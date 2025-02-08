@@ -118,4 +118,6 @@ diy_clock:
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ""
+  type: git
+  repo: https://github.com/daishengli/daishengli.github.io
+  branch: gh-pages
