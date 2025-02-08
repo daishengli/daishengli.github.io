@@ -1,0 +1,64 @@
+scheme: Gemini
+social:
+  GitHub: https://github.com/daishengli
+  E-Mail: mailto:daishengli1024@outlook.com
+post_meta:
+  updated_at: false
+sidebar:
+  position: left
+menu:
+  home: / || fa fa-home
+  about: /about/ || fa fa-user
+  tags: /tags/ || fa fa-tags
+  categories: /categories/ || fa fa-th
+  archives: /archives/ || fa fa-archive
+menu_settings:
+  icons: true
+  badges: true
+avatar:
+  url: /images/avatar.png
+  rounded: true
+  rotated: false
+toc:
+  enable: true
+  number: true
+  wrap: true
+  expand_all: true
+back2top:
+  enable: true
+  sidebar: false
+  scrollpercent: true
+creative_commons:
+  license: by-nc-sa
+  sidebar: true
+  post: true
+  language: zh-CN
+reward_settings:
+  enable: true
+  animation: false
+  comment: "您的支持是对我最大的鼓励！"
+
+reward:
+  wechatpay: /images/wechatpay.jpg
+  alipay: /images/alipay.jpg
+local_search:
+  enable: true
+  trigger: manual
+  top_n_per_article: -1
+  unescape: false
+  preload: false
+mediumzoom: true
+footer:
+  since: 2019
+  powered: false
+  # beian:
+  #   enable: true
+  #   icp: 鄂ICP备 1234567890号-1
+  #   gongan_id: 1234567890
+  #   gongan_num: 鄂公网安备 1234567890号
+  #   gongan_icon_url: /uploads/beian.png
+links:
+  "GitHub": https://www.github.com
+  "DeepSeek": https://deepseek.com
+links_settings:
+  layout: inline
