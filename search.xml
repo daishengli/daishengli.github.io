@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>内网穿透软件 frp 使用</title>
+    <url>/2024/12/10/Using-FRP-Software/</url>
+    <content><![CDATA[<h1 id="frp-是什么？"><a href="#frp-是什么？" class="headerlink" title="frp 是什么？"></a>frp 是什么？</h1><p>FRP（Fast Reverse Proxy）是一个开源、简洁易用、高性能的内网穿透和反向代理软件，它支持 TCP、UDP、HTTP、HTTPS 等多种协议。FRP 可以帮助用户将内网服务以安全、便捷的方式通过具有公网 IP 节点的中转暴露到公网。</p>
+<h2 id="FRP-的功能特点包括："><a href="#FRP-的功能特点包括：" class="headerlink" title="FRP 的功能特点包括："></a>FRP 的功能特点包括：</h2><ol>
+<li><strong>多协议支持</strong>：FRP 支持 TCP、UDP、HTTP、HTTPS 等多种协议，满足不同应用场景的需求。</li>
+<li><strong>P2P 通信</strong>：FRP 支持 P2P 模式，提高特殊环境下连接的灵活性。</li>
+<li><strong>TLS 加密</strong>：FRP 提供 TLS 加密功能，确保数据传输的安全性。</li>
+<li><strong>动态 DNS</strong>：FRP 支持动态 DNS，便于动态 IP 环境中的稳定访问。</li>
+<li><strong>Web 界面</strong>：FRP 提供 Web 界面，简化管理和监控。</li>
+<li><strong>反向代理</strong>：FRP 作为反向代理，使得内部服务可以通过外部服务器被访问。</li>
+</ol>
+<h2 id="FRP-的工作原理："><a href="#FRP-的工作原理：" class="headerlink" title="FRP 的工作原理："></a>FRP 的工作原理：</h2><p>FRP 主要由客户端（frpc）和服务端（frps）组成。通常情况下，服务端部署在具有公网 IP 地址的机器上，而客户端部署在需要穿透的内网服务所在的机器上。用户通过访问服务端的 frps，由 frp 负责根据请求的端口或其他信息将请求路由到相应的内网机器，从而实现通信。</p>
+<h2 id="FRP-的应用场景："><a href="#FRP-的应用场景：" class="headerlink" title="FRP 的应用场景："></a>FRP 的应用场景：</h2><ol>
+<li><strong>远程访问内网服务</strong>：例如，通过 FRP 访问家里或公司的服务器，而不需要配置复杂的端口映射。</li>
+<li><strong>开发环境共享</strong>：开发者可以通过 FRP 共享自己本地的开发环境，外部团队可以直接访问内网的应用和 API。</li>
+<li><strong>穿透防火墙 / NAT</strong>：即使内网服务器处于 NAT 后面或防火墙后面，仍然可以通过 FRP 将服务暴露到公网。</li>
+</ol>
+<p>FRP 的安装和部署相对简单，采用 Golang 编写，支持跨平台，仅需下载对应平台的二进制文件即可执行，没有额外依赖。用户可以根据需要编写配置文件，启动服务端和客户端，实现内网服务的公网访问。</p>
+<p>Github 地址：</p>
+<blockquote>
+<p><a href="https://github.com/fatedier/frp">https://github.com/fatedier/frp</a></p>
+</blockquote>
+<p>Frp 文档地址：</p>
+<blockquote>
+<p><a href="https://gofrp.org/zh-cn/docs">https://gofrp.org/zh-cn/docs</a></p>
+</blockquote>
+<h1 id="frp-具体使用"><a href="#frp-具体使用" class="headerlink" title="frp 具体使用"></a>frp 具体使用</h1><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>可以从 GitHub 的 Release 页面中下载最新版本的客户端和服务器二进制文件。所有文件都打包在一个压缩包中，还包含了一份完整的配置参数说明。</p>
+<blockquote>
+<p><a href="https://github.com/fatedier/frp/releases">https://github.com/fatedier/frp/releases</a></p>
+</blockquote>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><ol>
+<li>解压下载的压缩包。</li>
+<li>将 <code>frpc</code> 复制到内网服务所在的机器上。</li>
+<li>将 <code>frps</code> 复制到拥有公网 IP 地址的机器上，并将它们放在任意目录。</li>
+</ol>
+<h2 id="开始使用！"><a href="#开始使用！" class="headerlink" title="开始使用！"></a>开始使用！</h2><ol>
+<li>编写配置文件。</li>
+<li>使用以下命令启动服务器：<code>./frps -c ./frps.toml</code>。</li>
+<li>使用以下命令启动客户端：<code>./frpc -c ./frpc.toml</code>。</li>
+</ol>
+<h2 id="使用systemd来管理服务端"><a href="#使用systemd来管理服务端" class="headerlink" title="使用systemd来管理服务端"></a>使用 <code>systemd</code> 来管理服务端</h2><p>在服务器 <code>/etc/systemd/system</code> 创建 <code>frps.service</code> 文件并写入如下内容</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># /etc/systemd/system/frps.service</span></span><br><span class="line">[Unit]</span><br><span class="line"><span class="comment"># 服务名称，可自定义</span></span><br><span class="line">Description = frp server</span><br><span class="line">After = network.target syslog.target</span><br><span class="line">Wants = network.target</span><br><span class="line">[Service]</span><br><span class="line">Type = simple</span><br><span class="line"><span class="comment"># 启动frps的命令，需修改为您的frps的安装路径</span></span><br><span class="line">ExecStart = /path/to/frps -c /path/to/frps.toml</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy = multi-user.target</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用 systemd 命令管理 frps 服务</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># 启动frp</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start frps</span><br><span class="line"><span class="comment"># 停止frp</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl stop frps</span><br><span class="line"><span class="comment"># 重启frp</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl restart frps</span><br><span class="line"><span class="comment"># 查看frp状态</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl status frps</span><br></pre></td></tr></tbody></table></figure>
+
+<p>设置开机自启<br><code>sudo systemctl enable frps</code></p>
+<h2 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h2><blockquote>
+<p>服务端使用 frps，我的 frps 安装在 <code>/usr/local/frp</code>，下面有两个文件，分别是 <code>frps</code> 和 <code>fros.toml</code>，其中 <code>fros.toml</code> 是配置文件。<br>客户端使用 frpc，我的 frpc 安装在 <code>D:\development\frp</code>，下面有两个文件，分别是 <code>frpc.exe</code> 和 <code>froc.toml</code>，其中 <code>froc.toml</code> 是配置文件。<br>这里是做 http 转发的配置，其他配置可参考官方文档。</p>
+</blockquote>
+<p>修改服务端配置，即修改服务端 <code>/usr/local/frp/fros.toml</code> 文件，内容如下</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># bindPort是使用的端口号</span></span><br><span class="line">bindPort = 7000</span><br><span class="line"><span class="comment"># webServer配置是服务端 Dashboard 的配置</span></span><br><span class="line"><span class="comment"># 默认为 127.0.0.1，如果需要公网访问，需要修改为 0.0.0.0。</span></span><br><span class="line">webServer.addr = <span class="string">"0.0.0.0"</span></span><br><span class="line">webServer.port = 7500</span><br><span class="line"><span class="comment"># dashboard 用户名密码，可选，默认为空</span></span><br><span class="line">webServer.user = <span class="string">"替换为你自己想用的账号"</span></span><br><span class="line">webServer.password = <span class="string">"替换为你自己想用的密码"</span></span><br><span class="line"><span class="comment"># 身份认证token，客户端和服务端一致才能成功，还可以参考官方文档使用 OIDC</span></span><br><span class="line">auth.token = <span class="string">"替换为你自己想用的token"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>启动服务端<br><code>/usr/local/frp/frps -c /usr/local/frp/frps.toml</code><br>修改客户端配置</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">serverAddr = <span class="string">"此处填写服务端所在服务器IP"</span></span><br><span class="line"><span class="comment"># 此处修改为服务端使用的端口</span></span><br><span class="line">serverPort = 7000</span><br><span class="line"><span class="comment"># 此处修改为跟服务端token一致即可</span></span><br><span class="line">auth.token = <span class="string">"替换为你服务端的token"</span></span><br><span class="line"></span><br><span class="line">[[proxies]]</span><br><span class="line"><span class="comment"># 名称，可随意修改</span></span><br><span class="line">name = <span class="string">"http_forward"</span></span><br><span class="line"><span class="comment"># 类型，这里是tcp，还可以是http等，参考官方文档使用</span></span><br><span class="line"><span class="built_in">type</span> = <span class="string">"tcp"</span></span><br><span class="line"><span class="comment"># localIP和localPort是你本地想要代理出去的服务</span></span><br><span class="line">localIP = <span class="string">"127.0.0.1"</span></span><br><span class="line">localPort = 8080</span><br><span class="line"><span class="comment"># remotePort是指要占用服务端具体哪个端口，记得打开服务器对应端口的防火墙</span></span><br><span class="line">remotePort = 3000</span><br></pre></td></tr></tbody></table></figure>
+
+<p>启动客户端<br><code>D:\development\frp\frpc.exe -c D:\development\frp\frpc\frpc.toml</code><br>现在可以使用了<br>假设服务器的 ip 是 <code>43.159.71.116</code>，现在访问 <code>http://43.159.71.116:3000</code> 即可穿透到本地 <code>http://127.0.0.1:8080</code> 的服务。</p>
+<h1 id="为什么使用-frp？"><a href="#为什么使用-frp？" class="headerlink" title="为什么使用 frp？"></a>为什么使用 frp？</h1><p>使用 FRP（Fast Reverse Proxy）的原因有很多，以下是一些主要的优点和应用场景：</p>
+<ol>
+<li><p><strong>简化内网服务的公网访问</strong>：</p>
+<ul>
+<li>FRP 允许用户轻松地将内网服务暴露给公网，无需复杂的网络配置或端口映射。</li>
+</ul>
+</li>
+<li><p><strong>支持多种协议</strong>：</p>
+<ul>
+<li>FRP 支持 TCP、UDP、HTTP、HTTPS 等多种协议，适用于不同的应用和服务。</li>
+</ul>
+</li>
+<li><p><strong>安全性</strong>：</p>
+<ul>
+<li>FRP 提供 TLS 加密功能，可以保护数据传输的安全，防止数据在传输过程中被窃取或篡改。</li>
+</ul>
+</li>
+<li><p><strong>高性能</strong>：</p>
+<ul>
+<li>FRP 设计为高性能的反向代理应用，可以处理大量的连接和数据传输。</li>
+</ul>
+</li>
+<li><p><strong>P2P 通信</strong>：</p>
+<ul>
+<li>FRP 支持 P2P 模式，可以在特殊网络环境下提高连接的灵活性。</li>
+</ul>
+</li>
+<li><p><strong>动态 DNS 支持</strong>：</p>
+<ul>
+<li>对于动态 IP 环境，FRP 支持动态 DNS，使得服务可以稳定地被访问。</li>
+</ul>
+</li>
+<li><p><strong>Web 界面管理</strong>：</p>
+<ul>
+<li>FRP 提供 Web 界面，方便用户管理和监控服务状态。</li>
+</ul>
+</li>
+<li><p><strong>反向代理功能</strong>：</p>
+<ul>
+<li>作为反向代理，FRP 可以将内部服务通过外部服务器暴露给公网，增加一层安全性。</li>
+</ul>
+</li>
+<li><p><strong>跨平台支持</strong>：</p>
+<ul>
+<li>FRP 支持多种操作系统平台，包括 Linux、Windows 和 macOS。</li>
+</ul>
+</li>
+<li><p><strong>开源</strong>：</p>
+<ul>
+<li>FRP 是一个开源项目，用户可以自由使用、修改和分发。</li>
+</ul>
+</li>
+<li><p><strong>易于部署和使用</strong>：</p>
+<ul>
+<li>FRP 的安装和配置相对简单，不需要专业的网络知识。</li>
+</ul>
+</li>
+<li><p><strong>适用于多种场景</strong>：</p>
+<ul>
+<li>无论是远程办公、开发环境共享、个人项目托管还是企业内部服务的外部访问，FRP 都能提供解决方案。</li>
+</ul>
+</li>
+<li><p><strong>负载均衡和端口复用</strong>：</p>
+<ul>
+<li>FRP 支持代理组间的负载均衡和端口复用，可以更高效地利用公网资源。</li>
+</ul>
+</li>
+<li><p><strong>插件系统</strong>：</p>
+<ul>
+<li>FRP 具有高度扩展性的服务端插件系统，方便用户根据需求进行功能扩展。</li>
+</ul>
+</li>
+</ol>
+<p>使用 FRP 可以大大简化网络服务的部署和管理，提高工作效率，同时保证服务的安全性和稳定性。</p>
+]]></content>
+      <categories>
+        <category>软件使用</category>
+      </categories>
+      <tags>
+        <tag>软件使用</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>时间轮算法及简易实现</title>
+    <url>/2025/01/18/TimeWheel/</url>
+    <content><![CDATA[<h3 id="一、时间轮算法是什么？"><a href="#一、时间轮算法是什么？" class="headerlink" title="一、时间轮算法是什么？"></a>一、时间轮算法是什么？</h3><h4 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a>1. <strong>基本概念</strong></h4><p>时间轮（Time Wheel）是一种高效的定时任务调度算法，用于管理和调度大量的定时任务。它的核心思想是将时间划分为多个槽（Slot），每个槽代表一个时间间隔，任务根据其延迟时间被分配到对应的槽中。时间轮通过一个指针（Pointer）周期性地移动，触发当前槽中的任务执行。</p>
+<h4 id="2-核心名词解释"><a href="#2-核心名词解释" class="headerlink" title="2. 核心名词解释"></a>2. <strong>核心名词解释</strong></h4><ul>
+<li><strong>槽（Slot）</strong>：<ul>
+<li>时间轮被划分为多个槽，每个槽代表一个时间间隔。</li>
+<li>例如，一个时间轮有 8 个槽，每个槽代表 1 秒，那么整个时间轮的时间跨度是 8 秒。</li>
+</ul>
+</li>
+<li><strong>指针（Pointer）</strong>：<ul>
+<li>时间轮有一个指针，指向当前时间对应的槽。</li>
+<li>指针会周期性地移动，每次移动一个槽。</li>
+</ul>
+</li>
+<li><strong>任务（Task）</strong>：<ul>
+<li>需要调度的定时任务，任务会被分配到对应的槽中。</li>
+<li>当指针移动到某个槽时，该槽中的所有任务会被执行。</li>
+</ul>
+</li>
+<li><strong>层级（Hierarchy）</strong>：<ul>
+<li>对于长时间延迟的任务，可以使用多层时间轮（如秒级、分钟级、小时级等）。</li>
+<li>高层时间轮的槽代表更大的时间跨度。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-时间轮的结构"><a href="#3-时间轮的结构" class="headerlink" title="3. 时间轮的结构"></a>3. <strong>时间轮的结构</strong></h4><ul>
+<li><strong>单层时间轮</strong>：<ul>
+<li>只有一个时间轮，适合调度短时间延迟的任务。</li>
+</ul>
+</li>
+<li><strong>多层时间轮</strong>：<ul>
+<li>由多个时间轮组成，适合调度长时间延迟的任务。</li>
+<li>例如，秒级时间轮负责 0-59 秒的任务，分钟级时间轮负责 1-59 分钟的任务。</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-应用场景"><a href="#4-应用场景" class="headerlink" title="4. 应用场景"></a>4. <strong>应用场景</strong></h4><ul>
+<li><strong>网络编程</strong>：<ul>
+<li>用于检测连接超时、心跳机制等。</li>
+</ul>
+</li>
+<li><strong>操作系统</strong>：<ul>
+<li>用于调度定时任务（如 Linux 内核的定时器）。</li>
+</ul>
+</li>
+<li><strong>分布式系统</strong>：<ul>
+<li>用于任务调度、延迟队列等。</li>
+</ul>
+</li>
+<li><strong>游戏开发</strong>：<ul>
+<li>用于定时技能冷却、任务触发等。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="二、时间轮算法的优点"><a href="#二、时间轮算法的优点" class="headerlink" title="二、时间轮算法的优点"></a>二、时间轮算法的优点</h3><h4 id="1-高效的任务调度"><a href="#1-高效的任务调度" class="headerlink" title="1. 高效的任务调度"></a>1. <strong>高效的任务调度</strong></h4><ul>
+<li>时间复杂度为 O (1)，适合处理大量定时任务。</li>
+<li>任务的添加、删除和执行都非常高效。</li>
+</ul>
+<h4 id="2-低内存占用"><a href="#2-低内存占用" class="headerlink" title="2. 低内存占用"></a>2. <strong>低内存占用</strong></h4><ul>
+<li>时间轮通过槽和指针的方式管理任务，内存占用较低。</li>
+</ul>
+<h4 id="3-适合高并发场景"><a href="#3-适合高并发场景" class="headerlink" title="3. 适合高并发场景"></a>3. <strong>适合高并发场景</strong></h4><ul>
+<li>时间轮算法是无锁的，适合高并发环境。</li>
+</ul>
+<h4 id="4-支持长时间延迟任务"><a href="#4-支持长时间延迟任务" class="headerlink" title="4. 支持长时间延迟任务"></a>4. <strong>支持长时间延迟任务</strong></h4><ul>
+<li>通过多层时间轮，可以支持长时间延迟的任务。</li>
+</ul>
+<h4 id="5-灵活的任务管理"><a href="#5-灵活的任务管理" class="headerlink" title="5. 灵活的任务管理"></a>5. <strong>灵活的任务管理</strong></h4><ul>
+<li>可以方便地添加、删除和更新任务。</li>
+</ul>
+<hr>
+<h3 id="三、时间轮算法的实现"><a href="#三、时间轮算法的实现" class="headerlink" title="三、时间轮算法的实现"></a>三、时间轮算法的实现</h3><h4 id="1-Java-实现"><a href="#1-Java-实现" class="headerlink" title="1. Java 实现"></a>1. <strong>Java 实现</strong></h4><p>以下是一个单层时间轮的 Java 实现：</p>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ScheduledExecutorService;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TimeWheel</span> {</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> slotNum; <span class="comment">// 槽数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">long</span> interval; <span class="comment">// 每个槽的时间间隔（毫秒）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;List&lt;Runnable&gt;&gt; slots; <span class="comment">// 槽中的任务列表</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> currentSlot; <span class="comment">// 当前指针位置</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ScheduledExecutorService scheduler; <span class="comment">// 定时调度器</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">TimeWheel</span><span class="params">(<span class="type">int</span> slotNum, <span class="type">long</span> interval)</span> {</span><br><span class="line">        <span class="built_in">this</span>.slotNum = slotNum;</span><br><span class="line">        <span class="built_in">this</span>.interval = interval;</span><br><span class="line">        <span class="built_in">this</span>.slots = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(slotNum);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; slotNum; i++) {</span><br><span class="line">            slots.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;());</span><br><span class="line">        }</span><br><span class="line">        <span class="built_in">this</span>.currentSlot = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">this</span>.scheduler = Executors.newScheduledThreadPool(<span class="number">1</span>);</span><br><span class="line">        start();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 启动时间轮</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">start</span><span class="params">()</span> {</span><br><span class="line">        scheduler.scheduleAtFixedRate(() -&gt; {</span><br><span class="line">            <span class="comment">// 执行当前槽的任务</span></span><br><span class="line">            List&lt;Runnable&gt; tasks = slots.get(currentSlot);</span><br><span class="line">            <span class="keyword">for</span> (Runnable task : tasks) {</span><br><span class="line">                task.run();</span><br><span class="line">            }</span><br><span class="line">            tasks.clear(); <span class="comment">// 清空已执行的任务</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 移动指针</span></span><br><span class="line">            currentSlot = (currentSlot + <span class="number">1</span>) % slotNum;</span><br><span class="line">        }, interval, interval, TimeUnit.MILLISECONDS);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 添加任务</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addTask</span><span class="params">(Runnable task, <span class="type">long</span> delay)</span> {</span><br><span class="line">        <span class="keyword">if</span> (delay &lt;= <span class="number">0</span>) {</span><br><span class="line">            task.run();</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 计算任务所在的槽</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">targetSlot</span> <span class="operator">=</span> (currentSlot + (<span class="type">int</span>) (delay / interval)) % slotNum;</span><br><span class="line">        slots.get(targetSlot).add(task);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 停止时间轮</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">stop</span><span class="params">()</span> {</span><br><span class="line">        scheduler.shutdown();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException {</span><br><span class="line">        <span class="comment">// 创建一个时间轮，8 个槽，每个槽间隔 1 秒</span></span><br><span class="line">        <span class="type">TimeWheel</span> <span class="variable">timeWheel</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TimeWheel</span>(<span class="number">8</span>, <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 添加任务</span></span><br><span class="line">        timeWheel.addTask(() -&gt; System.out.println(<span class="string">"Task 1 executed"</span>), <span class="number">3000</span>); <span class="comment">// 3 秒后执行</span></span><br><span class="line">        timeWheel.addTask(() -&gt; System.out.println(<span class="string">"Task 2 executed"</span>), <span class="number">5000</span>); <span class="comment">// 5 秒后执行</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 等待任务执行</span></span><br><span class="line">        Thread.sleep(<span class="number">10000</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 停止时间轮</span></span><br><span class="line">        timeWheel.stop();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="2-Python-实现"><a href="#2-Python-实现" class="headerlink" title="2. Python 实现"></a>2. <strong>Python 实现</strong></h4><p>以下是一个单层时间轮的 Python 实现：</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TimeWheel</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, slot_num, interval</span>):</span><br><span class="line">        <span class="variable language_">self</span>.slot_num = slot_num</span><br><span class="line">        <span class="variable language_">self</span>.interval = interval</span><br><span class="line">        <span class="variable language_">self</span>.slots = [[] <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(slot_num)]</span><br><span class="line">        <span class="variable language_">self</span>.current_slot = <span class="number">0</span></span><br><span class="line">        <span class="variable language_">self</span>.lock = threading.Lock()</span><br><span class="line">        <span class="variable language_">self</span>.running = <span class="literal">True</span></span><br><span class="line">        <span class="variable language_">self</span>.scheduler = threading.Thread(target=<span class="variable language_">self</span>.run)</span><br><span class="line">        <span class="variable language_">self</span>.scheduler.start()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 启动时间轮</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">while</span> <span class="variable language_">self</span>.running:</span><br><span class="line">            time.sleep(<span class="variable language_">self</span>.interval / <span class="number">1000</span>)  <span class="comment"># 转换为秒</span></span><br><span class="line">            <span class="keyword">with</span> <span class="variable language_">self</span>.lock:</span><br><span class="line">                tasks = <span class="variable language_">self</span>.slots[<span class="variable language_">self</span>.current_slot]</span><br><span class="line">                <span class="keyword">for</span> task <span class="keyword">in</span> tasks:</span><br><span class="line">                    task()</span><br><span class="line">                tasks.clear()  <span class="comment"># 清空已执行的任务</span></span><br><span class="line">                <span class="variable language_">self</span>.current_slot = (<span class="variable language_">self</span>.current_slot + <span class="number">1</span>) % <span class="variable language_">self</span>.slot_num</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 添加任务</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add_task</span>(<span class="params">self, task, delay</span>):</span><br><span class="line">        <span class="keyword">if</span> delay &lt;= <span class="number">0</span>:</span><br><span class="line">            task()</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">with</span> <span class="variable language_">self</span>.lock:</span><br><span class="line">            target_slot = (<span class="variable language_">self</span>.current_slot + <span class="built_in">int</span>(delay / <span class="variable language_">self</span>.interval)) % <span class="variable language_">self</span>.slot_num</span><br><span class="line">            <span class="variable language_">self</span>.slots[target_slot].append(task)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 停止时间轮</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">stop</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.running = <span class="literal">False</span></span><br><span class="line">        <span class="variable language_">self</span>.scheduler.join()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    <span class="comment"># 创建一个时间轮，8 个槽，每个槽间隔 1 秒</span></span><br><span class="line">    time_wheel = TimeWheel(<span class="number">8</span>, <span class="number">1000</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 添加任务</span></span><br><span class="line">    time_wheel.add_task(<span class="keyword">lambda</span>: <span class="built_in">print</span>(<span class="string">"Task 1 executed"</span>), <span class="number">3000</span>)  <span class="comment"># 3 秒后执行</span></span><br><span class="line">    time_wheel.add_task(<span class="keyword">lambda</span>: <span class="built_in">print</span>(<span class="string">"Task 2 executed"</span>), <span class="number">5000</span>)  <span class="comment"># 5 秒后执行</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 等待任务执行</span></span><br><span class="line">    time.sleep(<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 停止时间轮</span></span><br><span class="line">    time_wheel.stop()</span><br></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h3 id="四、总结与扩展"><a href="#四、总结与扩展" class="headerlink" title="四、总结与扩展"></a>四、总结与扩展</h3><h4 id="1-总结"><a href="#1-总结" class="headerlink" title="1. 总结"></a>1. <strong>总结</strong></h4><ul>
+<li>时间轮算法是一种高效的定时任务调度算法，适合处理大量定时任务。</li>
+<li>通过槽和指针的方式，时间轮实现了 O (1) 的时间复杂度。</li>
+<li>时间轮广泛应用于网络编程、操作系统、分布式系统等场景。</li>
+</ul>
+<h4 id="2-扩展"><a href="#2-扩展" class="headerlink" title="2. 扩展"></a>2. <strong>扩展</strong></h4><ul>
+<li><strong>多层时间轮</strong>：<ul>
+<li>对于长时间延迟的任务，可以使用多层时间轮（如秒级、分钟级、小时级）。</li>
+</ul>
+</li>
+<li><strong>动态扩容</strong>：<ul>
+<li>时间轮可以根据任务的数量动态调整槽数。</li>
+</ul>
+</li>
+<li><strong>分布式时间轮</strong>：<ul>
+<li>在分布式系统中，时间轮可以与其他算法（如一致性哈希）结合使用，实现分布式任务调度。</li>
+</ul>
+</li>
+</ul>
+<p>时间轮算法是定时任务调度领域的重要工具，掌握其原理和实现对于开发高性能系统非常有帮助。</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+</search>
