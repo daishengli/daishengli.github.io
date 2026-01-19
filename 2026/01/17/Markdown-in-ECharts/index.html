@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="详细介绍了在Markdown中无缝集成ECharts图表，并给出了相关的代码。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 Markdown 中无缝集成 ECharts 图表的技术实践">
+<meta property="og:url" content="https://www.daishengli.top/2026/01/17/Markdown-in-ECharts/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="详细介绍了在Markdown中无缝集成ECharts图表，并给出了相关的代码。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.daishengli.top/images/EChartsInMarkdown.png#pic_center">
+<meta property="article:published_time" content="2026-01-17T07:39:00.000Z">
+<meta property="article:modified_time" content="2026-01-19T08:51:00.094Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="技术实践">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="ECharts">
+<meta property="article:tag" content="Markdown">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.daishengli.top/images/EChartsInMarkdown.png#pic_center">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/01/17/Markdown-in-ECharts/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/01/17/Markdown-in-ECharts/","path":"2026/01/17/Markdown-in-ECharts/","title":"在 Markdown 中无缝集成 ECharts 图表的技术实践"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>在 Markdown 中无缝集成 ECharts 图表的技术实践 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">9</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">9</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">4</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E8%83%8C%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">技术背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Markdown%E5%8F%8A%E5%85%B6%E6%89%A9%E5%B1%95%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">Markdown 及其扩展性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ECharts%E7%AE%80%E4%BB%8B"><span class="nav-number">2.2.</span> <span class="nav-text">ECharts 简介</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88"><span class="nav-number">3.</span> <span class="nav-text">实现方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF"><span class="nav-number">3.1.</span> <span class="nav-text">核心思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%82%B9%E8%A7%A3%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">关键点解析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">4.</span> <span class="nav-text">使用示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="nav-number">4.1.</span> <span class="nav-text">完整示例代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E4%BC%98%E5%8A%BF"><span class="nav-number">5.</span> <span class="nav-text">技术优势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BD%9C%E5%9C%A8%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">6.</span> <span class="nav-text">潜在问题与解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E5%8F%AF%E8%83%BD%E6%80%A7"><span class="nav-number">7.</span> <span class="nav-text">扩展可能性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">8.</span> <span class="nav-text">结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/01/17/Markdown-in-ECharts/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="在 Markdown 中无缝集成 ECharts 图表的技术实践 | 小戴的网络日志">
+      <meta itemprop="description" content="详细介绍了在Markdown中无缝集成ECharts图表，并给出了相关的代码。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在 Markdown 中无缝集成 ECharts 图表的技术实践
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-01-17 15:39:00" itemprop="dateCreated datePublished" datetime="2026-01-17T15:39:00+08:00">2026-01-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/" itemprop="url" rel="index"><span itemprop="name">技术实践</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/JavaScript/ECharts/" itemprop="url" rel="index"><span itemprop="name">ECharts</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/JavaScript/ECharts/Markdown/" itemprop="url" rel="index"><span itemprop="name">Markdown</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">详细介绍了在Markdown中无缝集成ECharts图表，并给出了相关的代码。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在现代 Web 开发中，数据可视化已成为不可或缺的一部分。ECharts 作为百度开源的一款优秀的数据可视化库，以其丰富的图表类型和灵活的配置选项广受欢迎。而 Markdown 作为一种轻量级标记语言，因其简洁易用的特性，被广泛应用于文档编写和技术博客中。本文将介绍如何实现在 Markdown 文档中无缝嵌入 ECharts 图表的技术方案。</p>
+<h2 id="技术背景"><a href="#技术背景" class="headerlink" title="技术背景"></a>技术背景</h2><h3 id="Markdown及其扩展性"><a href="#Markdown及其扩展性" class="headerlink" title="Markdown及其扩展性"></a>Markdown 及其扩展性</h3><p>Markdown 最初由 John Gruber 创建，旨在实现” 易读易写” 的纯文本格式。随着发展，Markdown 通过扩展语法支持了更多功能，如代码块、表格等。其中，代码块语法通常用于展示代码片段：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">``` language</span></span><br><span class="line"><span class="code">code here</span></span><br><span class="line"><span class="code">```</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这种语法为我们嵌入 ECharts 图表提供了天然的接口。</p>
+<h3 id="ECharts简介"><a href="#ECharts简介" class="headerlink" title="ECharts简介"></a>ECharts 简介</h3><p>ECharts 是一个使用 JavaScript 实现的开源可视化库，可以流畅运行在 PC 和移动设备上，兼容当前绝大部分浏览器。它提供了直观、交互丰富、可高度个性化定制的数据可视化图表。</p>
+<h2 id="实现方案"><a href="#实现方案" class="headerlink" title="实现方案"></a>实现方案</h2><h3 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h3><p>我们的目标是在 Markdown 文档中通过特定语法嵌入 ECharts 图表配置，并在渲染时自动将其转换为交互式图表。具体实现步骤如下：</p>
+<ol>
+<li>识别 Markdown 中的 ECharts 代码块</li>
+<li>解析其中的 JSON 配置</li>
+<li>动态创建图表容器</li>
+<li>初始化 ECharts 实例并应用配置</li>
+<li>处理响应式布局</li>
+</ol>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> renderer = <span class="keyword">new</span> marked.<span class="title class_">Renderer</span>();</span><br><span class="line">renderer.<span class="property">code</span> = <span class="function">(<span class="params">{ lang, text }</span>) =&gt;</span> {</span><br><span class="line">  <span class="keyword">if</span> (lang === <span class="string">'echarts'</span>) {</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">      <span class="keyword">const</span> chartData = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(text.<span class="title function_">trim</span>()); <span class="comment">// 使用trim()移除可能的空白字符</span></span><br><span class="line">      <span class="keyword">const</span> randomId = <span class="string">'echart-'</span> + <span class="title class_">Math</span>.<span class="title function_">random</span>().<span class="title function_">toString</span>(<span class="number">36</span>).<span class="title function_">substr</span>(<span class="number">2</span>, <span class="number">9</span>);</span><br><span class="line">      </span><br><span class="line">      <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> {</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> echarts !== <span class="string">'undefined'</span>) {</span><br><span class="line">          <span class="keyword">const</span> chart = echarts.<span class="title function_">init</span>(<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(randomId));</span><br><span class="line">          chart.<span class="title function_">setOption</span>(chartData);</span><br><span class="line">          </span><br><span class="line">          <span class="comment">// 响应式调整大小</span></span><br><span class="line">          <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">'resize'</span>, <span class="keyword">function</span>(<span class="params"></span>) {</span><br><span class="line">            chart.<span class="title function_">resize</span>();</span><br><span class="line">          });</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">          <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">'ECharts is not loaded'</span>);</span><br><span class="line">        }</span><br><span class="line">      }, <span class="number">0</span>);</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">return</span> <span class="string">`&lt;div id="<span class="subst">${randomId}</span>" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;`</span>;</span><br><span class="line">    } <span class="keyword">catch</span> (e) {</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">'解析ECharts数据失败:'</span>, e);</span><br><span class="line">      <span class="keyword">return</span> <span class="string">`&lt;pre&gt;&lt;code&gt;<span class="subst">${text}</span>&lt;/code&gt;&lt;/pre&gt;`</span>;</span><br><span class="line">    }</span><br><span class="line">  } <span class="keyword">else</span> {</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`&lt;pre&gt;&lt;code&gt;<span class="subst">${text}</span>&lt;/code&gt;&lt;/pre&gt;`</span>;</span><br><span class="line">  }</span><br><span class="line">};</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="关键点解析"><a href="#关键点解析" class="headerlink" title="关键点解析"></a>关键点解析</h3><ol>
+<li><p><strong>自定义 Markdown 渲染器</strong>：通过扩展 marked.js 的渲染器，我们能够自定义代码块的渲染逻辑。</p>
+</li>
+<li><p><strong>ECharts 代码块识别</strong>：当代码块语言标记为 <code>echarts</code> 时，我们将其内容视为 ECharts 配置。</p>
+</li>
+<li><p><strong>JSON 配置解析</strong>：使用 <code>JSON.parse</code> 解析代码块内容，确保其是有效的 ECharts 配置。</p>
+</li>
+<li><p><strong>动态容器创建</strong>：为每个图表生成唯一 ID，并创建相应大小的容器 div。</p>
+</li>
+<li><p><strong>异步初始化</strong>：使用 <code>setTimeout</code> 确保 DOM 加载完成后再初始化图表。</p>
+</li>
+<li><p><strong>响应式处理</strong>：监听窗口大小变化事件，自动调整图表尺寸。</p>
+</li>
+</ol>
+<h2 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h2><p>在 Markdown 文档中嵌入 ECharts 图表非常简单：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 标题一</span></span><br><span class="line"></span><br><span class="line"><span class="section">## 标题二</span></span><br><span class="line"></span><br><span class="line"><span class="section">### 标题三</span></span><br><span class="line"></span><br><span class="line"><span class="section">#### 标题四-echarts图</span></span><br><span class="line"></span><br><span class="line"><span class="code">``` echarts</span></span><br><span class="line"><span class="code">{</span></span><br><span class="line"><span class="code">  "title": {</span></span><br><span class="line"><span class="code">    "text": "销售趋势图"</span></span><br><span class="line"><span class="code">  },</span></span><br><span class="line"><span class="code">  "xAxis": {</span></span><br><span class="line"><span class="code">    "type": "category",</span></span><br><span class="line"><span class="code">    "data": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]</span></span><br><span class="line"><span class="code">  },</span></span><br><span class="line"><span class="code">  "yAxis": {</span></span><br><span class="line"><span class="code">    "type": "value"</span></span><br><span class="line"><span class="code">  },</span></span><br><span class="line"><span class="code">  "series": [{</span></span><br><span class="line"><span class="code">    "data": [150, 230, 224, 218, 135, 147, 260],</span></span><br><span class="line"><span class="code">    "type": "line"</span></span><br><span class="line"><span class="code">  }]</span></span><br><span class="line"><span class="code">}</span></span><br><span class="line"><span class="code">```</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>渲染后将自动显示一个折线图，并随窗口大小变化自动调整。</p>
+<p><img src="/images/EChartsInMarkdown.png#pic_center" alt="EChartsInMarkdown示例渲染图片"></p>
+<h3 id="完整示例代码"><a href="#完整示例代码" class="headerlink" title="完整示例代码"></a>完整示例代码</h3><figure class="highlight html"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>ECharts In MarkDwon<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"responseContent"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 引入 marked.js 库用于 Markdown 渲染 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/marked/marked.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 引入 ECharts 库 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> renderer = <span class="keyword">new</span> marked.<span class="title class_">Renderer</span>();</span></span><br><span class="line"><span class="language-javascript">    renderer.<span class="property">code</span> = <span class="function">(<span class="params">{ lang, text }</span>) =&gt;</span> {</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">if</span> (lang === <span class="string">'echarts'</span>) {</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">try</span> {</span></span><br><span class="line"><span class="language-javascript">          <span class="keyword">const</span> chartData = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(text.<span class="title function_">trim</span>()); <span class="comment">// 使用trim()移除可能的空白字符</span></span></span><br><span class="line"><span class="language-javascript">          <span class="keyword">const</span> randomId = <span class="string">'echart-'</span> + <span class="title class_">Math</span>.<span class="title function_">random</span>().<span class="title function_">toString</span>(<span class="number">36</span>).<span class="title function_">substr</span>(<span class="number">2</span>, <span class="number">9</span>);</span></span><br><span class="line"><span class="language-javascript">          </span></span><br><span class="line"><span class="language-javascript">          <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> {</span></span><br><span class="line"><span class="language-javascript">            <span class="keyword">if</span> (<span class="keyword">typeof</span> echarts !== <span class="string">'undefined'</span>) {</span></span><br><span class="line"><span class="language-javascript">              <span class="keyword">const</span> chart = echarts.<span class="title function_">init</span>(<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(randomId));</span></span><br><span class="line"><span class="language-javascript">              chart.<span class="title function_">setOption</span>(chartData);</span></span><br><span class="line"><span class="language-javascript">              </span></span><br><span class="line"><span class="language-javascript">              <span class="comment">// 响应式调整大小</span></span></span><br><span class="line"><span class="language-javascript">              <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">'resize'</span>, <span class="keyword">function</span>(<span class="params"></span>) {</span></span><br><span class="line"><span class="language-javascript">                chart.<span class="title function_">resize</span>();</span></span><br><span class="line"><span class="language-javascript">              });</span></span><br><span class="line"><span class="language-javascript">            } <span class="keyword">else</span> {</span></span><br><span class="line"><span class="language-javascript">              <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">'ECharts is not loaded'</span>);</span></span><br><span class="line"><span class="language-javascript">            }</span></span><br><span class="line"><span class="language-javascript">          }, <span class="number">0</span>);</span></span><br><span class="line"><span class="language-javascript">          </span></span><br><span class="line"><span class="language-javascript">          <span class="keyword">return</span> <span class="string">`&lt;div id="<span class="subst">${randomId}</span>" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;`</span>;</span></span><br><span class="line"><span class="language-javascript">        } <span class="keyword">catch</span> (e) {</span></span><br><span class="line"><span class="language-javascript">          <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">'解析ECharts数据失败:'</span>, e);</span></span><br><span class="line"><span class="language-javascript">          <span class="keyword">return</span> <span class="string">`&lt;pre&gt;&lt;code&gt;<span class="subst">${text}</span>&lt;/code&gt;&lt;/pre&gt;`</span>;</span></span><br><span class="line"><span class="language-javascript">        }</span></span><br><span class="line"><span class="language-javascript">      } <span class="keyword">else</span> {</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> <span class="string">`&lt;pre&gt;&lt;code&gt;<span class="subst">${text}</span>&lt;/code&gt;&lt;/pre&gt;`</span>;</span></span><br><span class="line"><span class="language-javascript">      }</span></span><br><span class="line"><span class="language-javascript">    };</span></span><br><span class="line"><span class="language-javascript">    </span></span><br><span class="line"><span class="language-javascript">    marked.<span class="title function_">setOptions</span>({</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">renderer</span>: renderer,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">highlight</span>: <span class="keyword">function</span> (<span class="params">code, lang</span>) {</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> code;</span></span><br><span class="line"><span class="language-javascript">      }</span></span><br><span class="line"><span class="language-javascript">    });</span></span><br><span class="line"><span class="language-javascript">    </span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">let</span> markDownStr = <span class="string">"# 标题一\n\n## 标题二\n\n### 标题三\n\n#### 标题四-echarts图\n\n```echarts\n{\"xAxis\":{\"type\":\"category\",\"data\":[\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\",\"Sun\"]},\"yAxis\":{\"type\":\"value\"},\"series\":[{\"data\":[150,230,224,218,135,147,260],\"type\":\"line\"}]}\n```"</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(markDownStr);</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> responseContentEl = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">'responseContent'</span>);</span></span><br><span class="line"><span class="language-javascript">    responseContentEl.<span class="property">innerHTML</span> = marked.<span class="title function_">parse</span>(markDownStr);</span></span><br><span class="line"><span class="language-javascript">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="技术优势"><a href="#技术优势" class="headerlink" title="技术优势"></a>技术优势</h2><ol>
+<li><strong>无缝集成</strong>：保持 Markdown 简洁性的同时增加可视化能力</li>
+<li><strong>开发友好</strong>：前端开发者熟悉的 JSON 配置方式</li>
+<li><strong>灵活性高</strong>：支持 ECharts 所有图表类型和配置选项</li>
+<li><strong>响应式设计</strong>：自动适应不同屏幕尺寸</li>
+<li><strong>错误处理</strong>：配置解析失败时优雅降级为代码块显示</li>
+</ol>
+<h2 id="潜在问题与解决方案"><a href="#潜在问题与解决方案" class="headerlink" title="潜在问题与解决方案"></a>潜在问题与解决方案</h2><ol>
+<li><strong>JSON 解析错误</strong>：通过 try-catch 捕获异常，失败时回退为普通代码块显示</li>
+<li><strong> ECharts 未加载</strong>：检查全局变量是否存在，给出明确错误提示</li>
+<li><strong>性能考虑</strong>：大量图表时可能影响性能，建议按需加载或虚拟滚动</li>
+<li><strong>安全性</strong>：确保 JSON.parse 的内容来自可信源，避免 XSS 攻击</li>
+</ol>
+<h2 id="扩展可能性"><a href="#扩展可能性" class="headerlink" title="扩展可能性"></a>扩展可能性</h2><ol>
+<li><strong>主题支持</strong>：通过额外参数指定图表主题</li>
+<li><strong>数据动态加载</strong>：支持从 URL 加载数据配置</li>
+<li><strong>交互事件</strong>：暴露图表事件供外部使用</li>
+<li><strong>服务端渲染</strong>：生成静态图片作为 fallback</li>
+</ol>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>通过在 Markdown 中嵌入 ECharts 图表的技术方案，我们成功地将数据可视化能力无缝集成到文档编写流程中。这种方法既保留了 Markdown 的简洁性，又充分利用了 ECharts 强大的可视化功能，特别适合技术文档、数据分析报告等需要结合文字说明和数据展示的场景。</p>
+<p>实现的核心在于灵活运用 Markdown 解析器的扩展能力和 ECharts 的动态初始化机制。随着 Web 技术的不断发展，这种轻量级集成方案将为内容创作者提供更强大的表达工具。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/01/17/Markdown-in-ECharts/" title="在 Markdown 中无缝集成 ECharts 图表的技术实践">https://www.daishengli.top/2026/01/17/Markdown-in-ECharts/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+              <a href="/tags/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/" rel="tag"># 技术实践</a>
+              <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+              <a href="/tags/ECharts/" rel="tag"># ECharts</a>
+              <a href="/tags/Markdown/" rel="tag"># Markdown</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/03/20/Install-MySQL/" rel="prev" title="Windows 上 MySQL 服务的下载安装及卸载">
+                  <i class="fa fa-angle-left"></i> Windows 上 MySQL 服务的下载安装及卸载
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
