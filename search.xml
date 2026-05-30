@@ -1,0 +1,1718 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Windows 上 MySQL 服务的下载安装及卸载</title>
+    <url>/2025/03/20/Install-MySQL/</url>
+    <content><![CDATA[<h1 id="MySQL-下载"><a href="#MySQL-下载" class="headerlink" title="MySQL 下载"></a>MySQL 下载</h1><p>国内在官下载 MySQL 会很慢，推荐使用国内镜像下载：</p>
+<p><a href="https://dev.mysql.com/downloads/installer/">官网下载</a></p>
+<p><a href="https://mirrors.huaweicloud.com/mysql/Downloads/">华为云镜像站下载 MySQL</a></p>
+<p><a href="https://mirrors.aliyun.com/mysql/">阿里云镜像站下载 MySQL</a></p>
+<p>这里我们<a href="https://mirrors.huaweicloud.com/mysql/Downloads/MySQL-8.0/mysql-8.0.29-winx64.zip">下载</a>当前最新版的 mysql，版本为 mysql-8.0.29。</p>
+<h1 id="MySQL-安装"><a href="#MySQL-安装" class="headerlink" title="MySQL 安装"></a>MySQL 安装</h1><p>首先将下载的文件解压到你想安装 MySQL 的路径，这里我的路径是：<code>D:\development</code></p>
+<p>解压后如下：</p>
+<p><img src="/images/Install-MySQL.assets/41a1305a592246c88baa879bf5a71012.png" alt="mysql安装目录"></p>
+<p>接下来需要将 mysql 安装为服务，以管理员身份打开终端，进入 bin 目录，执行：</p>
+<p><code>.\mysqld.exe --install</code></p>
+<p><img src="/images/Install-MySQL.assets/c3c7e1b14b3c400cb380b1c00cd6354d.png" alt="终端管理员"></p>
+<p><img src="/images/Install-MySQL.assets/38f115e3eb974e458e55983035a9e24b.png" alt="执行命令"></p>
+<p>此时 MySQL 服务已安装但未启动，打开服务可查看</p>
+<p><img src="/images/Install-MySQL.assets/e2e5fac6bcff4a9d8b26764a2a9487e1.png" alt="MySQL服务"></p>
+<p>现在需要先设置一下配置文件，在安装目录下创建 <code>my.ini</code>，并写入以下内容，可自行修改相关配置。</p>
+<figure class="highlight ini"><table><tbody><tr><td class="code"><pre><span class="line"><span class="section">[mysqld]</span></span><br><span class="line"><span class="comment"># 配置mysql安装地址，默认为配置文件的地址，可以不用配置</span></span><br><span class="line"><span class="attr">basedir</span>=D:\development\mysql-<span class="number">8.0</span>.<span class="number">29</span>-winx64\</span><br><span class="line"><span class="comment"># 配置mysql的数据存储地址，默认为配置文件同级目录下的data文件夹，可以不用配置</span></span><br><span class="line"><span class="attr">datadir</span>=D:\development\mysql-<span class="number">8.0</span>.<span class="number">29</span>-winx64\data</span><br><span class="line"><span class="comment"># mysql端口，默认3306，可以不用配置</span></span><br><span class="line"><span class="attr">port</span>=<span class="number">3306</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置客户端，可以不用配置</span></span><br><span class="line"><span class="section">[mysql]</span></span><br><span class="line"><span class="attr">default-character-set</span>=utf8mb4</span><br><span class="line"></span><br><span class="line"><span class="section">[client]</span></span><br><span class="line"><span class="attr">default-character-set</span>=utf8mb4</span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来初始化 MySQL 并获取 root 账号的密码，以管理员身份打开终端，进入 bin 目录，执行:</p>
+<p><code>.\mysqld.exe --initialize --user=root --console</code></p>
+<p><img src="/images/Install-MySQL.assets/94270f1246a54cf89c84d33b65433f6e.png" alt="初始化MySQL"></p>
+<p><img src="/images/Install-MySQL.assets/7775ed8d004449b0852d6e8158d15769.png" alt="初始化MySQL"></p>
+<p>初始化完成后，需要<strong>复制一下密码</strong>，然后可以启动 MySQL 了，进入服务，直接启动。</p>
+<p><img src="/images/Install-MySQL.assets/3895a029c20646ee8eee26b330e0f538.png" alt="启动MySQL"></p>
+<p><img src="/images/Install-MySQL.assets/cc57f8d2395d4846841be33f940499af.png" alt="已启动"></p>
+<p>还有最后一步，需要更改默认密码，不然无法使用，接下来执行连接 mysql 的命令，注意，这时候使用的是 <code>mysql</code> 客户端，执行：</p>
+<p><code>.\mysql.exe -u root -p</code></p>
+<p>执行后需要输入密码，就是上面框出来的，我这里是：<code>ysjdeDtf8D&gt;(</code>，各位需要自行复制。</p>
+<p><img src="/images/Install-MySQL.assets/50bae05e91424267947c8ab160703ed9.png" alt="连接MySQL"></p>
+<p>现在可以执行一下 sql 语句显示当前的所有表格试试，会发现用不了，需要修改密码，先验证试试：</p>
+<p><code>show databases;</code></p>
+<p><img src="/images/Install-MySQL.assets/b2aa7e40ea534ac08c85596c836a1eb4.png" alt="执行SQL"></p>
+<p>果然是需要修改密码，现在我们直接修改一下密码，执行：</p>
+<p><code>alter user root@localhost identified by 'root';</code></p>
+<p>最后引号中的 <code>root</code> 就是设置的密码，<mark>最好设置一个强密码</mark>，我这边为了演示所以设置的密码为弱密码。</p>
+<blockquote>
+<p><mark>若设置为弱密码造成数据泄露概不负责</mark><br><mark>若设置为弱密码造成数据泄露概不负责</mark><br><mark>若设置为弱密码造成数据泄露概不负责</mark></p>
+</blockquote>
+<p><img src="/images/Install-MySQL.assets/aac8985e12b646aeaebe6df3dd459416.png" alt="设置MySQL密码"></p>
+<p>设置密码之后还需要刷新一下权限，执行：</p>
+<p><code>FLUSH PRIVILEGES;</code></p>
+<p><img src="/images/Install-MySQL.assets/7c6dc06586914230bf903e93e5f3b8e4.png" alt="刷新权限"></p>
+<p>接下来需要验证密码是否设置成功，先执行 <code>exit;</code> 退出，然后重新连接，如下：</p>
+<p><img src="/images/Install-MySQL.assets/8d0abd2db39543c79d4071e705fa1faf.png" alt="退出MySQL"></p>
+<p><img src="/images/Install-MySQL.assets/df046aaf96134192bb0e5917bda6d137.png" alt="重新连接"></p>
+<p>验证能否使用 sql 语句</p>
+<p><img src="/images/Install-MySQL.assets/80cfe228938f4de3a07ef2c710d5926d.png" alt="验证"></p>
+<p>恭喜，大功告成了！！！！！！！！！！</p>
+<h1 id="MySQL-卸载"><a href="#MySQL-卸载" class="headerlink" title="MySQL 卸载"></a>MySQL 卸载</h1><blockquote>
+<p>如果只是安装不用看这一步</p>
+</blockquote>
+<p>首先进入服务停止 MySQL 服务</p>
+<p><img src="/images/Install-MySQL.assets/cc57f8d2395d4846841be33f940499ad.png" alt="停止"></p>
+<p><img src="/images/Install-MySQL.assets/3895a029c20646ee8eee26b330e0f539.png" alt="已停止MySQL"></p>
+<p>接下来进入 MySQL 的 bin 目录执行：<code>.\mysqld.exe --remove</code></p>
+<p><img src="/images/Install-MySQL.assets/bfd7a900b37847a4a6d08a637067476f.png" alt="移除MySQL服务"></p>
+<p>刷新服务会发现已经没有了，接下来再直接删除整个 MySQL 文件夹。如果数据配置在其他文件夹也需要删除数据文件夹。这时候就已经卸载完成了！</p>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在 Markdown 中无缝集成 ECharts 图表的技术实践</title>
+    <url>/2026/01/17/Markdown-in-ECharts/</url>
+    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在现代 Web 开发中，数据可视化已成为不可或缺的一部分。ECharts 作为百度开源的一款优秀的数据可视化库，以其丰富的图表类型和灵活的配置选项广受欢迎。而 Markdown 作为一种轻量级标记语言，因其简洁易用的特性，被广泛应用于文档编写和技术博客中。本文将介绍如何实现在 Markdown 文档中无缝嵌入 ECharts 图表的技术方案。</p>
+<h2 id="技术背景"><a href="#技术背景" class="headerlink" title="技术背景"></a>技术背景</h2><h3 id="Markdown及其扩展性"><a href="#Markdown及其扩展性" class="headerlink" title="Markdown及其扩展性"></a>Markdown 及其扩展性</h3><p>Markdown 最初由 John Gruber 创建，旨在实现” 易读易写” 的纯文本格式。随着发展，Markdown 通过扩展语法支持了更多功能，如代码块、表格等。其中，代码块语法通常用于展示代码片段：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="code"><pre><span class="line"><span class="code">``` language</span></span><br><span class="line"><span class="code">code here</span></span><br><span class="line"><span class="code">```</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这种语法为我们嵌入 ECharts 图表提供了天然的接口。</p>
+<h3 id="ECharts简介"><a href="#ECharts简介" class="headerlink" title="ECharts简介"></a>ECharts 简介</h3><p>ECharts 是一个使用 JavaScript 实现的开源可视化库，可以流畅运行在 PC 和移动设备上，兼容当前绝大部分浏览器。它提供了直观、交互丰富、可高度个性化定制的数据可视化图表。</p>
+<h2 id="实现方案"><a href="#实现方案" class="headerlink" title="实现方案"></a>实现方案</h2><h3 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h3><p>我们的目标是在 Markdown 文档中通过特定语法嵌入 ECharts 图表配置，并在渲染时自动将其转换为交互式图表。具体实现步骤如下：</p>
+<ol>
+<li>识别 Markdown 中的 ECharts 代码块</li>
+<li>解析其中的 JSON 配置</li>
+<li>动态创建图表容器</li>
+<li>初始化 ECharts 实例并应用配置</li>
+<li>处理响应式布局</li>
+</ol>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> renderer = <span class="keyword">new</span> marked.<span class="title class_">Renderer</span>();</span><br><span class="line">renderer.<span class="property">code</span> = <span class="function">(<span class="params">{ lang, text }</span>) =&gt;</span> {</span><br><span class="line">  <span class="keyword">if</span> (lang === <span class="string">'echarts'</span>) {</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">      <span class="keyword">const</span> chartData = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(text.<span class="title function_">trim</span>()); <span class="comment">// 使用trim()移除可能的空白字符</span></span><br><span class="line">      <span class="keyword">const</span> randomId = <span class="string">'echart-'</span> + <span class="title class_">Math</span>.<span class="title function_">random</span>().<span class="title function_">toString</span>(<span class="number">36</span>).<span class="title function_">substr</span>(<span class="number">2</span>, <span class="number">9</span>);</span><br><span class="line">      </span><br><span class="line">      <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> {</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> echarts !== <span class="string">'undefined'</span>) {</span><br><span class="line">          <span class="keyword">const</span> chart = echarts.<span class="title function_">init</span>(<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(randomId));</span><br><span class="line">          chart.<span class="title function_">setOption</span>(chartData);</span><br><span class="line">          </span><br><span class="line">          <span class="comment">// 响应式调整大小</span></span><br><span class="line">          <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">'resize'</span>, <span class="keyword">function</span>(<span class="params"></span>) {</span><br><span class="line">            chart.<span class="title function_">resize</span>();</span><br><span class="line">          });</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">          <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">'ECharts is not loaded'</span>);</span><br><span class="line">        }</span><br><span class="line">      }, <span class="number">0</span>);</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">return</span> <span class="string">`&lt;div id="<span class="subst">${randomId}</span>" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;`</span>;</span><br><span class="line">    } <span class="keyword">catch</span> (e) {</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">'解析ECharts数据失败:'</span>, e);</span><br><span class="line">      <span class="keyword">return</span> <span class="string">`&lt;pre&gt;&lt;code&gt;<span class="subst">${text}</span>&lt;/code&gt;&lt;/pre&gt;`</span>;</span><br><span class="line">    }</span><br><span class="line">  } <span class="keyword">else</span> {</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`&lt;pre&gt;&lt;code&gt;<span class="subst">${text}</span>&lt;/code&gt;&lt;/pre&gt;`</span>;</span><br><span class="line">  }</span><br><span class="line">};</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="关键点解析"><a href="#关键点解析" class="headerlink" title="关键点解析"></a>关键点解析</h3><ol>
+<li><p><strong>自定义 Markdown 渲染器</strong>：通过扩展 marked.js 的渲染器，我们能够自定义代码块的渲染逻辑。</p>
+</li>
+<li><p><strong>ECharts 代码块识别</strong>：当代码块语言标记为 <code>echarts</code> 时，我们将其内容视为 ECharts 配置。</p>
+</li>
+<li><p><strong>JSON 配置解析</strong>：使用 <code>JSON.parse</code> 解析代码块内容，确保其是有效的 ECharts 配置。</p>
+</li>
+<li><p><strong>动态容器创建</strong>：为每个图表生成唯一 ID，并创建相应大小的容器 div。</p>
+</li>
+<li><p><strong>异步初始化</strong>：使用 <code>setTimeout</code> 确保 DOM 加载完成后再初始化图表。</p>
+</li>
+<li><p><strong>响应式处理</strong>：监听窗口大小变化事件，自动调整图表尺寸。</p>
+</li>
+</ol>
+<h2 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h2><p>在 Markdown 文档中嵌入 ECharts 图表非常简单：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="code"><pre><span class="line"><span class="section"># 标题一</span></span><br><span class="line"></span><br><span class="line"><span class="section">## 标题二</span></span><br><span class="line"></span><br><span class="line"><span class="section">### 标题三</span></span><br><span class="line"></span><br><span class="line"><span class="section">#### 标题四-echarts图</span></span><br><span class="line"></span><br><span class="line"><span class="code">``` echarts</span></span><br><span class="line"><span class="code">{</span></span><br><span class="line"><span class="code">  "title": {</span></span><br><span class="line"><span class="code">    "text": "销售趋势图"</span></span><br><span class="line"><span class="code">  },</span></span><br><span class="line"><span class="code">  "xAxis": {</span></span><br><span class="line"><span class="code">    "type": "category",</span></span><br><span class="line"><span class="code">    "data": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]</span></span><br><span class="line"><span class="code">  },</span></span><br><span class="line"><span class="code">  "yAxis": {</span></span><br><span class="line"><span class="code">    "type": "value"</span></span><br><span class="line"><span class="code">  },</span></span><br><span class="line"><span class="code">  "series": [{</span></span><br><span class="line"><span class="code">    "data": [150, 230, 224, 218, 135, 147, 260],</span></span><br><span class="line"><span class="code">    "type": "line"</span></span><br><span class="line"><span class="code">  }]</span></span><br><span class="line"><span class="code">}</span></span><br><span class="line"><span class="code">```</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>渲染后将自动显示一个折线图，并随窗口大小变化自动调整。</p>
+<p><img src="/images/EChartsInMarkdown.png#pic_center" alt="EChartsInMarkdown示例渲染图片"></p>
+<h3 id="完整示例代码"><a href="#完整示例代码" class="headerlink" title="完整示例代码"></a>完整示例代码</h3><figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>ECharts In MarkDwon<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"responseContent"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 引入 marked.js 库用于 Markdown 渲染 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/marked/marked.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 引入 ECharts 库 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> renderer = <span class="keyword">new</span> marked.<span class="title class_">Renderer</span>();</span></span><br><span class="line"><span class="language-javascript">    renderer.<span class="property">code</span> = <span class="function">(<span class="params">{ lang, text }</span>) =&gt;</span> {</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">if</span> (lang === <span class="string">'echarts'</span>) {</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">try</span> {</span></span><br><span class="line"><span class="language-javascript">          <span class="keyword">const</span> chartData = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(text.<span class="title function_">trim</span>()); <span class="comment">// 使用trim()移除可能的空白字符</span></span></span><br><span class="line"><span class="language-javascript">          <span class="keyword">const</span> randomId = <span class="string">'echart-'</span> + <span class="title class_">Math</span>.<span class="title function_">random</span>().<span class="title function_">toString</span>(<span class="number">36</span>).<span class="title function_">substr</span>(<span class="number">2</span>, <span class="number">9</span>);</span></span><br><span class="line"><span class="language-javascript">          </span></span><br><span class="line"><span class="language-javascript">          <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> {</span></span><br><span class="line"><span class="language-javascript">            <span class="keyword">if</span> (<span class="keyword">typeof</span> echarts !== <span class="string">'undefined'</span>) {</span></span><br><span class="line"><span class="language-javascript">              <span class="keyword">const</span> chart = echarts.<span class="title function_">init</span>(<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(randomId));</span></span><br><span class="line"><span class="language-javascript">              chart.<span class="title function_">setOption</span>(chartData);</span></span><br><span class="line"><span class="language-javascript">              </span></span><br><span class="line"><span class="language-javascript">              <span class="comment">// 响应式调整大小</span></span></span><br><span class="line"><span class="language-javascript">              <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">'resize'</span>, <span class="keyword">function</span>(<span class="params"></span>) {</span></span><br><span class="line"><span class="language-javascript">                chart.<span class="title function_">resize</span>();</span></span><br><span class="line"><span class="language-javascript">              });</span></span><br><span class="line"><span class="language-javascript">            } <span class="keyword">else</span> {</span></span><br><span class="line"><span class="language-javascript">              <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">'ECharts is not loaded'</span>);</span></span><br><span class="line"><span class="language-javascript">            }</span></span><br><span class="line"><span class="language-javascript">          }, <span class="number">0</span>);</span></span><br><span class="line"><span class="language-javascript">          </span></span><br><span class="line"><span class="language-javascript">          <span class="keyword">return</span> <span class="string">`&lt;div id="<span class="subst">${randomId}</span>" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;`</span>;</span></span><br><span class="line"><span class="language-javascript">        } <span class="keyword">catch</span> (e) {</span></span><br><span class="line"><span class="language-javascript">          <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">'解析ECharts数据失败:'</span>, e);</span></span><br><span class="line"><span class="language-javascript">          <span class="keyword">return</span> <span class="string">`&lt;pre&gt;&lt;code&gt;<span class="subst">${text}</span>&lt;/code&gt;&lt;/pre&gt;`</span>;</span></span><br><span class="line"><span class="language-javascript">        }</span></span><br><span class="line"><span class="language-javascript">      } <span class="keyword">else</span> {</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> <span class="string">`&lt;pre&gt;&lt;code&gt;<span class="subst">${text}</span>&lt;/code&gt;&lt;/pre&gt;`</span>;</span></span><br><span class="line"><span class="language-javascript">      }</span></span><br><span class="line"><span class="language-javascript">    };</span></span><br><span class="line"><span class="language-javascript">    </span></span><br><span class="line"><span class="language-javascript">    marked.<span class="title function_">setOptions</span>({</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">renderer</span>: renderer,</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">highlight</span>: <span class="keyword">function</span> (<span class="params">code, lang</span>) {</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> code;</span></span><br><span class="line"><span class="language-javascript">      }</span></span><br><span class="line"><span class="language-javascript">    });</span></span><br><span class="line"><span class="language-javascript">    </span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">let</span> markDownStr = <span class="string">"# 标题一\n\n## 标题二\n\n### 标题三\n\n#### 标题四-echarts图\n\n```echarts\n{\"xAxis\":{\"type\":\"category\",\"data\":[\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\",\"Sun\"]},\"yAxis\":{\"type\":\"value\"},\"series\":[{\"data\":[150,230,224,218,135,147,260],\"type\":\"line\"}]}\n```"</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">console</span>.<span class="title function_">log</span>(markDownStr);</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> responseContentEl = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">'responseContent'</span>);</span></span><br><span class="line"><span class="language-javascript">    responseContentEl.<span class="property">innerHTML</span> = marked.<span class="title function_">parse</span>(markDownStr);</span></span><br><span class="line"><span class="language-javascript">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="技术优势"><a href="#技术优势" class="headerlink" title="技术优势"></a>技术优势</h2><ol>
+<li><strong>无缝集成</strong>：保持 Markdown 简洁性的同时增加可视化能力</li>
+<li><strong>开发友好</strong>：前端开发者熟悉的 JSON 配置方式</li>
+<li><strong>灵活性高</strong>：支持 ECharts 所有图表类型和配置选项</li>
+<li><strong>响应式设计</strong>：自动适应不同屏幕尺寸</li>
+<li><strong>错误处理</strong>：配置解析失败时优雅降级为代码块显示</li>
+</ol>
+<h2 id="潜在问题与解决方案"><a href="#潜在问题与解决方案" class="headerlink" title="潜在问题与解决方案"></a>潜在问题与解决方案</h2><ol>
+<li><strong>JSON 解析错误</strong>：通过 try-catch 捕获异常，失败时回退为普通代码块显示</li>
+<li><strong> ECharts 未加载</strong>：检查全局变量是否存在，给出明确错误提示</li>
+<li><strong>性能考虑</strong>：大量图表时可能影响性能，建议按需加载或虚拟滚动</li>
+<li><strong>安全性</strong>：确保 JSON.parse 的内容来自可信源，避免 XSS 攻击</li>
+</ol>
+<h2 id="扩展可能性"><a href="#扩展可能性" class="headerlink" title="扩展可能性"></a>扩展可能性</h2><ol>
+<li><strong>主题支持</strong>：通过额外参数指定图表主题</li>
+<li><strong>数据动态加载</strong>：支持从 URL 加载数据配置</li>
+<li><strong>交互事件</strong>：暴露图表事件供外部使用</li>
+<li><strong>服务端渲染</strong>：生成静态图片作为 fallback</li>
+</ol>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>通过在 Markdown 中嵌入 ECharts 图表的技术方案，我们成功地将数据可视化能力无缝集成到文档编写流程中。这种方法既保留了 Markdown 的简洁性，又充分利用了 ECharts 强大的可视化功能，特别适合技术文档、数据分析报告等需要结合文字说明和数据展示的场景。</p>
+<p>实现的核心在于灵活运用 Markdown 解析器的扩展能力和 ECharts 的动态初始化机制。随着 Web 技术的不断发展，这种轻量级集成方案将为内容创作者提供更强大的表达工具。</p>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>技术实践</category>
+        <category>JavaScript</category>
+        <category>ECharts</category>
+        <category>Markdown</category>
+      </categories>
+      <tags>
+        <tag>前端</tag>
+        <tag>技术实践</tag>
+        <tag>JavaScript</tag>
+        <tag>ECharts</tag>
+        <tag>Markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>时间轮算法及简易实现</title>
+    <url>/2025/01/18/TimeWheel/</url>
+    <content><![CDATA[<h3 id="一、时间轮算法是什么？"><a href="#一、时间轮算法是什么？" class="headerlink" title="一、时间轮算法是什么？"></a>一、时间轮算法是什么？</h3><h4 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a>1. <strong>基本概念</strong></h4><p>时间轮（Time Wheel）是一种高效的定时任务调度算法，用于管理和调度大量的定时任务。它的核心思想是将时间划分为多个槽（Slot），每个槽代表一个时间间隔，任务根据其延迟时间被分配到对应的槽中。时间轮通过一个指针（Pointer）周期性地移动，触发当前槽中的任务执行。</p>
+<h4 id="2-核心名词解释"><a href="#2-核心名词解释" class="headerlink" title="2. 核心名词解释"></a>2. <strong>核心名词解释</strong></h4><ul>
+<li><strong>槽（Slot）</strong>：<ul>
+<li>时间轮被划分为多个槽，每个槽代表一个时间间隔。</li>
+<li>例如，一个时间轮有 8 个槽，每个槽代表 1 秒，那么整个时间轮的时间跨度是 8 秒。</li>
+</ul>
+</li>
+<li><strong>指针（Pointer）</strong>：<ul>
+<li>时间轮有一个指针，指向当前时间对应的槽。</li>
+<li>指针会周期性地移动，每次移动一个槽。</li>
+</ul>
+</li>
+<li><strong>任务（Task）</strong>：<ul>
+<li>需要调度的定时任务，任务会被分配到对应的槽中。</li>
+<li>当指针移动到某个槽时，该槽中的所有任务会被执行。</li>
+</ul>
+</li>
+<li><strong>层级（Hierarchy）</strong>：<ul>
+<li>对于长时间延迟的任务，可以使用多层时间轮（如秒级、分钟级、小时级等）。</li>
+<li>高层时间轮的槽代表更大的时间跨度。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-时间轮的结构"><a href="#3-时间轮的结构" class="headerlink" title="3. 时间轮的结构"></a>3. <strong>时间轮的结构</strong></h4><ul>
+<li><strong>单层时间轮</strong>：<ul>
+<li>只有一个时间轮，适合调度短时间延迟的任务。</li>
+</ul>
+</li>
+<li><strong>多层时间轮</strong>：<ul>
+<li>由多个时间轮组成，适合调度长时间延迟的任务。</li>
+<li>例如，秒级时间轮负责 0-59 秒的任务，分钟级时间轮负责 1-59 分钟的任务。</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-应用场景"><a href="#4-应用场景" class="headerlink" title="4. 应用场景"></a>4. <strong>应用场景</strong></h4><ul>
+<li><strong>网络编程</strong>：<ul>
+<li>用于检测连接超时、心跳机制等。</li>
+</ul>
+</li>
+<li><strong>操作系统</strong>：<ul>
+<li>用于调度定时任务（如 Linux 内核的定时器）。</li>
+</ul>
+</li>
+<li><strong>分布式系统</strong>：<ul>
+<li>用于任务调度、延迟队列等。</li>
+</ul>
+</li>
+<li><strong>游戏开发</strong>：<ul>
+<li>用于定时技能冷却、任务触发等。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="二、时间轮算法的优点"><a href="#二、时间轮算法的优点" class="headerlink" title="二、时间轮算法的优点"></a>二、时间轮算法的优点</h3><h4 id="1-高效的任务调度"><a href="#1-高效的任务调度" class="headerlink" title="1. 高效的任务调度"></a>1. <strong>高效的任务调度</strong></h4><ul>
+<li>时间复杂度为 O (1)，适合处理大量定时任务。</li>
+<li>任务的添加、删除和执行都非常高效。</li>
+</ul>
+<h4 id="2-低内存占用"><a href="#2-低内存占用" class="headerlink" title="2. 低内存占用"></a>2. <strong>低内存占用</strong></h4><ul>
+<li>时间轮通过槽和指针的方式管理任务，内存占用较低。</li>
+</ul>
+<h4 id="3-适合高并发场景"><a href="#3-适合高并发场景" class="headerlink" title="3. 适合高并发场景"></a>3. <strong>适合高并发场景</strong></h4><ul>
+<li>时间轮算法是无锁的，适合高并发环境。</li>
+</ul>
+<h4 id="4-支持长时间延迟任务"><a href="#4-支持长时间延迟任务" class="headerlink" title="4. 支持长时间延迟任务"></a>4. <strong>支持长时间延迟任务</strong></h4><ul>
+<li>通过多层时间轮，可以支持长时间延迟的任务。</li>
+</ul>
+<h4 id="5-灵活的任务管理"><a href="#5-灵活的任务管理" class="headerlink" title="5. 灵活的任务管理"></a>5. <strong>灵活的任务管理</strong></h4><ul>
+<li>可以方便地添加、删除和更新任务。</li>
+</ul>
+<hr>
+<h3 id="三、时间轮算法的实现"><a href="#三、时间轮算法的实现" class="headerlink" title="三、时间轮算法的实现"></a>三、时间轮算法的实现</h3><h4 id="1-Java-实现"><a href="#1-Java-实现" class="headerlink" title="1. Java 实现"></a>1. <strong>Java 实现</strong></h4><p>以下是一个单层时间轮的 Java 实现：</p>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ScheduledExecutorService;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TimeWheel</span> {</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> slotNum; <span class="comment">// 槽数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">long</span> interval; <span class="comment">// 每个槽的时间间隔（毫秒）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;List&lt;Runnable&gt;&gt; slots; <span class="comment">// 槽中的任务列表</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> currentSlot; <span class="comment">// 当前指针位置</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ScheduledExecutorService scheduler; <span class="comment">// 定时调度器</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">TimeWheel</span><span class="params">(<span class="type">int</span> slotNum, <span class="type">long</span> interval)</span> {</span><br><span class="line">        <span class="built_in">this</span>.slotNum = slotNum;</span><br><span class="line">        <span class="built_in">this</span>.interval = interval;</span><br><span class="line">        <span class="built_in">this</span>.slots = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(slotNum);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; slotNum; i++) {</span><br><span class="line">            slots.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;());</span><br><span class="line">        }</span><br><span class="line">        <span class="built_in">this</span>.currentSlot = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">this</span>.scheduler = Executors.newScheduledThreadPool(<span class="number">1</span>);</span><br><span class="line">        start();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 启动时间轮</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">start</span><span class="params">()</span> {</span><br><span class="line">        scheduler.scheduleAtFixedRate(() -&gt; {</span><br><span class="line">            <span class="comment">// 执行当前槽的任务</span></span><br><span class="line">            List&lt;Runnable&gt; tasks = slots.get(currentSlot);</span><br><span class="line">            <span class="keyword">for</span> (Runnable task : tasks) {</span><br><span class="line">                task.run();</span><br><span class="line">            }</span><br><span class="line">            tasks.clear(); <span class="comment">// 清空已执行的任务</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 移动指针</span></span><br><span class="line">            currentSlot = (currentSlot + <span class="number">1</span>) % slotNum;</span><br><span class="line">        }, interval, interval, TimeUnit.MILLISECONDS);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 添加任务</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addTask</span><span class="params">(Runnable task, <span class="type">long</span> delay)</span> {</span><br><span class="line">        <span class="keyword">if</span> (delay &lt;= <span class="number">0</span>) {</span><br><span class="line">            task.run();</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 计算任务所在的槽</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">targetSlot</span> <span class="operator">=</span> (currentSlot + (<span class="type">int</span>) (delay / interval)) % slotNum;</span><br><span class="line">        slots.get(targetSlot).add(task);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 停止时间轮</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">stop</span><span class="params">()</span> {</span><br><span class="line">        scheduler.shutdown();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException {</span><br><span class="line">        <span class="comment">// 创建一个时间轮，8 个槽，每个槽间隔 1 秒</span></span><br><span class="line">        <span class="type">TimeWheel</span> <span class="variable">timeWheel</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TimeWheel</span>(<span class="number">8</span>, <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 添加任务</span></span><br><span class="line">        timeWheel.addTask(() -&gt; System.out.println(<span class="string">"Task 1 executed"</span>), <span class="number">3000</span>); <span class="comment">// 3 秒后执行</span></span><br><span class="line">        timeWheel.addTask(() -&gt; System.out.println(<span class="string">"Task 2 executed"</span>), <span class="number">5000</span>); <span class="comment">// 5 秒后执行</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 等待任务执行</span></span><br><span class="line">        Thread.sleep(<span class="number">10000</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 停止时间轮</span></span><br><span class="line">        timeWheel.stop();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="2-Python-实现"><a href="#2-Python-实现" class="headerlink" title="2. Python 实现"></a>2. <strong>Python 实现</strong></h4><p>以下是一个单层时间轮的 Python 实现：</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TimeWheel</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, slot_num, interval</span>):</span><br><span class="line">        <span class="variable language_">self</span>.slot_num = slot_num</span><br><span class="line">        <span class="variable language_">self</span>.interval = interval</span><br><span class="line">        <span class="variable language_">self</span>.slots = [[] <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(slot_num)]</span><br><span class="line">        <span class="variable language_">self</span>.current_slot = <span class="number">0</span></span><br><span class="line">        <span class="variable language_">self</span>.lock = threading.Lock()</span><br><span class="line">        <span class="variable language_">self</span>.running = <span class="literal">True</span></span><br><span class="line">        <span class="variable language_">self</span>.scheduler = threading.Thread(target=<span class="variable language_">self</span>.run)</span><br><span class="line">        <span class="variable language_">self</span>.scheduler.start()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 启动时间轮</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">while</span> <span class="variable language_">self</span>.running:</span><br><span class="line">            time.sleep(<span class="variable language_">self</span>.interval / <span class="number">1000</span>)  <span class="comment"># 转换为秒</span></span><br><span class="line">            <span class="keyword">with</span> <span class="variable language_">self</span>.lock:</span><br><span class="line">                tasks = <span class="variable language_">self</span>.slots[<span class="variable language_">self</span>.current_slot]</span><br><span class="line">                <span class="keyword">for</span> task <span class="keyword">in</span> tasks:</span><br><span class="line">                    task()</span><br><span class="line">                tasks.clear()  <span class="comment"># 清空已执行的任务</span></span><br><span class="line">                <span class="variable language_">self</span>.current_slot = (<span class="variable language_">self</span>.current_slot + <span class="number">1</span>) % <span class="variable language_">self</span>.slot_num</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 添加任务</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add_task</span>(<span class="params">self, task, delay</span>):</span><br><span class="line">        <span class="keyword">if</span> delay &lt;= <span class="number">0</span>:</span><br><span class="line">            task()</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">with</span> <span class="variable language_">self</span>.lock:</span><br><span class="line">            target_slot = (<span class="variable language_">self</span>.current_slot + <span class="built_in">int</span>(delay / <span class="variable language_">self</span>.interval)) % <span class="variable language_">self</span>.slot_num</span><br><span class="line">            <span class="variable language_">self</span>.slots[target_slot].append(task)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 停止时间轮</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">stop</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.running = <span class="literal">False</span></span><br><span class="line">        <span class="variable language_">self</span>.scheduler.join()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    <span class="comment"># 创建一个时间轮，8 个槽，每个槽间隔 1 秒</span></span><br><span class="line">    time_wheel = TimeWheel(<span class="number">8</span>, <span class="number">1000</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 添加任务</span></span><br><span class="line">    time_wheel.add_task(<span class="keyword">lambda</span>: <span class="built_in">print</span>(<span class="string">"Task 1 executed"</span>), <span class="number">3000</span>)  <span class="comment"># 3 秒后执行</span></span><br><span class="line">    time_wheel.add_task(<span class="keyword">lambda</span>: <span class="built_in">print</span>(<span class="string">"Task 2 executed"</span>), <span class="number">5000</span>)  <span class="comment"># 5 秒后执行</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 等待任务执行</span></span><br><span class="line">    time.sleep(<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 停止时间轮</span></span><br><span class="line">    time_wheel.stop()</span><br></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h3 id="四、总结与扩展"><a href="#四、总结与扩展" class="headerlink" title="四、总结与扩展"></a>四、总结与扩展</h3><h4 id="1-总结"><a href="#1-总结" class="headerlink" title="1. 总结"></a>1. <strong>总结</strong></h4><ul>
+<li>时间轮算法是一种高效的定时任务调度算法，适合处理大量定时任务。</li>
+<li>通过槽和指针的方式，时间轮实现了 O (1) 的时间复杂度。</li>
+<li>时间轮广泛应用于网络编程、操作系统、分布式系统等场景。</li>
+</ul>
+<h4 id="2-扩展"><a href="#2-扩展" class="headerlink" title="2. 扩展"></a>2. <strong>扩展</strong></h4><ul>
+<li><strong>多层时间轮</strong>：<ul>
+<li>对于长时间延迟的任务，可以使用多层时间轮（如秒级、分钟级、小时级）。</li>
+</ul>
+</li>
+<li><strong>动态扩容</strong>：<ul>
+<li>时间轮可以根据任务的数量动态调整槽数。</li>
+</ul>
+</li>
+<li><strong>分布式时间轮</strong>：<ul>
+<li>在分布式系统中，时间轮可以与其他算法（如一致性哈希）结合使用，实现分布式任务调度。</li>
+</ul>
+</li>
+</ul>
+<p>时间轮算法是定时任务调度领域的重要工具，掌握其原理和实现对于开发高性能系统非常有帮助。</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>内网穿透软件 frp 使用</title>
+    <url>/2024/12/10/Using-FRP-Software/</url>
+    <content><![CDATA[<h1 id="frp-是什么？"><a href="#frp-是什么？" class="headerlink" title="frp 是什么？"></a>frp 是什么？</h1><p>FRP（Fast Reverse Proxy）是一个开源、简洁易用、高性能的内网穿透和反向代理软件，它支持 TCP、UDP、HTTP、HTTPS 等多种协议。FRP 可以帮助用户将内网服务以安全、便捷的方式通过具有公网 IP 节点的中转暴露到公网。</p>
+<h2 id="FRP-的功能特点包括："><a href="#FRP-的功能特点包括：" class="headerlink" title="FRP 的功能特点包括："></a>FRP 的功能特点包括：</h2><ol>
+<li><strong>多协议支持</strong>：FRP 支持 TCP、UDP、HTTP、HTTPS 等多种协议，满足不同应用场景的需求。</li>
+<li><strong>P2P 通信</strong>：FRP 支持 P2P 模式，提高特殊环境下连接的灵活性。</li>
+<li><strong>TLS 加密</strong>：FRP 提供 TLS 加密功能，确保数据传输的安全性。</li>
+<li><strong>动态 DNS</strong>：FRP 支持动态 DNS，便于动态 IP 环境中的稳定访问。</li>
+<li><strong>Web 界面</strong>：FRP 提供 Web 界面，简化管理和监控。</li>
+<li><strong>反向代理</strong>：FRP 作为反向代理，使得内部服务可以通过外部服务器被访问。</li>
+</ol>
+<h2 id="FRP-的工作原理："><a href="#FRP-的工作原理：" class="headerlink" title="FRP 的工作原理："></a>FRP 的工作原理：</h2><p>FRP 主要由客户端（frpc）和服务端（frps）组成。通常情况下，服务端部署在具有公网 IP 地址的机器上，而客户端部署在需要穿透的内网服务所在的机器上。用户通过访问服务端的 frps，由 frp 负责根据请求的端口或其他信息将请求路由到相应的内网机器，从而实现通信。</p>
+<h2 id="FRP-的应用场景："><a href="#FRP-的应用场景：" class="headerlink" title="FRP 的应用场景："></a>FRP 的应用场景：</h2><ol>
+<li><strong>远程访问内网服务</strong>：例如，通过 FRP 访问家里或公司的服务器，而不需要配置复杂的端口映射。</li>
+<li><strong>开发环境共享</strong>：开发者可以通过 FRP 共享自己本地的开发环境，外部团队可以直接访问内网的应用和 API。</li>
+<li><strong>穿透防火墙 / NAT</strong>：即使内网服务器处于 NAT 后面或防火墙后面，仍然可以通过 FRP 将服务暴露到公网。</li>
+</ol>
+<p>FRP 的安装和部署相对简单，采用 Golang 编写，支持跨平台，仅需下载对应平台的二进制文件即可执行，没有额外依赖。用户可以根据需要编写配置文件，启动服务端和客户端，实现内网服务的公网访问。</p>
+<p>Github 地址：</p>
+<blockquote>
+<p><a href="https://github.com/fatedier/frp">https://github.com/fatedier/frp</a></p>
+</blockquote>
+<p>Frp 文档地址：</p>
+<blockquote>
+<p><a href="https://gofrp.org/zh-cn/docs">https://gofrp.org/zh-cn/docs</a></p>
+</blockquote>
+<h1 id="frp-具体使用"><a href="#frp-具体使用" class="headerlink" title="frp 具体使用"></a>frp 具体使用</h1><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>可以从 GitHub 的 Release 页面中下载最新版本的客户端和服务器二进制文件。所有文件都打包在一个压缩包中，还包含了一份完整的配置参数说明。</p>
+<blockquote>
+<p><a href="https://github.com/fatedier/frp/releases">https://github.com/fatedier/frp/releases</a></p>
+</blockquote>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><ol>
+<li>解压下载的压缩包。</li>
+<li>将 <code>frpc</code> 复制到内网服务所在的机器上。</li>
+<li>将 <code>frps</code> 复制到拥有公网 IP 地址的机器上，并将它们放在任意目录。</li>
+</ol>
+<h2 id="开始使用！"><a href="#开始使用！" class="headerlink" title="开始使用！"></a>开始使用！</h2><ol>
+<li>编写配置文件。</li>
+<li>使用以下命令启动服务器：<code>./frps -c ./frps.toml</code>。</li>
+<li>使用以下命令启动客户端：<code>./frpc -c ./frpc.toml</code>。</li>
+</ol>
+<h2 id="使用systemd来管理服务端"><a href="#使用systemd来管理服务端" class="headerlink" title="使用systemd来管理服务端"></a>使用 <code>systemd</code> 来管理服务端</h2><p>在服务器 <code>/etc/systemd/system</code> 创建 <code>frps.service</code> 文件并写入如下内容</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># /etc/systemd/system/frps.service</span></span><br><span class="line">[Unit]</span><br><span class="line"><span class="comment"># 服务名称，可自定义</span></span><br><span class="line">Description = frp server</span><br><span class="line">After = network.target syslog.target</span><br><span class="line">Wants = network.target</span><br><span class="line">[Service]</span><br><span class="line">Type = simple</span><br><span class="line"><span class="comment"># 启动frps的命令，需修改为您的frps的安装路径</span></span><br><span class="line">ExecStart = /path/to/frps -c /path/to/frps.toml</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy = multi-user.target</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用 systemd 命令管理 frps 服务</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># 启动frp</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start frps</span><br><span class="line"><span class="comment"># 停止frp</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl stop frps</span><br><span class="line"><span class="comment"># 重启frp</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl restart frps</span><br><span class="line"><span class="comment"># 查看frp状态</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl status frps</span><br></pre></td></tr></tbody></table></figure>
+
+<p>设置开机自启<br><code>sudo systemctl enable frps</code></p>
+<h2 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h2><blockquote>
+<p>服务端使用 frps，我的 frps 安装在 <code>/usr/local/frp</code>，下面有两个文件，分别是 <code>frps</code> 和 <code>fros.toml</code>，其中 <code>fros.toml</code> 是配置文件。<br>客户端使用 frpc，我的 frpc 安装在 <code>D:\development\frp</code>，下面有两个文件，分别是 <code>frpc.exe</code> 和 <code>froc.toml</code>，其中 <code>froc.toml</code> 是配置文件。<br>这里是做 http 转发的配置，其他配置可参考官方文档。</p>
+</blockquote>
+<p>修改服务端配置，即修改服务端 <code>/usr/local/frp/fros.toml</code> 文件，内容如下</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># bindPort是使用的端口号</span></span><br><span class="line">bindPort = 7000</span><br><span class="line"><span class="comment"># webServer配置是服务端 Dashboard 的配置</span></span><br><span class="line"><span class="comment"># 默认为 127.0.0.1，如果需要公网访问，需要修改为 0.0.0.0。</span></span><br><span class="line">webServer.addr = <span class="string">"0.0.0.0"</span></span><br><span class="line">webServer.port = 7500</span><br><span class="line"><span class="comment"># dashboard 用户名密码，可选，默认为空</span></span><br><span class="line">webServer.user = <span class="string">"替换为你自己想用的账号"</span></span><br><span class="line">webServer.password = <span class="string">"替换为你自己想用的密码"</span></span><br><span class="line"><span class="comment"># 身份认证token，客户端和服务端一致才能成功，还可以参考官方文档使用 OIDC</span></span><br><span class="line">auth.token = <span class="string">"替换为你自己想用的token"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>启动服务端<br><code>/usr/local/frp/frps -c /usr/local/frp/frps.toml</code><br>修改客户端配置</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">serverAddr = <span class="string">"此处填写服务端所在服务器IP"</span></span><br><span class="line"><span class="comment"># 此处修改为服务端使用的端口</span></span><br><span class="line">serverPort = 7000</span><br><span class="line"><span class="comment"># 此处修改为跟服务端token一致即可</span></span><br><span class="line">auth.token = <span class="string">"替换为你服务端的token"</span></span><br><span class="line"></span><br><span class="line">[[proxies]]</span><br><span class="line"><span class="comment"># 名称，可随意修改</span></span><br><span class="line">name = <span class="string">"http_forward"</span></span><br><span class="line"><span class="comment"># 类型，这里是tcp，还可以是http等，参考官方文档使用</span></span><br><span class="line"><span class="built_in">type</span> = <span class="string">"tcp"</span></span><br><span class="line"><span class="comment"># localIP和localPort是你本地想要代理出去的服务</span></span><br><span class="line">localIP = <span class="string">"127.0.0.1"</span></span><br><span class="line">localPort = 8080</span><br><span class="line"><span class="comment"># remotePort是指要占用服务端具体哪个端口，记得打开服务器对应端口的防火墙</span></span><br><span class="line">remotePort = 3000</span><br></pre></td></tr></tbody></table></figure>
+
+<p>启动客户端<br><code>D:\development\frp\frpc.exe -c D:\development\frp\frpc\frpc.toml</code><br>现在可以使用了<br>假设服务器的 ip 是 <code>43.159.71.116</code>，现在访问 <code>http://43.159.71.116:3000</code> 即可穿透到本地 <code>http://127.0.0.1:8080</code> 的服务。</p>
+<h1 id="为什么使用-frp？"><a href="#为什么使用-frp？" class="headerlink" title="为什么使用 frp？"></a>为什么使用 frp？</h1><p>使用 FRP（Fast Reverse Proxy）的原因有很多，以下是一些主要的优点和应用场景：</p>
+<ol>
+<li><p><strong>简化内网服务的公网访问</strong>：</p>
+<ul>
+<li>FRP 允许用户轻松地将内网服务暴露给公网，无需复杂的网络配置或端口映射。</li>
+</ul>
+</li>
+<li><p><strong>支持多种协议</strong>：</p>
+<ul>
+<li>FRP 支持 TCP、UDP、HTTP、HTTPS 等多种协议，适用于不同的应用和服务。</li>
+</ul>
+</li>
+<li><p><strong>安全性</strong>：</p>
+<ul>
+<li>FRP 提供 TLS 加密功能，可以保护数据传输的安全，防止数据在传输过程中被窃取或篡改。</li>
+</ul>
+</li>
+<li><p><strong>高性能</strong>：</p>
+<ul>
+<li>FRP 设计为高性能的反向代理应用，可以处理大量的连接和数据传输。</li>
+</ul>
+</li>
+<li><p><strong>P2P 通信</strong>：</p>
+<ul>
+<li>FRP 支持 P2P 模式，可以在特殊网络环境下提高连接的灵活性。</li>
+</ul>
+</li>
+<li><p><strong>动态 DNS 支持</strong>：</p>
+<ul>
+<li>对于动态 IP 环境，FRP 支持动态 DNS，使得服务可以稳定地被访问。</li>
+</ul>
+</li>
+<li><p><strong>Web 界面管理</strong>：</p>
+<ul>
+<li>FRP 提供 Web 界面，方便用户管理和监控服务状态。</li>
+</ul>
+</li>
+<li><p><strong>反向代理功能</strong>：</p>
+<ul>
+<li>作为反向代理，FRP 可以将内部服务通过外部服务器暴露给公网，增加一层安全性。</li>
+</ul>
+</li>
+<li><p><strong>跨平台支持</strong>：</p>
+<ul>
+<li>FRP 支持多种操作系统平台，包括 Linux、Windows 和 macOS。</li>
+</ul>
+</li>
+<li><p><strong>开源</strong>：</p>
+<ul>
+<li>FRP 是一个开源项目，用户可以自由使用、修改和分发。</li>
+</ul>
+</li>
+<li><p><strong>易于部署和使用</strong>：</p>
+<ul>
+<li>FRP 的安装和配置相对简单，不需要专业的网络知识。</li>
+</ul>
+</li>
+<li><p><strong>适用于多种场景</strong>：</p>
+<ul>
+<li>无论是远程办公、开发环境共享、个人项目托管还是企业内部服务的外部访问，FRP 都能提供解决方案。</li>
+</ul>
+</li>
+<li><p><strong>负载均衡和端口复用</strong>：</p>
+<ul>
+<li>FRP 支持代理组间的负载均衡和端口复用，可以更高效地利用公网资源。</li>
+</ul>
+</li>
+<li><p><strong>插件系统</strong>：</p>
+<ul>
+<li>FRP 具有高度扩展性的服务端插件系统，方便用户根据需求进行功能扩展。</li>
+</ul>
+</li>
+</ol>
+<p>使用 FRP 可以大大简化网络服务的部署和管理，提高工作效率，同时保证服务的安全性和稳定性。</p>
+]]></content>
+      <categories>
+        <category>软件使用</category>
+      </categories>
+      <tags>
+        <tag>软件使用</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ccglass：让 AI 编程 agent 的 API 消耗一目了然</title>
+    <url>/2026/05/28/ccglass-ai-agent-api-monitoring/</url>
+    <content><![CDATA[<h1 id="ccglass：让-AI-编程-agent-的-API-消耗一目了然"><a href="#ccglass：让-AI-编程-agent-的-API-消耗一目了然" class="headerlink" title="ccglass：让 AI 编程 agent 的 API 消耗一目了然"></a>ccglass：让 AI 编程 agent 的 API 消耗一目了然</h1><p><img src="https://img.daishengli.top/ccglass-cover.png" alt="ccglass"></p>
+<p>作为数字游民，我每天在不同城市、不同咖啡馆、不同网络环境下工作。</p>
+<p>问题来了：Claude Code 跑了半小时，API 消耗了多少？Codex 今天处理了几个请求？Kimi 的 token 账单为什么比预想的高？</p>
+<p>这些答案，传统代理工具给不了我。</p>
+<p>今天发现一个工具叫 <strong>ccglass</strong>，解决了这个痛点。</p>
+<h2 id="为什么现有工具看不到流量"><a href="#为什么现有工具看不到流量" class="headerlink" title="为什么现有工具看不到流量"></a>为什么现有工具看不到流量</h2><p>用 Charles、mitmproxy 这类工具抓 HTTP 请求，是程序员日常。但当你对 Claude Code 开刀的时候，发现 —— 抓不到。</p>
+<p>原因是这些 coding agent <strong>忽略了 <code>HTTP_PROXY</code> 和 <code>HTTPS_PROXY</code> 环境变量</strong>。它们直连 API 域名，根本不走系统代理。常见的 <code>fetch</code> 补丁工具也因为版本更新频繁而失效。</p>
+<p>ccglass 的思路很聪明：不去拦截 HTTPS，而是<strong>拦截客户端到本地的 HTTP  hop</strong>。</p>
+<p>具体来说：客户端（Claude Code）通过 HTTPS 连接真实 API，但只把请求的<strong>明文 HTTP 版本</strong>发送到一个本地端口，ccglass 在那里做记录，然后再转发给真实 API。</p>
+<blockquote>
+<p>不需要 CA 证书，不需要破解 TLS pinning。</p>
+</blockquote>
+<h2 id="安装与使用"><a href="#安装与使用" class="headerlink" title="安装与使用"></a>安装与使用</h2><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># 通过 npm 安装</span></span><br><span class="line">npm install -g ccglass</span><br><span class="line"></span><br><span class="line"><span class="comment"># 直接运行，自动检测已安装的 agent</span></span><br><span class="line">ccglass</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定 agent 类型</span></span><br><span class="line">ccglass claude    <span class="comment"># 监听 Claude Code</span></span><br><span class="line">ccglass codex     <span class="comment"># 监听 Codex (OpenAI)</span></span><br><span class="line">ccglass kimi      <span class="comment"># 监听 Kimi (Moonshot)</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>运行后会输出代理地址和仪表板地址：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">● ccglass watching Codex (OpenAI) → https://api.openai.com</span><br><span class="line">dashboard: http://127.0.0.1:57633</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在浏览器打开仪表板，就可以看到实时请求流。</p>
+<h2 id="仪表板能看什么"><a href="#仪表板能看什么" class="headerlink" title="仪表板能看什么"></a>仪表板能看什么</h2><p>ccglass 的仪表板提供了几个实用视图：</p>
+<p><strong>实时请求捕获</strong>：每个请求、每个响应、每个 tool call 都实时显示。</p>
+<p><strong>Token 和成本追踪</strong>：每次调用的 token 数量、缓存命中率、预估成本一一列出。</p>
+<p><strong>消息历史</strong>：完整的对话上下文，包括 system prompt、user message、assistant response、tool results。</p>
+<p><strong>Agent 工作流视图</strong>：能看到 agent 在多轮对话中是怎么思考、怎么调用工具的。</p>
+<p><strong>Turn-to-Turn 对比</strong>：比较相邻两次请求的差异，方便分析 agent 的推理路径。</p>
+<p>对于我这种经常在多个项目里切换的人来说，成本可视化特别有用 —— 有时候让 Claude Code 处理一个简单任务，结果 token 消耗比我预估的高出一个量级，现在能马上发现。</p>
+<h2 id="支持哪些-Agent"><a href="#支持哪些-Agent" class="headerlink" title="支持哪些 Agent"></a>支持哪些 Agent</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>监听对象</th>
+<th>上游</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ccglass claude</code></td>
+<td>Claude Code</td>
+<td>api.anthropic.com</td>
+</tr>
+<tr>
+<td><code>ccglass codex</code></td>
+<td>Codex</td>
+<td>api.openai.com</td>
+</tr>
+<tr>
+<td><code>ccglass deepseek</code></td>
+<td>DeepSeek-TUI</td>
+<td>api.deepseek.com</td>
+</tr>
+<tr>
+<td><code>ccglass kimi</code></td>
+<td>Kimi (通过 Claude Code)</td>
+<td>api.moonshot.ai</td>
+</tr>
+<tr>
+<td><code>ccglass opencode</code></td>
+<td>OpenCode</td>
+<td> 自动读取环境变量</td>
+</tr>
+<tr>
+<td><code>ccglass ollama</code></td>
+<td>Ollama 任意客户端</td>
+<td> 127.0.0.1:11434</td>
+</tr>
+<tr>
+<td><code>ccglass lmstudio</code></td>
+<td>LM Studio 任意客户端</td>
+<td> 127.0.0.1:1234</td>
+</tr>
+</tbody></table>
+<p>IDE 插件也支持：Cursor（Cline、Continue.dev 等）如果使用自己的 API key（BYOK 模式），可以用 <code>ccglass proxy</code> 开启透明代理。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">ccglass proxy</span><br><span class="line"><span class="comment"># 设置 IDE 的 API base URL 为 http://127.0.0.1:PORT</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="日志存储方式"><a href="#日志存储方式" class="headerlink" title="日志存储方式"></a>日志存储方式</h2><p>ccglass 的日志采用内容寻址存储，类似 git 的设计：</p>
+<ul>
+<li>每个 message、tools 数组、system block 只写入一次</li>
+<li>后续请求通过哈希引用，避免重复存储</li>
+</ul>
+<p>存储路径：<code>~/.ccglass/sessions/&lt;项目路径&gt;-&lt;hash&gt;/&lt;session&gt;/NNNN.json</code></p>
+<p>对于长周期的 agent 会话，这个设计避免了日志体积的二次增长。切换项目时日志自动隔离，不会混淆。</p>
+<p>认证 token（authorization、x-api-key）默认是脱敏的，用 <code>--no-redact</code> 可以关闭脱敏方便调试。</p>
+<h2 id="对数字游民的实际价值"><a href="#对数字游民的实际价值" class="headerlink" title="对数字游民的实际价值"></a>对数字游民的实际价值</h2><p>我在移动办公场景下有几个具体用法：</p>
+<p><strong>多设备成本监控</strong>：在 MacBook Pro 上跑 Claude Code，在 iPad 上看 ccglass 仪表板，了解实时消耗。</p>
+<p><strong>网络波动时的请求分析</strong>：在酒店、咖啡馆网络不稳定时，看到哪些请求超时、哪些 token 重试。</p>
+<p><strong>多项目 API key 管理</strong>：不同项目用不同的 API key，ccglass 能帮我区分哪个项目消耗多、哪个 token 配额快用完。</p>
+<p><strong>调试 Prompt</strong>：Agent 行为异常时，直接看它实际收到的 system prompt，比猜测要高效得多。</p>
+<h2 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h2><p>需要注意几点：</p>
+<ol>
+<li><p><strong>不适用 Cursor 内置订阅</strong>：Cursor 的内置订阅走 <code>api2.cursor.sh</code>，ccglass 无法拦截。</p>
+</li>
+<li><p><strong>需要客户端支持 base URL 配置</strong>：Claude Code、Codex 这类 CLI 工具支持通过环境变量自定义上游，而有些工具没有这个能力。</p>
+</li>
+<li><p><strong>Node ≥ 18</strong>：运行环境要求。</p>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>ccglass 解决的是一个很具体的问题：当你用 AI coding agent 工作时，API 消耗对你是黑箱。</p>
+<p>它不是炫技的工具，是实打实的效率伴侣。对于我这样每天在不同环境里移动办公的人，能看到 API 消耗、成本趋势、agent 工作流 —— 这些信息帮我做决策：是优化 prompt、切换模型、还是改变使用方式。</p>
+<p>项目地址：<a href="https://github.com/jianshuo/ccglass">github.com/jianshuo/ccglass</a>，MIT 协议，值得一试。</p>
+]]></content>
+      <categories>
+        <category>工具推荐</category>
+      </categories>
+      <tags>
+        <tag>AI Agent</tag>
+        <tag>Claude Code</tag>
+        <tag>开发工具</tag>
+        <tag>效率</tag>
+        <tag>API 成本</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>代码图谱让 AI 编程 agent 少走冤枉路：CodeGraph 深度体验</title>
+    <url>/2026/05/27/codegraph-ai-coding-agent/</url>
+    <content><![CDATA[<h1 id="代码图谱让-AI-编程-agent-少走冤枉路：CodeGraph-深度体验"><a href="#代码图谱让-AI-编程-agent-少走冤枉路：CodeGraph-深度体验" class="headerlink" title="代码图谱让 AI 编程 agent 少走冤枉路：CodeGraph 深度体验"></a>代码图谱让 AI 编程 agent 少走冤枉路：CodeGraph 深度体验</h1><p>干 AI 编程这行，最烦的不是写代码，是等 agent 探索代码库。</p>
+<p>每次新建会话，Claude Code、Cursor、Codex CLI 这些工具都会先派「侦察兵」—— 用 grep、glob、Read 一点点爬你的代码库，找入口、找关系、找上下文。Token 哗哗地烧，问题还没开始解决。</p>
+<p>这个问题有个名字：<strong>探索税</strong>（Discovery Tax）。</p>
+<p>而 CodeGraph 做的事情，就是把这笔税彻底取消。</p>
+<h2 id="它到底是什么"><a href="#它到底是什么" class="headerlink" title="它到底是什么"></a>它到底是什么</h2><p><a href="https://github.com/colbymchenry/codegraph">CodeGraph</a> 是 colbymchenry 开源的一个本地代码知识图谱工具，为 AI 编程 agent 提供「预理解」能力。</p>
+<p>简单说：你在本地跑一次 <code>codegraph build</code>，它会：</p>
+<ol>
+<li>用 tree-sitter 解析你的代码，提取符号、调用关系、文件结构</li>
+<li>把这些信息存进一个本地 SQLite 数据库（含 FTS5 全文搜索）</li>
+<li>以 MCP server 的形式暴露给 AI agent</li>
+</ol>
+<p>之后每次你的 agent 需要了解代码结构时，直接查询图谱 —— 一次工具调用拿到所有上下文，而不是发动一大波 Explore 子 agent 去地毯式搜索。</p>
+<h2 id="实测：省了多少？"><a href="#实测：省了多少？" class="headerlink" title="实测：省了多少？"></a>实测：省了多少？</h2><p>作者 Colby McHenry 自己测过：</p>
+<blockquote>
+<p><strong>Token 消耗降低 40%，工具调用次数降低 90%。</strong></p>
+</blockquote>
+<p>这不是营销数字。以一个中等规模项目为例：</p>
+<ul>
+<li>传统流程：一个需求 → agent 先花 20 次 Read/grep/glob 探索 → 才开始真正写代码</li>
+<li> CodeGraph 流程：<code>@codegraph where is the auth middleware</code> → 一次拿到所有相关内容 → 直接写</li>
+</ul>
+<p>作为数字游民，咖啡馆里用笔记本跑 AI 编程，省 Token = 省 API 钱 = 省笔记本电池。这个意义不用多说。</p>
+<h2 id="支持哪些语言和工具"><a href="#支持哪些语言和工具" class="headerlink" title="支持哪些语言和工具"></a>支持哪些语言和工具</h2><p>目前支持的编程语言（持续增加）：</p>
+<ul>
+<li>TypeScript / JavaScript</li>
+<li>Python</li>
+<li>Go</li>
+<li>Rust</li>
+<li>Ruby</li>
+<li>… 以及更多</li>
+</ul>
+<p>支持的 AI 编程工具：</p>
+<ul>
+<li>Claude Code</li>
+<li>Cursor</li>
+<li>Codex CLI</li>
+<li>OpenCode</li>
+<li><strong>Hermes Agent</strong>（是的，它明确支持）</li>
+</ul>
+<p>支持的语言越多越好了 —— 大多数数字游民项目都是多语言混合的。</p>
+<h2 id="怎么装"><a href="#怎么装" class="headerlink" title="怎么装"></a>怎么装</h2><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># 全局安装</span></span><br><span class="line">npm install -g @colbymchenry/codegraph</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入你的项目目录，初始化</span></span><br><span class="line"><span class="built_in">cd</span> your-project</span><br><span class="line">codegraph init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建索引</span></span><br><span class="line">codegraph build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 注册 MCP server（以 Claude Code 为例，在 CLAUDE.md / settings.local.json 中配置）</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>之后正常用你的 AI 编程工具就行了 —— 它会自动通过 MCP 协议连接本地图谱。</p>
+<h2 id="我的场景"><a href="#我的场景" class="headerlink" title="我的场景"></a>我的场景</h2><p>我平时在多个地点远程工作，项目切换频繁。每次打开一个新项目，第一件事就是让 agent「熟悉一下代码库」。在 CodeGraph 出现之前，这个过程：</p>
+<ol>
+<li>慢（多次网络往返）</li>
+<li>费 token（探索阶段纯烧钱）</li>
+<li>不准确（agent 只能靠模糊的相似度猜测代码关系）</li>
+</ol>
+<p>现在用 CodeGraph：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> new-project</span><br><span class="line">codegraph init &amp;&amp; codegraph build</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后直接问 agent：「这个项目用的 ORM 是什么？在哪里切换数据库连接？」agent 通过图谱直接回答，不需要扫描任何文件。</p>
+<h2 id="什么情况下不用它"><a href="#什么情况下不用它" class="headerlink" title="什么情况下不用它"></a>什么情况下不用它</h2><p>说点实在的：</p>
+<ul>
+<li><strong>小项目</strong>（几百行，单一文件）不需要 —— 探索成本本来就很低</li>
+<li><strong>已经对代码库非常熟的场景</strong> —— 自己知道入口在哪，agent 不需要「探索」</li>
+<li><strong>代码库频繁大变动的场景</strong> —— 每次大改都要重建索引，有一点维护成本</li>
+</ul>
+<p>但如果你的项目超过 5000 行、多人协作、或者你同时跑多个项目，CodeGraph 是那种「用了就回不去」的工具。</p>
+<h2 id="技术细节（感兴趣的可以看看）"><a href="#技术细节（感兴趣的可以看看）" class="headerlink" title="技术细节（感兴趣的可以看看）"></a>技术细节（感兴趣的可以看看）</h2><p>CodeGraph 的架构分三层：</p>
+<p><strong>解析层</strong>：tree-sitter 负责语法解析，生成 AST，提取符号定义和引用关系。</p>
+<p><strong>存储层</strong>：SQLite + FTS5，索引保存在 <code>.codegraph/codegraph.db</code>，完全本地，100% 隐私。</p>
+<p><strong>服务层</strong>：MCP server，遵循 Model Context Protocol 规范，向 AI agent 暴露查询工具。</p>
+<p>整个系统不需要任何外部 API，不联网，数据永远在本地 —— 这对注重隐私的数字游民来说，是个加分项。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>CodeGraph 本质上解决的是 AI 编程工具的「认知效率」问题：agent 不是不懂代码，是每次都要从零学一遍。给它一张预建好的代码地图，agent 的工作效率会直接上一个台阶。</p>
+<p>如果你用 Claude Code 或者其他 AI 编程工具，建议花 5 分钟装一下试试。减少 40% Token 消耗这件事，真的不是噱头。</p>
+<hr>
+<p><strong>项目地址</strong>：<a href="https://github.com/colbymchenry/codegraph">github.com/colbymchenry/codegraph</a><br><strong>Star 数</strong>：21,000+（2026 年 5 月数据，涨势凶猛）<br><strong>License</strong>：MIT</p>
+]]></content>
+      <categories>
+        <category>技术教程</category>
+      </categories>
+      <tags>
+        <tag>AI Agent</tag>
+        <tag>Claude Code</tag>
+        <tag>开发工具</tag>
+        <tag>效率</tag>
+        <tag>MCP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一句话建起一整个 AI 开发团队？Harness 让 Claude Code 变成了真正的工程平台</title>
+    <url>/2026/05/29/harness-claude-code-team-architecture/</url>
+    <content><![CDATA[<h2 id="先说个真实的痛"><a href="#先说个真实的痛" class="headerlink" title="先说个真实的痛"></a>先说个真实的痛</h2><p>你用 Claude Code 写过稍微复杂一点的项目吗？</p>
+<p>比如说，一个需要同时处理代码审查、性能优化和功能开发的任务。如果全塞给一个 Agent，它要么上下文爆炸，要么开始来回重复；如果开多个 Session 分别跑，又没法让它们真正协同工作。</p>
+<p>我最近在折腾一个数据管道项目，需要同时跑爬虫、数据清洗和 API 对接三个模块。手动切来切去效率很低，就开始琢磨：有没有办法让多个 Agent 像一个真正的团队一样协同工作，而不是各自为战？</p>
+<p>然后就找到了 <strong>Harness</strong>。</p>
+<h2 id="Harness-是什么"><a href="#Harness-是什么" class="headerlink" title="Harness 是什么"></a>Harness 是什么</h2><p><a href="https://github.com/revfactory/harness">Harness</a>（<a href="https://github.com/revfactory/harness/blob/main/README_ZH.md">中文 README</a>）是一个 Claude Code 插件，中文叫” 团队架构工厂”。它的核心思路很简单：给它一个业务描述，它帮你自动生成一整套 Agent 团队 —— 包括每个 Agent 的角色定义、技能配置，以及它们之间的协作方式。</p>
+<p>打个比方：传统方式是” 你告诉一个人，让他自己协调自己”。Harness 的方式是” 你告诉一个项目经理，让他去安排一整个团队”。</p>
+<p>它目前支持 6 种团队架构模式：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> Pipeline</strong></td>
+<td> 流水线式，按顺序执行，每个步骤依赖前一步的输出</td>
+</tr>
+<tr>
+<td><strong> Fan-out/Fan-in</strong></td>
+<td> 先分发到多个并行 Agent，再汇总结果</td>
+</tr>
+<tr>
+<td><strong> Expert Pool</strong></td>
+<td> 根据任务类型动态选择最合适的专家 Agent</td>
+</tr>
+<tr>
+<td><strong>Producer-Reviewer</strong></td>
+<td> 一个生成，一个审查，适合质量要求高的任务</td>
+</tr>
+<tr>
+<td><strong> Supervisor</strong></td>
+<td> 一个中央 Agent 做任务分配和调度</td>
+</tr>
+<tr>
+<td><strong> Hierarchical Delegation</strong></td>
+<td> 逐层向下委托，适合大型复杂项目</td>
+</tr>
+</tbody></table>
+<h2 id="实操体验：建一个代码审查团队"><a href="#实操体验：建一个代码审查团队" class="headerlink" title="实操体验：建一个代码审查团队"></a>实操体验：建一个代码审查团队</h2><p>我用一个实际场景来说明它的使用方式。假设我想建一个代码审查 Agent 团队，需求是：</p>
+<ul>
+<li>三个 Agent 分别负责架构审查、安全审查和性能审查</li>
+<li>三个 Agent 并行工作，互不依赖</li>
+<li>有一个汇总 Agent 整合三份报告，输出最终结论</li>
+</ul>
+<p>在 Claude Code 里，我只需要说一句话：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Build a harness for this project. I need an agent team for code review, </span><br><span class="line">with agents checking architecture, security vulnerabilities, and </span><br><span class="line">performance bottlenecks in parallel, then a supervisor to compile the findings.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后 Harness 就会自动生成这样的结构：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">your-project/.claude/</span><br><span class="line">├── agents/</span><br><span class="line">│   ├── architect.md          # 架构审查 Agent</span><br><span class="line">│   ├── security-reviewer.md  # 安全审查 Agent</span><br><span class="line">│   ├── performance-reviewer.md  # 性能审查 Agent</span><br><span class="line">│   └── supervisor.md         # 汇总 Supervisor Agent</span><br><span class="line">└── skills/</span><br><span class="line">    ├── review-architecture/</span><br><span class="line">    │   └── SKILL.md</span><br><span class="line">    ├── review-security/</span><br><span class="line">    │   └── SKILL.md</span><br><span class="line">    ├── review-performance/</span><br><span class="line">    │   └── SKILL.md</span><br><span class="line">    └── compile-report/</span><br><span class="line">        └── SKILL.md</span><br></pre></td></tr></tbody></table></figure>
+
+<p>每个 Agent 文件里包含了角色定义、行为规范、使用工具和协作接口。你不需要自己写任何东西，Harness 已经把工程化的那套东西帮你搭好了。</p>
+<h2 id="为什么这让我兴奋"><a href="#为什么这让我兴奋" class="headerlink" title="为什么这让我兴奋"></a>为什么这让我兴奋</h2><p>作为一个经常在咖啡馆、共享办公空间工作，偶尔还需要边旅游边处理代码的数字游民，我最在意两件事：<strong>上下文保持</strong>和<strong>任务并行</strong>。</p>
+<p>Claude Code 本身的 Agent 能力已经很强，但默认情况下它更像一个单兵作战的工具。你可以用 <code>/linter</code> 调起一个子 Agent，可以用 <code>/ask</code> 快速查询，但这些都是在单个 Session 内的轻量协同。</p>
+<p>Harness 补上了缺失的那一块 —— <strong>结构化的团队协作层</strong>。它把多 Agent 协同从” 我可以想办法实现” 变成了” 开箱即用的工程实践”。</p>
+<p>让我真正觉得有价值的是这几点：</p>
+<p><strong>第一，降低了多 Agent 系统的工程门槛。</strong> 自己配 Agent 团队需要处理角色定义、消息协议、任务分发逻辑，Harness 把这些都封装成了一套可复用的模板。你不需要是 Agent 系统专家，也能用上成熟的团队架构模式。</p>
+<p><strong>第二，和 Claude Code 深度集成。</strong> Harness 生成的 Agent 定义和技能文件直接放在 <code>.claude/</code> 目录下，Claude Code 可以直接识别和调度。你不需要切换到别的工具，不需要配置额外的 API 入口。</p>
+<p><strong>第三，六种架构模式覆盖了大多数场景。</strong> 简单任务用 Pipeline，复杂任务用 Hierarchical Delegation，审查类任务用 Producer-Reviewer，创意发散类任务用 Expert Pool—— 每种模式都有明确的使用边界。</p>
+<h2 id="使用前提和限制"><a href="#使用前提和限制" class="headerlink" title="使用前提和限制"></a>使用前提和限制</h2><p>Harness 依赖 Claude Code 的实验性 Agent Teams 功能，使用前需要设置环境变量：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>另外，团队协作涉及多个 Agent 并发运行，Token 消耗会比单个 Agent 明显更高。我建议只在任务确实需要并行处理时才启用 Harness，避免用大炮打蚊子。</p>
+<p>目前的版本是 1.2.0，功能已经比较稳定，但仍在快速迭代中。如果你在使用中遇到问题，可以去 GitHub 提 Issue，或者加入 Discord 社区。</p>
+<h2 id="适合谁用"><a href="#适合谁用" class="headerlink" title="适合谁用"></a>适合谁用</h2><p>Harness 适合以下场景：</p>
+<ul>
+<li><strong>大型重构或新建项目</strong>：架构复杂，多模块需要同时推进，Agent 团队比单 Agent 效率高得多</li>
+<li><strong>需要多角度审查的任务</strong>：安全、架构、性能三个维度并行审查，比串行快很多</li>
+<li><strong>研究类任务</strong>：多个 Agent 分别搜索不同来源的信息，Supervisor 汇总结论</li>
+</ul>
+<p>不适合的场景：</p>
+<ul>
+<li>简单的一次性代码修改任务，直接用 Claude Code 更轻量</li>
+<li>没有复杂上下文的长任务，多 Agent 反而增加管理成本</li>
+</ul>
+<h2 id="我的实际用法"><a href="#我的实际用法" class="headerlink" title="我的实际用法"></a>我的实际用法</h2><p>我现在会把任务先分类：如果是一个模块需要改动，直接让 Claude Code 单 Agent 处理；如果是需要同时考虑多个维度（比如我要给一个服务加新功能，需要同时评估对现有架构的影响、性能和安全性），我会建一个 Harness 团队，让它们并行跑。</p>
+<p>最让我惊喜的是 Producer-Reviewer 模式：让一个 Agent 生成方案，另一个 Agent 专门挑毛病。这个模式特别适合我这种经常” 脑子一热就开始写代码” 的人 ——Reviewer Agent 真的能拦住一些事后才发觉的坑。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Harness 解决的不是”Agent 能做什么” 的问题，而是” 多个 Agent 怎么协同” 的问题。它把多 Agent 协作从技术探索变成了可复用的工程实践。对于已经在用 Claude Code 的人来说，这是一个值得尝试的升级 —— 它不会取代你现有的工作方式，但会在某些场景下显著提升你的效率。</p>
+<p>如果你感兴趣，可以去 <a href="https://github.com/revfactory/harness">GitHub 仓库</a>看看，文档写得很详细，还支持韩语和日语 README。</p>
+<hr>
+<p><em>你有什么” 多个 Agent 协同工作” 的场景？或者你有什么想让我试着用 Harness 解决的？随时可以聊聊。</em></p>
+]]></content>
+      <categories>
+        <category>AI 工具</category>
+      </categories>
+      <tags>
+        <tag>AI Agent</tag>
+        <tag>Claude Code</tag>
+        <tag>Harness</tag>
+        <tag>开发效率</tag>
+        <tag>工作流自动化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hermes Agent 实战：我用 AI 助手打理生活与工作</title>
+    <url>/2026/05/27/hermes-agent-intro/</url>
+    <content><![CDATA[<h2 id="一、为什么你需要-Hermes-Agent？"><a href="#一、为什么你需要-Hermes-Agent？" class="headerlink" title="一、为什么你需要 Hermes Agent？"></a>一、为什么你需要 Hermes Agent？</h2><p>用传统 AI 助手最大的痛苦是什么？</p>
+<p>你花了 2 小时教会它你的项目结构、技术栈、编码风格，下次对话它又忘了。你们之间的所有上下文，都随着 Session 结束而消失。同样的问题要反复解释，同样的错误倾向要反复纠正。</p>
+<p><strong>Hermes Agent</strong> 解决这个问题的方式很简单但有效：<strong>让它记住一切，运行越久越强大。</strong></p>
+<p>这是 Nous Research 在 2026 年 2 月开源的 AI Agent，MIT 协议，完全免费，数据留在本地。它不是对话机器人，而是一个<strong>持久化运行在你服务器上的智能体</strong> —— 记住你说的话，构建自己的技能，定时帮你完成任务，推送你需要的信息。</p>
+<p>一句话总结：<strong>一个越用越聪明的本地 AI 助手。</strong></p>
+<h2 id="二、五大核心支柱"><a href="#二、五大核心支柱" class="headerlink" title="二、五大核心支柱"></a>二、五大核心支柱</h2><p>Hermes 的架构围绕五个支柱展开，这五个支柱共同构成一个自我进化的闭环：</p>
+<h3 id="2-1-记忆系统：三层架构"><a href="#2-1-记忆系统：三层架构" class="headerlink" title="2.1 记忆系统：三层架构"></a>2.1 记忆系统：三层架构</h3><p>Hermes 的记忆是一个分层系统：</p>
+<p><strong>第一层：快思考记忆（内存）</strong><br>每次对话的上下文窗口，所有大模型都有的能力。</p>
+<p><strong>第二层：持久记忆（memory.md + user.md）</strong></p>
+<ul>
+<li><code>memory.md</code>：你自己的笔记，存放环境配置、项目习惯、工具偏好</li>
+<li><code>user.md</code>：用户画像，你的姓名、时区、偏好、交流风格</li>
+</ul>
+<p>这两层加起来限制 2,200 字符，强制精简 —— 只记录真正重要的信息。</p>
+<p><strong>第三层：会话历史（SQLite FTS5）</strong><br>所有历史 Session 存在 <code>~/.hermes/</code> 的 SQLite 数据库里，支持全文搜索，随时可以翻回之前的对话找回解决方案。</p>
+<p>三层记忆的逻辑是：<strong>把每次成功的操作流程写成 Skills，把重要的个人信息记到 memory，把用户画像存到 user。</strong></p>
+<h3 id="2-2-技能系统：程序化记忆"><a href="#2-2-技能系统：程序化记忆" class="headerlink" title="2.2 技能系统：程序化记忆"></a>2.2 技能系统：程序化记忆</h3><p>当 Hermes 用某个工作流成功解决一个问题，它会把这个流程写成一份 <strong>SKILL.md</strong> 文档，存在 <code>~/.hermes/skills/</code> 目录。下次遇到同类问题，它会自动加载这个 Skill，而不是重新摸索。</p>
+<p>举例：你在开发 Priority Todo 时第一次配置了 Cloudflare D1，Hermes 会生成一份 <code>cloudflare-d1.md</code> Skill，记录操作步骤和注意事项。以后再做类似操作，它直接调用。</p>
+<p>Skills 是 Markdown 文件，格式固定，包含：</p>
+<ul>
+<li>触发条件（什么情况下用这个 Skill）</li>
+<li>步骤（精确的命令和操作流程）</li>
+<li>注意事项（踩过的坑）</li>
+</ul>
+<p>这本质上是把<strong>成功的实战经验固化下来</strong>，形成程序化的持久记忆。</p>
+<h3 id="2-3-SOUL-md：定义-Agent-的人格"><a href="#2-3-SOUL-md：定义-Agent-的人格" class="headerlink" title="2.3 SOUL.md：定义 Agent 的人格"></a>2.3 SOUL.md：定义 Agent 的人格</h3><p><code>SOUL.md</code> 是一个配置文件，位于 <code>~/.hermes/SOUL.md</code>，用来定义 Agent 的：</p>
+<ul>
+<li>交流语气（严谨 / 活泼 / 简洁）</li>
+<li>行为习惯（回复长度、是否用 emoji、称呼用户的方式）</li>
+<li>默认工具集偏好</li>
+<li>其他默认行为规范</li>
+</ul>
+<p>它不是系统 Prompt，而是作为一个文件在每次启动时加载，影响 Agent 的所有行为。你可以把它理解为 Agent 的” 性格配置”。</p>
+<h3 id="2-4-Cron-定时任务：自然语言调度"><a href="#2-4-Cron-定时任务：自然语言调度" class="headerlink" title="2.4 Cron 定时任务：自然语言调度"></a>2.4 Cron 定时任务：自然语言调度</h3><p>Hermes 支持用自然语言描述定时任务：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">"每天早上 7:30 给我发一条玉溪的天气提醒"</span><br><span class="line">"每个整点汇总一次时事新闻发到微信"</span><br><span class="line">"每周五下午 6 点生成一份本周工作汇总"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>你只要描述清楚需求，Hermes 会自动翻译成 Cron 表达式，创建定时任务，自动执行并把结果推送到你配置的任意平台（微信、Telegram、Discord、Email 等）。</p>
+<h3 id="2-5-自我进化闭环"><a href="#2-5-自我进化闭环" class="headerlink" title="2.5 自我进化闭环"></a>2.5 自我进化闭环</h3><p>把前四个支柱串起来，就是 Hermes 的自我进化循环：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">用户提出问题 → 使用工具解决 → 成功流程写入 Skills → 重要信息记入 Memory → </span><br><span class="line">下次同类问题 → 自动加载 Skill → 更快解决 → 继续固化</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用时间越长，Skills 越多，Agent 处理问题的能力越强。这个闭环是 Hermes 区别于其他 Agent 的核心。</p>
+<h2 id="三、工具集：开箱即用"><a href="#三、工具集：开箱即用" class="headerlink" title="三、工具集：开箱即用"></a>三、工具集：开箱即用</h2><p>Hermes 内置 70+ 工具，按类型分类：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>终端</td>
+<td>本地 / Docker/SSH/Singularity/Modal</td>
+</tr>
+<tr>
+<td> 文件</td>
+<td> read/write/patch/search</td>
+</tr>
+<tr>
+<td>Web</td>
+<td>web_search/web_extract/browser_navigate</td>
+</tr>
+<tr>
+<td> 媒体</td>
+<td> image_generate/video_generate/speech_synthesize</td>
+</tr>
+<tr>
+<td> 代码</td>
+<td> delegate_task（子 Agent）、Python 脚本执行</td>
+</tr>
+<tr>
+<td>记忆</td>
+<td> memory/session_search/skill_manage</td>
+</tr>
+<tr>
+<td> 消息</td>
+<td> send_message（多平台）</td>
+</tr>
+<tr>
+<td>智能家居</td>
+<td> Home Assistant</td>
+</tr>
+<tr>
+<td> 其他</td>
+<td> cronjob、todo、mcp</td>
+</tr>
+</tbody></table>
+<p>特别值得说的是 <strong>delegate_task</strong>——Hermes 可以启动独立的子 Agent 处理复杂任务，子 Agent 有自己的终端和会话上下文，互不干扰。这对于需要并行研究多个方向的任务非常有用。</p>
+<h2 id="四、多平台消息网关"><a href="#四、多平台消息网关" class="headerlink" title="四、多平台消息网关"></a>四、多平台消息网关</h2><p>Hermes 不只是 CLI 工具，它还是一个<strong>消息网关</strong>。</p>
+<p>配置好之后，你可以在 Telegram 上跟它对话，它在服务器上处理完后回复给你。可以接入的平台包括：</p>
+<ul>
+<li>Telegram</li>
+<li>Discord</li>
+<li>Slack</li>
+<li>WhatsApp</li>
+<li>Signal</li>
+<li>Email</li>
+<li> 飞书</li>
+<li>微信（通过 iLink）</li>
+<li>Teams</li>
+<li>… 总计 22 个平台</li>
+</ul>
+<p>这意味着 Hermes 可以 <strong>7×24 小时运行在服务器上</strong>，随时响应，定时推送结果。你不需要打开电脑，它在后台帮你盯着。</p>
+<h2 id="五、本地数据存储"><a href="#五、本地数据存储" class="headerlink" title="五、本地数据存储"></a>五、本地数据存储</h2><p>所有数据都存在 <code>~/.hermes/</code> 目录：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">~/.hermes/</span><br><span class="line">├── memory.md        # 持久记忆</span><br><span class="line">├── user.md          # 用户画像</span><br><span class="line">├── SOUL.md          # 人格配置</span><br><span class="line">├── skills/          # 自动生成的技能文档</span><br><span class="line">├── sessions.db      # SQLite 会话历史（可搜索）</span><br><span class="line">├── config.yaml      # 配置文件</span><br><span class="line">└── cron/            # 定时任务配置</span><br></pre></td></tr></tbody></table></figure>
+
+<p>数据完全本地，不经过第三方服务器。隐私安全，数据自主可控。</p>
+<h2 id="六、实战案例：我的使用场景"><a href="#六、实战案例：我的使用场景" class="headerlink" title="六、实战案例：我的使用场景"></a>六、实战案例：我的使用场景</h2><p>作为数字游民，我主要用 Hermes 做三件事：</p>
+<p><strong>1. 定时简报</strong><br>每天早上 7:30 查一次玉溪天气预报 + 查看当天日程，汇总后发到微信。出门前看一眼，不用打开多个 App。</p>
+<p><strong>2. 博客维护</strong><br>写完文章后自动推送到 GitHub，GitHub Actions 触发 Hexo 部署，全程不用手动操作。</p>
+<p><strong>3. 信息聚合</strong><br>每小时汇总一次时事新闻推送给微信，遇到重要信息直接保存在笔记里待后续整理。</p>
+<p>这些任务用自然语言配置好后，完全不用管，Hermes 自动执行。</p>
+<h2 id="七、快速上手"><a href="#七、快速上手" class="headerlink" title="七、快速上手"></a>七、快速上手</h2><h3 id="安装（一行命令）"><a href="#安装（一行命令）" class="headerlink" title="安装（一行命令）"></a>安装（一行命令）</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="配置模型"><a href="#配置模型" class="headerlink" title="配置模型"></a>配置模型</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">hermes model <span class="built_in">set</span> openai --api-key sk-xxxxx</span><br><span class="line"><span class="comment"># 或通过 Nous Portal（免费额度）</span></span><br><span class="line">hermes auth login</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="配置消息通道（以微信为例）"><a href="#配置消息通道（以微信为例）" class="headerlink" title="配置消息通道（以微信为例）"></a>配置消息通道（以微信为例）</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">hermes channels <span class="built_in">set</span> weixin --chat-id 你的微信ID</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="开始对话"><a href="#开始对话" class="headerlink" title="开始对话"></a>开始对话</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">hermes chat</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="创建定时任务"><a href="#创建定时任务" class="headerlink" title="创建定时任务"></a>创建定时任务</h3><p>直接在对话里说：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">"每天早上 8 点给我汇总一条时事新闻，发到我的微信"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Hermes 自动创建并开始执行。</p>
+<h2 id="八、总结"><a href="#八、总结" class="headerlink" title="八、总结"></a>八、总结</h2><p>Hermes Agent 解决的核心问题是：<strong>传统 AI 助手的上下文不持久，每次对话都是独立的，无法积累经验。</strong></p>
+<p>通过记忆系统、技能系统、SOUL.md 和定时任务，Hermes 把” 用完就走” 的 AI 助手变成了” 持续运行、不断学习” 的智能体。运行时间越长，它越懂你，处理问题的能力越强。</p>
+<p>开源免费，本地运行，多平台支持 —— 对于技术背景的数字游民来说，这是一个值得投入配置的个人 AI 助手。</p>
+<p>官网：<a href="https://hermes-agent.nousresearch.com/">https://hermes-agent.nousresearch.com</a><br>GitHub：<a href="https://github.com/NousResearch/hermes-agent">https://github.com/NousResearch/hermes-agent</a></p>
+<hr>
+<p><em>相关博客：<a href="/2026/05/27/openclaw-auto-ops/">用 OpenClaw 做自动化运维</a></em></p>
+]]></content>
+      <categories>
+        <category>技术教程</category>
+      </categories>
+      <tags>
+        <tag>AI Agent</tag>
+        <tag>Hermes</tag>
+        <tag>Nous Research</tag>
+        <tag>效率工具</tag>
+        <tag>自动化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java 工程师必会的设计模式：从策略模式到模板方法</title>
+    <url>/2026/05/28/java-design-patterns/</url>
+    <content><![CDATA[<h2 id="一、为什么学设计模式"><a href="#一、为什么学设计模式" class="headerlink" title="一、为什么学设计模式"></a>一、为什么学设计模式</h2><p>学设计模式不是为了面试背题，而是<strong>积累经过验证的解决方案</strong>。</p>
+<p>你遇到的问题，前人早就遇到过。前人把解法命名、归档，形成了设计模式。掌握这些模式，遇到问题时就能站在巨人的肩膀上，而不是从零思考。</p>
+<p>Java JDK 本身就用了大量设计模式。读 JDK 源码时认出设计模式，能帮你更快理解它的设计逻辑。</p>
+<p>这篇文章不会讲 23 种模式，挑最实用的 7 种，配合 JDK 里的实际用法。</p>
+<h2 id="二、单例模式（Singleton）"><a href="#二、单例模式（Singleton）" class="headerlink" title="二、单例模式（Singleton）"></a>二、单例模式（Singleton）</h2><p><strong>解决的问题</strong>：一个类只应该有一个实例，全局唯一。</p>
+<h3 id="常见写法：双重检查锁定"><a href="#常见写法：双重检查锁定" class="headerlink" title="常见写法：双重检查锁定"></a>常见写法：双重检查锁定</h3><figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Singleton</span> {</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> Singleton instance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Singleton</span><span class="params">()</span> {}</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title function_">getInstance</span><span class="params">()</span> {</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="literal">null</span>) {</span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class) {</span><br><span class="line">                <span class="keyword">if</span> (instance == <span class="literal">null</span>) {</span><br><span class="line">                    instance = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>volatile</code> 防止指令重排序，确保多线程安全。JDK 里的 <code>java.lang.Runtime</code> 就是单例 —— 每个 JVM 只有一个 Runtime 实例。</p>
+<h3 id="为什么不用全局变量"><a href="#为什么不用全局变量" class="headerlink" title="为什么不用全局变量"></a>为什么不用全局变量</h3><p>全局变量也能做到全局唯一，但无法防止有人 <code>new Singleton()</code> 创建第二个实例。单例模式把构造函数设为 <code>private</code>，从语言层面保证了唯一性。</p>
+<h2 id="三、工厂模式（Factory）"><a href="#三、工厂模式（Factory）" class="headerlink" title="三、工厂模式（Factory）"></a>三、工厂模式（Factory）</h2><p><strong>解决的问题</strong>：对象创建逻辑和使用逻辑分离，切换实现不需要改调用方代码。</p>
+<h3 id="简单工厂"><a href="#简单工厂" class="headerlink" title="简单工厂"></a>简单工厂</h3><figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NotificationFactory</span> {</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Notification <span class="title function_">create</span><span class="params">(String type)</span> {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">switch</span> (type) {</span><br><span class="line">            <span class="keyword">case</span> <span class="string">"email"</span> -&gt; <span class="keyword">new</span> <span class="title class_">EmailNotification</span>();</span><br><span class="line">            <span class="keyword">case</span> <span class="string">"sms"</span> -&gt; <span class="keyword">new</span> <span class="title class_">SmsNotification</span>();</span><br><span class="line">            <span class="keyword">case</span> <span class="string">"push"</span> -&gt; <span class="keyword">new</span> <span class="title class_">PushNotification</span>();</span><br><span class="line">            <span class="keyword">default</span> -&gt; <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">"Unknown type"</span>);</span><br><span class="line">        };</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>调用方只依赖 <code>Notification</code> 接口，不需要知道具体是哪种通知。</p>
+<h3 id="JDK-源码里的工厂"><a href="#JDK-源码里的工厂" class="headerlink" title="JDK 源码里的工厂"></a>JDK 源码里的工厂</h3><p><code>java.time.NumberFormat</code> 的 <code>getInstance()</code>、<code>getNumberInstance()</code> 等方法都是工厂方法。调用方不需要知道 <code>NumberFormat</code> 内部怎么构造 decimal format。</p>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="type">NumberFormat</span> <span class="variable">nf</span> <span class="operator">=</span> NumberFormat.getInstance(Locale.US);</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="四、策略模式（Strategy）"><a href="#四、策略模式（Strategy）" class="headerlink" title="四、策略模式（Strategy）"></a>四、策略模式（Strategy）</h2><p><strong>解决的问题</strong>：一组算法可以互换，客户端代码可以根据上下文选择算法，无需修改自身。</p>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">PaymentStrategy</span> {</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">pay</span><span class="params">(<span class="type">double</span> amount)</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AlipayStrategy</span> <span class="keyword">implements</span> <span class="title class_">PaymentStrategy</span> {</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">pay</span><span class="params">(<span class="type">double</span> amount)</span> { <span class="comment">/* 支付宝逻辑 */</span> }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WechatPayStrategy</span> <span class="keyword">implements</span> <span class="title class_">PaymentStrategy</span> {</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">pay</span><span class="params">(<span class="type">double</span> amount)</span> { <span class="comment">/* 微信支付逻辑 */</span> }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OrderContext</span> {</span><br><span class="line">    <span class="keyword">private</span> PaymentStrategy strategy;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setStrategy</span><span class="params">(PaymentStrategy strategy)</span> {</span><br><span class="line">        <span class="built_in">this</span>.strategy = strategy;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">checkout</span><span class="params">(<span class="type">double</span> amount)</span> {</span><br><span class="line">        strategy.pay(amount);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>调用方：</p>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="type">OrderContext</span> <span class="variable">order</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OrderContext</span>();</span><br><span class="line">order.setStrategy(<span class="keyword">new</span> <span class="title class_">AlipayStrategy</span>());</span><br><span class="line">order.checkout(<span class="number">100.0</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>切换支付方式只需要 <code>setStrategy(...)</code>，不需要改 <code>OrderContext</code> 的代码。</p>
+<h3 id="JDK-里的策略模式"><a href="#JDK-里的策略模式" class="headerlink" title="JDK 里的策略模式"></a>JDK 里的策略模式</h3><p><code>java.util.Comparator</code> 就是策略模式的具体应用。不同的排序规则传入不同的 <code>Comparator</code> 实现，集合.sort 方法不需要改动。</p>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line">List&lt;String&gt; names = Arrays.asList(<span class="string">"Tom"</span>, <span class="string">"Alice"</span>, <span class="string">"Bob"</span>);</span><br><span class="line">names.sort((a, b) -&gt; b.compareTo(a)); <span class="comment">// 逆序</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="五、观察者模式（Observer）"><a href="#五、观察者模式（Observer）" class="headerlink" title="五、观察者模式（Observer）"></a>五、观察者模式（Observer）</h2><p><strong>解决的问题</strong>：对象状态变化时，自动通知依赖它的其他对象。</p>
+<p>JDK 内置支持：<code>java.util.Observable</code>（已废弃）和 <code>java.util.Observer</code>（已废弃），但思想值得掌握。</p>
+<h3 id="手动实现"><a href="#手动实现" class="headerlink" title="手动实现"></a>手动实现</h3><figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Observer</span> {</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(String message)</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Subject</span> {</span><br><span class="line">    <span class="keyword">private</span> List&lt;Observer&gt; observers = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addObserver</span><span class="params">(Observer observer)</span> {</span><br><span class="line">        observers.add(observer);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">notifyObservers</span><span class="params">(String message)</span> {</span><br><span class="line">        <span class="keyword">for</span> (Observer observer : observers) {</span><br><span class="line">            observer.update(message);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="JDK-里的观察者"><a href="#JDK-里的观察者" class="headerlink" title="JDK 里的观察者"></a>JDK 里的观察者</h3><p>Spring 的 <code>ApplicationEvent</code> + <code>ApplicationListener</code> 就是观察者模式。Bean 监听 <code>ApplicationEvent</code>，任何地方发布事件时所有监听器都会收到通知。</p>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyListener</span> <span class="keyword">implements</span> <span class="title class_">ApplicationListener</span>&lt;MyEvent&gt; {</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onApplicationEvent</span><span class="params">(MyEvent event)</span> {</span><br><span class="line">        <span class="comment">// 收到通知</span></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="六、装饰器模式（Decorator）"><a href="#六、装饰器模式（Decorator）" class="headerlink" title="六、装饰器模式（Decorator）"></a>六、装饰器模式（Decorator）</h2><p><strong>解决的问题</strong>：动态给对象添加新功能，比继承更灵活，不会导致类膨胀。</p>
+<h3 id="类结构"><a href="#类结构" class="headerlink" title="类结构"></a>类结构</h3><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">InputStream</span><br><span class="line">  └─ FilterInputStream（装饰器基类）</span><br><span class="line">       └─ BufferedInputStream（具体装饰器）</span><br></pre></td></tr></tbody></table></figure>
+
+<p>JDK 的 I/O 类库是装饰器模式的经典案例：</p>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">// 基础流</span></span><br><span class="line"><span class="type">FileInputStream</span> <span class="variable">fis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="string">"file.txt"</span>);</span><br><span class="line"><span class="comment">// 加缓冲</span></span><br><span class="line"><span class="type">BufferedInputStream</span> <span class="variable">bis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedInputStream</span>(fis);</span><br><span class="line"><span class="comment">// 加行号</span></span><br><span class="line"><span class="type">LineNumberInputStream</span> <span class="variable">lis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LineNumberInputStream</span>(bis);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>每个装饰器都包装了上一个流，层层叠加。运行时动态组合功能，比写一个继承链清晰得多。</p>
+<h3 id="装饰器-vs-继承"><a href="#装饰器-vs-继承" class="headerlink" title="装饰器 vs 继承"></a>装饰器 vs 继承</h3><p>继承在编译时确定功能，装饰器在运行时动态组合。如果用继承：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">FileInputStream → BufferedFileInputStream → LineNumberBufferedFileInputStream</span><br></pre></td></tr></tbody></table></figure>
+
+<p>组合一多，类就爆炸了。装饰器模式解决了这个问题。</p>
+<h2 id="七、迭代器模式（Iterator）"><a href="#七、迭代器模式（Iterator）" class="headerlink" title="七、迭代器模式（Iterator）"></a>七、迭代器模式（Iterator）</h2><p><strong>解决的问题</strong>：统一遍历接口，客户端代码不需要知道集合内部结构。</p>
+<p>JDK 集合框架全部实现了 <code>java.util.Iterator</code>：</p>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">"a"</span>);</span><br><span class="line">list.add(<span class="string">"b"</span>);</span><br><span class="line"></span><br><span class="line">Iterator&lt;String&gt; it = list.iterator();</span><br><span class="line"><span class="keyword">while</span> (it.hasNext()) {</span><br><span class="line">    <span class="type">String</span> <span class="variable">item</span> <span class="operator">=</span> it.next();</span><br><span class="line">    System.out.println(item);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>调用方不需要知道 ArrayList 底层是数组还是链表，遍历方式统一。</p>
+<h3 id="for-each-的背后"><a href="#for-each-的背后" class="headerlink" title="for-each 的背后"></a>for-each 的背后</h3><figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (String item : list) {</span><br><span class="line">    System.out.println(item);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>语法糖，编译器把它变成：</p>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line">Iterator&lt;String&gt; it = list.iterator();</span><br><span class="line"><span class="keyword">while</span> (it.hasNext()) {</span><br><span class="line">    <span class="type">String</span> <span class="variable">item</span> <span class="operator">=</span> it.next();</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="八、模板方法模式（Template-Method）"><a href="#八、模板方法模式（Template-Method）" class="headerlink" title="八、模板方法模式（Template Method）"></a>八、模板方法模式（Template Method）</h2><p><strong>解决问题</strong>：算法骨架固定，部分步骤由子类实现，复用共同逻辑。</p>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">DataProcessor</span> {</span><br><span class="line">    <span class="comment">// 模板方法，final 防止子类修改骨架</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">process</span><span class="params">()</span> {</span><br><span class="line">        connect();</span><br><span class="line">        processData();</span><br><span class="line">        disconnect();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">processData</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">connect</span><span class="params">()</span> { <span class="comment">/* 连接逻辑 */</span> }</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">disconnect</span><span class="params">()</span> { <span class="comment">/* 断开逻辑 */</span> }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">XmlProcessor</span> <span class="keyword">extends</span> <span class="title class_">DataProcessor</span> {</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">processData</span><span class="params">()</span> {</span><br><span class="line">        <span class="comment">// 处理 XML</span></span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JsonProcessor</span> <span class="keyword">extends</span> <span class="title class_">DataProcessor</span> {</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">processData</span><span class="params">()</span> {</span><br><span class="line">        <span class="comment">// 处理 JSON</span></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>connect()</code> 和 <code>disconnect()</code> 是固定逻辑，子类不需要关心。<code>processData()</code> 由子类实现，提供各自的数据处理逻辑。</p>
+<h3 id="JDK-里的模板方法"><a href="#JDK-里的模板方法" class="headerlink" title="JDK 里的模板方法"></a>JDK 里的模板方法</h3><p><code>java.io.InputStream</code> 的 <code>read()</code> 方法就是模板方法：</p>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">read</span><span class="params">(<span class="type">byte</span> b[], <span class="type">int</span> off, <span class="type">int</span> len)</span> <span class="keyword">throws</span> IOException {</span><br><span class="line">    <span class="keyword">if</span> (b == <span class="literal">null</span>) {</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>();</span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> (off &lt; <span class="number">0</span> || off &gt; b.length || len &lt; <span class="number">0</span>) {</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IndexOutOfBoundsException</span>();</span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> (len == <span class="number">0</span>) {</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 这里调用了抽象方法 read()</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">c</span> <span class="operator">=</span> read();</span><br><span class="line">    <span class="keyword">if</span> (c == -<span class="number">1</span>) {</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    }</span><br><span class="line">    b[off] = (<span class="type">byte</span>)(c &amp; <span class="number">0xFF</span>);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>read(byte[], int, int)</code> 是骨架，调用无参数的 <code>read()</code> 由子类实现。</p>
+<h2 id="九、总结"><a href="#九、总结" class="headerlink" title="九、总结"></a>九、总结</h2><table>
+<thead>
+<tr>
+<th>模式</th>
+<th>解决问题</th>
+<th> JDK 里的例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单例</td>
+<td>全局唯一实例</td>
+<td><code>java.lang.Runtime</code></td>
+</tr>
+<tr>
+<td>工厂</td>
+<td>创建和使用分离</td>
+<td><code>NumberFormat.getInstance()</code></td>
+</tr>
+<tr>
+<td>策略</td>
+<td>算法可切换</td>
+<td><code>Comparator</code></td>
+</tr>
+<tr>
+<td>观察者</td>
+<td>状态变化自动通知</td>
+<td> Spring <code>ApplicationListener</code></td>
+</tr>
+<tr>
+<td>装饰器</td>
+<td>动态添加功能</td>
+<td><code>BufferedInputStream</code></td>
+</tr>
+<tr>
+<td>迭代器</td>
+<td>统一遍历接口</td>
+<td><code>Iterator</code></td>
+</tr>
+<tr>
+<td>模板方法</td>
+<td>算法骨架复用</td>
+<td><code>InputStream.read()</code></td>
+</tr>
+</tbody></table>
+<p>设计模式不是银弹。它的价值在于<strong>让代码结构变得可预测</strong> —— 当你认出某个模式时，你就能预判代码接下来会怎么走。这对读源码、做 Code Review、还有和团队沟通，都很有帮助。</p>
+]]></content>
+      <categories>
+        <category>技术教程</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>设计模式</tag>
+        <tag>架构</tag>
+        <tag>后端开发</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基于 OpenClaw 的自动化运维实践</title>
+    <url>/2026/05/27/openclaw-auto-ops/</url>
+    <content><![CDATA[<h2 id="一、为什么需要自动化运维？"><a href="#一、为什么需要自动化运维？" class="headerlink" title="一、为什么需要自动化运维？"></a>一、为什么需要自动化运维？</h2><p>作为一名开发者，你是否经历过这些场景：</p>
+<ul>
+<li><strong>手动部署耗时费力</strong> —— 每次更新代码都要登录服务器，执行一堆命令，一不小心就出错</li>
+<li><strong>重复操作令人烦躁</strong> —— 同样的部署流程要执行几十遍，机械又无聊</li>
+<li><strong>深夜告警让人崩溃</strong> —— 系统凌晨出问题，被电话叫醒，迷迷糊糊排查问题</li>
+<li><strong>环境不一致导致故障</strong> —— 本地好好的，部署到生产就出问题</li>
+</ul>
+<p>传统运维方式效率低、容易出错，而且无法规模化。随着项目增多，手动运维会变成一场噩梦。</p>
+<p><strong>那么，有没有一种方式可以让机器替我们完成这些重复性工作？</strong></p>
+<p>答案就是：<strong>OpenClaw + 定时任务 = 自动化运维</strong></p>
+<h2 id="二、OpenClaw-是什么？"><a href="#二、OpenClaw-是什么？" class="headerlink" title="二、OpenClaw 是什么？"></a>二、OpenClaw 是什么？</h2><p><strong>OpenClaw</strong> 是一款国产开源的 AI 智能体工具，它的核心能力是：</p>
+<blockquote>
+<p><strong>让 AI 自动执行各种电脑操作任务</strong></p>
+</blockquote>
+<p><img src="https://img.shields.io/badge/OpenClaw-%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4-brightgreen" alt="OpenClaw Logo"></p>
+<h3 id="核心特性"><a href="#核心特性" class="headerlink" title="核心特性"></a>核心特性</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>本地化运行</td>
+<td>数据不出本地，安全可控</td>
+</tr>
+<tr>
+<td>工具链丰富</td>
+<td>内置文件操作、命令执行、网页交互等原子能力</td>
+</tr>
+<tr>
+<td>技能市场</td>
+<td>通过 ClawHub (clawhub.ai) 扩展更多功能</td>
+</tr>
+<tr>
+<td>定时任务</td>
+<td>支持 Cron 表达式，自动化执行工作流</td>
+</tr>
+<tr>
+<td>开源免费</td>
+<td>完全开源，企业级安全合规</td>
+</tr>
+</tbody></table>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    OpenClaw 应用场景                      │</span><br><span class="line">├─────────────────────────────────────────────────────────┤</span><br><span class="line">│  📦 自动化部署    →  一键发布应用到服务器                 │</span><br><span class="line">│  🔍 健康检查      →  定时检测服务状态                      │</span><br><span class="line">│  📊 数据采集      →  定时抓取数据并生成报表                │</span><br><span class="line">│  🧹 批量处理      →  文件批量重命名、格式转换              │</span><br><span class="line">│  🔄 持续集成      →  代码提交后自动构建部署                │</span><br><span class="line">└─────────────────────────────────────────────────────────┘</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="三、自动化部署实战"><a href="#三、自动化部署实战" class="headerlink" title="三、自动化部署实战"></a>三、自动化部署实战</h2><p>下面以一个实际场景为例，展示如何用 OpenClaw 实现自动化部署。</p>
+<h3 id="场景描述"><a href="#场景描述" class="headerlink" title="场景描述"></a>场景描述</h3><p>假设我们有一个 Web 应用，需要部署到远程服务器。传统的部署流程是：</p>
+<ol>
+<li>本地构建（打包前端 / 后端）</li>
+<li>上传到服务器</li>
+<li>备份旧版本</li>
+<li>执行部署脚本</li>
+<li>验证部署结果</li>
+</ol>
+<p>如果每次更新都要手动执行这 5 步，既费时又容易出错。</p>
+<h3 id="用-OpenClaw-实现自动化"><a href="#用-OpenClaw-实现自动化" class="headerlink" title="用 OpenClaw 实现自动化"></a>用 OpenClaw 实现自动化</h3><h4 id="1-创建部署-Skill"><a href="#1-创建部署-Skill" class="headerlink" title="1. 创建部署 Skill"></a>1. 创建部署 Skill</h4><p>首先，创建一个专门用于部署的 Skill：</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># deploy_skill.py</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DeploySkill</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, config</span>):</span><br><span class="line">        <span class="variable language_">self</span>.server_host = config.get(<span class="string">"server_host"</span>)</span><br><span class="line">        <span class="variable language_">self</span>.server_user = config.get(<span class="string">"server_user"</span>)</span><br><span class="line">        <span class="variable language_">self</span>.server_password = config.get(<span class="string">"server_password"</span>)</span><br><span class="line">        <span class="variable language_">self</span>.remote_jar_path = config.get(<span class="string">"remote_jar_path"</span>)</span><br><span class="line">        <span class="variable language_">self</span>.local_jar_path = config.get(<span class="string">"local_jar_path"</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">execute</span>(<span class="params">self, context</span>):</span><br><span class="line">        <span class="string">"""执行完整的部署流程"""</span></span><br><span class="line">        steps = [</span><br><span class="line">            {<span class="string">"name"</span>: <span class="string">"构建项目"</span>, <span class="string">"action"</span>: <span class="variable language_">self</span>.build_project},</span><br><span class="line">            {<span class="string">"name"</span>: <span class="string">"备份旧版本"</span>, <span class="string">"action"</span>: <span class="variable language_">self</span>.backup_server},</span><br><span class="line">            {<span class="string">"name"</span>: <span class="string">"上传新版本"</span>, <span class="string">"action"</span>: <span class="variable language_">self</span>.upload_files},</span><br><span class="line">            {<span class="string">"name"</span>: <span class="string">"执行部署"</span>, <span class="string">"action"</span>: <span class="variable language_">self</span>.run_deploy_script},</span><br><span class="line">            {<span class="string">"name"</span>: <span class="string">"验证结果"</span>, <span class="string">"action"</span>: <span class="variable language_">self</span>.verify_deployment},</span><br><span class="line">        ]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> step <span class="keyword">in</span> steps:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f"🔄 执行步骤: <span class="subst">{step[<span class="string">'name'</span>]}</span>"</span>)</span><br><span class="line">            result = <span class="keyword">await</span> step[<span class="string">"action"</span>]()</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> result.get(<span class="string">"success"</span>):</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f"❌ 步骤失败: <span class="subst">{step[<span class="string">'name'</span>]}</span>"</span>)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f"错误信息: <span class="subst">{result.get(<span class="string">'error'</span>)}</span>"</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"✅ 部署完成!"</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">build_project</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">"""构建项目"""</span></span><br><span class="line">        <span class="comment"># 执行 mvn clean package 或 pnpm build</span></span><br><span class="line">        <span class="keyword">return</span> {<span class="string">"success"</span>: <span class="literal">True</span>}</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">backup_server</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">"""备份服务器旧版本"""</span></span><br><span class="line">        backup_cmd = <span class="string">f"cp <span class="subst">{self.remote_jar_path}</span> <span class="subst">{self.remote_jar_path}</span>.backup.$(date +%Y%m%d%H%M%S)"</span></span><br><span class="line">        <span class="comment"># SSH 执行备份命令</span></span><br><span class="line">        <span class="keyword">return</span> {<span class="string">"success"</span>: <span class="literal">True</span>}</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">upload_files</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">"""上传新版本到服务器"""</span></span><br><span class="line">        <span class="comment"># 使用 scp 或 rsync 上传文件</span></span><br><span class="line">        <span class="keyword">return</span> {<span class="string">"success"</span>: <span class="literal">True</span>}</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">run_deploy_script</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">"""执行服务器上的部署脚本"""</span></span><br><span class="line">        <span class="comment"># SSH 执行部署命令</span></span><br><span class="line">        <span class="keyword">return</span> {<span class="string">"success"</span>: <span class="literal">True</span>}</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">verify_deployment</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">"""验证部署结果"""</span></span><br><span class="line">        <span class="comment"># 检查 HTTP 响应、容器状态、日志输出</span></span><br><span class="line">        <span class="keyword">return</span> {<span class="string">"success"</span>: <span class="literal">True</span>}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="2-配置定时任务"><a href="#2-配置定时任务" class="headerlink" title="2. 配置定时任务"></a>2. 配置定时任务</h4><p>部署准备好了，现在配置定时任务让它自动执行：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># openclaw_cron.yaml</span></span><br><span class="line"><span class="attr">tasks:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">"daily-deploy"</span></span><br><span class="line">    <span class="attr">cron:</span> <span class="string">"0 2 * * *"</span>  <span class="comment"># 每天凌晨 2 点</span></span><br><span class="line">    <span class="attr">trigger:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">"schedule"</span></span><br><span class="line">      <span class="attr">config:</span></span><br><span class="line">        <span class="attr">timezone:</span> <span class="string">"Asia/Shanghai"</span></span><br><span class="line">    </span><br><span class="line">    <span class="attr">workflow:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">skill:</span> <span class="string">"deploy_skill"</span></span><br><span class="line">        <span class="attr">params:</span></span><br><span class="line">          <span class="attr">env:</span> <span class="string">"production"</span></span><br><span class="line">          <span class="attr">notify_on_failure:</span> <span class="literal">true</span></span><br><span class="line">          <span class="attr">notification_channel:</span> <span class="string">"feishu"</span></span><br><span class="line">      </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">condition:</span></span><br><span class="line">          <span class="attr">type:</span> <span class="string">"deployment_success"</span></span><br><span class="line">          <span class="attr">then:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">action:</span> <span class="string">"send_notification"</span></span><br><span class="line">              <span class="attr">message:</span> <span class="string">"✅ 部署成功，已更新到生产环境"</span></span><br><span class="line">      </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">condition:</span></span><br><span class="line">          <span class="attr">type:</span> <span class="string">"deployment_failed"</span></span><br><span class="line">          <span class="attr">then:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">action:</span> <span class="string">"rollback"</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">action:</span> <span class="string">"send_notification"</span></span><br><span class="line">              <span class="attr">message:</span> <span class="string">"❌ 部署失败，已自动回滚"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="3-部署流程图"><a href="#3-部署流程图" class="headerlink" title="3. 部署流程图"></a>3. 部署流程图</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──────────────────────────────────────────────────────┐</span><br><span class="line">│                   定时任务触发                        │</span><br><span class="line">│                   (每天凌晨2点)                       │</span><br><span class="line">└─────────────────────┬──────────────────────────────┘</span><br><span class="line">                      ▼</span><br><span class="line">┌──────────────────────────────────────────────────────┐</span><br><span class="line">│                   Step 1: 构建项目                    │</span><br><span class="line">│    ┌─────────────┐    ┌─────────────┐               │</span><br><span class="line">│    │  后端 Maven  │    │  前端 PNPM  │               │</span><br><span class="line">│    │   打包 jar   │    │   构建 dist │               │</span><br><span class="line">│    └─────────────┘    └─────────────┘               │</span><br><span class="line">└─────────────────────┬──────────────────────────────┘</span><br><span class="line">                      ▼</span><br><span class="line">┌──────────────────────────────────────────────────────┐</span><br><span class="line">│               Step 2: 备份 + 上传                      │</span><br><span class="line">│    ┌─────────────┐    ┌─────────────┐               │</span><br><span class="line">│    │  备份旧版本  │    │   同步文件  │               │</span><br><span class="line">│    │  到服务器    │    │  到服务器    │               │</span><br><span class="line">│    └─────────────┘    └─────────────┘               │</span><br><span class="line">└─────────────────────┬──────────────────────────────┘</span><br><span class="line">                      ▼</span><br><span class="line">┌──────────────────────────────────────────────────────┐</span><br><span class="line">│               Step 3: 执行部署脚本                    │</span><br><span class="line">│    ┌─────────────┐    ┌─────────────┐               │</span><br><span class="line">│    │  重启 Docker │    │  清理缓存   │               │</span><br><span class="line">│    │     容器     │    │  验证状态   │               │</span><br><span class="line">│    └─────────────┘    └─────────────┘               │</span><br><span class="line">└─────────────────────┬──────────────────────────────┘</span><br><span class="line">                      ▼</span><br><span class="line">┌──────────────────────────────────────────────────────┐</span><br><span class="line">│                   Step 4: 验证结果                    │</span><br><span class="line">│    ┌─────────────┐    ┌─────────────┐               │</span><br><span class="line">│    │  HTTP 健康  │    │   发送通知  │               │</span><br><span class="line">│    │    检查     │    │   到钉钉/飞书│               │</span><br><span class="line">│    └─────────────┘    └─────────────┘               │</span><br><span class="line">└─────────────────────┬──────────────────────────────┘</span><br><span class="line">                      ▼</span><br><span class="line">                   ✅ 完成</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="四、健康检查自动化"><a href="#四、健康检查自动化" class="headerlink" title="四、健康检查自动化"></a>四、健康检查自动化</h2><p>除了部署，定时健康检查也是运维的核心需求。</p>
+<h3 id="场景需求"><a href="#场景需求" class="headerlink" title="场景需求"></a>场景需求</h3><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">每天早上 9 点，检查所有服务的健康状态：</span><br><span class="line">1. 检查后端 API 是否可访问</span><br><span class="line">2. 检查前端页面是否正常</span><br><span class="line">3. 检查数据库连接是否正常</span><br><span class="line">4. 检查 Redis、MQ 等中间件</span><br><span class="line">5. 生成健康报告，发送到钉钉群</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="实现方案"><a href="#实现方案" class="headerlink" title="实现方案"></a>实现方案</h3><figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># health_check_skill.py</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HealthCheckSkill</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.services = [</span><br><span class="line">            {<span class="string">"name"</span>: <span class="string">"后端 API"</span>, <span class="string">"url"</span>: <span class="string">"http://api.example.com/health"</span>, <span class="string">"timeout"</span>: <span class="number">5</span>},</span><br><span class="line">            {<span class="string">"name"</span>: <span class="string">"前端页面"</span>, <span class="string">"url"</span>: <span class="string">"http://app.example.com"</span>, <span class="string">"timeout"</span>: <span class="number">5</span>},</span><br><span class="line">            {<span class="string">"name"</span>: <span class="string">"管理后台"</span>, <span class="string">"url"</span>: <span class="string">"http://admin.example.com/health"</span>, <span class="string">"timeout"</span>: <span class="number">5</span>},</span><br><span class="line">        ]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">execute</span>(<span class="params">self, context</span>):</span><br><span class="line">        <span class="string">"""执行健康检查"""</span></span><br><span class="line">        results = []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> service <span class="keyword">in</span> <span class="variable language_">self</span>.services:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f"🔍 检查服务: <span class="subst">{service[<span class="string">'name'</span>]}</span>"</span>)</span><br><span class="line">            result = <span class="keyword">await</span> <span class="variable language_">self</span>.check_service(service)</span><br><span class="line">            results.append(result)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 生成报告</span></span><br><span class="line">        report = <span class="variable language_">self</span>.generate_report(results)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 发送通知</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.should_notify(results):</span><br><span class="line">            <span class="keyword">await</span> <span class="variable language_">self</span>.send_notification(report)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> {<span class="string">"success"</span>: <span class="literal">True</span>, <span class="string">"report"</span>: report}</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">check_service</span>(<span class="params">self, service</span>):</span><br><span class="line">        <span class="string">"""检查单个服务"""</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            response = <span class="keyword">await</span> http_get(service[<span class="string">"url"</span>], timeout=service[<span class="string">"timeout"</span>])</span><br><span class="line">            <span class="keyword">return</span> {</span><br><span class="line">                <span class="string">"name"</span>: service[<span class="string">"name"</span>],</span><br><span class="line">                <span class="string">"status"</span>: <span class="string">"healthy"</span> <span class="keyword">if</span> response.status == <span class="number">200</span> <span class="keyword">else</span> <span class="string">"degraded"</span>,</span><br><span class="line">                <span class="string">"response_time"</span>: response.elapsed,</span><br><span class="line">                <span class="string">"details"</span>: <span class="string">f"HTTP <span class="subst">{response.status}</span>"</span>,</span><br><span class="line">            }</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">return</span> {</span><br><span class="line">                <span class="string">"name"</span>: service[<span class="string">"name"</span>],</span><br><span class="line">                <span class="string">"status"</span>: <span class="string">"down"</span>,</span><br><span class="line">                <span class="string">"error"</span>: <span class="built_in">str</span>(e),</span><br><span class="line">            }</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">generate_report</span>(<span class="params">self, results</span>):</span><br><span class="line">        <span class="string">"""生成健康报告"""</span></span><br><span class="line">        report = <span class="string">"# 服务健康检查报告\n\n"</span></span><br><span class="line">        report += <span class="string">f"检查时间: <span class="subst">{datetime.now().strftime(<span class="string">'%Y-%m-%d %H:%M:%S'</span>)}</span>\n\n"</span></span><br><span class="line">        </span><br><span class="line">        healthy_count = <span class="built_in">sum</span>(<span class="number">1</span> <span class="keyword">for</span> r <span class="keyword">in</span> results <span class="keyword">if</span> r[<span class="string">"status"</span>] == <span class="string">"healthy"</span>)</span><br><span class="line">        total_count = <span class="built_in">len</span>(results)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> result <span class="keyword">in</span> results:</span><br><span class="line">            icon = <span class="string">"✅"</span> <span class="keyword">if</span> result[<span class="string">"status"</span>] == <span class="string">"healthy"</span> <span class="keyword">else</span> <span class="string">"❌"</span></span><br><span class="line">            report += <span class="string">f"<span class="subst">{icon}</span> **<span class="subst">{result[<span class="string">'name'</span>]}</span>**: <span class="subst">{result[<span class="string">'status'</span>]}</span>\n"</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">"response_time"</span> <span class="keyword">in</span> result:</span><br><span class="line">                report += <span class="string">f"   响应时间: <span class="subst">{result[<span class="string">'response_time'</span>]}</span>ms\n"</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">"error"</span> <span class="keyword">in</span> result:</span><br><span class="line">                report += <span class="string">f"   错误: <span class="subst">{result[<span class="string">'error'</span>]}</span>\n"</span></span><br><span class="line">        </span><br><span class="line">        report += <span class="string">f"\n总计: <span class="subst">{healthy_count}</span>/<span class="subst">{total_count}</span> 服务正常\n"</span></span><br><span class="line">        <span class="keyword">return</span> report</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">should_notify</span>(<span class="params">self, results</span>):</span><br><span class="line">        <span class="string">"""判断是否需要发送通知"""</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">any</span>(r[<span class="string">"status"</span>] != <span class="string">"healthy"</span> <span class="keyword">for</span> r <span class="keyword">in</span> results)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">send_notification</span>(<span class="params">self, report</span>):</span><br><span class="line">        <span class="string">"""发送通知到钉钉/飞书"""</span></span><br><span class="line">        <span class="comment"># 集成通知渠道</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="配置-Cron-任务"><a href="#配置-Cron-任务" class="headerlink" title="配置 Cron 任务"></a>配置 Cron 任务</h3><figure class="highlight yaml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="attr">tasks:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">"morning-health-check"</span></span><br><span class="line">    <span class="attr">cron:</span> <span class="string">"0 9 * * *"</span>  <span class="comment"># 每天早上 9 点</span></span><br><span class="line">    <span class="attr">trigger:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">"schedule"</span></span><br><span class="line">      <span class="attr">config:</span></span><br><span class="line">        <span class="attr">timezone:</span> <span class="string">"Asia/Shanghai"</span></span><br><span class="line">    </span><br><span class="line">    <span class="attr">workflow:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">skill:</span> <span class="string">"health_check_skill"</span></span><br><span class="line">        <span class="attr">params:</span></span><br><span class="line">          <span class="attr">services:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">"后端 API"</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">"前端页面"</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">"管理后台"</span></span><br><span class="line">          <span class="attr">notify_on_result:</span> <span class="literal">true</span></span><br><span class="line">      </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">action:</span> <span class="string">"log_report"</span></span><br><span class="line">        <span class="attr">destination:</span> <span class="string">"file"</span></span><br><span class="line">        <span class="attr">path:</span> <span class="string">"/logs/health_report.md"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="五、完整的工作流示例"><a href="#五、完整的工作流示例" class="headerlink" title="五、完整的工作流示例"></a>五、完整的工作流示例</h2><p>结合部署和健康检查，我们可以搭建一个完整的自动化运维体系：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────────────┐</span><br><span class="line">│                     OpenClaw 自动化运维体系                       │</span><br><span class="line">├─────────────────────────────────────────────────────────────────┤</span><br><span class="line">│                                                                  │</span><br><span class="line">│   ┌──────────────┐      ┌──────────────┐      ┌──────────────┐ │</span><br><span class="line">│   │  定时任务调度  │ ───▶ │   执行 Skill │ ───▶ │   结果通知   │ │</span><br><span class="line">│   └──────────────┘      └──────────────┘      └──────────────┘ │</span><br><span class="line">│          │                     │                     │          │</span><br><span class="line">│          ▼                     ▼                     ▼          │</span><br><span class="line">│   ┌──────────────┐      ┌──────────────┐      ┌──────────────┐ │</span><br><span class="line">│   │  Git 钩子触发 │      │   部署流程   │      │   飞书/钉钉   │ │</span><br><span class="line">│   │  代码提交时   │      │   备份+上传   │      │   通知结果   │ │</span><br><span class="line">│   └──────────────┘      └──────────────┘      └──────────────┘ │</span><br><span class="line">│          │                     │                     │          │</span><br><span class="line">│          ▼                     ▼                     ▼          │</span><br><span class="line">│   ┌──────────────┐      ┌──────────────┐      ┌──────────────┐ │</span><br><span class="line">│   │  自动测试验证  │      │  健康检查    │      │  日志归档    │ │</span><br><span class="line">│   │  构建后验证    │      │  定时巡检    │      │  历史记录    │ │</span><br><span class="line">│   └──────────────┘      └──────────────┘      └──────────────┘ │</span><br><span class="line">│                                                                  │</span><br><span class="line">└─────────────────────────────────────────────────────────────────┘</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="典型工作流配置"><a href="#典型工作流配置" class="headerlink" title="典型工作流配置"></a>典型工作流配置</h3><figure class="highlight yaml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="attr">workflows:</span></span><br><span class="line">  <span class="comment"># 工作流1: 代码提交自动部署</span></span><br><span class="line">  <span class="attr">auto_deploy:</span></span><br><span class="line">    <span class="attr">trigger:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">"git_hook"</span></span><br><span class="line">      <span class="attr">events:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">"push"</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">"merge_request"</span></span><br><span class="line">    </span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">"checkout"</span></span><br><span class="line">        <span class="attr">action:</span> <span class="string">"git_pull"</span></span><br><span class="line">      </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">"build"</span></span><br><span class="line">        <span class="attr">parallel:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">skill:</span> <span class="string">"build_backend"</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">skill:</span> <span class="string">"build_frontend"</span></span><br><span class="line">      </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">"deploy"</span></span><br><span class="line">        <span class="attr">skill:</span> <span class="string">"deploy_skill"</span></span><br><span class="line">        <span class="attr">config:</span></span><br><span class="line">          <span class="attr">auto_backup:</span> <span class="literal">true</span></span><br><span class="line">          <span class="attr">verify_after_deploy:</span> <span class="literal">true</span></span><br><span class="line">      </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">"notify"</span></span><br><span class="line">        <span class="attr">action:</span> <span class="string">"send_notification"</span></span><br><span class="line">        <span class="attr">message:</span> <span class="string">"✅ 部署完成，版本: {version}"</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment"># 工作流2: 定时健康检查</span></span><br><span class="line">  <span class="attr">periodic_health_check:</span></span><br><span class="line">    <span class="attr">trigger:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">"schedule"</span></span><br><span class="line">      <span class="attr">cron:</span> <span class="string">"0 */4 * * *"</span>  <span class="comment"># 每 4 小时检查一次</span></span><br><span class="line">    </span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">"health_check"</span></span><br><span class="line">        <span class="attr">skill:</span> <span class="string">"health_check_skill"</span></span><br><span class="line">      </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">"update_dashboard"</span></span><br><span class="line">        <span class="attr">action:</span> <span class="string">"update_metrics"</span></span><br><span class="line">        <span class="attr">metrics:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">"api_health"</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">"frontend_health"</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">"response_time"</span></span><br><span class="line">      </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">condition:</span></span><br><span class="line">          <span class="attr">type:</span> <span class="string">"has_issues"</span></span><br><span class="line">          <span class="attr">then:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">"alert"</span></span><br><span class="line">              <span class="attr">action:</span> <span class="string">"send_alert"</span></span><br><span class="line">              <span class="attr">channels:</span></span><br><span class="line">                <span class="bullet">-</span> <span class="string">"feishu"</span></span><br><span class="line">                <span class="bullet">-</span> <span class="string">"email"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="六、进阶技巧"><a href="#六、进阶技巧" class="headerlink" title="六、进阶技巧"></a>六、进阶技巧</h2><h3 id="1-失败自动回滚"><a href="#1-失败自动回滚" class="headerlink" title="1. 失败自动回滚"></a>1. 失败自动回滚</h3><figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">deploy_with_rollback</span>():</span><br><span class="line">    backup_path = <span class="string">f"<span class="subst">{remote_jar_path}</span>.backup.<span class="subst">{timestamp}</span>"</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 执行部署</span></span><br><span class="line">        <span class="keyword">await</span> execute_deploy()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 验证部署结果</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">await</span> verify_deployment():</span><br><span class="line">            <span class="keyword">raise</span> DeploymentError(<span class="string">"验证失败"</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="comment"># 自动回滚</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f"❌ 部署失败，执行回滚: <span class="subst">{e}</span>"</span>)</span><br><span class="line">        <span class="keyword">await</span> rollback(backup_path)</span><br><span class="line">        <span class="keyword">raise</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="2-多环境支持"><a href="#2-多环境支持" class="headerlink" title="2. 多环境支持"></a>2. 多环境支持</h3><figure class="highlight yaml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="attr">environments:</span></span><br><span class="line">  <span class="attr">dev:</span></span><br><span class="line">    <span class="attr">server_host:</span> <span class="string">"dev.example.com"</span></span><br><span class="line">    <span class="attr">deploy_path:</span> <span class="string">"/opt/app-dev"</span></span><br><span class="line">  </span><br><span class="line">  <span class="attr">staging:</span></span><br><span class="line">    <span class="attr">server_host:</span> <span class="string">"staging.example.com"</span></span><br><span class="line">    <span class="attr">deploy_path:</span> <span class="string">"/opt/app-staging"</span></span><br><span class="line">  </span><br><span class="line">  <span class="attr">production:</span></span><br><span class="line">    <span class="attr">server_host:</span> <span class="string">"prod.example.com"</span></span><br><span class="line">    <span class="attr">deploy_path:</span> <span class="string">"/opt/app-prod"</span></span><br><span class="line">    <span class="attr">require_approval:</span> <span class="literal">true</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="3-审批流程"><a href="#3-审批流程" class="headerlink" title="3. 审批流程"></a>3. 审批流程</h3><figure class="highlight yaml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="attr">workflows:</span></span><br><span class="line">  <span class="attr">production_deploy:</span></span><br><span class="line">    <span class="attr">trigger:</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">"manual"</span></span><br><span class="line">      <span class="attr">requires_approval:</span> <span class="literal">true</span></span><br><span class="line">    </span><br><span class="line">    <span class="attr">approval:</span></span><br><span class="line">      <span class="attr">approvers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">"tech_lead"</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">"product_manager"</span></span><br><span class="line">      <span class="attr">timeout:</span> <span class="string">24h</span></span><br><span class="line">      <span class="attr">reminder_interval:</span> <span class="string">4h</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a>七、总结</h2><p>通过 OpenClaw + 定时任务，我们可以实现：</p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>传统方式</th>
+<th> OpenClaw 自动化</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>部署效率</td>
+<td> 30 分钟手动操作</td>
+<td> 3 分钟自动完成</td>
+</tr>
+<tr>
+<td>错误率</td>
+<td>人工操作易出错</td>
+<td>程序化执行零失误</td>
+</tr>
+<tr>
+<td>监控覆盖</td>
+<td>被动发现问题</td>
+<td>主动定时巡检</td>
+</tr>
+<tr>
+<td>响应时间</td>
+<td>凌晨告警需人工处理</td>
+<td>自动告警 + 自动恢复</td>
+</tr>
+</tbody></table>
+<p><strong>OpenClaw 让运维工作从” 人找事” 变成” 事找人”，大幅提升效率的同时降低了人为错误的风险。</strong></p>
+<blockquote>
+<p>更多 OpenClaw 信息：<a href="https://www.openclaw.ai/">https://www.openclaw.ai</a><br>技能市场 ClawHub：<a href="https://clawhub.ai/">https://clawhub.ai</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>技术教程</category>
+      </categories>
+      <tags>
+        <tag>AI Agent</tag>
+        <tag>OpenClaw</tag>
+        <tag>自动化运维</tag>
+        <tag>DevOps</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>让 AI 替你写东西，但不说 AI 的话</title>
+    <url>/2026/05/27/stop-slop-ai-writing-style/</url>
+    <content><![CDATA[<p>前几天一个朋友发给我一段文字，让我帮忙改改。那是一段用 AI 辅助写的项目介绍，开头是这样的：</p>
+<blockquote>
+<p>在当今快速发展的数字化时代，人工智能正在以前所未有的方式重塑我们的工作和生活方式……</p>
+</blockquote>
+<p>我看完沉默了。不是写得差 —— 语法正确，逻辑通顺，甚至还挺有气势。但我就是能感觉到：<strong>这不像人在说话</strong>。</p>
+<p>相信你也遇过类似的情况。AI 写的东西有一种独特的” 指纹”：空洞的万能金句、固定的结构套路、避开了所有真实的语气。结果就是 —— 读起来正确，但读不进去。</p>
+<h2 id="stop-slop-是什么"><a href="#stop-slop-是什么" class="headerlink" title="stop-slop 是什么"></a>stop-slop 是什么</h2><p><a href="https://github.com/hardikpandya/stop-slop">hardikpandya/stop-slop</a> 是一个开源的 Claude Skill，核心功能只有一个：<strong>检测并消除 AI 写作中的”AI 腔调”</strong>。</p>
+<p>它不是一个写作工具，不是一个语法检查器，也不帮你生成内容。它是一个<strong>风格过滤器</strong> —— 读入 AI 生成的文字，输出去掉 AI 指纹的版本。</p>
+<p>项目结构很简洁：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">stop-slop/</span><br><span class="line">├── SKILL.md        # 核心规则和使用说明</span><br><span class="line">├── phrases.md      # 需要删除的惯用短语</span><br><span class="line">└── structures.md   # 需要避免的结构模式</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>phrases.md</code> 里列出的是那些 AI 喜欢用但人类基本不用的表达，比如” 让我们深入探讨”” 这是革命性的”” 值得注意的是”。<code>structures.md</code> 则是结构层面的反模式 —— 三点列表、”It’s not X, it’s Y” 句式、用”Furthermore” 开篇的习惯等。</p>
+<h2 id="为什么值得关注"><a href="#为什么值得关注" class="headerlink" title="为什么值得关注"></a>为什么值得关注</h2><p>你可能会想：既然是 AI 写的，让 AI 直接不这样写不就好了？</p>
+<p>但这里有个实际的矛盾 —— 大多数人用 AI 辅助写作的模式是：<strong>自己搭框架，AI 填内容</strong>。框架是人想的，填进去的文字是 AI 的。这种情况下，你很难从源头控制 AI 的腔调，因为你没有时间逐句 prompt。</p>
+<p>stop-slop 解决的是这个<strong>后处理</strong>问题：不管 AI 怎么写的，过一遍 filter，还原成人话。</p>
+<p>另一个值得关注的原因是它体现了一种趋势 ——<strong>AI 工具正在从” 能力堆叠” 转向” 质量把控”</strong>。2025 年大家疯狂卷模型能力，2026 年的热点已经开始转向怎么让 AI 输出真正可用的东西。stop-slop 是这个趋势里一个很轻量但很精准的切入点。</p>
+<h2 id="怎么用"><a href="#怎么用" class="headerlink" title="怎么用"></a>怎么用</h2><p>最直接的方式是在 Claude Code 里安装这个 skill：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line"># 克隆到本地</span><br><span class="line">git clone https://github.com/hardikpandya/stop-slop.git</span><br><span class="line"></span><br><span class="line"># 添加到 Claude Code</span><br><span class="line">claude skills add ./stop-slop</span><br></pre></td></tr></tbody></table></figure>
+
+<p>之后当你让 AI 帮你写或者改文字时，它会自动参考 skill 里的规则。</p>
+<p>如果不用 Claude Code，也可以把 <code>SKILL.md</code> 的核心规则拷到 system prompt 里，或者上传到 Claude Projects 作为项目知识。</p>
+<p>作为数字游民，我日常工作高度依赖 AI 辅助写邮件、写文档、写代码注释。以前经常遇到 AI 写出来的文字发不出去 —— 不是因为内容有问题，而是因为腔调太 AI 了。用了 stop-slop 之后，邮件变得正常多了，读者不会隔着屏幕皱眉头。</p>
+<h2 id="核心规则一览"><a href="#核心规则一览" class="headerlink" title="核心规则一览"></a>核心规则一览</h2><p>stop-slop 识别的主要”AI 腔调” 有几类：</p>
+<p><strong>高频删除短语</strong>（部分节选）：</p>
+<ul>
+<li>“delve into” / “深入探讨”</li>
+<li>“It’s important to note that”</li>
+<li>“In conclusion, …”</li>
+<li>“It is worth noting that”</li>
+<li>“This is a game-changer”</li>
+<li>“revolutionize” / “革命性”</li>
+<li>“Unlock your …”</li>
+<li>“cutting-edge”</li>
+</ul>
+<p><strong>结构反模式</strong>：</p>
+<ul>
+<li>强制三点列表（AI 几乎从不列出两点）</li>
+<li>“It’s not X, it’s Y” 开头</li>
+<li> “Firstly / Secondly / Lastly” 序列</li>
+<li>用 “Furthermore / Moreover / Additionally” 连接句子</li>
+<li>开头大段背景铺垫才进入正题</li>
+</ul>
+<p><strong>语气特征</strong>：</p>
+<ul>
+<li>避免使用缩写（”it’s” → “it is”）</li>
+<li>过度使用被动语态</li>
+<li>形容词堆砌但缺乏具体数据</li>
+</ul>
+<h2 id="数字游民的使用场景"><a href="#数字游民的使用场景" class="headerlink" title="数字游民的使用场景"></a>数字游民的使用场景</h2><p>作为常年远程工作的人，我的文字沟通比面对面多太多。邮件、飞书文档、GitHub PR 描述、技术博客 —— 全是文字。AI 辅助写作帮我省了大量时间，但”AI 腔调” 是个反效果：让你的专业度打折，让读者建立距离感。</p>
+<p>stop-slop 对我最有用的场景有两个：</p>
+<p><strong>第一，PR 和 Issue 描述</strong>。开源项目里最怕 AI 生成的 PR 描述，读起来像宣传材料。维护者一眼就能分辨，他们会说” 这条 PR 没用 AI 写的吧”—— 然后这条 PR 的命运就不好了。</p>
+<p><strong>第二，快速草稿的人文化</strong>。我会让 AI 先出一个版本，然后用 stop-slop 过一遍改成正常人类语言。这个流程比直接 prompt “写得自然点” 可靠得多。</p>
+<h2 id="和其他工具的配合"><a href="#和其他工具的配合" class="headerlink" title="和其他工具的配合"></a>和其他工具的配合</h2><p>stop-slop 不是孤立的。它可以和工作流里的其他工具配合：</p>
+<ul>
+<li><strong>claude-code + stop-slop</strong>：最直接的组合，skill 装完直接用</li>
+<li><strong>与语法检查配合</strong>：stop-slop 去腔调，语法工具修拼写，分工明确</li>
+<li><strong>作为 CI 检查</strong>：有人把它做成 GitHub Action，在 PR 阶段检测 AI 腔调</li>
+</ul>
+<h2 id="局限与建议"><a href="#局限与建议" class="headerlink" title="局限与建议"></a>局限与建议</h2><p>stop-slop 不是银弹。它基于模式匹配，对真正的创意写作帮助有限 —— 毕竟好文章本身就是有结构、有句式变化的，而不是无脑避开列表和过渡词。</p>
+<p>另外它目前以英文规则为主，中文场景需要自己补充词表。不过原理是通用的 —— 你可以 fork 这个项目，建立自己的中文 AI 腔调词表。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>AI 写作工具已经很强大了，但下一个竞争维度不在于” 能生成什么”，而在于” 生成的东西看起来像人写的”。</p>
+<p>stop-slop 是一个很小但很真实的尝试。它解决的不是技术问题，而是<strong>沟通质量</strong>问题。如果你也在用 AI 辅助写作，不妨试试 —— 让你的文字回到它应该在的地方：被人读进去。</p>
+<hr>
+<p><em>如果你在远程工作中有其他控制 AI 写作腔调的方法，欢迎交流。我的博客里还写过 Hermes Agent 的使用心得，可以一起看看。</em></p>
+]]></content>
+      <categories>
+        <category>技术教程</category>
+      </categories>
+      <tags>
+        <tag>AI</tag>
+        <tag>Writing</tag>
+        <tag>Tools</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>去除 AI 腔调：stop-slop 让机器写作更像人</title>
+    <url>/2026/05/27/stop-slop-ai-writing/</url>
+    <content><![CDATA[<h2 id="一、AI-写作最大的bug"><a href="#一、AI-写作最大的bug" class="headerlink" title="一、AI 写作最大的bug"></a>一、AI 写作最大的 bug</h2><p>你有没有这种感觉？看一篇文章，开头三句话就知道” 这是 AI 写的”。</p>
+<p>不是内容不好，而是那种腔调太明显了 ——</p>
+<ul>
+<li>“首先，让我们深入探讨一下这个问题”</li>
+<li>“值得注意的是”</li>
+<li>“从多个维度来看”</li>
+<li>“这充分说明了……”</li>
+</ul>
+<p>这些听起来正式、专业，但读起来就是不对劲。像是一个穿着西装、打着领带、背诵稿子的机器人 —— 每个词都对，但整个感觉就是假。</p>
+<p><strong>stop-slop</strong> 就是来解决这个问题的。</p>
+<h2 id="二、stop-slop-是什么"><a href="#二、stop-slop-是什么" class="headerlink" title="二、stop-slop 是什么"></a>二、stop-slop 是什么</h2><p>stop-slop 是 Hardik Pandya 开发的一个开源 Skill，GitHub 地址：<a href="https://github.com/hardikpandya/stop-slop">hardikpandya/stop-slop</a>。它的核心任务是：<strong>教 AI 识别并去除文字中的 AI 腔调</strong>。</p>
+<p>这个 Skill 不是教你写更好的内容，而是专注于一个更具体的问题：<strong>怎么让写出来的东西读起来不像 AI</strong>。</p>
+<h2 id="三、七条核心规则"><a href="#三、七条核心规则" class="headerlink" title="三、七条核心规则"></a>三、七条核心规则</h2><p>stop-slop 的方法论很简洁，7 条规则 + 1 个检查清单：</p>
+<h3 id="规则-1：干掉副词"><a href="#规则-1：干掉副词" class="headerlink" title="规则 1：干掉副词"></a>规则 1：干掉副词</h3><p>AI 写作喜欢加副词来显得” 专业”：</p>
+<ul>
+<li><del>“非常快速地”</del> → “很快”</li>
+<li><del>“相当彻底地”</del> → “彻底”</li>
+<li><del>“极其重要”</del> → “重要”</li>
+</ul>
+<p>副词是弱化表达的罪魁祸首。删掉它们，句子反而更有力。</p>
+<h3 id="规则-2：使用主动语态"><a href="#规则-2：使用主动语态" class="headerlink" title="规则 2：使用主动语态"></a>规则 2：使用主动语态</h3><p>每个句子需要一个有实际动作的人类主体。</p>
+<p>❌ AI 腔调：” 这个决定是由管理层做出的”<br>✅ 人类写作：”CEO 拍板定了这件事”</p>
+<p>❌ AI 腔调：” 问题的解决方案正在被实施”<br>✅ 人类写作：” 团队正在落实解决方案”</p>
+<p>无生命的东西不能执行人类的动作。</p>
+<h3 id="规则-3：具体，不要模糊声明"><a href="#规则-3：具体，不要模糊声明" class="headerlink" title="规则 3：具体，不要模糊声明"></a>规则 3：具体，不要模糊声明</h3><p>❌ AI 腔调：” 原因是多方面的”<br>✅ 人类写作：” 原因有三个：预算超支、需求变更、团队人员不足”</p>
+<p>❌ AI 腔调：” 效果显著”<br>✅ 人类写作：” 转化率提升了 23%”</p>
+<p>说具体的数字和事实，别用空洞的形容词。</p>
+<h3 id="规则-4：让读者置身场景"><a href="#规则-4：让读者置身场景" class="headerlink" title="规则 4：让读者置身场景"></a>规则 4：让读者置身场景</h3><p>不要” narrator-from-a-distance”（远距离叙述者）的腔调。</p>
+<p>❌ AI 腔调：” 没有人预料到这件事会发展成这样”<br>✅ 人类写作：” 我们在周三晚上十点发现问题时，预处理器已经崩溃了三次”</p>
+<p>让读者” 在场”，而不是站在场景外面听解说。</p>
+<h3 id="规则-5：干掉”以下是”式的开头"><a href="#规则-5：干掉”以下是”式的开头" class="headerlink" title="规则 5：干掉”以下是”式的开头"></a>规则 5：干掉” 以下是” 式的开头</h3><p>❌ AI 腔调：” 以下是关于这个主题的关键要点：”<br>✅ 人类写作：” 真正重要的只有三点：”</p>
+<p>❌ AI 腔调：” 在这里，我要强调的是”<br>✅ 人类写作：” 关键在于”</p>
+<p>清理掉这种” 喉结清理” 式的废话，直接说正事。</p>
+<h3 id="规则-6：干掉听起来像金句的引用"><a href="#规则-6：干掉听起来像金句的引用" class="headerlink" title="规则 6：干掉听起来像金句的引用"></a>规则 6：干掉听起来像金句的引用</h3><p>如果一个句子读起来像宣传海报上的标语，<strong>重写</strong>。</p>
+<p>❌ AI 腔调：” 创新是引领发展的第一动力”<br>✅ 人类写作：” 我们这轮融资的钱，有一半砸在了模型微调上”</p>
+<p>假大空的金句让人物离文章太远。</p>
+<h3 id="规则-7：检查无生命物体做人类动作"><a href="#规则-7：检查无生命物体做人类动作" class="headerlink" title="规则 7：检查无生命物体做人类动作"></a>规则 7：检查无生命物体做人类动作</h3><p>这是最容易被忽略的：</p>
+<ul>
+<li><del>“决策浮现”</del> → 有人做了决定 </li>
+<li><del>“数据表明”</del> → 我分析了数据，发现 </li>
+<li><del>“系统能够实现”</del> → 我们用系统实现了</li>
+</ul>
+<p>无生命的系统 / 数据 / 概念，不能执行只有人类才能执行的动作。</p>
+<h2 id="四、检查清单（50-分评分表）"><a href="#四、检查清单（50-分评分表）" class="headerlink" title="四、检查清单（50 分评分表）"></a>四、检查清单（50 分评分表）</h2><p>除了 7 条规则，stop-slop 还给了一个实用评分系统：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>权重</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>直接性</td>
+<td> 20 分</td>
+<td>没有废话，开门见山</td>
+</tr>
+<tr>
+<td>节奏感</td>
+<td> 15 分</td>
+<td>句子长短交替，有呼吸感</td>
+</tr>
+<tr>
+<td>人情味</td>
+<td> 15 分</td>
+<td>像个真实的人在对另一个真实的人说话</td>
+</tr>
+</tbody></table>
+<p><strong>50 分满分</strong>，自测一下你写的东西离 AI 腔调有多远。</p>
+<h2 id="五、taste-skill：配套的品味系统"><a href="#五、taste-skill：配套的品味系统" class="headerlink" title="五、taste-skill：配套的品味系统"></a>五、taste-skill：配套的品味系统</h2><p>taste-skill 和 stop-slop 是同一个作者，定位是” 给 AI 装上一个品味过滤器”。</p>
+<p>taste-skill 的逻辑是：在 AI 生成的任何内容之后，自动跑一遍 taste 检查 ——</p>
+<ul>
+<li>内容有没有品味？</li>
+<li>表达有没有特色？</li>
+<li>整体有没有让人想读下去的欲望？</li>
+</ul>
+<p>两者配合：一个负责” 不难吃”，一个负责” 有特色”。</p>
+<h2 id="六、如何使用"><a href="#六、如何使用" class="headerlink" title="六、如何使用"></a>六、如何使用</h2><h3 id="在-Claude-Code-中使用"><a href="#在-Claude-Code-中使用" class="headerlink" title="在 Claude Code 中使用"></a>在 Claude Code 中使用</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">npx skills add https://github.com/hardikpandya/stop-slop --skill stop-slop</span><br></pre></td></tr></tbody></table></figure>
+
+<p>添加后，每次写作任务 Claude Code 会自动加载这个 Skill。</p>
+<h3 id="作为自定义指令"><a href="#作为自定义指令" class="headerlink" title="作为自定义指令"></a>作为自定义指令</h3><p>直接把 SKILL.md 的核心规则复制到你的 system prompt 里：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">写作时遵循以下规则：</span><br><span class="line">1. 删除所有副词</span><br><span class="line">2. 使用主动语态，人类主体执行动作</span><br><span class="line">3. 具体数据替代模糊形容词</span><br><span class="line">4. 让读者置身场景</span><br><span class="line">5. 删除"以下是"类开头</span><br><span class="line">6. 假大空金句重写</span><br><span class="line">7. 检查无生命物体执行人类动作</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="手动检查"><a href="#手动检查" class="headerlink" title="手动检查"></a>手动检查</h3><p>打开 <code>phrases.md</code> 和 <code>structures.md</code>，把容易出错的模式列出来，写完文章后对照检查。</p>
+<h2 id="七、适用场景"><a href="#七、适用场景" class="headerlink" title="七、适用场景"></a>七、适用场景</h2><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>是否适用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>技术博客</td>
+<td>✅ 非常适合</td>
+</tr>
+<tr>
+<td>产品文案</td>
+<td>✅ 适合</td>
+</tr>
+<tr>
+<td>论文 / 报告</td>
+<td>❌ 不适合（需要正式腔调）</td>
+</tr>
+<tr>
+<td>社交媒体</td>
+<td>✅ 适合</td>
+</tr>
+<tr>
+<td>代码注释</td>
+<td>✅ 适合</td>
+</tr>
+<tr>
+<td>邮件</td>
+<td>✅ 适合</td>
+</tr>
+</tbody></table>
+<p>本质上，只要目标是” 让人类读者读起来舒服”，stop-slop 就适用。</p>
+<h2 id="八、为什么这个问题重要"><a href="#八、为什么这个问题重要" class="headerlink" title="八、为什么这个问题重要"></a>八、为什么这个问题重要</h2><p>内容为王的时代，读者越来越聪明。AI 腔调太明显的文章，即使内容有价值，也会被快速划走。</p>
+<p>但更深层的原因是：<strong>AI 腔调本质上是” 不真诚” 的表达</strong>。当你用一堆” 首先、其次、综上所述” 的时候，读者感受到的不是专业，而是一种距离感。</p>
+<p>写东西的目的是传达信息、影响他人。不真诚的表达方式会在读者和内容之间竖起一道墙。</p>
+<p>stop-slop 做的，就是把这道墙拆掉。</p>
+<hr>
+<p><strong>相关工具：</strong></p>
+<ul>
+<li>GitHub：<a href="https://github.com/hardikpandya/stop-slop">hardikpandya/stop-slop</a></li>
+<li>GitHub：<a href="https://github.com/Leonxlnx/taste-skill">Leonxlnx/taste-skill</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>技术教程</category>
+      </categories>
+      <tags>
+        <tag>Claude Code</tag>
+        <tag>AI 写作</tag>
+        <tag>Prompt Engineering</tag>
+        <tag>Skills</tag>
+        <tag>内容创作</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Superpowers：用一套工作流让 AI 编码代理真正替你干活</title>
+    <url>/2025/05/29/superpowers-agentic-skills-framework/</url>
+    <content><![CDATA[<p>作为数字游民，我最怕的就是打开 Cursor 或 Claude Code，准备写两行代码，结果 AI 给你整出来一坨功能 —— 三个月后自己都看不懂。这不是我一个人的感受。最近在 GitHub trending 上看到的 <strong>Superpowers</strong>，正好解决这个痛点。</p>
+<h2 id="它解决什么问题"><a href="#它解决什么问题" class="headerlink" title="它解决什么问题"></a>它解决什么问题</h2><p>AI 编码代理（Claude Code、Codex、Cursor 等）现在越来越强，但有个通病：<strong>缺乏结构和约束</strong>。你让它写一个功能，它分分钟给你整出 20 个文件，变量名随手起，测试一个没有，三个月后再看 —— 哇，这谁写的。</p>
+<p>Superpowers 是一套软件开发和代理工作流框架，专门给 AI 编码代理使用的。它的核心思想很简单：<strong>先想清楚再动手，每个任务都要验收</strong>。不是让 AI 自由发挥，而是给它一套规则。</p>
+<h2 id="怎么运作的"><a href="#怎么运作的" class="headerlink" title="怎么运作的"></a>怎么运作的</h2><p>Superpowers 把开发分成三个阶段：</p>
+<p><strong>设计阶段</strong> — AI 先问你到底想干什么，把目标拆解清楚，写一份设计文档，你确认了再往下走。不是一上来就开写。</p>
+<p><strong>规划阶段</strong> — 设计确认后，AI 会生成一份实现计划，细到每个文件、每行改动要做什么。” 让一个热情洋溢但品味很差、没有判断力、不爱写测试的初级工程师照着这份计划能看懂”—— 这是官方原话。</p>
+<p><strong>执行阶段</strong> — 任务被拆成小块，每块由子代理处理，处理完有检查点。不是一条龙服务到黑，而是一步一验收。</p>
+<h2 id="核心技能：六个必须掌握的工作流"><a href="#核心技能：六个必须掌握的工作流" class="headerlink" title="核心技能：六个必须掌握的工作流"></a>核心技能：六个必须掌握的工作流</h2><p>Superpowers 提供了多个技能（skills），强制使用的有这几个：</p>
+<table>
+<thead>
+<tr>
+<th>技能</th>
+<th>触发时机</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>brainstorming</code></td>
+<td>写代码之前</td>
+<td>细化需求，探索方案，确认设计是否合理</td>
+</tr>
+<tr>
+<td><code>using-git-worktrees</code></td>
+<td>设计通过后</td>
+<td>创建隔离的工作分支，验证 clean baseline</td>
+</tr>
+<tr>
+<td><code>writing-plans</code></td>
+<td>有设计后</td>
+<td>拆解成 2-5 分钟的小任务，明确文件路径</td>
+</tr>
+<tr>
+<td><code>subagent-driven-development</code></td>
+<td>有计划后</td>
+<td>分派子代理逐个完成任务，有人工 checkpoint</td>
+</tr>
+<tr>
+<td><code>test-driven-development</code></td>
+<td>实现过程中</td>
+<td>先写测试，跑不过再实现，RED-GREEN-REFACTOR</td>
+</tr>
+<tr>
+<td><code>requesting-code-review</code></td>
+<td>任务之间</td>
+<td>按严重程度报告问题，review 设计合规性</td>
+</tr>
+</tbody></table>
+<p>这套流程的本质是：<strong>不让 AI 跳步</strong>。测试先行的 TDD 套路大家都懂，但 AI 往往直接跳到实现，忽略测试。Superpowers 通过强制技能把这一点扳过来。</p>
+<h2 id="支持哪些代理"><a href="#支持哪些代理" class="headerlink" title="支持哪些代理"></a>支持哪些代理</h2><p>官方支持：</p>
+<ul>
+<li>Claude Code（官方插件市场）</li>
+<li>Codex CLI / App（官方插件市场）</li>
+<li>Cursor（<code>/add-plugin superpowers</code> 或市场搜索）</li>
+<li>OpenCode（fetch 安装脚本）</li>
+<li>Gemini CLI（扩展安装）</li>
+<li>GitHub Copilot CLI（自定义市场注册）</li>
+</ul>
+<p>每个代理都有专属配置，技能在不同代理之间保持一致。</p>
+<h2 id="我怎么用的"><a href="#我怎么用的" class="headerlink" title="我怎么用的"></a>我怎么用的</h2><p>我平时写东西经常是临时起意 —— 突然想做一个脚本，噼里啪啦就开始让 AI 写。结果就是代码散落一地，功能倒是实现了，但完全没法维护。</p>
+<p>用了 Superpowers 的工作流之后，我的日常变成了：</p>
+<ol>
+<li>让 AI 先描述它要做什么，我来确认需求是否清晰</li>
+<li>让它生成一份计划，我逐项检查哪些不合理</li>
+<li>每一小块完成之后检查 output，而不是等最后一起验收</li>
+</ol>
+<p>听起来多了几步，但实际上省了大量的返工时间。尤其是 <code>test-driven-development</code> 这个技能 —— 它真的强制 AI 先写测试再写实现，这让代码质量高了一个档次。</p>
+<h2 id="谁适合用"><a href="#谁适合用" class="headerlink" title="谁适合用"></a>谁适合用</h2><p>如果你符合以下任意一条，Superpowers 值得一试：</p>
+<ul>
+<li>经常和 AI 编码代理打交道（Cursor、Claude Code、Codex 等）</li>
+<li>团队里有人在用 AI 辅助开发，但没有统一规范</li>
+<li>项目代码越来越难维护，AI 生成的代码质量参差不齐</li>
+<li>想让 AI 代理做更复杂的任务，但不知道怎么约束它</li>
+</ul>
+<p>如果你只是偶尔让 AI 帮你写个脚本，那 Superpowers 有点杀鸡用牛刀。但只要你是重度 AI 编码用户，这套工作流能显著提升输出质量。</p>
+<h2 id="怎么安装"><a href="#怎么安装" class="headerlink" title="怎么安装"></a>怎么安装</h2><p>以 Claude Code 为例，直接在官方插件市场搜索 “Superpowers” 安装即可。其他代理参考官方 README，有完整的安装说明。</p>
+<p>GitHub：<a href="https://github.com/obra/superpowers">https://github.com/obra/superpowers</a></p>
+<hr>
+<p>数字游民的时间最贵，别把时间浪费在返工上。给 AI 一点结构，它能给你的产出加不止一个档次。</p>
+]]></content>
+      <tags>
+        <tag>AI Agent</tag>
+        <tag>开发效率</tag>
+        <tag>工作流</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Superpowers：给 AI 编程 Agent 的一套完整方法论</title>
+    <url>/2026/05/28/superpowers-ai-agent-methodology/</url>
+    <content><![CDATA[<h2 id="一、210k-stars-说明什么"><a href="#一、210k-stars-说明什么" class="headerlink" title="一、210k stars 说明什么"></a>一、210k stars 说明什么</h2><p>写这篇文章的时候，GitHub 上有一个项目：</p>
+<ul>
+<li><strong>210,000 颗星</strong></li>
+<li><strong> 18,700 个 Fork</strong></li>
+<li> 支持 Claude Code、Codex、Cursor、OpenCode、GitHub Copilot CLI、Gemini CLI 六大平台</li>
+<li> MIT 协议，完全开源</li>
+</ul>
+<p>这个项目叫 <strong>Superpowers</strong>，来自 <a href="https://github.com/obra">obra</a>（Jesse Vincent，GitHub 上最活跃的贡献者之一）。</p>
+<p>它不是一套 Skills 集合，而是一套<strong>完整的软件开发方法论</strong>。目标很简单：让 AI 编程 Agent 不是在随机试错中帮你写代码，而是按照一套经过验证的流程，稳稳当当地完成开发任务。</p>
+<h2 id="二、问题：AI-编程工具的天花板在哪里"><a href="#二、问题：AI-编程工具的天花板在哪里" class="headerlink" title="二、问题：AI 编程工具的天花板在哪里"></a>二、问题：AI 编程工具的天花板在哪里</h2><p>用过 Claude Code、Cursor、Copilot 的同学应该有一个共同感受：</p>
+<p><strong>它们都很强，但不稳定。</strong></p>
+<p>有时候能帮你独立完成一个完整功能，有时候却在一个简单 bug 上绕了三小时。有时候输出的代码质量很高，有时候满屏 boilerplate。</p>
+<p>这种不稳定不是工具本身的问题，而是<strong>缺少流程约束</strong>。没有流程，AI 就只能靠概率工作 —— 碰巧对了就好，碰巧错了就崩。</p>
+<p>Superpowers 想解决的就是这个问题：<strong>用一套方法论，把 AI 的能力框在一个可靠的范围内。</strong></p>
+<h2 id="三、核心工作流：七步走"><a href="#三、核心工作流：七步走" class="headerlink" title="三、核心工作流：七步走"></a>三、核心工作流：七步走</h2><p>Superpowers 的工作流分七个阶段，每个阶段都有对应的 Skill：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">brainstorming → writing-plans → subagent-driven-development →</span><br><span class="line">test-driven-development → requesting-code-review → finishing-a-development-branch</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="第一步：Brainstorming（头脑风暴）"><a href="#第一步：Brainstorming（头脑风暴）" class="headerlink" title="第一步：Brainstorming（头脑风暴）"></a>第一步：Brainstorming（头脑风暴）</h3><p>起点不是代码，而是理解问题。Agent 会通过一系列提问，把你要做的事拆解清楚，然后用小块的方式呈现给你确认 —— 每次只显示你能读完的分量，避免信息过载。</p>
+<p>这个设计很聪明：<strong>很多 AI 生成的代码问题，根源在于对需求的理解就有偏差</strong>。在动手之前先对齐目标，后续返工的概率就低很多。</p>
+<h3 id="第二步：Writing-Plans（写计划）"><a href="#第二步：Writing-Plans（写计划）" class="headerlink" title="第二步：Writing Plans（写计划）"></a>第二步：Writing Plans（写计划）</h3><p>计划是 Superpowers 的核心。每个任务被拆成 2-5 分钟的小块，每块都有精确的文件路径和验证步骤。</p>
+<p>不是” 实现登录功能” 这种模糊描述，而是：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">1. 修改 src/auth/login.js，在第 23 行加 validateEmail 函数</span><br><span class="line">2. 跑 npm test，确认 auth.test.js 全绿</span><br><span class="line">3. 验证 /login 路由返回 200</span><br></pre></td></tr></tbody></table></figure>
+
+<p>有路径、有验证步骤、有预期结果。Agent 按这个计划执行，不会跑偏。</p>
+<h3 id="第三步：Subagent-Driven-Development（子-Agent-驱动）"><a href="#第三步：Subagent-Driven-Development（子-Agent-驱动）" class="headerlink" title="第三步：Subagent Driven Development（子 Agent 驱动）"></a>第三步：Subagent Driven Development（子 Agent 驱动）</h3><p>复杂任务被分解后，每个子任务分配给独立的子 Agent 处理。子 Agent 有自己的会话和终端上下文，互不干扰，主 Agent 最后汇总结果。</p>
+<p>这解决了什么问题？主 Agent 上下文有限，不可能同时追踪太多任务。用子 Agent 并行处理，效率高，而且每个子任务的 context 都是干净的。</p>
+<h3 id="第四步：Test-Driven-Development（测试驱动）"><a href="#第四步：Test-Driven-Development（测试驱动）" class="headerlink" title="第四步：Test Driven Development（测试驱动）"></a>第四步：Test Driven Development（测试驱动）</h3><p>Superpowers 的 TDD 不是说说而已。它强制要求 <strong>RED-GREEN-REFACTOR</strong> 循环：</p>
+<ul>
+<li>RED：先写一个失败的测试</li>
+<li> GREEN：写最少数量的代码让测试通过</li>
+<li> REFACTOR：重构，去掉重复</li>
+</ul>
+<p>这个 Skill 里还附带了一个 <strong>anti-patterns 参考</strong>，列出 TDD 实践中容易犯的错误。</p>
+<h3 id="第五步：Requesting-Code-Review（代码审查）"><a href="#第五步：Requesting-Code-Review（代码审查）" class="headerlink" title="第五步：Requesting Code Review（代码审查）"></a>第五步：Requesting Code Review（代码审查）</h3><p>代码写完了，不是直接合并，而是先过一遍审查。审查对照原始计划，检查是否所有功能都已实现，关键问题是否都已解决。</p>
+<p>Superpowers 的审查规则很严格：<strong>PR 必须有人类参与才能合并</strong>。纯 AI 生成的 PR，如果没有人类审核，直接关闭。</p>
+<h3 id="第六步：Finishing-a-Development-Branch（收尾）"><a href="#第六步：Finishing-a-Development-Branch（收尾）" class="headerlink" title="第六步：Finishing a Development Branch（收尾）"></a>第六步：Finishing a Development Branch（收尾）</h3><p>测试全绿、审查通过之后，才是合并。有 merge、rebase、squash 三种合并方式可选，每种都有明确的适用场景说明。</p>
+<h2 id="四、Skills-体系：能力的模块化"><a href="#四、Skills-体系：能力的模块化" class="headerlink" title="四、Skills 体系：能力的模块化"></a>四、Skills 体系：能力的模块化</h2><p>Superpowers 把开发能力拆成多个 Skill，不是为了炫技，而是让每个 Skill 都可以独立演进：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th> Skills</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 测试</td>
+<td><code>test-driven-development</code></td>
+</tr>
+<tr>
+<td>调试</td>
+<td><code>systematic-debugging</code>、<code>verification-before-completion</code></td>
+</tr>
+<tr>
+<td>协作</td>
+<td><code>brainstorming</code>、<code>writing-plans</code>、<code>requesting-code-review</code>、<code>subagent-driven-development</code></td>
+</tr>
+<tr>
+<td>元</td>
+<td><code>writing-skills</code>、<code>using-superpowers</code></td>
+</tr>
+</tbody></table>
+<p>任何一个 Skill 都可以单独更新、单独 PR，不需要改动整个项目。</p>
+<p>社区维护了一个独立仓库 <a href="https://github.com/obra/superpowers-skills">obra/superpowers-skills</a>，任何人都可以 Fork 提交新的 Skill 或改进现有 Skill。</p>
+<h2 id="五、方法论背后的哲学"><a href="#五、方法论背后的哲学" class="headerlink" title="五、方法论背后的哲学"></a>五、方法论背后的哲学</h2><p>Superpowers 之所以有效，是因为它坚持了几个核心原则：</p>
+<p><strong>TDD 优先</strong><br>测试先行不是教条，而是减少返工的最有效手段。没有测试的代码，AI 写出来的质量完全靠概率。强制测试通过之后才进入下一步，质量稳定性大大提高。</p>
+<p><strong>YAGNI（You Aren’t Gonna Need It）</strong><br>不做过度设计。AI 倾向于” 功能全上”，写出来的代码经常 over-engineered。YAGNI 原则让 AI 只做当前需求的东西，不做未来可能需要的预留。</p>
+<p><strong>DRY（Don’t Repeat Yourself）</strong><br>重复是维护的噩梦。Superpowers 在执行过程中会检查重复代码，让 Agent 保持代码库的简洁。</p>
+<p><strong>Evidence over claims</strong><br>不要在没有验证的情况下宣布成功。测试全绿才能合并，验证通过才能进入下一阶段。所有的” 完成” 都要有可衡量的标准。</p>
+<h2 id="六、怎么安装"><a href="#六、怎么安装" class="headerlink" title="六、怎么安装"></a>六、怎么安装</h2><p>支持六大平台：</p>
+<h3 id="Claude-Code（官方市场）"><a href="#Claude-Code（官方市场）" class="headerlink" title="Claude Code（官方市场）"></a>Claude Code（官方市场）</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">/plugin install superpowers@claude-plugins-official</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Cursor"><a href="#Cursor" class="headerlink" title="Cursor"></a>Cursor</h3><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">/add-plugin superpowers</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Codex"><a href="#Codex" class="headerlink" title="Codex"></a>Codex</h3><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.codex/INSTALL.md</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Gemini-CLI"><a href="#Gemini-CLI" class="headerlink" title="Gemini CLI"></a>Gemini CLI</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">gemini extensions install https://github.com/obra/superpowers</span><br></pre></td></tr></tbody></table></figure>
+
+<p>装完之后开启新会话，问它” 帮我计划这个功能”，Superpowers 会自动调用相关 Skills。</p>
+<h2 id="七、为什么这个项目值得关注"><a href="#七、为什么这个项目值得关注" class="headerlink" title="七、为什么这个项目值得关注"></a>七、为什么这个项目值得关注</h2><p>210k stars 不是刷出来的。Superpowers 解决的是一个真实问题：<strong>AI 编程工具很强，但缺少可靠的工作流程约束，导致输出质量不稳定。</strong></p>
+<p>它不是给 AI 赋能更多能力，而是给 AI 一个<strong>可靠的做事框架</strong>。有了框架，AI 的能力才能稳定发挥。</p>
+<p>对于用 AI 编程工具的同学，这套方法论值得花时间学一下。学的是怎么跟 AI 协作，而不是怎么让 AI 帮你写代码。</p>
+<p><strong>GitHub</strong>：<a href="https://github.com/obra/superpowers">https://github.com/obra/superpowers</a><br><strong>作者</strong>：Jesse Vincent (<a href="https://github.com/obra">@obra</a>)<br><strong>Discord</strong>：<a href="https://discord.gg/35wsABTejz">https://discord.gg/35wsABTejz</a></p>
+<hr>
+<p><em>相关博客：<a href="/2026/05/27/hermes-agent-intro/">Hermes Agent 实战</a></em><br><em><a href="/2026/05/27/stop-slop-ai-writing/">去除 AI 腔调：stop-slop</a></em></p>
+]]></content>
+      <categories>
+        <category>技术教程</category>
+      </categories>
+      <tags>
+        <tag>AI Agent</tag>
+        <tag>Claude Code</tag>
+        <tag>效率工具</tag>
+        <tag>开发流程</tag>
+        <tag>TDD</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python 包管理工具 uv：告别 pip 的慢与痛</title>
+    <url>/2026/05/27/uv-vs-pip/</url>
+    <content><![CDATA[<h2 id="一、问题：pip-到底哪里让人不爽？"><a href="#一、问题：pip-到底哪里让人不爽？" class="headerlink" title="一、问题：pip 到底哪里让人不爽？"></a>一、问题：pip 到底哪里让人不爽？</h2><p>作为一个 Python 开发者，你一定经历过这些场景：</p>
+<ul>
+<li><strong>安装依赖慢如蜗牛</strong> —— <code>pip install</code> 一个大型项目，喝完一杯咖啡还没装完</li>
+<li><strong>工具链碎片化严重</strong> —— pip 装包、venv 建环境、pip-tools 锁依赖、pipx 装全局工具、pyenv 管版本…… 每个工具各管一摊，配置文件散落一地</li>
+<li><strong>依赖冲突让人崩溃</strong> —— 项目 A 需要 <code>numpy==1.24</code>，项目 B 需要 <code>numpy==2.0</code>，来回切换虚拟环境手忙脚乱</li>
+<li><strong>团队协作环境不一致</strong> —— 你本地跑得好好的，同事拉代码就报错，<code>requirements.txt</code> 根本锁不住精确版本</li>
+<li><strong> Python 版本管理混乱</strong> —— 系统自带 Python 3.8，项目需要 3.12，装了一堆版本却不知道怎么切换</li>
+</ul>
+<p>这些问题不是你的错，而是 Python 生态的历史包袱。pip 诞生于 2008 年，用纯 Python 编写，虽然功能完善，但在<strong>速度</strong>和<strong>统一性</strong>上已经跟不上时代了。</p>
+<h2 id="二、解决方案：uv-是什么？"><a href="#二、解决方案：uv-是什么？" class="headerlink" title="二、解决方案：uv 是什么？"></a>二、解决方案：uv 是什么？</h2><p><strong>uv</strong> 是由 <a href="https://astral.sh/">Astral</a>（Ruff 的开发团队）用 <strong>Rust</strong> 编写的新一代 Python 包和项目管理工具，于 2024 年开源。它的目标非常明确：</p>
+<blockquote>
+<p><strong>一个工具，替代 pip + venv + pip-tools + pipx + pyenv + virtualenv</strong></p>
+</blockquote>
+<p>核心优势：</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>极速</td>
+<td>比 pip 快 10~100 倍（Rust 实现 + 全局缓存）</td>
+</tr>
+<tr>
+<td>统一</td>
+<td>包管理、环境管理、版本管理、工具管理一体化</td>
+</tr>
+<tr>
+<td>兼容</td>
+<td>提供 pip 兼容接口，迁移成本极低</td>
+</tr>
+<tr>
+<td>智能</td>
+<td>自动解析依赖、生成锁文件、管理虚拟环境</td>
+</tr>
+<tr>
+<td>轻量</td>
+<td>单一二进制文件，无需 Python 环境即可安装</td>
+</tr>
+</tbody></table>
+<h2 id="三、安装-uv"><a href="#三、安装-uv" class="headerlink" title="三、安装 uv"></a>三、安装 uv</h2><h3 id="macOS-Linux"><a href="#macOS-Linux" class="headerlink" title="macOS / Linux"></a>macOS / Linux</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># 推荐方式：官方安装脚本</span></span><br><span class="line">curl -LsSf https://astral.sh/uv/install.sh | sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者用 wget</span></span><br><span class="line">wget -qO- https://astral.sh/uv/install.sh | sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以通过包管理器</span></span><br><span class="line">brew install uv          <span class="comment"># Homebrew</span></span><br><span class="line"><span class="built_in">sudo</span> port install uv     <span class="comment"># MacPorts</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h3><figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># PowerShell</span></span><br><span class="line">powershell <span class="literal">-c</span> <span class="string">"irm https://astral.sh/uv/install.ps1 | iex"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者用 WinGet / Scoop</span></span><br><span class="line">winget install <span class="literal">--id</span>=astral<span class="literal">-sh</span>.uv <span class="literal">-e</span></span><br><span class="line">scoop install main/uv</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="其他方式"><a href="#其他方式" class="headerlink" title="其他方式"></a>其他方式</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># 通过 pip（不推荐，因为 pip 本身就慢……但确实可以）</span></span><br><span class="line">pip install uv</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过 pipx（推荐，隔离安装）</span></span><br><span class="line">pipx install uv</span><br><span class="line"></span><br><span class="line"><span class="comment"># Docker</span></span><br><span class="line"><span class="comment"># 官方镜像：ghcr.io/astral-sh/uv</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="验证安装"><a href="#验证安装" class="headerlink" title="验证安装"></a>验证安装</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">uv --version</span><br><span class="line"><span class="comment"># uv 0.x.x (2026-xx-xx)</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="升级"><a href="#升级" class="headerlink" title="升级"></a>升级</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># 独立安装器方式</span></span><br><span class="line">uv self update</span><br><span class="line"></span><br><span class="line"><span class="comment"># pip 方式</span></span><br><span class="line">pip install --upgrade uv</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="四、核心用法：uv-vs-pip-逐项对比"><a href="#四、核心用法：uv-vs-pip-逐项对比" class="headerlink" title="四、核心用法：uv vs pip 逐项对比"></a>四、核心用法：uv vs pip 逐项对比</h2><h3 id="1-创建虚拟环境"><a href="#1-创建虚拟环境" class="headerlink" title="1. 创建虚拟环境"></a>1. 创建虚拟环境</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># pip 的方式（需要先建环境再激活）</span></span><br><span class="line">python -m venv .venv</span><br><span class="line"><span class="built_in">source</span> .venv/bin/activate   <span class="comment"># Linux/Mac</span></span><br><span class="line">.venv\Scripts\activate      <span class="comment"># Windows</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># uv 的方式（一步到位，无需手动激活）</span></span><br><span class="line">uv venv                      <span class="comment"># 创建虚拟环境</span></span><br><span class="line">uv <span class="built_in">sync</span>                      <span class="comment"># 自动创建并安装依赖</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>区别</strong>：uv 不需要手动激活虚拟环境，<code>uv run</code> 会自动使用项目环境。</p>
+<h3 id="2-安装包"><a href="#2-安装包" class="headerlink" title="2. 安装包"></a>2. 安装包</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># pip</span></span><br><span class="line">pip install requests</span><br><span class="line">pip install <span class="string">"django&gt;=4.0"</span></span><br><span class="line">pip install -r requirements.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># uv（命令几乎一样，但快 10~100 倍）</span></span><br><span class="line">uv pip install requests</span><br><span class="line">uv pip install <span class="string">"django&gt;=4.0"</span></span><br><span class="line">uv pip install -r requirements.txt</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>区别</strong>：uv 提供了 <code>uv pip</code> 子命令来兼容 pip 的工作流，但更推荐使用项目级别的 <code>uv add</code>。</p>
+<h3 id="3-项目依赖管理"><a href="#3-项目依赖管理" class="headerlink" title="3. 项目依赖管理"></a>3. 项目依赖管理</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># pip：手动编辑 requirements.txt</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"requests"</span> &gt;&gt; requirements.txt</span><br><span class="line">pip install -r requirements.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># uv：自动管理 pyproject.toml + uv.lock</span></span><br><span class="line">uv init my-project       <span class="comment"># 初始化项目（生成 pyproject.toml）</span></span><br><span class="line">uv add requests          <span class="comment"># 添加依赖（自动更新 pyproject.toml 和 uv.lock）</span></span><br><span class="line">uv add pytest --dev      <span class="comment"># 添加开发依赖</span></span><br><span class="line">uv add <span class="string">"django&gt;=4.0"</span>     <span class="comment"># 指定版本范围</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>区别</strong>：uv 自动维护 <code>pyproject.toml</code>（声明依赖）和 <code>uv.lock</code>（锁定精确版本），不再需要手写 <code>requirements.txt</code>。</p>
+<h3 id="4-同步环境"><a href="#4-同步环境" class="headerlink" title="4. 同步环境"></a>4. 同步环境</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># pip：没有原生锁文件机制，依赖 requirements.txt</span></span><br><span class="line">pip install -r requirements.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># uv：基于锁文件精确复现</span></span><br><span class="line">uv <span class="built_in">sync</span>                  <span class="comment"># 完整同步（含开发依赖）</span></span><br><span class="line">uv <span class="built_in">sync</span> --no-dev         <span class="comment"># 仅生产依赖</span></span><br><span class="line">uv <span class="built_in">sync</span> --group <span class="built_in">test</span>     <span class="comment"># 同步特定依赖组</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>区别</strong>：<code>uv.lock</code> 锁定了所有依赖（包括子依赖）的精确版本，确保团队成员和 CI/CD 环境完全一致。</p>
+<h3 id="5-运行代码"><a href="#5-运行代码" class="headerlink" title="5. 运行代码"></a>5. 运行代码</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># pip：必须先激活虚拟环境</span></span><br><span class="line"><span class="built_in">source</span> .venv/bin/activate</span><br><span class="line">python main.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># uv：自动使用项目环境</span></span><br><span class="line">uv run python main.py</span><br><span class="line">uv run pytest            <span class="comment"># 直接运行测试</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>区别</strong>：<code>uv run</code> 自动激活项目虚拟环境，无需手动 source/activate。</p>
+<h3 id="6-全局工具安装"><a href="#6-全局工具安装" class="headerlink" title="6. 全局工具安装"></a>6. 全局工具安装</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># pip：不推荐全局安装（会污染系统 Python）</span></span><br><span class="line">pip install --user black</span><br><span class="line"></span><br><span class="line"><span class="comment"># pipx：需要额外安装</span></span><br><span class="line">pipx install black</span><br><span class="line"></span><br><span class="line"><span class="comment"># uv：内置支持，每个工具独立隔离</span></span><br><span class="line">uv tool install black</span><br><span class="line">uv tool install ruff jupyter</span><br><span class="line">uv tool list</span><br><span class="line">uv tool upgrade black</span><br><span class="line">uv tool uninstall jupyter</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>区别</strong>：uv 内置了 pipx 的功能，无需额外安装工具。</p>
+<h3 id="7-临时运行工具（类似-npx）"><a href="#7-临时运行工具（类似-npx）" class="headerlink" title="7. 临时运行工具（类似 npx）"></a>7. 临时运行工具（类似 npx）</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># pip：没有对应功能，必须先安装再运行</span></span><br><span class="line">pip install black &amp;&amp; black .</span><br><span class="line"></span><br><span class="line"><span class="comment"># uv：uvx 一步到位，用完即弃</span></span><br><span class="line">uvx black .                    <span class="comment"># 格式化代码</span></span><br><span class="line">uvx ruff check .               <span class="comment"># 代码检查</span></span><br><span class="line">uvx <span class="string">"black==23.12.0"</span> .         <span class="comment"># 指定版本运行</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>区别</strong>：<code>uvx</code> 是 uv 的杀手级功能，自动创建临时环境、安装、运行、清理，全程无需手动干预。</p>
+<h3 id="8-Python-版本管理"><a href="#8-Python-版本管理" class="headerlink" title="8. Python 版本管理"></a>8. Python 版本管理</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># pip：不涉及，需要 pyenv 等额外工具</span></span><br><span class="line">pyenv install 3.12</span><br><span class="line">pyenv global 3.12</span><br><span class="line"></span><br><span class="line"><span class="comment"># uv：内置 Python 版本管理</span></span><br><span class="line">uv python list                 <span class="comment"># 查看可用版本</span></span><br><span class="line">uv python install 3.10 3.11 3.12  <span class="comment"># 安装多个版本</span></span><br><span class="line">uv python pin 3.11             <span class="comment"># 为项目指定版本</span></span><br><span class="line">uv run --python 3.10 pytest    <span class="comment"># 用指定版本运行</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>区别</strong>：uv 内置了 pyenv 的功能，一个工具搞定版本管理。</p>
+<h3 id="9-导出依赖"><a href="#9-导出依赖" class="headerlink" title="9. 导出依赖"></a>9. 导出依赖</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># pip：本身就是 requirements.txt 格式</span></span><br><span class="line">pip freeze &gt; requirements.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># uv：可导出多种格式</span></span><br><span class="line">uv <span class="built_in">export</span> --format requirements-txt &gt; requirements.txt</span><br><span class="line">uv <span class="built_in">export</span> --format pyproject-toml</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="10-缓存管理"><a href="#10-缓存管理" class="headerlink" title="10. 缓存管理"></a>10. 缓存管理</h3><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># pip：缓存管理有限</span></span><br><span class="line">pip cache <span class="built_in">dir</span></span><br><span class="line">pip cache purge</span><br><span class="line"></span><br><span class="line"><span class="comment"># uv：全局缓存，跨项目共享</span></span><br><span class="line">uv cache clean                <span class="comment"># 清理缓存</span></span><br><span class="line">uv cache <span class="built_in">dir</span>                  <span class="comment"># 查看缓存位置</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>区别</strong>：uv 使用全局缓存，已下载的包在多个项目间共享，大幅减少重复下载。</p>
+<h2 id="五、命令速查表"><a href="#五、命令速查表" class="headerlink" title="五、命令速查表"></a>五、命令速查表</h2><table>
+<thead>
+<tr>
+<th>场景</th>
+<th> pip</th>
+<th>uv</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 安装包</td>
+<td><code>pip install requests</code></td>
+<td><code>uv add requests</code></td>
+</tr>
+<tr>
+<td>卸载包</td>
+<td><code>pip uninstall requests</code></td>
+<td><code>uv remove requests</code></td>
+</tr>
+<tr>
+<td>创建环境</td>
+<td><code>python -m venv .venv</code></td>
+<td><code>uv venv</code></td>
+</tr>
+<tr>
+<td>安装全部依赖</td>
+<td><code>pip install -r requirements.txt</code></td>
+<td><code>uv sync</code></td>
+</tr>
+<tr>
+<td>运行脚本</td>
+<td><code>python main.py</code>（需先激活）</td>
+<td><code>uv run python main.py</code></td>
+</tr>
+<tr>
+<td>锁定依赖</td>
+<td><code>pip freeze &gt; requirements.txt</code></td>
+<td><code>uv lock</code>（自动）</td>
+</tr>
+<tr>
+<td>查看已安装</td>
+<td><code>pip list</code></td>
+<td><code>uv pip list</code></td>
+</tr>
+<tr>
+<td>查看依赖树</td>
+<td><code>pipdeptree</code>（需安装）</td>
+<td><code>uv tree</code></td>
+</tr>
+<tr>
+<td>全局工具</td>
+<td><code>pipx install black</code></td>
+<td><code>uv tool install black</code></td>
+</tr>
+<tr>
+<td>临时运行</td>
+<td>无</td>
+<td><code>uvx black .</code></td>
+</tr>
+<tr>
+<td>Python 版本管理</td>
+<td><code>pyenv install 3.12</code></td>
+<td><code>uv python install 3.12</code></td>
+</tr>
+<tr>
+<td>构建发布</td>
+<td><code>python -m build</code></td>
+<td><code>uv build</code></td>
+</tr>
+<tr>
+<td>发布到 PyPI</td>
+<td><code>twine upload dist/*</code></td>
+<td><code>uv publish</code></td>
+</tr>
+</tbody></table>
+<h2 id="六、从-pip-迁移到-uv"><a href="#六、从-pip-迁移到-uv" class="headerlink" title="六、从 pip 迁移到 uv"></a>六、从 pip 迁移到 uv</h2><p>迁移非常简单，几乎零成本：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># 1. 安装 uv</span></span><br><span class="line">curl -LsSf https://astral.sh/uv/install.sh | sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 进入现有项目目录</span></span><br><span class="line"><span class="built_in">cd</span> your-project</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 初始化 uv 项目</span></span><br><span class="line">uv init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 从 requirements.txt 导入依赖</span></span><br><span class="line">uv add -r requirements.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 完成！后续使用 uv 管理即可</span></span><br><span class="line">uv <span class="built_in">sync</span></span><br><span class="line">uv run python main.py</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果项目已经有 <code>pyproject.toml</code>（如 Poetry 项目），直接 <code>uv sync</code> 即可识别。</p>
+<h2 id="七、优缺点总结"><a href="#七、优缺点总结" class="headerlink" title="七、优缺点总结"></a>七、优缺点总结</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ol>
+<li><strong>极速</strong> —— Rust 编写，安装速度比 pip 快 10~100 倍，全局缓存避免重复下载</li>
+<li><strong>统一工具链</strong> —— 一个工具替代 pip + venv + pip-tools + pipx + pyenv，减少工具碎片化</li>
+<li><strong>兼容性强</strong> —— 提供 <code>uv pip</code> 兼容接口，支持 <code>requirements.txt</code> 导入，迁移成本极低</li>
+<li><strong>锁文件机制</strong> —— <code>uv.lock</code> 确保依赖精确可复现，团队协作和 CI/CD 更可靠</li>
+<li><strong>内置 Python 版本管理</strong> —— 不再需要 pyenv，一个工具管理所有 Python 版本</li>
+<li><strong> uvx 临时运行</strong> —— 类似 npx 的体验，用完即弃，不污染环境</li>
+<li><strong>现代化项目结构</strong> —— 基于 <code>pyproject.toml</code> 标准，符合 Python 社区发展方向</li>
+<li><strong>活跃的社区</strong> —— Astral 团队维护（Ruff 同团队），更新频繁，生态完善</li>
+</ol>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ol>
+<li><strong>相对年轻</strong> —— 2024 年才发布，部分边缘场景可能存在兼容性问题</li>
+<li><strong>学习成本</strong> —— 新增了大量命令和概念（lock 文件、依赖组、工具管理等），需要学习</li>
+<li><strong> pip 生态依赖</strong> —— 部分老旧教程和 CI/CD 模板仍以 pip 为标准，需要适配</li>
+<li><strong>企业环境适配</strong> —— 某些严格限制网络或使用私有 PyPI 镜像的企业环境，可能需要额外配置</li>
+<li><strong>非 Python 标准库</strong> —— pip 是 Python 官方打包工具，uv 是第三方工具，长期维护存在不确定性</li>
+<li><strong> Windows 兼容性</strong> —— 虽然支持 Windows，但部分功能在 Windows 上的体验可能不如 macOS/Linux</li>
+</ol>
+<h3 id="适用建议"><a href="#适用建议" class="headerlink" title="适用建议"></a>适用建议</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>新项目</td>
+<td>强烈推荐 uv</td>
+</tr>
+<tr>
+<td> 个人开发</td>
+<td>推荐 uv</td>
+</tr>
+<tr>
+<td> 团队协作</td>
+<td>推荐 uv（锁文件机制优势明显）</td>
+</tr>
+<tr>
+<td>CI/CD</td>
+<td> 推荐 uv（速度快，环境一致性好）</td>
+</tr>
+<tr>
+<td>老项目维护</td>
+<td>可以逐步迁移，uv 兼容 pip</td>
+</tr>
+<tr>
+<td> 严格企业环境</td>
+<td>评估后谨慎使用</td>
+</tr>
+</tbody></table>
+<h2 id="八、总结"><a href="#八、总结" class="headerlink" title="八、总结"></a>八、总结</h2><p>Python 生态的包管理工具经历了从 <code>easy_install</code> → <code>pip</code> → <code>Poetry/Pipenv/PDM</code> → <code>uv</code> 的演进。每一次变革都在解决前一代工具的痛点。</p>
+<p><strong>uv 的出现，本质上是用 Rust 的性能优势 + 现代工具设计理念，对 Python 包管理进行了一次” 降维打击”。</strong> 它不是简单地在 pip 上打补丁，而是重新思考了”Python 开发者到底需要一个怎样的工具链” 这个问题。</p>
+<p>如果你还在忍受 pip 的慢速和工具链的碎片化，现在就是尝试 uv 的最佳时机。安装只需一行命令，迁移几乎零成本，而获得的是 10~100 倍的速度提升和统一高效的工作流。</p>
+<blockquote>
+<p>官方文档：<a href="https://docs.astral.sh/uv/">https://docs.astral.sh/uv/</a><br>GitHub：<a href="https://github.com/astral-sh/uv">https://github.com/astral-sh/uv</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>技术教程</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>uv</tag>
+        <tag>pip</tag>
+        <tag>包管理</tag>
+      </tags>
+  </entry>
+</search>
