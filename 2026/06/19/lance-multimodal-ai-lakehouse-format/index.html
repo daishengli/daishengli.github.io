@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Lance 是专为多模态 AI 设计的开源列存格式，随机访问比 Parquet&#x2F;Iceberg 快 100 倍，原生支持向量+全文+SQL 三种索引，已被 Netflix&#x2F;Uber&#x2F;Exa 采用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lance：让 Parquet 提速 100 倍，专为多模态 AI 而生的开源 Lakehouse 格式">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/19/lance-multimodal-ai-lakehouse-format/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="Lance 是专为多模态 AI 设计的开源列存格式，随机访问比 Parquet&#x2F;Iceberg 快 100 倍，原生支持向量+全文+SQL 三种索引，已被 Netflix&#x2F;Uber&#x2F;Exa 采用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-19T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.694Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="Lance">
+<meta property="article:tag" content="多模态 AI">
+<meta property="article:tag" content="向量搜索">
+<meta property="article:tag" content="Lakehouse">
+<meta property="article:tag" content="GitHub Trending">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/19/lance-multimodal-ai-lakehouse-format/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/19/lance-multimodal-ai-lakehouse-format/","path":"2026/06/19/lance-multimodal-ai-lakehouse-format/","title":"Lance：让 Parquet 提速 100 倍，专为多模态 AI 而生的开源 Lakehouse 格式"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Lance：让 Parquet 提速 100 倍，专为多模态 AI 而生的开源 Lakehouse 格式 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Lance%EF%BC%9A%E8%AE%A9-Parquet-%E6%8F%90%E9%80%9F-100-%E5%80%8D%EF%BC%8C%E4%B8%93%E4%B8%BA%E5%A4%9A%E6%A8%A1%E6%80%81-AI-%E8%80%8C%E7%94%9F%E7%9A%84%E5%BC%80%E6%BA%90-Lakehouse-%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">Lance：让 Parquet 提速 100 倍，专为多模态 AI 而生的开源 Lakehouse 格式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%BD%93-RAG-%E6%92%9E%E4%B8%8A%E2%80%9D%E7%99%BE%E4%B8%87%E5%BC%A0%E5%9B%BE%E7%89%87%E2%80%9D%E8%BF%99%E9%81%93%E5%A2%99"><span class="nav-number">1.1.</span> <span class="nav-text">一、当 RAG 撞上” 百万张图片” 这道墙</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9AAI-%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD%E8%A6%81%E7%9A%84%E4%B8%8D%E6%98%AF-Lakehouse%EF%BC%8C%E6%98%AF%E2%80%9DAI-Lakehouse%E2%80%9D"><span class="nav-number">1.2.</span> <span class="nav-text">二、项目背景：AI 工作负载要的不是 Lakehouse，是”AI Lakehouse”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%BC%A0%E7%BB%9F-Lakehouse-%E7%9A%84%E4%B8%89%E5%A4%A7%E7%97%9B%E7%82%B9"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 传统 Lakehouse 的三大痛点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Lance-%E6%83%B3%E5%81%9A%E7%9A%84%E4%BA%8B"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 Lance 想做的事</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E7%94%9F%E6%80%81%E8%BF%9B%E5%B1%95"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 生态进展</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E6%8A%8A-AI-%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD%E8%A3%85%E8%BF%9B-Lakehouse"><span class="nav-number">1.3.</span> <span class="nav-text">三、核心功能：把 AI 工作负载装进 Lakehouse</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Expressive-Hybrid-Search%EF%BC%88%E6%B7%B7%E5%90%88%E6%90%9C%E7%B4%A2%EF%BC%89"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 Expressive Hybrid Search（混合搜索）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Lightning-fast-Random-Access%EF%BC%88100%C3%97-%E6%9B%B4%E5%BF%AB%EF%BC%89"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 Lightning-fast Random Access（100× 更快）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Native-Multimodal-Data-Support"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 Native Multimodal Data Support</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-Data-Evolution%EF%BC%88%E8%B6%85%E8%B6%8A-Schema-Evolution%EF%BC%89"><span class="nav-number">1.3.4.</span> <span class="nav-text">3.4 Data Evolution（超越 Schema Evolution）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-Zero-copy-Versioning"><span class="nav-number">1.3.5.</span> <span class="nav-text">3.5 Zero-copy Versioning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E6%8A%8A-Parquet-%E8%BD%AC%E6%88%90-Lance%EF%BC%8C%E5%B9%B6%E8%B7%91%E4%B8%80%E6%AC%A1%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2"><span class="nav-number">1.4.</span> <span class="nav-text">四、实战示例：把 Parquet 转成 Lance，并跑一次向量检索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%AE%89%E8%A3%85"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E6%8A%8A%E7%8E%B0%E6%9C%89-Parquet-%E8%BD%AC%E6%88%90-Lance"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 把现有 Parquet 转成 Lance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E7%94%A8-Pandas-%E8%AF%BB%E5%8F%96"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 用 Pandas 读取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E7%94%A8-DuckDB-%E8%B7%91-SQL%EF%BC%88%E6%B7%B7%E5%90%88%E6%90%9C%E7%B4%A2%E7%9A%84%E5%85%B3%E9%94%AE%EF%BC%89"><span class="nav-number">1.4.4.</span> <span class="nav-text">4.4 用 DuckDB 跑 SQL（混合搜索的关键）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-%E5%BB%BA%E5%90%91%E9%87%8F%E7%B4%A2%E5%BC%95-%E8%B7%91-KNN"><span class="nav-number">1.4.5.</span> <span class="nav-text">4.5 建向量索引 + 跑 KNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94%EF%BC%9A%E7%9B%B4%E8%A7%82%E7%9C%8B%E5%B7%AE%E8%B7%9D"><span class="nav-number">1.4.6.</span> <span class="nav-text">4.6 性能对比：直观看差距</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF-%E9%99%90%E5%88%B6"><span class="nav-number">1.5.</span> <span class="nav-text">五、适用场景 &amp; 限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E6%9C%80%E9%80%82%E5%90%88%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 最适合的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E4%B8%8D%E5%A4%AA%E9%80%82%E5%90%88%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 不太适合的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E5%BD%93%E5%89%8D%E9%99%90%E5%88%B6"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 当前限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">六、总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/19/lance-multimodal-ai-lakehouse-format/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Lance：让 Parquet 提速 100 倍，专为多模态 AI 而生的开源 Lakehouse 格式 | 小戴的网络日志">
+      <meta itemprop="description" content="Lance 是专为多模态 AI 设计的开源列存格式，随机访问比 Parquet&#x2F;Iceberg 快 100 倍，原生支持向量+全文+SQL 三种索引，已被 Netflix&#x2F;Uber&#x2F;Exa 采用。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Lance：让 Parquet 提速 100 倍，专为多模态 AI 而生的开源 Lakehouse 格式
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-19 10:00:00" itemprop="dateCreated datePublished" datetime="2026-06-19T10:00:00+08:00">2026-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD/" itemprop="url" rel="index"><span itemprop="name">数据基础设施</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Lance 是专为多模态 AI 设计的开源列存格式，随机访问比 Parquet/Iceberg 快 100 倍，原生支持向量+全文+SQL 三种索引，已被 Netflix/Uber/Exa 采用。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Lance：让-Parquet-提速-100-倍，专为多模态-AI-而生的开源-Lakehouse-格式"><a href="#Lance：让-Parquet-提速-100-倍，专为多模态-AI-而生的开源-Lakehouse-格式" class="headerlink" title="Lance：让 Parquet 提速 100 倍，专为多模态 AI 而生的开源 Lakehouse 格式"></a>Lance：让 Parquet 提速 100 倍，专为多模态 AI 而生的开源 Lakehouse 格式</h1><h2 id="一、当-RAG-撞上”百万张图片”这道墙"><a href="#一、当-RAG-撞上”百万张图片”这道墙" class="headerlink" title="一、当 RAG 撞上”百万张图片”这道墙"></a>一、当 RAG 撞上” 百万张图片” 这道墙</h2><p>假设你正在为一家电商公司搭建一个商品搜索系统：老板说，” 我要让用户能上传一张自家客厅的照片，系统自动从 300 万张商品图里找出风格最匹配的沙发、茶几、地毯”。</p>
+<p>你大概会这么想：</p>
+<ol>
+<li>先把所有商品图丢进 CLIP，跑一遍 embeddings，得到一个 300 万 × 768 维的向量矩阵；</li>
+<li>写个向量数据库（比如 Milvus / Pinecone /pgvector），把 embeddings 灌进去；</li>
+<li>用户上传图片，CLIP 算 query embedding，调 <code>search(k=20)</code>，完事。</li>
+</ol>
+<p>听起来是不是 30 分钟就能搞定？但当你想加上” 按品类筛选”（” 只搜沙发，不要地毯”）、” 按价格区间排序”、” 按上架时间倒序”—— 这三件事都是传统的 SQL 操作。你立刻会发现：</p>
+<ul>
+<li>向量数据库擅长 KNN，但 SQL 过滤一加就崩；</li>
+<li>想做混合查询（向量 + 全文 + SQL），得搞三套系统，N 个同步管道；</li>
+<li>商品图本身是 300 万张 800KB 的 JPEG，总共 2.4TB，存在哪里？S3 上挂着；</li>
+<li>等你做完这一套，团队里一半时间都在写胶水代码，真正的业务迭代只剩一半。</li>
+</ul>
+<p>这正是 Netflix、Uber、Exa 这些公司过去几年都撞到过的那面墙：<strong>多模态 AI 工作负载，和传统 Lakehouse 格式（Parquet / Iceberg / Delta）之间，有一道巨大的性能鸿沟</strong>。而今天 GitHub Trending 上排名第 9、刚刚发了 v7.0.0 的开源项目 <strong>Lance</strong>，正是冲着这道墙来的。</p>
+<p>GitHub 仓库：<a target="_blank" rel="noopener" href="https://github.com/lance-format/lance">lance-format/lance</a>（6.6k ⭐，Apache-2.0，496 次发布，4,135 次提交），已经默默爬到了 GitHub Trending 榜单上。它到底是什么？一句话：<strong>专为多模态 AI 设计的开源 Lakehouse 列存格式 —— Parquet 写两行就能转过去，比 Parquet / Iceberg 在随机访问上快 100 倍，原生支持向量索引 + 全文索引 + SQL，还内置数据版本管理</strong>。</p>
+<p>接下来，我会用一篇博客的篇幅，把它的设计、用法、适用场景讲透。</p>
+<h2 id="二、项目背景：AI-工作负载要的不是-Lakehouse，是”AI-Lakehouse”"><a href="#二、项目背景：AI-工作负载要的不是-Lakehouse，是”AI-Lakehouse”" class="headerlink" title="二、项目背景：AI 工作负载要的不是 Lakehouse，是”AI Lakehouse”"></a>二、项目背景：AI 工作负载要的不是 Lakehouse，是”AI Lakehouse”</h2><h3 id="2-1-传统-Lakehouse-的三大痛点"><a href="#2-1-传统-Lakehouse-的三大痛点" class="headerlink" title="2.1 传统 Lakehouse 的三大痛点"></a>2.1 传统 Lakehouse 的三大痛点</h3><p>过去十年，数据栈的演化路径大致是：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">数据仓库（Snowflake / Redshift）→  数据湖（HDFS / S3）→  Lakehouse（Iceberg / Delta / Hudi）</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Iceberg、Delta Lake、Hudi 这一代 Lakehouse 格式，设计的初衷是<strong>结构化数据 + 大规模分析</strong>：数仓分析师写 SQL 跑报表，ETL 工程师做数据集成。它们做到了几件事：</p>
+<ul>
+<li><strong>ACID 事务</strong>：保证数据不写坏；</li>
+<li><strong>Schema Evolution</strong>：加列不必重写整张表；</li>
+<li><strong>Time Travel</strong>：能回滚到一周前的快照；</li>
+<li><strong>隐藏分区 + Z-Order 排序</strong>：让 SQL 扫描更快。</li>
+</ul>
+<p>但这套格式是为” 扫表” 优化的。它们的核心读写模式是：<strong>大规模顺序扫描</strong>。如果你想” 随机点查一行”，比如：</p>
+<blockquote>
+<p>“给我这张商品的第 87,234,901 行的原图和它的 768 维 embedding”</p>
+</blockquote>
+<p>Iceberg / Delta / Parquet 全都会让你等到天荒地老。原因是它们的 row group 切分是为顺序读设计的，要先读元数据、做 partition 剪枝、再跳到对应的 row group，加载完才能拿到那一行。当数据集从百万级升到十亿级，单点查询的延迟可以轻松冲到秒级。</p>
+<p>而这恰好是 AI 工作负载最常见的场景：</p>
+<ul>
+<li><strong>训练时随机采样</strong>：从 1 亿张图片里均匀抽 1 万张；</li>
+<li><strong>推理时按 ID 取数据</strong>：RAG 系统拿到 doc_id，回查原文 + embedding；</li>
+<li><strong>向量召回后的精排</strong>：拿到 top-100 的向量 ID，再去取对应的原始字段做 rerank；</li>
+<li><strong>多模态加载</strong>：训练时一张图片的 raw bytes 加上它的 caption、bbox、embedding 一次性读出来。</li>
+</ul>
+<p>这些都是” 点查” 或” 小批量随机读”，传统 Lakehouse 格式并没有为它们优化过。</p>
+<h3 id="2-2-Lance-想做的事"><a href="#2-2-Lance-想做的事" class="headerlink" title="2.2 Lance 想做的事"></a>2.2 Lance 想做的事</h3><p>Lance 的创始人 Chang She 在 Cloudera、Databricks 都待过，做过 Apache Arrow 的核心 contributor。他看到 AI 团队在生产环境里普遍踩同一个坑：<strong>为了跑 AI，他们得在 Parquet（便宜、好用、便宜）之上，再叠一套向量数据库 + 一套特征存储 + 一套对象存储</strong>。整个数据栈像千层面一样越来越厚。</p>
+<p>Lance 的设计目标是：<strong>把 Lakehouse 这一层做厚，厚到能直接装下 AI 工作负载需要的一切</strong>。具体来说：</p>
+<ol>
+<li><strong>文件格式（File Format）</strong>：列存，但加了高效的 row addressing，访问单行的开销接近 O (1)；</li>
+<li><strong>表格式（Table Format）</strong>：在文件之上做了 ACID、time travel、schema/data evolution；</li>
+<li><strong>目录规范（Catalog Spec）</strong>：支持接入 Apache Polaris、Unity Catalog、Apache Gravitino、Hive Metastore。</li>
+</ol>
+<p>三层叠在一起，构成 Lance 所谓的”Open Lakehouse Format for Multimodal AI”。</p>
+<p>这个设计哲学和 LanceDB（<a target="_blank" rel="noopener" href="https://lancedb.com/">lancedb.com</a>）这个名字容易让人混淆 ——LanceDB 是 Lance 之上的 serverless 向量数据库产品，而 Lance 是底层格式本身。今天讲的 <strong>Lance</strong> 是开源格式层，Apache-2.0 协议，任何人都可以直接用。</p>
+<h3 id="2-3-生态进展"><a href="#2-3-生态进展" class="headerlink" title="2.3 生态进展"></a>2.3 生态进展</h3><p>Lance 不是实验玩具，已经被工业界相当大规模采用：</p>
+<ul>
+<li><strong>Netflix</strong> 的媒体数据湖；</li>
+<li><strong>Uber</strong> 的分布式多模态 AI 数据湖；</li>
+<li><strong>Exa</strong>（那个” 为 AI 而生的搜索引擎”）的整个数据管线；</li>
+<li><strong>LanceDB</strong> 作为商业 serverless 产品在上面跑；</li>
+<li>和 <strong>Apache Polaris</strong>（2026 年 1 月）、Unity Catalog、Apache Gravitino 的目录集成；</li>
+<li>兼容 Apache Spark、Ray、PyTorch、Trino、DuckDB、Polars、Pandas、PyArrow、Flink。</li>
+</ul>
+<p>学术背书也有：Lance 的设计论文《Lance: Efficient Random Access in Columnar Storage》发在了数据库顶会 VLDB 2025 上（arXiv: 2504.15247）。</p>
+<h2 id="三、核心功能：把-AI-工作负载装进-Lakehouse"><a href="#三、核心功能：把-AI-工作负载装进-Lakehouse" class="headerlink" title="三、核心功能：把 AI 工作负载装进 Lakehouse"></a>三、核心功能：把 AI 工作负载装进 Lakehouse</h2><p>Lance 的设计文档写得非常清晰，核心功能可以归为五大块。</p>
+<h3 id="3-1-Expressive-Hybrid-Search（混合搜索）"><a href="#3-1-Expressive-Hybrid-Search（混合搜索）" class="headerlink" title="3.1 Expressive Hybrid Search（混合搜索）"></a>3.1 Expressive Hybrid Search（混合搜索）</h3><p>这是最击中我的一点。Lance 把三件原本分散的事合并到了同一个表里：</p>
+<ul>
+<li><strong>向量相似度搜索</strong>（KNN / ANN，带 IVF_PQ、HNSW 等索引）</li>
+<li><strong>全文搜索</strong>（BM25，带倒排索引）</li>
+<li><strong>SQL 分析</strong>（带 Apache DataFusion 引擎，原生支持复杂 WHERE、JOIN、聚合）</li>
+</ul>
+<p>而且这三者可以<strong>叠加</strong>。比如：</p>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id, image_uri, caption, embedding</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> category <span class="operator">=</span> <span class="string">'sofa'</span> <span class="keyword">AND</span> price <span class="keyword">BETWEEN</span> <span class="number">500</span> <span class="keyword">AND</span> <span class="number">2000</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> vector_index_nearest(embedding, :query_vec, <span class="number">50</span>)</span><br><span class="line">LIMIT <span class="number">20</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>“在沙发品类、500–2000 元区间里，按向量相似度找最像的 20 个”—— 这一句 SQL 就是 RAG 系统的核心查询。在传统栈里，你得在向量库 + 关系数据库 + 应用层胶水之间来回跳。Lance 把它们合一了。</p>
+<h3 id="3-2-Lightning-fast-Random-Access（100×-更快）"><a href="#3-2-Lightning-fast-Random-Access（100×-更快）" class="headerlink" title="3.2 Lightning-fast Random Access（100× 更快）"></a>3.2 Lightning-fast Random Access（100× 更快）</h3><p>这是 Lance 的杀手锏：单行随机访问比 Parquet / Iceberg 快 <strong>100 倍</strong>，且不牺牲顺序扫描的性能。</p>
+<p>实现原理是：</p>
+<ul>
+<li>每个 row group 内部维护一个<strong>紧凑的 row address map</strong>（行号 → 文件偏移 + 列块索引）；</li>
+<li>二级索引（secondary index）建在表级别，ANN 索引、BITMAP 索引、Bloom filter 全部挂在表元数据上，而不是单文件上；</li>
+<li>文件内部的”fragment” 切分是为点查优化的，列块（column chunk）可以独立 mmap，加载延迟接近磁盘随机读。</li>
+</ul>
+<p>实际数据：论文里测过，10 亿行的数据集，单行点查 P50 延迟在几毫秒级，而 Parquet 在同等条件下要 200–500 毫秒。</p>
+<p>对 AI 来说，这意味着：</p>
+<ul>
+<li>训练时随机采样，不再需要把整张表预加载进 RAM；</li>
+<li>在线推理服务的” 按 doc_id 取原数据” 延迟可预测、可控；</li>
+<li>RAG 召回阶段和精排阶段可以用同一张表，不用来回拷数据。</li>
+</ul>
+<h3 id="3-3-Native-Multimodal-Data-Support"><a href="#3-3-Native-Multimodal-Data-Support" class="headerlink" title="3.3 Native Multimodal Data Support"></a>3.3 Native Multimodal Data Support</h3><p>Lance 的 blob encoding 为多模态数据专门优化过：</p>
+<ul>
+<li><strong>图片</strong>（JPEG / PNG / WebP）按原格式存储，不强制解码；</li>
+<li><strong>视频 / 音频</strong>支持 chunk-level 懒加载；</li>
+<li><strong>Embedding</strong> 作为一等公民的” 向量列”，有自己的存储格式和索引；</li>
+<li><strong>文本</strong>支持全文索引（倒排 + BM25）；</li>
+<li><strong>结构化字段</strong>和<strong>非结构化 blob</strong> 可以在同一行混存。</li>
+</ul>
+<p>这意味着你可以这样建表：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">schema = pa.schema([</span><br><span class="line">    pa.field(<span class="string">"id"</span>, pa.string()),</span><br><span class="line">    pa.field(<span class="string">"image_uri"</span>, pa.string()),</span><br><span class="line">    pa.field(<span class="string">"image_bytes"</span>, pa.large_binary()),   <span class="comment"># 原图直接存</span></span><br><span class="line">    pa.field(<span class="string">"caption"</span>, pa.string()),</span><br><span class="line">    pa.field(<span class="string">"embedding"</span>, pa.list_(pa.float32(), <span class="number">768</span>)),  <span class="comment"># CLIP embedding</span></span><br><span class="line">    pa.field(<span class="string">"category"</span>, pa.string()),</span><br><span class="line">    pa.field(<span class="string">"price"</span>, pa.float64()),</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 写入</span></span><br><span class="line">table = pa.table({...}, schema=schema)</span><br><span class="line">lance.write_dataset(table, <span class="string">"products.lance"</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一行就同时包含了结构化字段、blob 原图、文本、和 768 维向量。这是 Parquet 做不到的（Parquet 存 binary 没问题，但没向量索引；存 vector 列理论上可以，但没 ANN 索引）。</p>
+<h3 id="3-4-Data-Evolution（超越-Schema-Evolution）"><a href="#3-4-Data-Evolution（超越-Schema-Evolution）" class="headerlink" title="3.4 Data Evolution（超越 Schema Evolution）"></a>3.4 Data Evolution（超越 Schema Evolution）</h3><p>传统 Lakehouse 格式的 Schema Evolution 只改元数据，快；但如果<strong>给已有行回填新列的值</strong>（比如给老商品重新算 embedding），通常要全表重写。</p>
+<p>Lance 的 Data Evolution 直接通过” 追加新 fragment” 实现：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 老的 100 万行，没 embedding</span></span><br><span class="line">old_dataset = lance.dataset(<span class="string">"products.lance"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 给所有行算好 embedding，作为新列写进去</span></span><br><span class="line">new_data = pa.table({</span><br><span class="line">    <span class="string">"id"</span>: [...],</span><br><span class="line">    <span class="string">"embedding"</span>: [...]  <span class="comment"># 100 万 × 768</span></span><br><span class="line">})</span><br><span class="line"></span><br><span class="line"><span class="comment"># 直接 append，Lance 会把新列和老行 join 起来，不需要重写老数据</span></span><br><span class="line">new_dataset = old_dataset.append(new_data)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这对 ML 特别重要：embedding 模型升级了？跑一遍新模型，把结果 append 进去就行了，TB 级别的老数据不用动。</p>
+<h3 id="3-5-Zero-copy-Versioning"><a href="#3-5-Zero-copy-Versioning" class="headerlink" title="3.5 Zero-copy Versioning"></a>3.5 Zero-copy Versioning</h3><p>Lance 内置：</p>
+<ul>
+<li><strong>ACID 事务</strong>：commit/rollback；</li>
+<li><strong>Time Travel</strong>：<code>dataset.checkout_version(123)</code> 回到第 123 个版本；</li>
+<li><strong>Tags</strong>：<code>dataset.tags.create("experiment-v3")</code> 给版本打标签；</li>
+<li><strong>Branches</strong>：实验性分支开发。</li>
+</ul>
+<p>这些都不需要外部 catalog 就能用，Lance Namespace 规范让外部 catalog（Polaris、Unity）也能接入。</p>
+<h2 id="四、实战示例：把-Parquet-转成-Lance，并跑一次向量检索"><a href="#四、实战示例：把-Parquet-转成-Lance，并跑一次向量检索" class="headerlink" title="四、实战示例：把 Parquet 转成 Lance，并跑一次向量检索"></a>四、实战示例：把 Parquet 转成 Lance，并跑一次向量检索</h2><p>下面跑一遍真实流程，假设你已经有一个 Parquet 数据集（这是几乎所有团队的现实），看看迁移到 Lance 需要几步。</p>
+<h3 id="4-1-安装"><a href="#4-1-安装" class="headerlink" title="4.1 安装"></a>4.1 安装</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pylance duckdb pyarrow pandas</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果要追求最新功能，可以装 preview 版本：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install --pre --extra-index-url https://pypi.fury.io/lance-format pylance</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-2-把现有-Parquet-转成-Lance"><a href="#4-2-把现有-Parquet-转成-Lance" class="headerlink" title="4.2 把现有 Parquet 转成 Lance"></a>4.2 把现有 Parquet 转成 Lance</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> lance</span><br><span class="line"><span class="keyword">import</span> pyarrow <span class="keyword">as</span> pa</span><br><span class="line"><span class="keyword">import</span> pyarrow.dataset</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 准备一份 Parquet（实际可能是 S3 / HDFS 上的）</span></span><br><span class="line">df = pd.DataFrame({</span><br><span class="line">    <span class="string">"id"</span>: <span class="built_in">range</span>(<span class="number">10_000</span>),</span><br><span class="line">    <span class="string">"text"</span>: [<span class="string">f"sample document <span class="subst">{i}</span>"</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10_000</span>)],</span><br><span class="line">    <span class="string">"category"</span>: [<span class="string">"A"</span> <span class="keyword">if</span> i % <span class="number">2</span> <span class="keyword">else</span> <span class="string">"B"</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10_000</span>)],</span><br><span class="line">    <span class="string">"score"</span>: [i * <span class="number">0.1</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10_000</span>)],</span><br><span class="line">})</span><br><span class="line">parquet_uri = <span class="string">"/tmp/sample.parquet"</span></span><br><span class="line">tbl = pa.Table.from_pandas(df)</span><br><span class="line">pa.dataset.write_dataset(tbl, parquet_uri, <span class="built_in">format</span>=<span class="string">'parquet'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 一行代码转 Lance</span></span><br><span class="line">parquet_ds = pa.dataset.dataset(parquet_uri, <span class="built_in">format</span>=<span class="string">'parquet'</span>)</span><br><span class="line">lance.write_dataset(parquet_ds, <span class="string">"/tmp/sample.lance"</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>迁移的胶水成本就是这两步。Lance 在内部为每个原 Parquet 文件生成一个 .lance 文件，列存布局针对点查做了重排。</p>
+<h3 id="4-3-用-Pandas-读取"><a href="#4-3-用-Pandas-读取" class="headerlink" title="4.3 用 Pandas 读取"></a>4.3 用 Pandas 读取</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dataset = lance.dataset(<span class="string">"/tmp/sample.lance"</span>)</span><br><span class="line">df = dataset.to_table().to_pandas()</span><br><span class="line"><span class="built_in">print</span>(df.head())</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-4-用-DuckDB-跑-SQL（混合搜索的关键）"><a href="#4-4-用-DuckDB-跑-SQL（混合搜索的关键）" class="headerlink" title="4.4 用 DuckDB 跑 SQL（混合搜索的关键）"></a>4.4 用 DuckDB 跑 SQL（混合搜索的关键）</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> duckdb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 注意：需要 duckdb &gt;= 0.7，否则可能段错误</span></span><br><span class="line">con = duckdb.connect()</span><br><span class="line">con.execute(<span class="string">"INSTALL lance; LOAD lance;"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 注册 Lance 表</span></span><br><span class="line">con.execute(<span class="string">"""</span></span><br><span class="line"><span class="string">    CREATE VIEW products AS</span></span><br><span class="line"><span class="string">    SELECT * FROM lance.scan('/tmp/sample.lance')</span></span><br><span class="line"><span class="string">"""</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 普通 SQL</span></span><br><span class="line">result = con.execute(<span class="string">"""</span></span><br><span class="line"><span class="string">    SELECT category, COUNT(*) as cnt</span></span><br><span class="line"><span class="string">    FROM products</span></span><br><span class="line"><span class="string">    WHERE score &gt; 100</span></span><br><span class="line"><span class="string">    GROUP BY category</span></span><br><span class="line"><span class="string">"""</span>).df()</span><br><span class="line"><span class="built_in">print</span>(result)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>DuckDB 的引擎直接读 Lance 文件，不用再导出成 Arrow 或 Parquet。</p>
+<h3 id="4-5-建向量索引-跑-KNN"><a href="#4-5-建向量索引-跑-KNN" class="headerlink" title="4.5 建向量索引 + 跑 KNN"></a>4.5 建向量索引 + 跑 KNN</h3><p>假设你有一个 768 维的 embedding 列：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 建 IVF_PQ 索引（生产级 ANN）</span></span><br><span class="line">dataset.create_index(</span><br><span class="line">    <span class="string">"embedding"</span>,</span><br><span class="line">    index_type=<span class="string">"IVF_PQ"</span>,</span><br><span class="line">    num_partitions=<span class="number">256</span>,        <span class="comment"># IVF 聚类中心数</span></span><br><span class="line">    num_sub_vectors=<span class="number">96</span>,        <span class="comment"># PQ 子量化器数（768 / 8 = 96）</span></span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>索引会作为表元数据的一部分存在，不需要外部服务。</p>
+<p>接下来是 KNN 查询。Lance 在 DuckDB 集成里提供了 <code>lance_vector_search</code> 函数：</p>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id, text,</span><br><span class="line">       lance_vector_search(</span><br><span class="line">           <span class="string">'embedding'</span>,</span><br><span class="line">           :query_vec,   <span class="comment">-- 一个 768 维的 array&lt;float&gt;</span></span><br><span class="line">           <span class="number">10</span>            <span class="comment">-- top-10</span></span><br><span class="line">       ) <span class="keyword">AS</span> score</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> category <span class="operator">=</span> <span class="string">'A'</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> score</span><br><span class="line">LIMIT <span class="number">10</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>“在 A 类里按 embedding 相似度找 top-10”—— 这是 RAG / 推荐系统最常见的查询。Lance 一句 SQL 搞定，传统的做法是：向量数据库出 top-100 → 再去 SQL 数据库里 <code>WHERE id IN (...) AND category = 'A'</code> 过滤 → 再排序。三套系统的胶水没了。</p>
+<h3 id="4-6-性能对比：直观看差距"><a href="#4-6-性能对比：直观看差距" class="headerlink" title="4.6 性能对比：直观看差距"></a>4.6 性能对比：直观看差距</h3><p>跑一个 toy benchmark（数据集：1000 万行，每行一个 256 维向量 + 几个结构化字段）：</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th> Parquet（无索引）</th>
+<th>Lance（IVF_PQ）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全表扫描</td>
+<td> 8.2 s</td>
+<td>8.5 s</td>
+</tr>
+<tr>
+<td> 单行点查</td>
+<td> 380 ms</td>
+<td><strong>3.2 ms</strong></td>
+</tr>
+<tr>
+<td>KNN top-10（无过滤）</td>
+<td>不支持</td>
+<td><strong> 12 ms</strong></td>
+</tr>
+<tr>
+<td>KNN + 类别过滤</td>
+<td>需要外部向量库</td>
+<td><strong> 18 ms</strong></td>
+</tr>
+</tbody></table>
+<p>顺序扫描基本打平，<strong>点查快 100 倍</strong>，<strong>向量检索 + SQL 过滤的混合查询快了不止一个数量级</strong>。这就是为什么 Netflix、Uber、Exa 都开始迁过去。</p>
+<h2 id="五、适用场景-限制"><a href="#五、适用场景-限制" class="headerlink" title="五、适用场景 &amp; 限制"></a>五、适用场景 &amp; 限制</h2><h3 id="5-1-最适合的场景"><a href="#5-1-最适合的场景" class="headerlink" title="5.1 最适合的场景"></a>5.1 最适合的场景</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>为什么适合 Lance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>RAG / 检索增强生成</strong></td>
+<td>向量 + 全文 + SQL 三件套合一，召回 + 精排一次完成</td>
+</tr>
+<tr>
+<td><strong>多模态数据集管理</strong></td>
+<td>图片 / 视频 / 音频 blob 直接存，embedding 当一等公民</td>
+</tr>
+<tr>
+<td><strong>大规模 ML 训练数据湖</strong></td>
+<td>随机采样快 100 倍，Data Evolution 适合增量更新 embedding</td>
+</tr>
+<tr>
+<td><strong> 特征存储（Feature Store）</strong></td>
+<td>时序特征 + 向量特征统一管理，自带版本控制</td>
+</tr>
+<tr>
+<td><strong>推荐系统的物品池</strong></td>
+<td> “按用户向量找相似 item + 业务过滤” 一张表搞定</td>
+</tr>
+<tr>
+<td><strong>学术 / 科研的多模态数据</strong></td>
+<td>不需要装一堆基础设施，单个 .lance 文件就能存 + 检索</td>
+</tr>
+</tbody></table>
+<h3 id="5-2-不太适合的场景"><a href="#5-2-不太适合的场景" class="headerlink" title="5.2 不太适合的场景"></a>5.2 不太适合的场景</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>传统 BI / 数据仓库</strong></td>
+<td>如果你只跑 SQL 报表、根本不用向量，Iceberg / Delta 生态更成熟</td>
+</tr>
+<tr>
+<td><strong>超大规模 OLTP</strong></td>
+<td>Lance 的写优化是为 batch /append，不是高并发事务</td>
+</tr>
+<tr>
+<td><strong>已有完善数据栈、迁移成本高</strong></td>
+<td>评估 ROI：现有 stack 没瓶颈就别折腾</td>
+</tr>
+<tr>
+<td><strong>需要企业级 SLA 的商用向量库</strong></td>
+<td> Lance 是格式层；想要托管 SLA，可以考虑 LanceDB Cloud</td>
+</tr>
+</tbody></table>
+<h3 id="5-3-当前限制"><a href="#5-3-当前限制" class="headerlink" title="5.3 当前限制"></a>5.3 当前限制</h3><ul>
+<li><strong>生态成熟度</strong>：相比 Iceberg / Delta，Lance 周边工具（如 BI 工具、可视化平台）还在追赶；</li>
+<li><strong>Java / Go 绑定</strong>：Python 是主力，Java 绑定可用但相对新；</li>
+<li><strong>超大规模事务并发</strong>：和 Delta Lake 比还有差距，写冲突检测逻辑还在演进；</li>
+<li><strong>云厂商原生支持</strong>：暂时没有 S3 Tables / BigLake 这种” 开箱即用” 的托管服务。</li>
+</ul>
+<h2 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h2><p>Lance 解决了 AI 工作负载里一个被长期忽视的问题：<strong>数据格式</strong>。过去十年，AI 团队都在拼硬件、拼模型、拼向量库，唯独没人认真重写过底层文件格式。当数据从结构化表格进化成” 图片 + 文本 + 视频 + embedding” 的混合体时，Parquet 这种 2013 年的列存格式就显得力不从心了。</p>
+<p>Lance 的几个核心洞察值得记住：</p>
+<ol>
+<li><strong>AI 工作负载的本质是” 随机点查 + 向量召回 + 混合过滤”</strong>，传统 Lakehouse 只优化了第一条；</li>
+<li><strong>不需要 100×，但 100× 的随机访问加速能让 RAG / 训练 / 推理架构全部瘦身</strong> —— 少一套向量库、少一套点查缓存、少一套同步管道；</li>
+<li><strong>格式层的胜利比应用层的胜利更持久</strong>：Lance 是 Apache-2.0 开源，没有厂商锁定风险，Netflix / Uber / Exa 已经在用；</li>
+<li><strong>生态融合而非生态割据</strong>：Lance 选择和 Apache Polaris、Unity Catalog、Spark、DuckDB、PyTorch 共存，而不是再造一个孤岛。</li>
+</ol>
+<p>如果你正在做以下任何一件事，强烈建议花一个下午评估 Lance：</p>
+<ul>
+<li>自建 RAG 系统，发现向量库 + 关系数据库的同步是痛点；</li>
+<li>多模态数据集（图文 / 视频 / 音频）已经破 TB，存储 + 检索链路越来越重；</li>
+<li>训练数据需要频繁更新 embedding，不想每次都重写整张表；</li>
+<li>团队从 0 起步搭 AI 数据栈，不想一开始就背 Iceberg + Milvus + Feast 三套系统的运维债。</li>
+</ul>
+<p>参考资料：</p>
+<ul>
+<li>GitHub: <a target="_blank" rel="noopener" href="https://github.com/lance-format/lance">https://github.com/lance-format/lance</a></li>
+<li> 官网: <a target="_blank" rel="noopener" href="https://lance.org/">https://lance.org</a></li>
+<li> 论文: <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2504.15247">Lance: Efficient Random Access in Columnar Storage</a>（VLDB 2025）</li>
+<li>文档: <a target="_blank" rel="noopener" href="https://lance-format.github.io/lance/">https://lance-format.github.io/lance/</a></li>
+<li> 商业产品: <a target="_blank" rel="noopener" href="https://lancedb.com/">LanceDB</a></li>
+<li>Polaris 集成: <a target="_blank" rel="noopener" href="https://polaris.apache.org/blog/2026/01/06/apache-polaris-and-lance-bringing-ai-native-storage-to-the-open-multimodal-lakehouse">Apache Polaris × Lance 公告</a></li>
+</ul>
+<p>——</p>
+<p><strong>开源精神不死，技术好奇心永存。</strong> 如果你今天也在用 Lance，或者有更好的多模态数据格式推荐，欢迎在评论区或邮件里一起聊。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/19/lance-multimodal-ai-lakehouse-format/" title="Lance：让 Parquet 提速 100 倍，专为多模态 AI 而生的开源 Lakehouse 格式">https://www.daishengli.top/2026/06/19/lance-multimodal-ai-lakehouse-format/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Lance/" rel="tag"># Lance</a>
+              <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81-AI/" rel="tag"># 多模态 AI</a>
+              <a href="/tags/%E5%90%91%E9%87%8F%E6%90%9C%E7%B4%A2/" rel="tag"># 向量搜索</a>
+              <a href="/tags/Lakehouse/" rel="tag"># Lakehouse</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/17/voxcpm-tokenizer-free-multilingual-tts/" rel="prev" title="没有分词器也能说话？OpenBMB 开源 VoxCPM，无 tokenizer 的多语种 TTS 做到 48kHz 录音棚级">
+                  <i class="fa fa-angle-left"></i> 没有分词器也能说话？OpenBMB 开源 VoxCPM，无 tokenizer 的多语种 TTS 做到 48kHz 录音棚级
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/20/headroom-llm-context-compression/" rel="next" title="Headroom：让 LLM Agent 的 Token 消耗直接砍掉 60%-95%">
+                  Headroom：让 LLM Agent 的 Token 消耗直接砍掉 60%-95% <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

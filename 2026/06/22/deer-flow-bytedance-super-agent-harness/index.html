@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="DeerFlow 2.0 是字节跳动开源的 SuperAgent Harness，用 LangGraph 编排子 Agent、持久记忆、Docker 沙箱与可扩展技能，处理&quot;分钟到小时&quot;级的长链路任务。GitHub 72k+ stars，曾登顶 Trending">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DeerFlow 2.0：字节跳动开源的 SuperAgent Harness，让一个 Agent 干完一队人的活">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/22/deer-flow-bytedance-super-agent-harness/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="DeerFlow 2.0 是字节跳动开源的 SuperAgent Harness，用 LangGraph 编排子 Agent、持久记忆、Docker 沙箱与可扩展技能，处理&quot;分钟到小时&quot;级的长链路任务。GitHub 72k+ stars，曾登顶 Trending">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-22T02:00:30.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.693Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="DeerFlow">
+<meta property="article:tag" content="ByteDance">
+<meta property="article:tag" content="Multi-Agent">
+<meta property="article:tag" content="SubAgent">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/22/deer-flow-bytedance-super-agent-harness/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/22/deer-flow-bytedance-super-agent-harness/","path":"2026/06/22/deer-flow-bytedance-super-agent-harness/","title":"DeerFlow 2.0：字节跳动开源的 SuperAgent Harness，让一个 Agent 干完一队人的活"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>DeerFlow 2.0：字节跳动开源的 SuperAgent Harness，让一个 Agent 干完一队人的活 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DeerFlow-2-0%EF%BC%9A%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8%E5%BC%80%E6%BA%90%E7%9A%84-SuperAgent-Harness%EF%BC%8C%E8%AE%A9%E4%B8%80%E4%B8%AA-Agent-%E5%B9%B2%E5%AE%8C%E4%B8%80%E9%98%9F%E4%BA%BA%E7%9A%84%E6%B4%BB"><span class="nav-number">1.</span> <span class="nav-text">DeerFlow 2.0：字节跳动开源的 SuperAgent Harness，让一个 Agent 干完一队人的活</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%80%E4%B8%AA%E5%9C%BA%E6%99%AF%EF%BC%9A%E6%98%8E%E6%98%8E%E5%8F%AA%E6%98%AF%E4%B8%80%E7%AF%87%E8%B0%83%E7%A0%94%E6%8A%A5%E5%91%8A%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E5%86%99%E4%BA%86%E4%B8%A4%E5%91%A8%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">一、一个场景：明明只是一篇调研报告，为什么写了两周？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E4%BB%8E-Deep-Research-%E5%88%B0-SuperAgent-Harness"><span class="nav-number">1.2.</span> <span class="nav-text">二、项目背景：从 Deep Research 到 SuperAgent Harness</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E4%BA%94%E4%BB%B6%E5%A5%97%E8%AE%A9%E9%95%BF%E9%93%BE%E8%B7%AF%E4%BB%BB%E5%8A%A1%E7%9C%9F%E6%AD%A3%E5%8F%AF%E5%B7%A5%E7%A8%8B%E5%8C%96"><span class="nav-number">1.3.</span> <span class="nav-text">三、核心功能：五件套让长链路任务真正可工程化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Skills%EF%BC%9A%E6%8C%89%E9%9C%80%E5%8A%A0%E8%BD%BD%E7%9A%84%E2%80%9D%E8%83%BD%E5%8A%9B%E6%A8%A1%E5%9D%97%E2%80%9D"><span class="nav-number">1.3.1.</span> <span class="nav-text">1. Skills：按需加载的” 能力模块”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Sub-Agents%EF%BC%9A%E6%8A%8A%E4%B8%80%E4%B8%AA%E5%A4%A7%E4%BB%BB%E5%8A%A1%E6%8B%86%E7%BB%99%E4%B8%80%E9%98%9F%E4%BA%BA"><span class="nav-number">1.3.2.</span> <span class="nav-text">2. Sub-Agents：把一个大任务拆给一队人</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Sandbox%EF%BC%9A%E6%AF%8F%E4%B8%AA%E4%BB%BB%E5%8A%A1%E4%B8%80%E4%B8%AA%E5%AE%89%E5%85%A8%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83"><span class="nav-number">1.3.3.</span> <span class="nav-text">3. Sandbox：每个任务一个安全执行环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Context-Engineering%EF%BC%9A%E6%8A%8A%E4%B8%8A%E4%B8%8B%E6%96%87%E5%BD%93%E6%88%90%E2%80%9D%E5%B7%A5%E7%A8%8B%E2%80%9D%E6%9D%A5%E7%AE%A1"><span class="nav-number">1.3.4.</span> <span class="nav-text">4. Context Engineering：把上下文当成” 工程” 来管</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Long-Term-Memory%EF%BC%9A%E8%B7%A8%E4%BC%9A%E8%AF%9D%E7%9A%84%E2%80%9D%E7%94%A8%E6%88%B7%E6%A1%A3%E6%A1%88%E2%80%9D"><span class="nav-number">1.3.5.</span> <span class="nav-text">5. Long-Term Memory：跨会话的” 用户档案”</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E8%AE%A9-DeerFlow-%E8%87%AA%E5%8A%A8%E4%BA%A7%E5%87%BA%E2%80%9D%E8%A1%8C%E4%B8%9A%E7%A0%94%E7%A9%B6%E6%8A%A5%E5%91%8A-PPT-%E7%BD%91%E9%A1%B5%E2%80%9D"><span class="nav-number">1.4.</span> <span class="nav-text">四、实战示例：让 DeerFlow 自动产出” 行业研究报告 + PPT + 网页”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E9%99%90%E5%88%B6"><span class="nav-number">1.5.</span> <span class="nav-text">五、适用场景与限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93%EF%BC%9AAgent-%E6%97%B6%E4%BB%A3%E7%9A%84%E2%80%9D%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E2%80%9D%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="nav-number">1.6.</span> <span class="nav-text">六、总结：Agent 时代的” 操作系统” 长什么样？</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/22/deer-flow-bytedance-super-agent-harness/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="DeerFlow 2.0：字节跳动开源的 SuperAgent Harness，让一个 Agent 干完一队人的活 | 小戴的网络日志">
+      <meta itemprop="description" content="DeerFlow 2.0 是字节跳动开源的 SuperAgent Harness，用 LangGraph 编排子 Agent、持久记忆、Docker 沙箱与可扩展技能，处理&quot;分钟到小时&quot;级的长链路任务。GitHub 72k+ stars，曾登顶 Trending">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DeerFlow 2.0：字节跳动开源的 SuperAgent Harness，让一个 Agent 干完一队人的活
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-22 10:00:30" itemprop="dateCreated datePublished" datetime="2026-06-22T10:00:30+08:00">2026-06-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">DeerFlow 2.0 是字节跳动开源的 SuperAgent Harness，用 LangGraph 编排子 Agent、持久记忆、Docker 沙箱与可扩展技能，处理"分钟到小时"级的长链路任务。GitHub 72k+ stars，曾登顶 Trending</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="DeerFlow-2-0：字节跳动开源的-SuperAgent-Harness，让一个-Agent-干完一队人的活"><a href="#DeerFlow-2-0：字节跳动开源的-SuperAgent-Harness，让一个-Agent-干完一队人的活" class="headerlink" title="DeerFlow 2.0：字节跳动开源的 SuperAgent Harness，让一个 Agent 干完一队人的活"></a>DeerFlow 2.0：字节跳动开源的 SuperAgent Harness，让一个 Agent 干完一队人的活</h1><h2 id="一、一个场景：明明只是一篇调研报告，为什么写了两周？"><a href="#一、一个场景：明明只是一篇调研报告，为什么写了两周？" class="headerlink" title="一、一个场景：明明只是一篇调研报告，为什么写了两周？"></a>一、一个场景：明明只是一篇调研报告，为什么写了两周？</h2><p>“花三天读论文、拉数据、做竞品分析，再花两天把这些塞进 PPT。”—— 这是不是听起来很熟悉？更扎心的是，做完之后你大概率会收到一句” 能不能再做个网页版？”。</p>
+<p>我们目前的 AI Agent 大多数是” 单兵作战”：一个主 Agent 接 prompt、查资料、写文档、生成配图、导出 PPT—— 所有事情串在一条链上跑。一旦任务稍微复杂一点，问题立刻冒出来：上下文窗口被自己撑爆、并发度上不去、一个工具报错整个流程卡死、最后产出的内容风格也七零八落。</p>
+<p>字节跳动 2 月底把内部用了大半年、并在 2026 年 2 月 28 日登顶 GitHub Trending 第一名的项目 <strong>DeerFlow 2.0</strong>（<a target="_blank" rel="noopener" href="https://github.com/bytedance/deer-flow">github.com/bytedance/deer-flow</a>）完全开源了出来。72,000+ stars、MIT 协议、基于 LangGraph 与 LangChain 重写，<strong>它不是又一个” 研究助手”，而是一套给 Agent 用的运行时（Agent Harness）</strong>—— 把” 一个 Agent 干所有事” 换成了” 一个 Lead Agent 调度一队 Sub-Agent”。</p>
+<h2 id="二、项目背景：从-Deep-Research-到-SuperAgent-Harness"><a href="#二、项目背景：从-Deep-Research-到-SuperAgent-Harness" class="headerlink" title="二、项目背景：从 Deep Research 到 SuperAgent Harness"></a>二、项目背景：从 Deep Research 到 SuperAgent Harness</h2><p>DeerFlow 的全称是 <strong>D</strong>eep <strong>E</strong>xploration and <strong>E</strong>fficient <strong>R</strong>esearch <strong>Flow</strong>。1.x 版本最初定位是” 深度研究框架”，2.0 做了一次彻头彻尾的 ground-up rewrite，代码与 1.x <strong>没有任何继承关系</strong> ——v1 的研究能力保留在 <code>main-1.x</code> 分支，2.0 主线已经进化成一套” 能跑长链路任务的 Agent 操作系统”。</p>
+<p>官方对它的定义是 <strong>SuperAgent Harness</strong>—— 一个能编排 sub-agents、memory、sandboxes，并被可扩展 skills 驱动的运行时。它要解决的问题不是” 再做一个更好的 ChatGPT”，而是：</p>
+<ul>
+<li>任务时长从” 几十秒” 扩展到” 几分钟到几小时”；</li>
+<li>上下文从” 塞进一个窗口” 变成” 按需加载 + 子 Agent 隔离”；</li>
+<li>工具从” 塞 50 个 MCP” 变成” 按任务渐进式激活 skills”；</li>
+<li>执行从” 单进程串行” 变成” 并行 Sub-Agent + 沙箱隔离”。</li>
+</ul>
+<p>用一句话总结：<strong>DeerFlow 把 Agent 从” 对话” 升级为” 工程”</strong>。</p>
+<h2 id="三、核心功能：五件套让长链路任务真正可工程化"><a href="#三、核心功能：五件套让长链路任务真正可工程化" class="headerlink" title="三、核心功能：五件套让长链路任务真正可工程化"></a>三、核心功能：五件套让长链路任务真正可工程化</h2><h3 id="1-Skills：按需加载的”能力模块”"><a href="#1-Skills：按需加载的”能力模块”" class="headerlink" title="1. Skills：按需加载的”能力模块”"></a>1. Skills：按需加载的” 能力模块”</h3><p>DeerFlow 里的 Skill 不是” 插件代码”，而是写在 <code>SKILL.md</code> 里的结构化能力描述 ——markdown 写清楚” 这个 skill 解决什么问题、输入是什么、输出格式、典型步骤”。系统启动时只加载 skill 的<strong>元信息</strong>（名字、描述、占用 token 大小），真正用的时候才把完整流程读进上下文。</p>
+<p>内置的 5 个公共 skill：</p>
+<ul>
+<li><strong>research</strong>：多源检索、交叉验证、产出研究报告；</li>
+<li><strong>report-generation</strong>：把研究结果组织成结构化长文；</li>
+<li><strong>slide-creation</strong>：直接生成 PPT；</li>
+<li><strong>web-page</strong>：把同一份内容渲成网页；</li>
+<li><strong>image / video generation</strong>：按需生成配图或视频。</li>
+</ul>
+<p>按需加载带来的好处是<strong>主 Agent 的系统 prompt 永远保持精简</strong> ——72k stars 的项目里没有任何一个内置 skill 会被” 无条件塞进 prompt”。如果你装了 Claude Code / Codex / Cursor，还可以用一句话让 coding agent 帮你装好 DeerFlow：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Help me clone DeerFlow if needed, then bootstrap it for local development by</span><br><span class="line">following https://raw.githubusercontent.com/bytedance/deer-flow/main/Install.md</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="2-Sub-Agents：把一个大任务拆给一队人"><a href="#2-Sub-Agents：把一个大任务拆给一队人" class="headerlink" title="2. Sub-Agents：把一个大任务拆给一队人"></a>2. Sub-Agents：把一个大任务拆给一队人</h3><p>Lead Agent 接到任务后，<strong>会自己判断</strong>需要拆成几步、每一步派给哪种 Sub-Agent。每个 Sub-Agent 拥有：</p>
+<ul>
+<li><strong>独立的上下文窗口</strong> —— 子 Agent 看不到主 Agent，也看不到其它 Sub-Agent 的对话；</li>
+<li><strong>独立的工具集</strong> —— 比如” 研究” 型 Sub-Agent 拿搜索 / 抓取工具，” 写作” 型 Sub-Agent 拿文件 / 排版工具；</li>
+<li><strong>独立的终止条件</strong> —— 明确” 做完就走”，避免无限循环。</li>
+</ul>
+<p>关键是它们能<strong>并行跑</strong>。比如” 研究 A 股 + 港股 + 美股三家公司”，三个 Sub-Agent 同步出去各自调研，最后由 Lead Agent 把三份结果合并成一份报告。<strong>子 Agent 的 token 消耗会单独归集到发起它的那个 step</strong>，方便你做成本归因。</p>
+<h3 id="3-Sandbox：每个任务一个安全执行环境"><a href="#3-Sandbox：每个任务一个安全执行环境" class="headerlink" title="3. Sandbox：每个任务一个安全执行环境"></a>3. Sandbox：每个任务一个安全执行环境</h3><p>DeerFlow 提供两种沙箱模式：</p>
+<ul>
+<li><strong>AioSandboxProvider</strong>：用 Docker 容器隔离执行 shell、Python 脚本、Playwright 浏览器操作；</li>
+<li><strong>LocalSandboxProvider</strong>：把文件操作映射到主机目录，默认禁用 <code>bash</code>，适合” 不放心给 Agent 跑代码、但想让它读写文件” 的场景。</li>
+</ul>
+<p>每个任务启动后，会拿到一套标准化的文件系统：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/mnt/user-data/</span><br><span class="line">├── uploads/     ← 你上传的原始素材</span><br><span class="line">├── workspace/   ← Sub-Agent 的工作目录</span><br><span class="line">└── outputs/     ← 最终交付物（报告、PPT、网页、图表）</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这种” 虚拟电脑” 的设计意味着 Sub-Agent 之间的产出<strong>不会互相污染</strong>，主 Agent 拿到的永远是” 成品文件” 而不是” 半成品对话”。</p>
+<h3 id="4-Context-Engineering：把上下文当成”工程”来管"><a href="#4-Context-Engineering：把上下文当成”工程”来管" class="headerlink" title="4. Context Engineering：把上下文当成”工程”来管"></a>4. Context Engineering：把上下文当成” 工程” 来管</h3><p>DeerFlow 把上下文工程拆成 4 个独立策略：</p>
+<ul>
+<li><strong>Sub-Agent 隔离上下文</strong>：避免噪音扩散；</li>
+<li><strong>强制 Summarization</strong>：在长会话里定期压缩早期消息；</li>
+<li><strong>Strict Tool-Call Recovery</strong>：被中断的工具调用会被清理掉原始元数据，注入占位结果，防止模型” 卡在幻觉里”；</li>
+<li><strong>Skill 渐进式加载</strong>：前文已经说过的，按需激活。</li>
+</ul>
+<p>这四点合起来让 DeerFlow 2.0 能稳定跑<strong>长达数小时</strong>的任务，而不会像单 Agent 那样在 1 小时后开始” 答非所问”。</p>
+<h3 id="5-Long-Term-Memory：跨会话的”用户档案”"><a href="#5-Long-Term-Memory：跨会话的”用户档案”" class="headerlink" title="5. Long-Term Memory：跨会话的”用户档案”"></a>5. Long-Term Memory：跨会话的” 用户档案”</h3><p>DeerFlow 把用户偏好、过往任务里沉淀的事实写进本地长期记忆，<strong>下一次启动会自动恢复</strong>。更妙的是：写入时会做去重 —— 同一个事实不会因为被反复提到就被重复存储。配合 Skill 系统，它能在你第二次做类似任务时主动建议” 要不要沿用上次的结构？”</p>
+<h2 id="四、实战示例：让-DeerFlow-自动产出”行业研究报告-PPT-网页”"><a href="#四、实战示例：让-DeerFlow-自动产出”行业研究报告-PPT-网页”" class="headerlink" title="四、实战示例：让 DeerFlow 自动产出”行业研究报告 + PPT + 网页”"></a>四、实战示例：让 DeerFlow 自动产出” 行业研究报告 + PPT + 网页”</h2><p>下面演示一个典型工作流 —— 研究”2026 年 AI Agent 框架市场格局”，并一键产出 markdown 报告 + PPT + 网页。假设你已经按官方 <code>Install.md</code> 跑完 <code>make config</code> 并写好 <code>config.yaml</code>。</p>
+<p><strong>Step 1. 启动 DeerFlow 控制台</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make run</span><br><span class="line"><span class="comment"># 默认监听 http://localhost:2026</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>Step 2. 在前端发起任务</strong></p>
+<p>在对话框里输入：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">请用 research + report-generation + slide-creation 三个 skill 协作完成：</span><br><span class="line">主题：2026 年 AI Agent 框架市场格局（LangChain、LangGraph、AutoGen、MetaGPT、CrewAI、Agno）</span><br><span class="line">要求：</span><br><span class="line">1. 拉取每个项目的最新 stars、release、license、核心定位；</span><br><span class="line">2. 用表格对比它们的能力差异；</span><br><span class="line">3. 输出到 /mnt/user-data/outputs/ 下的三份文件：report.md、slides.pptx、webpage.html；</span><br><span class="line">4. 最后给我一个一句话总结。</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>Step 3. 观察 Lead Agent 的调度</strong></p>
+<p>前端会实时显示 Lead Agent 拆出了哪些 Sub-Agent、它们在跑什么 skill、当前 token 消耗。你可以中途看到类似这样的过程：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[Lead] 识别到需要：研究 → 写作 → 排版</span><br><span class="line">  ├── Sub-Agent #1 (research)    → 抓 6 个项目的 README + 近期 release notes</span><br><span class="line">  ├── Sub-Agent #2 (research)    → 检索 2026 Q1 / Q2 的行业评测文章</span><br><span class="line">  ├── Sub-Agent #3 (analysis)    → 对比 6 个项目的 stars、license、协议</span><br><span class="line">  ├── Sub-Agent #4 (report-gen)  → 汇总上面三份结果产出 report.md</span><br><span class="line">  ├── Sub-Agent #5 (slide)       → 把报告转成 slides.pptx</span><br><span class="line">  └── Sub-Agent #6 (web-page)    → 把报告渲成 webpage.html</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>Step 4. 拿到产物</strong></p>
+<p>任务结束后，去 <code>/mnt/user-data/outputs/</code> 拉文件即可。整个过程 5–15 分钟，<strong>主 Agent 自己的上下文始终保持精简</strong>，因为重活全部分摊给了 Sub-Agent。</p>
+<p><strong>进阶玩法：让 Claude Code 直接指挥 DeerFlow</strong></p>
+<p>装好 <code>claude-to-deerflow</code> skill 后，你在 Claude Code 里输入 <code>/claude-to-deerflow</code>，就能把当前 Coding Agent 当成 DeerFlow 的一个客户端，命令由 DeerFlow 的 Lead Agent 统一调度。</p>
+<h2 id="五、适用场景与限制"><a href="#五、适用场景与限制" class="headerlink" title="五、适用场景与限制"></a>五、适用场景与限制</h2><p><strong>DeerFlow 适合的场景</strong>：</p>
+<ul>
+<li><strong>长链路内容生产</strong>：调研 + 报告 + PPT + 网页这种” 一个人干一周” 的活；</li>
+<li><strong>多源数据分析</strong>：把” 拉数据 + 清洗 + 分析 + 出图 + 写解读” 串成一个 pipeline；</li>
+<li><strong>代码 + 文档双交付</strong>：研究代码库改完之后，自动生成对应的技术文档、发布说明；</li>
+<li><strong>需要” 工程化” 的 AI 工作流</strong>：你希望任务可观测、可中断、可恢复，而不是一次性 chat。</li>
+</ul>
+<p><strong>DeerFlow 不适合 / 有局限的场景</strong>：</p>
+<ul>
+<li><strong>极简单轮对话</strong>：” 帮我写个正则” 这种任务，单 Agent 反而更快；</li>
+<li><strong>实时性要求极高</strong>：5 秒内必须给出答案的场景，DeerFlow 的 Sub-Agent 调度开销吃不消；</li>
+<li><strong>极低 token 预算</strong>：Sub-Agent 隔离和持久记忆都要额外开销，单任务 token 消耗通常比” 裸调 LLM API” 高 20–40%；</li>
+<li><strong>模型强依赖</strong>：官方推荐” 长上下文 + 工具调用 + 推理” 三项齐全的模型，纯小模型跑不起来；需要先在 <code>config.yaml</code> 里配好 OpenAI / Anthropic / OpenRouter 等兼容网关。</li>
+</ul>
+<h2 id="六、总结：Agent-时代的”操作系统”长什么样？"><a href="#六、总结：Agent-时代的”操作系统”长什么样？" class="headerlink" title="六、总结：Agent 时代的”操作系统”长什么样？"></a>六、总结：Agent 时代的” 操作系统” 长什么样？</h2><p>如果说 LangChain 是”Agent 时代的 Spring”，那 DeerFlow 2.0 给出的答案更接近”Agent 时代的 Kubernetes”—— 它关心的不是单 Agent 怎么写 prompt，而是<strong>多 Agent 怎么协作、上下文怎么工程化、长任务怎么不崩、产物怎么落盘</strong>。</p>
+<p>72,000+ stars 不是白拿的。它解决的是当前 AI Agent 落地最痛的那几件事：</p>
+<ul>
+<li>✅ <strong>复杂任务可拆分</strong>：Lead Agent + Sub-Agent 的两层结构天然适合” 研究 + 写作 + 排版” 型任务；</li>
+<li>✅ <strong>上下文不再爆</strong>：Sub-Agent 隔离 + 按需加载 Skill + 强制 Summarization；</li>
+<li>✅ <strong>执行可观测</strong>：每个 step、每个 Sub-Agent 的 token 消耗独立归因；</li>
+<li>✅ <strong>产物可交付</strong>：沙箱文件系统 + 多 skill 协作产出真实文件，不只是” 一段对话”。</li>
+</ul>
+<p>如果你正在做 AI Agent 产品、想给团队搭一套”AI 数字员工流水线”，又或者你已经受够了 LangGraph 自己拼图拼到怀疑人生 ——<strong>DeerFlow 2.0 值得花一个下午去 <code>git clone</code> 一下</strong>。</p>
+<p>仓库地址：<a target="_blank" rel="noopener" href="https://github.com/bytedance/deer-flow">github.com/bytedance/deer-flow</a>（MIT・Python 3.12+・Node 22+），官方文档站：<a target="_blank" rel="noopener" href="https://deerflow.tech/">deerflow.tech</a>。装好之后，从 <code>/research</code> 跑一个你最熟悉的领域开始，会很快理解它为什么能登顶 Trending。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/22/deer-flow-bytedance-super-agent-harness/" title="DeerFlow 2.0：字节跳动开源的 SuperAgent Harness，让一个 Agent 干完一队人的活">https://www.daishengli.top/2026/06/22/deer-flow-bytedance-super-agent-harness/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/DeerFlow/" rel="tag"># DeerFlow</a>
+              <a href="/tags/ByteDance/" rel="tag"># ByteDance</a>
+              <a href="/tags/Multi-Agent/" rel="tag"># Multi-Agent</a>
+              <a href="/tags/SubAgent/" rel="tag"># SubAgent</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/21/pake-turn-webpage-into-desktop-app/" rel="prev" title="Pake：一行命令把任意网页变成桌面 App，比 Electron 小 20 倍">
+                  <i class="fa fa-angle-left"></i> Pake：一行命令把任意网页变成桌面 App，比 Electron 小 20 倍
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/23/openmontage-agentic-video-production-studio/" rel="next" title="OpenMontage：把 Claude Code &#x2F; Cursor 变成 AI 视频制片厂，登顶 GitHub Trending">
+                  OpenMontage：把 Claude Code / Cursor 变成 AI 视频制片厂，登顶 GitHub Trending <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

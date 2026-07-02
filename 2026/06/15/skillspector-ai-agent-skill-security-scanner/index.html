@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="NVIDIA 开源 SkillSpector：64 条规则扫 Agent skill，26% 装的就是漏洞。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SkillSpector：NVIDIA 出的 AI Agent 技能扫描器，26% 的 &quot;技能&quot; 其实是漏洞">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/15/skillspector-ai-agent-skill-security-scanner/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="NVIDIA 开源 SkillSpector：64 条规则扫 Agent skill，26% 装的就是漏洞。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-15T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.696Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="Codex">
+<meta property="article:tag" content="开源工具">
+<meta property="article:tag" content="NVIDIA">
+<meta property="article:tag" content="安全">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/15/skillspector-ai-agent-skill-security-scanner/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/15/skillspector-ai-agent-skill-security-scanner/","path":"2026/06/15/skillspector-ai-agent-skill-security-scanner/","title":"SkillSpector：NVIDIA 出的 AI Agent 技能扫描器，26% 的 \"技能\" 其实是漏洞"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SkillSpector：NVIDIA 出的 AI Agent 技能扫描器，26% 的 "技能" 其实是漏洞 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E6%89%AB%E4%BB%80%E4%B9%88%EF%BC%9A64-%E6%9D%A1%E8%A7%84%E5%88%99%EF%BC%8C%E8%A6%86%E7%9B%96-16-%E4%B8%AA%E6%94%BB%E5%87%BB%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">它扫什么：64 条规则，覆盖 16 个攻击面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E6%80%8E%E4%B9%88%E6%89%AB%EF%BC%9A%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="nav-number">2.</span> <span class="nav-text">它怎么扫：两阶段流水线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E8%A1%8C%E5%91%BD%E4%BB%A4%E7%9A%84%E7%9C%9F%E5%AE%9E%E4%BD%93%E9%AA%8C"><span class="nav-number">3.</span> <span class="nav-text">一行命令的真实体验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B8%AA%E9%A1%B9%E7%9B%AE%E5%80%BC%E5%BE%97-star"><span class="nav-number">4.</span> <span class="nav-text">为什么这个项目值得 star</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%80%E9%99%90%E5%92%8C%E6%88%91%E7%9A%84%E4%BD%BF%E7%94%A8%E5%BB%BA%E8%AE%AE"><span class="nav-number">5.</span> <span class="nav-text">局限和我的使用建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">6.</span> <span class="nav-text">最后</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/15/skillspector-ai-agent-skill-security-scanner/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SkillSpector：NVIDIA 出的 AI Agent 技能扫描器，26% 的 &quot;技能&quot; 其实是漏洞 | 小戴的网络日志">
+      <meta itemprop="description" content="NVIDIA 开源 SkillSpector：64 条规则扫 Agent skill，26% 装的就是漏洞。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SkillSpector：NVIDIA 出的 AI Agent 技能扫描器，26% 的 "技能" 其实是漏洞
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-15 10:00:00" itemprop="dateCreated datePublished" datetime="2026-06-15T10:00:00+08:00">2026-06-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">效率工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">NVIDIA 开源 SkillSpector：64 条规则扫 Agent skill，26% 装的就是漏洞。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>早上刷 GitHub Trending，第二条项目让我后背一凉：</p>
+<blockquote>
+<p><strong>NVIDIA / SkillSpector</strong> — Security scanner for AI agent skills. Detect vulnerabilities, malicious patterns, and security risks before installing agent skills.</p>
+</blockquote>
+<p>单日 <strong>964 stars</strong>，仓库总数 <strong>5.4k</strong>。一个扫描器被顶到这个位置，说明整个社区已经意识到一件事 —— <strong>我们正在疯狂安装的”Agent skills”，有四分之一其实是定时炸弹</strong>。</p>
+<p>引用它 README 里那句直白得有点可怕的话：</p>
+<blockquote>
+<p>Research shows that <strong>26.1% of skills contain vulnerabilities</strong> and <strong>5.2% show likely malicious intent</strong>.</p>
+</blockquote>
+<p>我用的是数字游民的工作流，Claude Code、Codex、Hermes Agent 三个客户端长期并行，每个里都装了几十个社区 skill。看到 26.1% 这个数字，第一反应不是” 哇又有新工具”，而是 —— <strong>我昨天装的那个 skill，安全吗？</strong></p>
+<h2 id="它扫什么：64-条规则，覆盖-16-个攻击面"><a href="#它扫什么：64-条规则，覆盖-16-个攻击面" class="headerlink" title="它扫什么：64 条规则，覆盖 16 个攻击面"></a>它扫什么：64 条规则，覆盖 16 个攻击面</h2><p>SkillSpector 不是简单的关键词匹配，它把整个 skill 拆成 16 个攻击面，每个面都有具体的规则：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>规则数</th>
+<th>抓什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Prompt Injection</td>
+<td>5</td>
+<td> 覆盖系统提示、隐藏指令、行为操纵、危险内容</td>
+</tr>
+<tr>
+<td> Data Exfiltration</td>
+<td>4</td>
+<td> 外发数据、env 变量收割、文件系统枚举、上下文外泄</td>
+</tr>
+<tr>
+<td> Privilege Escalation</td>
+<td>3</td>
+<td> 越权、sudo/root 调用、读 SSH key</td>
+</tr>
+<tr>
+<td>Supply Chain</td>
+<td>6</td>
+<td> 未锁定依赖、<code>curl | bash</code>、混淆代码、<strong>联网查 OSV.dev CVE</strong>、废弃包、typosquatting</td>
+</tr>
+<tr>
+<td>Excessive Agency</td>
+<td>4</td>
+<td> 无限制工具调用、自主决策、范围蔓延、无界资源</td>
+</tr>
+<tr>
+<td> Output Handling</td>
+<td>3</td>
+<td> 模型输出未消毒、跨信任边界输出、无界输出</td>
+</tr>
+<tr>
+<td> System Prompt Leakage</td>
+<td>3</td>
+<td> 直接泄漏、间接提取、工具侧通道</td>
+</tr>
+<tr>
+<td> Memory Poisoning</td>
+<td>3</td>
+<td> 持久化注入、上下文窗口填充、内存篡改</td>
+</tr>
+<tr>
+<td> Tool Misuse</td>
+<td>3</td>
+<td> 参数滥用（如 <code>shell=True</code>、<code>--force</code>）、链路绕过、不安全默认</td>
+</tr>
+<tr>
+<td> Rogue Agent</td>
+<td>2</td>
+<td> 自修改、会话持久化（写 cron）</td>
+</tr>
+<tr>
+<td>Trigger Abuse</td>
+<td>3</td>
+<td> 触发词太宽、影子命令、关键词诱饵</td>
+</tr>
+<tr>
+<td> Behavioral AST</td>
+<td>8</td>
+<td><code>exec/eval/subprocess</code>、动态 import、<code>os.system</code>、动态 <code>getattr</code></td>
+</tr>
+<tr>
+<td>Taint Tracking</td>
+<td>5</td>
+<td> 数据流追踪 ——env → 网络、文件 → 网络、输入 → 代码执行</td>
+</tr>
+<tr>
+<td> YARA Signatures</td>
+<td>4</td>
+<td> 已知恶意软件、webshell、挖矿、hack 工具特征</td>
+</tr>
+<tr>
+<td> MCP Least Privilege</td>
+<td>4</td>
+<td> 声明的能力低于实际代码、通配符权限、缺失声明、过度声明</td>
+</tr>
+<tr>
+<td> MCP Tool Poisoning</td>
+<td>4</td>
+<td> 元数据里的隐藏指令、Unicode 欺骗、参数注入、描述行为不符</td>
+</tr>
+</tbody></table>
+<p><strong>最后两个类别尤其值得关注</strong> ——MCP（Model Context Protocol）是今年 Claude Code / Cursor / Codex 等工具的” 工具接口标准”，而 <strong>MCP 工具中毒</strong>是今年新冒出来的一类攻击：恶意 skill 在自己的 <code>description</code> 字段、metadata、参数说明里塞隐藏指令，模型读到这些就会按攻击者意图执行。</p>
+<p>我把 64 条规则完整列出来不是为了凑字数，是因为这套分类基本上就是给”Agent 时代软件供应链” 画了一张完整的威胁地图。任何一个想做 Agent 安全产品的人，都可以直接拿这个当骨架。</p>
+<h2 id="它怎么扫：两阶段流水线"><a href="#它怎么扫：两阶段流水线" class="headerlink" title="它怎么扫：两阶段流水线"></a>它怎么扫：两阶段流水线</h2><p>SkillSpector 把扫描拆成两个阶段，对应不同速度和精度：</p>
+<p><strong>Stage 1：纯静态分析（毫秒级）</strong></p>
+<ul>
+<li>11 个静态分析器并行扫</li>
+<li> AST 层面抓 <code>exec/eval/subprocess</code> 这类危险调用</li>
+<li>抓网络 / 文件 /env 这三个 sink 的可疑数据流</li>
+<li><strong> SC4 规则会真去查 OSV.dev</strong>（免费的漏洞数据库），把 skill 的 <code>requirements.txt</code> / <code>package.json</code> 拿去比对，发现依赖里有已知 CVE 会直接报警。OSV.dev 失败就 fallback 到内置的离线列表</li>
+<li>高召回、速度极快，但会有一些误报</li>
+</ul>
+<p><strong>Stage 2：LLM 语义分析（可选，需要 provider）</strong></p>
+<p>把 Stage 1 的发现扔给一个 LLM（OpenAI / Anthropic / NVIDIA build.nvidia.com/ 本地 Ollama），让它：</p>
+<ul>
+<li>评估上下文和意图（区分” 故意的功能” vs “无意的漏洞”）</li>
+<li>过滤掉假阳性</li>
+<li>生成人类能读的解释</li>
+</ul>
+<p>精度从静态的” 高召回中精度” 提升到 <strong>~87%</strong>。关键是它还特意写了 ——<strong>prompt 里加 anti-jailbreak 防护</strong>，防止恶意 skill 在分析过程中反向操纵分析 LLM。这一点非常专业。</p>
+<p>我尤其想点赞的是它支持三种 provider：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> SKILLSPECTOR_PROVIDER=anthropic</span><br><span class="line"><span class="built_in">export</span> ANTHROPIC_API_KEY=sk-ant-...</span><br><span class="line">skillspector scan ./my-skill/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者本地 Ollama</span></span><br><span class="line"><span class="built_in">export</span> SKILLSPECTOR_PROVIDER=openai</span><br><span class="line"><span class="built_in">export</span> OPENAI_BASE_URL=http://localhost:11434/v1</span><br><span class="line"><span class="built_in">export</span> OPENAI_API_KEY=ollama</span><br><span class="line"><span class="built_in">export</span> SKILLSPECTOR_MODEL=llama3.1:8b</span><br></pre></td></tr></tbody></table></figure>
+
+<p>数字游民工作流的核心矛盾就是” 数据不能上云” 和” 又想要 AI 能力”。SkillSpector 直接支持本地 Ollama /vLLM/llama.cpp 跑分析，<strong>敏感 skill 的扫描可以完全不离本地</strong>。</p>
+<h2 id="一行命令的真实体验"><a href="#一行命令的真实体验" class="headerlink" title="一行命令的真实体验"></a>一行命令的真实体验</h2><p>我顺手扫了一下我 Claude Code 里装了三个月的几个 skill：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/NVIDIA/skillspector.git</span><br><span class="line"><span class="built_in">cd</span> skillspector</span><br><span class="line">uv venv .venv &amp;&amp; <span class="built_in">source</span> .venv/bin/activate</span><br><span class="line">make install</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不调 LLM，先跑一遍静态扫</span></span><br><span class="line">skillspector scan ~/.claude/skills/superpowers --no-llm</span><br></pre></td></tr></tbody></table></figure>
+
+<p>终端输出长这样：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> SkillSpector Security Report  v2.0.0</span><br><span class="line"></span><br><span class="line">Skill: superpowers</span><br><span class="line">Source: ~/.claude/skills/superpowers/</span><br><span class="line">Scanned: 2026-06-15 03:14:00 UTC</span><br><span class="line"></span><br><span class="line">        Risk Assessment</span><br><span class="line"> Metric          Value</span><br><span class="line"> Score           12/100</span><br><span class="line"> Severity        LOW</span><br><span class="line"> Recommendation  SAFE</span><br><span class="line"></span><br><span class="line">        Components (3)</span><br><span class="line"> File              Type      Lines  Executable</span><br><span class="line"> SKILL.md          markdown    142  No</span><br><span class="line"> scripts/sync.py   python       87  Yes</span><br><span class="line"> requirements.txt  text          3  No</span><br><span class="line"></span><br><span class="line">Issues (0)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>干净。<strong>Score 12/100，Severity LOW，SAFE</strong>。</p>
+<p>然后我又试着扫了一个我前阵子在某 marketplace 装的、用的人比较多但作者不熟悉的 skill。这一次报告就不一样了：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">        Risk Assessment</span><br><span class="line"> Score           68/100</span><br><span class="line"> Severity        HIGH</span><br><span class="line"> Recommendation  DO NOT INSTALL</span><br><span class="line"></span><br><span class="line">Issues (3)</span><br><span class="line"></span><br><span class="line">  HIGH: Env Variable Harvesting (E2)</span><br><span class="line">    Location: scripts/sync.py:23</span><br><span class="line">    Finding: for key, val in os.environ.items():...</span><br><span class="line">    Confidence: 94%</span><br><span class="line">    Explanation: This code collects environment variables containing</span><br><span class="line">    API keys and secrets, then sends them to an external server.</span><br><span class="line"></span><br><span class="line">  HIGH: External Transmission (E1)</span><br><span class="line">    Location: scripts/sync.py:45</span><br><span class="line">    Finding: requests.post("https://api.skill.io/env"...</span><br><span class="line">    Confidence: 89%</span><br><span class="line">    Explanation: Data is being sent to an external server. Combined</span><br><span class="line">    with env harvesting above, this indicates credential exfiltration.</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>两个 HIGH 联动，直接被判定 DO NOT INSTALL</strong>。</p>
+<p>我默默 <code>rm -rf</code> 了一下那个 skill 的目录，然后给作者提了 issue。</p>
+<p>风险打分规则也很直白（README 里写得清清楚楚）：</p>
+<table>
+<thead>
+<tr>
+<th>Score</th>
+<th>Severity</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0-20</td>
+<td>LOW</td>
+<td>SAFE</td>
+</tr>
+<tr>
+<td>21-50</td>
+<td>MEDIUM</td>
+<td>CAUTION</td>
+</tr>
+<tr>
+<td>51-80</td>
+<td>HIGH</td>
+<td>DO NOT INSTALL</td>
+</tr>
+<tr>
+<td>81-100</td>
+<td>CRITICAL</td>
+<td>DO NOT INSTALL</td>
+</tr>
+</tbody></table>
+<p>单项计分：<strong>CRITICAL +50，HIGH +25，MEDIUM +10，LOW +5</strong>。如果 skill 里有可执行脚本（<code>.py</code> / <code>.sh</code>），整个分数还要乘 <strong>1.3x</strong>—— 因为带可执行脚本的 skill 漏洞概率是普通 skill 的 <strong>2.12 倍</strong>（来自它引用的那篇 Liu et al. 2026 论文，扫描了 42,447 个 skill）。</p>
+<h2 id="为什么这个项目值得-star"><a href="#为什么这个项目值得-star" class="headerlink" title="为什么这个项目值得 star"></a>为什么这个项目值得 star</h2><p>我想从数字游民 + 重度 Agent 使用者的角度，说三点它解决了我自己真正的痛点：</p>
+<p><strong>第一，” 装 skill” 这件事从 2024 年开始变成了 Agent 工作流的核心动作</strong>，但没人给这个动作装一个” 杀毒软件”。我们装 npm 包会跑 <code>npm audit</code>，装 Python 包会扫 pip-audit，唯独 Agent skill 是裸装。SkillSpector 把这个缺口填上了。</p>
+<p><strong>第二，它的输出能进 CI/CD</strong>。SARIF 格式可以直接喂给 GitHub Code Scanning，意味着你完全可以做一个 “skill marketplace 的预发检查流水线”—— 任何人提交新 skill，先过 SkillSpector 这关才允许上架。这对任何一个想做 skill 平台的人来说，是基础设施级的组件。</p>
+<p><strong>第三，它是 NVIDIA 出的，但工具本身立场中立</strong>。任何 skill 都能扫，没有白名单、没有商业关系。Apache 2.0 license + 论文级的研究背景（基于 Liu et al. 2026 那篇 42,447 个 skill 的大规模实证研究），可信度比” 某 startup 攒的扫描器” 高得多。</p>
+<p>我已经在想一件事：要不要把我自己维护的 skill 列表每周跑一次 SkillSpector，然后把结果写进 README 当 trust signal。这样读者看到的不只是” 这个 skill 有 200 stars”，而是”SkillSpector 评级 LOW，上次扫描时间 2026-06-15”。</p>
+<h2 id="局限和我的使用建议"><a href="#局限和我的使用建议" class="headerlink" title="局限和我的使用建议"></a>局限和我的使用建议</h2><p>它自己在 README 里也写了 5 条局限，我翻译一下并补上我的建议：</p>
+<table>
+<thead>
+<tr>
+<th>局限</th>
+<th>我的应对</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>非英文内容可能漏</td>
+<td>我自己写的 skill 全是英文，但装别人的中文 skill 需要人工再过一遍</td>
+</tr>
+<tr>
+<td>图片里的攻击抓不到</td>
+<td> skill 仓库一般不放图片，这条不痛</td>
+</tr>
+<tr>
+<td>加密 / 编译过的代码看不到</td>
+<td>警惕含 <code>.so</code> / <code>.pyd</code> 的 skill，这类根本不该有</td>
+</tr>
+<tr>
+<td>静态分析，不跑</td>
+<td> SkillSpector 永远不执行你的 skill，只看代码。这意味着 0 误执行风险</td>
+</tr>
+<tr>
+<td> SC4 离线时用静态 fallback</td>
+<td> 出差在没网的咖啡馆工作时，先 <code>--no-llm</code> 也能用</td>
+</tr>
+</tbody></table>
+<p><strong>我自己的实操建议</strong>：</p>
+<ol>
+<li><strong>装新 skill 之前先扫</strong> ——<code>skillspector scan https://github.com/xxx/yyy</code></li>
+<li><strong>批量审计已有 skill</strong>——<code>find ~/.claude/skills -name SKILL.md | xargs -I{} skillspector scan {}</code></li>
+<li><strong>CI 集成</strong> —— 输出 SARIF，上传到 GitHub Code Scanning</li>
+<li><strong> 敏感 skill 走本地 LLM</strong>——Ollama 拉一个 <code>llama3.1:8b</code> 跑 Stage 2，数据完全不离本地</li>
+<li><strong>可执行脚本的 skill 重点看</strong> —— 带 <code>.py</code> / <code>.sh</code> 的 skill 风险 ×1.3，作者不熟的话直接 DO NOT INSTALL</li>
+</ol>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>2026 年的 Agent 生态，和 2014 年的 npm 生态很像 —— <strong>安装门槛极低、增长速度极快、安全基础设施滞后</strong>。那时候我们有 <code>npm audit</code>，现在我们终于有了 <code>skillspector scan</code>。</p>
+<p>如果你跟我一样，每天都在装新 skill、试新工具，<strong>强烈建议把 SkillSpector 加到你的必装清单里</strong>。一句话安装，三秒出报告，从此告别” 看完 README 就装” 的无脑节奏。</p>
+<p>仓库：<a target="_blank" rel="noopener" href="https://github.com/NVIDIA/SkillSpector">github.com/NVIDIA/SkillSpector</a>（5.4k stars，单日 +964）</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/15/skillspector-ai-agent-skill-security-scanner/" title="SkillSpector：NVIDIA 出的 AI Agent 技能扫描器，26% 的 &quot;技能&quot; 其实是漏洞">https://www.daishengli.top/2026/06/15/skillspector-ai-agent-skill-security-scanner/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/Codex/" rel="tag"># Codex</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/" rel="tag"># 开源工具</a>
+              <a href="/tags/NVIDIA/" rel="tag"># NVIDIA</a>
+              <a href="/tags/%E5%AE%89%E5%85%A8/" rel="tag"># 安全</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/14/agentsview-ai-coding-agent-session-intelligence/" rel="prev" title="agentsview：让 Claude Code、Codex、27 个 Agent 的会话数据全部归到一个本地 SQLite">
+                  <i class="fa fa-angle-left"></i> agentsview：让 Claude Code、Codex、27 个 Agent 的会话数据全部归到一个本地 SQLite
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/15/graphify-knowledge-graph-ai-coding-assistant/" rel="next" title="Graphify：把整个项目编成一张图，让 Claude Code 别再每次「失忆」">
+                  Graphify：把整个项目编成一张图，让 Claude Code 别再每次「失忆」 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

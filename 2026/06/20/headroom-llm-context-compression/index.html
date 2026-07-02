@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Headroom 跑在应用和 LLM 之间的&quot;上下文压缩层&quot;，6 种压缩器识别 JSON&#x2F;AST&#x2F;代码&#x2F;日志，code search 砍 92%，SRE 日志砍 92%，答案不变、可逆回溯、本地优先。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Headroom：让 LLM Agent 的 Token 消耗直接砍掉 60%-95%">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/20/headroom-llm-context-compression/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="Headroom 跑在应用和 LLM 之间的&quot;上下文压缩层&quot;，6 种压缩器识别 JSON&#x2F;AST&#x2F;代码&#x2F;日志，code search 砍 92%，SRE 日志砍 92%，答案不变、可逆回溯、本地优先。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-20T02:00:29.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.693Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="Headroom">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="Token 压缩">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/20/headroom-llm-context-compression/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/20/headroom-llm-context-compression/","path":"2026/06/20/headroom-llm-context-compression/","title":"Headroom：让 LLM Agent 的 Token 消耗直接砍掉 60%-95%"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Headroom：让 LLM Agent 的 Token 消耗直接砍掉 60%-95% | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Headroom%EF%BC%9A%E8%AE%A9-LLM-Agent-%E7%9A%84-Token-%E6%B6%88%E8%80%97%E7%9B%B4%E6%8E%A5%E7%A0%8D%E6%8E%89-60-95"><span class="nav-number">1.</span> <span class="nav-text">Headroom：让 LLM Agent 的 Token 消耗直接砍掉 60%-95%</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98%EF%BC%9A%E4%BD%A0%E7%9A%84-Agent-%E8%B4%A6%E5%8D%95%E8%BF%98%E5%A5%BD%E5%90%97%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">一、一个问题：你的 Agent 账单还好吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9AContext-Optimization-Layer"><span class="nav-number">1.2.</span> <span class="nav-text">二、项目背景：Context Optimization Layer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A6-%E7%A7%8D%E5%8E%8B%E7%BC%A9%E5%99%A8-3-%E7%A7%8D%E6%8E%A5%E5%85%A5%E6%96%B9%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">三、核心功能：6 种压缩器 + 3 种接入方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A30-%E7%A7%92%E6%8E%A5%E5%88%B0-LangGraph"><span class="nav-number">1.4.</span> <span class="nav-text">四、实战示例：30 秒接到 LangGraph</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E9%99%90%E5%88%B6"><span class="nav-number">1.5.</span> <span class="nav-text">五、适用场景与限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%92%8C%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">1.6.</span> <span class="nav-text">六、和同类项目的差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">七、总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/20/headroom-llm-context-compression/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Headroom：让 LLM Agent 的 Token 消耗直接砍掉 60%-95% | 小戴的网络日志">
+      <meta itemprop="description" content="Headroom 跑在应用和 LLM 之间的&quot;上下文压缩层&quot;，6 种压缩器识别 JSON&#x2F;AST&#x2F;代码&#x2F;日志，code search 砍 92%，SRE 日志砍 92%，答案不变、可逆回溯、本地优先。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Headroom：让 LLM Agent 的 Token 消耗直接砍掉 60%-95%
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-20 10:00:29" itemprop="dateCreated datePublished" datetime="2026-06-20T10:00:29+08:00">2026-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Headroom 跑在应用和 LLM 之间的"上下文压缩层"，6 种压缩器识别 JSON/AST/代码/日志，code search 砍 92%，SRE 日志砍 92%，答案不变、可逆回溯、本地优先。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Headroom：让-LLM-Agent-的-Token-消耗直接砍掉-60-95"><a href="#Headroom：让-LLM-Agent-的-Token-消耗直接砍掉-60-95" class="headerlink" title="Headroom：让 LLM Agent 的 Token 消耗直接砍掉 60%-95%"></a>Headroom：让 LLM Agent 的 Token 消耗直接砍掉 60%-95%</h1><h2 id="一、一个问题：你的-Agent-账单还好吗？"><a href="#一、一个问题：你的-Agent-账单还好吗？" class="headerlink" title="一、一个问题：你的 Agent 账单还好吗？"></a>一、一个问题：你的 Agent 账单还好吗？</h2><p>如果你正在用 Claude Code、Cursor、Codex 或者自己搭的 LangGraph / Agno 跑 AI Agent，账单曲线大概是这样的 —— 上线第一天觉得真便宜，运行一周后看到 Anthropic 或 OpenAI 的消费提醒开始沉默，运行一个月后开始认真思考” 是不是该把 RAG 召回的 chunk 数量从 20 砍到 5”。</p>
+<p>这不是错觉。一次真实的 Agent 对话经常吃掉 100K+ token，而其中绝大多数都是重复的、冗余的、对最终答案毫无贡献的” 上下文噪音”：tool 返回的巨大 JSON、长串 stack trace、RAG 检索回来的整段文档、文件读取后的源码…… 这些内容塞进上下文窗口，模型要付钱，我们要付钱，但模型其实只需要其中一小段就能给出正确答案。</p>
+<p>有没有办法在” 送到 LLM 之前” 就把这些噪音挤掉？<strong>Headroom</strong> 就是干这个的 —— 今天 GitHub Trending 上单日新增 4,000+ stars 的项目，本文带你把它看明白。</p>
+<h2 id="二、项目背景：Context-Optimization-Layer"><a href="#二、项目背景：Context-Optimization-Layer" class="headerlink" title="二、项目背景：Context Optimization Layer"></a>二、项目背景：Context Optimization Layer</h2><p><strong>Headroom</strong>（<a target="_blank" rel="noopener" href="https://github.com/chopratejas/headroom">github.com/chopratejas/headroom</a>）的定位是” 上下文优化层”（Context Optimization Layer），它跑在你的应用和 LLM 提供商之间。Agent 准备好要送给模型的 prompt、tool 输出、日志、RAG 结果、文件内容，Headroom 会先用对应的策略做压缩，再把压缩后的版本发到 Anthropic / OpenAI / Bedrock。</p>
+<p>它的几个核心承诺：</p>
+<ul>
+<li><strong>压缩率 60%–95%</strong>：在真实 Agent 工作负载上，code search 92%、SRE 事故日志 92%、GitHub issue triage 73%、代码库探索 47%。</li>
+<li><strong>答案不变</strong>：GSM8K、TruthfulQA、SQuAD v2、BFCL 等基准上压缩前后准确率几乎无差异（GSM8K 0.870 vs 0.870）。</li>
+<li><strong>可逆压缩</strong>：被压掉的内容不是真的丢了，模型可以通过 <code>headroom_retrieve</code> 工具按需拉回全文。</li>
+<li><strong>本地优先</strong>：默认在本地运行，原始数据不出你的机器；通过 <code>headroom learn</code> 还能从失败会话里挖经验，自动写回 <code>CLAUDE.md</code> / <code>AGENTS.md</code> / <code>GEMINI.md</code>。</li>
+</ul>
+<p>如果用一句话总结：<strong>它是 LLM 时代的 gzip，但能识别 JSON、AST、代码结构和自然语言，并知道哪些字节可以丢、哪些必须留。</strong></p>
+<h2 id="三、核心功能：6-种压缩器-3-种接入方式"><a href="#三、核心功能：6-种压缩器-3-种接入方式" class="headerlink" title="三、核心功能：6 种压缩器 + 3 种接入方式"></a>三、核心功能：6 种压缩器 + 3 种接入方式</h2><p>Headroom 的内部架构是一个三段式管道：<code>CacheAligner → ContentRouter → CCR</code>（Compression Content Router）。CCR 会根据内容类型把数据分发给三套压缩器之一：</p>
+<ol>
+<li><strong>SmartCrusher</strong>：针对 JSON 的结构化压缩，能识别出重复键、长数组、冗余字段，把 <code>{"a":1,"a":1,"a":1,...}</code> 这种噪声打掉。</li>
+<li><strong>CodeCompressor</strong>：基于 AST 的源码压缩，删掉注释、空行、无用 import，但保留语法正确性。</li>
+<li><strong>Kompress-base</strong>：基于 Hugging Face 模型训练的通用文本压缩器，处理自然语言段落。</li>
+</ol>
+<p>对用户来说，更直观的接口有三种：</p>
+<ul>
+<li><strong>作为库调用</strong>：<code>from headroom import compress</code>，直接处理 messages 列表。</li>
+<li><strong>作为本地代理</strong>：<code>headroom proxy --port 8787</code>，启动一个 OpenAI 兼容的 HTTP 端点，把 <code>base_url</code> 指过去就能用。</li>
+<li><strong>作为 MCP 服务器</strong>：<code>headroom mcp install</code>，把 <code>headroom_compress</code> / <code>headroom_retrieve</code> / <code>headroom_stats</code> 三个工具挂到 Claude Desktop、Cursor 等客户端里。</li>
+</ul>
+<p>另外，Headroom 还提供 <code>headroom wrap</code> 命令，可以一键包装 Claude Code、Codex、Cursor、Aider、Copilot CLI 等主流 Agent CLI；以及 <code>headroom learn --verbosity</code>，从历史会话里” 学” 你的简洁偏好，自动控制输出 token（因为 Opus 这类模型输出成本是输入的 5×）。</p>
+<h2 id="四、实战示例：30-秒接到-LangGraph"><a href="#四、实战示例：30-秒接到-LangGraph" class="headerlink" title="四、实战示例：30 秒接到 LangGraph"></a>四、实战示例：30 秒接到 LangGraph</h2><p>最省事的接入方式是用代理。下面这个例子里，我们让一个 LangGraph Agent 通过 Headroom 调用 OpenAI，统计一次真实问答的 token 消耗。</p>
+<p><strong>第一步：安装并启动代理</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip install headroom</span><br><span class="line"><span class="built_in">export</span> OPENAI_API_KEY=sk-...</span><br><span class="line">headroom proxy --port 8787</span><br></pre></td></tr></tbody></table></figure>
+
+<p>启动后访问 <code>http://localhost:8787/stats</code> 能看到实时面板：累计请求数、节省的 token、命中率。</p>
+<p><strong>第二步：让 Agent 走代理</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain_openai <span class="keyword">import</span> ChatOpenAI</span><br><span class="line"><span class="keyword">from</span> langgraph.prebuilt <span class="keyword">import</span> create_react_agent</span><br><span class="line"></span><br><span class="line">llm = ChatOpenAI(</span><br><span class="line">    model=<span class="string">"gpt-4o"</span>,</span><br><span class="line">    base_url=<span class="string">"http://localhost:8787/v1"</span>,   <span class="comment"># 指向 Headroom</span></span><br><span class="line">    api_key=<span class="string">"dummy"</span>,                       <span class="comment"># Headroom 会用环境变量里的真实 key</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">agent = create_react_agent(llm, tools=[...])</span><br><span class="line">result = agent.invoke({<span class="string">"messages"</span>: [(<span class="string">"user"</span>, <span class="string">"总结我刚发的那 50 条 GitHub issue"</span>)]})</span><br></pre></td></tr></tbody></table></figure>
+
+<p>不需要改任何业务代码 —— 所有 RAG 召回的 chunk、tool 的 JSON 返回、文件读取结果，Headroom 都会在转发到 OpenAI 之前自动压一遍。</p>
+<p><strong>第三步：让模型” 取回” 原文</strong></p>
+<p>Headroom 的关键设计是<strong>可逆</strong>。它不会把数据真删掉，而是给模型一个引用 + 一个 <code>headroom_retrieve</code> 工具。模型如果发现” 这里信息不够”，可以自己拉全文：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Headroom 自动注入的 tool schema</span></span><br><span class="line">{</span><br><span class="line">  <span class="string">"name"</span>: <span class="string">"headroom_retrieve"</span>,</span><br><span class="line">  <span class="string">"description"</span>: <span class="string">"按 cache_key 取回被压缩的原始内容"</span>,</span><br><span class="line">  <span class="string">"parameters"</span>: {</span><br><span class="line">    <span class="string">"cache_key"</span>: {<span class="string">"type"</span>: <span class="string">"string"</span>},</span><br><span class="line">    <span class="string">"offset"</span>:    {<span class="string">"type"</span>: <span class="string">"integer"</span>},</span><br><span class="line">    <span class="string">"limit"</span>:     {<span class="string">"type"</span>: <span class="string">"integer"</span>}</span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这种” 先压、要看再拉” 的模式，是它能在保留答案质量的前提下做到 90%+ 压缩率的根本原因。</p>
+<p><strong>第四步：观察效果</strong></p>
+<p>跑完一个会话后：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">headroom stats --last 1h</span><br></pre></td></tr></tbody></table></figure>
+
+<p>典型输出：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">input_tokens_saved: 412,338  (78.2%)</span><br><span class="line">output_tokens_saved: 89,201   (measured, 0.95 CI)</span><br><span class="line">top_compressor: CodeCompressor (52%), SmartCrusher (33%)</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="五、适用场景与限制"><a href="#五、适用场景与限制" class="headerlink" title="五、适用场景与限制"></a>五、适用场景与限制</h2><p><strong>最值得用 Headroom 的场景</strong>：</p>
+<ul>
+<li>跑 Claude Code、Cursor、Codex 等长任务 Agent，账单肉眼可见地降。</li>
+<li>RAG 应用召回量大、上下文窗口吃紧，需要在送进 LLM 之前做一层无损 / 近无损压缩。</li>
+<li>多 Agent 系统（Claude + Codex + 自建 agent）需要共享” 压缩记忆”——Headroom 自带跨 Agent 记忆。</li>
+<li>SRE / 运维 Agent 处理长日志、stack trace、监控输出。</li>
+<li>想白嫖 Copilot CLI 订阅但希望降低上下文长度的开发者。</li>
+</ul>
+<p><strong>目前需要留意的限制</strong>：</p>
+<ul>
+<li>macOS 上 Copilot CLI 的 keychain 鉴权已冒烟测试，Windows Credential Manager、Linux Secret Service 还在真实 OS 验证阶段。Docker / CI 场景建议显式传 <code>GITHUB_COPILOT_TOKEN</code>。</li>
+<li><code>headroom learn --verbosity</code> 节省的是” 输出 token”—— 这是反事实估计，Headroom 会明确标注 <code>measured</code> 还是 <code>estimated</code> 并给出置信区间，不会假装测过。</li>
+<li>对延迟极敏感的场景（&lt; 50ms 首 token）需要先 benchmark，本地代理会增加几毫秒开销。</li>
+<li>Reddit 社区上有开发者指出” 任何上下文压缩都<strong>不能保证</strong>得到和原文完全一样的答案”——Headroom 用 benchmark 论证” 足够接近”，但具体业务场景请自己跑回归。</li>
+</ul>
+<h2 id="六、和同类项目的差异"><a href="#六、和同类项目的差异" class="headerlink" title="六、和同类项目的差异"></a>六、和同类项目的差异</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th> Headroom</th>
+<th>llmlingua / LLMLingua-2</th>
+<th> 自建摘要层</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发位置</td>
+<td>透明代理 /wrap/ MCP</td>
+<td> 库调用</td>
+<td>业务代码内</td>
+</tr>
+<tr>
+<td>内容识别</td>
+<td> JSON / AST / 文本分路压缩</td>
+<td>统一文本压缩</td>
+<td>取决于实现</td>
+</tr>
+<tr>
+<td>可逆性</td>
+<td>✅ cache + retrieve 工具</td>
+<td>❌ 一次性</td>
+<td>❌ 一次性</td>
+</tr>
+<tr>
+<td>跨 Agent 共享记忆</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>接入成本</td>
+<td>改 base_url 即可</td>
+<td>需重写调用层</td>
+<td>改业务代码</td>
+</tr>
+</tbody></table>
+<p>核心差异在于：<strong>Headroom 把” 压缩” 做成了网络协议层和 MCP 工具，而不是一个 Python 函数</strong>。这让它在不动业务代码的前提下，能同时压输入和压输出、能跨 Agent 共享压缩记忆、能在主流程里无缝介入。</p>
+<h2 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a>七、总结</h2><p>Headroom 的爆火（单日 4K+ stars）背后是一个真实痛点：<strong>Agent 的成本曲线在失控，单纯靠减小 RAG 召回数、缩短 tool 输出只是治标</strong>。它用” 内容感知 + 可逆压缩 + 透明代理” 的组合拳，给出了一个工程化、可观测、可回滚的解决方案 —— 这是和” 再写一个 LLMlingua 包装” 完全不同的产品形态。</p>
+<p>如果你的 Agent 已经在跑、账单已经在涨，建议先花 10 分钟跑一下 <code>headroom proxy</code>，打开 dashboard 看一眼实际压缩率 —— 大概率你会立刻决定把它留下来。</p>
+<blockquote>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/chopratejas/headroom">github.com/chopratejas/headroom</a><br>协议：Apache 2.0<br>趋势数据：单日 +4,005 stars，38,728 total stars</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/20/headroom-llm-context-compression/" title="Headroom：让 LLM Agent 的 Token 消耗直接砍掉 60%-95%">https://www.daishengli.top/2026/06/20/headroom-llm-context-compression/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/Headroom/" rel="tag"># Headroom</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/Token-%E5%8E%8B%E7%BC%A9/" rel="tag"># Token 压缩</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/19/lance-multimodal-ai-lakehouse-format/" rel="prev" title="Lance：让 Parquet 提速 100 倍，专为多模态 AI 而生的开源 Lakehouse 格式">
+                  <i class="fa fa-angle-left"></i> Lance：让 Parquet 提速 100 倍，专为多模态 AI 而生的开源 Lakehouse 格式
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/21/pake-turn-webpage-into-desktop-app/" rel="next" title="Pake：一行命令把任意网页变成桌面 App，比 Electron 小 20 倍">
+                  Pake：一行命令把任意网页变成桌面 App，比 Electron 小 20 倍 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

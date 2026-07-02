@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="browser-use 团队把&quot;让 LLM 读结构化数据而不是看原始像素&quot;的思路搬到了视频领域——video-use 不用 AI 逐帧&quot;看&quot;视频，而是用 ElevenLabs Scribe 把视频压成 ~12KB 的文字版 EDL，再让 Claude Code 像写代码一样剪片。丢一文件夹原片进来说一句&quot;edit these into a launch video&quot;，它就吐 final.mp4 给">
+<meta property="og:type" content="article">
+<meta property="og:title" content="100k Star 的 browser-use 又出新品：把 Claude Code 变成你的 AI 剪辑师，丢一文件夹原片它吐 final.mp4">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/30/browser-use-video-use-ai-video-editor-from-claude-code/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="browser-use 团队把&quot;让 LLM 读结构化数据而不是看原始像素&quot;的思路搬到了视频领域——video-use 不用 AI 逐帧&quot;看&quot;视频，而是用 ElevenLabs Scribe 把视频压成 ~12KB 的文字版 EDL，再让 Claude Code 像写代码一样剪片。丢一文件夹原片进来说一句&quot;edit these into a launch video&quot;，它就吐 final.mp4 给">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-30T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.692Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="browser-use">
+<meta property="article:tag" content="video-use">
+<meta property="article:tag" content="视频剪辑">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/30/browser-use-video-use-ai-video-editor-from-claude-code/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/30/browser-use-video-use-ai-video-editor-from-claude-code/","path":"2026/06/30/browser-use-video-use-ai-video-editor-from-claude-code/","title":"100k Star 的 browser-use 又出新品：把 Claude Code 变成你的 AI 剪辑师，丢一文件夹原片它吐 final.mp4"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>100k Star 的 browser-use 又出新品：把 Claude Code 变成你的 AI 剪辑师，丢一文件夹原片它吐 final.mp4 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A4%B4%EF%BC%9A%E4%BD%A0%E6%9C%89%E6%B2%A1%E6%9C%89%E8%BF%87%E8%BF%99%E7%A7%8D%E5%B4%A9%E6%BA%83%E6%97%B6%E5%88%BB%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">开头：你有没有过这种崩溃时刻？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9Abrowser-use-%E5%9C%A8%E8%A7%A3%E5%86%B3%E4%B8%80%E4%B8%AA%E8%80%81%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">项目背景：browser-use 在解决一个老问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E7%94%A8%E2%80%9D%E8%AF%BB%E2%80%9D%E4%BB%A3%E6%9B%BF%E2%80%9D%E7%9C%8B%E2%80%9D%E7%9A%84%E5%89%AA%E8%BE%91%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="nav-number">3.</span> <span class="nav-text">核心功能：用” 读” 代替” 看” 的剪辑流水线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%8F%8C%E5%B1%82%E8%A1%A8%E5%BE%81%EF%BC%9A%E6%96%87%E5%AD%97-%E6%8C%89%E9%9C%80%E7%94%9F%E6%88%90%E7%9A%84%E8%A7%86%E8%A7%89%E5%90%88%E6%88%90%E5%9B%BE"><span class="nav-number">3.1.</span> <span class="nav-text">1. 双层表征：文字 + 按需生成的视觉合成图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%AE%8C%E6%95%B4%E7%9A%84%E7%94%9F%E4%BA%A7%E7%BA%A7%E5%89%AA%E8%BE%91%E8%83%BD%E5%8A%9B"><span class="nav-number">3.2.</span> <span class="nav-text">2. 完整的生产级剪辑能力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-12-%E6%9D%A1%E2%80%9D%E7%A1%AC%E8%A7%84%E5%88%99%E2%80%9D%E2%80%94%E2%80%94SKILL-md-%E6%98%AF%E5%AE%83%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%9F%BA%E7%BA%BF"><span class="nav-number">3.3.</span> <span class="nav-text">3. 12 条” 硬规则”——SKILL.md 是它的工程基线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%B8%8E-coding-agent-%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%B7%B1%E5%BA%A6%E9%9B%86%E6%88%90"><span class="nav-number">3.4.</span> <span class="nav-text">4. 与 coding agent 工作流深度集成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%B0%B8%E8%BF%9C%E5%8F%AA%E8%BE%93%E5%87%BA%E5%88%B0-edit-%E7%9B%AE%E5%BD%95"><span class="nav-number">3.5.</span> <span class="nav-text">5. 永远只输出到 &#x2F;edit&#x2F; 目录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E6%8A%8A%E4%B8%80%E6%AE%B5%E9%87%87%E8%AE%BF%E5%89%AA%E6%88%90-2-%E5%88%86%E9%92%9F%E7%B2%BE%E5%8D%8E%E7%89%88"><span class="nav-number">4.</span> <span class="nav-text">实战示例：把一段采访剪成 2 分钟精华版</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E6%8A%8A%E7%B4%A0%E6%9D%90%E4%B8%A2%E8%BF%9B%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">4.1.</span> <span class="nav-text">第一步：把素材丢进文件夹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E8%B7%9F-agent-%E8%AF%B4%E8%AF%9D"><span class="nav-number">4.2.</span> <span class="nav-text">第二步：跟 agent 说话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E7%A1%AE%E8%AE%A4-%E7%AD%89%E5%BE%85"><span class="nav-number">4.3.</span> <span class="nav-text">第三步：确认 &amp; 等待</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">适用场景和限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9B%B8%E6%AF%94%EF%BC%8Cvideo-use-%E5%88%B0%E5%BA%95%E7%89%B9%E5%88%AB%E5%9C%A8%E5%93%AA%EF%BC%9F"><span class="nav-number">6.</span> <span class="nav-text">与同类项目相比，video-use 到底特别在哪？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/30/browser-use-video-use-ai-video-editor-from-claude-code/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="100k Star 的 browser-use 又出新品：把 Claude Code 变成你的 AI 剪辑师，丢一文件夹原片它吐 final.mp4 | 小戴的网络日志">
+      <meta itemprop="description" content="browser-use 团队把&quot;让 LLM 读结构化数据而不是看原始像素&quot;的思路搬到了视频领域——video-use 不用 AI 逐帧&quot;看&quot;视频，而是用 ElevenLabs Scribe 把视频压成 ~12KB 的文字版 EDL，再让 Claude Code 像写代码一样剪片。丢一文件夹原片进来说一句&quot;edit these into a launch video&quot;，它就吐 final.mp4 给你。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          100k Star 的 browser-use 又出新品：把 Claude Code 变成你的 AI 剪辑师，丢一文件夹原片它吐 final.mp4
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-30 10:00:00" itemprop="dateCreated datePublished" datetime="2026-06-30T10:00:00+08:00">2026-06-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">AI 开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">browser-use 团队把"让 LLM 读结构化数据而不是看原始像素"的思路搬到了视频领域——video-use 不用 AI 逐帧"看"视频，而是用 ElevenLabs Scribe 把视频压成 ~12KB 的文字版 EDL，再让 Claude Code 像写代码一样剪片。丢一文件夹原片进来说一句"edit these into a launch video"，它就吐 final.mp4 给你。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="开头：你有没有过这种崩溃时刻？"><a href="#开头：你有没有过这种崩溃时刻？" class="headerlink" title="开头：你有没有过这种崩溃时刻？"></a>开头：你有没有过这种崩溃时刻？</h2><p>录了两个小时的播客采访，剪的时候才发现里面全是” 嗯”” 啊”” 那个”” 然后”，每一句话前面都跟着 3 秒空白。</p>
+<p>或者，你花了半天时间给公司产品拍了一支 30 秒的介绍片，结果导出来一看：第 12 秒说话的人还在” 呃……”，第 18 秒突然接不上气，第 24 秒一句话被拦腰斩断。</p>
+<p>更惨的是，你打开 Premiere / Final Cut / DaVinci，准备手工修。轨道拉到时间线上一段一段听、一帧一帧剪，<strong>光是去掉所有” 嗯啊” 就能耗掉大半天</strong>。Premiere 自带的” 删除停顿” 功能有，但经常会把正常的人声呼吸也给干掉，效果让人崩溃。</p>
+<p>你是不是无数次想过：<strong>如果 AI 能像读代码一样读视频就好了。</strong></p>
+<p>巧了 ——browser-use 团队上周刚发了一个叫 <a target="_blank" rel="noopener" href="https://github.com/browser-use/video-use">video-use</a> 的新项目，直接把这个想法做出来了。它的 slogan 特别直白：<strong>“Edit videos with coding agents”</strong>。丢一文件夹原片进 Claude Code，说一句”edit these into a launch video”，它就给你吐 <code>final.mp4</code>。</p>
+<p>而且他们<strong>完全不靠 AI 去逐帧” 看” 视频</strong>。</p>
+<h2 id="项目背景：browser-use-在解决一个老问题"><a href="#项目背景：browser-use-在解决一个老问题" class="headerlink" title="项目背景：browser-use 在解决一个老问题"></a>项目背景：browser-use 在解决一个老问题</h2><p>在说 video-use 之前，得先介绍一下它爹。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/browser-use/browser-use">browser-use</a> 是 2024 年 GitHub 上爆火的一个 Python 项目，现在已经 <strong>100k stars</strong> 了。它解决的痛点很朴素：让 LLM 能像人一样操作浏览器。早期大模型要” 上网”，要么得靠截图（GPT-4V 之类的视觉模型），要么得依赖结构化的 HTML。</p>
+<p>browser-use 的核心洞察是：<strong>别让 AI 看像素，让它读 DOM。</strong> 把网页结构、a11y 树、元素位置打包成结构化文本喂给 LLM，再让 LLM 输出” 点击这个元素”” 在那个输入框里输入” 这样的动作序列。这套思路直接成了行业标配 ——OpenAI Operator、Anthropic Computer Use、Manus，背后多少都有它的影子。</p>
+<p>video-use 干的是同一件事，只不过把对象从” 网页” 换成了” 视频”。</p>
+<p>它面对的核心问题很简单：<strong>视频是世界上最难让 LLM 处理的数据格式之一。</strong></p>
+<p>一段 30 分钟的口播视频，按 30fps 算有 <strong>54,000 帧</strong>。哪怕每帧只喂给模型 1,500 tokens，整段视频就吃掉 8,100 万 tokens。这不是” 贵不贵” 的问题，是根本塞不进上下文窗口的问题。</p>
+<p>video-use 的解法和它爹一脉相承：<strong>别让 AI 看视频帧，让它读视频的”DOM”—— 也就是文字版的转录稿。</strong></p>
+<h2 id="核心功能：用”读”代替”看”的剪辑流水线"><a href="#核心功能：用”读”代替”看”的剪辑流水线" class="headerlink" title="核心功能：用”读”代替”看”的剪辑流水线"></a>核心功能：用” 读” 代替” 看” 的剪辑流水线</h2><p>video-use 的 README 写得非常工程化，它的核心设计可以拆成 5 个亮点：</p>
+<h3 id="1-双层表征：文字-按需生成的视觉合成图"><a href="#1-双层表征：文字-按需生成的视觉合成图" class="headerlink" title="1. 双层表征：文字 + 按需生成的视觉合成图"></a>1. 双层表征：文字 + 按需生成的视觉合成图</h3><p>video-use 把视频内容压成两个东西：</p>
+<p><strong>Layer 1：一份～12KB 的 <code>takes_packed.md</code></strong></p>
+<p>这是 AI 的” 主视图”。它不是简单的字幕文件，而是用 <a target="_blank" rel="noopener" href="https://elevenlabs.io/app/settings/api-keys">ElevenLabs Scribe</a> 转录出来的<strong>短语级</strong>转录稿：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## C0103 (duration: 43.0s, 8 phrases)</span></span><br><span class="line">[002.52-005.36] S0 Ninety percent of what a web agent does is completely wasted.</span><br><span class="line">[006.08-006.74] S0 We fixed this.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意几个关键点：</p>
+<ul>
+<li><strong>word 级时间戳</strong>：每个词都能精确定位，但展示时按短语分组便于 LLM 推理</li>
+<li><strong>说话人分离</strong>：<code>S0</code> <code>S1</code> 这样标记谁在说话，多人访谈场景非常有用</li>
+<li><strong>音频事件</strong>：<code>(laughter)</code> <code>(applause)</code> <code>(sigh)</code> 这些 ElevenLabs Scribe 会顺便标出来，对剪辑” 笑了” 或” 沉默了一会儿” 这种决策点至关重要</li>
+<li><strong>纯文本 + 时间戳</strong>：所有内容打包到一个 markdown 文件，<strong>整段 30 分钟视频压成 12KB</strong></li>
+</ul>
+<p><strong>Layer 2：按需生成的 <code>timeline_view</code> PNG</strong></p>
+<p>当 LLM 看到” 第 14 秒这里有歧义” 或” 两段之间要比较哪段保留” 这种问题时，它会调一个工具生成一张合成图：<strong>画面胶片 + 音轨波形 + 词级时间标签</strong>。</p>
+<p>这两层的 token 消耗差距是：</p>
+<blockquote>
+<p><strong>Naive（30,000 帧 × 1,500 token）= 45M tokens of noise</strong><br><strong>video-use = 12KB 文字 + 几张 PNG</strong></p>
+</blockquote>
+<p>差了三个数量级。这就是为什么它能塞进 Claude Code 的上下文窗口里。</p>
+<h3 id="2-完整的生产级剪辑能力"><a href="#2-完整的生产级剪辑能力" class="headerlink" title="2. 完整的生产级剪辑能力"></a>2. 完整的生产级剪辑能力</h3><p>video-use 不是玩具，它能干的活包括：</p>
+<ul>
+<li><strong>剪掉填充词</strong>（<code>umm</code> <code>uh</code> <code>那个</code> 重复起句）</li>
+<li><strong>自动逐段调色</strong>（暖色电影感、中性高对比、或者你自己写 ffmpeg filter chain）</li>
+<li><strong>每个剪辑点强制 30ms 音频淡入淡出</strong>，避免可察觉的爆音</li>
+<li><strong>烧录字幕</strong>：默认是 2 词一行的全大写风，完全可定制</li>
+<li><strong>生成动画叠加层</strong>：调用 HyperFrames、Remotion、Manim 或 PIL，并行 spawn 多个 sub-agent 同时出图</li>
+<li><strong>自评估渲染输出</strong>：在每个剪辑点拉一张 timeline_view 截图看实际效果，发现问题自动重渲（最多 3 轮）</li>
+<li><strong>会话记忆持久化</strong>：把这次的 <code>project.md</code> 存起来，下次接着干</li>
+</ul>
+<h3 id="3-12-条”硬规则”——SKILL-md-是它的工程基线"><a href="#3-12-条”硬规则”——SKILL-md-是它的工程基线" class="headerlink" title="3. 12 条”硬规则”——SKILL.md 是它的工程基线"></a>3. 12 条” 硬规则”——SKILL.md 是它的工程基线</h3><p>video-use 的 SKILL.md 里写了一组<strong>不可违反的硬规则</strong>，这是它和”AI 剪辑玩具” 的最大区别。挑几条最硬核的：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1. 字幕必须在 filter chain 最后应用，否则会被叠加层盖住</span><br><span class="line">2. 必须逐段 extract 再 -c copy 拼接，不能用单次 filtergraph</span><br><span class="line">3. 每个剪辑边界必须 30ms 音频淡入淡出</span><br><span class="line">4. 主 SRT 必须用输出时间轴的偏移量</span><br><span class="line">5. 永远不要在一个词的中间切</span><br><span class="line">6. 每次切边都 pad 30-200ms（Scribe 时间戳会漂移 50-100ms）</span><br><span class="line">7. 永远用 word 级 verbatim ASR，不要用 SRT 模式</span><br><span class="line">8. 转录要缓存，永远不要重复转录同一个文件</span><br><span class="line">9. 多段动画并行用 sub-agent 跑</span><br><span class="line">10. 策略确认后才执行，永远不要直接动刀</span><br></pre></td></tr></tbody></table></figure>
+
+<p>翻译过来就是：<strong>它不是生成一个” 看起来像样” 的视频，它是按专业剪辑师的工业标准来交付成品。</strong></p>
+<h3 id="4-与-coding-agent-工作流深度集成"><a href="#4-与-coding-agent-工作流深度集成" class="headerlink" title="4. 与 coding agent 工作流深度集成"></a>4. 与 coding agent 工作流深度集成</h3><p>video-use 本质上是 Claude Code / Codex / Hermes 这些 coding agent 的一个 <strong>skill</strong>。安装方式是这样的：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/browser-use/video-use ~/Developer/video-use</span><br><span class="line"><span class="built_in">ln</span> -sfn ~/Developer/video-use ~/.claude/skills/video-use</span><br><span class="line"><span class="built_in">cd</span> ~/Developer/video-use</span><br><span class="line">uv <span class="built_in">sync</span></span><br><span class="line">brew install ffmpeg</span><br><span class="line"><span class="built_in">cp</span> .env.example .<span class="built_in">env</span></span><br><span class="line"><span class="comment"># 编辑 .env 填入 ELEVENLABS_API_KEY</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后日常使用：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /path/to/your/videos</span><br><span class="line">claude</span><br><span class="line"><span class="comment"># 在 Claude Code 里说：</span></span><br><span class="line"><span class="comment"># &gt; edit these into a launch video</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>agent 就会：</p>
+<ol>
+<li>盘点你目录里的原片</li>
+<li>用自然语言提出一个剪辑策略（哪些段保留、哪些段剪掉、加什么调色和字幕）</li>
+<li><strong>等你 OK 之后</strong>再动手</li>
+<li>渲染出 <code>edit/final.mp4</code></li>
+</ol>
+<p>这个” 问 → 确认 → 执行 → 自评 → 持久化” 的工作流，是它最像” 人” 的地方。</p>
+<h3 id="5-永远只输出到-edit-目录"><a href="#5-永远只输出到-edit-目录" class="headerlink" title="5. 永远只输出到 /edit/ 目录"></a>5. 永远只输出到 <code>/edit/</code> 目录</h3><p>所有产物都活在 <code>&lt;视频目录&gt;/edit/</code> 下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">edit/</span><br><span class="line">├── project.md           # 记忆，每次会话追加</span><br><span class="line">├── takes_packed.md      # 短语级转录</span><br><span class="line">├── edl.json             # 剪辑决策</span><br><span class="line">├── transcripts/.json    # 缓存的原始 Scribe 输出</span><br><span class="line">├── animations/slot_/    # 每个动画的源 + 渲染 + 推理</span><br><span class="line">├── clips_graded/        # 逐段 extract 后的调色 + 淡入淡出</span><br><span class="line">├── master.srt           # 输出时间轴的字幕</span><br><span class="line">├── preview.mp4</span><br><span class="line">└── final.mp4</span><br></pre></td></tr></tbody></table></figure>
+
+<p>skill 目录永远是干净的，永远不会被污染。</p>
+<h2 id="实战示例：把一段采访剪成-2-分钟精华版"><a href="#实战示例：把一段采访剪成-2-分钟精华版" class="headerlink" title="实战示例：把一段采访剪成 2 分钟精华版"></a>实战示例：把一段采访剪成 2 分钟精华版</h2><p>我假设一个真实场景：<strong>你刚做完一期 30 分钟的播客采访，录了 3 个机位，输出是 3 个 mp4 文件。</strong></p>
+<h3 id="第一步：把素材丢进文件夹"><a href="#第一步：把素材丢进文件夹" class="headerlink" title="第一步：把素材丢进文件夹"></a>第一步：把素材丢进文件夹</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p ~/videos/podcast-ep42/raw</span><br><span class="line"><span class="built_in">cp</span> /Volumes/SD/C0103.MP4 ~/videos/podcast-ep42/raw/</span><br><span class="line"><span class="built_in">cp</span> /Volumes/SD/C0201.MP4 ~/videos/podcast-ep42/raw/</span><br><span class="line"><span class="built_in">cp</span> /Volumes/SD/C0202.MP4 ~/videos/podcast-ep42/raw/</span><br><span class="line"><span class="built_in">cd</span> ~/videos/podcast-ep42</span><br><span class="line">claude</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="第二步：跟-agent-说话"><a href="#第二步：跟-agent-说话" class="headerlink" title="第二步：跟 agent 说话"></a>第二步：跟 agent 说话</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; 我刚录完一期播客，3 个机位剪成一个 2 分钟精华版。</span><br><span class="line">&gt; 风格：暖色电影感，配英文 2 词一行大写字幕。</span><br><span class="line">&gt; 重点保留嘉宾讲"我们为什么做 browser-use"那段。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>agent 会先调用 ElevenLabs Scribe 转录，3 个文件大约 30-60 秒。然后它会读 <code>takes_packed.md</code>，给你输出类似这样的策略：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">我打算这样剪：</span><br><span class="line">- C0103 的 02:30-05:30 完整保留（开场观点）</span><br><span class="line">- C0201 的 12:00-18:00 拼接成主体（"为什么做 browser-use"）</span><br><span class="line">- C0202 只在 25:00-27:00 用一次（结尾金句）</span><br><span class="line">- 调色：暖色电影感</span><br><span class="line">- 字幕：英文 2 词一行大写</span><br><span class="line">- 在 13:45 那个 "We fixed this" 之后加 0.5s freeze frame</span><br><span class="line"></span><br><span class="line">可以吗？</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="第三步：确认-等待"><a href="#第三步：确认-等待" class="headerlink" title="第三步：确认 &amp; 等待"></a>第三步：确认 &amp; 等待</h3><p>你说”OK”，agent 开始渲染 + 自评估。</p>
+<p>渲染过程中，它会在每个剪辑点拉 <code>timeline_view</code> 截图自己看：</p>
+<ul>
+<li>看到画面有跳变？回退调一下 cut boundary</li>
+<li> 听到爆音？回退加长 fade</li>
+<li> 看到字幕被某个叠加层盖住了？回退调整 filter chain</li>
+</ul>
+<p>最多 3 轮自评之后，你看到的就是 <code>edit/preview.mp4</code>，然后是 <code>edit/final.mp4</code>。</p>
+<p>整个过程你唯一要做的事就是 <strong>“OK”</strong>。</p>
+<h2 id="适用场景和限制"><a href="#适用场景和限制" class="headerlink" title="适用场景和限制"></a>适用场景和限制</h2><p>video-use 显然不是万能的。<strong>它最适合的场景：</strong></p>
+<ul>
+<li>✅ <strong>口播内容</strong>：播客、采访、vlog、教程</li>
+<li>✅ <strong>多人对话</strong>：自带说话人分离</li>
+<li>✅ <strong>长素材 → 短视频精华</strong>：你不需要 30 分钟版本，agent 帮你抽 2 分钟</li>
+<li>✅ <strong>个人创作者</strong>：不想学 Premiere，又想要专业级输出</li>
+<li>✅ <strong>批量生产</strong>：每个 episode 一次渲染，下一期直接接着 <code>project.md</code> 干</li>
+</ul>
+<p><strong>它不太合适的场景：</strong></p>
+<ul>
+<li>❌ <strong>复杂视觉特效</strong>：调色、淡入淡出、字幕它都会；但如果你要花字动画、三维合成、粒子特效，它生成不了 —— 除非你愿意把 HyperFrames/Remotion/Manim 这些叠加层手把手配出来</li>
+<li>❌ <strong>海量机位</strong>：3 个机位能 hold 住，10 个机位就需要更长上下文，token 成本会快速涨上来</li>
+<li>❌ <strong>超长视频</strong>：单次会话几小时可能 OK，但 8 小时直播录屏就吃力了</li>
+<li>❌ <strong>完全脱离 ElevenLabs</strong>：转录核心依赖 ElevenLabs Scribe（要 API key），ffmpeg/PIL/Node 22+ 也得自己装好</li>
+<li>❌ <strong>本地化字幕</strong>：英文默认支持最好，中文要 ElevenLabs Scribe 中文模型 OK，但 2 词一行的” 分词” 逻辑对中文不太友好，可能要改 prompt</li>
+</ul>
+<h2 id="与同类项目相比，video-use-到底特别在哪？"><a href="#与同类项目相比，video-use-到底特别在哪？" class="headerlink" title="与同类项目相比，video-use 到底特别在哪？"></a>与同类项目相比，video-use 到底特别在哪？</h2><p>市面上”AI 剪辑工具” 已经不少了，主要分三类：</p>
+<p><strong>第一类：全自动片段生成器</strong>（Opus Clip、Munch、Vizard）</p>
+<p>它们擅长把 30 分钟长视频自动切成 5-10 条 60 秒短片，主打” 一键发抖音 / 小红书”。但你<strong>几乎控制不了剪辑逻辑</strong> ——AI 说这段是” 高光时刻”，它就是高光时刻，你没法改。你想要” 把第 12 秒那个停顿保留，其它全部剪掉”，它做不到。</p>
+<p><strong>第二类：AI 辅助转写 + 粗剪</strong>（Descript）</p>
+<p>Descript 的” 文字版时间线” 是行业开创性的发明，video-use 显然受过它的启发。但 Descript 是闭源 SaaS，要月费，而且它的” 文字版时间线” 是给你看的、不是给 LLM 推理用的。</p>
+<p><strong>第三类：通用 LLM + 视觉模型</strong>（GPT-4V、Gemini 直接喂视频）</p>
+<p>理论上能行，实际上很贵。一段 10 分钟视频调 GPT-4V 逐帧打分，账单轻松到几十美元；而且 LLM 依然很难精确到 word 级做剪辑 —— 它对帧边界的判断就是粗的。</p>
+<p>video-use 走的是第四条路：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th> Opus Clip 类</th>
+<th> Descript</th>
+<th>GPT-4V 直接来</th>
+<th><strong> video-use</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 精细控制</td>
+<td>❌ 几乎为零</td>
+<td>⚠️ GUI 拖拽</td>
+<td>⚠️ 受限于视觉模型</td>
+<td>✅ 自然语言精细指令</td>
+</tr>
+<tr>
+<td>成本</td>
+<td>中（SaaS 月费）</td>
+<td>高（月费）</td>
+<td>极高（按 token 烧）</td>
+<td><strong>低（一次 12KB 转录 + 几次 LLM 调用）</strong></td>
+</tr>
+<tr>
+<td>可定制</td>
+<td>❌ 不可</td>
+<td>❌ 不可</td>
+<td>⚠️ prompt 工程</td>
+<td>✅ SKILL.md 12 条规则 + 完整代码可改</td>
+</tr>
+<tr>
+<td>工业级输出</td>
+<td>⚠️ 社交媒体 ok</td>
+<td>✅ 专业</td>
+<td>⚠️ 容易有视觉穿帮</td>
+<td>✅ 30ms fade + 自评估 + 工业规则</td>
+</tr>
+<tr>
+<td>与 coding agent 工作流集成</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ <strong>Claude Code / Codex / Hermes</strong></td>
+</tr>
+<tr>
+<td> 开源</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ <strong>100% Apache 2.0</strong></td>
+</tr>
+</tbody></table>
+<p>最后一点是最关键的：<strong>它是开源 skill，可以和你的 coding agent 工作流融为一体。</strong></p>
+<p>你写代码累了，想” 顺手把今天录的会议剪个 2 分钟总结发给老板”？<code>claude</code> 里说一句就行，agent 不会因为” 这是视频不是代码” 就愣住。</p>
+<p>这背后其实是一个更大的趋势：<strong>未来的 coding agent 不会只写代码。</strong> 任何可以被” 结构化文本” 表达的领域 —— 网页（DOM）、视频（转录 + 时间戳）、数据库（schema + SQL）、设计稿（Figma JSON）—— 都可能成为 agent 施展拳脚的新舞台。</p>
+<p>browser-use 的 DOM 即网页，视频的”DOM” 即转录稿 + 时间戳。video-use 的真正价值，<strong>不在于” 它能剪视频”，而在于它演示了 coding agent 如何把” 看似无法处理的多媒体” 重新理解成” 可以推理的结构化数据”。</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>video-use 是 browser-use 团队给”AI 剪辑” 赛道带来的一个非常工程师化的解法。它的核心设计哲学只有一句话：</p>
+<blockquote>
+<p><strong>别让 AI 看视频，让它读视频的”DOM”。</strong></p>
+</blockquote>
+<p>围绕这句话，它做了这些事：</p>
+<ol>
+<li>用 ElevenLabs Scribe 把视频压成～12KB 的文字版 EDL</li>
+<li> 在需要决策时按需生成 timeline_view 合成图</li>
+<li>让 Claude Code 推理出剪辑策略，<strong>等人 OK 才动手</strong></li>
+<li>用 12 条工业级硬规则保证成品质量</li>
+<li>渲染后自评，发现问题自动重渲</li>
+<li>整个工作流是开源的、可修改的、可继承的</li>
+</ol>
+<p>它今天可能还不完美 —— 中文支持、复杂动效、长视频适配都还有空间 —— 但它示范的方向是确定的：<strong>当 LLM 学会” 读” 视频而不是” 看” 视频时，视频剪辑就从 GUI 软件的菜单层级，坍缩成一段对话。</strong></p>
+<p>去 <a target="_blank" rel="noopener" href="https://github.com/browser-use/video-use">browser-use/video-use</a> 看看吧，丢一文件夹原片进你的 Claude Code，让 agent 当一次你的剪辑师。</p>
+<p><strong>References:</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/browser-use/video-use">browser-use/video-use (GitHub)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/browser-use/browser-use">browser-use/browser-use (主项目，100k stars)</a></li>
+<li><a target="_blank" rel="noopener" href="https://elevenlabs.io/app/settings/api-keys">ElevenLabs Scribe API</a></li>
+<li><a target="_blank" rel="noopener" href="https://browser-use.com/bux">Browser Use Box 7×24 部署方案</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/30/browser-use-video-use-ai-video-editor-from-claude-code/" title="100k Star 的 browser-use 又出新品：把 Claude Code 变成你的 AI 剪辑师，丢一文件夹原片它吐 final.mp4">https://www.daishengli.top/2026/06/30/browser-use-video-use-ai-video-editor-from-claude-code/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/browser-use/" rel="tag"># browser-use</a>
+              <a href="/tags/video-use/" rel="tag"># video-use</a>
+              <a href="/tags/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/" rel="tag"># 视频剪辑</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/29/ppt-master-ai-generates-natively-editable-pptx/" rel="prev" title="30k Star 的 PPT Master：让 AI 直接吐出「能改的」PPTX，告别一张图糊弄人的时代">
+                  <i class="fa fa-angle-left"></i> 30k Star 的 PPT Master：让 AI 直接吐出「能改的」PPTX，告别一张图糊弄人的时代
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/01/omniroute-free-ai-gateway-237-providers-one-endpoint/" rel="next" title="OmniRoute：让 Claude Code &#x2F; Cursor &#x2F; Codex 共享一个 AI 网关，再也不怕 rate limit">
+                  OmniRoute：让 Claude Code / Cursor / Codex 共享一个 AI 网关，再也不怕 rate limit <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

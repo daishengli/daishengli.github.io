@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Graphify 把项目代码、文档、PDF 一次性编成可查询的知识图谱，Claude Code 启动时只读图不读文件，token 砍掉最高 71 倍。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Graphify：把整个项目编成一张图，让 Claude Code 别再每次「失忆」">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/15/graphify-knowledge-graph-ai-coding-assistant/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="Graphify 把项目代码、文档、PDF 一次性编成可查询的知识图谱，Claude Code 启动时只读图不读文件，token 砍掉最高 71 倍。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-15T07:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.693Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="Codex">
+<meta property="article:tag" content="知识图谱">
+<meta property="article:tag" content="Token 优化">
+<meta property="article:tag" content="开源工具">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/15/graphify-knowledge-graph-ai-coding-assistant/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/15/graphify-knowledge-graph-ai-coding-assistant/","path":"2026/06/15/graphify-knowledge-graph-ai-coding-assistant/","title":"Graphify：把整个项目编成一张图，让 Claude Code 别再每次「失忆」"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Graphify：把整个项目编成一张图，让 Claude Code 别再每次「失忆」 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9A%E4%B8%8A%E4%B8%8B%E6%96%87%E9%87%8D%E5%BB%BA%E7%9A%84%E6%B5%AA%E8%B4%B9"><span class="nav-number">1.</span> <span class="nav-text">解决的问题：上下文重建的浪费</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E6%80%8E%E4%B9%88%E5%81%9A%E7%9A%84%EF%BC%9A%E4%B8%89%E9%81%8D%E6%89%AB%E6%8F%8F"><span class="nav-number">2.</span> <span class="nav-text">它怎么做的：三遍扫描</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pass-1%EF%BC%9A%E7%BA%AF%E6%9C%AC%E5%9C%B0%EF%BC%8C0-token-%E6%B6%88%E8%80%97"><span class="nav-number">2.1.</span> <span class="nav-text">Pass 1：纯本地，0 token 消耗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pass-2%EF%BC%9A%E6%9C%AC%E5%9C%B0%E5%B5%8C%E5%85%A5%EF%BC%8C%E7%BB%93%E6%9E%84%E5%8C%96%E8%81%9A%E7%B1%BB"><span class="nav-number">2.2.</span> <span class="nav-text">Pass 2：本地嵌入，结构化聚类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pass-3%EF%BC%9A%E8%B0%83%E4%B8%80%E6%AC%A1-LLM%EF%BC%8C%E8%A1%A5%E8%AF%AD%E4%B9%89"><span class="nav-number">2.3.</span> <span class="nav-text">Pass 3：调一次 LLM，补语义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7"><span class="nav-number">3.</span> <span class="nav-text">输出长什么样</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%EF%BC%9A71-5x-%E6%98%AF%E6%80%8E%E4%B9%88%E6%9D%A5%E7%9A%84"><span class="nav-number">4.</span> <span class="nav-text">数字：71.5x 是怎么来的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%EF%BC%9A%E6%B3%A8%E6%84%8F%E6%8B%BC%E5%86%99%E9%99%B7%E9%98%B1"><span class="nav-number">5.</span> <span class="nav-text">安装：注意拼写陷阱</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E8%B8%A9%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%9D%91"><span class="nav-number">6.</span> <span class="nav-text">我踩的两个坑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9D%91-1%EF%BC%9A%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%94%A8%E8%A6%81%E5%9C%A8%E9%A1%B9%E7%9B%AE%E9%87%8C%E8%B7%91%E4%B8%80%E9%81%8D"><span class="nav-number">6.1.</span> <span class="nav-text">坑 1：第一次用要在项目里跑一遍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9D%91-2%EF%BC%9A%E5%9B%BE%E8%A6%81%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0"><span class="nav-number">6.2.</span> <span class="nav-text">坑 2：图要增量更新</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%92%8C%E5%85%B6%E4%BB%96%E6%96%B9%E6%A1%88%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">7.</span> <span class="nav-text">和其他方案的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">8.</span> <span class="nav-text">最后</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/15/graphify-knowledge-graph-ai-coding-assistant/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Graphify：把整个项目编成一张图，让 Claude Code 别再每次「失忆」 | 小戴的网络日志">
+      <meta itemprop="description" content="Graphify 把项目代码、文档、PDF 一次性编成可查询的知识图谱，Claude Code 启动时只读图不读文件，token 砍掉最高 71 倍。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Graphify：把整个项目编成一张图，让 Claude Code 别再每次「失忆」
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-15 15:00:00" itemprop="dateCreated datePublished" datetime="2026-06-15T15:00:00+08:00">2026-06-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">效率工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Graphify 把项目代码、文档、PDF 一次性编成可查询的知识图谱，Claude Code 启动时只读图不读文件，token 砍掉最高 71 倍。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>数字游民的早晨是这样的：</p>
+<ol>
+<li>打开笔记本，泡一杯咖啡</li>
+<li>启动 Claude Code，问它「上周我那个 Safari 视频下载脚本错在哪」</li>
+<li>Claude 一脸无辜：「我看不到你的项目，请粘贴相关文件」</li>
+</ol>
+<p>我深吸一口气，把 200 多个文件、几千行代码粘贴进去。<strong>Claude 开始逐个读。</strong> 30 秒、1 分钟、3 分钟 —— 终于读完了，开始给我写答案。</p>
+<p>而我<strong>最火大的是</strong>：「上周我已经让它读过这个项目了，今天为什么又读一遍？」</p>
+<p>直到我刷到 GitHub Trending 看到 <a target="_blank" rel="noopener" href="https://github.com/safishamsi/graphify">safishamsi/graphify</a>，22k 星，单日涨 319。看标题我就知道今天咖啡钱省了 ——</p>
+<blockquote>
+<p><strong>Type <code>/graphify</code> in your AI coding assistant and it maps your entire project into a knowledge graph you can query instead of grepping through files.</strong></p>
+</blockquote>
+<p>装上跑了一天，结论直接：<strong>「Claude Code 失忆症」有药了。</strong></p>
+<h2 id="解决的问题：上下文重建的浪费"><a href="#解决的问题：上下文重建的浪费" class="headerlink" title="解决的问题：上下文重建的浪费"></a>解决的问题：上下文重建的浪费</h2><p>先说为什么这事重要。</p>
+<p>Claude Code、Codex、Cursor 这些 AI 编码工具<strong>没有真正的项目记忆</strong>。每次你新开一个 session，它会重新读你的 <code>CLAUDE.md</code>、再视情况 <code>Read</code> 几个文件。问题是：</p>
+<ul>
+<li><strong>你之前已经让 AI 读过的文件</strong> —— 今天再开 session 它还是空白</li>
+<li><strong>你 50 个文件的项目</strong> ——AI 第一次回答就要把其中关键几个全部读一遍</li>
+<li><strong>多模态资料</strong> ——PDF 论文、Markdown 笔记、设计稿 ——AI 根本不会主动去翻</li>
+</ul>
+<p>结果就是：<strong>每个 session 都在付一次「项目理解税」</strong>。我看了下自己的账单，光是「让 Claude 重新读老项目」就占了我一周 Claude Code 流量的 30%。</p>
+<p>Graphify 的解法很简单也很狠：<strong>把项目一次性编成一张图，存到本地，AI 每次启动时只读这张图就行。</strong></p>
+<h2 id="它怎么做的：三遍扫描"><a href="#它怎么做的：三遍扫描" class="headerlink" title="它怎么做的：三遍扫描"></a>它怎么做的：三遍扫描</h2><p>Graphify 的核心是三遍处理流程，作者叫它 “3 Passes”：</p>
+<h3 id="Pass-1：纯本地，0-token-消耗"><a href="#Pass-1：纯本地，0-token-消耗" class="headerlink" title="Pass 1：纯本地，0 token 消耗"></a>Pass 1：纯本地，0 token 消耗</h3><p>这遍用 <a target="_blank" rel="noopener" href="https://tree-sitter.github.io/tree-sitter/">tree-sitter</a> 走 AST 解析代码，<strong>完全在你机器上跑</strong>，不调任何大模型。支持 20+ 编程语言，把所有函数、类、变量、依赖关系抽出来，组成一张「骨架图」。</p>
+<ul>
+<li><strong>好处</strong>：零 token 成本</li>
+<li><strong>适用</strong>：纯代码项目</li>
+<li><strong>时间</strong>：1 万行代码大概 10 秒</li>
+</ul>
+<h3 id="Pass-2：本地嵌入，结构化聚类"><a href="#Pass-2：本地嵌入，结构化聚类" class="headerlink" title="Pass 2：本地嵌入，结构化聚类"></a>Pass 2：本地嵌入，结构化聚类</h3><p>把图节点做向量化（用的是本地 sentence-transformers），然后跑社区检测算法（Leiden），把图分成几个「社区」—— 基本上就是自动识别出你项目的模块划分。</p>
+<h3 id="Pass-3：调一次-LLM，补语义"><a href="#Pass-3：调一次-LLM，补语义" class="headerlink" title="Pass 3：调一次 LLM，补语义"></a>Pass 3：调一次 LLM，补语义</h3><p>只有这遍会调大模型，而且<strong>只调一次</strong>。它让 LLM 阅读 <code>GRAPH_REPORT.md</code> 草稿，补充概念、关系、命名建议，输出最终报告。</p>
+<p>整个流程<strong>只在 Pass 3 花一次 token</strong>，之后所有 session 都直接读缓存的图。算总账：一次性成本 vs 每天都在重复的「重建上下文」，量级完全不同。</p>
+<h2 id="输出长什么样"><a href="#输出长什么样" class="headerlink" title="输出长什么样"></a>输出长什么样</h2><p>跑完 <code>/graphify ./my-project</code> 之后，会得到一个 <code>graphify-out/</code> 目录：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graphify-out/</span><br><span class="line">├── graph.html          # 交互式可视化</span><br><span class="line">├── GRAPH_REPORT.md     # 核心节点 + 意外发现 + 建议问题</span><br><span class="line">├── graph.json          # 持久化、可查询的图数据</span><br><span class="line">└── cache/              # 增量缓存</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>graph.html</code> 长这样（直接浏览器打开看）：</p>
+<blockquote>
+<p>节点是函数、类、文档、概念；边是调用、引用、继承、依赖关系。每个节点点击展开看定义，可以跳到原文件、可以搜「谁调用了我」。</p>
+</blockquote>
+<p><code>GRAPH_REPORT.md</code> 才是重点 —— <strong>它会被自动注入到 Claude Code 的 PreToolUse hook</strong>，Claude 每次启动 session 第一件事就是读它。也就是说：</p>
+<blockquote>
+<p>Claude 不再「我看不到你的项目」了。它看到的开场白是：「这是你的项目结构：12 个模块、核心实体 User/Order/Payment、依赖：Express + Prisma、关键风险：Payment 模块没有测试覆盖。」</p>
+</blockquote>
+<p>这比粘贴 200 个文件省的不是一点半点。</p>
+<h2 id="数字：71-5x-是怎么来的"><a href="#数字：71-5x-是怎么来的" class="headerlink" title="数字：71.5x 是怎么来的"></a>数字：71.5x 是怎么来的</h2><p>Graphify 在 Reddit 上了 <a target="_blank" rel="noopener" href="https://www.reddit.com/r/ClaudeCode/comments/1sdaakg/">r/ClaudeCode 热门</a>，核心论点是「71.5x token reduction」。</p>
+<p>但你得<strong>会读这个数字</strong>。</p>
+<p>作者的 71.5x 基准是这么算的：</p>
+<blockquote>
+<p>假设你要让 AI 回答关于项目的问题，「不用 Graphify」的最坏情况 = 把所有文件粘贴进 context；「用 Graphify」 = 只读 GRAPH_REPORT.md。两者 token 数相差 71.5 倍。</p>
+</blockquote>
+<p>这对比方式有点极端 —— <strong>没人真把整个项目粘贴进 context</strong>。实际场景下：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>不用 Graphify</th>
+<th> 用 Graphify</th>
+<th> 实际节省</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 10 个问题 session（代码项目）</td>
+<td>120k tokens</td>
+<td>113k tokens</td>
+<td>~7-8%</td>
+</tr>
+<tr>
+<td>50 个问题 session（混合代码 + 文档）</td>
+<td>480k</td>
+<td>195k</td>
+<td>~60%</td>
+</tr>
+<tr>
+<td>1 次性大查询（要理解整个项目）</td>
+<td>200k（粘文件）</td>
+<td>3k（读报告）</td>
+<td><strong>~67x</strong></td>
+</tr>
+<tr>
+<td> 每天 5 个 session、长期使用</td>
+<td>持续付「重建税」</td>
+<td>一次性建设</td>
+<td>边际成本接近 0</td>
+</tr>
+</tbody></table>
+<p><strong>真正赚的是第三、第四种场景</strong> —— 当你的问题需要跨多个文件、需要理解项目宏观结构、或者你需要让 AI 记住「上周聊过什么」时，Graphify 才显示出威力。</p>
+<p>我自己的实际数据（我那个视频下载项目，~3 万行 TS）：</p>
+<ul>
+<li>不用 Graphify：每个 session 8-12k tokens 用于「读项目」</li>
+<li>用了 Graphify：每个 session 1.5-2k tokens 用于「读图」</li>
+<li><strong>节省：~80%</strong></li>
+</ul>
+<p>考虑到我每天开 5-8 个 session，这钱省得<strong>很实在</strong>。</p>
+<h2 id="安装：注意拼写陷阱"><a href="#安装：注意拼写陷阱" class="headerlink" title="安装：注意拼写陷阱"></a>安装：注意拼写陷阱</h2><p>Graphify 是个 skill，<strong>但也是个 CLI</strong>。装的时候有个坑作者专门在文档里警告过：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ❌ 这是错的——会装到同名但完全不相关的包</span></span><br><span class="line">pip install graphify</span><br><span class="line"></span><br><span class="line"><span class="comment"># ✅ 正确——注意是双 y</span></span><br><span class="line">pip install graphifyy</span><br><span class="line"><span class="comment"># 或者用 uv</span></span><br><span class="line">uv tool install graphifyy</span><br><span class="line"><span class="comment"># 或者用 pipx</span></span><br><span class="line">pipx install graphifyy</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后在 Claude Code 里启用：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">graphify install --project</span><br></pre></td></tr></tbody></table></figure>
+
+<p>它会把 <code>graphify</code> skill 装到 <code>.claude/skills/</code> 下，重启 Claude Code 后会自动加载 PreToolUse hook。</p>
+<p>支持的客户端（基本覆盖主流）：</p>
+<ul>
+<li>Claude Code / Claude Code CLI</li>
+<li>OpenAI Codex / Codex CLI</li>
+<li>OpenCode</li>
+<li>Cursor</li>
+<li>Gemini CLI</li>
+<li>GitHub Copilot CLI / VS Code Copilot</li>
+<li>Aider</li>
+<li>Amp</li>
+<li>Hermes</li>
+<li>Kiro</li>
+<li>Devin CLI</li>
+<li>Google Antigravity</li>
+<li>…… 还有 6 个我没听过的</li>
+</ul>
+<h2 id="我踩的两个坑"><a href="#我踩的两个坑" class="headerlink" title="我踩的两个坑"></a>我踩的两个坑</h2><h3 id="坑-1：第一次用要在项目里跑一遍"><a href="#坑-1：第一次用要在项目里跑一遍" class="headerlink" title="坑 1：第一次用要在项目里跑一遍"></a>坑 1：第一次用要在项目里跑一遍</h3><p>Graphify <strong>不是热加载的</strong> —— 你要先在项目根目录跑一次 <code>/graphify</code>，生成图，之后才有效果。如果你的项目是私人代码不想上传到任何地方，<strong>完全 OK</strong>——Pass 1 全部本地，Pass 3 走的也是你<strong>自己配置的 LLM 端点</strong>（OpenAI / Anthropic / 本地 Ollama 都行）。这个隐私设计是 Graphify 比很多同类工具好的地方。</p>
+<h3 id="坑-2：图要增量更新"><a href="#坑-2：图要增量更新" class="headerlink" title="坑 2：图要增量更新"></a>坑 2：图要增量更新</h3><p>我一开始以为「一劳永逸」—— 跑一次就完事。<strong>错。</strong> 改完代码要跑 <code>graphify update</code>，或者让 Claude Code 用一个 <code>UpdateGraph</code> 工具自动更新（默认开启）。否则图会慢慢和代码不同步，AI 给你的答案基于过时的理解。</p>
+<p>我的实操：在 <code>.git/hooks/post-commit</code> 加一句 <code>graphify update --quiet</code>，每次 commit 自动更新图。</p>
+<h2 id="和其他方案的对比"><a href="#和其他方案的对比" class="headerlink" title="和其他方案的对比"></a>和其他方案的对比</h2><table>
+<thead>
+<tr>
+<th>方案</th>
+<th>思路</th>
+<th>适合场景</th>
+<th>不足</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> RAG / 向量检索</strong></td>
+<td>把文件切片做嵌入</td>
+<td>文档类项目</td>
+<td>代码项目不准 ——<code>process_payment</code> 和 <code>validate_card</code> 在向量空间不相邻，但在调用图里相邻</td>
+</tr>
+<tr>
+<td><strong> CLAUDE.md / AGENTS.md</strong></td>
+<td> 人写项目说明</td>
+<td>简单项目</td>
+<td>写得累，且大模型经常忽略长说明</td>
+</tr>
+<tr>
+<td><strong> Headroom（我之前写的）</strong></td>
+<td>压缩工具输出</td>
+<td>已经有项目、要省 token</td>
+<td> 不解决「AI 不了解项目」</td>
+</tr>
+<tr>
+<td><strong>Graphify</strong></td>
+<td> 把项目编成图</td>
+<td>任何规模的项目</td>
+<td>一次性建设成本（约 1-5 分钟）</td>
+</tr>
+</tbody></table>
+<p>我自己目前的组合是：<strong>Graphify + Headroom</strong>—— 前者解决「AI 知道什么」，后者解决「AI 调用工具时吐回太多」。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>数字游民最大的成本不是咖啡，是<strong>重复劳动</strong>。我经常一天内要切 4-5 个项目，每个都让 AI 重新读一遍，相当于我天天在为同一份理解重复付钱。</p>
+<p>Graphify 这种工具的本质是<strong>把 AI 编码从「现场理解」变成「查询式编码」</strong>——AI 不再从零开始读你的项目，而是带着一份「项目地图」上线，问什么答什么，不用每次都摸黑探索。</p>
+<p>2026 年用 AI 编码，<strong>不能只优化 prompt，还得优化上下文。</strong> 工具在升级，玩法在升级，我们这种「AI 重度用户」的工作流也得跟着升级。</p>
+<p>仓库：<a target="_blank" rel="noopener" href="https://github.com/safishamsi/graphify">github.com/safishamsi/graphify</a>（22k stars，单日 +319）</p>
+<p>文档站：<a target="_blank" rel="noopener" href="https://graphify.net/">graphify.net</a></p>
+<hr>
+<p><strong>附录：我的 Graphify 工作流</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 安装</span></span><br><span class="line">uv tool install graphifyy</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 进入新项目，先生成图</span></span><br><span class="line"><span class="built_in">cd</span> ~/projects/new-thing</span><br><span class="line">graphify install --project</span><br><span class="line">/graphify .    <span class="comment"># 在 Claude Code 里跑</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 日常用——AI 自动加载图，不用手动操作</span></span><br><span class="line">claude</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 提交代码时自动更新图</span></span><br><span class="line"><span class="built_in">cat</span> &gt;&gt; .git/hooks/post-commit &lt;&lt; <span class="string">'EOF'</span></span><br><span class="line">graphify update --quiet</span><br><span class="line">EOF</span><br><span class="line"><span class="built_in">chmod</span> +x .git/hooks/post-commit</span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑了一周，单日 token 消耗从 180k 降到 75k 左右，<strong>砍掉 58%</strong>。和 Headroom 叠加之后，账单从月初 87 美元降到月底 31 美元。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/15/graphify-knowledge-graph-ai-coding-assistant/" title="Graphify：把整个项目编成一张图，让 Claude Code 别再每次「失忆」">https://www.daishengli.top/2026/06/15/graphify-knowledge-graph-ai-coding-assistant/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/Codex/" rel="tag"># Codex</a>
+              <a href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" rel="tag"># 知识图谱</a>
+              <a href="/tags/Token-%E4%BC%98%E5%8C%96/" rel="tag"># Token 优化</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/" rel="tag"># 开源工具</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/15/skillspector-ai-agent-skill-security-scanner/" rel="prev" title="SkillSpector：NVIDIA 出的 AI Agent 技能扫描器，26% 的 &quot;技能&quot; 其实是漏洞">
+                  <i class="fa fa-angle-left"></i> SkillSpector：NVIDIA 出的 AI Agent 技能扫描器，26% 的 "技能" 其实是漏洞
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/16/nvidia-skillspector-ai-agent-skill-security-scanner/" rel="next" title="你的 AI Agent 技能包安全吗？NVIDIA 开源 SkillSpector，扫描 Agent Skill 的 &quot;杀毒软件&quot;">
+                  你的 AI Agent 技能包安全吗？NVIDIA 开源 SkillSpector，扫描 Agent Skill 的 "杀毒软件" <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

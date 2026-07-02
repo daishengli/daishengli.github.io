@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="我每天要处理大量信息、写文章、做技术调研。以前靠一个人硬扛，现在让 AI 团队帮我干活，体验完全不一样了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CrewAI 实战：我用 AI 团队把研究效率翻了三倍">
+<meta property="og:url" content="https://www.daishengli.top/2026/05/30/crewai-multi-agent-workflow/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="我每天要处理大量信息、写文章、做技术调研。以前靠一个人硬扛，现在让 AI 团队帮我干活，体验完全不一样了。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.693Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="效率工具">
+<meta property="article:tag" content="CrewAI">
+<meta property="article:tag" content="AI 团队">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/05/30/crewai-multi-agent-workflow/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/05/30/crewai-multi-agent-workflow/","path":"2026/05/30/crewai-multi-agent-workflow/","title":"CrewAI 实战：我用 AI 团队把研究效率翻了三倍"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>CrewAI 实战：我用 AI 团队把研究效率翻了三倍 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CrewAI-%E5%AE%9E%E6%88%98%EF%BC%9A%E6%88%91%E7%94%A8-AI-%E5%9B%A2%E9%98%9F%E6%8A%8A%E7%A0%94%E7%A9%B6%E6%95%88%E7%8E%87%E7%BF%BB%E4%BA%86%E4%B8%89%E5%80%8D"><span class="nav-number">1.</span> <span class="nav-text">CrewAI 实战：我用 AI 团队把研究效率翻了三倍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%AE%A9-AI-%E7%BB%84%E6%88%90%E5%9B%A2%E9%98%9F%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">为什么要让 AI 组成团队？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CrewAI-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.2.</span> <span class="nav-text">CrewAI 是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%9C%9F%E5%AE%9E%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.3.</span> <span class="nav-text">一个真实的使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%80%BC%E5%BE%97%E7%94%A8"><span class="nav-number">1.4.</span> <span class="nav-text">为什么值得用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E4%BD%93%E9%AA%8C"><span class="nav-number">1.5.</span> <span class="nav-text">实际体验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E5%90%88%E5%93%AA%E4%BA%9B%E4%BA%BA"><span class="nav-number">1.6.</span> <span class="nav-text">适合哪些人</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/05/30/crewai-multi-agent-workflow/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="CrewAI 实战：我用 AI 团队把研究效率翻了三倍 | 小戴的网络日志">
+      <meta itemprop="description" content="我每天要处理大量信息、写文章、做技术调研。以前靠一个人硬扛，现在让 AI 团队帮我干活，体验完全不一样了。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CrewAI 实战：我用 AI 团队把研究效率翻了三倍
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-05-31 00:00:00" itemprop="dateCreated datePublished" datetime="2026-05-31T00:00:00+08:00">2026-05-31</time>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">我每天要处理大量信息、写文章、做技术调研。以前靠一个人硬扛，现在让 AI 团队帮我干活，体验完全不一样了。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="CrewAI-实战：我用-AI-团队把研究效率翻了三倍"><a href="#CrewAI-实战：我用-AI-团队把研究效率翻了三倍" class="headerlink" title="CrewAI 实战：我用 AI 团队把研究效率翻了三倍"></a>CrewAI 实战：我用 AI 团队把研究效率翻了三倍</h1><p>我每天要处理大量信息、写文章、做技术调研。以前靠一个人硬扛，现在让 AI 团队帮我干活，体验完全不一样了。</p>
+<h2 id="为什么要让-AI-组成团队？"><a href="#为什么要让-AI-组成团队？" class="headerlink" title="为什么要让 AI 组成团队？"></a>为什么要让 AI 组成团队？</h2><p>单个 AI Agent 的问题在于：当你让它同时做调研、写作、审核三件事，它要么顾此失彼，要么输出质量参差不齐。就好像让一个人同时当研究员、编辑和排版师 —— 每件事都做得马马虎虎。</p>
+<p>CrewAI 的思路很简单：<strong>让不同的 AI agent 干不同的事，然后让它们协作。</strong> 就像一个正常的工作团队，有人专门负责调研，有人专门负责写作，最后有人审核把关。</p>
+<p>这套东西最近在 GitHub 上火得一塌糊涂，企业版已经在 DocuSign、AB InBev 这些大公司跑生产了。</p>
+<h2 id="CrewAI-是什么"><a href="#CrewAI-是什么" class="headerlink" title="CrewAI 是什么"></a>CrewAI 是什么</h2><p>CrewAI 是一个开源的 Python 多智能体框架，用角色扮演的方式组织 AI 协作。你可以给每个 agent 定义角色、目标和背景故事，然后让它们围绕一个任务各自发挥专长。</p>
+<p>核心概念就三个：</p>
+<ul>
+<li><strong>Agent</strong>：一个带角色的 AI，有自己的专业领域和工具</li>
+<li><strong> Task</strong>：具体任务，有明确的输出预期</li>
+<li><strong> Crew</strong>：把一堆 Agent 和 Task 组织起来，按顺序或协作方式运行</li>
+</ul>
+<p>安装就一行：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install crewai</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="一个真实的使用场景"><a href="#一个真实的使用场景" class="headerlink" title="一个真实的使用场景"></a>一个真实的使用场景</h2><p>我的工作流是这样的：</p>
+<p><strong>研究员 agent</strong> 负责全网搜索最新技术动态，整理成结构化要点；<br><strong>写手 agent</strong> 根据研究员的输出，生成一篇完整的文章草稿；<br><strong>审核 agent</strong> 检查文章逻辑是否通顺、有没有事实错误。</p>
+<p>用 CrewAI 实现起来大概是这个感觉：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> crewai <span class="keyword">import</span> Agent, Task, Crew</span><br><span class="line"></span><br><span class="line">researcher = Agent(</span><br><span class="line">    role=<span class="string">"Research Analyst"</span>,</span><br><span class="line">    goal=<span class="string">"Find and summarize latest developments in {topic}"</span>,</span><br><span class="line">    backstory=<span class="string">"You are an expert researcher with a talent for finding key insights."</span>,</span><br><span class="line">    tools=[search_tool, scrape_tool],</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">writer = Agent(</span><br><span class="line">    role=<span class="string">"Content Writer"</span>,</span><br><span class="line">    goal=<span class="string">"Write a clear, engaging article based on research findings"</span>,</span><br><span class="line">    backstory=<span class="string">"You turn complex topics into readable, well-structured articles."</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">reviewer = Agent(</span><br><span class="line">    role=<span class="string">"Editor"</span>,</span><br><span class="line">    goal=<span class="string">"Ensure the article is accurate, clear, and well-structured"</span>,</span><br><span class="line">    backstory=<span class="string">"You have sharp editorial instincts and catch everything."</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">research_task = Task(</span><br><span class="line">    description=<span class="string">"Research the latest developments in {topic}"</span>,</span><br><span class="line">    expected_output=<span class="string">"A detailed summary with key findings and sources"</span>,</span><br><span class="line">    agent=researcher,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">writing_task = Task(</span><br><span class="line">    description=<span class="string">"Write a blog post based on the research findings"</span>,</span><br><span class="line">    expected_output=<span class="string">"A well-structured article of 1000-1500 words"</span>,</span><br><span class="line">    agent=writer,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">review_task = Task(</span><br><span class="line">    description=<span class="string">"Review and refine the article"</span>,</span><br><span class="line">    expected_output=<span class="string">"A polished, error-free article"</span>,</span><br><span class="line">    agent=reviewer,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">crew = Crew(</span><br><span class="line">    agents=[researcher, writer, reviewer],</span><br><span class="line">    tasks=[research_task, writing_task, review_task],</span><br><span class="line">    verbose=<span class="literal">True</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">result = crew.kickoff(inputs={<span class="string">"topic"</span>: <span class="string">"AI coding agents in 2025"</span>})</span><br></pre></td></tr></tbody></table></figure>
+
+<p>实际跑的时候，每个 agent 会按顺序执行自己的任务，遇到需要其他 agent 提供信息时会主动沟通。研究员跑完，写手才开工，写手跑完，审核再上。</p>
+<h2 id="为什么值得用"><a href="#为什么值得用" class="headerlink" title="为什么值得用"></a>为什么值得用</h2><p><strong>1. 不依赖 LangChain，轻量级</strong><br>CrewAI 完全自研，没有沉重的抽象层。对于只是想用多 agent 协作的人来说是好事。</p>
+<p><strong>2. 角色定义非常灵活</strong><br>每个 agent 可以有自己的工具集（搜索、爬虫、API 调用等），还能用 YAML 配置文件管理，不需要硬编码。</p>
+<p><strong>3. 支持 Flows 和 Crews 两种模式</strong><br>Crews 适合有明确分工的合作流程；Flows 适合更动态的、事件驱动的任务编排。两个可以混用。</p>
+<p><strong>4. 接入任何 LLM</strong><br>支持 OpenAI、Anthropic、DeepSeek、Ollama 各种模型，想用哪个用哪个，不绑定。</p>
+<p><strong>5. 有 Skills 支持</strong><br>官方出了 CrewAI Skills，教 AI coding agent 怎么写 Flow、配置 Crew、设计 agent 和 task。对于想把框架用标准化的团队来说很有价值。</p>
+<h2 id="实际体验"><a href="#实际体验" class="headerlink" title="实际体验"></a>实际体验</h2><p>我平时写作需要大量英文技术资料。以前我自己搜索、阅读、提炼要点，一篇文章光前期研究就要花 2-3 小时。</p>
+<p>用 CrewAI 跑了一套研究 + 写作的流程，同样的文章研究时间压缩到 40 分钟左右。研究员 agent 帮我把全网关键信息整理好，写手 agent 直接出草稿，我主要做最后的人工审核和润色。</p>
+<p>关键是<strong>质量没有下降</strong>。因为研究员 agent 会把多个来源的关键信息都提炼出来，不会漏掉重要观点。写手 agent 在结构化输出上比大多数人类助手更稳定。</p>
+<h2 id="适合哪些人"><a href="#适合哪些人" class="headerlink" title="适合哪些人"></a>适合哪些人</h2><ul>
+<li>需要系统性地做技术调研的人</li>
+<li>想用 AI 自动化内容生产流程的内容创作者</li>
+<li>在团队里想引入 AI agent 但不想从零造轮子的开发者</li>
+<li>想把重复性信息处理任务自动化的效率控</li>
+</ul>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>CrewAI 不是一个” 通用 AI” 的花哨玩具，而是一个<strong>实用的多 agent 协作框架</strong>。它的价值在于把 AI 工作流从” 一个人干所有事” 变成” 一个团队各司其职”，这种转变带来的效率提升是真实的。</p>
+<p>GitHub 上 Star 数一直在涨，企业市场也在打开。如果你对 AI Agent 感兴趣，或者已经在玩单 Agent 应用想进一步，这个框架值得上手试试。</p>
+<hr>
+<p><em>你平时怎么处理信息研究这件事？有没有尝试过类似的 AI 协作工具？欢迎交流。</em></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/05/30/crewai-multi-agent-workflow/" title="CrewAI 实战：我用 AI 团队把研究效率翻了三倍">https://www.daishengli.top/2026/05/30/crewai-multi-agent-workflow/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" rel="tag"># 效率工具</a>
+              <a href="/tags/CrewAI/" rel="tag"># CrewAI</a>
+              <a href="/tags/AI-%E5%9B%A2%E9%98%9F/" rel="tag"># AI 团队</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/05/30/claude-code-terminal-agent/" rel="prev" title="Claude Code Terminal 里的 AI 编程搭档">
+                  <i class="fa fa-angle-left"></i> Claude Code Terminal 里的 AI 编程搭档
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/01/ruflo-multi-agent-claude-code/" rel="next" title="我用 ruflo 把 Claude Code 变成了多智能体战队，真香">
+                  我用 ruflo 把 Claude Code 变成了多智能体战队，真香 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="港大 HKUDS 开源的金融研究 Agent，77 个金融 Skill + 7 大回测引擎 + 29 个投研团队预设，一句话跑回测、跑多 Agent 评审，默认不替你下单。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vibe-Trading：港大 HKUDS 那个 10k 星的「AI 投研实习生」，把回测这件事变成说人话">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/09/vibe-trading-ai-finance-research-agent/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="港大 HKUDS 开源的金融研究 Agent，77 个金融 Skill + 7 大回测引擎 + 29 个投研团队预设，一句话跑回测、跑多 Agent 评审，默认不替你下单。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.daishengli.top/images/vibe-trading/workflow.svg">
+<meta property="article:published_time" content="2026-06-09T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.696Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="量化交易">
+<meta property="article:tag" content="港大">
+<meta property="article:tag" content="HKUDS">
+<meta property="article:tag" content="投研工具">
+<meta property="article:tag" content="AI 投研">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.daishengli.top/images/vibe-trading/workflow.svg">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/09/vibe-trading-ai-finance-research-agent/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/09/vibe-trading-ai-finance-research-agent/","path":"2026/06/09/vibe-trading-ai-finance-research-agent/","title":"Vibe-Trading：港大 HKUDS 那个 10k 星的「AI 投研实习生」，把回测这件事变成说人话"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Vibe-Trading：港大 HKUDS 那个 10k 星的「AI 投研实习生」，把回测这件事变成说人话 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E5%88%B0%E5%BA%95%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">一、它到底解决什么问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E5%92%8C%E6%99%AE%E9%80%9A%E5%9B%9E%E6%B5%8B%E6%A1%86%E6%9E%B6%E7%9A%84%E5%B7%AE%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">二、它和普通回测框架的差别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E8%A3%85%E8%B5%B7%E6%9D%A5%E6%9C%89%E5%A4%9A%E7%AE%80%E5%8D%95"><span class="nav-number">3.</span> <span class="nav-text">三、装起来有多简单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%814-%E4%B8%AA%E8%AE%A9%E6%88%91%E8%A7%89%E5%BE%97%E2%80%9D%E8%BF%99%E5%B8%AE%E4%BA%BA%E6%87%82%E6%8A%95%E7%A0%94%E2%80%9D%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">4.</span> <span class="nav-text">四、4 个让我觉得” 这帮人懂投研” 的设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E8%B7%91%E4%B8%8D%E5%87%BA%E7%BB%93%E6%9E%9C%E6%97%B6%EF%BC%8CAgent-%E4%B8%8D%E4%BC%9A%E9%97%B7%E5%A4%B4%E7%83%A7-token"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 跑不出结果时，Agent 不会闷头烧 token</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E2%80%9CShadow-Account%E2%80%9D%E2%80%94%E2%80%94%E6%8A%8A%E5%88%B8%E5%95%86%E6%B5%81%E6%B0%B4%E5%8F%98%E6%88%90%E5%8F%AF%E5%AE%A1%E8%AE%A1%E6%8A%A5%E5%91%8A"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 “Shadow Account”—— 把券商流水变成可审计报告</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-Alpha-Zoo%E2%80%94%E2%80%94452-%E4%B8%AA%E9%A2%84%E7%BD%AE%E5%9B%A0%E5%AD%90%E7%9A%84%E2%80%9D%E6%93%82%E5%8F%B0%E2%80%9D"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 Alpha Zoo——452 个预置因子的” 擂台”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-Live-trading-%E6%98%AF%E2%80%9D%E5%8F%AF%E9%80%89%E9%A1%B9%EF%BC%8C%E4%B8%94%E9%BB%98%E8%AE%A4%E5%85%B3%E2%80%9D"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 Live trading 是” 可选项，且默认关”</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%AE%83%E8%B7%9F%E2%80%9DAI-%E5%B8%AE%E4%BD%A0%E7%82%92%E8%82%A1%E2%80%9D%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%9C%AC%E8%B4%A8%E5%8C%BA%E5%88%AB"><span class="nav-number">5.</span> <span class="nav-text">五、它跟”AI 帮你炒股” 类项目的本质区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%AE%83%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">6.</span> <span class="nav-text">六、它适合谁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E4%B8%80%E4%BA%9B%E8%A6%81%E6%8F%90%E9%86%92%E7%9A%84%E5%9D%91"><span class="nav-number">7.</span> <span class="nav-text">七、一些要提醒的坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-number">8.</span> <span class="nav-text">八、写在最后</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/09/vibe-trading-ai-finance-research-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Vibe-Trading：港大 HKUDS 那个 10k 星的「AI 投研实习生」，把回测这件事变成说人话 | 小戴的网络日志">
+      <meta itemprop="description" content="港大 HKUDS 开源的金融研究 Agent，77 个金融 Skill + 7 大回测引擎 + 29 个投研团队预设，一句话跑回测、跑多 Agent 评审，默认不替你下单。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Vibe-Trading：港大 HKUDS 那个 10k 星的「AI 投研实习生」，把回测这件事变成说人话
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-09 10:00:00" itemprop="dateCreated datePublished" datetime="2026-06-09T10:00:00+08:00">2026-06-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/%E5%BC%80%E6%BA%90/" itemprop="url" rel="index"><span itemprop="name">开源</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/%E5%BC%80%E6%BA%90/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">港大 HKUDS 开源的金融研究 Agent，77 个金融 Skill + 7 大回测引擎 + 29 个投研团队预设，一句话跑回测、跑多 Agent 评审，默认不替你下单。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>打开 GitHub Trending，一眼就看到了 <a target="_blank" rel="noopener" href="https://github.com/HKUDS/Vibe-Trading">HKUDS/Vibe-Trading</a>—— 单日涨 197 颗星，总星 10.8k，背后是<strong>港大数据智能实验室</strong>（就是做 Open-LLM-VTuber、ChatDev 那个组）。</p>
+<p>我之所以点进去看，是因为它写的不是又一个 LLM 聊天框，而是一句让我心动的承诺：</p>
+<blockquote>
+<p><strong>“One Command to Empower Your Agent with Comprehensive Trading Capabilities”</strong></p>
+</blockquote>
+<p>更让我安心的是它官网顶上红底白字写的两行：</p>
+<blockquote>
+<p><strong>No live trading. Vibe-Trading is for research, simulation, and backtesting.</strong></p>
+</blockquote>
+<p>翻译成人话：<strong>这是个投研工具，不替你下单</strong>。这事儿就有意思了 —— 不是又一个鼓吹”AI 帮你炒币” 的项目，是个<strong>真正想帮普通人做严肃投研</strong>的东西。</p>
+<p><img src="https://www.daishengli.top/images/vibe-trading/workflow.svg" alt="Vibe-Trading 工作流"></p>
+<hr>
+<h2 id="一、它到底解决什么问题"><a href="#一、它到底解决什么问题" class="headerlink" title="一、它到底解决什么问题"></a>一、它到底解决什么问题</h2><p>我自己平时也折腾点小投资，但每次想做点正经研究就头大：</p>
+<ul>
+<li>想验证一个简单的双均线策略，得先装 pandas、装 backtrader、装 ta-lib，找数据源、写回测代码、调参数、看结果 —— 一上午过去了</li>
+<li>想看看”2024 年 BTC 的 20/50 均线策略到底赚没赚钱”，要么自己写 SQL 拉数据，要么用某平台的图形界面但被限制只能选预设</li>
+<li>想做个多角度的评估（比如同时看宏观 + 资金流向 + 技术面），得切三四个工具手动拼</li>
+</ul>
+<p>Vibe-Trading 干的就是<strong>把这一堆动作塞回一句话里</strong>。你写一句中文 / 英文，剩下全交给 Agent。</p>
+<p>比如它官网那个最直观的 demo：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ vibe-trading run -p <span class="string">"Backtest BTC-USDT 20/50 MA for 2024"</span></span><br><span class="line"></span><br><span class="line">route: crypto data -&gt; strategy -&gt; backtest -&gt; run card</span><br><span class="line"><span class="built_in">return</span> +18.6%   max drawdown -7.4%</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一行命令，连” 数据从哪来、用什么框架跑、报告写在哪” 都帮你想好了。</p>
+<hr>
+<h2 id="二、它和普通回测框架的差别"><a href="#二、它和普通回测框架的差别" class="headerlink" title="二、它和普通回测框架的差别"></a>二、它和普通回测框架的差别</h2><p>光看” 回测” 两个字，会以为它又是一个 backtrader、zipline、vectorbt 的竞品。其实不是。它的定位是 <strong>“投研 Agent”</strong>，回测只是其中一个工具。</p>
+<p>我用一张表来分一下：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th> backtrader / vectorbt</th>
+<th>Vibe-Trading</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 入口</td>
+<td> Python 库，得写代码</td>
+<td><strong>自然语言 + Python</strong> 双入口</td>
+</tr>
+<tr>
+<td>数据源</td>
+<td>自己接 Tushare /yfinance</td>
+<td><strong> 内置 7 个数据源的路由</strong>，自动 fallback</td>
+</tr>
+<tr>
+<td> 策略生成</td>
+<td>手动写</td>
+<td><strong> LLM 帮你起草</strong> + 预校验</td>
+</tr>
+<tr>
+<td>回测引擎</td>
+<td>单一</td>
+<td><strong> 7 个引擎</strong>：股票、加密、期货、外汇、组合、期权</td>
+</tr>
+<tr>
+<td>多视角评审</td>
+<td>自己拉人讨论</td>
+<td><strong> 29 个预设投研团队</strong>（投委会、量化、加密、风控…）</td>
+</tr>
+<tr>
+<td>交易日志复盘</td>
+<td>自己写 parser</td>
+<td><strong>Shadow Account</strong>—— 把券商流水解析成可审计报告</td>
+</tr>
+<tr>
+<td>真实下单</td>
+<td>库自己不管</td>
+<td><strong>可选 Opt-in</strong>（Robinhood / IBKR / 富途 / OKX…），默认关</td>
+</tr>
+</tbody></table>
+<p>最让我眼前一亮的是 <strong>77 个金融 Skill</strong> 和 <strong>29 个 Swarm Team</strong>。它把” 投资研究” 这件事<strong>模块化</strong>了 —— 每个 Skill 是一个独立能力（数据路由、策略模板、因子研究、宏观分析…），每个 Swarm Team 是一个预设的多 Agent 协作流（” 投委会” 就是宏观 Agent + 量化 Agent + 风险 Agent + 催化剂 Agent 一起干）。</p>
+<p>举个例子，你想做” 美股科技股财报季研究”，直接：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vibe-trading --swarm-run earnings_research_desk</span><br></pre></td></tr></tbody></table></figure>
+
+<p>四个 Agent 自动开干，输出一份带证据、指标、保留意见的报告，全程可追溯。</p>
+<hr>
+<h2 id="三、装起来有多简单"><a href="#三、装起来有多简单" class="headerlink" title="三、装起来有多简单"></a>三、装起来有多简单</h2><p>我是用 <code>uv</code> 装的（这个博客之前专门写过 <a href="/2026/05/uv-vs-pip/">uv vs pip</a>），一行命令搞定：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">uv tool install vibe-trading-ai</span><br><span class="line">vibe-trading init</span><br><span class="line">vibe-trading</span><br></pre></td></tr></tbody></table></figure>
+
+<p>它会启动一个 TUI 或者 Web UI（看你选哪种），我选了 Web——<code>vibe-trading serve --port 8899</code> 然后浏览器开 <code>localhost:8899</code>。</p>
+<p><strong>注意：它要 Python 3.11+</strong>。如果你系统 Python 是 3.10，别挣扎，直接上 <code>uv</code>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">uv python install 3.11</span><br><span class="line">uv tool install --python 3.11 vibe-trading-ai</span><br></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h2 id="四、4-个让我觉得”这帮人懂投研”的设计"><a href="#四、4-个让我觉得”这帮人懂投研”的设计" class="headerlink" title="四、4 个让我觉得”这帮人懂投研”的设计"></a>四、4 个让我觉得” 这帮人懂投研” 的设计</h2><h3 id="4-1-跑不出结果时，Agent-不会闷头烧-token"><a href="#4-1-跑不出结果时，Agent-不会闷头烧-token" class="headerlink" title="4.1 跑不出结果时，Agent 不会闷头烧 token"></a>4.1 跑不出结果时，Agent 不会闷头烧 token</h3><p><code>vibe-trading</code> 的 Agent loop 有个我特别欣赏的设计 —— <strong>跑到 80% 预算就收尾</strong>，最后一轮把工具定义直接丢开，强制 LLM 给出文字总结。</p>
+<p>这意味着你<strong>永远不会看到一个 Agent 跑了 50 步最后 <code>failed</code> 啥也没说</strong>。它要么中间给你可读的中间结果，要么最后一刻给你一段” 我走到哪、卡在哪、还差什么” 的诚实复盘。</p>
+<p>我在 <a href="/2026/06/hermes-agent-intro/">Hermes Agent</a> 里实现过类似机制，深知这种” 显式截断 + 强制落地” 是多反直觉但多好用的设计。</p>
+<h3 id="4-2-“Shadow-Account”——把券商流水变成可审计报告"><a href="#4-2-“Shadow-Account”——把券商流水变成可审计报告" class="headerlink" title="4.2 “Shadow Account”——把券商流水变成可审计报告"></a>4.2 “Shadow Account”—— 把券商流水变成可审计报告</h3><p>这一条对散户特别有用。</p>
+<p>它能解析你的券商（老虎、富途、Robinhood、IBKR…）导出的交易流水，<strong>提取你实际的下单行为规则</strong>（比如” 你每次亏损超过 5% 就割肉”、” 你周五尾盘总是减仓”），然后用历史数据做<strong>反事实回测</strong> —— 告诉你” 如果你当时没割肉，半年后是赚是赔”。</p>
+<p>这东西要是做实了，对<strong>交易行为矫正</strong>比任何” 投资心理学” 课程都直接。</p>
+<h3 id="4-3-Alpha-Zoo——452-个预置因子的”擂台”"><a href="#4-3-Alpha-Zoo——452-个预置因子的”擂台”" class="headerlink" title="4.3 Alpha Zoo——452 个预置因子的”擂台”"></a>4.3 Alpha Zoo——452 个预置因子的” 擂台”</h3><p>它内置了一个 <strong>Alpha Zoo</strong>，452 个经典量化因子（动量、反转、价值、质量…），一行命令跑 IC 评估：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vibe-trading alpha bench --zoo gtja191 --universe csi300 --period 2018-2025 --top 20</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这等于<strong>白嫖一个国泰君安 191 因子库的在线版</strong>，不需要自己下数据、自己写回测、自己算 IC。</p>
+<p>更狠的是 <code>alpha compare</code>—— 挑几个因子让它们 PK，按 IC、IR、胜率排名。这对因子选股的初学者极其友好。</p>
+<h3 id="4-4-Live-trading-是”可选项，且默认关”"><a href="#4-4-Live-trading-是”可选项，且默认关”" class="headerlink" title="4.4 Live trading 是”可选项，且默认关”"></a>4.4 Live trading 是” 可选项，且默认关”</h3><p>这点我必须单独夸。</p>
+<p>整个 README 翻一遍，live trading 的描述永远是 <strong>“opt-in”, “bounded autonomy”, “read-only by default”, “instant kill switch”</strong>。它有完整的审计日志、文件级紧急熔断、用户授权的 mandate（品种 / 仓位 / 杠杆 / 日内上限都你定）、自动到期。</p>
+<p>它甚至在 6 月 2 日加了 6 个新券商连接器（老虎 / Longbridge/Alpaca/OKX/Binance/ 富途）后，特意注明 <strong>Longbridge 只支持模拟 + 只读</strong> —— 因为 API 没法区分用户当前是 paper 还是 live mode，<strong>它宁可不做，也不替你冒险</strong>。</p>
+<p>这种” 知道自己边界” 的态度，是现在 AI Agent 领域稀缺的品质。</p>
+<hr>
+<h2 id="五、它跟”AI-帮你炒股”类项目的本质区别"><a href="#五、它跟”AI-帮你炒股”类项目的本质区别" class="headerlink" title="五、它跟”AI 帮你炒股”类项目的本质区别"></a>五、它跟”AI 帮你炒股” 类项目的本质区别</h2><p>我必须把这块单独拎出来说。</p>
+<p>过去一年我见过太多”AI Trader” 项目：包装一个 LLM + 一个交易所 API = “AI 帮你炒币”。</p>
+<p>Vibe-Trading 反着来：</p>
+<ol>
+<li><strong>它不替你做决策</strong> —— 所有投资判断你写</li>
+<li><strong>它不替你下单</strong> —— 默认关</li>
+<li><strong>它干的是研究员 / 分析师 / 数据工程师的活</strong> —— 把数据拿来、把回测跑起来、把报告写好、把你券商流水解析清楚</li>
+<li><strong>它的价值在” 过程可审计”</strong>—— 每个结论都带数据源、回测 ID、保留意见</li>
+<li><strong>它的风险在” 用户自己”</strong>—— 开了 live trading 模式，所有责任在你</li>
+</ol>
+<p>这不是”AI 炒股”，这是” <strong>给普通投资者配了一个免费的卖方研究团队</strong> “。</p>
+<p>后者才是真正能改变散户命运的东西。</p>
+<hr>
+<h2 id="六、它适合谁"><a href="#六、它适合谁" class="headerlink" title="六、它适合谁"></a>六、它适合谁</h2><ul>
+<li><strong>个人投资者</strong>：想自己跑策略但不会写代码（或者懒得每次都写）</li>
+<li><strong>量化爱好者</strong>：想要一个开箱即用的因子库 + 回测环境</li>
+<li><strong>小机构 / 独立 trader</strong>：需要一个合规、可审计的研究工作台</li>
+<li><strong> AI Agent 学习者</strong>：想看一个<strong>生产级的多 Agent 投研系统</strong>怎么搭的（Swarm DAG、Kill Switch、Audit Ledger 都是好教材）</li>
+<li><strong>不想被券商”AI 工具” 割韭菜的人</strong>：想自己掌握研究流程</li>
+</ul>
+<p>不适合：</p>
+<ul>
+<li>指望它替你赚钱的（它不做这事）</li>
+<li>想要一键躺赚的（醒醒）</li>
+<li>不想读英文文档的（README 90% 是英文，社区 Discord 也偏英文）</li>
+</ul>
+<hr>
+<h2 id="七、一些要提醒的坑"><a href="#七、一些要提醒的坑" class="headerlink" title="七、一些要提醒的坑"></a>七、一些要提醒的坑</h2><p>用了两天，列几个<strong>实测踩到的注意事项</strong>：</p>
+<ol>
+<li><strong>Gemini 2.5/3.0 的 <code>thoughtSignature</code></strong> 还在标 <code>help wanted</code>—— 你用 Gemini 做底座时会丢一些推理痕迹，目前不影响结果但会有 warning</li>
+<li><strong>macOS 之外的系统</strong>，broker 的 keychain 集成还不算完全验证（Windows/Linux/Docker 都有警告）——CI 环境里老老实实传 <code>GITHUB_COPILOT_TOKEN</code> 之类显式 token</li>
+<li><strong> 它的 CLI/UI/MCP 三个入口共用同一份 session</strong>—— 别在 CLI 里跑到一半去 Web 端改同一个 goal，会有 race condition（这其实是 GitHub issue 里也有人报的）</li>
+<li><strong>港股和 A 股数据源</strong>走的是通达信协议（<code>mootdx</code>），无 token 无 IP 速率限制，但<strong>仅限中国大陆 IP 段</strong>，海外会连不上 —— 海外用户老老实实用 yfinance 或 CCXT</li>
+<li><strong> 券商连接器 6 月 2 日刚加</strong>，文档说”Experimental”—— 别拿真钱跑，先 paper</li>
+</ol>
+<hr>
+<h2 id="八、写在最后"><a href="#八、写在最后" class="headerlink" title="八、写在最后"></a>八、写在最后</h2><p>我写代码、做产品、也炒过币。每次进一个新市场都要重新研究当地的税务、券商、行情软件 —— 这套流程痛苦得让人想吐。</p>
+<p>Vibe-Trading 给我的感觉是：<strong>第一次有一个开源工具，把” 投研” 和” 交易” 这两件事切得很干净</strong>。前者它做透，后者它不碰。</p>
+<p>如果你和我一样，是那种” 想自己搞懂市场再下场” 的人 —— 而不是” 听个消息就梭哈” 的人 —— 它值得你花一个下午试试。</p>
+<p>装个 1 分钟，跑个 demo 3 分钟，再花 30 分钟读它的 Swarm 架构文档 —— 你会对”AI Agent 在严肃领域怎么落地” 这件事有更具体的体感。</p>
+<blockquote>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/HKUDS/Vibe-Trading">github.com/HKUDS/Vibe-Trading</a><br>官网：<a target="_blank" rel="noopener" href="https://vibetrading.wiki/">vibetrading.wiki</a><br>文档：<a target="_blank" rel="noopener" href="https://vibetrading.wiki/docs/">vibetrading.wiki/docs</a></p>
+</blockquote>
+<hr>
+<p><strong>免责声明</strong>：本文不是投资建议。Vibe-Trading 本身也不提供投资建议。量化投资有风险，过去回测业绩不代表未来表现。亏了别找我。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/09/vibe-trading-ai-finance-research-agent/" title="Vibe-Trading：港大 HKUDS 那个 10k 星的「AI 投研实习生」，把回测这件事变成说人话">https://www.daishengli.top/2026/06/09/vibe-trading-ai-finance-research-agent/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/%E9%87%8F%E5%8C%96%E4%BA%A4%E6%98%93/" rel="tag"># 量化交易</a>
+              <a href="/tags/%E6%B8%AF%E5%A4%A7/" rel="tag"># 港大</a>
+              <a href="/tags/HKUDS/" rel="tag"># HKUDS</a>
+              <a href="/tags/%E6%8A%95%E7%A0%94%E5%B7%A5%E5%85%B7/" rel="tag"># 投研工具</a>
+              <a href="/tags/AI-%E6%8A%95%E7%A0%94/" rel="tag"># AI 投研</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/07/multica-ai-agent-management-platform/" rel="prev" title="Multica：开源的 AI 代理 &quot;虚拟员工&quot; 管理平台，让 Claude Code 真正成为你的同事">
+                  <i class="fa fa-angle-left"></i> Multica：开源的 AI 代理 "虚拟员工" 管理平台，让 Claude Code 真正成为你的同事
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/11/apple-container-swift-vm-per-container/" rel="next" title="apple&#x2F;container：苹果亲自下场做容器，每个容器独占一台微型 VM">
+                  apple/container：苹果亲自下场做容器，每个容器独占一台微型 VM <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

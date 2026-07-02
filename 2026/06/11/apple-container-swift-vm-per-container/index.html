@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="苹果开源的 container 工具用 Swift 写，给每个容器单独起一台轻量 VM，而不是共用一个。CPU 和内存性能比 Docker Desktop 还强，但还不到 1.0。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="apple&#x2F;container：苹果亲自下场做容器，每个容器独占一台微型 VM">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/11/apple-container-swift-vm-per-container/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="苹果开源的 container 工具用 Swift 写，给每个容器单独起一台轻量 VM，而不是共用一个。CPU 和内存性能比 Docker Desktop 还强，但还不到 1.0。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-11T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.692Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="apple&#x2F;container">
+<meta property="article:tag" content="Apple Silicon">
+<meta property="article:tag" content="Swift">
+<meta property="article:tag" content="容器">
+<meta property="article:tag" content="Docker Desktop">
+<meta property="article:tag" content="OrbStack">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/11/apple-container-swift-vm-per-container/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/11/apple-container-swift-vm-per-container/","path":"2026/06/11/apple-container-swift-vm-per-container/","title":"apple/container：苹果亲自下场做容器，每个容器独占一台微型 VM"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>apple/container：苹果亲自下场做容器，每个容器独占一台微型 VM | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%88%E8%AF%B4%E5%AE%83%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">先说它到底干了什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A3%85%E4%B8%80%E4%B8%8B%E7%9C%8B%E7%9C%8B"><span class="nav-number">2.</span> <span class="nav-text">装一下看看</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%88%B0%E5%BA%95%E6%80%8E%E4%B9%88%E6%A0%B7"><span class="nav-number">3.</span> <span class="nav-text">性能到底怎么样</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%86%E5%AE%83%E8%BF%98%E6%B2%A1%E5%88%B0%E8%83%BD%E6%9B%BF%E4%BB%A3-Docker-Desktop"><span class="nav-number">4.</span> <span class="nav-text">但它还没到能替代 Docker Desktop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%82%A3%E7%8E%B0%E5%9C%A8%E8%AF%A5%E4%B8%8D%E8%AF%A5%E5%88%87"><span class="nav-number">5.</span> <span class="nav-text">那现在该不该切</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%BB%B6%E4%BA%8B%E5%80%BC%E5%BE%97%E5%86%99"><span class="nav-number">6.</span> <span class="nav-text">为什么这件事值得写</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/11/apple-container-swift-vm-per-container/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="apple&#x2F;container：苹果亲自下场做容器，每个容器独占一台微型 VM | 小戴的网络日志">
+      <meta itemprop="description" content="苹果开源的 container 工具用 Swift 写，给每个容器单独起一台轻量 VM，而不是共用一个。CPU 和内存性能比 Docker Desktop 还强，但还不到 1.0。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          apple/container：苹果亲自下场做容器，每个容器独占一台微型 VM
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-11 10:00:00" itemprop="dateCreated datePublished" datetime="2026-06-11T10:00:00+08:00">2026-06-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90/" itemprop="url" rel="index"><span itemprop="name">开源</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">效率工具</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/Apple/" itemprop="url" rel="index"><span itemprop="name">Apple</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">苹果开源的 container 工具用 Swift 写，给每个容器单独起一台轻量 VM，而不是共用一个。CPU 和内存性能比 Docker Desktop 还强，但还不到 1.0。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>今天早上刷 GitHub Trending，首页第三位挂着一个让我盯了十几秒的项目：<a target="_blank" rel="noopener" href="https://github.com/apple/container">apple/container</a>，29k 星，单日涨 1611，仓库描述就一句话：</p>
+<blockquote>
+<p>A tool for creating and running Linux containers using lightweight virtual machines on a Mac. It is written in Swift, and optimized for Apple silicon.</p>
+</blockquote>
+<p>「苹果官方做的容器工具，Swift 写」，这八个字放在 2026 年的 Mac 开发者圈子里已经够炸了。我打开 README 第一遍没看进去，第二遍才反应过来 —— 它不是一个新 runtime，它是 Apple 自己下场重写了「在 macOS 上跑 Linux 容器」这件事。装下来跑了半天，我得认真聊聊这件事。</p>
+<h2 id="先说它到底干了什么"><a href="#先说它到底干了什么" class="headerlink" title="先说它到底干了什么"></a>先说它到底干了什么</h2><p>大部分 Mac 上的容器方案（Docker Desktop、OrbStack、Colima、Podman）都长一个样：起一台 Linux 虚拟机，在那台虚拟机里跑 containerd /dockerd，所有容器共享这一个 Linux 内核。简单、成本低，但代价是「共享内核」—— 一旦某个容器逃逸，影响的是同一台 VM 里所有的容器。</p>
+<p><code>apple/container</code> 不这么干。它的核心架构是 <strong>每个容器独占一台轻量 VM</strong>，内核都不共享。README 写得很直白：</p>
+<blockquote>
+<p>While most macOS container tools launch a single Linux VM hosting all containers, <code>container</code> takes a different approach using the open source <a target="_blank" rel="noopener" href="https://github.com/apple/containerization">Containerization</a> package: <strong>It runs a lightweight VM for each container that you create.</strong></p>
+</blockquote>
+<p>这个能力来自 Apple 开源的另一个 Swift 包 <a target="_blank" rel="noopener" href="https://github.com/apple/containerization">Containerization</a>，直接调用 macOS 的 Virtualization.framework 框架。这件事能成立，是因为 Apple Silicon 的硬件虚拟化已经做到「每开一台 VM 都几乎不花什么钱」的程度。</p>
+<p>我之前写过的 <a href="/2026/06/10/whichllm-local-llm-hardware-matcher/">whichllm</a> 解决「该跑哪个模型」，今天这个解决的是更上游的问题 —— <strong>模型要装在容器里跑在 Mac 上，那个「容器」本身到底是什么</strong>。</p>
+<h2 id="装一下看看"><a href="#装一下看看" class="headerlink" title="装一下看看"></a>装一下看看</h2><p>我这台机器正好是 Apple Silicon + macOS26.5（<code>sw_vers</code> 出来 <code>26.5.1</code>），官方说必须 macOS26，刚好踩线。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 从 release page 下安装包双击装</span></span><br><span class="line"><span class="comment"># 2. 启动系统服务</span></span><br><span class="line">container system start</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 拉个镜像跑跑</span></span><br><span class="line">container run --<span class="built_in">rm</span> -it alpine:latest sh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第一次跑 <code>container run</code> 的时候能看到 macOS 在后台开了一个 VZ（Virtualization）进程。启动速度感觉跟 OrbStack 差不多，并没有 Docker Desktop 那种「点了图标等三秒」的感觉。</p>
+<p>几个用下来让我有点意外的细节：</p>
+<ul>
+<li><strong>OCI 兼容</strong>。<code>container</code> 不是苹果搞私有协议，它拉的是标准 OCI 镜像（Docker Hub、GHCR、quay.io 都没问题），构建出来的镜像也能推回这些 registry。README 直接写：「can pull and run images from any standard container registry」。</li>
+<li><strong>多架构构建</strong>一行命令：<code>container build --arch arm64 --amd64</code>，跑 <code>uname -a</code> 在 amd64 模式下还能看到是 Rosetta 在翻译。</li>
+<li><strong><code>--cpus</code> 和 <code>--memory</code> 跟 Docker 长得一样</strong>：<code>container run --cpus 8 --memory 32G big</code>，单位支持缩写。我之前给本地 LLM 容器分内存常用的那套写法，直接搬过来。</li>
+<li><strong>网络隔离</strong>默认就有。<code>container system start</code> 会创建一个 <code>default</code> vmnet 网络，容器之间互相不可见。想要互通可以 <code>container network create foo</code> 建一个自己的。</li>
+<li><strong><code>stats</code> 命令</strong>长得像 <code>top</code>，能实时看每个容器的 CPU / 内存。</li>
+</ul>
+<p>整体命令风格很熟悉 ——<code>container run</code>、<code>container exec</code>、<code>container logs</code>、<code>container build</code>、<code>container image list</code>，写惯 Docker 的人不用查文档就能用。</p>
+<h2 id="性能到底怎么样"><a href="#性能到底怎么样" class="headerlink" title="性能到底怎么样"></a>性能到底怎么样</h2><p>RepoFlow 11 月在 M4 Mac mini 上做了一轮三方对比（<a target="_blank" rel="noopener" href="https://www.repoflow.io/blog/apple-containers-vs-docker-desktop-vs-orbstack">Apple Container v0.6.0 vs Docker Desktop 4.47 vs OrbStack 2.0.4</a>），Sysbench + FIO 全跑了一遍，每个测试重复 20 次：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th> apple/container</th>
+<th>Docker Desktop</th>
+<th>OrbStack</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU 单线程</td>
+<td>强</td>
+<td>强</td>
+<td>中</td>
+</tr>
+<tr>
+<td> CPU 全线程</td>
+<td>强</td>
+<td>强</td>
+<td>中</td>
+</tr>
+<tr>
+<td>内存吞吐</td>
+<td>强</td>
+<td>中</td>
+<td>中</td>
+</tr>
+<tr>
+<td>容器启动速度</td>
+<td>中</td>
+<td><strong>最快</strong></td>
+<td>中</td>
+</tr>
+<tr>
+<td>文件系统 / 小文件</td>
+<td>中</td>
+<td>慢</td>
+<td><strong>最快</strong></td>
+</tr>
+</tbody></table>
+<p>简单总结：<strong>苹果在 CPU 和内存上已经追上甚至超过 Docker Desktop</strong>，但启动延迟不如 Docker（毕竟每开一个容器都要开一台 VM，物理上就是比 fork 慢），文件系统密集型工作负载则被 OrbStack 吊打。</p>
+<p>这跟架构直觉对得上：</p>
+<ul>
+<li>每容器一台 VM → 隔离性极强，但启动要进 VM 引导 → 启动慢</li>
+<li> bind mount 走 virtiofs → 小文件性能受 virtiofs 实现质量影响</li>
+</ul>
+<p>我自己最看重的反而是 <strong>CPU 和内存那一栏</strong>。本地起 LLM、跑 Postgres 测试、做点数据处理，这些场景下 CPU / 内存吞吐才是瓶颈。Docker Desktop 在 macOS 上虚拟化 Linux 一直有点吃亏，现在 Apple 用自己的 Virtualization.framework 补上了这件事。</p>
+<h2 id="但它还没到能替代-Docker-Desktop"><a href="#但它还没到能替代-Docker-Desktop" class="headerlink" title="但它还没到能替代 Docker Desktop"></a>但它还没到能替代 Docker Desktop</h2><p>写到这里要说几个我装下来撞到的硬限制：</p>
+<ol>
+<li><strong>必须在 macOS26 上</strong>。仓库 MAINTAINERS 直接说：macOS 15 上的问题不修。这件事不怪苹果 ——vmnet 在 macOS26 上才支持真正的网络隔离，container-to-container 通信、多个网络、subnet 配置这些都要 macOS26 才能完整工作。</li>
+<li><strong>Pre-1.0，目前 0.6.x</strong>。README 写得很清楚：「stability is only guaranteed within patch versions … Minor version releases may include breaking changes until we reach a 1.0.0 release」。生产环境锁版本，别追最新 minor。</li>
+<li><strong>没有 Docker Compose</strong>。<code>container compose</code> 还没出来（issue 列表里排着，但优先级不高）。我现在本地起的几个项目都是 docker-compose.yml，迁过来要拆成多个 <code>container run</code> 命令或者写 shell 脚本。短期不爽。</li>
+<li><strong>内存 balloon 不完整</strong>。官方文档承认：如果你给容器分了 16G 但它只用 2G，剩下那 14G 不会归还给 macOS。要靠偶尔重启容器来回收。这条对 M 系列机器内存本来就紧的用户比较扎心。</li>
+<li><strong>amd64 镜像走 Rosetta 翻译</strong>。这条对 arm64 原生优先的项目没影响，但如果你的依赖里塞了一堆只有 x86_64 的二进制，启动速度会比原生更慢。</li>
+</ol>
+<p>所以它现在的定位很清晰：<strong>「Mac 开发者愿意尝鲜、能接受偶尔撞坑」</strong>。还不是给运维同事直接顶上去的工具。</p>
+<h2 id="那现在该不该切"><a href="#那现在该不该切" class="headerlink" title="那现在该不该切"></a>那现在该不该切</h2><p>我自己给三个不同人群的建议：</p>
+<ul>
+<li><strong>如果你是 Apple Silicon + macOS26 用户，平时主要跑 Linux 服务做开发</strong> —— 装一个跑跑看。它对你唯一的成本是 30 分钟装 + 适应期。</li>
+<li><strong>如果你重度依赖 docker-compose</strong>，项目里有一堆 compose 文件 —— 再等等，至少等 <code>container compose</code> 出 preview。</li>
+<li><strong>如果你的团队有非 macOS 同事</strong> —— 别切。<code>container</code> 只能跑在 Mac 上，跨平台一致性是零。这事跟 Apple Silicon 是「Apple-only 体验」的性质一样。</li>
+</ul>
+<p>我自己现在的工作流是：长期项目还是 OrbStack（文件系统性能太好，开发体验稳），新的、需要「真隔离」或者「跑个边界场景」的小项目用 <code>container</code>—— 比如本地跑一个 untrusted 二进制、或者测多租户隔离。它用起来让人安心，VM-per-container 这个架构本身比「共享内核」让人安心。</p>
+<h2 id="为什么这件事值得写"><a href="#为什么这件事值得写" class="headerlink" title="为什么这件事值得写"></a>为什么这件事值得写</h2><p>回到主题：GitHub Trending 上每天都有几十个项目冒出来，大部分是「又一个 XXX」或者「又一个 AI wrapper」。<code>apple/container</code> 不一样的地方在于 —— <strong>它是平台方下场重新做了一件大家都认为已经做完的事情</strong>。Docker 已经存在 13 年了，所有人都默认「容器等于共享内核」，Apple 现在告诉你这件事在 Mac 上可以重做。</p>
+<p>这件事让我有点感慨：macOS 虚拟化这两年进化太快了。Virtualization.framework 在 Apple Silicon 上从「勉强能用」变成「拿来做生产容器 runtime」也就三年时间。Apple 一直不直接做 DevTools，但当他们做了，通常是带着硬件优势来的 —— 这次的 Swift + Virtualization.framework + Apple Silicon，三件套叠在一起，Docker Desktop 真的该紧张了。</p>
+<p>今天先写到这。如果你装了发现什么我没遇到的问题，欢迎留言。下一篇准备聊聊 Hermes Agent 里那个 <code>delegate_task</code> 的真实体验 —— 这个东西我用了两周，越用越觉得它不像一个工具，更像是在「雇」一个独立工作的同事。</p>
+<hr>
+<p>参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/apple/container">apple/container GitHub repo</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/apple/containerization">Containerization Swift package</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.repoflow.io/blog/apple-containers-vs-docker-desktop-vs-orbstack">RepoFlow benchmark: Apple Container vs Docker Desktop vs OrbStack</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.edera.dev/technical-overview/concepts/vm-containers">Edera: VM-per-container explained</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/11/apple-container-swift-vm-per-container/" title="apple&#x2F;container：苹果亲自下场做容器，每个容器独占一台微型 VM">https://www.daishengli.top/2026/06/11/apple-container-swift-vm-per-container/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/apple-container/" rel="tag"># apple/container</a>
+              <a href="/tags/Apple-Silicon/" rel="tag"># Apple Silicon</a>
+              <a href="/tags/Swift/" rel="tag"># Swift</a>
+              <a href="/tags/%E5%AE%B9%E5%99%A8/" rel="tag"># 容器</a>
+              <a href="/tags/Docker-Desktop/" rel="tag"># Docker Desktop</a>
+              <a href="/tags/OrbStack/" rel="tag"># OrbStack</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/09/vibe-trading-ai-finance-research-agent/" rel="prev" title="Vibe-Trading：港大 HKUDS 那个 10k 星的「AI 投研实习生」，把回测这件事变成说人话">
+                  <i class="fa fa-angle-left"></i> Vibe-Trading：港大 HKUDS 那个 10k 星的「AI 投研实习生」，把回测这件事变成说人话
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/12/sia-self-improving-ai-framework/" rel="next" title="SIA：让 AI 自己改自己，70.1% 把 Claude Code 干到 17.3%">
+                  SIA：让 AI 自己改自己，70.1% 把 Claude Code 干到 17.3% <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

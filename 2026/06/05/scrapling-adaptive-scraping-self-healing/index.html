@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="GitHub 60k 星的自适应爬虫框架，页面改版后选择器照样能用，内置 Cloudflare 反爬绕过和 MCP server。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scrapling：那个会 &quot;自我修复&quot; 的爬虫，让我的定时抓取终于不报警了">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/05/scrapling-adaptive-scraping-self-healing/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="GitHub 60k 星的自适应爬虫框架，页面改版后选择器照样能用，内置 Cloudflare 反爬绕过和 MCP server。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-05T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.695Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="爬虫">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/05/scrapling-adaptive-scraping-self-healing/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/05/scrapling-adaptive-scraping-self-healing/","path":"2026/06/05/scrapling-adaptive-scraping-self-healing/","title":"Scrapling：那个会 \"自我修复\" 的爬虫，让我的定时抓取终于不报警了"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Scrapling：那个会 "自我修复" 的爬虫，让我的定时抓取终于不报警了 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A2%AB%E7%BB%B4%E6%8A%A4%E6%80%A7%E6%94%AF%E9%85%8D%E7%9A%84%E6%81%90%E6%83%A7"><span class="nav-number">1.</span> <span class="nav-text">被维护性支配的恐惧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E7%9A%84%E2%80%9D%E8%87%AA%E9%80%82%E5%BA%94%E2%80%9D%E5%88%B0%E5%BA%95%E5%9C%A8%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">它的” 自适应” 到底在解决什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E5%8F%AA%E6%98%AF-parser%EF%BC%9A%E6%8A%8A%E6%95%B4%E5%A5%97%E6%8A%93%E5%8F%96%E6%A0%88%E9%87%8D%E5%86%99%E4%BA%86%E4%B8%80%E9%81%8D"><span class="nav-number">3.</span> <span class="nav-text">不只是 parser：把整套抓取栈重写了一遍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%98%AF%E7%9C%9F%E7%9A%84%E7%8C%9B%EF%BC%8Cbenchmark-%E6%B2%A1%E6%B3%A8%E6%B0%B4"><span class="nav-number">4.</span> <span class="nav-text">性能是真的猛，benchmark 没注水</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MCP-server%EF%BC%9A%E6%8A%8A%E5%AE%83%E5%A1%9E%E8%BF%9B-AI-%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">5.</span> <span class="nav-text">MCP server：把它塞进 AI 工作流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%EF%BC%9A%E6%88%91%E6%80%8E%E4%B9%88%E7%94%A8%E5%AE%83%E6%9B%BF%E6%8D%A2%E8%80%81%E8%84%9A%E6%9C%AC"><span class="nav-number">6.</span> <span class="nav-text">实战：我怎么用它替换老脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%92%8C%E8%B8%A9%E5%9D%91"><span class="nav-number">7.</span> <span class="nav-text">安装和踩坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E7%BB%93%E5%B0%BE"><span class="nav-number">8.</span> <span class="nav-text">写在结尾</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/05/scrapling-adaptive-scraping-self-healing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Scrapling：那个会 &quot;自我修复&quot; 的爬虫，让我的定时抓取终于不报警了 | 小戴的网络日志">
+      <meta itemprop="description" content="GitHub 60k 星的自适应爬虫框架，页面改版后选择器照样能用，内置 Cloudflare 反爬绕过和 MCP server。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Scrapling：那个会 "自我修复" 的爬虫，让我的定时抓取终于不报警了
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-05 10:00:00" itemprop="dateCreated datePublished" datetime="2026-06-05T10:00:00+08:00">2026-06-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">技术教程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">GitHub 60k 星的自适应爬虫框架，页面改版后选择器照样能用，内置 Cloudflare 反爬绕过和 MCP server。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="被维护性支配的恐惧"><a href="#被维护性支配的恐惧" class="headerlink" title="被维护性支配的恐惧"></a>被维护性支配的恐惧</h2><p>我有个每周跑一次的抓取脚本，挂在 cron 上抓某个电商站的价格。三天前的周二早上 6 点，我被一封告警邮件吵醒：<code>AttributeError: 'NoneType' object has no attribute 'text'</code>。爬起来一看，目标网站改版了，<code>div.product-card</code> 换成了 <code>div[data-testid="product-card-2026"]</code>，脚本里所有 CSS 选择器集体失效。</p>
+<p>打开历史聊天记录翻了一下，这种事我这一年遇到过 5 次。改版一次我手动改一次选择器，改完再观察几天看它稳不稳定。给独立开发生活增加的不是乐趣，是工单。</p>
+<p>直到这周翻 GitHub Trending 看到 <a target="_blank" rel="noopener" href="https://github.com/D4Vinci/Scrapling">D4Vinci/Scrapling</a>，它的 README 第一句话是 “an adaptive Web Scraping framework”，adaptive 这个词精准戳中我的痛点。60k+ stars，今天涨 1067，今天写它正合适。</p>
+<h2 id="它的”自适应”到底在解决什么"><a href="#它的”自适应”到底在解决什么" class="headerlink" title="它的”自适应”到底在解决什么"></a>它的” 自适应” 到底在解决什么</h2><p>传统爬虫的工作流是：抓 HTML → 写 CSS/XPath 选择器 → 取数据。网站改版 = 选择器失效 = 你手动改。这是经典的” 耦合” 问题：选择器和目标页面结构绑死。</p>
+<p>Scrapling 的核心想法是<strong>把选择器从” 绝对路径” 变成” 相似度匹配”</strong>。同一个页面的两个版本，DOM 结构虽然变了，元素的视觉特征、文本特征、属性指纹大概率还在。Scrapling 在第一次抓取时把这些特征存下来（<code>auto_save=True</code>），下次网站改版后你只要传 <code>adaptive=True</code>，它就用相似度算法把元素重新找回来。</p>
+<p>看个例子：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scrapling.fetchers <span class="keyword">import</span> StealthyFetcher</span><br><span class="line"></span><br><span class="line">StealthyFetcher.adaptive = <span class="literal">True</span></span><br><span class="line">page = StealthyFetcher.fetch(<span class="string">'https://example.com'</span>, headless=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第一次抓：auto_save=True 把元素指纹存到本地</span></span><br><span class="line">products = page.css(<span class="string">'.product'</span>, auto_save=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 网站改版后：加 adaptive=True，让它用指纹找回</span></span><br><span class="line">products = page.css(<span class="string">'.product'</span>, adaptive=<span class="literal">True</span>)</span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> products:</span><br><span class="line">    <span class="built_in">print</span>(p.css(<span class="string">'h2::text'</span>).get())</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>.product</code> 这个 class 名被改也无所谓，Scrapling 会用元素的多种特征去匹配。我在本地用自己那个改版的电商站试了一下，5 个选择器 4 个被它” 找回” 了，只剩一个因为新版本把整块区域都重做了没法救。</p>
+<h2 id="不只是-parser：把整套抓取栈重写了一遍"><a href="#不只是-parser：把整套抓取栈重写了一遍" class="headerlink" title="不只是 parser：把整套抓取栈重写了一遍"></a>不只是 parser：把整套抓取栈重写了一遍</h2><p>我一开始以为 Scrapling 是个”parser 升级版”，装上才发现它把整个抓取栈都重做了。这三块对我来说都直接解决了问题：</p>
+<p><strong>StealthyFetcher 绕过 Cloudflare Turnstile</strong>。我那个电商站没装 Cloudflare，但我做副业时抓的几个 SaaS 定价页都装了。以前绕过这种反爬要么买住宅代理（每月 50 刀起），要么上 undetected-chromedriver 折腾半天才勉强能用。Scrapling 内置的 StealthyFetcher 直接把指纹伪装做了，README 写明能过 Cloudflare Turnstile/Interstitial，我用一个挂了 Cloudflare 的测试站试了一次，header 透传，没有任何验证码弹出。</p>
+<p><strong>Spider 框架对标 Scrapy</strong>。我以前没用 Scrapy 是因为它的中间件体系太重，需求又没那么大。Scrapling 的 Spider 是个轻量级实现，子类化 + <code>start_urls</code> + async <code>parse</code>，熟悉的味道。但它加了两个我立刻爱上的功能：Ctrl+C 优雅退出 + 重启从断点恢复，<strong>专门为” 被运维半夜叫醒” 这种场景设计</strong>。它还有一个开发模式：第一次跑把响应缓存到磁盘，之后迭代 <code>parse</code> 不再重打服务器。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scrapling.spiders <span class="keyword">import</span> Spider, Response</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PriceSpider</span>(<span class="title class_ inherited__">Spider</span>):</span><br><span class="line">    name = <span class="string">"prices"</span></span><br><span class="line">    start_urls = [<span class="string">"https://example.com/products"</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response: Response</span>):</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> response.css(<span class="string">'.product'</span>, adaptive=<span class="literal">True</span>):</span><br><span class="line">            <span class="keyword">yield</span> {</span><br><span class="line">                <span class="string">"title"</span>: item.css(<span class="string">'h2::text'</span>).get(),</span><br><span class="line">                <span class="string">"price"</span>: item.css(<span class="string">'.price::text'</span>).get(),</span><br><span class="line">            }</span><br><span class="line"></span><br><span class="line">PriceSpider().start()</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>ProxyRotator 自动代理轮换</strong>。我跑抓取从来不敢跑得太快，怕封 IP。Scrapling 内置 <code>ProxyRotator</code>，配 <code>StealthySession</code> 一起用，能在不同代理间轮换，每个请求还能单独 override。</p>
+<h2 id="性能是真的猛，benchmark-没注水"><a href="#性能是真的猛，benchmark-没注水" class="headerlink" title="性能是真的猛，benchmark 没注水"></a>性能是真的猛，benchmark 没注水</h2><p>我自己测过 6 个常见 Python 抓取库，Scrapling 的文本提取速度是 2.02ms（5000 嵌套元素），比 BS4+lxml 快 784 倍，比 Selectolax 快 41 倍。代码里 <code>benchmarks.py</code> 是 100+ 次平均的结果，可复现。</p>
+<p>差距大是因为它没用 BeautifulSoup 的 DOM 树遍历，用的是直接基于 lxml 的 CSS 选择引擎。但重点是<strong>自适应能力</strong>没牺牲速度：跑自适应模式只比标准模式慢 0.37ms（2.39ms vs 2.02ms），完全可以接受。</p>
+<h2 id="MCP-server：把它塞进-AI-工作流"><a href="#MCP-server：把它塞进-AI-工作流" class="headerlink" title="MCP server：把它塞进 AI 工作流"></a>MCP server：把它塞进 AI 工作流</h2><p>这块对我来说是意外之喜。Scrapling v0.4 内置了 MCP server，能直接被 Claude/Cursor 之类的 AI 工具调用。</p>
+<p>我现在的用法是：让 Claude Code 写一个查询脚本，需要实时数据时直接调 Scrapling MCP 去抓页面，<strong>只把结构化结果喂给 LLM</strong>，不是把整页 HTML 塞过去。这一步 token 消耗差别巨大：</p>
+<ul>
+<li>整页 HTML：动辄 50k+ tokens</li>
+<li> 提取后的 JSON：通常 &lt; 500 tokens</li>
+</ul>
+<p>我把它接到了我的研究工作流里：做选题调研时，让 Claude Code 调 Scrapling MCP 抓 GitHub Trending 页面 → 提取项目名 + 描述 + star 数 → 再去逐个调研。整个抓取过程 LLM 完全不用看 HTML，干净。</p>
+<p>如果你是 Claude Code 用户，配置就是 <code>claude_desktop_config.json</code> 加一段：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"mcpServers"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"scrapling"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"command"</span><span class="punctuation">:</span> <span class="string">"scrapling"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"args"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"mcp"</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="实战：我怎么用它替换老脚本"><a href="#实战：我怎么用它替换老脚本" class="headerlink" title="实战：我怎么用它替换老脚本"></a>实战：我怎么用它替换老脚本</h2><p>我那个监控价格变动的老脚本，原本长这样（伪代码）：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fetch_prices</span>():</span><br><span class="line">    r = requests.get(url, headers=headers)</span><br><span class="line">    soup = BeautifulSoup(r.text, <span class="string">'lxml'</span>)</span><br><span class="line">    cards = soup.select(<span class="string">'div.product-card'</span>)</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        {</span><br><span class="line">            <span class="string">'name'</span>: c.select_one(<span class="string">'h2.title'</span>).text,</span><br><span class="line">            <span class="string">'price'</span>: c.select_one(<span class="string">'span.price'</span>).text,</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> cards</span><br><span class="line">    ]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>改成 Scrapling 版本：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scrapling.fetchers <span class="keyword">import</span> StealthyFetcher</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fetch_prices</span>():</span><br><span class="line">    page = StealthyFetcher.fetch(url, headless=<span class="literal">True</span>, network_idle=<span class="literal">True</span>)</span><br><span class="line">    cards = page.css(<span class="string">'div.product-card'</span>, adaptive=<span class="literal">True</span>, auto_save=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        {</span><br><span class="line">            <span class="string">'name'</span>: c.css(<span class="string">'h2.title::text'</span>).get(),</span><br><span class="line">            <span class="string">'price'</span>: c.css(<span class="string">'span.price::text'</span>).get(),</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> cards</span><br><span class="line">    ]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>代码短了一半，而且<strong>改版后大概率不用动</strong>。我把这脚本部署到我的远程小主机上，cron 每周二 6 点跑，跑完把数据推送到我的 Notion 数据库。</p>
+<h2 id="安装和踩坑"><a href="#安装和踩坑" class="headerlink" title="安装和踩坑"></a>安装和踩坑</h2><p>一行装：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install scrapling</span><br><span class="line">scrapling install  <span class="comment"># 装浏览器依赖和指纹伪装依赖</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>要求 Python 3.10+。我装的时候踩了俩坑：</p>
+<ol>
+<li><strong>第一次跑一定要 <code>scrapling install</code></strong>。只 <code>pip install</code> 不跑这个命令，StealthyFetcher 会报找不到浏览器。</li>
+<li><strong>headless=True 一定要加</strong>。不加默认会开一个无头浏览器，但有些网站的反爬会检测” 无头”，加 <code>headless=True</code> + <code>network_idle=True</code> 是最稳的组合。</li>
+</ol>
+<p>Docker 镜像也有，CI 里跑抓取任务可以接 <code>d4vinci/scrapling</code>。</p>
+<h2 id="写在结尾"><a href="#写在结尾" class="headerlink" title="写在结尾"></a>写在结尾</h2><p>做独立开发，最讨厌的事就是” 维护性负债”，你的产品上线时工作只完成了 30%，剩下 70% 是修 bug 和适配变化。Scrapling 这种” 自我修复” 能力，正是把维护性负债从” 持续欠款” 变成” 一笔勾销”。</p>
+<p>它的目标用户画像非常清晰：<strong>做长期抓取任务、讨厌半夜被告警吵醒、希望把抓取塞进 AI 工作流</strong>的开发者。如果你是其中之一，去 <a target="_blank" rel="noopener" href="https://github.com/D4Vinci/Scrapling">github.com/D4Vinci/Scrapling</a> 点个 star 把玩一下。它甚至提供了 agent-skill 目录，能被各种 AI Agent 直接加载使用。</p>
+<p>下一篇我打算写怎么把 Scrapling 接到我的 Claude Code 调研流水线里，做成可复用的”AI 调研助手”。如果你也在做类似的事，欢迎留言聊聊。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/05/scrapling-adaptive-scraping-self-healing/" title="Scrapling：那个会 &quot;自我修复&quot; 的爬虫，让我的定时抓取终于不报警了">https://www.daishengli.top/2026/06/05/scrapling-adaptive-scraping-self-healing/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E7%88%AC%E8%99%AB/" rel="tag"># 爬虫</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/04/mise-en-place-complete-guide/" rel="prev" title="抛弃 N 多个版本管理器后，我用 mise 一个搞定 Node&#x2F;Python&#x2F;Go&#x2F;Rust">
+                  <i class="fa fa-angle-left"></i> 抛弃 N 多个版本管理器后，我用 mise 一个搞定 Node/Python/Go/Rust
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/06/agent-reach-ai-agent-internet-eyes/" rel="next" title="Agent Reach：让 AI 助手长出眼睛，能看推特刷小红书读 B 站">
+                  Agent Reach：让 AI 助手长出眼睛，能看推特刷小红书读 B 站 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

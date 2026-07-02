@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Superpowers 是 210k stars 的开源项目，为 Claude Code、Codex、Cursor 等 AI 编程工具提供完整开发流程——TDD、计划驱动、子 Agent 协作、质量门禁。用方法论替代随机性，让 AI 真正成为可靠的开发搭档。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Superpowers：给 AI 编程 Agent 的一套完整方法论">
+<meta property="og:url" content="https://www.daishengli.top/2026/05/28/superpowers-ai-agent-methodology/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="Superpowers 是 210k stars 的开源项目，为 Claude Code、Codex、Cursor 等 AI 编程工具提供完整开发流程——TDD、计划驱动、子 Agent 协作、质量门禁。用方法论替代随机性，让 AI 真正成为可靠的开发搭档。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-28T07:48:00.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.696Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="效率工具">
+<meta property="article:tag" content="开发流程">
+<meta property="article:tag" content="TDD">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/05/28/superpowers-ai-agent-methodology/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/05/28/superpowers-ai-agent-methodology/","path":"2026/05/28/superpowers-ai-agent-methodology/","title":"Superpowers：给 AI 编程 Agent 的一套完整方法论"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Superpowers：给 AI 编程 Agent 的一套完整方法论 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81210k-stars-%E8%AF%B4%E6%98%8E%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">一、210k stars 说明什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%97%AE%E9%A2%98%EF%BC%9AAI-%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%E7%9A%84%E5%A4%A9%E8%8A%B1%E6%9D%BF%E5%9C%A8%E5%93%AA%E9%87%8C"><span class="nav-number">2.</span> <span class="nav-text">二、问题：AI 编程工具的天花板在哪里</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E5%B7%A5%E4%BD%9C%E6%B5%81%EF%BC%9A%E4%B8%83%E6%AD%A5%E8%B5%B0"><span class="nav-number">3.</span> <span class="nav-text">三、核心工作流：七步走</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9ABrainstorming%EF%BC%88%E5%A4%B4%E8%84%91%E9%A3%8E%E6%9A%B4%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">第一步：Brainstorming（头脑风暴）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9AWriting-Plans%EF%BC%88%E5%86%99%E8%AE%A1%E5%88%92%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">第二步：Writing Plans（写计划）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9ASubagent-Driven-Development%EF%BC%88%E5%AD%90-Agent-%E9%A9%B1%E5%8A%A8%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">第三步：Subagent Driven Development（子 Agent 驱动）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9ATest-Driven-Development%EF%BC%88%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%EF%BC%89"><span class="nav-number">3.4.</span> <span class="nav-text">第四步：Test Driven Development（测试驱动）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E6%AD%A5%EF%BC%9ARequesting-Code-Review%EF%BC%88%E4%BB%A3%E7%A0%81%E5%AE%A1%E6%9F%A5%EF%BC%89"><span class="nav-number">3.5.</span> <span class="nav-text">第五步：Requesting Code Review（代码审查）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E6%AD%A5%EF%BC%9AFinishing-a-Development-Branch%EF%BC%88%E6%94%B6%E5%B0%BE%EF%BC%89"><span class="nav-number">3.6.</span> <span class="nav-text">第六步：Finishing a Development Branch（收尾）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Skills-%E4%BD%93%E7%B3%BB%EF%BC%9A%E8%83%BD%E5%8A%9B%E7%9A%84%E6%A8%A1%E5%9D%97%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">四、Skills 体系：能力的模块化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%96%B9%E6%B3%95%E8%AE%BA%E8%83%8C%E5%90%8E%E7%9A%84%E5%93%B2%E5%AD%A6"><span class="nav-number">5.</span> <span class="nav-text">五、方法论背后的哲学</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%8E%E4%B9%88%E5%AE%89%E8%A3%85"><span class="nav-number">6.</span> <span class="nav-text">六、怎么安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Claude-Code%EF%BC%88%E5%AE%98%E6%96%B9%E5%B8%82%E5%9C%BA%EF%BC%89"><span class="nav-number">6.1.</span> <span class="nav-text">Claude Code（官方市场）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cursor"><span class="nav-number">6.2.</span> <span class="nav-text">Cursor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Codex"><span class="nav-number">6.3.</span> <span class="nav-text">Codex</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gemini-CLI"><span class="nav-number">6.4.</span> <span class="nav-text">Gemini CLI</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B8%AA%E9%A1%B9%E7%9B%AE%E5%80%BC%E5%BE%97%E5%85%B3%E6%B3%A8"><span class="nav-number">7.</span> <span class="nav-text">七、为什么这个项目值得关注</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/05/28/superpowers-ai-agent-methodology/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Superpowers：给 AI 编程 Agent 的一套完整方法论 | 小戴的网络日志">
+      <meta itemprop="description" content="Superpowers 是 210k stars 的开源项目，为 Claude Code、Codex、Cursor 等 AI 编程工具提供完整开发流程——TDD、计划驱动、子 Agent 协作、质量门禁。用方法论替代随机性，让 AI 真正成为可靠的开发搭档。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Superpowers：给 AI 编程 Agent 的一套完整方法论
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-05-28 15:48:00" itemprop="dateCreated datePublished" datetime="2026-05-28T15:48:00+08:00">2026-05-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">技术教程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Superpowers 是 210k stars 的开源项目，为 Claude Code、Codex、Cursor 等 AI 编程工具提供完整开发流程——TDD、计划驱动、子 Agent 协作、质量门禁。用方法论替代随机性，让 AI 真正成为可靠的开发搭档。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="一、210k-stars-说明什么"><a href="#一、210k-stars-说明什么" class="headerlink" title="一、210k stars 说明什么"></a>一、210k stars 说明什么</h2><p>写这篇文章的时候，GitHub 上有一个项目：</p>
+<ul>
+<li><strong>210,000 颗星</strong></li>
+<li><strong> 18,700 个 Fork</strong></li>
+<li> 支持 Claude Code、Codex、Cursor、OpenCode、GitHub Copilot CLI、Gemini CLI 六大平台</li>
+<li> MIT 协议，完全开源</li>
+</ul>
+<p>这个项目叫 <strong>Superpowers</strong>，来自 <a target="_blank" rel="noopener" href="https://github.com/obra">obra</a>（Jesse Vincent，GitHub 上最活跃的贡献者之一）。</p>
+<p>它不是一套 Skills 集合，而是一套<strong>完整的软件开发方法论</strong>。目标很简单：让 AI 编程 Agent 不是在随机试错中帮你写代码，而是按照一套经过验证的流程，稳稳当当地完成开发任务。</p>
+<h2 id="二、问题：AI-编程工具的天花板在哪里"><a href="#二、问题：AI-编程工具的天花板在哪里" class="headerlink" title="二、问题：AI 编程工具的天花板在哪里"></a>二、问题：AI 编程工具的天花板在哪里</h2><p>用过 Claude Code、Cursor、Copilot 的同学应该有一个共同感受：</p>
+<p><strong>它们都很强，但不稳定。</strong></p>
+<p>有时候能帮你独立完成一个完整功能，有时候却在一个简单 bug 上绕了三小时。有时候输出的代码质量很高，有时候满屏 boilerplate。</p>
+<p>这种不稳定不是工具本身的问题，而是<strong>缺少流程约束</strong>。没有流程，AI 就只能靠概率工作 —— 碰巧对了就好，碰巧错了就崩。</p>
+<p>Superpowers 想解决的就是这个问题：<strong>用一套方法论，把 AI 的能力框在一个可靠的范围内。</strong></p>
+<h2 id="三、核心工作流：七步走"><a href="#三、核心工作流：七步走" class="headerlink" title="三、核心工作流：七步走"></a>三、核心工作流：七步走</h2><p>Superpowers 的工作流分七个阶段，每个阶段都有对应的 Skill：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brainstorming → writing-plans → subagent-driven-development →</span><br><span class="line">test-driven-development → requesting-code-review → finishing-a-development-branch</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="第一步：Brainstorming（头脑风暴）"><a href="#第一步：Brainstorming（头脑风暴）" class="headerlink" title="第一步：Brainstorming（头脑风暴）"></a>第一步：Brainstorming（头脑风暴）</h3><p>起点不是代码，而是理解问题。Agent 会通过一系列提问，把你要做的事拆解清楚，然后用小块的方式呈现给你确认 —— 每次只显示你能读完的分量，避免信息过载。</p>
+<p>这个设计很聪明：<strong>很多 AI 生成的代码问题，根源在于对需求的理解就有偏差</strong>。在动手之前先对齐目标，后续返工的概率就低很多。</p>
+<h3 id="第二步：Writing-Plans（写计划）"><a href="#第二步：Writing-Plans（写计划）" class="headerlink" title="第二步：Writing Plans（写计划）"></a>第二步：Writing Plans（写计划）</h3><p>计划是 Superpowers 的核心。每个任务被拆成 2-5 分钟的小块，每块都有精确的文件路径和验证步骤。</p>
+<p>不是” 实现登录功能” 这种模糊描述，而是：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 修改 src/auth/login.js，在第 23 行加 validateEmail 函数</span><br><span class="line">2. 跑 npm test，确认 auth.test.js 全绿</span><br><span class="line">3. 验证 /login 路由返回 200</span><br></pre></td></tr></tbody></table></figure>
+
+<p>有路径、有验证步骤、有预期结果。Agent 按这个计划执行，不会跑偏。</p>
+<h3 id="第三步：Subagent-Driven-Development（子-Agent-驱动）"><a href="#第三步：Subagent-Driven-Development（子-Agent-驱动）" class="headerlink" title="第三步：Subagent Driven Development（子 Agent 驱动）"></a>第三步：Subagent Driven Development（子 Agent 驱动）</h3><p>复杂任务被分解后，每个子任务分配给独立的子 Agent 处理。子 Agent 有自己的会话和终端上下文，互不干扰，主 Agent 最后汇总结果。</p>
+<p>这解决了什么问题？主 Agent 上下文有限，不可能同时追踪太多任务。用子 Agent 并行处理，效率高，而且每个子任务的 context 都是干净的。</p>
+<h3 id="第四步：Test-Driven-Development（测试驱动）"><a href="#第四步：Test-Driven-Development（测试驱动）" class="headerlink" title="第四步：Test Driven Development（测试驱动）"></a>第四步：Test Driven Development（测试驱动）</h3><p>Superpowers 的 TDD 不是说说而已。它强制要求 <strong>RED-GREEN-REFACTOR</strong> 循环：</p>
+<ul>
+<li>RED：先写一个失败的测试</li>
+<li> GREEN：写最少数量的代码让测试通过</li>
+<li> REFACTOR：重构，去掉重复</li>
+</ul>
+<p>这个 Skill 里还附带了一个 <strong>anti-patterns 参考</strong>，列出 TDD 实践中容易犯的错误。</p>
+<h3 id="第五步：Requesting-Code-Review（代码审查）"><a href="#第五步：Requesting-Code-Review（代码审查）" class="headerlink" title="第五步：Requesting Code Review（代码审查）"></a>第五步：Requesting Code Review（代码审查）</h3><p>代码写完了，不是直接合并，而是先过一遍审查。审查对照原始计划，检查是否所有功能都已实现，关键问题是否都已解决。</p>
+<p>Superpowers 的审查规则很严格：<strong>PR 必须有人类参与才能合并</strong>。纯 AI 生成的 PR，如果没有人类审核，直接关闭。</p>
+<h3 id="第六步：Finishing-a-Development-Branch（收尾）"><a href="#第六步：Finishing-a-Development-Branch（收尾）" class="headerlink" title="第六步：Finishing a Development Branch（收尾）"></a>第六步：Finishing a Development Branch（收尾）</h3><p>测试全绿、审查通过之后，才是合并。有 merge、rebase、squash 三种合并方式可选，每种都有明确的适用场景说明。</p>
+<h2 id="四、Skills-体系：能力的模块化"><a href="#四、Skills-体系：能力的模块化" class="headerlink" title="四、Skills 体系：能力的模块化"></a>四、Skills 体系：能力的模块化</h2><p>Superpowers 把开发能力拆成多个 Skill，不是为了炫技，而是让每个 Skill 都可以独立演进：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th> Skills</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 测试</td>
+<td><code>test-driven-development</code></td>
+</tr>
+<tr>
+<td>调试</td>
+<td><code>systematic-debugging</code>、<code>verification-before-completion</code></td>
+</tr>
+<tr>
+<td>协作</td>
+<td><code>brainstorming</code>、<code>writing-plans</code>、<code>requesting-code-review</code>、<code>subagent-driven-development</code></td>
+</tr>
+<tr>
+<td>元</td>
+<td><code>writing-skills</code>、<code>using-superpowers</code></td>
+</tr>
+</tbody></table>
+<p>任何一个 Skill 都可以单独更新、单独 PR，不需要改动整个项目。</p>
+<p>社区维护了一个独立仓库 <a target="_blank" rel="noopener" href="https://github.com/obra/superpowers-skills">obra/superpowers-skills</a>，任何人都可以 Fork 提交新的 Skill 或改进现有 Skill。</p>
+<h2 id="五、方法论背后的哲学"><a href="#五、方法论背后的哲学" class="headerlink" title="五、方法论背后的哲学"></a>五、方法论背后的哲学</h2><p>Superpowers 之所以有效，是因为它坚持了几个核心原则：</p>
+<p><strong>TDD 优先</strong><br>测试先行不是教条，而是减少返工的最有效手段。没有测试的代码，AI 写出来的质量完全靠概率。强制测试通过之后才进入下一步，质量稳定性大大提高。</p>
+<p><strong>YAGNI（You Aren’t Gonna Need It）</strong><br>不做过度设计。AI 倾向于” 功能全上”，写出来的代码经常 over-engineered。YAGNI 原则让 AI 只做当前需求的东西，不做未来可能需要的预留。</p>
+<p><strong>DRY（Don’t Repeat Yourself）</strong><br>重复是维护的噩梦。Superpowers 在执行过程中会检查重复代码，让 Agent 保持代码库的简洁。</p>
+<p><strong>Evidence over claims</strong><br>不要在没有验证的情况下宣布成功。测试全绿才能合并，验证通过才能进入下一阶段。所有的” 完成” 都要有可衡量的标准。</p>
+<h2 id="六、怎么安装"><a href="#六、怎么安装" class="headerlink" title="六、怎么安装"></a>六、怎么安装</h2><p>支持六大平台：</p>
+<h3 id="Claude-Code（官方市场）"><a href="#Claude-Code（官方市场）" class="headerlink" title="Claude Code（官方市场）"></a>Claude Code（官方市场）</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/plugin install superpowers@claude-plugins-official</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Cursor"><a href="#Cursor" class="headerlink" title="Cursor"></a>Cursor</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/add-plugin superpowers</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Codex"><a href="#Codex" class="headerlink" title="Codex"></a>Codex</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.codex/INSTALL.md</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Gemini-CLI"><a href="#Gemini-CLI" class="headerlink" title="Gemini CLI"></a>Gemini CLI</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gemini extensions install https://github.com/obra/superpowers</span><br></pre></td></tr></tbody></table></figure>
+
+<p>装完之后开启新会话，问它” 帮我计划这个功能”，Superpowers 会自动调用相关 Skills。</p>
+<h2 id="七、为什么这个项目值得关注"><a href="#七、为什么这个项目值得关注" class="headerlink" title="七、为什么这个项目值得关注"></a>七、为什么这个项目值得关注</h2><p>210k stars 不是刷出来的。Superpowers 解决的是一个真实问题：<strong>AI 编程工具很强，但缺少可靠的工作流程约束，导致输出质量不稳定。</strong></p>
+<p>它不是给 AI 赋能更多能力，而是给 AI 一个<strong>可靠的做事框架</strong>。有了框架，AI 的能力才能稳定发挥。</p>
+<p>对于用 AI 编程工具的同学，这套方法论值得花时间学一下。学的是怎么跟 AI 协作，而不是怎么让 AI 帮你写代码。</p>
+<p><strong>GitHub</strong>：<a target="_blank" rel="noopener" href="https://github.com/obra/superpowers">https://github.com/obra/superpowers</a><br><strong>作者</strong>：Jesse Vincent (<a target="_blank" rel="noopener" href="https://github.com/obra">@obra</a>)<br><strong>Discord</strong>：<a target="_blank" rel="noopener" href="https://discord.gg/35wsABTejz">https://discord.gg/35wsABTejz</a></p>
+<hr>
+<p><em>相关博客：<a href="/2026/05/27/hermes-agent-intro/">Hermes Agent 实战</a></em><br><em><a href="/2026/05/27/stop-slop-ai-writing/">去除 AI 腔调：stop-slop</a></em></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/05/28/superpowers-ai-agent-methodology/" title="Superpowers：给 AI 编程 Agent 的一套完整方法论">https://www.daishengli.top/2026/05/28/superpowers-ai-agent-methodology/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" rel="tag"># 效率工具</a>
+              <a href="/tags/%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" rel="tag"># 开发流程</a>
+              <a href="/tags/TDD/" rel="tag"># TDD</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/05/28/ccglass-ai-agent-api-monitoring/" rel="prev" title="ccglass：让 AI 编程 agent 的 API 消耗一目了然">
+                  <i class="fa fa-angle-left"></i> ccglass：让 AI 编程 agent 的 API 消耗一目了然
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/05/28/java-design-patterns/" rel="next" title="Java 工程师必会的设计模式：从策略模式到模板方法">
+                  Java 工程师必会的设计模式：从策略模式到模板方法 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

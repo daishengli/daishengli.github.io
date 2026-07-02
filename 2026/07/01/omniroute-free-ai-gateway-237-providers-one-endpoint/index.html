@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="8.5k Star 的 OmniRoute 把 237 个 AI 提供商（50+ 免费）接到同一个 OpenAI 兼容端点，用四层 fallback + RTK&#x2F;Caveman 压缩让 Claude Code、Cursor、Codex 永远不断流。开源、MIT、Node.js 一键启动。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OmniRoute：让 Claude Code &#x2F; Cursor &#x2F; Codex 共享一个 AI 网关，再也不怕 rate limit">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/01/omniroute-free-ai-gateway-237-providers-one-endpoint/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="8.5k Star 的 OmniRoute 把 237 个 AI 提供商（50+ 免费）接到同一个 OpenAI 兼容端点，用四层 fallback + RTK&#x2F;Caveman 压缩让 Claude Code、Cursor、Codex 永远不断流。开源、MIT、Node.js 一键启动。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-01T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.694Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="效率工具">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="API 网关">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/01/omniroute-free-ai-gateway-237-providers-one-endpoint/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/01/omniroute-free-ai-gateway-237-providers-one-endpoint/","path":"2026/07/01/omniroute-free-ai-gateway-237-providers-one-endpoint/","title":"OmniRoute：让 Claude Code / Cursor / Codex 共享一个 AI 网关，再也不怕 rate limit"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>OmniRoute：让 Claude Code / Cursor / Codex 共享一个 AI 网关，再也不怕 rate limit | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88-8-5k-Star-%E7%9A%84%E9%A1%B9%E7%9B%AE%E5%80%BC%E5%BE%97%E8%AE%A4%E7%9C%9F%E7%9C%8B"><span class="nav-number">1.</span> <span class="nav-text">一、为什么 8.5k Star 的项目值得认真看</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9AAI-%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%E7%9A%84%E2%80%9D%E9%85%8D%E9%A2%9D%E5%BA%A6%E5%81%87%E2%80%9D"><span class="nav-number">2.</span> <span class="nav-text">二、项目背景：AI 编程工具的” 配额度假”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">三、核心功能详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%80%E7%AB%AF%E7%82%B9-237-%E6%8F%90%E4%BE%9B%E5%95%86-OpenAI-%E5%85%BC%E5%AE%B9"><span class="nav-number">3.1.</span> <span class="nav-text">1. 一端点 + 237 提供商 + OpenAI 兼容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Combo%EF%BC%9A%E5%9B%9B%E5%B1%82%E8%87%AA%E5%8A%A8-fallback"><span class="nav-number">3.2.</span> <span class="nav-text">2. Combo：四层自动 fallback</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%B8%89%E5%B1%82%E7%8B%AC%E7%AB%8B-resilience"><span class="nav-number">3.3.</span> <span class="nav-text">3. 三层独立 resilience</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-RTK-Caveman-token-%E5%8E%8B%E7%BC%A9%EF%BC%8815%E2%80%9395-%E7%9C%81-token%EF%BC%89"><span class="nav-number">3.4.</span> <span class="nav-text">4. RTK + Caveman token 压缩（15–95% 省 token）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-50-%E5%85%8D%E8%B4%B9-Provider%EF%BC%8C%E7%BA%A6-1-6B-%E5%85%8D%E8%B4%B9-token-%E6%9C%88"><span class="nav-number">3.5.</span> <span class="nav-text">5. 50+ 免费 Provider，约 1.6B 免费 token &#x2F; 月</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%AE%8C%E6%95%B4%E7%94%9F%E6%80%81%EF%BC%9AMCP-A2A-Guardrails-Electron"><span class="nav-number">3.6.</span> <span class="nav-text">6. 完整生态：MCP &#x2F; A2A &#x2F; Guardrails &#x2F; Electron</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A5-%E5%88%86%E9%92%9F%E8%B7%91%E8%B5%B7%E6%9D%A5"><span class="nav-number">4.</span> <span class="nav-text">四、实战示例：5 分钟跑起来</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85"><span class="nav-number">4.1.</span> <span class="nav-text">1. 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%85%8D-Claude-Code"><span class="nav-number">4.2.</span> <span class="nav-text">2. 配 Claude Code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%85%8D-Cursor"><span class="nav-number">4.3.</span> <span class="nav-text">3. 配 Cursor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%9C%A8-Dashboard-%E9%85%8D%E4%B8%80%E4%B8%AA-Combo"><span class="nav-number">4.4.</span> <span class="nav-text">4. 在 Dashboard 配一个 Combo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E7%9B%91%E6%8E%A7"><span class="nav-number">4.5.</span> <span class="nav-text">5. 监控</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">五、适用场景和限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88%E8%B0%81%E7%94%A8"><span class="nav-number">5.1.</span> <span class="nav-text">适合谁用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">5.2.</span> <span class="nav-text">不适合谁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%B2%E7%9F%A5%E9%99%90%E5%88%B6"><span class="nav-number">5.3.</span> <span class="nav-text">已知限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E8%B7%9F%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E5%AF%B9%E6%AF%94"><span class="nav-number">6.</span> <span class="nav-text">六、跟同类项目对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">七、总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/01/omniroute-free-ai-gateway-237-providers-one-endpoint/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="OmniRoute：让 Claude Code &#x2F; Cursor &#x2F; Codex 共享一个 AI 网关，再也不怕 rate limit | 小戴的网络日志">
+      <meta itemprop="description" content="8.5k Star 的 OmniRoute 把 237 个 AI 提供商（50+ 免费）接到同一个 OpenAI 兼容端点，用四层 fallback + RTK&#x2F;Caveman 压缩让 Claude Code、Cursor、Codex 永远不断流。开源、MIT、Node.js 一键启动。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OmniRoute：让 Claude Code / Cursor / Codex 共享一个 AI 网关，再也不怕 rate limit
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-01 10:00:00" itemprop="dateCreated datePublished" datetime="2026-07-01T10:00:00+08:00">2026-07-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">技术教程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">8.5k Star 的 OmniRoute 把 237 个 AI 提供商（50+ 免费）接到同一个 OpenAI 兼容端点，用四层 fallback + RTK/Caveman 压缩让 Claude Code、Cursor、Codex 永远不断流。开源、MIT、Node.js 一键启动。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="一、为什么-8-5k-Star-的项目值得认真看"><a href="#一、为什么-8-5k-Star-的项目值得认真看" class="headerlink" title="一、为什么 8.5k Star 的项目值得认真看"></a>一、为什么 8.5k Star 的项目值得认真看</h2><p>如果你跟我一样，每天在 Claude Code、Cursor、Codex 之间来回切，迟早会遇到这种场面：</p>
+<blockquote>
+<p>“下午三点，关键重构写到一半，Anthropic 给我返回 429 rate limit。我切到 GPT，结果 Codex 又 quota 用完。再切 Gemini，关键上下文又丢了。”</p>
+</blockquote>
+<p>或者更糟 —— 你在用一个 50 美元 / 月的订阅，但每天只用掉 30% 的额度，剩下的 token 像水一样流走。</p>
+<p>GitHub Trending 上最近冒出来一个项目，<strong>OmniRoute</strong>（<a target="_blank" rel="noopener" href="https://github.com/diegosouzapw/OmniRoute">diegosouzapw/OmniRoute</a>），做的事很直接：把 237 个 AI 提供商、500 多个模型，统一接进一个 OpenAI 兼容的端点，再给这个端点加上四层自动 fallback、token 压缩、配额追踪、CI/CD 集成。它 6 月 30 号登顶过 GitHub Trending #1，目前 8.5k Star、4,532 个 commit、14,965 个测试。</p>
+<p>一句话总结：<strong>“Never stop coding”—— 让所有 AI 编程工具共享一个永远在线、永远便宜的网关</strong>。</p>
+<hr>
+<h2 id="二、项目背景：AI-编程工具的”配额度假”"><a href="#二、项目背景：AI-编程工具的”配额度假”" class="headerlink" title="二、项目背景：AI 编程工具的”配额度假”"></a>二、项目背景：AI 编程工具的” 配额度假”</h2><p>过去一年，AI 编程工具从单一选择（Copilot）变成了生态割据：</p>
+<ul>
+<li><strong>Claude Code</strong> / <strong>Codex</strong> / <strong>Cursor</strong> / <strong>Cline</strong> / <strong>Copilot</strong> / <strong>Antigravity</strong>…… 每个工具都想要” 自己” 的 API 账号</li>
+<li>每家订阅 20–50 美元 / 月，<strong>大多数人的订阅额度用不到 30%</strong></li>
+<li>Rate limit、quota 耗尽、地区封锁，<strong>任何一个都可能让 workflow 突然中断</strong></li>
+<li>不同模型有不同价格、不同上下文窗口，<strong>手动切换心智成本极高</strong></li>
+</ul>
+<p>OmniRoute 的解法是做一层”AI 网关”（Gateway）—— 所有工具都指向 <code>http://localhost:20128/v1</code>，OmniRoute 在背后做：</p>
+<ol>
+<li><strong>统一协议</strong>：OpenAI 兼容 API，所有工具零改造接入</li>
+<li><strong>多账号聚合</strong>：Claude Code、Codex、Copilot 的 OAuth 都接进来</li>
+<li><strong>四层 fallback</strong>：Subscription → API Key → Cheap → Free，毫秒级切换</li>
+<li><strong> Token 压缩</strong>：RTK + Caveman 双重压缩，省 15–95% token</li>
+<li><strong> 可视化 Dashboard</strong>：实时看每个 provider 的 quota、cost、health</li>
+</ol>
+<p>这种”API Gateway” 思路在传统后端很常见（Kong、Apigee、Tyk），但专门为 AI Coding 工具做一层开源的、自带 fallback 和压缩的网关，OmniRoute 算是把” 个人开发者的痛点” 产品化的典型。</p>
+<hr>
+<h2 id="三、核心功能详解"><a href="#三、核心功能详解" class="headerlink" title="三、核心功能详解"></a>三、核心功能详解</h2><h3 id="1-一端点-237-提供商-OpenAI-兼容"><a href="#1-一端点-237-提供商-OpenAI-兼容" class="headerlink" title="1. 一端点 + 237 提供商 + OpenAI 兼容"></a>1. 一端点 + 237 提供商 + OpenAI 兼容</h3><p>安装之后，OmniRoute 默认监听 <code>20128</code> 端口。所有 AI 工具只需要改两个配置：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">API Base URL: http://localhost:20128/v1</span><br><span class="line">API Key:      &lt;dashboard 生成的 key&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>不管你用的是 Claude Code、Cursor、Cline、Codex 还是 Copilot，接入后看到的是同一个 OpenAI 兼容接口。背后可以是 Anthropic、OpenAI、Gemini、DeepSeek、Qwen、GLM、Kiro、Pollinations…… <strong>写一次配置，237 家随便切</strong>。</p>
+<h3 id="2-Combo：四层自动-fallback"><a href="#2-Combo：四层自动-fallback" class="headerlink" title="2. Combo：四层自动 fallback"></a>2. Combo：四层自动 fallback</h3><p>OmniRoute 最有杀伤力的特性叫 <strong>Combo</strong>—— 一个模型链，定义优先级，OmniRoute 自动按顺序选。</p>
+<p>预置的几个开箱即用别名：</p>
+<table>
+<thead>
+<tr>
+<th>别名</th>
+<th>优化目标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>auto</code></td>
+<td>平衡默认（LKGP：粘住上次的好 provider）</td>
+</tr>
+<tr>
+<td><code>auto/coding</code></td>
+<td>编程质量优先</td>
+</tr>
+<tr>
+<td><code>auto/fast</code></td>
+<td>延迟最低</td>
+</tr>
+<tr>
+<td><code>auto/cheap</code></td>
+<td>最便宜</td>
+</tr>
+<tr>
+<td><code>auto/offline</code></td>
+<td>配额余量最大</td>
+</tr>
+<tr>
+<td><code>auto/smart</code></td>
+<td>质量优先 + 10% 探索</td>
+</tr>
+</tbody></table>
+<p>如果自己定义，可以这样写：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Combo: "always-on"   Strategy: priority</span><br><span class="line">1. cc/claude-opus-4-7   ← subscription (用完为止)</span><br><span class="line">2. cx/gpt-5.5           ← 第二个订阅</span><br><span class="line">3. glm/glm-5.1          ← 廉价兜底 ($0.5/1M)</span><br><span class="line">4. kr/claude-sonnet-4.5 ← FREE, unlimited</span><br><span class="line">Result: 4 层 fallback = 零中断</span><br></pre></td></tr></tbody></table></figure>
+
+<p>加上 <strong>17 种 routing strategies</strong>（priority、fill-first、round-robin、weighted、p2c、least-used、cost-optimized、context-relay、context-optimized、random、strict-random、fusion、reset-window、headroom、lkgp、reset-aware、9-factor scoring），基本上能想到的调度策略都覆盖了。</p>
+<h3 id="3-三层独立-resilience"><a href="#3-三层独立-resilience" class="headerlink" title="3. 三层独立 resilience"></a>3. 三层独立 resilience</h3><p>OmniRoute 把” 不断流” 做成了三个独立层：</p>
+<ul>
+<li><strong>🔌 Circuit breaker（整 provider）</strong>：检测到 provider 整体故障，停止打压，自动探测恢复</li>
+<li><strong>💤 Connection cooldown（单账号）</strong>：某个 key 被限流，单独跳过，其他 key 继续服务</li>
+<li><strong>🎯 Model lockout（单 provider + model）</strong>：某个模型 quota 用完，只隔离这一个模型，不影响其他模型</li>
+</ul>
+<p>换句话说，<strong>任何一个环节出问题，都不会让整个 workflow 趴下</strong>。</p>
+<h3 id="4-RTK-Caveman-token-压缩（15–95-省-token）"><a href="#4-RTK-Caveman-token-压缩（15–95-省-token）" class="headerlink" title="4. RTK + Caveman token 压缩（15–95% 省 token）"></a>4. RTK + Caveman token 压缩（15–95% 省 token）</h3><p>这个是 OmniRoute 跟其他 gateway 最大的差异化能力。它内置了两层压缩：</p>
+<ul>
+<li><strong>RTK (Request Token Kompressor)</strong>：把 tool 输出、错误堆栈、长日志里的冗余字符砍掉</li>
+<li><strong> Caveman</strong>：把工具输出转成更紧凑的表示</li>
+</ul>
+<p>官方数据是 15–95% 的 token 节省。具体取决于你的工具输出类型（读文件、跑命令、查数据库这类场景压缩最猛）。</p>
+<p>省钱的同时也省 quota—— <strong>对一个 50 美元 / 月的订阅来说，等于把上限拉到了 100–200 美元 / 月</strong>。</p>
+<h3 id="5-50-免费-Provider，约-1-6B-免费-token-月"><a href="#5-50-免费-Provider，约-1-6B-免费-token-月" class="headerlink" title="5. 50+ 免费 Provider，约 1.6B 免费 token/月"></a>5. 50+ 免费 Provider，约 1.6B 免费 token / 月</h3><p>OmniRoute 最有诚意的部分是它<strong>真的能用免费模型</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th> 前缀</th>
+<th>免费模型</th>
+<th>额度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> Kiro</strong></td>
+<td><code>kr/</code></td>
+<td>Claude Sonnet 4.5 / Haiku 4.5 / Opus 4.6</td>
+<td>50 credits / 月</td>
+</tr>
+<tr>
+<td><strong> Qoder</strong></td>
+<td><code>if/</code></td>
+<td>kimi-k2-thinking / qwen3-coder-plus / deepseek-r1</td>
+<td><strong> 无限</strong></td>
+</tr>
+<tr>
+<td><strong> Qwen</strong></td>
+<td><code>qw/</code></td>
+<td>qwen3-coder-plus / flash / next</td>
+<td><strong> 无限</strong></td>
+</tr>
+<tr>
+<td><strong> Pollinations</strong></td>
+<td><code>pol/</code></td>
+<td>GPT-5 / Claude / Gemini / DeepSeek / Llama 4</td>
+<td> 无需 key</td>
+</tr>
+<tr>
+<td><strong>LongCat</strong></td>
+<td><code>lc/</code></td>
+<td>LongCat-Flash-Lite</td>
+<td>50M tokens / 天</td>
+</tr>
+<tr>
+<td><strong> Cloudflare AI</strong></td>
+<td><code>cf/</code></td>
+<td>50+ 模型</td>
+<td> 10K neurons / 天</td>
+</tr>
+</tbody></table>
+<p>官方 Pro Tip：<strong>“Gemini CLI (180K 免费 / 月) + Qoder (无限免费) combo = $0 成本”</strong>。</p>
+<p>也就是说，理论上你可以做到<strong>不花一分钱</strong>，跑 Claude Code / Cursor / Codex 这些付费工具。</p>
+<h3 id="6-完整生态：MCP-A2A-Guardrails-Electron"><a href="#6-完整生态：MCP-A2A-Guardrails-Electron" class="headerlink" title="6. 完整生态：MCP / A2A / Guardrails / Electron"></a>6. 完整生态：MCP / A2A / Guardrails / Electron</h3><p>OmniRoute 不只是转发，它还把 AI 编程工作流所需要的周边都做了：</p>
+<ul>
+<li><strong>87 个 MCP 工具</strong>（3 种 transport，30 个 scope）</li>
+<li><strong>6 个 A2A skill</strong>（JSON-RPC 2.0）</li>
+<li><strong>Guardrails</strong>：内容过滤、限速、成本上限</li>
+<li><strong> Electron Desktop App</strong> + <strong>PWA</strong>：本地开箱即用</li>
+<li><strong> 42 种 i18n locale</strong>：包含中文</li>
+<li><strong> 270 个 release</strong>：迭代速度非常快</li>
+</ul>
+<hr>
+<h2 id="四、实战示例：5-分钟跑起来"><a href="#四、实战示例：5-分钟跑起来" class="headerlink" title="四、实战示例：5 分钟跑起来"></a>四、实战示例：5 分钟跑起来</h2><h3 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 需要 Node 22 / 24</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/diegosouzapw/OmniRoute.git</span><br><span class="line"><span class="built_in">cd</span> OmniRoute</span><br><span class="line">npm install</span><br><span class="line">npm start</span><br><span class="line"><span class="comment"># 启动后访问 http://localhost:20128/dashboard</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="2-配-Claude-Code"><a href="#2-配-Claude-Code" class="headerlink" title="2. 配 Claude Code"></a>2. 配 Claude Code</h3><p>把 <code>~/.claude.json</code> 改成：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"env"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"ANTHROPIC_BASE_URL"</span><span class="punctuation">:</span> <span class="string">"http://localhost:20128/v1"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"ANTHROPIC_AUTH_TOKEN"</span><span class="punctuation">:</span> <span class="string">"&lt;dashboard 生成的 key&gt;"</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>或者用环境变量：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> ANTHROPIC_BASE_URL=http://localhost:20128/v1</span><br><span class="line"><span class="built_in">export</span> ANTHROPIC_AUTH_TOKEN=&lt;your-key&gt;</span><br><span class="line">claude</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="3-配-Cursor"><a href="#3-配-Cursor" class="headerlink" title="3. 配 Cursor"></a>3. 配 Cursor</h3><p>Settings → Models → Advanced：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OpenAI API Base URL: http://localhost:20128/v1</span><br><span class="line">OpenAI API Key:      &lt;your-key&gt;</span><br><span class="line">Model:               auto/coding</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-在-Dashboard-配一个-Combo"><a href="#4-在-Dashboard-配一个-Combo" class="headerlink" title="4. 在 Dashboard 配一个 Combo"></a>4. 在 Dashboard 配一个 Combo</h3><p>进入 <code>/dashboard/combos</code>，新建：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Name: "always-on"</span><br><span class="line">Strategy: priority</span><br><span class="line">Models:</span><br><span class="line">  1. cc/claude-opus-4-7     (subscription, 用光为止)</span><br><span class="line">  2. cx/gpt-5.5             (第二订阅)</span><br><span class="line">  3. glm/glm-5.1            (廉价兜底)</span><br><span class="line">  4. kr/claude-sonnet-4.5   (免费, 永不断)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>保存后，Claude Code / Cursor 里只要把 model 写成 <code>always-on</code>，OmniRoute 就会按这个顺序自动选。</p>
+<h3 id="5-监控"><a href="#5-监控" class="headerlink" title="5. 监控"></a>5. 监控</h3><p>Dashboard 实时显示：</p>
+<ul>
+<li>每个 provider 的健康度、quota 余量、cost</li>
+<li> 每个模型的调用次数、token 消耗、压缩比</li>
+<li>失败回退触发次数</li>
+</ul>
+<p><strong>一个 dashboard 看完所有 AI 工具的运行状态</strong>，这个对重度用户特别爽。</p>
+<hr>
+<h2 id="五、适用场景和限制"><a href="#五、适用场景和限制" class="headerlink" title="五、适用场景和限制"></a>五、适用场景和限制</h2><h3 id="适合谁用"><a href="#适合谁用" class="headerlink" title="适合谁用"></a>适合谁用</h3><ul>
+<li>✅ <strong>重度 AI 编程用户</strong>：每天用 Claude Code / Cursor / Codex 4 小时以上，订阅额度经常不够用</li>
+<li>✅ <strong>多订阅用户</strong>：同时买了 Claude Code + Codex + Copilot，想统一调度</li>
+<li>✅ <strong>想省钱 / 跑免费模型</strong>：愿意花时间配 Qoder / Pollinations / Qwen，享受 $0 编程</li>
+<li>✅ <strong>团队 / 小公司</strong>：想统一管理 API key、配额、成本，搭一个内部 AI 网关</li>
+<li>✅ <strong>AI 网关研究者 / DevOps 工程师</strong>：想了解 AI Gateway 的工程实现</li>
+</ul>
+<h3 id="不适合谁"><a href="#不适合谁" class="headerlink" title="不适合谁"></a>不适合谁</h3><ul>
+<li>❌ <strong>只用一种 AI 工具 + 订阅够用</strong>：没有 fallback 痛点，装了也用不到核心能力</li>
+<li>❌ <strong>对延迟极敏感</strong>（如高频交易、毫秒级响应）：多一层 proxy 会有 5–50ms 延迟</li>
+<li>❌ <strong>企业级 SSO / 合规要求</strong>：开源版没有 SSO，企业功能要付费（app.strix.ai 这种平台版本）</li>
+<li>❌ <strong>完全不想折腾</strong>：dashboard 配 Combo、provider、key 对纯用户来说不算轻松</li>
+<li>❌ <strong>担心数据出境</strong>：免费 provider 多数用海外 API，敏感业务要谨慎</li>
+</ul>
+<h3 id="已知限制"><a href="#已知限制" class="headerlink" title="已知限制"></a>已知限制</h3><ul>
+<li>需要 <strong>Node.js 22 或 24</strong>（&lt;23 或 24–26），其他版本装不上</li>
+<li><strong>免费 provider 的稳定性参差不齐</strong>：Qoder / Pollinations 偶尔会抽风</li>
+<li><strong>跨 provider 上下文接力</strong>（context-relay）还在演进，不一定每个模型组合都好用</li>
+<li><strong>官方推荐模型</strong>：openai/gpt-5.4、anthropic/claude-sonnet-4-6、vertex_ai/gemini-3-pro-preview 效果最好</li>
+</ul>
+<hr>
+<h2 id="六、跟同类项目对比"><a href="#六、跟同类项目对比" class="headerlink" title="六、跟同类项目对比"></a>六、跟同类项目对比</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>定位</th>
+<th> OmniRoute 优势</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> OpenRouter</strong></td>
+<td> 商业 AI Router</td>
+<td>OmniRoute 开源 + 本地化 + 自带 dashboard</td>
+</tr>
+<tr>
+<td><strong>LiteLLM</strong></td>
+<td>Python 库，统一调用</td>
+<td> OmniRoute 是网关服务，不绑定语言，UI 更友好</td>
+</tr>
+<tr>
+<td><strong> Portkey</strong></td>
+<td> 企业 AI Gateway</td>
+<td>OmniRoute 免费、个人友好、含压缩</td>
+</tr>
+<tr>
+<td><strong>自建 Nginx + Lua</strong></td>
+<td> 完全自建</td>
+<td> OmniRoute 现成 fallback + 压缩 + dashboard</td>
+</tr>
+<tr>
+<td><strong> 单用 Claude Code / Cursor</strong></td>
+<td> 单工具</td>
+<td> OmniRoute 多订阅聚合 + 永不中断</td>
+</tr>
+</tbody></table>
+<p><strong>最大差异化</strong>：</p>
+<ol>
+<li><strong>专为 AI 编程工具设计</strong>：OAuth、subscription quota、tool output 压缩这些场景都做透了</li>
+<li><strong> Combo + 17 routing strategies</strong>：不是简单转发，是” 策略路由”</li>
+<li><strong>RTK + Caveman 压缩</strong>：是 OmniRoute 自己写的，官方省 15–95%</li>
+<li><strong> 完全本地 + Electron</strong>：你的 key 不经过任何第三方服务器</li>
+</ol>
+<hr>
+<h2 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a>七、总结</h2><p>OmniRoute 解决的是 AI 编程时代一个非常具体、非常普遍的问题：<strong>我有一堆订阅，但用着用着就断了；我有一堆免费 API，但不知道怎么聚合</strong>。</p>
+<p>它的解法 —— <strong>统一端点 + 四层 fallback + token 压缩 + 可视化 dashboard</strong>—— 既不性感也不前沿，但极其实用。对一个 2026 年每天用 AI 编程工具 4 小时以上的人来说，<strong>它是少有的” 装完就回不去” 的基础设施</strong>。</p>
+<p>几个值得关注的点：</p>
+<ul>
+<li><strong>8.5k Star + 4,532 commit + 14,965 测试 + 270 release</strong>：开发活跃度很高，不会装完吃灰</li>
+<li><strong> MIT License + 完全开源</strong>：可以 fork 改、可以私有部署</li>
+<li><strong>支持 Claude Code / Codex / Cursor / Cline / Copilot / Antigravity</strong>：覆盖了几乎所有主流 AI 编程工具</li>
+<li><strong>月省 50 美元的可能性</strong>：用好 Combo + 免费 provider，单用户一年能省 300–600 美元订阅费</li>
+</ul>
+<p><strong>值得现在就用起来</strong>。</p>
+<p>如果你是 OmniRoute 的目标用户 —— 多订阅重度用户、想跑免费模型、想统一管理 AI API—— 花一个午休时间把它装上，配好 Combo，从此告别”rate limit 焦虑”。</p>
+<p>仓库地址：<a target="_blank" rel="noopener" href="https://github.com/diegosouzapw/OmniRoute">https://github.com/diegosouzapw/OmniRoute</a><br>文档：<a target="_blank" rel="noopener" href="https://docs.omniroute.online/">https://docs.omniroute.online</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/01/omniroute-free-ai-gateway-237-providers-one-endpoint/" title="OmniRoute：让 Claude Code &#x2F; Cursor &#x2F; Codex 共享一个 AI 网关，再也不怕 rate limit">https://www.daishengli.top/2026/07/01/omniroute-free-ai-gateway-237-providers-one-endpoint/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" rel="tag"># 效率工具</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/API-%E7%BD%91%E5%85%B3/" rel="tag"># API 网关</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/30/browser-use-video-use-ai-video-editor-from-claude-code/" rel="prev" title="100k Star 的 browser-use 又出新品：把 Claude Code 变成你的 AI 剪辑师，丢一文件夹原片它吐 final.mp4">
+                  <i class="fa fa-angle-left"></i> 100k Star 的 browser-use 又出新品：把 Claude Code 变成你的 AI 剪辑师，丢一文件夹原片它吐 final.mp4
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/02/astryx-meta-agent-ready-react-design-system/" rel="next" title="Astryx：Meta 把 13,000 个 App 用 8 年的设计系统开源了，还专门为 AI Agent 配了 MCP Server">
+                  Astryx：Meta 把 13,000 个 App 用 8 年的设计系统开源了，还专门为 AI Agent 配了 MCP Server <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

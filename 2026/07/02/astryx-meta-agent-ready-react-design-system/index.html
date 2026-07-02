@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Meta 在 Facebook、Instagram、Threads 内部用了 8 年、跑在 13,000+ 应用上的设计系统 Astryx 上周开源了，MIT 协议、150+ 组件、7 套主题。最值得关注的是它专门为 AI 编码助手造了一套 CLI + MCP Server，让 Claude Code、Cursor、Codex 第一次能&quot;看懂&quot;设计系统——组件召回率从 15% 干到 71%。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Astryx：Meta 把 13,000 个 App 用 8 年的设计系统开源了，还专门为 AI Agent 配了 MCP Server">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/02/astryx-meta-agent-ready-react-design-system/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="Meta 在 Facebook、Instagram、Threads 内部用了 8 年、跑在 13,000+ 应用上的设计系统 Astryx 上周开源了，MIT 协议、150+ 组件、7 套主题。最值得关注的是它专门为 AI 编码助手造了一套 CLI + MCP Server，让 Claude Code、Cursor、Codex 第一次能&quot;看懂&quot;设计系统——组件召回率从 15% 干到 71%。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-02T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.692Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="Astryx">
+<meta property="article:tag" content="Meta">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="StyleX">
+<meta property="article:tag" content="设计系统">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/02/astryx-meta-agent-ready-react-design-system/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/02/astryx-meta-agent-ready-react-design-system/","path":"2026/07/02/astryx-meta-agent-ready-react-design-system/","title":"Astryx：Meta 把 13,000 个 App 用 8 年的设计系统开源了，还专门为 AI Agent 配了 MCP Server"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Astryx：Meta 把 13,000 个 App 用 8 年的设计系统开源了，还专门为 AI Agent 配了 MCP Server | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%80%E4%B8%AA%E8%AE%A9%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%B8%88%E6%B2%89%E9%BB%98%E7%9A%84%E6%95%85%E4%BA%8B"><span class="nav-number">1.</span> <span class="nav-text">一、一个让前端工程师沉默的故事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A8-%E5%B9%B4%E3%80%8113-000-%E4%B8%AA-App%E3%80%81Storybook-%E5%96%82%E4%B8%8D%E9%A5%B1-AI"><span class="nav-number">2.</span> <span class="nav-text">二、项目背景：8 年、13,000 个 App、Storybook 喂不饱 AI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A5-%E4%B8%AA%E7%9C%9F%E6%AD%A3%E2%80%9D%E5%AF%B9-AI-%E5%8F%8B%E5%A5%BD%E2%80%9D%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.</span> <span class="nav-text">三、核心功能：5 个真正” 对 AI 友好” 的设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-150-%E5%BC%80%E7%AE%B1%E5%8D%B3%E7%94%A8%E7%BB%84%E4%BB%B6%EF%BC%8C%E9%9B%B6%E6%9E%84%E5%BB%BA%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.</span> <span class="nav-text">1. 150+ 开箱即用组件，零构建配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-%E5%A5%97%E4%B8%BB%E9%A2%98-CSS-%E5%8F%98%E9%87%8F%E7%BA%A7%E8%81%94%EF%BC%8C%E4%B8%8D%E7%94%A8%E6%94%B9%E4%BB%A3%E7%A0%81%E5%B0%B1%E8%83%BD%E6%8D%A2%E8%82%A4"><span class="nav-number">3.2.</span> <span class="nav-text">2. 7 套主题 + CSS 变量级联，不用改代码就能换肤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%85%B3%E9%94%AE%E6%9D%80%E6%89%8B%E9%94%8F%EF%BC%9Aastryx-build-CLI"><span class="nav-number">3.3.</span> <span class="nav-text">3. 关键杀手锏：astryx build CLI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E9%85%8D%E5%A5%97-MCP-Server%EF%BC%8CClaude-Code-Cursor-Codex-%E7%9B%B4%E6%8E%A5%E3%80%8C%E8%AF%BB%E3%80%8D%E8%AE%BE%E8%AE%A1%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.4.</span> <span class="nav-text">4. 配套 MCP Server，Claude Code &#x2F; Cursor &#x2F; Codex 直接「读」设计系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-StyleX-Tailwind-%E5%8F%8C%E6%A0%88%E5%85%BC%E5%AE%B9"><span class="nav-number">3.5.</span> <span class="nav-text">5. StyleX + Tailwind 双栈兼容</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A3-%E5%88%86%E9%92%9F%E6%90%AD%E4%B8%80%E4%B8%AA-Settings-%E9%A1%B5%E9%9D%A2"><span class="nav-number">4.</span> <span class="nav-text">四、实战示例：3 分钟搭一个 Settings 页面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">五、适用场景和限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">六、总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/02/astryx-meta-agent-ready-react-design-system/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Astryx：Meta 把 13,000 个 App 用 8 年的设计系统开源了，还专门为 AI Agent 配了 MCP Server | 小戴的网络日志">
+      <meta itemprop="description" content="Meta 在 Facebook、Instagram、Threads 内部用了 8 年、跑在 13,000+ 应用上的设计系统 Astryx 上周开源了，MIT 协议、150+ 组件、7 套主题。最值得关注的是它专门为 AI 编码助手造了一套 CLI + MCP Server，让 Claude Code、Cursor、Codex 第一次能&quot;看懂&quot;设计系统——组件召回率从 15% 干到 71%。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Astryx：Meta 把 13,000 个 App 用 8 年的设计系统开源了，还专门为 AI Agent 配了 MCP Server
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-02 10:00:00" itemprop="dateCreated datePublished" datetime="2026-07-02T10:00:00+08:00">2026-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Meta 在 Facebook、Instagram、Threads 内部用了 8 年、跑在 13,000+ 应用上的设计系统 Astryx 上周开源了，MIT 协议、150+ 组件、7 套主题。最值得关注的是它专门为 AI 编码助手造了一套 CLI + MCP Server，让 Claude Code、Cursor、Codex 第一次能"看懂"设计系统——组件召回率从 15% 干到 71%。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="一、一个让前端工程师沉默的故事"><a href="#一、一个让前端工程师沉默的故事" class="headerlink" title="一、一个让前端工程师沉默的故事"></a>一、一个让前端工程师沉默的故事</h2><p>上周五晚上，你用 Claude Code 写个管理后台的页面，跟它说：</p>
+<blockquote>
+<p>“帮我搭一个 Settings 页面，要有侧边导航、个人资料卡片、通知开关、保存按钮。”</p>
+</blockquote>
+<p>你期望它给你吐一份像样的 React 代码。结果呢？</p>
+<p>它给你整了一个根本不存在的 <code>&lt;UserProfileCard variant="glass" /&gt;</code> 组件（项目里压根没这个组件），给了一个调不通的 <code>&lt;NotificationSwitch checked={isOn} onChange={handleChange}&gt;</code>（你项目里只有 <code>Switch</code>，根本没有 <code>NotificationSwitch</code>），最后还装模作样导出了一个 <code>withToast</code> HOC—— 你翻了五分钟项目源码，根本没见过这玩意儿。</p>
+<p>你叹了口气，又切到 Cursor 重写一遍，结果它给你塞了一堆 Tailwind 的 <code>bg-zinc-50/30 hover:bg-zinc-100/40</code> 这种色值，跟你们设计稿里的 <code>#F7F8FA</code> 完全不是一回事。</p>
+<p><strong>问题出在哪？</strong> 不是 AI 笨，而是它「看不到」你的设计系统。</p>
+<p>一个设计系统通常只有给人类看的 Storybook 文档和 HTML 页面，<strong>机器读不出来</strong>。AI 编码助手在「即兴发挥」：瞎编组件名、瞎传 props、瞎填 CSS 类名。</p>
+<p>而 Meta 在 2026 年 6 月 26 日开源的 <strong>Astryx</strong>（<a target="_blank" rel="noopener" href="https://github.com/facebook/astryx">facebook/astryx</a>），就是冲着这个问题来的。它不只是「Meta 内部用了 8 年的 React 设计系统开源」这么简单 —— 它是<strong>第一个把「给 AI 看」当作一等公民来设计的开源设计系统</strong>。</p>
+<h2 id="二、项目背景：8-年、13-000-个-App、Storybook-喂不饱-AI"><a href="#二、项目背景：8-年、13-000-个-App、Storybook-喂不饱-AI" class="headerlink" title="二、项目背景：8 年、13,000 个 App、Storybook 喂不饱 AI"></a>二、项目背景：8 年、13,000 个 App、Storybook 喂不饱 AI</h2><p>Astryx 最早是 Meta 内部叫 XDS（Cross-Design System）的东西，2018 年立项，撑起了 Facebook、Instagram、Threads、Workplace、Messenger Lite 等 <strong>13,000+ 内部应用</strong>。它是 Meta 内部「最大、最被依赖」的设计系统，每天被几千个工程师和设计师调用。</p>
+<p>但是它原本并不是为 AI 写的。Meta 内部工程师这两年大规模用 Cursor / Claude Code 之后，发现老设计系统跟新工作流直接打架：</p>
+<ol>
+<li><strong>组件库黑盒</strong> ——AI 不知道你有哪些组件、什么 props、什么默认值，只能瞎猜。</li>
+<li><strong>StyleX 缺工程化</strong> ——StyleX 是 Meta 自研的 compile-time CSS 引擎（编译期生成 atomic CSS），光给人类看是不够的，AI 不会主动用。</li>
+<li><strong>没有机器可读的 contract</strong>—— 后端有 OpenAPI 规范了，前端呢？没有。AI 没有” 权威组件清单” 可以查。</li>
+<li><strong>无障碍 / 主题一致性难保证</strong> ——AI 写出来的 UI 经常破坏 a11y，主题切换直接挂掉。</li>
+</ol>
+<p>所以 Meta 在 2026 年 6 月 26 日发布的 Astryx（v0.1.0，6 月 27 日即更新 v0.1.1）做了三件事：</p>
+<ul>
+<li><strong>把 8 年内部沉淀的 150+ 组件全部开源</strong>，MIT 协议；</li>
+<li><strong>重新设计了分层架构</strong>（Foundations → Components → Patterns），让组件可以单独被引用；</li>
+<li><strong>最关键的：造了一套 CLI + MCP Server，让 AI 编码助手可以像查 OpenAPI 一样查设计系统</strong>。</li>
+</ul>
+<h2 id="三、核心功能：5-个真正”对-AI-友好”的设计"><a href="#三、核心功能：5-个真正”对-AI-友好”的设计" class="headerlink" title="三、核心功能：5 个真正”对 AI 友好”的设计"></a>三、核心功能：5 个真正” 对 AI 友好” 的设计</h2><h3 id="1-150-开箱即用组件，零构建配置"><a href="#1-150-开箱即用组件，零构建配置" class="headerlink" title="1. 150+ 开箱即用组件，零构建配置"></a>1. 150+ 开箱即用组件，零构建配置</h3><p>Astryx 内置 150+ 个 React 组件，全部是 typed（TypeScript 完整类型定义），覆盖 Layout、Navigation、Form、Data Display、Feedback 等所有常见场景。</p>
+<p>最有意思的是它的<strong>分发方式</strong> —— 你不用装任何构建插件，直接 import 预编译的 CSS 就行：</p>
+<figure class="highlight jsx"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/app/globals.css</span></span><br><span class="line">@layer reset, astryx-base, astryx-theme;</span><br><span class="line"></span><br><span class="line">@<span class="keyword">import</span> <span class="string">"@astryxdesign/core/reset.css"</span> <span class="title function_">layer</span>(reset);</span><br><span class="line">@<span class="keyword">import</span> <span class="string">"@astryxdesign/core/astryx.css"</span> <span class="title function_">layer</span>(astryx-base);</span><br><span class="line">@<span class="keyword">import</span> <span class="string">"@astryxdesign/theme-neutral/theme.css"</span> <span class="title function_">layer</span>(astryx-theme);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>不需要 PostCSS，不需要 Babel，不需要 Vite 插件。Next.js、Tailwind、Vite、纯 CDN 都能跑。<strong>对 AI 助手来说，少一层配置就少一次翻车。</strong></p>
+<h3 id="2-7-套主题-CSS-变量级联，不用改代码就能换肤"><a href="#2-7-套主题-CSS-变量级联，不用改代码就能换肤" class="headerlink" title="2. 7 套主题 + CSS 变量级联，不用改代码就能换肤"></a>2. 7 套主题 + CSS 变量级联，不用改代码就能换肤</h3><p>Astryx 把所有设计 token 都暴露成 CSS 变量，并通过 CSS <code>@layer</code> 级联：</p>
+<figure class="highlight css"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 切换主题只需换 import */</span></span><br><span class="line"><span class="keyword">@import</span> <span class="string">"@astryxdesign/theme-neutral/theme.css"</span> layer(astryx-theme);</span><br><span class="line"><span class="keyword">@import</span> <span class="string">"@astryxdesign/theme-butter/theme.css"</span> layer(astryx-theme);</span><br><span class="line"><span class="keyword">@import</span> <span class="string">"@astryxdesign/theme-y2k/theme.css"</span> layer(astryx-theme);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>官方提供 7 套主题：<code>neutral</code>（默认）、<code>butter</code>、<code>chocolate</code>、<code>matcha</code>、<code>stone</code>、<code>gothic</code>、<code>y2k</code>。所有组件自动跟随主题色，<strong>AI 写出来的代码天然支持深色模式和多主题</strong>。</p>
+<h3 id="3-关键杀手锏：astryx-build-CLI"><a href="#3-关键杀手锏：astryx-build-CLI" class="headerlink" title="3. 关键杀手锏：astryx build CLI"></a>3. 关键杀手锏：<code>astryx build</code> CLI</h3><p>这是 Astryx 跟其它设计系统最大的区别。它给 AI 编码助手造了一个 <code>astryx build "&lt;需求&gt;"</code> 命令，<strong>直接吐出按角色分组的「组件套件」</strong>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ npm run astryx -- build <span class="string">"settings page with sidebar nav"</span></span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># === START (scaffold) ===</span></span><br><span class="line"><span class="comment"># === PAGE: DetailPageLayout ===</span></span><br><span class="line"><span class="comment"># === FRAME: AppShell + SideNav (always-on) ===</span></span><br><span class="line"><span class="comment"># === FOUNDATION: typography, layout, action ===</span></span><br><span class="line"><span class="comment"># === BLOCKS: Card, Stack ===</span></span><br><span class="line"><span class="comment"># === DOMAIN COMPONENTS: UserProfileCard, NotificationSwitch, SaveBar ===</span></span><br><span class="line"><span class="comment"># === SETUP reminder ===</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>Meta 内部基准测试：<strong>引入 always-on FRAME / FOUNDATION 之后，AI 写组件的召回率从 15% 干到 71%</strong>。这个数字非常炸裂 —— 意味着 AI 给你写的代码里，能直接 import 到真实存在的组件的概率翻了将近 5 倍。</p>
+<h3 id="4-配套-MCP-Server，Claude-Code-Cursor-Codex-直接「读」设计系统"><a href="#4-配套-MCP-Server，Claude-Code-Cursor-Codex-直接「读」设计系统" class="headerlink" title="4. 配套 MCP Server，Claude Code / Cursor / Codex 直接「读」设计系统"></a>4. 配套 MCP Server，Claude Code / Cursor / Codex 直接「读」设计系统</h3><p>跟其它设计系统只给人类看的 Storybook 不同，Astryx 自带一个 <strong>MCP（Model Context Protocol）Server</strong>。你只要在 Claude Code / Cursor / Codex 里配一下：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"mcpServers"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"astryx"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"command"</span><span class="punctuation">:</span> <span class="string">"npx"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"args"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"-y"</span><span class="punctuation">,</span> <span class="string">"@astryxdesign/cli"</span><span class="punctuation">,</span> <span class="string">"mcp"</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>之后你的 AI 助手就能：</p>
+<ul>
+<li>列出所有可用组件、查 props 定义</li>
+<li>按需求搜索组件（” 给我找一个能展开折叠的侧边导航”）</li>
+<li>生成 <code>CLAUDE.md</code> / <code>AGENTS.md</code> 项目指令文件</li>
+<li>校验你写的代码里 prop 名是否合法</li>
+</ul>
+<p>这是 <strong>OpenAPI 之于后端</strong> 在前端领域的对应物。Meta 把它做成 JSON manifest，AI 助手可以像查字典一样查设计系统，再也不会瞎编组件了。</p>
+<h3 id="5-StyleX-Tailwind-双栈兼容"><a href="#5-StyleX-Tailwind-双栈兼容" class="headerlink" title="5. StyleX + Tailwind 双栈兼容"></a>5. StyleX + Tailwind 双栈兼容</h3><p>Astryx 内置 StyleX（Meta 自研的 compile-time CSS 引擎）支持，同时也提供 Tailwind 桥接层：</p>
+<figure class="highlight html"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- StyleX 写法 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">{stylex.css(styles.primary)}</span>&gt;</span>Save<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Tailwind 写法（同样的视觉）--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">"bg-blue-600 text-white rounded-md px-4 py-2"</span>&gt;</span></span><br><span class="line">  Save</span><br><span class="line"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>Astryx 把 StyleX token 映射成 Tailwind 主题变量，所以 <code>text-primary</code>、<code>bg-surface</code>、<code>border-border</code> 这些类名直接可用。<strong>团队可以渐进式迁移</strong> —— 老项目用 Tailwind、新组件用 StyleX，两边视觉一致。</p>
+<h2 id="四、实战示例：3-分钟搭一个-Settings-页面"><a href="#四、实战示例：3-分钟搭一个-Settings-页面" class="headerlink" title="四、实战示例：3 分钟搭一个 Settings 页面"></a>四、实战示例：3 分钟搭一个 Settings 页面</h2><p>假设你有一个 Next.js 项目，现在用 Astryx + Claude Code 搭一个 Settings 页面：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 安装</span></span><br><span class="line">pnpm add @astryxdesign/core @astryxdesign/theme-neutral</span><br><span class="line">pnpm add -D @astryxdesign/cli</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight ts"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/app/providers.tsx</span></span><br><span class="line"><span class="string">"use client"</span>;</span><br><span class="line"><span class="keyword">import</span> { <span class="title class_">AstryxProvider</span> } <span class="keyword">from</span> <span class="string">"@astryxdesign/core"</span>;</span><br><span class="line"><span class="keyword">import</span> { neutralTheme } <span class="keyword">from</span> <span class="string">"@astryxdesign/theme-neutral"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Providers</span>(<span class="params">{ children }: { children: React.ReactNode }</span>) {</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">AstryxProvider</span> <span class="attr">theme</span>=<span class="string">{neutralTheme}</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      {children}</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">AstryxProvider</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight ts"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/app/layout.tsx</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">"./globals.css"</span>;</span><br><span class="line"><span class="keyword">import</span> { <span class="title class_">Providers</span> } <span class="keyword">from</span> <span class="string">"./providers"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">RootLayout</span>(<span class="params">{ children }: { children: React.ReactNode }</span>) {</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Providers</span>&gt;</span>{children}<span class="tag">&lt;/<span class="name">Providers</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后在 Claude Code 里说：</p>
+<blockquote>
+<p>“用 astryx build ‘settings page with sidebar nav, profile card, notification toggles, save bar’ 给我一个 Settings 页面”</p>
+</blockquote>
+<p>Claude Code 会调 <code>astryx build</code> MCP 工具，吐出 <code>AppShell</code> + <code>SideNav</code> + <code>UserProfileCard</code> + <code>NotificationSwitch</code> + <code>SaveBar</code> 这套真实存在的组件组合，按 README 模板给你拼出来。<strong>你不用再去查每个组件的 props，AI 也不会瞎编了</strong>。</p>
+<h2 id="五、适用场景和限制"><a href="#五、适用场景和限制" class="headerlink" title="五、适用场景和限制"></a>五、适用场景和限制</h2><p><strong>适用：</strong></p>
+<ul>
+<li>中大型 React / Next.js 项目，特别是已经用 Cursor / Claude Code / Codex 写 UI 的团队；</li>
+<li>想统一多套主题（默认 / 暗黑 / 品牌色）的 SaaS 产品；</li>
+<li>设计 token 经常改、靠人工同步容易漏的团队；</li>
+<li>AI 写 UI 经常瞎编组件名的痛点场景。</li>
+</ul>
+<p><strong>注意：</strong></p>
+<ul>
+<li><strong>目前还在 Beta</strong>（v0.1.1，2026-06-27 发布），命名空间从内部的 <code>xds</code> 改成 <code>astryx</code>，还有些 API 在调整，生产环境慎用；</li>
+<li><strong>StyleX 学习曲线</strong> —— 如果不熟 StyleX，建议先用 Tailwind 桥接层；</li>
+<li><strong>7 套主题里部分偏风格化</strong>（y2k、gothic），正式业务可能只用 <code>neutral</code> + 自定义；</li>
+<li><strong>Stars 还在早期增长期</strong>（Beta 后 2k Star 左右），社区生态（第三方组件、CodeSandbox 模板）还不够丰富。</li>
+</ul>
+<h2 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h2><p>Astryx 的真正意义不在那 150 个组件，而在它<strong>第一个把「给 AI 看」当作设计系统的一等公民</strong>。Meta 用 8 年时间、13,000+ 应用跑出来的实践告诉你：</p>
+<ul>
+<li>设计系统不应该只是给人看的文档，更应该是机器可读的 contract；</li>
+<li>组件召回率从 15% 干到 71%，不是靠更聪明的 AI，而是靠<strong>给 AI 一本可查的字典</strong>；</li>
+<li>CLI + MCP Server 是设计系统跟 AI 工作流接轨的标配，未来 1-2 年会变成开源设计系统的入场券。</li>
+</ul>
+<p>如果你正在用 AI 编码助手写 React UI、并且被「AI 瞎编组件名」折磨过，Astryx 值得你花一个下午接入试试。MIT 协议，可以直接拿到生产项目里玩坏。</p>
+<p>GitHub 地址：<a target="_blank" rel="noopener" href="https://github.com/facebook/astryx">facebook/astryx</a><br>官方文档：<a target="_blank" rel="noopener" href="https://github.com/facebook/astryx/tree/main/packages/core">https://github.com/facebook/astryx/tree/main/packages/core</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/02/astryx-meta-agent-ready-react-design-system/" title="Astryx：Meta 把 13,000 个 App 用 8 年的设计系统开源了，还专门为 AI Agent 配了 MCP Server">https://www.daishengli.top/2026/07/02/astryx-meta-agent-ready-react-design-system/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/Astryx/" rel="tag"># Astryx</a>
+              <a href="/tags/Meta/" rel="tag"># Meta</a>
+              <a href="/tags/React/" rel="tag"># React</a>
+              <a href="/tags/StyleX/" rel="tag"># StyleX</a>
+              <a href="/tags/%E8%AE%BE%E8%AE%A1%E7%B3%BB%E7%BB%9F/" rel="tag"># 设计系统</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/01/omniroute-free-ai-gateway-237-providers-one-endpoint/" rel="prev" title="OmniRoute：让 Claude Code &#x2F; Cursor &#x2F; Codex 共享一个 AI 网关，再也不怕 rate limit">
+                  <i class="fa fa-angle-left"></i> OmniRoute：让 Claude Code / Cursor / Codex 共享一个 AI 网关，再也不怕 rate limit
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

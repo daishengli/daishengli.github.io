@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Impeccable 是给 AI 编码工具的设计技能包，7 套领域知识 + 23 条命令，专治 AI 生成 UI 的「紫色渐变 + Inter 字体 + 卡片套卡片」通病。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Impeccable：让 AI 写出的前端代码不再像「AI 套娃」">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/01/impeccable-ai-design-skill/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="Impeccable 是给 AI 编码工具的设计技能包，7 套领域知识 + 23 条命令，专治 AI 生成 UI 的「紫色渐变 + Inter 字体 + 卡片套卡片」通病。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.694Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="设计系统">
+<meta property="article:tag" content="前端开发">
+<meta property="article:tag" content="Cursor">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/01/impeccable-ai-design-skill/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/01/impeccable-ai-design-skill/","path":"2026/06/01/impeccable-ai-design-skill/","title":"Impeccable：让 AI 写出的前端代码不再像「AI 套娃」"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Impeccable：让 AI 写出的前端代码不再像「AI 套娃」 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Impeccable-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">Impeccable 是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">解决什么问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A3%85%E4%B8%8A%E4%B9%8B%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-number">3.</span> <span class="nav-text">装上之后发生了什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7-%E5%A5%97%E9%A2%86%E5%9F%9F%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="nav-number">3.1.</span> <span class="nav-text">1. 7 套领域参考文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-23-%E6%9D%A1%E6%96%9C%E6%9D%A0%E5%91%BD%E4%BB%A4"><span class="nav-number">3.2.</span> <span class="nav-text">2. 23 条斜杠命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%8F%8D%E6%A8%A1%E5%BC%8F%E6%89%AB%E6%8F%8F%E5%99%A8"><span class="nav-number">3.3.</span> <span class="nav-text">3. 反模式扫描器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E8%A3%85"><span class="nav-number">4.</span> <span class="nav-text">怎么装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E4%B8%80%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">4.1.</span> <span class="nav-text">通用一行命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E5%AF%B9%E5%BA%94%E8%B7%AF%E5%BE%84%E9%80%9F%E6%9F%A5"><span class="nav-number">4.2.</span> <span class="nav-text">工具对应路径速查</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E7%9A%84%E5%AE%9E%E9%99%85%E7%94%A8%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">我的实际用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%90%90%E6%A7%BD"><span class="nav-number">6.</span> <span class="nav-text">一些吐槽</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%BB%B6%E4%BA%8B%E9%87%8D%E8%A6%81"><span class="nav-number">7.</span> <span class="nav-text">为什么这件事重要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88"><span class="nav-number">8.</span> <span class="nav-text">一些替代方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">9.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/01/impeccable-ai-design-skill/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Impeccable：让 AI 写出的前端代码不再像「AI 套娃」 | 小戴的网络日志">
+      <meta itemprop="description" content="Impeccable 是给 AI 编码工具的设计技能包，7 套领域知识 + 23 条命令，专治 AI 生成 UI 的「紫色渐变 + Inter 字体 + 卡片套卡片」通病。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Impeccable：让 AI 写出的前端代码不再像「AI 套娃」
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-02 00:00:00" itemprop="dateCreated datePublished" datetime="2026-06-02T00:00:00+08:00">2026-06-02</time>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Impeccable 是给 AI 编码工具的设计技能包，7 套领域知识 + 23 条命令，专治 AI 生成 UI 的「紫色渐变 + Inter 字体 + 卡片套卡片」通病。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>最近帮一个朋友改他的 SaaS 后台，他之前用 Cursor 花了一周生成的页面，紫色渐变背景、Inter 字体、灰底卡片、按钮全是圆角大阴影 —— 典型的「AI 出厂设置」。我把链接丢给我用 Claude Code 搭的另一个项目，视觉风格一对比，明显不是一个物种。</p>
+<p>不是他用得不好，是 AI 编码工具的「设计语言」太单调了。大家都在同一个训练数据池里打捞，出来的东西就像一个模子刻的。</p>
+<p>直到我刷到 GitHub Trending 看到了 <a target="_blank" rel="noopener" href="https://github.com/pbakaus/impeccable">pbakaus/impeccable</a>—— 一个专门给 AI 写前端的「设计技能包」，7 套领域知识 + 23 条命令，专门对治上面这套审美通病。</p>
+<h2 id="Impeccable-是什么"><a href="#Impeccable-是什么" class="headerlink" title="Impeccable 是什么"></a>Impeccable 是什么</h2><p>Impeccable 不是一个组件库，也不是设计系统，它是一套<strong>塞给 AI 看的「设计词典」</strong>。</p>
+<p>它的作者 Paul Bakaus 是 Google Tag Manager 和 Iodine 的创始人，折腾前端设计语言这事儿算他的老本行。这个项目脱胎于 Anthropic 官方的 <code>frontend-design</code> skill，然后被狠狠扩展了一轮。</p>
+<p>核心思路就一句话：<strong>AI 不是不懂设计，是没人告诉它「别用烂大街的模板」</strong>。</p>
+<p>Impeccable 把这件事工程化了 —— 它把你的 AI 编码工具（Claude Code、Cursor、Codex、Gemini CLI、Pi、Copilot…）变成一个会主动避开「AI 味」UI 的设计助手。</p>
+<h2 id="解决什么问题"><a href="#解决什么问题" class="headerlink" title="解决什么问题"></a>解决什么问题</h2><p>先来看一组典型「AI 味」UI 的特征（Impeccable 在仓库里直接列了出来）：</p>
+<ul>
+<li><strong>字体一律 Inter / DM Sans</strong>，不带衬线、不带个性</li>
+<li><strong>配色一律紫色到蓝色渐变</strong>，像注册 Stripe 时见的那种</li>
+<li><strong>卡片套卡片</strong>，空白不够就再套一层</li>
+<li><strong>灰底配彩色按钮</strong>，对比拉满但没层次</li>
+<li><strong>动效全是 ease-in-out</strong>，从不考虑 spring physics</li>
+<li><strong> 图标全用 lucide-react 默认色</strong>，不切氛围</li>
+<li><strong>响应式只做「桌面端缩小」</strong>，不考虑真实移动端场景</li>
+</ul>
+<p>你是不是也中过几条？我自己看着笑出声，因为我写过的几十个 demo 全是这个味儿。</p>
+<p>Impeccable 的反制办法是：<strong>给 AI 一整套设计约束 + 反模式清单</strong>，让模型在生成代码前先读一遍。</p>
+<h2 id="装上之后发生了什么"><a href="#装上之后发生了什么" class="headerlink" title="装上之后发生了什么"></a>装上之后发生了什么</h2><h3 id="1-7-套领域参考文档"><a href="#1-7-套领域参考文档" class="headerlink" title="1. 7 套领域参考文档"></a>1. 7 套领域参考文档</h3><p>Impeccable 内置了 7 个细分领域的 reference 文件，按需加载：</p>
+<table>
+<thead>
+<tr>
+<th>文档</th>
+<th>涵盖内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> typography</td>
+<td> 字体系统、字重搭配、模块化比例、OpenType 特性</td>
+</tr>
+<tr>
+<td> color-and-contrast</td>
+<td>OKLCH 色彩空间、tinted neutrals、暗色模式、可访问性</td>
+</tr>
+<tr>
+<td> spatial-design</td>
+<td> 间距系统、栅格、视觉层级</td>
+</tr>
+<tr>
+<td> motion-design</td>
+<td> 缓动曲线、stagger、reduced motion</td>
+</tr>
+<tr>
+<td>interaction-design</td>
+<td> 表单、focus 状态、loading 模式</td>
+</tr>
+<tr>
+<td> responsive-design</td>
+<td> 移动优先、container queries、流式排版</td>
+</tr>
+<tr>
+<td> ux-writing</td>
+<td> 按钮文案、错误提示、空状态</td>
+</tr>
+</tbody></table>
+<p>这些不是泛泛的「设计原则」，是<strong>给模型看的具体决策树</strong> —— 比如「用 Inter 之前先停下来问三个问题」「圆形头像别默认加 1px border」这种粒度。</p>
+<h3 id="2-23-条斜杠命令"><a href="#2-23-条斜杠命令" class="headerlink" title="2. 23 条斜杠命令"></a>2. 23 条斜杠命令</h3><p>最实用的部分。所有命令都通过 <code>/impeccable</code> 触发，常见的有：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/impeccable init        <span class="comment"># 一次性收集设计上下文，写成 PRODUCT.md + DESIGN.md</span></span><br><span class="line">/impeccable craft       <span class="comment"># 完整 shape → build 流程，含视觉迭代</span></span><br><span class="line">/impeccable critique    <span class="comment"># 跑一遍 UX 评审，输出层级 / 清晰度 / 情绪分</span></span><br><span class="line">/impeccable audit       <span class="comment"># 技术质量检查（a11y、性能、响应式）</span></span><br><span class="line">/impeccable polish      <span class="comment"># 上线前的最后一刀</span></span><br><span class="line">/impeccable harden      <span class="comment"># 错误处理、i18n、文本溢出、边界情况</span></span><br><span class="line">/impeccable live        <span class="comment"># 浏览器里实时调样式</span></span><br><span class="line">/impeccable distill     <span class="comment"># 砍到本质</span></span><br><span class="line">/impeccable overdrive   <span class="comment"># 想要更炫的效果就用它</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>还可以 pin 常用命令成快捷方式：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/impeccable pin audit    <span class="comment"># 创建 /audit 快捷命令</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="3-反模式扫描器"><a href="#3-反模式扫描器" class="headerlink" title="3. 反模式扫描器"></a>3. 反模式扫描器</h3><p>Impeccable 自带一个独立 CLI，能识别 24 种「AI 味」反模式 —— 比如「左侧导航带 1px 边框」「灰底卡片里嵌彩色按钮」「icon button 没有 aria-label」这些。</p>
+<p>就算你不跑 AI 生成，想给老项目体检也很有用。</p>
+<h2 id="怎么装"><a href="#怎么装" class="headerlink" title="怎么装"></a>怎么装</h2><h3 id="通用一行命令"><a href="#通用一行命令" class="headerlink" title="通用一行命令"></a>通用一行命令</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx skills add pbakaus/impeccable</span><br></pre></td></tr></tbody></table></figure>
+
+<p>它会自动检测你用的是哪个 AI 工具，把编译好的 build 写到对应位置（<code>.claude/skills/</code>、<code>.cursor/skills/</code>、<code>.agents/skills/</code> 等等）。</p>
+<h3 id="工具对应路径速查"><a href="#工具对应路径速查" class="headerlink" title="工具对应路径速查"></a>工具对应路径速查</h3><table>
+<thead>
+<tr>
+<th>工具</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Claude Code</td>
+<td><code>.claude/skills/</code></td>
+</tr>
+<tr>
+<td>Cursor</td>
+<td><code>.cursor/skills/</code></td>
+</tr>
+<tr>
+<td>Codex CLI</td>
+<td><code>.agents/skills/</code></td>
+</tr>
+<tr>
+<td>Gemini CLI</td>
+<td><code>~/.gemini/skills/</code></td>
+</tr>
+<tr>
+<td>GitHub Copilot</td>
+<td><code>.github/skills/</code></td>
+</tr>
+<tr>
+<td>Pi</td>
+<td><code>.pi/skills/</code></td>
+</tr>
+<tr>
+<td>Trae</td>
+<td><code>~/.trae/skills/</code></td>
+</tr>
+</tbody></table>
+<p>如果不想用 CLI，直接去 <a target="_blank" rel="noopener" href="https://impeccable.style/">impeccable.style</a> 下载对应工具的 ZIP 解压也行。</p>
+<h2 id="我的实际用法"><a href="#我的实际用法" class="headerlink" title="我的实际用法"></a>我的实际用法</h2><p>我经常在不同项目、不同设备、不同屏幕尺寸之间切换写代码，<strong>视觉一致性</strong>对我来说不只是审美问题，是生产力问题 —— 我得一眼看出「这段代码是哪个项目」，不然大脑会卡壳。</p>
+<p>装上 Impeccable 之后，我的工作流变成了这样：</p>
+<ol>
+<li><strong>新项目开张</strong>：<code>/impeccable init</code> 跑一遍，自动生成 <code>PRODUCT.md</code>（产品定位、目标用户、品牌调性）和 <code>DESIGN.md</code>（配色、字体、间距规则）</li>
+<li><strong>写新页面</strong>：<code>/impeccable craft 写一个设置页</code> —— 它会先问你三五个关于上下文的问题（暗色还是亮色？目标用户技术背景？要不要插画？），再动手写代码</li>
+<li><strong>写完看效果</strong>：浏览器里用 <code>/impeccable live</code> 实时调，把「这个按钮再沉一点」「标题字号再降一档」这种话直接变成视觉迭代</li>
+<li><strong>准备上线</strong>：<code>/impeccable audit</code> + <code>/impeccable harden</code> 收尾</li>
+</ol>
+<p>最让我意外的提升来自 <code>/impeccable critique</code>—— 它会真的像同事评审一样，给你列「这条信息层级不够」「这屏认知负载太高」「这个动画没意义」，逼我重新想清楚再动手。</p>
+<h2 id="一些吐槽"><a href="#一些吐槽" class="headerlink" title="一些吐槽"></a>一些吐槽</h2><p>不是什么都好。说几个实测发现的注意点：</p>
+<ul>
+<li><strong>需要时间消化</strong>：第一次跑 <code>init</code>，AI 会问很多上下文问题，新手可能嫌烦。建议准备一个你常做的项目类型（比如「B2B SaaS 后台」），提前把品牌定位、目标用户、参考产品列出来，回答会快很多</li>
+<li><strong>和现有设计系统冲突</strong>：如果你公司已经有自己的设计系统，Impeccable 可能会和它打架。建议先在 side project 上跑通，再决定要不要往主项目里塞</li>
+<li><strong>命令名需要记忆</strong>：23 条命令虽然可以 pin，但要真正用熟，还是得在脑子里建立索引。前几天我经常打错 <code>/impeccable audti</code></li>
+<li><strong>不支持所有工具</strong>：一些小众的 AI 编码 IDE 暂时不在支持列表里，作者在仓库里开 issue 让大家报需求</li>
+</ul>
+<h2 id="为什么这件事重要"><a href="#为什么这件事重要" class="headerlink" title="为什么这件事重要"></a>为什么这件事重要</h2><p>「AI 生成的设计都长一样」这件事，不只是审美问题，是<strong>信任问题</strong>。当用户看到一屏「典型 AI UI」，潜意识会想「这是个 demo，不是产品」。</p>
+<p>Impeccable 这种工具的存在，说明 AI 编码领域开始进入下一阶段 —— <strong>从「能不能生成」转向「生成得专不专业」</strong>。和 Cursor、Claude Code 这些「AI 写代码」的工具是互补关系：它们解决能力问题，Impeccable 解决品味问题。</p>
+<p>对于真正在意产品视觉的开发者来说，<strong>这是一个免费、可立刻上手的「AI 设计师外挂」</strong>，10k+ 星不是白给的。</p>
+<h2 id="一些替代方案"><a href="#一些替代方案" class="headerlink" title="一些替代方案"></a>一些替代方案</h2><p>如果你不想装 Impeccable 这类「设计技能包」，也可以考虑：</p>
+<ul>
+<li><strong><code>/frontend-design</code> skill</strong>（Anthropic 官方）：Impeccable 的前身，能力更基础</li>
+<li><strong>自己写 design tokens + 喂给 AI</strong>：维护一份 <code>tokens.json</code>，每次写代码前塞进 prompt</li>
+<li><strong> 设计稿先行（Figma → 代码）</strong>：用 v0、Lovable 这类工具先出图，再让 AI coding agent 改</li>
+</ul>
+<p>但就我自己的体验，<strong>Impeccable 是目前「上手成本 / 效果提升」比最高的方案</strong> —— 一行命令装上，立刻有效果。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>Impeccable 解决的是「AI 写前端代码审美同质化」这个真问题。它给 AI 编码工具塞了一套设计词典 + 23 条命令 + 反模式扫描器，让模型从「能写」变成「会写」。</p>
+<p>如果你已经被「紫色渐变 + Inter 字体 + 卡片套卡片」搞烦了，花 10 分钟装一下，再用 <code>/impeccable init</code> 跑一次你的项目 —— 相信我，你会被自己的项目页面惊到。</p>
+<p><strong>这是我今年见过最值得给 AI 工具塞的「插件」</strong>，没有之一。轻量、立刻见效、不绑架你的工作流。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/01/impeccable-ai-design-skill/" title="Impeccable：让 AI 写出的前端代码不再像「AI 套娃」">https://www.daishengli.top/2026/06/01/impeccable-ai-design-skill/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/%E8%AE%BE%E8%AE%A1%E7%B3%BB%E7%BB%9F/" rel="tag"># 设计系统</a>
+              <a href="/tags/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/" rel="tag"># 前端开发</a>
+              <a href="/tags/Cursor/" rel="tag"># Cursor</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/01/ruflo-multi-agent-claude-code/" rel="prev" title="我用 ruflo 把 Claude Code 变成了多智能体战队，真香">
+                  <i class="fa fa-angle-left"></i> 我用 ruflo 把 Claude Code 变成了多智能体战队，真香
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/03/headroom-token-compression-llm/" rel="next" title="Headroom：给 Claude Code 装上「节流阀」，我的 API 账单砍掉了 60%">
+                  Headroom：给 Claude Code 装上「节流阀」，我的 API 账单砍掉了 60% <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

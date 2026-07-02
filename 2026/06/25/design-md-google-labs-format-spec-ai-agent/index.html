@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="design.md 是 Google Labs 开源的格式规范，用 YAML frontmatter + Markdown 散文给 AI 编程 Agent 一份持久、结构化的&quot;设计系统说明书&quot;。配合官方 CLI 可以一键导出 Tailwind v3&#x2F;v4、W3C DTCG 等格式，让 Claude Code、Cursor 等 Agent 生成的 UI 真正符合品牌规范。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="design.md：Google Labs 给 AI 编程 Agent 立的设计系统 &quot;宪法&quot;，一套 YAML 让 Agent 一次就生成对的设计">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/25/design-md-google-labs-format-spec-ai-agent/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="design.md 是 Google Labs 开源的格式规范，用 YAML frontmatter + Markdown 散文给 AI 编程 Agent 一份持久、结构化的&quot;设计系统说明书&quot;。配合官方 CLI 可以一键导出 Tailwind v3&#x2F;v4、W3C DTCG 等格式，让 Claude Code、Cursor 等 Agent 生成的 UI 真正符合品牌规范。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-25T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-02T02:10:04.693Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="设计系统">
+<meta property="article:tag" content="design.md">
+<meta property="article:tag" content="Google Labs">
+<meta property="article:tag" content="Design Tokens">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/25/design-md-google-labs-format-spec-ai-agent/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/25/design-md-google-labs-format-spec-ai-agent/","path":"2026/06/25/design-md-google-labs-format-spec-ai-agent/","title":"design.md：Google Labs 给 AI 编程 Agent 立的设计系统 \"宪法\"，一套 YAML 让 Agent 一次就生成对的设计"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>design.md：Google Labs 给 AI 编程 Agent 立的设计系统 "宪法"，一套 YAML 让 Agent 一次就生成对的设计 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">138</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">36</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">49</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#design-md%EF%BC%9AGoogle-Labs-%E7%BB%99-AI-%E7%BC%96%E7%A8%8B-Agent-%E7%AB%8B%E7%9A%84%E8%AE%BE%E8%AE%A1%E7%B3%BB%E7%BB%9F%E2%80%9D%E5%AE%AA%E6%B3%95%E2%80%9D%EF%BC%8C%E4%B8%80%E5%A5%97-YAML-%E8%AE%A9-Agent-%E4%B8%80%E6%AC%A1%E5%B0%B1%E7%94%9F%E6%88%90%E5%AF%B9%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.</span> <span class="nav-text">design.md：Google Labs 给 AI 编程 Agent 立的设计系统” 宪法”，一套 YAML 让 Agent 一次就生成对的设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%80%E4%B8%AA%E8%AE%A9%E8%AE%BE%E8%AE%A1%E5%B8%88%E5%B4%A9%E6%BA%83%E7%9A%84%E7%9C%9F%E5%AE%9E%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">一、一个让设计师崩溃的真实场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E5%88%B0%E5%BA%95%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">二、它到底解决什么问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E4%BA%AE%E7%82%B9"><span class="nav-number">1.3.</span> <span class="nav-text">三、核心功能亮点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%8F%8C%E5%B1%82%E7%BB%93%E6%9E%84%EF%BC%9AYAML-tokens-Markdown-%E6%95%A3%E6%96%87"><span class="nav-number">1.3.1.</span> <span class="nav-text">1. 双层结构：YAML tokens + Markdown 散文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%A5%E6%A0%BC%E7%9A%84%E7%AB%A0%E8%8A%82%E9%A1%BA%E5%BA%8F%E8%A7%84%E8%8C%83"><span class="nav-number">1.3.2.</span> <span class="nav-text">2. 严格的章节顺序规范</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AE%8C%E6%95%B4%E7%9A%84-Token-%E7%B1%BB%E5%9E%8B%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.3.3.</span> <span class="nav-text">3. 完整的 Token 类型系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%BB%84%E4%BB%B6%EF%BC%88Component%EF%BC%89%E6%8A%BD%E8%B1%A1"><span class="nav-number">1.3.4.</span> <span class="nav-text">4. 组件（Component）抽象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%AE%B9%E9%94%99%E5%93%B2%E5%AD%A6%EF%BC%9A%E6%9C%AA%E7%9F%A5%E5%86%85%E5%AE%B9%E4%B8%8D%E6%8A%A5%E9%94%99"><span class="nav-number">1.3.5.</span> <span class="nav-text">5. 容错哲学：未知内容不报错</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%AE%98%E6%96%B9-CLI%EF%BC%9Alint-diff-export-spec"><span class="nav-number">1.3.6.</span> <span class="nav-text">6. 官方 CLI：lint &#x2F;diff&#x2F;export &#x2F;spec</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A5-%E5%88%86%E9%92%9F%E6%90%AD%E4%B8%80%E4%B8%AA%E5%93%81%E7%89%8C%E8%90%BD%E5%9C%B0%E9%A1%B5"><span class="nav-number">1.4.</span> <span class="nav-text">四、实战示例：5 分钟搭一个品牌落地页</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">1.5.</span> <span class="nav-text">五、适用场景和限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.5.1.</span> <span class="nav-text">适用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%90%E5%88%B6%E4%B8%8E%E5%9D%91"><span class="nav-number">1.5.2.</span> <span class="nav-text">限制与坑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">六、总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/25/design-md-google-labs-format-spec-ai-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="design.md：Google Labs 给 AI 编程 Agent 立的设计系统 &quot;宪法&quot;，一套 YAML 让 Agent 一次就生成对的设计 | 小戴的网络日志">
+      <meta itemprop="description" content="design.md 是 Google Labs 开源的格式规范，用 YAML frontmatter + Markdown 散文给 AI 编程 Agent 一份持久、结构化的&quot;设计系统说明书&quot;。配合官方 CLI 可以一键导出 Tailwind v3&#x2F;v4、W3C DTCG 等格式，让 Claude Code、Cursor 等 Agent 生成的 UI 真正符合品牌规范。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          design.md：Google Labs 给 AI 编程 Agent 立的设计系统 "宪法"，一套 YAML 让 Agent 一次就生成对的设计
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-25 10:00:00" itemprop="dateCreated datePublished" datetime="2026-06-25T10:00:00+08:00">2026-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">前端开发</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">design.md 是 Google Labs 开源的格式规范，用 YAML frontmatter + Markdown 散文给 AI 编程 Agent 一份持久、结构化的"设计系统说明书"。配合官方 CLI 可以一键导出 Tailwind v3/v4、W3C DTCG 等格式，让 Claude Code、Cursor 等 Agent 生成的 UI 真正符合品牌规范。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="design-md：Google-Labs-给-AI-编程-Agent-立的设计系统”宪法”，一套-YAML-让-Agent-一次就生成对的设计"><a href="#design-md：Google-Labs-给-AI-编程-Agent-立的设计系统”宪法”，一套-YAML-让-Agent-一次就生成对的设计" class="headerlink" title="design.md：Google Labs 给 AI 编程 Agent 立的设计系统”宪法”，一套 YAML 让 Agent 一次就生成对的设计"></a>design.md：Google Labs 给 AI 编程 Agent 立的设计系统” 宪法”，一套 YAML 让 Agent 一次就生成对的设计</h1><h2 id="一、一个让设计师崩溃的真实场景"><a href="#一、一个让设计师崩溃的真实场景" class="headerlink" title="一、一个让设计师崩溃的真实场景"></a>一、一个让设计师崩溃的真实场景</h2><p>周一上午 10 点，你刚把新一版品牌色” 墨黑 + 石灰 + 波士顿陶土橙” 同步给设计系统，PM 就丢过来一个 Jira：让 Claude Code 帮官网做一个” 夏季活动” 落地页。</p>
+<p>你心里咯噔一下。因为你知道接下来会发生什么：</p>
+<ul>
+<li>AI 看着截图猜颜色，生成一个偏蓝的” 墨黑”，跟品牌色差了两个色阶；</li>
+<li>字体随便挑，Inter、Roboto、Public Sans 混着用，标题字重 700、正文 400，全凭” 感觉”；</li>
+<li>圆角一会儿 4px、一会儿 12px，按钮一会儿实心、一会儿描边；</li>
+<li>你花了 3 周定的 4 级 spacing scale 在 AI 眼里只有” 大、中、小” 三个值。</li>
+</ul>
+<p>更扎心的是：你已经在 <code>/docs/design-system.md</code> 里写了 8000 字规范，但 AI <strong>压根没读</strong> —— 它只看到你贴进 prompt 的那张 Figma 截图。</p>
+<p>问题出在哪？<strong>AI 不缺设计规范，它缺一个” 机器可读、且不会被它忽略” 的设计说明书。</strong></p>
+<p>如果有一种文件格式，能把颜色、字体、间距、组件、Do’s and Don’ts <strong>同时用结构化 tokens 和人类可读散文</strong> 写在一份 Markdown 里，让任何 Agent 一打开就能理解，并且能一键导出 Tailwind v4 <code>@theme</code>、W3C DTCG 等行业标准 —— 会怎样？</p>
+<p>这就是 <a target="_blank" rel="noopener" href="https://github.com/google-labs-code/design.md">google-labs-code/design.md</a> 想做的事。今天它以 16,829 stars、单日 504 新增登上了 GitHub Trending，背后是 Google Labs 团队亲自操刀 —— 格式已经在 alpha 阶段，并提供同名 npm CLI 工具。</p>
+<h2 id="二、它到底解决什么问题"><a href="#二、它到底解决什么问题" class="headerlink" title="二、它到底解决什么问题"></a>二、它到底解决什么问题</h2><p><strong>一句话：给 AI 编程 Agent 一份” 持久化、结构化、能 lint、能 diff、能导出” 的设计系统宪法。</strong></p>
+<p>传统 AI 编程工作流里，让模型” 遵守设计规范” 只能靠这些” 笨办法”：</p>
+<ul>
+<li><strong>截图喂图</strong>：模型看到的是像素，不是语义。换个 hover 状态、换个分辨率就翻车。</li>
+<li><strong>粘贴 Figma 链接</strong>：模型拿到的是 read-only URL，看一眼就忘，下一次 prompt 又得重新发。</li>
+<li><strong>长篇 Markdown 规范</strong>：模型懒得读 8000 字散文，更不会在生成代码时引用具体 token。</li>
+<li><strong>手工导出 Tailwind config</strong>：维护成本高，每次设计变更都得人工同步。</li>
+</ul>
+<p><code>design.md</code> 选择了一条完全不同的路：<strong>把设计系统写成一个标准的 Markdown 文件，但用 YAML frontmatter 承载机器可读的 tokens，用 <code>##</code> 章节承载人类可读的设计意图</strong>。再配合官方 CLI，能 lint、能 diff 前后变更、能一键导出 Tailwind v3/v4 CSS、W3C DTCG 等格式。</p>
+<p>效果如何？官方在文档里给了一个非常直观的例子：</p>
+<blockquote>
+<p>一个符合规范的 agent 读完之后，会自动生成” 墨黑标题 + Public Sans + 石灰背景 + 波士顿陶土橙按钮” 的落地页 —— 而你只贴了那一份 DESIGN.md 文件。</p>
+</blockquote>
+<h2 id="三、核心功能亮点"><a href="#三、核心功能亮点" class="headerlink" title="三、核心功能亮点"></a>三、核心功能亮点</h2><h3 id="1-双层结构：YAML-tokens-Markdown-散文"><a href="#1-双层结构：YAML-tokens-Markdown-散文" class="headerlink" title="1. 双层结构：YAML tokens + Markdown 散文"></a>1. 双层结构：YAML tokens + Markdown 散文</h3><p>DESIGN.md 文件由两部分组成，缺一不可：</p>
+<ul>
+<li><strong>YAML frontmatter（规范性值）</strong>：所有 token 的” 硬数值”，比如颜色十六进制、字号 rem 值、圆角 px。</li>
+<li><strong>Markdown 主体（应用上下文）</strong>：每个章节用 <code>##</code> 标题写” 为什么这么设计”、” 什么时候用”、” 什么时候不要用”。</li>
+</ul>
+<p>官方原话：</p>
+<blockquote>
+<p>“Tokens give agents exact values. Prose tells them <em>why</em> those values exist and how to apply them.”</p>
+</blockquote>
+<p>也就是说，<strong>tokens 是骨架，散文是灵魂</strong>。模型读到 <code>#1A1C1E</code> 知道是墨黑；读到 “Use deep ink for headlines only — never for body text” 才不会在段落里乱用。</p>
+<h3 id="2-严格的章节顺序规范"><a href="#2-严格的章节顺序规范" class="headerlink" title="2. 严格的章节顺序规范"></a>2. 严格的章节顺序规范</h3><p>DESIGN.md 规定了 8 个标准章节，出现时必须按顺序：</p>
+<ol>
+<li>Overview（别名 Brand &amp; Style）</li>
+<li>Colors</li>
+<li>Typography</li>
+<li>Layout（别名 Layout &amp; Spacing）</li>
+<li>Elevation &amp; Depth</li>
+<li>Shapes</li>
+<li>Components</li>
+<li>Do’s and Don’ts</li>
+</ol>
+<p>这套顺序不是强制的（章节可省略），但<strong>一旦出现就必须按此顺序排列</strong> —— 这一点对 Agent 非常友好，因为它可以按位置预判下一个字段是什么，不用每次都重新解析整个文件结构。</p>
+<h3 id="3-完整的-Token-类型系统"><a href="#3-完整的-Token-类型系统" class="headerlink" title="3. 完整的 Token 类型系统"></a>3. 完整的 Token 类型系统</h3><p>支持的 token 类型覆盖了前端设计的 90% 场景：</p>
+<ul>
+<li><strong>Color</strong>：任何 CSS 颜色格式都行 ——hex、<code>rgb()</code>、<code>oklch()</code>、命名色都 OK。</li>
+<li><strong>Dimension</strong>：number + 单位（<code>px</code>、<code>em</code>、<code>rem</code>），连负 letter-spacing <code>-0.02em</code> 都能写。</li>
+<li><strong>Token Reference</strong>：可以用 <code>{colors.primary}</code> 这种路径引用别的 token，避免重复定义。</li>
+<li><strong>Typography</strong>：对象类型，包含 <code>fontFamily</code>、<code>fontSize</code>、<code>fontWeight</code>、<code>lineHeight</code>、<code>letterSpacing</code>、<code>fontFeature</code>、<code>fontVariation</code>—— 基本上把 OpenType 字体特性也覆盖了。</li>
+</ul>
+<h3 id="4-组件（Component）抽象"><a href="#4-组件（Component）抽象" class="headerlink" title="4. 组件（Component）抽象"></a>4. 组件（Component）抽象</h3><p>Components 是这套规范里最像” 面向对象” 的部分。一个 component 是一个<strong>命名的 token 组</strong>，包含 <code>backgroundColor</code>、<code>textColor</code>、<code>typography</code>、<code>rounded</code>、<code>padding</code>、<code>size</code> 等子属性。</p>
+<p>更妙的是，<strong>变体（hover、active、pressed）用独立 component 条目 + 关联命名</strong>来表达，比如 <code>Button</code> 和 <code>Button:hover</code>。这跟 Tailwind v4 的 <code>data-attribute variants</code> 哲学非常接近，导出时基本无损耗。</p>
+<h3 id="5-容错哲学：未知内容不报错"><a href="#5-容错哲学：未知内容不报错" class="headerlink" title="5. 容错哲学：未知内容不报错"></a>5. 容错哲学：未知内容不报错</h3><p>对” 未知内容” 的处理是这套规范里最值得 AI 工程借鉴的设计：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>未知章节标题</td>
+<td>保留，不报错</td>
+</tr>
+<tr>
+<td>未知颜色 token 名</td>
+<td>只要值合法就接受</td>
+</tr>
+<tr>
+<td>未知 typography token 名</td>
+<td>当作合法 typography 接受</td>
+</tr>
+<tr>
+<td>未知 component 属性</td>
+<td>接受但给 warning</td>
+</tr>
+<tr>
+<td><strong> 重复章节标题</strong></td>
+<td><strong>报错，拒绝文件</strong></td>
+</tr>
+</tbody></table>
+<p>也就是说，<strong>“前向兼容” 做得非常激进</strong> —— 你今天写一个新章节、明天写一个新属性，旧的 parser 都不会炸。只有” 重复” 这种真正的歧义才会被拒绝。这对 Agent 生态极其友好：模型可以自由探索新结构，而不会因为小创新就把整个流水线打挂。</p>
+<h3 id="6-官方-CLI：lint-diff-export-spec"><a href="#6-官方-CLI：lint-diff-export-spec" class="headerlink" title="6. 官方 CLI：lint / diff / export / spec"></a>6. 官方 CLI：lint /diff/export /spec</h3><p>仓库同步发布了一个 npm 包：<code>@google/design.md</code>（命令行别名 <code>designmd</code>）。提供 4 个核心命令：</p>
+<ul>
+<li><strong><code>lint &lt;file&gt;</code></strong>：校验文件结构，错误退出码 1，正确退出码 0。可以塞进 CI。</li>
+<li><strong><code>diff &lt;before&gt; &lt;after&gt;</code></strong>：对比两份 DESIGN.md，输出 token 级别的变更。<strong>退出码 1 表示 “after” 比 “before” 有更多 error/warning</strong>—— 可以直接当 PR 检查用。</li>
+<li><strong><code>export &lt;file&gt; --format=...</code></strong>：导出成 4 种格式：<ul>
+<li><code>json-tailwind</code>（Tailwind v3 <code>theme.extend</code> 对象）</li>
+<li><code>css-tailwind</code>（Tailwind v4 <code>@theme { ... }</code> 块，含 CSS 自定义属性）</li>
+<li><code>tailwind</code>（<code>json-tailwind</code> 的别名）</li>
+<li><code>dtcg</code>（W3C Design Tokens Format Module）</li>
+</ul>
+</li>
+<li><strong><code>spec</code></strong>：把格式规范本身 dump 出来，方便塞进 agent 的 system prompt 当作上下文。</li>
+</ul>
+<h2 id="四、实战示例：5-分钟搭一个品牌落地页"><a href="#四、实战示例：5-分钟搭一个品牌落地页" class="headerlink" title="四、实战示例：5 分钟搭一个品牌落地页"></a>四、实战示例：5 分钟搭一个品牌落地页</h2><p>假设你是某 SaaS 公司的前端工程师，品牌色是” 墨黑 + 石灰 + 波士顿陶土橙”，主字体 Public Sans。先写一份 DESIGN.md：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">name: "Acme Cloud Brand"</span><br><span class="line">colors:</span><br><span class="line">  ink: "#1A1C1E"</span><br><span class="line">  limestone: "#F2EDE4"</span><br><span class="line">  boston-clay: "#B5651D"</span><br><span class="line">  text-muted: "oklch(45% 0.02 250)"</span><br><span class="line">typography:</span><br><span class="line">  font-display:</span><br><span class="line"><span class="code">    fontFamily: "Public Sans"</span></span><br><span class="line"><span class="code">    fontSize: "48px"</span></span><br><span class="line"><span class="code">    fontWeight: "700"</span></span><br><span class="line"><span class="code">    lineHeight: "1.1"</span></span><br><span class="line"><span class="code">    letterSpacing: "-0.02em"</span></span><br><span class="line"><span class="code">  font-body:</span></span><br><span class="line"><span class="code">    fontFamily: "Public Sans"</span></span><br><span class="line"><span class="code">    fontSize: "16px"</span></span><br><span class="line"><span class="code">    fontWeight: "400"</span></span><br><span class="line"><span class="code">    lineHeight: "1.6"</span></span><br><span class="line"><span class="code">spacing:</span></span><br><span class="line"><span class="code">  xs: "4px"</span></span><br><span class="line"><span class="code">  sm: "8px"</span></span><br><span class="line"><span class="code">  md: "16px"</span></span><br><span class="line"><span class="code">  lg: "32px"</span></span><br><span class="line"><span class="code">  xl: "64px"</span></span><br><span class="line"><span class="code">components:</span></span><br><span class="line"><span class="code">  Button:</span></span><br><span class="line"><span class="code">    backgroundColor: "{colors.boston-clay}"</span></span><br><span class="line"><span class="code">    textColor: "{colors.limestone}"</span></span><br><span class="line"><span class="code">    typography: "{typography.font-body}"</span></span><br><span class="line"><span class="code">    rounded: "8px"</span></span><br><span class="line"><span class="code">    padding: "{spacing.sm} {spacing.lg}"</span></span><br><span class="line"><span class="code">  Button:hover:</span></span><br><span class="line"><span class="code">    backgroundColor: "{colors.ink}"</span></span><br><span class="line"><span class="code">    textColor: "{colors.limestone}"</span></span><br><span class="line"><span class="code">---</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section">## Overview</span></span><br><span class="line">Acme Cloud 的视觉语言走"克制 + 温暖"路线。墨黑与石灰奠定专业感，</span><br><span class="line">波士顿陶土橙作为唯一的高饱和强调色，每次界面只出现一次。</span><br><span class="line"></span><br><span class="line"><span class="section">## Colors</span></span><br><span class="line"><span class="bullet">-</span> <span class="code">`ink`</span>: 标题主色，仅用于 hero 标题、卡片标题、导航栏 logo。</span><br><span class="line"><span class="bullet">-</span> <span class="code">`limestone`</span>: 页面主背景，绝不用于文字。</span><br><span class="line"><span class="bullet">-</span> <span class="code">`boston-clay`</span>: 唯一 CTA 色，全屏只允许出现 1 次。</span><br><span class="line"><span class="bullet">-</span> <span class="code">`text-muted`</span>: 次要正文、辅助说明。</span><br><span class="line"></span><br><span class="line"><span class="section">## Typography</span></span><br><span class="line"><span class="bullet">-</span> <span class="code">`font-display`</span>: 仅用于 H1、H2，最大不超过 64px。</span><br><span class="line"><span class="bullet">-</span> <span class="code">`font-body`</span>: 全站正文统一字号、行高。</span><br><span class="line"></span><br><span class="line"><span class="section">## Components</span></span><br><span class="line"><span class="bullet">-</span> <span class="code">`Button`</span>: 默认态。</span><br><span class="line"><span class="bullet">-</span> <span class="code">`Button:hover`</span>: 鼠标悬停时反白，给用户明确的反馈。</span><br><span class="line"></span><br><span class="line"><span class="section">## Do's and Don'ts</span></span><br><span class="line"><span class="bullet">-</span> ✅ 用 <span class="code">`ink`</span> 做 H1。</span><br><span class="line"><span class="bullet">-</span> ❌ 不要用 <span class="code">`boston-clay`</span> 做正文链接。</span><br><span class="line"><span class="bullet">-</span> ❌ 不要混用第三方图标色板。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来用官方 CLI 一行命令导出 Tailwind v4：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx -p @google/design.md designmd <span class="built_in">export</span> brand.DESIGN.md --format=css-tailwind</span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出大致是：</p>
+<figure class="highlight css"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@theme</span> {</span><br><span class="line">  <span class="attr">--color-ink</span>: <span class="number">#1A1C1E</span>;</span><br><span class="line">  <span class="attr">--color-limestone</span>: <span class="number">#F2EDE4</span>;</span><br><span class="line">  <span class="attr">--color-boston-clay</span>: <span class="number">#B5651D</span>;</span><br><span class="line">  <span class="attr">--color-text-muted</span>: <span class="built_in">oklch</span>(<span class="number">45%</span> <span class="number">0.02</span> <span class="number">250</span>);</span><br><span class="line">  <span class="attr">--font-display</span>: <span class="string">"Public Sans"</span>, <span class="number">48px</span> <span class="number">700</span> <span class="number">1.1</span> -<span class="number">0.02em</span>;</span><br><span class="line">  <span class="attr">--font-body</span>: <span class="string">"Public Sans"</span>, <span class="number">16px</span> <span class="number">400</span> <span class="number">1.6</span> <span class="number">0</span>;</span><br><span class="line">  <span class="attr">--spacing-xs</span>: <span class="number">4px</span>;</span><br><span class="line">  <span class="attr">--spacing-sm</span>: <span class="number">8px</span>;</span><br><span class="line">  <span class="attr">--spacing-md</span>: <span class="number">16px</span>;</span><br><span class="line">  <span class="attr">--spacing-lg</span>: <span class="number">32px</span>;</span><br><span class="line">  <span class="attr">--spacing-xl</span>: <span class="number">64px</span>;</span><br><span class="line">  <span class="attr">--component-button-bg</span>: <span class="built_in">var</span>(--color-boston-clay);</span><br><span class="line">  <span class="attr">--component-button-color</span>: <span class="built_in">var</span>(--color-limestone);</span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后把这个文件丢给 Claude Code：</p>
+<blockquote>
+<p>“读一下 ./brand.DESIGN.md 和 ./tailwind.css，按规范给我做一个夏季活动落地页。”</p>
+</blockquote>
+<p>你会得到一份<strong>字体、颜色、圆距、按钮全部对齐品牌</strong>的 React/Tailwind 代码 —— 而不是又一份”AI 自己挑的颜色”。</p>
+<h2 id="五、适用场景和限制"><a href="#五、适用场景和限制" class="headerlink" title="五、适用场景和限制"></a>五、适用场景和限制</h2><h3 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h3><ul>
+<li><strong>品牌官网、营销页</strong>：需要严格遵循 VI 的页面，AI 一稿就能交。</li>
+<li><strong>设计系统迁移</strong>：从 Figma Tokens、W3C DTCG 迁到 Tailwind v4，可以用 <code>export</code> 反向生成。</li>
+<li><strong>PR/CI 校验</strong>：把 <code>lint</code> 和 <code>diff</code> 塞进 GitHub Actions，PR 里自动评论” 你删了 3 个 token、新增 1 个未授权颜色”。</li>
+<li><strong>多 Agent 协作</strong>：把 <code>spec</code> 命令输出塞进 system prompt，让任何 Agent（不只是 Claude Code）都能理解格式。</li>
+</ul>
+<h3 id="限制与坑"><a href="#限制与坑" class="headerlink" title="限制与坑"></a>限制与坑</h3><ul>
+<li><strong>状态：alpha</strong>：40 个 commit，规范仍在演化，生产环境建议先小范围试点。</li>
+<li><strong>Windows 坑</strong>：<code>npm install</code> 会因为 <code>@</code> 触发 Markdown 文件关联，必须用 <code>npx -p @google/design.md designmd</code> 间接调用。</li>
+<li><strong><code>npm error ENOVERSIONS</code></strong>：如果团队用了私有 npm 镜像，需要检查 <code>.npmrc</code> 里是否覆盖了 <code>@google:registry</code>，正确注册表必须是 <code>https://registry.npmjs.org/</code>。</li>
+<li><strong>变体表达仍然偏弱</strong>：hover、active、pressed 还得手写多份 component，没原生 <code>state</code> 字段，期待后续版本。</li>
+<li><strong>不是设计工具</strong>：DESIGN.md 不替代 Figma，它只负责” 机器可读的那部分”，视觉探索还得在 Figma 里完成。</li>
+</ul>
+<h2 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h2><p><code>design.md</code> 解决了一个被忽视很久的问题：<strong>设计系统和 AI Agent 之间缺一座桥</strong>。</p>
+<p>它没有发明新概念 ——tokens、组件、章节这些老熟人都有；但它做了一个非常聪明的妥协：</p>
+<ul>
+<li><strong>机器要的硬数值</strong>放进 YAML frontmatter，能 lint、能 diff、能导出。</li>
+<li><strong>人写的设计意图</strong>留在 Markdown 散文里，告诉模型” 为什么” 和” 什么时候不要用”。</li>
+<li><strong>未知内容不报错</strong>的容错哲学，让 Agent 生态可以自由探索新结构。</li>
+</ul>
+<p>对于一个每天都在让 AI 生成 UI 的团队来说，这意味着 —— <strong>你不用再每次 prompt 都重复品牌规范了</strong>。把 DESIGN.md 放进仓库根目录，剩下的交给 CLI 和 Agent。</p>
+<p>如果你正被”AI 总是生成错颜色、错字体、错间距” 折磨，今天就花 30 分钟写一份 DESIGN.md，然后跑一行 <code>npx -p @google/design.md designmd export --format=css-tailwind</code>。你会感谢自己的。</p>
+<hr>
+<p><strong>项目地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/google-labs-code/design.md">https://github.com/google-labs-code/design.md</a><br><strong>CLI 包</strong>：<code>@google/design.md</code>（别名 <code>designmd</code>）<br><strong>License</strong>：Apache 2.0<br><strong>Stars</strong>：16,829（截至撰文日）</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/25/design-md-google-labs-format-spec-ai-agent/" title="design.md：Google Labs 给 AI 编程 Agent 立的设计系统 &quot;宪法&quot;，一套 YAML 让 Agent 一次就生成对的设计">https://www.daishengli.top/2026/06/25/design-md-google-labs-format-spec-ai-agent/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/%E8%AE%BE%E8%AE%A1%E7%B3%BB%E7%BB%9F/" rel="tag"># 设计系统</a>
+              <a href="/tags/design-md/" rel="tag"># design.md</a>
+              <a href="/tags/Google-Labs/" rel="tag"># Google Labs</a>
+              <a href="/tags/Design-Tokens/" rel="tag"># Design Tokens</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/24/codebase-memory-mcp-code-intelligence-knowledge-graph/" rel="prev" title="codebase-memory-mcp：把整个代码库塞进 AI 编程助手的知识图谱，单二进制 0 依赖，索引 Linux 内核仅 3 分钟">
+                  <i class="fa fa-angle-left"></i> codebase-memory-mcp：把整个代码库塞进 AI 编程助手的知识图谱，单二进制 0 依赖，索引 Linux 内核仅 3 分钟
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/26/page-agent-in-page-gui-agent-natural-language/" rel="next" title="Alibaba Page Agent：把 &quot;自然语言&quot; 直接接到你的网页里，AI 替用户点击的时代到了">
+                  Alibaba Page Agent：把 "自然语言" 直接接到你的网页里，AI 替用户点击的时代到了 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">鄂ICP备2022017446号-6 </a>
+  </div>
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
