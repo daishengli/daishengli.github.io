@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="whichllm 是一个一行命令的 CLI，扫你的硬件直接告诉你&quot;该跑哪个本地 LLM 最强&quot;，按真实 benchmark排名而不是参数大小。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="whichllm：3.5k 星的本地 LLM 选型神器，让我不再纠结 MacBook 该跑哪个模型">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/10/whichllm-local-llm-hardware-matcher/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="whichllm 是一个一行命令的 CLI，扫你的硬件直接告诉你&quot;该跑哪个本地 LLM 最强&quot;，按真实 benchmark排名而不是参数大小。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-10T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.409Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="Apple Silicon">
+<meta property="article:tag" content="AI 编程">
+<meta property="article:tag" content="whichllm">
+<meta property="article:tag" content="本地 LLM">
+<meta property="article:tag" content="Ollama">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/10/whichllm-local-llm-hardware-matcher/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/10/whichllm-local-llm-hardware-matcher/","path":"2026/06/10/whichllm-local-llm-hardware-matcher/","title":"whichllm：3.5k 星的本地 LLM 选型神器，让我不再纠结 MacBook 该跑哪个模型"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>whichllm：3.5k 星的本地 LLM 选型神器，让我不再纠结 MacBook 该跑哪个模型 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E5%88%B0%E5%BA%95%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">它到底解决什么问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E5%9C%A8-M3-Max-%E4%B8%8A%E8%B7%91%E4%BA%86%E4%B8%80%E4%B8%8B"><span class="nav-number">2.</span> <span class="nav-text">我在 M3 Max 上跑了一下</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E5%81%9A%E5%AF%B9%E7%9A%84%E5%87%A0%E4%BB%B6%E4%BA%8B"><span class="nav-number">3.</span> <span class="nav-text">它做对的几件事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E6%89%93%E7%AE%97%E6%80%8E%E4%B9%88%E7%94%A8%E5%AE%83"><span class="nav-number">4.</span> <span class="nav-text">我打算怎么用它</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">5.</span> <span class="nav-text">它不适合谁</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/10/whichllm-local-llm-hardware-matcher/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="whichllm：3.5k 星的本地 LLM 选型神器，让我不再纠结 MacBook 该跑哪个模型 | 小戴的网络日志">
+      <meta itemprop="description" content="whichllm 是一个一行命令的 CLI，扫你的硬件直接告诉你&quot;该跑哪个本地 LLM 最强&quot;，按真实 benchmark排名而不是参数大小。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          whichllm：3.5k 星的本地 LLM 选型神器，让我不再纠结 MacBook 该跑哪个模型
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-10 10:00:00" itemprop="dateCreated datePublished" datetime="2026-06-10T10:00:00+08:00">2026-06-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/%E5%BC%80%E6%BA%90/" itemprop="url" rel="index"><span itemprop="name">开源</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/%E5%BC%80%E6%BA%90/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">whichllm 是一个一行命令的 CLI，扫你的硬件直接告诉你"该跑哪个本地 LLM 最强"，按真实 benchmark排名而不是参数大小。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>我习惯在每台机器上先把本地 LLM 装好再开工。但每次换机器，我都会遇到同一个问题：</p>
+<blockquote>
+<p><strong>这台机器到底该跑哪个模型？</strong></p>
+</blockquote>
+<p>我用过 M2 Air 的 8GB 显存、M3 Max 的 36GB、还有一台借朋友的 RTX4060。每换一台机器，我都会去翻 r/LocalLLaMA 的 megathread、刷 HuggingFace 的 leaderboard、对照 LiveBench 和 Aider 的分数，花一两个小时选一个「看上去还行」的模型，然后装下来发现要么跑得卡、要么回答质量稀烂。</p>
+<p>今天刷 GitHub Trending 看到一个新项目，正好戳中这件事：<strong>Andyyyy64/whichllm</strong>（3.5k 星，单日涨 800+），Show HN 上线不到一个月，已经被 threads/linkedin 一圈技术博主转发。我装下来用了半小时，第一个想法是：<strong>这个东西应该早一年出现。</strong></p>
+<h2 id="它到底解决什么问题"><a href="#它到底解决什么问题" class="headerlink" title="它到底解决什么问题"></a>它到底解决什么问题</h2><p>whichllm 的 README 第一句话就把我劝服了：</p>
+<blockquote>
+<p>Fitting a model into your VRAM is the easy part. The hard part is knowing <strong>which of the models that fit is actually the best</strong>.</p>
+</blockquote>
+<p>翻译成人话：把模型塞进显存里是简单的，难的是<strong>塞得进去的那一堆模型里，哪个真正最强</strong>。</p>
+<p>传统做法是：看显存 →找尺寸匹配的模型 →凭印象 / 参数选一个。但这个链条有三个坑：</p>
+<ol>
+<li><strong>参数多不等于能力强</strong>。32B 的 Qwen3 不一定比 27B 的 Qwen3.6 强；MoE 模型只看参数总量会被严重误导（30B-A3B 实际只激活 3B）。</li>
+<li><strong>量化等级影响巨大</strong>。同一个 7B 模型，Q3 和 Q6 的效果差距能到 20 分 benchmark。</li>
+<li><strong>榜单会过期</strong>。HuggingFace Open LLM Leaderboard2024 年的冠军，放到 2026 年连前十都进不去。</li>
+</ol>
+<p>whichllm 把这三件事一起解决了：<strong>实时拉 HuggingFace 的 benchmark 数据、按你的硬件过滤、按” 质量 × 速度” 综合打分排序</strong>，输出一个可以直接用的 Top N 表格。</p>
+<h2 id="我在-M3-Max-上跑了一下"><a href="#我在-M3-Max-上跑了一下" class="headerlink" title="我在 M3 Max 上跑了一下"></a>我在 M3 Max 上跑了一下</h2><p>安装一行命令：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uvx whichllm@latest</span><br></pre></td></tr></tbody></table></figure>
+
+<blockquote>
+<p>（它推荐用 <code>uvx</code>，不用装虚拟环境，不用装 Python 包管理器 —— 这点很贴心，毕竟不是每个想跑本地 LLM 的人都是 Python 老手）</p>
+</blockquote>
+<p>它在终端扫了我的硬件：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GPU: Apple M3 Max (40-core GPU, unified memory)</span><br><span class="line">RAM:36 GB</span><br><span class="line">OS: macOS15.4</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后给我吐出来一张表：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#1 Qwen/Qwen3.6-27B27.8B Q5_K_M score89.49 t/s</span><br><span class="line">#2 Qwen/Qwen3-32B32.0B Q4_K_M score83.08 t/s</span><br><span class="line">#3 Qwen/Qwen3-30B-A3B30.0B Q5_K_M score82.7102 t/s # MoE</span><br><span class="line">#4 mistral-large-2-24B24.0B Q5_K_M score81.211 t/s</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第一个细节让我乐了：<strong>27B 排在 32B 前面</strong>。不是按显存倒序排的，是按真实 benchmark 排的。Qwen3.6 是更新一代的模型，哪怕参数更少，分数也更高 —— 这就是” 不要被尺寸骗了” 的活教材。</p>
+<p>第三个细节更值得说：<strong>MoE 模型（30B-A3B）速度 102 t/s</strong>，是稠密模型的 10 倍。它没有把 30B 当成 30B 算 tok/s，而是按” 激活参数” 算 —— 这个细节绝大多数排行榜工具都没做对。</p>
+<h2 id="它做对的几件事"><a href="#它做对的几件事" class="headerlink" title="它做对的几件事"></a>它做对的几件事</h2><p>我看了一下它的源码（Python，结构挺清爽），挑几个我觉得作者做得特别讲究的点：</p>
+<p><strong>1. 评分有” 证据等级”，不是直接相加</strong></p>
+<p>每个 benchmark 来源被打上标签：<code>direct</code>（直接测过）、<code>variant</code>（同系列衍生）、<code>base</code>（基座）、<code>interpolated</code>（插值）、<code>self-reported</code>（厂商自报）。然后打分时给每个等级不同的折扣系数 —— 自报的分数会被显著压低。这一步直接砍掉了” 模型自己吹自己” 的污染。</p>
+<p><strong>2. 速度估算不是黑箱</strong></p>
+<p>公式不是简单的” 参数 ÷ 显存带宽”。它把：</p>
+<ul>
+<li>每个 quant 等级的实际效率（Q4_K_M 跟 Q4_0 不一样）</li>
+<li>不同 backend 的差异（llama.cpp vs MLX vs vLLM）</li>
+<li>MoE 模型的 active vs total 参数</li>
+<li> Apple Silicon unified memory 跟独立 GPU 的部分卸载</li>
+</ul>
+<p>都拆开算。读 README 里那行 “VRAM = weights + GQA KV cache + activation + overhead”，我怀疑作者和我一样被那些” 装下来 OOM 再换模型” 的循环折磨过。</p>
+<p><strong>3. 能模拟” 如果我有这张卡”</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">whichllm --gpu <span class="string">"RTX5090"</span></span><br><span class="line">whichllm --gpu <span class="string">"H100"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>你想升级显卡但不知道值不值？跑一下。不用真的买。</p>
+<p><strong>4. 还能反向查：跑这个模型需要什么卡</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">whichllm plan <span class="string">"llama370b"</span></span><br><span class="line"><span class="comment"># 输出：要跑得舒服，至少 RTX409024G / M3 Max36G</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>5. 一键开聊</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">whichllm run</span><br><span class="line"><span class="comment"># 自动下载上面 #1推荐的 GGUF权重，直接进入交互</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>或者你想指定：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whichllm run <span class="string">"qwen2.51.5b gguf"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>我试了一下，下载完启动大概 30 秒 —— 比 Ollama <code>pull</code> 那一套少敲两次命令。</p>
+<h2 id="我打算怎么用它"><a href="#我打算怎么用它" class="headerlink" title="我打算怎么用它"></a>我打算怎么用它</h2><p>我一年里会在多台机器之间切换：自己的 M3 Max MacBook、朋友的 Windows 游戏本（4090）、出租屋的 M1 Air、甚至有时候借朋友的 Linux 工作站。</p>
+<p>以前每换一台机器，第一晚的固定节目就是装 Ollama 然后瞎试模型。现在变成：</p>
+<p>1. 落地第一晚：<code>uvx whichllm@latest</code> 2. 看 Top3 推荐的模型，挑一个装 3. 不满意再 <code>whichllm --json | jq</code> 筛条件</p>
+<p>省下来的不是时间，是” 决定成本”—— 不用每次都重新做选型决策。</p>
+<p>另一个场景：当我写博客调研某个新模型时（比如昨天的 Qwen3.6），我会想知道它在<strong>我的硬件</strong>上能跑多快、哪个 quant 是甜点。whichllm 直接回答这个，不用我自己跑 benchmark 脚本。</p>
+<h2 id="它不适合谁"><a href="#它不适合谁" class="headerlink" title="它不适合谁"></a>它不适合谁</h2><p>公平起见说几个边界：</p>
+<ul>
+<li><strong>不评测你没装过的硬件</strong>。它是” 硬件 → 模型”，不是” 模型 → 模型”。如果你想横向比 Qwen3 vs Llama4 在同一张卡上的差距，你还得自己跑。</li>
+<li><strong>不跑视觉模型排行</strong>。它支持 vision profile，但 benchmark 数据相对稀薄。</li>
+<li><strong>不支持闭源模型</strong>。Claude / GPT-4o / Gemini 这种它不参与。</li>
+</ul>
+<p>但对” 我就想知道这台机器该装哪个开源模型” 这个核心问题，它干得非常漂亮。</p>
+<p>## 怎么开始</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#一次性试用，不用安装</span></span><br><span class="line">uvx whichllm@latest</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者装到本机</span></span><br><span class="line">brew install andyyyy64/whichllm/whichllm</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">pip install whichllm</span><br><span class="line"></span><br><span class="line"><span class="comment">#模拟你未来想买的卡</span></span><br><span class="line">whichllm --gpu <span class="string">"RTX5090"</span> --gpu <span class="string">"RTX4090"</span> --gpu <span class="string">"M3 Ultra"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#选好了直接开聊</span></span><br><span class="line">whichllm run</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出 JSON 给脚本用</span></span><br><span class="line">whichllm --json | jq <span class="string">'.[0]'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>MIT 协议，3.5k 星，2026 年 6 月还在活跃更新（v0.5.8 才发了 5 天）。作者一个人在维护，但仓库结构干净，issues 回得也快 —— 属于那种” 用着放心” 的项目。</p>
+<hr>
+<p>写完这一篇我去把 <code>whichllm</code> 加进自己的 dotfiles 装机脚本里。如果你也是个在不同设备之间切换的 AI 重度用户，建议今天就试一下，跑完回来告诉我你看到了什么模型排在第一。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/10/whichllm-local-llm-hardware-matcher/" title="whichllm：3.5k 星的本地 LLM 选型神器，让我不再纠结 MacBook 该跑哪个模型">https://www.daishengli.top/2026/06/10/whichllm-local-llm-hardware-matcher/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Apple-Silicon/" rel="tag"># Apple Silicon</a>
+              <a href="/tags/AI-%E7%BC%96%E7%A8%8B/" rel="tag"># AI 编程</a>
+              <a href="/tags/whichllm/" rel="tag"># whichllm</a>
+              <a href="/tags/%E6%9C%AC%E5%9C%B0-LLM/" rel="tag"># 本地 LLM</a>
+              <a href="/tags/Ollama/" rel="tag"># Ollama</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/09/vibe-trading-ai-finance-research-agent/" rel="prev" title="Vibe-Trading：港大 HKUDS 那个 10k 星的「AI 投研实习生」，把回测这件事变成说人话">
+                  <i class="fa fa-angle-left"></i> Vibe-Trading：港大 HKUDS 那个 10k 星的「AI 投研实习生」，把回测这件事变成说人话
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/11/apple-container-swift-vm-per-container/" rel="next" title="apple&#x2F;container：苹果亲自下场做容器，每个容器独占一台微型 VM">
+                  apple/container：苹果亲自下场做容器，每个容器独占一台微型 VM <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

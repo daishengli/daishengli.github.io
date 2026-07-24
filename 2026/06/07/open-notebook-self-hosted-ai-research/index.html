@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="开源自托管的 NotebookLM 替代品，支持 18+ 模型、可生成 1-4 人播客、完整 REST API，数据不出本地。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Open Notebook：自己部署一个比 NotebookLM 更猛的 AI 研报工作台">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/07/open-notebook-self-hosted-ai-research/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="开源自托管的 NotebookLM 替代品，支持 18+ 模型、可生成 1-4 人播客、完整 REST API，数据不出本地。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-07T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.407Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="开源工具">
+<meta property="article:tag" content="NotebookLM">
+<meta property="article:tag" content="自部署">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/07/open-notebook-self-hosted-ai-research/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/07/open-notebook-self-hosted-ai-research/","path":"2026/06/07/open-notebook-self-hosted-ai-research/","title":"Open Notebook：自己部署一个比 NotebookLM 更猛的 AI 研报工作台"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Open Notebook：自己部署一个比 NotebookLM 更猛的 AI 研报工作台 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E8%A7%A3%E5%86%B3%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">它解决的是什么问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E6%8B%86%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">核心能力拆解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%B5%84%E6%96%99%E6%91%84%E5%8F%96%EF%BC%9A%E4%BB%80%E4%B9%88%E9%83%BD%E8%83%BD%E5%BE%80%E9%87%8C%E5%A1%9E"><span class="nav-number">2.1.</span> <span class="nav-text">1. 资料摄取：什么都能往里塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%A4%9A%E6%A8%A1%E5%9E%8B-Chat%EF%BC%9A%E5%B8%A6%E7%9D%80%E4%B8%8A%E4%B8%8B%E6%96%87%E9%97%AE%E9%97%AE%E9%A2%98"><span class="nav-number">2.2.</span> <span class="nav-text">2. 多模型 Chat：带着上下文问问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Transformations%EF%BC%9A%E5%8F%AF%E7%BC%96%E7%A8%8B%E7%9A%84%E2%80%9D%E7%A0%94%E6%8A%A5%E6%B5%81%E6%B0%B4%E7%BA%BF%E2%80%9D"><span class="nav-number">2.3.</span> <span class="nav-text">3. Transformations：可编程的” 研报流水线”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%92%AD%E5%AE%A2%E7%94%9F%E6%88%90%EF%BC%9A1-4-%E4%B8%AA-Speaker%EF%BC%8C%E6%AF%94-NotebookLM-%E7%81%B5%E6%B4%BB"><span class="nav-number">2.4.</span> <span class="nav-text">4. 播客生成：1-4 个 Speaker，比 NotebookLM 灵活</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%AE%8C%E6%95%B4-REST-API%EF%BC%9A%E6%8A%8A%E5%AE%83%E6%8E%A5%E5%88%B0%E4%BB%BB%E4%BD%95%E5%9C%B0%E6%96%B9"><span class="nav-number">2.5.</span> <span class="nav-text">5. 完整 REST API：把它接到任何地方</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%88%86%E9%92%9F%E8%B7%91%E8%B5%B7%E6%9D%A5"><span class="nav-number">3.</span> <span class="nav-text">十分钟跑起来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E8%87%AA%E5%B7%B1%E7%9A%84%E5%87%A0%E4%B8%AA%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">4.</span> <span class="nav-text">我自己的几个使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E5%92%8C-NotebookLM-%E6%80%8E%E4%B9%88%E9%80%89"><span class="nav-number">5.</span> <span class="nav-text">它和 NotebookLM 怎么选</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%A0%E4%B8%AA%E5%B0%8F%E5%9D%91%E6%8F%90%E9%86%92"><span class="nav-number">6.</span> <span class="nav-text">几个小坑提醒</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%B6%E4%B8%AA%E5%B0%BE"><span class="nav-number">7.</span> <span class="nav-text">收个尾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="nav-number">8.</span> <span class="nav-text">相关阅读</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/07/open-notebook-self-hosted-ai-research/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Open Notebook：自己部署一个比 NotebookLM 更猛的 AI 研报工作台 | 小戴的网络日志">
+      <meta itemprop="description" content="开源自托管的 NotebookLM 替代品，支持 18+ 模型、可生成 1-4 人播客、完整 REST API，数据不出本地。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Open Notebook：自己部署一个比 NotebookLM 更猛的 AI 研报工作台
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-07 10:00:00" itemprop="dateCreated datePublished" datetime="2026-06-07T10:00:00+08:00">2026-06-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">技术教程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">开源自托管的 NotebookLM 替代品，支持 18+ 模型、可生成 1-4 人播客、完整 REST API，数据不出本地。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>最近翻 GitHub Trending 看到一个项目冲到第一名：<a target="_blank" rel="noopener" href="https://github.com/lfnovo/open-notebook">lfnovo/open-notebook</a>，一天涨了 794 颗星，标语写着「A private, multi-model, 100% local, full-featured alternative to Notebook LM」。作为一个常年被 NotebookLM 圈粉、又被它锁死在 Google 云里难受的人，我立刻拉下来玩了一圈。</p>
+<p>先说结论：这玩意儿是我今年用过的最舒服的研究类工具，没有之一。</p>
+<h2 id="它解决的是什么问题"><a href="#它解决的是什么问题" class="headerlink" title="它解决的是什么问题"></a>它解决的是什么问题</h2><p>NotebookLM 是个好产品。我拿它读过论文、啃过技术报告、生成过播客，但有三个点一直让我抓狂：</p>
+<ol>
+<li><strong>数据必须交给 Google</strong>。上传的 PDF、笔记、播客脚本都在 Google 的云上，敏感资料不敢传。</li>
+<li><strong>只能用 Google 的模型</strong>。Gemini 强是强，但我想用 Claude、想用本地 Ollama、想跑 Qwen，统统不行。</li>
+<li><strong>没有 API</strong>。想把它接到自己的 workflow 里自动化？没门。</li>
+</ol>
+<p>Open Notebook 就是冲着这三点来的：</p>
+<ul>
+<li><strong>100% 自托管</strong>，Docker Compose 拉起来就跑</li>
+<li><strong> 18+ 模型供应商</strong>，OpenAI、Anthropic、Google、Ollama、DeepSeek、Mistral、Qwen 全支持，甚至可以走 OpenRouter</li>
+<li><strong> 完整 REST API</strong>，什么都能自动化</li>
+</ul>
+<p>对我来说，这就把”AI 研报” 这件事从”Google 给我什么我用什么” 变成了” 我想怎么用就怎么用”。</p>
+<h2 id="核心能力拆解"><a href="#核心能力拆解" class="headerlink" title="核心能力拆解"></a>核心能力拆解</h2><h3 id="1-资料摄取：什么都能往里塞"><a href="#1-资料摄取：什么都能往里塞" class="headerlink" title="1. 资料摄取：什么都能往里塞"></a>1. 资料摄取：什么都能往里塞</h3><p>支持 PDF、视频、音频、网页链接、Office 文档、Markdown，纯文本直接复制也行。</p>
+<p>我自己的用法是建一个 <code>daily-research</code> 笔记本，把每天想看的论文、行业报告、播客转写都丢进去。后台会自动抽取文本、切块、向量化。</p>
+<h3 id="2-多模型-Chat：带着上下文问问题"><a href="#2-多模型-Chat：带着上下文问问题" class="headerlink" title="2. 多模型 Chat：带着上下文问问题"></a>2. 多模型 Chat：带着上下文问问题</h3><p>每个笔记本可以单独配置默认模型。我习惯这么配：</p>
+<ul>
+<li>日常问答用 <code>claude-sonnet-4.5</code>（性价比好）</li>
+<li>重要决策用 <code>claude-opus-4.5</code>（深度推理）</li>
+<li>涉密内容用本地 <code>qwen2.5:32b</code>（数据不出本机）</li>
+</ul>
+<p>切换的时候不用动代码，直接在 UI 里改。</p>
+<h3 id="3-Transformations：可编程的”研报流水线”"><a href="#3-Transformations：可编程的”研报流水线”" class="headerlink" title="3. Transformations：可编程的”研报流水线”"></a>3. Transformations：可编程的” 研报流水线”</h3><p>这是我最喜欢的部分。Transformation 是一组可复用的处理步骤，你可以理解为” 研报工作流的乐高积木”。</p>
+<p>内置的就够用：摘要、要点提取、FAQ 生成、人物关系抽取…… 我经常用的是「先抽要点，再生成 FAQ，再翻译成中文」三件套。</p>
+<p>进阶玩家可以自己写 prompt 模板，支持 Jinja 语法，能引用当前笔记本的内容。</p>
+<h3 id="4-播客生成：1-4-个-Speaker，比-NotebookLM-灵活"><a href="#4-播客生成：1-4-个-Speaker，比-NotebookLM-灵活" class="headerlink" title="4. 播客生成：1-4 个 Speaker，比 NotebookLM 灵活"></a>4. 播客生成：1-4 个 Speaker，比 NotebookLM 灵活</h3><p>这个功能必须单独拿出来说。</p>
+<p>NotebookLM 的 Audio Overview 只能生成两个主持人、只有一种风格。Open Notebook 直接把天花板抬到 4 个 speaker，而且每个 speaker 可以配：</p>
+<ul>
+<li><strong>Expertise</strong>：这个人的专业背景，比如「对齐研究专家」</li>
+<li><strong>Personality</strong>：性格，Rigrous、Skeptical、Warm、Sarcastic 都行</li>
+<li><strong> Accent</strong>：可选口音（British English、Southern US 等）</li>
+<li><strong>Voice Model</strong>：从模型注册表里挑 TTS，OpenAI、Google、ElevenLabs、本地 TTS 都行</li>
+</ul>
+<p>Episode Profile 还可以定义格式：debate（辩论）、interview（采访）、monologue（独白）、educational（教学）。</p>
+<p>我试了一个：让”AI 安全派专家” 和”AI 加速派投资人” 对一组论文做 debate，生成 20 分钟播客。听起来就像两个人真的在吵，还挺有意思。</p>
+<p>生成是异步的，一集 20 分钟的播客大概要跑 10-15 分钟。后台跑就行，跑完会有通知。</p>
+<h3 id="5-完整-REST-API：把它接到任何地方"><a href="#5-完整-REST-API：把它接到任何地方" class="headerlink" title="5. 完整 REST API：把它接到任何地方"></a>5. 完整 REST API：把它接到任何地方</h3><p>这是和 NotebookLM 的最大区别。Open Notebook 暴露了完整的 FastAPI，可以做：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个笔记本</span></span><br><span class="line">curl -X POST http://localhost:8502/api/notebooks \</span><br><span class="line">  -H <span class="string">"Content-Type: application/json"</span> \</span><br><span class="line">  -d <span class="string">'{"name": "agent-frameworks-2026"}'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 上传一个 PDF 源</span></span><br><span class="line">curl -X POST http://localhost:8502/api/sources \</span><br><span class="line">  -F <span class="string">"file=@paper.pdf"</span> \</span><br><span class="line">  -F <span class="string">"notebook_id=xxx"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 触发一次 transformation</span></span><br><span class="line">curl -X POST http://localhost:8502/api/transformations \</span><br><span class="line">  -d <span class="string">'{"notebook_id": "xxx", "type": "summary"}'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>我的用法是每天早上跑一个 cron，用它把 RSS 抓回来的文章自动入库、自动摘要、自动塞进 Obsidian。比之前手动操作省了 20 分钟。</p>
+<h2 id="十分钟跑起来"><a href="#十分钟跑起来" class="headerlink" title="十分钟跑起来"></a>十分钟跑起来</h2><p>Docker Compose 是官方推荐的方式：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/lfnovo/open-notebook.git</span><br><span class="line"><span class="built_in">cd</span> open-notebook</span><br><span class="line"><span class="comment"># 编辑 docker-compose.yml，把 ENCRYPTION_KEY 换成你自己的随机字符串</span></span><br><span class="line">docker compose up -d</span><br></pre></td></tr></tbody></table></figure>
+
+<p>等 15-20 秒，浏览器开 <code>http://localhost:8502</code>，第一次进 UI 去 Settings 配 API key。我配的是 Anthropic 和 OpenAI，播客用的 TTS 选了 OpenAI（速度快、便宜）。</p>
+<p>完全本地、不想连外网的，可以用 <code>examples/docker-compose-ollama.yml</code> 那个配置，跑 Ollama + 本地嵌入模型，全离线。</p>
+<h2 id="我自己的几个使用场景"><a href="#我自己的几个使用场景" class="headerlink" title="我自己的几个使用场景"></a>我自己的几个使用场景</h2><p>我的工作流是「读得多、写得少、决策快」，Open Notebook 完美对上：</p>
+<p><strong>场景一：行业研究晨会</strong></p>
+<p>每天早上 7 点跑一个 cron，把 Hacker News、TechCrunch、arXiv 的当日 top 抓下来，丢进 <code>morning-briefing</code> 笔记本，跑一遍「要点提取 + 中文摘要 + 风险提示」三个 transformation，10 点之前看完，决定今天重点关注什么。</p>
+<p><strong>场景二：客户资料的本地化分析</strong></p>
+<p>做咨询的时候经常要处理客户的内部资料（合同、调研报告、技术文档）。这种数据绝对不能传 Google。Open Notebook + 本地 Ollama 跑通之后，整套研报流程都在我自己的 MacBook 上完成，客户的数据从未离开过本机。</p>
+<p><strong>场景三：把读过的论文做成播客</strong></p>
+<p>跑步和通勤是我一天里仅有的” 被动学习” 时间。Open Notebook 让我把平时读不进去的长论文丢进去，让两个 AI 主持人给我辩论一遍，听着听着就把要点抓住了。</p>
+<h2 id="它和-NotebookLM-怎么选"><a href="#它和-NotebookLM-怎么选" class="headerlink" title="它和 NotebookLM 怎么选"></a>它和 NotebookLM 怎么选</h2><p>写个直白的对比：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>临时玩玩、不在乎数据出境</td>
+<td> NotebookLM</td>
+</tr>
+<tr>
+<td> 个人使用、追求省事、模型用 Gemini 就够</td>
+<td> NotebookLM</td>
+</tr>
+<tr>
+<td> 团队协作、需要把研报接进工作流</td>
+<td> Open Notebook</td>
+</tr>
+<tr>
+<td> 数据敏感、必须本地化</td>
+<td> Open Notebook</td>
+</tr>
+<tr>
+<td> 想用 Claude / 本地模型 / 多模型混搭</td>
+<td> Open Notebook</td>
+</tr>
+<tr>
+<td> 想要 API 做自动化</td>
+<td> Open Notebook</td>
+</tr>
+<tr>
+<td> 想要 3-4 人播客、辩论格式</td>
+<td> Open Notebook</td>
+</tr>
+</tbody></table>
+<p>说白了，NotebookLM 是给” 消费者” 的工具，Open Notebook 是给” 构建者” 的工具。两者不冲突。</p>
+<h2 id="几个小坑提醒"><a href="#几个小坑提醒" class="headerlink" title="几个小坑提醒"></a>几个小坑提醒</h2><p>我自己踩过的，列出来省你时间：</p>
+<ol>
+<li><strong>SurrealDB 第一次启动慢</strong>。别看到日志没动就急着 <code>docker compose restart</code>，等 1-2 分钟。</li>
+<li><strong>本地 Ollama 模型要够大</strong>。低于 14B 的模型做 transformation 容易抽风，建议 32B 起步。</li>
+<li><strong>TTS 选 Google 最划算</strong>。OpenAI 0.015 美元 / 分钟，Google 才 0.004，差距 4 倍。ElevenLabs 音质最好但贵（土豪随意）。</li>
+<li><strong>加密密钥一定要改</strong>。默认那个 <code>my-super-secret-key-123</code> 是 demo 值，不改等于没加密。</li>
+</ol>
+<h2 id="收个尾"><a href="#收个尾" class="headerlink" title="收个尾"></a>收个尾</h2><p>NotebookLM 让我意识到「AI 研报」是未来，但 Open Notebook 让我意识到「自己的 AI 研报」才是未来。</p>
+<p>数据主权、模型选择权、API 可编程性，这三件事 Google 给不了，开源给得了。26k 的 star 还在涨，社区活跃，作者 <a target="_blank" rel="noopener" href="https://github.com/lfnovo">lfnovo</a> 在 Discord 上响应很快，遇到问题去问基本当天就有答案。</p>
+<p>如果你也在找一个” 可以本地化、可编程、可换模型” 的研究工作台，从今天开始用 Open Notebook 吧。</p>
+<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><ul>
+<li><a href="https://www.daishengli.top/agent-reach-ai-agent-internet-eyes/">Agent Reach：让 AI 助手长出眼睛，能看推特刷小红书读 B 站</a></li>
+<li><a href="https://www.daishengli.top/claude-code-terminal-agent/">Claude Code Terminal 里的 AI 编程搭档</a></li>
+<li><a href="https://www.daishengli.top/hermes-agent-intro/">Hermes Agent 实战</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/07/open-notebook-self-hosted-ai-research/" title="Open Notebook：自己部署一个比 NotebookLM 更猛的 AI 研报工作台">https://www.daishengli.top/2026/06/07/open-notebook-self-hosted-ai-research/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/" rel="tag"># 开源工具</a>
+              <a href="/tags/NotebookLM/" rel="tag"># NotebookLM</a>
+              <a href="/tags/%E8%87%AA%E9%83%A8%E7%BD%B2/" rel="tag"># 自部署</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/06/agent-reach-ai-agent-internet-eyes/" rel="prev" title="Agent Reach：让 AI 助手长出眼睛，能看推特刷小红书读 B 站">
+                  <i class="fa fa-angle-left"></i> Agent Reach：让 AI 助手长出眼睛，能看推特刷小红书读 B 站
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/07/multica-ai-agent-management-platform/" rel="next" title="Multica：开源的 AI 代理 &quot;虚拟员工&quot; 管理平台，让 Claude Code 真正成为你的同事">
+                  Multica：开源的 AI 代理 "虚拟员工" 管理平台，让 Claude Code 真正成为你的同事 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="OpenMontage 是一个开源的&quot;代理式视频制片系统&quot;，把 Claude Code、Cursor、Copilot 等 AI 编程助手变成可编排 12 条产线、52 个工具、500+ 技能的完整视频制片厂。今天 GitHub Trending">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenMontage：把 Claude Code &#x2F; Cursor 变成 AI 视频制片厂，登顶 GitHub Trending">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/23/openmontage-agentic-video-production-studio/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="OpenMontage 是一个开源的&quot;代理式视频制片系统&quot;，把 Claude Code、Cursor、Copilot 等 AI 编程助手变成可编排 12 条产线、52 个工具、500+ 技能的完整视频制片厂。今天 GitHub Trending">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-23T02:05:52.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.407Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="OpenMontage">
+<meta property="article:tag" content="视频生成">
+<meta property="article:tag" content="Agentic Workflow">
+<meta property="article:tag" content="多模态">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/23/openmontage-agentic-video-production-studio/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/23/openmontage-agentic-video-production-studio/","path":"2026/06/23/openmontage-agentic-video-production-studio/","title":"OpenMontage：把 Claude Code / Cursor 变成 AI 视频制片厂，登顶 GitHub Trending"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>OpenMontage：把 Claude Code / Cursor 变成 AI 视频制片厂，登顶 GitHub Trending | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OpenMontage%EF%BC%9A%E6%8A%8A-Claude-Code-Cursor-%E5%8F%98%E6%88%90-AI-%E8%A7%86%E9%A2%91%E5%88%B6%E7%89%87%E5%8E%82%EF%BC%8C%E7%99%BB%E9%A1%B6-GitHub-Trending-1"><span class="nav-number">1.</span> <span class="nav-text">OpenMontage：把 Claude Code &#x2F; Cursor 变成 AI 视频制片厂，登顶 GitHub Trending #1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%83%B3%E5%81%9A%E4%B8%80%E6%9D%A1-60-%E7%A7%92%E7%9F%AD%E8%A7%86%E9%A2%91%EF%BC%8C%E4%BD%A0%E8%BF%98%E5%9C%A8%E6%89%8B%E5%8A%A8%E5%89%AA%E5%90%97%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">一、想做一条 60 秒短视频，你还在手动剪吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E8%BF%99%E4%B8%8D%E6%98%AF%E5%8F%88%E4%B8%80%E4%B8%AA%E2%80%9DAI-%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%E5%99%A8%E2%80%9D"><span class="nav-number">1.2.</span> <span class="nav-text">二、这不是又一个”AI 视频生成器”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A12-%E6%9D%A1%E4%BA%A7%E7%BA%BF-52-%E4%B8%AA%E5%B7%A5%E5%85%B7-500-%E6%8A%80%E8%83%BD"><span class="nav-number">1.3.</span> <span class="nav-text">三、核心功能：12 条产线 &#x2F; 52 个工具 &#x2F; 500+ 技能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%9B%B6-API-Key-%E4%B9%9F%E8%83%BD%E6%8B%8D%E5%87%BA-60-%E7%A7%92%E7%9F%AD%E7%89%87"><span class="nav-number">1.4.</span> <span class="nav-text">四、零 API Key 也能拍出 60 秒短片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A10-%E5%88%86%E9%92%9F%E8%B7%91%E5%AE%8C%E4%B8%80%E6%9D%A1-60-%E7%A7%92%E7%A7%91%E6%99%AE%E7%9F%AD%E7%89%87"><span class="nav-number">1.5.</span> <span class="nav-text">五、实战示例：10 分钟跑完一条 60 秒科普短片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">1.6.</span> <span class="nav-text">六、适用场景和限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B8%AA%E9%A1%B9%E7%9B%AE%E5%80%BC%E5%BE%97%E5%85%B3%E6%B3%A8"><span class="nav-number">1.7.</span> <span class="nav-text">七、为什么这个项目值得关注</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/23/openmontage-agentic-video-production-studio/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="OpenMontage：把 Claude Code &#x2F; Cursor 变成 AI 视频制片厂，登顶 GitHub Trending | 小戴的网络日志">
+      <meta itemprop="description" content="OpenMontage 是一个开源的&quot;代理式视频制片系统&quot;，把 Claude Code、Cursor、Copilot 等 AI 编程助手变成可编排 12 条产线、52 个工具、500+ 技能的完整视频制片厂。今天 GitHub Trending">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenMontage：把 Claude Code / Cursor 变成 AI 视频制片厂，登顶 GitHub Trending
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-23 10:05:52" itemprop="dateCreated datePublished" datetime="2026-06-23T10:05:52+08:00">2026-06-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">OpenMontage 是一个开源的"代理式视频制片系统"，把 Claude Code、Cursor、Copilot 等 AI 编程助手变成可编排 12 条产线、52 个工具、500+ 技能的完整视频制片厂。今天 GitHub Trending</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="OpenMontage：把-Claude-Code-Cursor-变成-AI-视频制片厂，登顶-GitHub-Trending-1"><a href="#OpenMontage：把-Claude-Code-Cursor-变成-AI-视频制片厂，登顶-GitHub-Trending-1" class="headerlink" title="OpenMontage：把 Claude Code / Cursor 变成 AI 视频制片厂，登顶 GitHub Trending #1"></a>OpenMontage：把 Claude Code / Cursor 变成 AI 视频制片厂，登顶 GitHub Trending #1</h1><h2 id="一、想做一条-60-秒短视频，你还在手动剪吗？"><a href="#一、想做一条-60-秒短视频，你还在手动剪吗？" class="headerlink" title="一、想做一条 60 秒短视频，你还在手动剪吗？"></a>一、想做一条 60 秒短视频，你还在手动剪吗？</h2><p>“帮我把昨天录的播客剪成十条短视频”—— 这种事在过去几年里一直是品牌方、独立创作者、知识 IP 团队的头号痛点。要做的事情其实很清楚：</p>
+<ol>
+<li>听一遍素材，挑出金句；</li>
+<li>写脚本、加配音、找背景音乐；</li>
+<li>做几条封面、加字幕、挑 B-roll；</li>
+<li>调色、渲染、导出 9:16、1:1、16:9 三个版本。</li>
+</ol>
+<p>每个环节都得换一个工具 —— 剪映、Premiere、CapCut、ElevenLabs、Pexels、Midjourney、Whisper…… 换工具是小事，<strong>真正烧时间的是” 上下文切换 + 决策疲劳”</strong>：剪到第三条就忘了第一条用了什么调色脚本；BGM 配到一半忘了脚本还剩几秒；最后发现某条短视频里有三段不同风格的字幕。</p>
+<p>今天登上 GitHub Trending 第一名的 <a target="_blank" rel="noopener" href="https://github.com/calesthio/OpenMontage">OpenMontage</a>（12,283 stars，AGPL v3）想做的事情，<strong>就是把这整套流水线塞进你的 AI 编程助手</strong>。你只负责一句话描述需求：</p>
+<blockquote>
+<p>“Make a 60-second animated explainer about how neural networks learn.”</p>
+</blockquote>
+<p>剩下的 —— 调研、脚本、配音、配乐、镜头、字幕、渲染、自检 —— 全部由 Claude Code / Cursor / Copilot / Windsurf / Codex 串起来自动跑完。</p>
+<h2 id="二、这不是又一个”AI-视频生成器”"><a href="#二、这不是又一个”AI-视频生成器”" class="headerlink" title="二、这不是又一个”AI 视频生成器”"></a>二、这不是又一个”AI 视频生成器”</h2><p>把 OpenMontage 当成” 又一款 Sora / Veo / Runway 替代品” 是最大的误解。它<strong>不生成模型</strong>，它的核心是<strong>编排</strong>。</p>
+<p>它的自我定位很直接：”World’s first open-source, agentic video production system”—— 全球第一个开源的、<strong>代理式（agentic）</strong> 视频制片系统。注意”agentic” 这个修饰词：和”AI 视频” 不一样，agentic 强调的是<strong>让一个 AI Agent 端到端地做完一整件事</strong>，而不是生成某一段素材就交给人类接管。</p>
+<p>OpenMontage 的设计哲学可以浓缩成三句话：</p>
+<ol>
+<li><strong>“No-code orchestrator, agent IS the orchestrator”</strong>—— 它没有一个 Python 主程序在调度一切；你的 Claude Code / Cursor <strong>本身</strong>就是调度器。Python 脚本只提供” 工具”（tools/）和” 知识”（skills/），所有决策由 Agent 自己读 manifest、做 proposal、调用工具、提交人类审批。</li>
+<li><strong>“Reference-driven creation”</strong>—— 你可以直接贴一个 YouTube Short / TikTok / 小红书链接，告诉它” 做一条类似的，但讲 CRISPR”。Agent 会分析原片的节奏、hook、镜头、风格，然后给出 2-3 个差异化方案 + 成本估算 + 样片 —— 先让你拍板，再开干。</li>
+<li><strong>“No vendor lock-in”</strong>—— 视频生成、图像、TTS、音乐、配音、字幕，每个环节都同时支持云端付费 API 和本地开源模型；7 维评分（task fit /output quality /control/reliability /cost/latency /continuity）的 provider selector 自动挑最合适的，<strong>你想换就换</strong>。</li>
+</ol>
+<p>这三个设计放在一起，让 OpenMontage 和市面上所有” 一键 AI 视频” 工具拉开了代差：它不是一个 SaaS 产品，而是一份<strong>给 AI Agent 的剧本</strong>。</p>
+<h2 id="三、核心功能：12-条产线-52-个工具-500-技能"><a href="#三、核心功能：12-条产线-52-个工具-500-技能" class="headerlink" title="三、核心功能：12 条产线 / 52 个工具 / 500+ 技能"></a>三、核心功能：12 条产线 / 52 个工具 / 500+ 技能</h2><p>OpenMontage 把整个视频制作流程拆解成一份” 分层知识架构”：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Layer 1: tools/ + pipeline_defs/   → "有什么"（可执行能力）</span><br><span class="line">Layer 2: skills/                   → "怎么用"（OpenMontage 自己的规范）</span><br><span class="line">Layer 3: .agents/skills/           → "原理是什么"（外部技术知识）</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第一层是 48 个 Python 工具 + 12 条 YAML 产线定义；第二层是 Markdown 写的” 导演技能”，教 Agent 怎么按 OpenMontage 的标准干活；第三层是 FFmpeg、Remotion、WhisperX 等外部技术的深度知识包，工具按需声明依赖。</p>
+<p><strong>12 条产线覆盖了视频生产几乎所有形态：</strong></p>
+<table>
+<thead>
+<tr>
+<th>产线名</th>
+<th>产出</th>
+<th>典型场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Animated Explainer</td>
+<td>AI 生成的解释视频</td>
+<td>教育内容、教程</td>
+</tr>
+<tr>
+<td> Animation</td>
+<td> 动效 + 动态排版</td>
+<td>短视频、产品演示</td>
+</tr>
+<tr>
+<td> Avatar Spokesperson</td>
+<td> 数字人讲解</td>
+<td>企业培训、公告</td>
+</tr>
+<tr>
+<td> Cinematic</td>
+<td> 预告片、海报级短片</td>
+<td>品牌片、概念片</td>
+</tr>
+<tr>
+<td> Clip Factory</td>
+<td> 一条长视频 → 十条竖屏</td>
+<td>播客复用、内容矩阵</td>
+</tr>
+<tr>
+<td> Documentary Montage</td>
+<td> 真实素材剪辑的视频随笔</td>
+<td>纪录片、情绪短片</td>
+</tr>
+<tr>
+<td> Hybrid</td>
+<td> 自有素材 + AI 补充</td>
+<td>升级现有素材</td>
+</tr>
+<tr>
+<td> Localization &amp; Dub</td>
+<td> 字幕、配音、翻译</td>
+<td>多语言分发</td>
+</tr>
+<tr>
+<td> Podcast Repurpose</td>
+<td> 播客金句 → 短视频</td>
+<td>播客营销</td>
+</tr>
+<tr>
+<td> Screen Demo</td>
+<td> 软件录屏美化</td>
+<td>产品演示、文档</td>
+</tr>
+<tr>
+<td> Talking Head</td>
+<td> 出镜人讲解视频</td>
+<td>分享、Vlog</td>
+</tr>
+</tbody></table>
+<p>每条产线都遵循统一的七阶段流：<code>research → proposal → script → scene_plan → assets → edit → compose</code>。在动笔写第一个字之前，<strong>Agent 会先跑 15-25 次网页搜索</strong>（YouTube / Reddit / Hacker News / 学术源），把数据点、用户问题、热门角度、视觉参考全部拉齐，整理成结构化研究简报 —— 这一步直接把所有”AI 视频最爱编造事实” 的毛病掐死。</p>
+<p><strong>52 个工具覆盖了从素材到成片的完整链路：</strong></p>
+<ul>
+<li><strong>视频生成（14 个）</strong>：Kling、Runway Gen-4、Google Veo 3、Grok Imagine、Higgsfield、HeyGen；本地有 WAN 2.1、Hunyuan、CogVideo、LTX-Video；素材库有 Pexels、Pixabay、Wikimedia Commons。</li>
+<li><strong>图像生成（10 个）</strong>：FLUX、Imagen 4、Grok Imagine、DALL-E 3、Recraft、本地 Stable Diffusion；素材有 Pexels、Pixabay、Unsplash；还有 ManimCE 做数学动画。</li>
+<li><strong>TTS（4 个）</strong>：ElevenLabs、Google TTS（700+ 音色、50+ 语言）、OpenAI TTS、本地 Piper（完全离线免费）。</li>
+<li><strong>音乐 / 音效</strong>：Suno AI（最长 8 分钟、含人声和歌词）、ElevenLabs Music、ElevenLabs SFX。</li>
+<li><strong>后期（永远免费）</strong>：FFmpeg 编码、字幕烧录、音频混音、Real-ESRGAN 升频、rembg 抠图、CodeFormer / GFPGAN 修脸。</li>
+<li><strong>分析</strong>：WhisperX 词级时间戳字幕、场景检测、关键帧采样、CLIP/BLIP-2 视觉理解。</li>
+<li><strong>数字人 / 口型同步</strong>：SadTalker / MuseTalk 出镜、Wav2Lip 唇音同步。</li>
+<li><strong>合成引擎</strong>：Remotion（React 写法，适合数据驱动场景）、HyperFrames（HTML/CSS/GSAP 写法，适合动态排版）、FFmpeg（兜底）。</li>
+</ul>
+<p><strong>500+ Agent Skill</strong> 包括产线导演技能、创意技法、质检清单，以及 FFmpeg / Remotion / Whisper 等技术包。Agent 不是” 按字符串匹配” 调用，而是真正读完一份 Markdown skill 文档，知道” 为什么这样用” 再动手。</p>
+<h2 id="四、零-API-Key-也能拍出-60-秒短片"><a href="#四、零-API-Key-也能拍出-60-秒短片" class="headerlink" title="四、零 API Key 也能拍出 60 秒短片"></a>四、零 API Key 也能拍出 60 秒短片</h2><p>最让人惊喜的部分 ——OpenMontage 明确支持<strong>完全离线的零成本路径</strong>。</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 一句话启动：</span><br><span class="line">"Make a 60-second animated explainer about why the sky is blue"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Agent 会自动按这条路径开干：</p>
+<ul>
+<li><strong>配音</strong>：Piper TTS（本地、离线、听起来像真人）；</li>
+<li><strong>素材</strong>：Archive.org + NASA + Wikimedia Commons（免费开放档案 + 科教素材 + 纪录片质感）；</li>
+<li><strong>画面</strong>：Stable Diffusion 本地生图，或者直接抓 Pexels / Unsplash / Pixabay 的免费版权图（开发者 key 免费申请）；</li>
+<li><strong>合成</strong>：Remotion 把静态图 + 字幕 + 转场 + 镜头运动编排成片；</li>
+<li><strong>字幕</strong>：自动词级时间戳；</li>
+<li><strong>后期</strong>：FFmpeg 编码、字幕烧录、音频混音。</li>
+</ul>
+<p>README 里给出的一个例子：一条 12 帧 FLUX 生成的吉卜力风动画 + 视差叠化 + 镜头平移 + 萤火虫花瓣粒子 + 环境音效 + 电影感渐晕 —— <strong>总成本 $0.15，不调用任何视频生成 API</strong>。另一条 Pixar 风格的”Last Banana”60 秒短片，用 6 段 Kling v3 视频 + Google Chirp3-HD 配音 + 免版税钢琴 + 词级字幕，<strong>总成本 $1.33</strong>。</p>
+<p>另一个更激进的路径 —— <strong>纪录片混剪</strong> —— 完全不依赖 AI 生成画面：</p>
+<blockquote>
+<p>“Make a 90-second documentary montage about what a city feels like at 4am. Use real footage only, no narration, elegiac tone.”</p>
+</blockquote>
+<p>Agent 会从 Archive.org、NASA、Wikimedia Commons 建一个 CLIP 可检索的语料库，挑出真实运动镜头，按主题、时间、镜头类别剪辑、配乐、调色，<strong>渲染出一条真正的纪录片式短片</strong> —— 不是” 用几张静态图加 Ken Burns 假装在动” 那种骗术。</p>
+<h2 id="五、实战示例：10-分钟跑完一条-60-秒科普短片"><a href="#五、实战示例：10-分钟跑完一条-60-秒科普短片" class="headerlink" title="五、实战示例：10 分钟跑完一条 60 秒科普短片"></a>五、实战示例：10 分钟跑完一条 60 秒科普短片</h2><p>环境要求：Python 3.10+、FFmpeg、Node.js 18+、一个能跑命令的 AI 编程助手（Claude Code 体验最佳）。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 克隆项目并初始化</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/calesthio/OpenMontage.git</span><br><span class="line"><span class="built_in">cd</span> OpenMontage</span><br><span class="line">make setup</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. （可选）配置至少一个 API key</span></span><br><span class="line"><span class="comment"># 编辑 .env，至少填 OPENAI_API_KEY 或 ELEVENLABS_API_KEY</span></span><br><span class="line"><span class="comment"># 也可以不填——make setup 已经把零成本路径配好了</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 在 Claude Code / Cursor / Copilot 里输入一句 prompt</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来在 Claude Code 中输入：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Make a 60-second animated explainer about how CRISPR gene editing works, </span><br><span class="line">target audience: high school students, fun narrator voice, </span><br><span class="line">use AI-generated visuals with subtitles.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Agent 的执行流程大致是：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1. 读 manifest → 选 "Animated Explainer" 产线</span><br><span class="line">2. 读 research skill → 跑 15+ 次 web 搜索，整理 CRISPR 的核心机制、安全性争议、教学难点</span><br><span class="line">3. 写 proposal → 三个差异化方向 + 估算时长和成本，请人类选</span><br><span class="line">4. 写脚本 → 60 秒、3 段结构、目标阅读年龄</span><br><span class="line">5. 配声音 → 选 ElevenLabs（或 Piper 离线）+ 调语速</span><br><span class="line">6. 生图 → 选 FLUX（或本地 SD）+ 选 Style playbook</span><br><span class="line">7. 拆镜头 → scene_plan.json，把每张图的出现时长、动效、字幕对齐都排好</span><br><span class="line">8. 合成 → 调 Remotion，输出 1080x1920 竖屏版本</span><br><span class="line">9. 自检 → ffprobe 校验、抽帧核对、音量检测、字幕对齐、delivery promise</span><br><span class="line">10. 渲染 → final.mp4 写到 projects/&lt;name&gt;/renders/</span><br></pre></td></tr></tbody></table></figure>
+
+<p>整个过程你只在三个节点需要拍板：</p>
+<ul>
+<li><strong>选提案</strong>（pick which concept）</li>
+<li><strong>批预算</strong>（”cost looks ok, proceed”）</li>
+<li><strong>看成片</strong>（approve 或 request changes）</li>
+</ul>
+<p>如果中间某一步 Agent 觉得不确定，它会停下来把决策点列出来给你看，<strong>不会闷头把视频做完再让你全盘接受</strong>。</p>
+<h2 id="六、适用场景和限制"><a href="#六、适用场景和限制" class="headerlink" title="六、适用场景和限制"></a>六、适用场景和限制</h2><p><strong>适合谁：</strong></p>
+<ul>
+<li>内容矩阵 / 短视频批量生产团队（一条 2 小时播客 → 10 条短视频，Clip Factory 产线）；</li>
+<li>教育博主、自媒体创作者，想把抽象概念做成可视化解释视频；</li>
+<li>初创团队做产品 Demo / 品牌片，没有专职视频团队；</li>
+<li>AI Agent 开发者，研究” 怎么把多个工具 + 长流程任务 + 人类审批” 编排好。</li>
+</ul>
+<p><strong>目前的限制：</strong></p>
+<ul>
+<li><strong>AGPL v3 协议</strong>：商业闭源产品集成需要谨慎评估；但作为内部工具、个人项目、学习研究完全 OK。</li>
+<li><strong>云端 API 成本</strong>虽然给了 $0.15 起步的最低价，但要做大量高质量视频仍然要烧钱 ——Suno AI / ElevenLabs / FLUX 的单价加起来不算便宜。</li>
+<li><strong>本地离线路径</strong>质量上限有限：Piper TTS 的配音听感不如 ElevenLabs；本地 Stable Diffusion 生图质量比不上云端 FLUX / Imagen 4；零成本适合” 练手 + 出片速度”，追求顶级观感仍需付费 API。</li>
+<li><strong>产线复杂程度</strong>：12 条产线、52 个工具、500+ skill 是” 能做事多” 的代价，新人上手需要 1-2 个项目熟悉 manifest /skill 体系。</li>
+<li><strong>沙箱与安全</strong>：因为 Agent 可以执行 shell 命令和写文件，<strong>官方强烈建议在本地可信网络（127.0.0.1 loopback）部署</strong> ——README 里有专门的 Security Notice 章节。如果你打算放到公网，请务必加 IP 白名单 + 反向代理预认证 + 网络隔离。</li>
+</ul>
+<h2 id="七、为什么这个项目值得关注"><a href="#七、为什么这个项目值得关注" class="headerlink" title="七、为什么这个项目值得关注"></a>七、为什么这个项目值得关注</h2><p>OpenMontage 上线才不到三个月（仓库创建于 2026-03-29），今天登顶 GitHub Trending #1、12k+ stars、AGPL 开源 —— 这个速度本身就说明了它踩中了一个真实需求：<strong>把 AI 编程助手当成” 万能 Agent 运行时”</strong>。</p>
+<p>昨天聊 DeerFlow 时我们写过：”Agent 的下一步不是更强的模型，而是更好的 Harness”。OpenMontage 给出了 Harness 的一个具体范式 —— <strong>把 Python 当工具库，把 Markdown 当 skill 文档，把 YAML 当 manifest，把你已经在用的 AI 编程助手当调度器</strong>。这套架构不只能做视频，把它换一套工具就能做播客自动化、做长报告、做数据可视化 —— 本质上是” 通用 Agent 制片框架”。</p>
+<p>更让我欣赏的是它的工程态度：<strong>每一步都有自检、每一次决策都有日志、每一笔花费都有预估</strong>。这不是” 调一次模型拿个结果” 的玩具，而是一份真正能进入生产环境的制片手册。</p>
+<p>如果你已经在用 Claude Code 或 Cursor，强烈建议花 30 分钟跑一下 <code>make demo</code>，零成本产出一条样片。看完那条 60 秒成片，你会开始重新想象 AI Agent 能接管的工作流还有多远。</p>
+<blockquote>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/calesthio/OpenMontage">github.com/calesthio/OpenMontage</a><br>官网与样片：<a target="_blank" rel="noopener" href="https://github.com/calesthio/OpenMontage">github.com/calesthio/OpenMontage</a><br>协议：AGPL v3</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/23/openmontage-agentic-video-production-studio/" title="OpenMontage：把 Claude Code &#x2F; Cursor 变成 AI 视频制片厂，登顶 GitHub Trending">https://www.daishengli.top/2026/06/23/openmontage-agentic-video-production-studio/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/OpenMontage/" rel="tag"># OpenMontage</a>
+              <a href="/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/" rel="tag"># 视频生成</a>
+              <a href="/tags/Agentic-Workflow/" rel="tag"># Agentic Workflow</a>
+              <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/" rel="tag"># 多模态</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/22/deer-flow-bytedance-super-agent-harness/" rel="prev" title="DeerFlow 2.0：字节跳动开源的 SuperAgent Harness，让一个 Agent 干完一队人的活">
+                  <i class="fa fa-angle-left"></i> DeerFlow 2.0：字节跳动开源的 SuperAgent Harness，让一个 Agent 干完一队人的活
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/24/codebase-memory-mcp-code-intelligence-knowledge-graph/" rel="next" title="codebase-memory-mcp：把整个代码库塞进 AI 编程助手的知识图谱，单二进制 0 依赖，索引 Linux 内核仅 3 分钟">
+                  codebase-memory-mcp：把整个代码库塞进 AI 编程助手的知识图谱，单二进制 0 依赖，索引 Linux 内核仅 3 分钟 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

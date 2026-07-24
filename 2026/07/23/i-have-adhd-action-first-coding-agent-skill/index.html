@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="用十条输出规则，让 Claude Code、Codex 等编程 Agent 先给行动，再给必要解释。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="i-have-adhd：让 AI 编程助手先给答案，再讲过程">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/23/i-have-adhd-action-first-coding-agent-skill/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="用十条输出规则，让 Claude Code、Codex 等编程 Agent 先给行动，再给必要解释。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-23T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.405Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="开发效率">
+<meta property="article:tag" content="Codex">
+<meta property="article:tag" content="Agent Skill">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/23/i-have-adhd-action-first-coding-agent-skill/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/23/i-have-adhd-action-first-coding-agent-skill/","path":"2026/07/23/i-have-adhd-action-first-coding-agent-skill/","title":"i-have-adhd：让 AI 编程助手先给答案，再讲过程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>i-have-adhd：让 AI 编程助手先给答案，再讲过程 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E8%A7%A3%E5%86%B3%E7%9A%84%E4%B8%8D%E6%98%AF%E2%80%9C%E5%9B%9E%E7%AD%94%E8%B4%A8%E9%87%8F%E2%80%9D%EF%BC%8C%E8%80%8C%E6%98%AF%E8%A1%8C%E5%8A%A8%E6%91%A9%E6%93%A6"><span class="nav-number">1.</span> <span class="nav-text">它解决的不是 “回答质量”，而是行动摩擦</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E6%9D%A1%E8%A7%84%E5%88%99%E5%A6%82%E4%BD%95%E7%BA%A6%E6%9D%9F%E7%BC%96%E7%A8%8B-Agent"><span class="nav-number">2.</span> <span class="nav-text">十条规则如何约束编程 Agent</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%BF%85%E9%A1%BB%E6%8E%92%E5%9C%A8%E6%9C%80%E5%89%8D%E9%9D%A2"><span class="nav-number">2.1.</span> <span class="nav-text">1. 下一步必须排在最前面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%A4%9A%E6%AD%A5%E9%AA%A4%E4%BB%BB%E5%8A%A1%E5%BF%85%E9%A1%BB%E7%BC%96%E5%8F%B7"><span class="nav-number">2.2.</span> <span class="nav-text">2. 多步骤任务必须编号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%AF%8F%E8%BD%AE%E5%8F%AA%E7%95%99%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%98%8E%E7%A1%AE%E7%9A%84%E4%B8%8B%E4%B8%80%E6%AD%A5"><span class="nav-number">2.3.</span> <span class="nav-text">3. 每轮只留下一个明确的下一步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%8E%8B%E4%BD%8F%E6%97%81%E6%94%AF%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.4.</span> <span class="nav-text">4. 压住旁支建议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%AF%8F%E8%BD%AE%E9%87%8D%E8%BF%B0%E5%BD%93%E5%89%8D%E7%8A%B6%E6%80%81"><span class="nav-number">2.5.</span> <span class="nav-text">5. 每轮重述当前状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%97%B6%E9%97%B4%E4%BC%B0%E8%AE%A1%E5%BF%85%E9%A1%BB%E5%85%B7%E4%BD%93"><span class="nav-number">2.6.</span> <span class="nav-text">6. 时间估计必须具体</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E5%88%86%E9%92%9F%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">五分钟安装与使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%9B%B4%E6%8E%A5%E5%86%99%E8%BF%9B-CLAUDE-md"><span class="nav-number">4.</span> <span class="nav-text">为什么不直接写进 CLAUDE.md</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E5%90%88%E5%93%AA%E4%BA%9B%E5%9C%BA%E6%99%AF"><span class="nav-number">5.</span> <span class="nav-text">适合哪些场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%90%E5%88%B6%EF%BC%9A%E7%9F%AD%E4%B8%8D%E7%AD%89%E4%BA%8E%E5%AF%B9"><span class="nav-number">6.</span> <span class="nav-text">限制：短不等于对</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/23/i-have-adhd-action-first-coding-agent-skill/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="i-have-adhd：让 AI 编程助手先给答案，再讲过程 | 小戴的网络日志">
+      <meta itemprop="description" content="用十条输出规则，让 Claude Code、Codex 等编程 Agent 先给行动，再给必要解释。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          i-have-adhd：让 AI 编程助手先给答案，再讲过程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-23 10:00:00" itemprop="dateCreated datePublished" datetime="2026-07-23T10:00:00+08:00">2026-07-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">用十条输出规则，让 Claude Code、Codex 等编程 Agent 先给行动，再给必要解释。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>你有没有遇到过这种情况：AI 编程助手明明知道怎么修，却先写三段背景、两种备选方案和一句 “这是个好问题”，真正要执行的命令藏在页面中间？</p>
+<p>代码没有更难，答案也没有更聪明，只是读取成本被拉高了。你必须从礼貌开场、重复上下文和旁支建议里捞出下一步，再判断它究竟希望你改哪个文件、跑哪条测试。</p>
+<p>今天 GitHub Trending 上的 <a target="_blank" rel="noopener" href="https://github.com/ayghri/i-have-adhd">ayghri/i-have-adhd</a> 专门处理这个小而真实的问题。它是一套面向 AI 编程助手的输出 Skill，不要求使用者真的被诊断为 ADHD，也不修改模型能力。它只规定回答顺序：行动在前、步骤编号、限制岔题，并以一个明确的下一步收尾。</p>
+<p>项目当前约 8.3k Stars，当天新增约 1.7k Stars，采用 MIT 协议，主分支已有 90 多次提交。仓库同时提供 Claude Code、Codex、Cursor、Gemini 等工具所需的插件或 Skill 目录，不只是一个贴在 README 里的提示词。</p>
+<h2 id="它解决的不是“回答质量”，而是行动摩擦"><a href="#它解决的不是“回答质量”，而是行动摩擦" class="headerlink" title="它解决的不是“回答质量”，而是行动摩擦"></a>它解决的不是 “回答质量”，而是行动摩擦</h2><p>大模型偏爱生成完整、礼貌、上下文充足的文字。这在解释概念时很有用，放进调试过程却容易出问题。</p>
+<p>假设认证测试失败，普通回答可能先介绍中间件、Token 校验和 Cookie 的关系，再提出升级依赖、重写函数、检查全局版本等建议。内容大体正确，开发者仍要自己重组执行顺序。</p>
+<p><code>i-have-adhd</code> 希望把同一答案压成下面这种形态：</p>
+<blockquote>
+<p>运行 <code>npm install jsonwebtoken@latest</code>，然后修改 <code>src/auth.ts:42</code>。</p>
+<ol>
+<li>打开 <code>src/auth.ts</code></li>
+<li>替换第 42 到 58 行的 <code>verifyToken</code></li>
+<li>运行 <code>npm test -- auth.spec.ts</code></li>
+</ol>
+<p>下一步：如果失败，贴出第一行错误。</p>
+</blockquote>
+<p>它没有让模型少做事，而是把 “你现在该做什么” 从说明文中提到第一屏。对频繁往返终端、编辑器和测试输出的开发者来说，这个调整比再多一段原理说明更直接。</p>
+<h2 id="十条规则如何约束编程-Agent"><a href="#十条规则如何约束编程-Agent" class="headerlink" title="十条规则如何约束编程 Agent"></a>十条规则如何约束编程 Agent</h2><p>项目的核心只有十条规则，但覆盖了日常 Agent 对话最常见的摩擦点。</p>
+<h3 id="1-下一步必须排在最前面"><a href="#1-下一步必须排在最前面" class="headerlink" title="1. 下一步必须排在最前面"></a>1. 下一步必须排在最前面</h3><p>回答先给命令、文件位置或决策，不用 “我来分析一下” 热身。需要解释时，解释放在行动之后。这样一眼就能判断 Agent 是否理解了任务。</p>
+<h3 id="2-多步骤任务必须编号"><a href="#2-多步骤任务必须编号" class="headerlink" title="2. 多步骤任务必须编号"></a>2. 多步骤任务必须编号</h3><p>散落在段落中的命令很容易漏掉。编号后，安装依赖、修改代码、运行测试各自成为独立检查点，也方便你回复 “第 2 步失败了”。</p>
+<h3 id="3-每轮只留下一个明确的下一步"><a href="#3-每轮只留下一个明确的下一步" class="headerlink" title="3. 每轮只留下一个明确的下一步"></a>3. 每轮只留下一个明确的下一步</h3><p>传统助手常在结尾同时追问日志、环境、配置和复现步骤。这个 Skill 要求收口为一个动作，例如 “贴出第一个失败断言”，降低继续对话时的决策负担。</p>
+<h3 id="4-压住旁支建议"><a href="#4-压住旁支建议" class="headerlink" title="4. 压住旁支建议"></a>4. 压住旁支建议</h3><p>修认证错误时顺手建议重构整个依赖树，通常只会扩大范围。规则要求 Agent 把无关建议藏起来，除非它们直接阻塞当前目标。</p>
+<h3 id="5-每轮重述当前状态"><a href="#5-每轮重述当前状态" class="headerlink" title="5. 每轮重述当前状态"></a>5. 每轮重述当前状态</h3><p>长任务中最危险的不是回答短，而是忘记已经完成什么。Skill 要求每轮恢复任务状态，让中途接回会话时不用重新阅读几十条消息。</p>
+<h3 id="6-时间估计必须具体"><a href="#6-时间估计必须具体" class="headerlink" title="6. 时间估计必须具体"></a>6. 时间估计必须具体</h3><p>“很快”“稍等一下” 没有操作价值。它要求使用 “约 5 分钟”“还剩两个测试” 这类可判断的信息。模型无法精确预测时，也应说明估计依据，而不是制造虚假的确定性。</p>
+<p>剩余四条分别是：让完成项可见、用平静事实描述错误、列表最多五项，以及禁止开场白、重复总结和客套结尾。组合起来的效果不是粗暴删字，而是把回答改造成一个轻量任务面板。</p>
+<h2 id="五分钟安装与使用"><a href="#五分钟安装与使用" class="headerlink" title="五分钟安装与使用"></a>五分钟安装与使用</h2><p>Claude Code 可以直接从插件市场安装：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">claude plugin marketplace add ayghri/i-have-adhd</span><br><span class="line">claude plugin install i-have-adhd@i-have-adhd</span><br></pre></td></tr></tbody></table></figure>
+
+<p>进入会话后执行：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/i-have-adhd</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果希望每次会话都启用，项目提供了一个标记文件方案：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> ~/.claude/.i-have-adhd-always</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Codex 的安装方式类似：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">codex plugin marketplace add ayghri/i-have-adhd --ref main</span><br><span class="line">codex plugin add i-have-adhd@i-have-adhd</span><br></pre></td></tr></tbody></table></figure>
+
+<p>显式调用时输入：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$i-have-adhd</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Codex 也可以在识别到合适任务时隐式使用它。仓库还包含 <code>.cursor/skills/i-have-adhd</code>、<code>gemini-extension.json</code>、通用 <code>.agents/plugins</code> 目录以及独立的 <code>INSTALL.md</code>，便于把同一套输出规范带到不同 Agent。</p>
+<p>安装后可以用一个真实任务验证效果：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">修复支付接口的 3 个失败测试。每完成一个测试就更新状态；</span><br><span class="line">不要讨论无关重构；每次只给我一个下一步。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>理想回复应该先报当前失败点，再给文件和命令，修复后显示 <code>1/3</code>、<code>2/3</code>、<code>3/3</code>，而不是先写一篇支付模块架构说明。</p>
+<h2 id="为什么不直接写进-CLAUDE-md"><a href="#为什么不直接写进-CLAUDE-md" class="headerlink" title="为什么不直接写进 CLAUDE.md"></a>为什么不直接写进 CLAUDE.md</h2><p>当然可以。把 “回答简洁一点”“先说结论” 写进项目规则，几分钟就能完成。<code>i-have-adhd</code> 的价值不在于这些句子难以发明，而在于它把零散偏好变成了可安装、可更新、可测试的产品。</p>
+<p>与一段临时提示词相比，它有四个实际差异：</p>
+<ul>
+<li>同一套规则可跨 Claude Code、Codex、Cursor 和 Gemini 复用；</li>
+<li>有固定的十条约束，团队成员不必各自解释 “简洁” 的含义；</li>
+<li>仓库包含 <code>evals/</code>、<code>tests/</code>、hooks 和 CI，而非只有一个 Markdown 文件；</li>
+<li>可以 Fork 后修改 <code>skills/i-have-adhd/SKILL.md</code>，形成团队自己的输出契约。</li>
+</ul>
+<p>它和 Superpowers、Everything Claude Code 这类工作流框架也不同。后两者会规定如何规划、测试、调试和交付，影响 Agent 做事的方法；<code>i-have-adhd</code> 主要管理答案如何呈现。两者可以叠加：工作流 Skill 决定 “该做什么”，它负责 “怎么把下一步告诉你”。</p>
+<h2 id="适合哪些场景"><a href="#适合哪些场景" class="headerlink" title="适合哪些场景"></a>适合哪些场景</h2><p>它最适合高频、短反馈循环的工作：修测试、排查构建失败、逐步部署、处理代码审查意见，以及同时开多个 Agent 会话时快速确认每个任务的状态。</p>
+<p>对团队来说，还可以把它当作输出规范的起点。比如要求所有 Agent 回答固定包含 “状态、动作、验证、下一步” 四项，再按团队习惯增加风险提示或回滚命令。</p>
+<p>它也适合不喜欢长回答的人。项目名称突出 ADHD，但 README 明确写着 “不需要 ADHD 诊断”。本质上，这是一套降低信息检索成本的界面规范。</p>
+<h2 id="限制：短不等于对"><a href="#限制：短不等于对" class="headerlink" title="限制：短不等于对"></a>限制：短不等于对</h2><p>这套 Skill 不会提升模型的代码能力，也不能保证命令安全。错误答案即使写得很短，仍然是错误答案。涉及删除数据、修改生产环境或迁移数据库时，开发者仍要检查 diff、备份和回滚路径。</p>
+<p>严格限制列表最多五项，也不适合所有任务。架构评审、事故复盘、协议设计和教学文章需要保留推理背景。如果把每个问题都压缩成三行命令，重要的权衡和隐含条件可能被一起删掉。</p>
+<p>“具体时间估计” 同样只能作为估算。Agent 无法预知下载速度、CI 队列或遗留代码复杂度，不应把 “约 10 分钟” 当成承诺。</p>
+<p>还有一个边界：规则控制的是输出，不是执行。它可以要求 Agent 每轮重述状态，但真正的持久记忆、任务恢复和多 Agent 调度仍需专门工具负责。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>i-have-adhd</code> 没有造一个更大的 Agent 框架，而是抓住了人与 Agent 协作里经常被忽略的一层：答案本身也是用户界面。</p>
+<p>行动先行、步骤编号、压住岔题、显示进度、一次只给一个下一步，这些规则看起来朴素，却能把 “读完一篇说明再开始” 变成 “看第一行就能动手”。如果你每天都在 Claude Code 或 Codex 里处理短任务，安装它的成本只有几条命令，效果也最容易当场判断。</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/ayghri/i-have-adhd">https://github.com/ayghri/i-have-adhd</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/23/i-have-adhd-action-first-coding-agent-skill/" title="i-have-adhd：让 AI 编程助手先给答案，再讲过程">https://www.daishengli.top/2026/07/23/i-have-adhd-action-first-coding-agent-skill/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/%E5%BC%80%E5%8F%91%E6%95%88%E7%8E%87/" rel="tag"># 开发效率</a>
+              <a href="/tags/Codex/" rel="tag"># Codex</a>
+              <a href="/tags/Agent-Skill/" rel="tag"># Agent Skill</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/22/worldmonitor-open-source-real-time-global-intelligence-dashboard/" rel="prev" title="World Monitor：把全球态势感知塞进浏览器的开源 OSINT 仪表盘">
+                  <i class="fa fa-angle-left"></i> World Monitor：把全球态势感知塞进浏览器的开源 OSINT 仪表盘
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/24/dioxus-rust-fullstack-cross-platform-framework/" rel="next" title="Dioxus：用一份 Rust 代码同时搞定 Web、桌面和移动端的全栈框架">
+                  Dioxus：用一份 Rust 代码同时搞定 Web、桌面和移动端的全栈框架 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

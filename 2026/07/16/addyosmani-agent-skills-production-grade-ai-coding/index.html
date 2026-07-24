@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Addy Osmani 开源的 agent-skills 是 78k stars 的明星项目，把资深工程师的开发流程（Spec→Plan→Build→Verify→Review→Ship）封装成 24 个 Markdown 技能和 8 个 Slash 命令，让 Claude Code、Cursor、Codex 等 AI Agent 真正按规范工作，而不是随机发挥。一次安装，全员升级。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Addy Osmani 的 agent-skills：给 AI 编程 Agent 装上资深工程师的工作流">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/16/addyosmani-agent-skills-production-grade-ai-coding/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="Addy Osmani 开源的 agent-skills 是 78k stars 的明星项目，把资深工程师的开发流程（Spec→Plan→Build→Verify→Review→Ship）封装成 24 个 Markdown 技能和 8 个 Slash 命令，让 Claude Code、Cursor、Codex 等 AI Agent 真正按规范工作，而不是随机发挥。一次安装，全员升级。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-16T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.402Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="开发流程">
+<meta property="article:tag" content="效率工具">
+<meta property="article:tag" content="TDD">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/16/addyosmani-agent-skills-production-grade-ai-coding/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/16/addyosmani-agent-skills-production-grade-ai-coding/","path":"2026/07/16/addyosmani-agent-skills-production-grade-ai-coding/","title":"Addy Osmani 的 agent-skills：给 AI 编程 Agent 装上资深工程师的工作流"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Addy Osmani 的 agent-skills：给 AI 编程 Agent 装上资深工程师的工作流 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%BD%93-AI-Agent-%E5%86%99%E4%BB%A3%E7%A0%81%E8%B6%8A%E6%9D%A5%E8%B6%8A%E5%83%8F%E5%BC%80%E7%9B%B2%E7%9B%92"><span class="nav-number">1.</span> <span class="nav-text">一、当 AI Agent 写代码越来越像开盲盒</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E4%BB%8E%E2%80%9D%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E2%80%9D%E5%88%B0%E2%80%9D%E5%B7%A5%E7%A8%8B%E6%90%AD%E6%A1%A3%E2%80%9D"><span class="nav-number">2.</span> <span class="nav-text">二、项目背景：从” 代码生成器” 到” 工程搭档”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%8124-%E4%B8%AA%E6%8A%80%E8%83%BD%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">三、24 个技能怎么工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%85%AD%E5%A4%A7%E9%98%B6%E6%AE%B5%E7%9A%84%E4%BB%A3%E8%A1%A8%E6%8A%80%E8%83%BD"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 六大阶段的代表技能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-8-%E4%B8%AA-Slash-%E5%91%BD%E4%BB%A4"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 8 个 Slash 命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A5-%E5%88%86%E9%92%9F%E8%A3%85%E5%A5%BD"><span class="nav-number">4.</span> <span class="nav-text">四、实战示例：5 分钟装好</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E8%A3%85%E5%88%B0-Claude-Code%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 装到 Claude Code（推荐）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E8%A3%85%E5%88%B0-Cursor"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 装到 Cursor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E8%A3%85%E5%88%B0-Gemini-CLI-Codex-Antigravity"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 装到 Gemini CLI &#x2F; Codex &#x2F; Antigravity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E4%B8%80%E6%AC%A1%E6%80%A7%E8%A3%85%E5%88%B0-70-Agent"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 一次性装到 70+ Agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8"><span class="nav-number">4.5.</span> <span class="nav-text">4.5 第一次使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E4%B8%8E%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">5.</span> <span class="nav-text">五、与同类项目的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">6.</span> <span class="nav-text">六、适用场景和限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E9%80%82%E5%90%88%E7%94%A8"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 适合用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E4%B8%8D%E5%A4%AA%E9%80%82%E5%90%88"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 不太适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E5%B7%B2%E7%9F%A5%E5%9D%91"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 已知坑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">七、总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/16/addyosmani-agent-skills-production-grade-ai-coding/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Addy Osmani 的 agent-skills：给 AI 编程 Agent 装上资深工程师的工作流 | 小戴的网络日志">
+      <meta itemprop="description" content="Addy Osmani 开源的 agent-skills 是 78k stars 的明星项目，把资深工程师的开发流程（Spec→Plan→Build→Verify→Review→Ship）封装成 24 个 Markdown 技能和 8 个 Slash 命令，让 Claude Code、Cursor、Codex 等 AI Agent 真正按规范工作，而不是随机发挥。一次安装，全员升级。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Addy Osmani 的 agent-skills：给 AI 编程 Agent 装上资深工程师的工作流
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-16 10:00:00" itemprop="dateCreated datePublished" datetime="2026-07-16T10:00:00+08:00">2026-07-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">技术教程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Addy Osmani 开源的 agent-skills 是 78k stars 的明星项目，把资深工程师的开发流程（Spec→Plan→Build→Verify→Review→Ship）封装成 24 个 Markdown 技能和 8 个 Slash 命令，让 Claude Code、Cursor、Codex 等 AI Agent 真正按规范工作，而不是随机发挥。一次安装，全员升级。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="一、当-AI-Agent-写代码越来越像开盲盒"><a href="#一、当-AI-Agent-写代码越来越像开盲盒" class="headerlink" title="一、当 AI Agent 写代码越来越像开盲盒"></a>一、当 AI Agent 写代码越来越像开盲盒</h2><p>你有没有过这样的经历：让 Claude Code 写一个新功能，它哗哗给你撸了几百行代码，跑起来 ——<code>TypeError: Cannot read property 'map' of undefined</code>。你让它修，它改一处又崩三处。再让它加个测试，它直接把所有测试文件全删了重新生成一套。</p>
+<p>问题不在模型，而在于<strong>流程</strong>。</p>
+<p>人类资深工程师不会上来就写代码：他先要写 PRD、和需求方对齐、把任务拆成小块、写测试再写实现、跑 lint、跑 review、确认 OK 才上线。一个完整的开发流程里有十几个质量门禁，每一个都是” 前辈踩过的坑”。</p>
+<p>而大多数 AI 编程 Agent 的工作方式是：<strong>接收 prompt → 直接生成代码</strong>。中间那些” 该问清楚再动手”、” 先写测试再写实现”、” 改之前先确认影响面” 的经验，它一条都没继承。</p>
+<p>所以，Addy Osmani（Google Chrome 团队负责人）做了 <strong><code>agent-skills</code></strong> —— 把资深工程师的整套工作流封装成 24 个 Markdown 技能文件 + 8 个 Slash 命令，让 Claude Code、Cursor、Codex 等任何支持系统提示的 AI Agent 都能” 按规矩办事”。</p>
+<p>今天 GitHub 上它狂揽 1,116 stars，总量突破 78k。今天就聊聊这个项目到底解决了什么、怎么用、有什么坑。</p>
+<hr>
+<h2 id="二、项目背景：从”代码生成器”到”工程搭档”"><a href="#二、项目背景：从”代码生成器”到”工程搭档”" class="headerlink" title="二、项目背景：从”代码生成器”到”工程搭档”"></a>二、项目背景：从” 代码生成器” 到” 工程搭档”</h2><p><code>addyosmani/agent-skills</code> 的核心理念只有一句话：</p>
+<blockquote>
+<p><strong>Skills encode the workflows, quality gates, and best practices that senior engineers use when building software. These ones are packaged so AI agents follow them consistently across every phase of development.</strong></p>
+</blockquote>
+<p>它把整个软件开发生命周期抽象成六个阶段：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP</span><br><span class="line">/spec  → /plan → /build → /test  → /review → /ship</span><br></pre></td></tr></tbody></table></figure>
+
+<p>每个阶段对应一个 slash 命令，命令会激活一组相关的技能文件。技能文件就是普通的 Markdown，里面写满了” 在该阶段应该做什么、避免什么、何时停止”。</p>
+<p>这跟之前的”AI Agent 框架”（比如 LangChain、AutoGen）不是一个赛道。那些是帮你<strong>搭建</strong> Agent；agent-skills 是帮你<strong>教育</strong>已经搭好的 Agent，让它按工程师的规矩工作。</p>
+<table>
+<thead>
+<tr>
+<th>对比维度</th>
+<th> AutoGPT / LangChain</th>
+<th>agent-skills</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 解决问题</td>
+<td>怎么让 LLM 变成 Agent</td>
+<td>Agent 怎么按规矩做事</td>
+</tr>
+<tr>
+<td>形态</td>
+<td> Python/TS 代码框架</td>
+<td> 24 个 Markdown 文件</td>
+</tr>
+<tr>
+<td>学习曲线</td>
+<td>几天到几周</td>
+<td>几分钟</td>
+</tr>
+<tr>
+<td>适配范围</td>
+<td>自己的 Agent</td>
+<td>Claude Code/Cursor/Codex 等 70+ 工具</td>
+</tr>
+<tr>
+<td>维护成本</td>
+<td>高（依赖、版本、breaking change）</td>
+<td>低（纯文本，可读可改）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="三、24-个技能怎么工作"><a href="#三、24-个技能怎么工作" class="headerlink" title="三、24 个技能怎么工作"></a>三、24 个技能怎么工作</h2><p>技能不是” 插件”，是<strong>上下文</strong>。Agent 启动时会读取相关的 skill 文件，把里面的规则注入到对话上下文里，然后按规则工作。</p>
+<h3 id="3-1-六大阶段的代表技能"><a href="#3-1-六大阶段的代表技能" class="headerlink" title="3.1 六大阶段的代表技能"></a>3.1 六大阶段的代表技能</h3><p><strong>DEFINE（定义阶段）</strong></p>
+<ul>
+<li><code>interview-me</code>：当需求不清晰时，一次问一个问题，直到 95% 置信度才动手。</li>
+<li><code>idea-refine</code>：把模糊的想法通过发散 / 收敛思考变成具体提案。</li>
+<li><code>spec-driven-development</code>：写 PRD，覆盖目标、命令、目录结构、代码风格、测试、边界 —— <strong>写代码之前必须先有 spec</strong>。</li>
+</ul>
+<p><strong>PLAN（计划阶段）</strong></p>
+<ul>
+<li><code>planning-and-task-breakdown</code>：把 spec 拆成可执行的原子任务，每个任务带验收标准。</li>
+</ul>
+<p><strong>BUILD（构建阶段）</strong></p>
+<ul>
+<li><code>incremental-implementation</code>：薄垂直切片（实现→测试→验证→提交），任何改动超过 1 个文件就要切片。</li>
+<li><code>test-driven-development</code>：强制 Red-Green-Refactor，测试金字塔 80/15/5，DAMP 优于 DRY。</li>
+<li><code>context-engineering</code>：在正确的时间喂给 Agent 正确的信息（rules 文件、MCP）。</li>
+<li><code>source-driven-development</code>：框架决策必须基于官方文档，标注引用，未验证的标黄。</li>
+<li><code>doubt-driven-development</code>：对抗式 review（CLAIM→EXTRACT→DOUBT→RECONCILE→STOP），用于高风险 / 不可逆操作。</li>
+<li><code>frontend-ui-engineering</code>：组件架构、设计系统、WCAG 2.1 AA 可访问性。</li>
+<li><code>api-and-interface-design</code>：契约先行、Hyrum’s Law、One-Version Rule、错误语义。</li>
+</ul>
+<p><strong>VERIFY（验证阶段）</strong></p>
+<ul>
+<li><code>browser-testing-with-devtools</code>：通过 Chrome DevTools MCP 拿实时运行数据。</li>
+<li><code>debugging-and-error-recovery</code>：五步定位（复现→定位→最小化→修复→防回归），stop-the-line 规则。</li>
+</ul>
+<p><strong>REVIEW（审查阶段）</strong></p>
+<ul>
+<li><code>code-review-and-quality</code>：五维评审（正确性 / 可读性 / 可维护性 / 性能 / 安全）。</li>
+<li><code>simplify-code</code>：可读性优于巧技，删除冗余。</li>
+</ul>
+<p><strong>SHIP（上线阶段）</strong></p>
+<ul>
+<li><code>webperf-audit</code>：先测量后优化（Core Web Vitals）。</li>
+<li><code>continuous-deployment</code>：渐进式发布、特性开关、快速回滚。</li>
+</ul>
+<p><strong>Meta（元技能）</strong></p>
+<ul>
+<li><code>using-agent-skills</code>：进会话先看这个，决定后续用哪个技能。</li>
+</ul>
+<h3 id="3-2-8-个-Slash-命令"><a href="#3-2-8-个-Slash-命令" class="headerlink" title="3.2 8 个 Slash 命令"></a>3.2 8 个 Slash 命令</h3><p>命令是技能集的快捷入口：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/spec        <span class="comment"># 把需求变成 PRD</span></span><br><span class="line">/plan        <span class="comment"># 把 PRD 拆成原子任务</span></span><br><span class="line">/build       <span class="comment"># 增量实现（一次一片）</span></span><br><span class="line">/build auto  <span class="comment"># 一次过：生成 plan + 实现 + 验证 + 提交</span></span><br><span class="line">/test        <span class="comment"># 写测试、跑测试</span></span><br><span class="line">/review      <span class="comment"># 五维代码评审</span></span><br><span class="line">/webperf     <span class="comment"># Web 性能审计</span></span><br><span class="line">/code-simplify  <span class="comment"># 简化代码</span></span><br><span class="line">/ship        <span class="comment"># 灰度发布</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>/build auto</code> 是杀手锏：你审批一次 plan，剩下的实现→测试→提交全自动跑，Agent 只在失败或高风险步骤停下来问你。</p>
+<hr>
+<h2 id="四、实战示例：5-分钟装好"><a href="#四、实战示例：5-分钟装好" class="headerlink" title="四、实战示例：5 分钟装好"></a>四、实战示例：5 分钟装好</h2><h3 id="4-1-装到-Claude-Code（推荐）"><a href="#4-1-装到-Claude-Code（推荐）" class="headerlink" title="4.1 装到 Claude Code（推荐）"></a>4.1 装到 Claude Code（推荐）</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过 Marketplace 装</span></span><br><span class="line">/plugin marketplace add addyosmani/agent-skills</span><br><span class="line">/plugin install agent-skills@addy-agent-skills</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者本地装（开发调试用）</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/addyosmani/agent-skills.git</span><br><span class="line">claude --plugin-dir /path/to/agent-skills</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果你没配 SSH key，marketplace 装可能报错。两条路：</p>
+<ol>
+<li>加 SSH key。</li>
+<li>强制 HTTPS：<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global url.<span class="string">"https://github.com/"</span>.insteadOf <span class="string">"git@github.com:"</span></span><br></pre></td></tr></tbody></table></figure></li>
+</ol>
+<h3 id="4-2-装到-Cursor"><a href="#4-2-装到-Cursor" class="headerlink" title="4.2 装到 Cursor"></a>4.2 装到 Cursor</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把技能文件复制到 .cursor/skills/</span></span><br><span class="line"><span class="comment"># 短规则放 .cursor/rules/*.mdc（不要把完整 skill 塞进 rules）</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>详细配置见仓库 <code>docs/cursor-setup.md</code>。</p>
+<h3 id="4-3-装到-Gemini-CLI-Codex-Antigravity"><a href="#4-3-装到-Gemini-CLI-Codex-Antigravity" class="headerlink" title="4.3 装到 Gemini CLI / Codex / Antigravity"></a>4.3 装到 Gemini CLI / Codex / Antigravity</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Gemini CLI</span></span><br><span class="line">gemini skills install https://github.com/addyosmani/agent-skills.git --path skills</span><br><span class="line"></span><br><span class="line"><span class="comment"># Codex (CLI v0.122+)</span></span><br><span class="line">codex plugin marketplace add addyosmani/agent-skills</span><br><span class="line"></span><br><span class="line"><span class="comment"># Antigravity</span></span><br><span class="line">agy plugin install https://github.com/addyosmani/agent-skills.git</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-4-一次性装到-70-Agent"><a href="#4-4-一次性装到-70-Agent" class="headerlink" title="4.4 一次性装到 70+ Agent"></a>4.4 一次性装到 70+ Agent</h3><p>Vercel Labs 的 <code>skills</code> CLI 已经把 agent-skills 收录：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npx skills add addyosmani/agent-skills</span><br><span class="line"><span class="comment"># 装单个技能</span></span><br><span class="line">npx skills add addyosmani/agent-skills --skill code-review-and-quality</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-5-第一次使用"><a href="#4-5-第一次使用" class="headerlink" title="4.5 第一次使用"></a>4.5 第一次使用</h3><p>装好后，进 Claude Code 直接说：</p>
+<blockquote>
+<p>“用 spec-driven-development 帮我做一个 CLI 工具，把 Markdown 转成飞书文档。”</p>
+</blockquote>
+<p>你会观察到：</p>
+<ol>
+<li>Agent 先问你几个澄清问题（<code>interview-me</code> 激活）。</li>
+<li>输出一份 PRD 让你确认（<code>spec-driven-development</code>）。</li>
+<li>PRD 通过后，它把任务拆成原子单元（<code>planning-and-task-breakdown</code>）。</li>
+<li>一步步实现，每步带测试（<code>incremental-implementation</code> + <code>test-driven-development</code>）。</li>
+<li>完事跑 <code>code-review-and-quality</code> 自审一遍。</li>
+</ol>
+<p>跟之前” 上来就写” 的体验完全是两个物种。</p>
+<hr>
+<h2 id="五、与同类项目的对比"><a href="#五、与同类项目的对比" class="headerlink" title="五、与同类项目的对比"></a>五、与同类项目的对比</h2><p>GitHub trending 上跟它相关的还有几个项目，定位差异：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>定位</th>
+<th>与 agent-skills 的关系</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>obra/superpowers</code> (252k stars)</td>
+<td> 完整的 Agentic Skills 框架 + 软件开发方法论</td>
+<td>更重、更哲学，agent-skills 更轻、更工程</td>
+</tr>
+<tr>
+<td><code>mattpocock/skills</code> (165k stars)</td>
+<td> 真实工程师的 <code>.claude</code> 目录技能集</td>
+<td>互补：可以同时装，Matt 偏个人风格，Addy 偏团队规范</td>
+</tr>
+<tr>
+<td><code>vercel-labs/skills</code></td>
+<td>跨平台 skills 安装 CLI</td>
+<td> 是 agent-skills 的<strong>安装器</strong>，不替代它</td>
+</tr>
+<tr>
+<td><code>claude-code-templates</code> (28k stars)</td>
+<td>Claude Code 配置模板 + 监控</td>
+<td>偏配置管理，agent-skills 偏行为规范</td>
+</tr>
+</tbody></table>
+<p>实际项目里，可以 <strong>agent-skills + mattpocock/skills + vercel-labs/skills</strong> 三件套一起装，互不冲突：前者定规矩、中者补风格、后者管分发。</p>
+<hr>
+<h2 id="六、适用场景和限制"><a href="#六、适用场景和限制" class="headerlink" title="六、适用场景和限制"></a>六、适用场景和限制</h2><h3 id="6-1-适合用"><a href="#6-1-适合用" class="headerlink" title="6.1 适合用"></a>6.1 适合用</h3><ul>
+<li><strong>团队新成员</strong>（包括 AI Agent）需要快速对齐工程规范。</li>
+<li><strong>中大型重构</strong>：spec → plan → incremental 三连，避免 Agent 一次性输出几千行不可读的代码。</li>
+<li><strong>多人协作</strong>：所有人（人 + Agent）跑同一套 spec-driven-development，PRD 成为单一事实源。</li>
+<li><strong>生产级项目</strong>：把 80/15/5 测试金字塔、WCAG 2.1 AA、Core Web Vitals 这些质量门禁沉淀进 skill，新需求自动触发。</li>
+</ul>
+<h3 id="6-2-不太适合"><a href="#6-2-不太适合" class="headerlink" title="6.2 不太适合"></a>6.2 不太适合</h3><ul>
+<li><strong>一次性脚本 / Demo</strong>：上 spec-driven-development 是杀鸡用牛刀，直接 <code>/build</code> 就行。</li>
+<li><strong>极小改动</strong>（改个 typo、调整文案）：激活完整 skill 流反而拖慢。</li>
+<li><strong>需要大量自定义公司内部流程</strong>：技能是通用工程实践，公司内部合规、审计流程得自己改 skill。</li>
+</ul>
+<h3 id="6-3-已知坑"><a href="#6-3-已知坑" class="headerlink" title="6.3 已知坑"></a>6.3 已知坑</h3><ol>
+<li><strong>Skill 是纯 Markdown，没有版本约束</strong>。技能更新后，老项目里的 Agent 可能行为不一致。建议把 skill 文件纳入版本控制，固定某个 commit/tag。</li>
+<li><strong>Token 消耗上升</strong>。24 个 skill 全开，每个会话都会带几千 token 的上下文。生产环境推荐只激活当下需要的几个。</li>
+<li><strong>Skill 不等于”AI 会自我反思”</strong>。<code>doubt-driven-development</code> 是工具，不是银弹 —— 遇到真正的伦理、架构分歧，Agent 还是会猜。</li>
+<li><strong>跨 Agent 兼容</strong>。Slash 命令的触发机制因 Agent 而异（Claude Code 是 <code>/</code>，Cursor 是命令面板，Gemini CLI 是 <code>/</code>，Codex 是 <code>@</code>），同一套 skill 行为可能微妙不同。</li>
+</ol>
+<hr>
+<h2 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a>七、总结</h2><p><code>addyosmani/agent-skills</code> 解决了一个被忽视的问题：<strong>AI Agent 不缺能力，缺规矩</strong>。</p>
+<p>它没有引入新的框架、没有训练新的模型，就是把” 资深工程师怎么做软件” 这件事写成了 24 个 Markdown 文件。然后让任何 AI Agent 在合适的时机读它们、按它们工作。</p>
+<p>这件事的价值怎么强调都不过分 ——</p>
+<p>我们已经有了越来越强的模型（Claude 4、GPT-5、Gemini 2.5），但生产事故的根因分析里，<strong>流程缺失</strong>永远排在<strong>模型能力不足</strong>前面。agent-skills 就是在补这个缺口。</p>
+<p>如果你团队正在大规模使用 AI 编程工具，今天花 5 分钟装一下，明天就会发现：</p>
+<ul>
+<li>Agent 不会上来就动代码了，会先问清楚。</li>
+<li>提交前会自己跑测试、做 review。</li>
+<li>改了 100 行代码，会自动拆成 5 个独立 commit。</li>
+<li>PRD 永远是单一事实源。</li>
+</ul>
+<p>这不是 Agent 变聪明了，是它<strong>终于学会按规矩出牌了</strong>。</p>
+<blockquote>
+<p>🔗 项目地址：<a target="_blank" rel="noopener" href="https://github.com/addyosmani/agent-skills">github.com/addyosmani/agent-skills</a><br>⭐ 78k stars | MIT 协议 | 8.3k forks | 最近一次发布 v0.6.4（2026-07-12）</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/16/addyosmani-agent-skills-production-grade-ai-coding/" title="Addy Osmani 的 agent-skills：给 AI 编程 Agent 装上资深工程师的工作流">https://www.daishengli.top/2026/07/16/addyosmani-agent-skills-production-grade-ai-coding/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" rel="tag"># 开发流程</a>
+              <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" rel="tag"># 效率工具</a>
+              <a href="/tags/TDD/" rel="tag"># TDD</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/15/iofficeai-officecli-ai-agent-office-suite/" rel="prev" title="iOfficeAI&#x2F;OfficeCLI：让 AI Agent 真正拥有 Office 能力，单二进制搞定 Word&#x2F;Excel&#x2F;PPT">
+                  <i class="fa fa-angle-left"></i> iOfficeAI/OfficeCLI：让 AI Agent 真正拥有 Office 能力，单二进制搞定 Word/Excel/PPT
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/17/mattpocock-skills-real-engineer-ai-coding/" rel="next" title="Matt Pocock 的 skills：把 &quot;真实工程师&quot; 的开发直觉装进 AI Agent">
+                  Matt Pocock 的 skills：把 "真实工程师" 的开发直觉装进 AI Agent <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

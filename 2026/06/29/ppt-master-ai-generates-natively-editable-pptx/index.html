@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="hugohe3&#x2F;ppt-master 上 GitHub Trending Python 榜第三，30k+ stars：不是把 PPT 渲染成图片再塞回去，而是真正输出 DrawingML 原生可编辑的 .pptx，AI 替我们做&quot;把文档变演示&quot;里最累的那 80%。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="30k Star 的 PPT Master：让 AI 直接吐出「能改的」PPTX，告别一张图糊弄人的时代">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/29/ppt-master-ai-generates-natively-editable-pptx/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="hugohe3&#x2F;ppt-master 上 GitHub Trending Python 榜第三，30k+ stars：不是把 PPT 渲染成图片再塞回去，而是真正输出 DrawingML 原生可编辑的 .pptx，AI 替我们做&quot;把文档变演示&quot;里最累的那 80%。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-29T02:03:17.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.408Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="PPT Master">
+<meta property="article:tag" content="Hugo He">
+<meta property="article:tag" content="办公自动化">
+<meta property="article:tag" content="PPTX">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/29/ppt-master-ai-generates-natively-editable-pptx/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/29/ppt-master-ai-generates-natively-editable-pptx/","path":"2026/06/29/ppt-master-ai-generates-natively-editable-pptx/","title":"30k Star 的 PPT Master：让 AI 直接吐出「能改的」PPTX，告别一张图糊弄人的时代"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>30k Star 的 PPT Master：让 AI 直接吐出「能改的」PPTX，告别一张图糊弄人的时代 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A4%B4%EF%BC%9A%E4%BD%A0%E6%9C%89%E6%B2%A1%E6%9C%89%E8%A2%AB-AI-%E7%94%9F%E6%88%90%E7%9A%84-PPT-%E2%80%9C%E9%AA%97%E2%80%9D-%E8%BF%87%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">开头：你有没有被 AI 生成的 PPT “骗” 过？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E8%A7%A3%E5%86%B3%E3%80%8CAI-%E5%87%BA%E5%9B%BE%E4%B8%8D%E7%BB%99%E5%87%BA-PPT%E3%80%8D%E7%9A%84%E6%A0%B9%E6%9C%AC%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">项目背景：解决「AI 出图不给出 PPT」的根本问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%BB%B6%E4%BA%8B%E4%BB%A5%E5%89%8D%E6%B2%A1%E4%BA%BA%E5%81%9A%E5%AF%B9%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">为什么这件事以前没人做对？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E4%BA%AE%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">核心功能亮点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%8E%9F%E7%94%9F-DrawingML-%E8%BE%93%E5%87%BA%EF%BC%8CPowerPoint-%E9%87%8C%E8%83%BD%E6%94%B9"><span class="nav-number">3.1.</span> <span class="nav-text">1. 原生 DrawingML 输出，PowerPoint 里能改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Claude-Code-Cursor-VS-Code-%E5%85%A8%E5%9C%BA%E6%99%AF%E9%80%82%E9%85%8D"><span class="nav-number">3.2.</span> <span class="nav-text">2. Claude Code &#x2F; Cursor &#x2F; VS Code 全场景适配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E2%80%9C%E6%A8%A1%E6%9D%BF%E5%A1%AB%E5%85%85%E2%80%9D-%E5%B7%A5%E4%BD%9C%E6%B5%81%EF%BC%9A%E6%8A%8A%E5%86%85%E5%AE%B9%E5%A1%9E%E8%BF%9B%E4%BD%A0%E5%B7%B2%E6%9C%89%E7%9A%84-PPT-%E6%A8%A1%E6%9D%BF"><span class="nav-number">3.3.</span> <span class="nav-text">3. “模板填充” 工作流：把内容塞进你已有的 PPT 模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%BC%94%E8%AE%B2%E8%80%85%E5%A4%87%E6%B3%A8-%E9%9F%B3%E9%A2%91%E6%97%81%E7%99%BD"><span class="nav-number">3.4.</span> <span class="nav-text">4. 演讲者备注 + 音频旁白</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%85%8D%E5%9B%BE%E5%8F%8C%E8%B7%AF%E5%BE%84%EF%BC%9AAI-%E7%94%9F%E6%88%90-Web-%E6%90%9C%E7%B4%A2"><span class="nav-number">3.5.</span> <span class="nav-text">5. 配图双路径：AI 生成 + Web 搜索</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E6%8A%8A%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%E5%8F%98%E6%88%90-10-%E9%A1%B5-PPT"><span class="nav-number">4.</span> <span class="nav-text">实战示例：把一篇博客变成 10 页 PPT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-1%EF%BC%9A%E5%87%86%E5%A4%87%E7%B4%A0%E6%9D%90"><span class="nav-number">4.1.</span> <span class="nav-text">步骤 1：准备素材</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-2%EF%BC%9A%E5%9C%A8-AI-IDE-%E9%87%8C%E5%BC%80%E8%81%8A"><span class="nav-number">4.2.</span> <span class="nav-text">步骤 2：在 AI IDE 里开聊</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-3%EF%BC%9AAI-%E8%B7%91%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">4.3.</span> <span class="nav-text">步骤 3：AI 跑工作流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-4%EF%BC%9A%E5%9C%A8-PowerPoint-%E9%87%8C%E6%94%B9"><span class="nav-number">4.4.</span> <span class="nav-text">步骤 4：在 PowerPoint 里改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E9%98%B6%EF%BC%9A%E7%94%A8%E8%87%AA%E5%B7%B1%E5%85%AC%E5%8F%B8%E7%9A%84%E6%A8%A1%E6%9D%BF"><span class="nav-number">4.5.</span> <span class="nav-text">进阶：用自己公司的模板</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E9%99%90%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">适用场景与限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88%E8%B0%81%E7%94%A8"><span class="nav-number">5.1.</span> <span class="nav-text">适合谁用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E4%B9%8B%E5%89%8D%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84%E5%87%A0%E4%BB%B6%E4%BA%8B"><span class="nav-number">5.2.</span> <span class="nav-text">用之前要知道的几件事</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%9F%E5%90%8C%E7%B1%BB%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">5.3.</span> <span class="nav-text">跟同类工具的对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/29/ppt-master-ai-generates-natively-editable-pptx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="30k Star 的 PPT Master：让 AI 直接吐出「能改的」PPTX，告别一张图糊弄人的时代 | 小戴的网络日志">
+      <meta itemprop="description" content="hugohe3&#x2F;ppt-master 上 GitHub Trending Python 榜第三，30k+ stars：不是把 PPT 渲染成图片再塞回去，而是真正输出 DrawingML 原生可编辑的 .pptx，AI 替我们做&quot;把文档变演示&quot;里最累的那 80%。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          30k Star 的 PPT Master：让 AI 直接吐出「能改的」PPTX，告别一张图糊弄人的时代
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-29 10:03:17" itemprop="dateCreated datePublished" datetime="2026-06-29T10:03:17+08:00">2026-06-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">AI 开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">hugohe3/ppt-master 上 GitHub Trending Python 榜第三，30k+ stars：不是把 PPT 渲染成图片再塞回去，而是真正输出 DrawingML 原生可编辑的 .pptx，AI 替我们做"把文档变演示"里最累的那 80%。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="开头：你有没有被-AI-生成的-PPT-“骗”-过？"><a href="#开头：你有没有被-AI-生成的-PPT-“骗”-过？" class="headerlink" title="开头：你有没有被 AI 生成的 PPT “骗” 过？"></a>开头：你有没有被 AI 生成的 PPT “骗” 过？</h2><p>你让 ChatGPT 或者 Gamma 帮你把一份季度报告做成 PPT，出来的页面看起来挺漂亮 —— 配色舒服、排版规整、信息密度也还行。你兴冲冲下载下来准备改两行字、加一张图，结果右键点开一看：傻眼了。</p>
+<p>每一页都<strong>是一张图</strong>。</p>
+<p>你想改标题里的 “Q3 增长 23%” 这几个字？得打开 Photoshop（或者 Figma）去改原图，再重新导出整页。换个对齐方式？得改整张图。想抠出那张折线图单独复用？抠不出来，因为图里所有元素都” 糊” 在同一个位图上。</p>
+<p>这就是过去三年 AI 生成 PPT 的通病：<strong>看着像 PPT，本质是 PNG 合集</strong>。工具默认走”HTML 转 PDF / 转图片” 路线 —— 快、稳、视觉好看，但<strong>完全牺牲了” 可编辑性”</strong>。而我们对 PPT 的核心诉求，恰恰是” 做出来之后还要改”。</p>
+<p>GitHub 上最近冒出来一个项目 <a target="_blank" rel="noopener" href="https://github.com/hugohe3/ppt-master">hugohe3/ppt-master</a>，直接对着这个痛点下刀：<strong>输出的是真正的 PowerPoint 原生 DrawingML 形状、文本框、图表、动画，每一页里的每一个元素，你点开就能改</strong>。项目 30k+ stars，836 次 commit，MIT 协议，6 月 11 号起在 GitHub Trending Python 榜霸榜 #3，到现在热度还没退。</p>
+<h2 id="项目背景：解决「AI-出图不给出-PPT」的根本问题"><a href="#项目背景：解决「AI-出图不给出-PPT」的根本问题" class="headerlink" title="项目背景：解决「AI 出图不给出 PPT」的根本问题"></a>项目背景：解决「AI 出图不给出 PPT」的根本问题</h2><p><a target="_blank" rel="noopener" href="https://github.com/hugohe3/ppt-master">ppt-master</a> 的作者 Hugo He 是一位注册会计师（CPA）+ 注册资产评估师（CPV）背景的财务人，在工作里被” 做 PPT” 这件事反复折磨。他做这件事的动机在 README 里写得很直白：</p>
+<blockquote>
+<p><strong>“This is a tool, not a wishing well.”</strong></p>
+<p>不要指望它一次给你一份完美无缺的成品。它的真正价值是把” 做 PPT 里最烦的那 80%” 替你干掉；剩下 20% 的润色是你的事 —— 而<strong>之所以要给你一份原生可编辑的 PPT，正是因为你还要继续改</strong>。</p>
+</blockquote>
+<h3 id="为什么这件事以前没人做对？"><a href="#为什么这件事以前没人做对？" class="headerlink" title="为什么这件事以前没人做对？"></a>为什么这件事以前没人做对？</h3><p>回顾一下 AI 出 PPT 这几年的几条技术路线，每条都有硬伤：</p>
+<table>
+<thead>
+<tr>
+<th>路线</th>
+<th>输出</th>
+<th>能不能在 PowerPoint 里逐元素改？</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>模板填充</strong></td>
+<td>用现成 .pptx 模板，把文字填进去</td>
+<td>部分可以，受模板限制</td>
+</tr>
+<tr>
+<td><strong>整页出图</strong>（Gamma、Beautiful.ai 早期、ChatGPT 的” 做幻灯片” 插件）</td>
+<td>每页一张高清 PNG</td>
+<td>❌ 完全改不了</td>
+</tr>
+<tr>
+<td><strong> HTML 演示稿</strong>（Slidev、revealjs、Marp）</td>
+<td>浏览器里跑</td>
+<td>❌ 这不是 PPTX</td>
+</tr>
+<tr>
+<td><strong> 原生可编辑</strong>（ppt-master 走的路线）</td>
+<td><strong>真实的 DrawingML 形状、文本框、图表、动画</strong></td>
+<td>✅ 想改哪里点哪里</td>
+</tr>
+</tbody></table>
+<p>第四条路之所以难，是因为：<strong>PowerPoint 文件本质是 ZIP 打包的 XML</strong>（.pptx = DrawingML + 关系图 + 媒体文件），要让 LLM “写出” 一份结构合规、跨 Office 版本不爆炸、动画时序还对得上的 .pptx，工程量巨大。</p>
+<p>ppt-master 选择了一条<strong>更聪明的路</strong>：自己不训练模型，而是<strong>把这件事拆成” 工作流（harness）” + “模型（model）”</strong>。作者把这个公式写在了 README 的第一行：</p>
+<blockquote>
+<p><strong><code>harness + model = agent</code></strong></p>
+</blockquote>
+<p>工具负责流程，模型负责质量。这就把”AI 做 PPT” 从一个黑盒变成了一个<strong>可调试、可替换、可升级的工程问题</strong>。</p>
+<h2 id="核心功能亮点"><a href="#核心功能亮点" class="headerlink" title="核心功能亮点"></a>核心功能亮点</h2><p>下面这五点，是 ppt-master 真正区别于同类工具的地方。</p>
+<h3 id="1-原生-DrawingML-输出，PowerPoint-里能改"><a href="#1-原生-DrawingML-输出，PowerPoint-里能改" class="headerlink" title="1. 原生 DrawingML 输出，PowerPoint 里能改"></a>1. 原生 DrawingML 输出，PowerPoint 里能改</h3><p>这是项目的核心卖点。打开它生成的 .pptx，<strong>右键 → 编辑</strong> 任意文本框，文字真的在那里。<strong>点击</strong> 任意图表，可以改数据源。<strong>动画窗格</strong> 里能看到所有进入 / 退出动画，可以逐个调整时长。</p>
+<p>实现方式：项目维护了一份基于 <a target="_blank" rel="noopener" href="https://python-pptx.readthedocs.io/">python-pptx</a> 的封装，让 LLM 输出的” 页面描述” 被转换成 DrawingML 的 <code>&lt;p:sp&gt;</code>、<code>&lt;p:txBody&gt;</code>、<code>&lt;a:animation&gt;</code> 节点，最后打包成合规的 .pptx 文件。</p>
+<h3 id="2-Claude-Code-Cursor-VS-Code-全场景适配"><a href="#2-Claude-Code-Cursor-VS-Code-全场景适配" class="headerlink" title="2. Claude Code / Cursor / VS Code 全场景适配"></a>2. Claude Code / Cursor / VS Code 全场景适配</h3><p>它不是一个” 独立 app”，而是一个 <strong>Skill</strong>—— 可以装进你现在已经用的 AI IDE 里：</p>
+<ul>
+<li><strong>IDE 原生 Agent</strong>：VS Code、Cursor、Trae、Codebuddy、Windsurf、Void、Zed</li>
+<li><strong>IDE 插件 / 扩展</strong>：GitHub Copilot、Claude Code（VS Code / JetBrains）、Cline、Continue、Roo Code</li>
+<li><strong>CLI Agent</strong>：Claude Code CLI、Codex CLI、Aider、Gemini CLI</li>
+</ul>
+<p>安装方式有三种：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方式 A：直接下载 ZIP 解压</span></span><br><span class="line"><span class="comment"># 方式 B：git clone</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/hugohe3/ppt-master.git</span><br><span class="line"><span class="comment"># 方式 C：Claude Code 插件市场（推荐）</span></span><br><span class="line"><span class="comment"># .claude-plugin/marketplace.json 一键安装</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="3-“模板填充”-工作流：把内容塞进你已有的-PPT-模板"><a href="#3-“模板填充”-工作流：把内容塞进你已有的-PPT-模板" class="headerlink" title="3. “模板填充” 工作流：把内容塞进你已有的 PPT 模板"></a>3. “模板填充” 工作流：把内容塞进你已有的 PPT 模板</h3><p>很多人其实不缺模板，<strong>缺的是把新内容填进老模板的工具</strong>。ppt-master 提供了一个独立的 workflow：<a target="_blank" rel="noopener" href="https://github.com/hugohe3/ppt-master/blob/main/skills/ppt-master/workflows/template-fill-pptx.md">template-fill-pptx</a>—— 你把现有的 .pptx 丢给 AI，AI 把新内容<strong>塞进对应位置</strong>，<strong>保留原模板的字体、配色、母版结构</strong>，而且输出仍然是原生可编辑的 PPTX。</p>
+<p>这一招对咨询、投行、销售这类” 公司 PPT 模板神圣不可侵犯” 的岗位来说，是<strong>真金白银的省时间</strong>。</p>
+<h3 id="4-演讲者备注-音频旁白"><a href="#4-演讲者备注-音频旁白" class="headerlink" title="4. 演讲者备注 + 音频旁白"></a>4. 演讲者备注 + 音频旁白</h3><p>每一页生成时，AI 会同时给出<strong>演讲者备注（speaker notes）</strong>。更进一步，备注可以直接转成<strong>音频旁白</strong> —— 用 TTS 念出来。配合 PowerPoint 的” 录制幻灯片演示” 功能，基本可以做到<strong>给一份大纲 → 出一份带旁白的演示视频</strong>。</p>
+<h3 id="5-配图双路径：AI-生成-Web-搜索"><a href="#5-配图双路径：AI-生成-Web-搜索" class="headerlink" title="5. 配图双路径：AI 生成 + Web 搜索"></a>5. 配图双路径：AI 生成 + Web 搜索</h3><p>配图这件事，ppt-master 给了两条可混用的路径：</p>
+<ul>
+<li><strong>A) AI 生成</strong>：<code>python3 skills/ppt-master/scripts/image_gen.py</code> 调用 <code>gpt-image-2</code>（默认推荐，质量最好）或其他支持 OpenAI Image API 的模型</li>
+<li><strong> B) Web 搜索</strong>：<code>image_search.py</code> 默认从 Openverse / Wikimedia Commons 抓（零配置），配 <code>PEXELS_API_KEY</code> / <code>PIXABAY_API_KEY</code> 可以拉到 Pexels / Pixabay 的高质量 CC0 图</li>
+</ul>
+<p>并且<strong>默认走” 质量优先” 授权链</strong>：CC0 → Public Domain → Pexels/Pixabay → CC BY → CC BY-SA，避免你拿一张” 禁止商业使用” 的图进季报。</p>
+<h2 id="实战示例：把一篇博客变成-10-页-PPT"><a href="#实战示例：把一篇博客变成-10-页-PPT" class="headerlink" title="实战示例：把一篇博客变成 10 页 PPT"></a>实战示例：把一篇博客变成 10 页 PPT</h2><p>下面走一遍<strong>最常见的场景</strong>：把一篇长文 / 报告转成一份 10 页的演示稿。</p>
+<h3 id="步骤-1：准备素材"><a href="#步骤-1：准备素材" class="headerlink" title="步骤 1：准备素材"></a>步骤 1：准备素材</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建项目目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p projects/q2-report/sources</span><br><span class="line"><span class="comment"># 把素材放进去（PDF / DOCX / HTML / 甚至直接粘贴的文字都行）</span></span><br><span class="line"><span class="built_in">cp</span> ~/Documents/q2-financial-report.pdf projects/q2-report/sources/</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="步骤-2：在-AI-IDE-里开聊"><a href="#步骤-2：在-AI-IDE-里开聊" class="headerlink" title="步骤 2：在 AI IDE 里开聊"></a>步骤 2：在 AI IDE 里开聊</h3><p>打开 Claude Code（或 Cursor / VS Code + Copilot），进入 ppt-master 的 skill 目录，然后：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">You: Please create a PPT from projects/q2-report/sources/q2-financial-report.pdf</span><br></pre></td></tr></tbody></table></figure>
+
+<p>AI 会先跟你确认设计规格：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">AI: Sure. Let's confirm the design spec:</span><br><span class="line">  [Template] B) Free design</span><br><span class="line">  [Format] PPT 16:9</span><br><span class="line">  [Pages] 8-10 pages</span><br><span class="line">  [Style] Professional / financial / minimalist</span><br><span class="line">  [Image strategy] AI generation via gpt-image-2</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="步骤-3：AI-跑工作流"><a href="#步骤-3：AI-跑工作流" class="headerlink" title="步骤 3：AI 跑工作流"></a>步骤 3：AI 跑工作流</h3><p>你确认之后，AI 会自动：</p>
+<ol>
+<li>读 PDF（支持多页 PDF + OCR 扫描件）</li>
+<li>切分章节、提炼每页核心信息</li>
+<li>选模板 / 配色 / 字体</li>
+<li>调用 <code>image_gen.py</code> 配图（如果需要）</li>
+<li>用 python-pptx 写出 DrawingML 节点</li>
+<li>打包成 .pptx，存到 <code>exports/q2-financial-report_&lt;timestamp&gt;.pptx</code></li>
+<li>同时在 <code>backup/&lt;timestamp&gt;/svg_output/</code> 留一份 SVG 快照</li>
+</ol>
+<h3 id="步骤-4：在-PowerPoint-里改"><a href="#步骤-4：在-PowerPoint-里改" class="headerlink" title="步骤 4：在 PowerPoint 里改"></a>步骤 4：在 PowerPoint 里改</h3><p>打开生成的 .pptx，<strong>一切元素都能改</strong>：</p>
+<ul>
+<li>改标题文字 → 双击直接编辑</li>
+<li>调字号 → 选中按 Ctrl+]</li>
+<li> 换图表数据 → 右键 → 编辑数据</li>
+<li>调动画时序 → 动画窗格</li>
+<li>换主题色 → 设计 → 变体</li>
+</ul>
+<p>这是用 Gamma 或 ChatGPT 出图式 PPT <strong>永远做不到的事</strong>。</p>
+<h3 id="进阶：用自己公司的模板"><a href="#进阶：用自己公司的模板" class="headerlink" title="进阶：用自己公司的模板"></a>进阶：用自己公司的模板</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 假设你公司模板在 ~/Templates/company-master.pptx</span></span><br><span class="line">You: 用 ~/Templates/company-master.pptx 当模板，</span><br><span class="line">    把 projects/q2-report/sources/q2-financial-report.pdf</span><br><span class="line">    的内容填进去，导出 10 页。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>AI 会调用 <code>template-fill-pptx</code> workflow，<strong>只动数据槽，保留母版和配色</strong>。导出的 PPT 直接拿去给老板看，连” 为什么用了别的字体” 的解释都省了。</p>
+<h2 id="适用场景与限制"><a href="#适用场景与限制" class="headerlink" title="适用场景与限制"></a>适用场景与限制</h2><h3 id="适合谁用"><a href="#适合谁用" class="headerlink" title="适合谁用"></a>适合谁用</h3><ul>
+<li><strong>咨询 / 投行 / 审计</strong>：周报月报季报一堆，模板神圣不可侵犯，<code>template-fill-pptx</code> 是杀手锏</li>
+<li><strong>产品 / 运营</strong>：PRD、竞品分析、用户调研报告，AI 出 80%，人改 20%</li>
+<li><strong> 学术 / 研究</strong>：论文转会议演讲 PPT 不用再从零排版</li>
+<li><strong>销售 / BD</strong>：方案 PPT 需要快速响应客户版本，AI 出初稿 → 销售微调</li>
+</ul>
+<h3 id="用之前要知道的几件事"><a href="#用之前要知道的几件事" class="headerlink" title="用之前要知道的几件事"></a>用之前要知道的几件事</h3><ul>
+<li><strong>模型天花板决定质量上限</strong>：作者在 README 里反复强调 —— <strong>便宜的模型出来就是垃圾</strong>。想要出” 能直接交给老板” 的成品，建议用 <strong>Claude Opus</strong> 或 <strong>Gemini 3.5 Flash</strong>。GPT-4o 出图不错但 PPT 排版一般。</li>
+<li><strong>必须用 Office 2016+ 打开</strong>：用 WPS / Keynote / LibreOffice 打开可能丢动画或排版错位</li>
+<li><strong>不是” 全自动” 工具</strong>：作者写得很诚实，<strong>这是 harness，不是 agent</strong>。你不能跟它说” 做个完美的 PPT 给 CEO”，它只能帮你做 80%，剩下 20% 是你（人）的事</li>
+<li><strong>配图一定要用 <code>gpt-image-2</code> 或自备素材</strong>：默认用 Openverse / Wikimedia Commons 抓的图质量参差，配上 Pexels API Key 会好很多</li>
+<li><strong>大文档（&gt; 200 页）需要分段处理</strong>：单次塞进上下文容易爆，ppt-master 提供分章节处理的 workflow</li>
+</ul>
+<h3 id="跟同类工具的对比"><a href="#跟同类工具的对比" class="headerlink" title="跟同类工具的对比"></a>跟同类工具的对比</h3><table>
+<thead>
+<tr>
+<th>工具</th>
+<th>能否逐元素改</th>
+<th>模板填充</th>
+<th>模型选择</th>
+<th>成本</th>
+<th>开源</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> Gamma</strong></td>
+<td>❌ 整页出图</td>
+<td>✅</td>
+<td>固定（自家）</td>
+<td>免费 + 付费</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>Beautiful.ai</strong></td>
+<td> 部分</td>
+<td>✅</td>
+<td>无（规则引擎）</td>
+<td>付费</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>ChatGPT Slide Plugin</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>GPT</td>
+<td>ChatGPT Plus</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>Marp / Slidev</strong></td>
+<td>✅ 但不是 PPTX</td>
+<td>❌</td>
+<td>你自己写</td>
+<td>免费</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>ppt-master</strong></td>
+<td>✅ <strong>原生可编辑 PPTX</strong></td>
+<td>✅</td>
+<td><strong>你自己挑</strong></td>
+<td>免费（自付 API）</td>
+<td>✅ MIT</td>
+</tr>
+</tbody></table>
+<p>最后这一行就是 ppt-master 的定位：<strong>“我能给你一份真的能在 PowerPoint 里改的 PPTX，模型你随便挑，模板你随便换，我开源 MIT。”</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><a target="_blank" rel="noopener" href="https://github.com/hugohe3/ppt-master">ppt-master</a> 解决了一个被忽视了三年的问题：AI 出 PPT 不是” 渲染出一张好看的图” 就够了，<strong>必须让用户拿过去能改、敢改、改得快</strong>。</p>
+<p>它做对了三件事：</p>
+<ol>
+<li><strong>选对了输出格式</strong> —— 原生 DrawingML，<strong>不是 PNG</strong></li>
+<li><strong> 选对了产品形态</strong> —— 做成 Skill 装进现有 AI IDE，<strong>而不是做独立 app</strong></li>
+<li><strong> 选对了边界感</strong> —— 明确说” 我是 harness，不是 agent”，把” 模型上限” 和” 工具流程” 拆开，让用户自己挑 Claude Opus 还是 Gemini 3.5 Flash</li>
+</ol>
+<p>30k+ stars、836 次 commit、连续霸榜 GitHub Trending Python 榜前 3—— 这不是靠营销出来的热度，是真的戳中了” 打工人每周被 PPT 折磨” 这个全民痛点。</p>
+<p>如果你下周的周报、季报、竞品分析还在从零排版，<strong>强烈建议花 10 分钟装一下 ppt-master</strong>。安装命令：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/hugohe3/ppt-master.git</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后打开 Claude Code，把一份 PDF 丢给它，<strong>让它先帮你做出 80%，剩下 20% 你再亲手改</strong> —— 这才是 AI 时代正确的” 做 PPT” 姿势。</p>
+<p>GitHub 地址：<a target="_blank" rel="noopener" href="https://github.com/hugohe3/ppt-master">https://github.com/hugohe3/ppt-master</a><br>在线 Demo：<a target="_blank" rel="noopener" href="https://hugohe3.github.io/ppt-master/">https://hugohe3.github.io/ppt-master/</a><br>作者博客 &amp; 文档：见仓库 <code>docs/</code> 目录</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/29/ppt-master-ai-generates-natively-editable-pptx/" title="30k Star 的 PPT Master：让 AI 直接吐出「能改的」PPTX，告别一张图糊弄人的时代">https://www.daishengli.top/2026/06/29/ppt-master-ai-generates-natively-editable-pptx/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/PPT-Master/" rel="tag"># PPT Master</a>
+              <a href="/tags/Hugo-He/" rel="tag"># Hugo He</a>
+              <a href="/tags/%E5%8A%9E%E5%85%AC%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag"># 办公自动化</a>
+              <a href="/tags/PPTX/" rel="tag"># PPTX</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/28/cognee-open-source-ai-agent-memory-platform/" rel="prev" title="Cognee：给 AI Agent 一块真正能用的「长期记忆」，开源知识图谱 + 向量检索双引擎">
+                  <i class="fa fa-angle-left"></i> Cognee：给 AI Agent 一块真正能用的「长期记忆」，开源知识图谱 + 向量检索双引擎
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/30/browser-use-video-use-ai-video-editor-from-claude-code/" rel="next" title="100k Star 的 browser-use 又出新品：把 Claude Code 变成你的 AI 剪辑师，丢一文件夹原片它吐 final.mp4">
+                  100k Star 的 browser-use 又出新品：把 Claude Code 变成你的 AI 剪辑师，丢一文件夹原片它吐 final.mp4 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

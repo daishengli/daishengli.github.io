@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="DioxusLabs&#x2F;dioxus 当日登顶 GitHub Trending：用一份 Rust 代码写出 React 风格 UI，自动产出 Web&#x2F;桌面&#x2F;移动端三端二进制，Web 包">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dioxus：用一份 Rust 代码同时搞定 Web、桌面和移动端的全栈框架">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/24/dioxus-rust-fullstack-cross-platform-framework/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="DioxusLabs&#x2F;dioxus 当日登顶 GitHub Trending：用一份 Rust 代码写出 React 风格 UI，自动产出 Web&#x2F;桌面&#x2F;移动端三端二进制，Web 包">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-24T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.404Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="Dioxus">
+<meta property="article:tag" content="全栈开发">
+<meta property="article:tag" content="跨平台">
+<meta property="article:tag" content="Wasm">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/24/dioxus-rust-fullstack-cross-platform-framework/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/24/dioxus-rust-fullstack-cross-platform-framework/","path":"2026/07/24/dioxus-rust-fullstack-cross-platform-framework/","title":"Dioxus：用一份 Rust 代码同时搞定 Web、桌面和移动端的全栈框架"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Dioxus：用一份 Rust 代码同时搞定 Web、桌面和移动端的全栈框架 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E4%BB%8E-Electron-%E7%9A%84%E2%80%9D%E5%8C%85%E5%A4%A7%E3%80%81%E5%86%85%E5%AD%98%E9%AB%98%E2%80%9D%E5%87%BA%E5%8F%91"><span class="nav-number">1.</span> <span class="nav-text">项目背景：从 Electron 的” 包大、内存高” 出发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E5%85%AD%E4%B8%AA%E7%82%B9%EF%BC%8C%E7%9C%8B%E6%87%82-Dioxus-%E5%9C%A8%E5%8D%B7%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">核心功能：六个点，看懂 Dioxus 在卷什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%80%E4%BB%BD%E4%BB%A3%E7%A0%81%EF%BC%8C%E5%9B%9B%E7%A7%8D%E6%B8%B2%E6%9F%93%E7%9B%AE%E6%A0%87"><span class="nav-number">2.1.</span> <span class="nav-text">1. 一份代码，四种渲染目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Signals%EF%BC%9A%E8%AE%A9%E2%80%9D%E7%8A%B6%E6%80%81%E5%8D%B3%E5%8F%98%E9%87%8F%E2%80%9D%E6%88%90%E4%B8%BA%E7%8E%B0%E5%AE%9E"><span class="nav-number">2.2.</span> <span class="nav-text">2. Signals：让” 状态即变量” 成为现实</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Subsecond-%E7%83%AD%E9%87%8D%E8%BD%BD"><span class="nav-number">2.3.</span> <span class="nav-text">3. Subsecond 热重载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Server-Functions%EF%BC%9ARust-%E5%86%99%E5%89%8D%E5%90%8E%E7%AB%AF%EF%BC%8C%E7%B1%BB%E5%9E%8B%E6%89%93%E9%80%9A"><span class="nav-number">2.4.</span> <span class="nav-text">4. Server Functions：Rust 写前后端，类型打通</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%AE%8C%E6%95%B4%E7%9A%84-Web-%E6%A1%86%E6%9E%B6%E8%83%BD%E5%8A%9B%EF%BC%8C%E4%B8%8D%E5%8F%AA%E6%98%AF%E2%80%9DUI-%E5%BA%93%E2%80%9D"><span class="nav-number">2.5.</span> <span class="nav-text">5. 完整的 Web 框架能力，不只是”UI 库”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E4%B8%80%E7%AD%89%E5%85%AC%E6%B0%91%E7%9A%84%E5%8E%9F%E7%94%9F%E8%83%BD%E5%8A%9B"><span class="nav-number">2.6.</span> <span class="nav-text">6. 一等公民的原生能力</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E4%BA%94%E5%88%86%E9%92%9F%E5%86%99%E4%B8%80%E4%B8%AA-%E2%80%9CTodo-%E6%A1%8C%E9%9D%A2%E7%AB%AF%E6%89%93%E5%8C%85%E2%80%9D"><span class="nav-number">3.</span> <span class="nav-text">实战示例：五分钟写一个 “Todo + 桌面端打包”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%AE%89%E8%A3%85-CLI"><span class="nav-number">3.1.</span> <span class="nav-text">第一步：安装 CLI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">3.2.</span> <span class="nav-text">第二步：创建项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E6%9B%BF%E6%8D%A2-main-rs"><span class="nav-number">3.3.</span> <span class="nav-text">第三步：替换 main.rs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9A%E5%88%87%E6%A1%8C%E9%9D%A2%E7%AB%AF%E6%89%93%E5%8C%85"><span class="nav-number">3.4.</span> <span class="nav-text">第四步：切桌面端打包</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E9%99%90%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">适用场景与限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88%E7%94%A8-Dioxus-%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">4.1.</span> <span class="nav-text">适合用 Dioxus 的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%B0%E9%98%B6%E6%AE%B5%E9%9C%80%E8%A6%81%E5%B0%8F%E5%BF%83%E7%9A%84%E8%BE%B9%E7%95%8C"><span class="nav-number">4.2.</span> <span class="nav-text">现阶段需要小心的边界</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E%E5%90%8C%E7%B1%BB%E6%A1%86%E6%9E%B6%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">5.</span> <span class="nav-text">与同类框架的差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/24/dioxus-rust-fullstack-cross-platform-framework/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Dioxus：用一份 Rust 代码同时搞定 Web、桌面和移动端的全栈框架 | 小戴的网络日志">
+      <meta itemprop="description" content="DioxusLabs&#x2F;dioxus 当日登顶 GitHub Trending：用一份 Rust 代码写出 React 风格 UI，自动产出 Web&#x2F;桌面&#x2F;移动端三端二进制，Web 包 &lt;50KB、桌面端 &lt;5MB，今天带你拆开它怎么做到的。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Dioxus：用一份 Rust 代码同时搞定 Web、桌面和移动端的全栈框架
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-24 10:00:00" itemprop="dateCreated datePublished" datetime="2026-07-24T10:00:00+08:00">2026-07-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">DioxusLabs/dioxus 当日登顶 GitHub Trending：用一份 Rust 代码写出 React 风格 UI，自动产出 Web/桌面/移动端三端二进制，Web 包 <50KB、桌面端 <5MB，今天带你拆开它怎么做到的。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>你有没有过这种时刻 —— 产品同事扔过来一句”Web 版先上线，iOS 跟上，安卓月底交差，桌面客户端等融资进来再说”？你心里明白，所谓的” 跟上” 和” 等融资” 翻译成技术语言，就是三套 UI、两套 API、一份样式表，外加五种构建脚本。React Native 重写移动端、Electron 再造桌面端、Tauri 替换 Web 端，每一站都意味着招聘新人、改动状态管理、补贴新的调试技巧。</p>
+<p><strong>有没有可能只用一份 Rust 代码，就把 web、桌面、移动、服务端同时写完？</strong></p>
+<p>这是今天登顶 GitHub Trending 的 <a target="_blank" rel="noopener" href="https://github.com/DioxusLabs/dioxus">DioxusLabs/dioxus</a> 想回答的问题。它在过去 24 小时新增 347 颗星，总计 36.7k Stars，license 是 MIT OR Apache-2.0 双授权，最新发布 v0.7.9（2026-05-08），距离 0.7 主版本只差几次 hot-patch 迭代。它的定位不是又一个 React 替代品，而是一套<strong>真正全栈的 Rust UI 框架</strong> —— 前端、桌面、移动、SSR、服务端函数，全都靠一份代码、近乎一份心智模型完成。</p>
+<h2 id="项目背景：从-Electron-的”包大、内存高”出发"><a href="#项目背景：从-Electron-的”包大、内存高”出发" class="headerlink" title="项目背景：从 Electron 的”包大、内存高”出发"></a>项目背景：从 Electron 的” 包大、内存高” 出发</h2><p>Dioxus 的第一次公开亮相要追溯到 2022 年，灵感来自它的同名前身 Dioxus 0.1：当 Electron 把 Chromium 揉进桌面应用，开发者开始意识到光是把”Web 应用装进 .dmg” 就要付 100MB+ 的体积溢价和几百兆常驻内存。当 Flutter 给出 Dart 的” 一份代码、三端一致”，Web 开发者又难以接受重写逻辑。当 Tauri 把 webview 抽离出来，又还要求你把 UI 用 HTML/JS 完整写一遍，再额外做 Rust 后端。</p>
+<p>Dioxus 的核心立意是：<strong>React 风格的声明式 UI、Rust 的安全与速度、一份代码、三端渲染</strong>。开发者在 <code>rsx!</code> 宏里写 JSX 风格的标记，Dioxus 的虚拟 DOM 替你决定渲染目标 —— 浏览器里的 Wasm、桌面端的原生 webview、iOS/Android 的 WKWebView/ChromeView，或者直接走服务器端渲染 + hydration。</p>
+<p>这意味着你不必为了打包桌面应用，重新实现一份 UI 树；也不必为了支持移动端，写两套 binding。</p>
+<h2 id="核心功能：六个点，看懂-Dioxus-在卷什么"><a href="#核心功能：六个点，看懂-Dioxus-在卷什么" class="headerlink" title="核心功能：六个点，看懂 Dioxus 在卷什么"></a>核心功能：六个点，看懂 Dioxus 在卷什么</h2><h3 id="1-一份代码，四种渲染目标"><a href="#1-一份代码，四种渲染目标" class="headerlink" title="1. 一份代码，四种渲染目标"></a>1. 一份代码，四种渲染目标</h3><p>跑 <code>dx serve</code> 默认启动桌面平台，加 <code>--platform web</code> 就切换到浏览器，<code>--platform ios --target aarch64-apple-ios</code> 直接产出 .ipa，新增安卓支持同样是一个命令。底层由四个 renderer 抽象：</p>
+<ul>
+<li><strong>web-sys</strong>：编译成 Wasm，浏览器即目标，最小 hello world &lt; 50KB</li>
+<li><strong>webview</strong>：macOS 用 WKWebView、Windows 用 WebView2、Linux 用 WebKitGTK，桌面二进制 &lt; 5MB</li>
+<li><strong>Liveview</strong>：所有点击都走服务端，浏览器只负责渲染中间状态，对内网工具和数据看板极友好</li>
+<li><strong> WGPU 实验渲染</strong>：Dioxus 0.7 起正在尝试绕开 webview，直接用 GPU 绘图，目的是把移动端启动时间和包体积再砍一半</li>
+</ul>
+<h3 id="2-Signals：让”状态即变量”成为现实"><a href="#2-Signals：让”状态即变量”成为现实" class="headerlink" title="2. Signals：让”状态即变量”成为现实"></a>2. Signals：让” 状态即变量” 成为现实</h3><p>Dioxus 的状态管理核心是 <code>Signal&lt;T&gt;</code>：一个会被自动追踪的 <code>T</code>，读取它的组件自动订阅，写它就精确触发依赖它的组件 re-render。这把 React 的 <code>useState</code>/Solid 的 <code>createSignal</code>/Svelte 的 <code>$state</code> 揉成了一个心智模型：</p>
+<figure class="highlight rust"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">counter</span>() <span class="punctuation">-&gt;</span> Element {</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">count</span> = <span class="title function_ invoke__">use_signal</span>(|| <span class="number">0</span>);</span><br><span class="line">    rsx! {</span><br><span class="line">        button { onclick: <span class="keyword">move</span> |_| count += <span class="number">1</span>, <span class="string">"Up high! {count}"</span> }</span><br><span class="line">        button { onclick: <span class="keyword">move</span> |_| count -= <span class="number">1</span>, <span class="string">"Down low!"</span> }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>没有 <code>useEffect</code>、<code>useMemo</code>、<code>useReducer</code> 的复杂度，订阅图由编译器在写时构造，运行时不付出任何 Virtual DOM diff 成本。</p>
+<h3 id="3-Subsecond-热重载"><a href="#3-Subsecond-热重载" class="headerlink" title="3. Subsecond 热重载"></a>3. Subsecond 热重载</h3><p>Dioxus 团队在 0.7 版本把 hotpatch 做成了” 次秒级 Rust 热补丁”。<code>dx serve --hotpatch</code> 监听 <code>.rs</code> 文件保存，自动重新编译并替换运行中进程的函数 —— 比 Cargo 的 <code>cargo check</code> 反馈循环快一个量级。改一个 CSS 颜色或者改一段 UI 文案，做一次 git stash 也来得及等编译。</p>
+<h3 id="4-Server-Functions：Rust-写前后端，类型打通"><a href="#4-Server-Functions：Rust-写前后端，类型打通" class="headerlink" title="4. Server Functions：Rust 写前后端，类型打通"></a>4. Server Functions：Rust 写前后端，类型打通</h3><p>得益于与 axum 的深度集成，Dioxus 提供 <code>#[server]</code> 宏把一个 Rust 函数直接变成 HTTP endpoint：</p>
+<figure class="highlight rust"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[server]</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">fn</span> <span class="title function_">fetch_user</span>(id: <span class="type">u64</span>) <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;User, ServerFnError&gt; {</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">user</span> = sqlx::query_as!(User, <span class="string">"SELECT * FROM users WHERE id = $1"</span>, id)</span><br><span class="line">        .<span class="title function_ invoke__">fetch_one</span>(&amp;*DATABASE.<span class="title function_ invoke__">read</span>().<span class="keyword">await</span>)</span><br><span class="line">        .<span class="keyword">await</span>?;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(user)</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>客户端只需 <code>fetch_user(42).await?</code>，Dioxus 自动生成对应 fetcher，包括表单序列化、SSG/SSR 期间的直接调用、WebSocket 协议下的流式支持。<strong>前后端共享同一个类型，不再靠 OpenAPI/TypeScript 编译器当传话人。</strong></p>
+<h3 id="5-完整的-Web-框架能力，不只是”UI-库”"><a href="#5-完整的-Web-框架能力，不只是”UI-库”" class="headerlink" title="5. 完整的 Web 框架能力，不只是”UI 库”"></a>5. 完整的 Web 框架能力，不只是”UI 库”</h3><p>新版本默认集成了 WebSocket、SSE、流式响应、文件上传下载、表单、middleware、动态路由、静态站点生成、增量静态再生（ISR）。这是 Dioxus 与 Yew/Leptos 的最大差异 —— 后者是 UI 库，Dioxus 是<strong>完整的 Fullstack Framework</strong>。</p>
+<h3 id="6-一等公民的原生能力"><a href="#6-一等公民的原生能力" class="headerlink" title="6. 一等公民的原生能力"></a>6. 一等公民的原生能力</h3><p>桌面端可以直接调 Objective-C、Cocoa API；移动端直接调 JNI 和 Native API；Web 端调 Web-Sys。零 IPC 中转，意味着 Flutter 桥接常见的序列化和异步排队痛苦不存在。文件上传后用一台 iPad 拍照片、做 OCR、走本地数据库，全程没有 HTTP 跳转。</p>
+<h2 id="实战示例：五分钟写一个-“Todo-桌面端打包”"><a href="#实战示例：五分钟写一个-“Todo-桌面端打包”" class="headerlink" title="实战示例：五分钟写一个 “Todo + 桌面端打包”"></a>实战示例：五分钟写一个 “Todo + 桌面端打包”</h2><h3 id="第一步：安装-CLI"><a href="#第一步：安装-CLI" class="headerlink" title="第一步：安装 CLI"></a>第一步：安装 CLI</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo install --git https://github.com/DioxusLabs/dioxus dioxus-cli --locked</span><br></pre></td></tr></tbody></table></figure>
+
+<p>或者用预编译版：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -L https://github.com/DioxusLabs/dioxus/releases/latest/download/dioxus-cli-installer.sh | sh</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="第二步：创建项目"><a href="#第二步：创建项目" class="headerlink" title="第二步：创建项目"></a>第二步：创建项目</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dx new todo_app --template fullstack-web</span><br><span class="line"><span class="built_in">cd</span> todo_app</span><br><span class="line">dx serve</span><br></pre></td></tr></tbody></table></figure>
+
+<p>立刻可以在浏览器打开本地 dev server。看到默认模板里的”Welcome to Dioxus”。</p>
+<h3 id="第三步：替换-main-rs"><a href="#第三步：替换-main-rs" class="headerlink" title="第三步：替换 main.rs"></a>第三步：替换 <code>main.rs</code></h3><figure class="highlight rust"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> dioxus::prelude::*;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[derive(Clone, PartialEq, Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Todo</span> { id: <span class="type">usize</span>, text: <span class="type">String</span>, done: <span class="type">bool</span> }</span><br><span class="line"></span><br><span class="line"><span class="meta">#[component]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">App</span>() <span class="punctuation">-&gt;</span> Element {</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">todos</span> = <span class="title function_ invoke__">use_signal</span>(<span class="type">Vec</span>::&lt;Todo&gt;::new);</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">draft</span> = <span class="title function_ invoke__">use_signal</span>(<span class="type">String</span>::new);</span><br><span class="line"></span><br><span class="line">    rsx! {</span><br><span class="line">        div { class: <span class="string">"p-6 max-w-md mx-auto font-sans"</span>,</span><br><span class="line">            h1 { class: <span class="string">"text-2xl mb-4"</span>, <span class="string">"Dioxus Todo Demo"</span> }</span><br><span class="line">            div { class: <span class="string">"flex gap-2 mb-3"</span>,</span><br><span class="line">                input {</span><br><span class="line">                    class: <span class="string">"border rounded px-2 py-1 flex-1"</span>,</span><br><span class="line">                    value: <span class="string">"{draft}"</span>,</span><br><span class="line">                    oninput: <span class="keyword">move</span> |e| draft.<span class="title function_ invoke__">set</span>(e.<span class="title function_ invoke__">value</span>()),</span><br><span class="line">                }</span><br><span class="line">                button {</span><br><span class="line">                    class: <span class="string">"bg-blue-500 text-white px-3 py-1 rounded"</span>,</span><br><span class="line">                    onclick: <span class="keyword">move</span> |_| {</span><br><span class="line">                        <span class="keyword">if</span> !draft.<span class="title function_ invoke__">read</span>().<span class="title function_ invoke__">is_empty</span>() {</span><br><span class="line">                            todos.<span class="title function_ invoke__">write</span>().<span class="title function_ invoke__">push</span>(Todo {</span><br><span class="line">                                id: todos.<span class="title function_ invoke__">read</span>().<span class="title function_ invoke__">len</span>(),</span><br><span class="line">                                text: draft.<span class="title function_ invoke__">read</span>().<span class="title function_ invoke__">clone</span>(),</span><br><span class="line">                                done: <span class="literal">false</span>,</span><br><span class="line">                            });</span><br><span class="line">                            draft.<span class="title function_ invoke__">set</span>(<span class="type">String</span>::<span class="title function_ invoke__">new</span>());</span><br><span class="line">                        }</span><br><span class="line">                    },</span><br><span class="line">                    <span class="string">"Add"</span></span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">            ul { class: <span class="string">"space-y-1"</span>,</span><br><span class="line">                <span class="keyword">for</span> <span class="variable">t</span> <span class="keyword">in</span> todos.<span class="title function_ invoke__">read</span>().<span class="title function_ invoke__">iter</span>() {</span><br><span class="line">                    li { class: <span class="string">"flex items-center gap-2"</span>,</span><br><span class="line">                        input {</span><br><span class="line">                            r#<span class="keyword">type</span>: <span class="string">"checkbox"</span>,</span><br><span class="line">                            checked: t.done,</span><br><span class="line">                            onchange: <span class="keyword">move</span> |_| {},</span><br><span class="line">                        }</span><br><span class="line">                        span { <span class="string">"{t.text}"</span> }</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() {</span><br><span class="line">    <span class="title function_ invoke__">launch</span>(App);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑 <code>dx serve</code>，浏览器看到的就是一份功能完整的待办清单 ——Tailwind 类名直接生效，因为 Dioxus 的 bundler 默认开启 Tailwind。</p>
+<h3 id="第四步：切桌面端打包"><a href="#第四步：切桌面端打包" class="headerlink" title="第四步：切桌面端打包"></a>第四步：切桌面端打包</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dx build --platform desktop --release</span><br></pre></td></tr></tbody></table></figure>
+
+<p>产物在 <code>target/dx/todo_app/release/bundle/</code> 下，按平台分别产出 <code>.app</code> / <code>.exe</code> / <code>.AppImage</code>，体积 3-5MB。</p>
+<p>加上 <code>--platform ios</code> 或 <code>--platform android</code> 参数即可产出移动端包。</p>
+<h2 id="适用场景与限制"><a href="#适用场景与限制" class="headerlink" title="适用场景与限制"></a>适用场景与限制</h2><h3 id="适合用-Dioxus-的场景"><a href="#适合用-Dioxus-的场景" class="headerlink" title="适合用 Dioxus 的场景"></a>适合用 Dioxus 的场景</h3><ul>
+<li><strong>跨平台工具型产品</strong>：必须给客户桌面端 + Web + 偶尔需要内嵌移动端的内部工具</li>
+<li><strong> AI Agent / CLI 的桌面外化</strong>：把 Python 服务包成桌面应用比 Python 写 Electron 体积小很多</li>
+<li><strong>数字游民 / 独立开发者</strong>：不愿意分别维护 React + React Native + Electron 仓库</li>
+<li><strong>静态站点 + 增量渲染</strong>：Hexo / Next 风格，但用 Rust 写，前后端共享类型</li>
+<li><strong> WGPU 实验渲染</strong>：对启动时间和包体积敏感、愿意接受新 renderer 边界的实验项目</li>
+</ul>
+<h3 id="现阶段需要小心的边界"><a href="#现阶段需要小心的边界" class="headerlink" title="现阶段需要小心的边界"></a>现阶段需要小心的边界</h3><ul>
+<li><strong>生态尚不及 Electron</strong>：大量专门为 Chromium 调好的 SaaS、监控 SDK，在 WebView 上偶有兼容性差异；Dioxus 团队在 Discord 上承认这是 WebView 路线<strong>最痛的痛点</strong></li>
+<li><strong> 0.7 仍在打磨</strong>：v0.7.9 还是 pre-1.0，breaking change 时有发生；建议生产项目固定版本号 + 跟社区同频升级</li>
+<li><strong> WebView 性能上限</strong>：复杂的动画、桌面端同时打开三四十个窗口，仍不如纯原生 SwiftUI/UIKit 流畅</li>
+<li><strong>与 Tauri 不冲突，但有重叠</strong>：Tauri 把 Rust 当 webview 后端、UI 用 JS；Dioxus 是把 UI 也交给 Rust—— 目标不同，按场景选</li>
+</ul>
+<h2 id="与同类框架的差异"><a href="#与同类框架的差异" class="headerlink" title="与同类框架的差异"></a>与同类框架的差异</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th> Dioxus</th>
+<th>Tauri</th>
+<th>Electron</th>
+<th>Flutter</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 语言</td>
+<td> Rust</td>
+<td>Rust + JS</td>
+<td>JS/TS</td>
+<td>Dart</td>
+</tr>
+<tr>
+<td>UI 风格</td>
+<td> React-like</td>
+<td>HTML/JS（前端自选）</td>
+<td>HTML/JS</td>
+<td> 自有 widget</td>
+</tr>
+<tr>
+<td> 最小桌面体积</td>
+<td> ~3MB</td>
+<td>~3-10MB</td>
+<td>100MB+</td>
+<td>~20MB</td>
+</tr>
+<tr>
+<td> 移动端</td>
+<td>一等公民</td>
+<td>实验 / 外部方案</td>
+<td>无</td>
+<td>一等公民</td>
+</tr>
+<tr>
+<td> Server Functions</td>
+<td> 内建</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td>学习曲线</td>
+<td> React 经验迁移快</td>
+<td>同时要懂前端</td>
+<td>前端熟即可</td>
+<td>新语言</td>
+</tr>
+</tbody></table>
+<p>Dioxus 想要吃的是” 我想用 Rust 写 UI，又能同时拿到 Web + 桌面 + 移动端” 这个交集。对那种<strong>只需 Web 或只需桌面</strong>的纯前端项目，Next.js/ Tauri 各有优势，不必硬上 Dioxus。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Dioxus 把” 一份代码、三端渲染” 这件事在 Rust 生态里推到了一个新的可用水位。它不是第一个尝试这个方向的框架，但截至 0.7.9，<strong>它是第一个把 Server Functions、热重载、原生调用、跨平台打包整合得足够少坑的开源方案</strong>。对那些被”Web + 桌面 + 移动各一份仓库” 压到喘不过气的团队，它值得拿一个 1-2 周的内部工具项目做 PoC。</p>
+<p>今天的 GitHub Trending 名单里，Dioxus 是少数几个既适合做严肃生产项目、又能动手玩起来的 Rust 框架 —— 比起纯研究项目（NVIDIA/Megatron-LM）和纯基础设施（trivy /airflow），它的回报曲线友好得多。</p>
+<blockquote>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/DioxusLabs/dioxus">https://github.com/DioxusLabs/dioxus</a><br>官网与文档：<a target="_blank" rel="noopener" href="https://dioxuslabs.com/">https://dioxuslabs.com</a><br>Discord 社区：<a target="_blank" rel="noopener" href="https://discord.gg/XgGxMSkvUM">https://discord.gg/XgGxMSkvUM</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/24/dioxus-rust-fullstack-cross-platform-framework/" title="Dioxus：用一份 Rust 代码同时搞定 Web、桌面和移动端的全栈框架">https://www.daishengli.top/2026/07/24/dioxus-rust-fullstack-cross-platform-framework/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/Dioxus/" rel="tag"># Dioxus</a>
+              <a href="/tags/%E5%85%A8%E6%A0%88%E5%BC%80%E5%8F%91/" rel="tag"># 全栈开发</a>
+              <a href="/tags/%E8%B7%A8%E5%B9%B3%E5%8F%B0/" rel="tag"># 跨平台</a>
+              <a href="/tags/Wasm/" rel="tag"># Wasm</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/23/i-have-adhd-action-first-coding-agent-skill/" rel="prev" title="i-have-adhd：让 AI 编程助手先给答案，再讲过程">
+                  <i class="fa fa-angle-left"></i> i-have-adhd：让 AI 编程助手先给答案，再讲过程
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="koala73 开源的 World Monitor：500+ 信息流、56 地图层、CII v8 国家不稳定性评分、39-tool MCP server，单 docker compose 启动，把 Bloomberg 级情报视图搬到任何浏览器。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="World Monitor：把全球态势感知塞进浏览器的开源 OSINT 仪表盘">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/22/worldmonitor-open-source-real-time-global-intelligence-dashboard/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="koala73 开源的 World Monitor：500+ 信息流、56 地图层、CII v8 国家不稳定性评分、39-tool MCP server，单 docker compose 启动，把 Bloomberg 级情报视图搬到任何浏览器。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-22T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.410Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="World Monitor">
+<meta property="article:tag" content="OSINT">
+<meta property="article:tag" content="Dashboard">
+<meta property="article:tag" content="实时数据">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/22/worldmonitor-open-source-real-time-global-intelligence-dashboard/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/22/worldmonitor-open-source-real-time-global-intelligence-dashboard/","path":"2026/07/22/worldmonitor-open-source-real-time-global-intelligence-dashboard/","title":"World Monitor：把全球态势感知塞进浏览器的开源 OSINT 仪表盘"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>World Monitor：把全球态势感知塞进浏览器的开源 OSINT 仪表盘 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A4%B4%EF%BC%9A%E4%BF%A1%E6%81%AF%E8%BF%87%E8%BD%BD%E7%9A%84%E7%9C%9F%E5%AE%9E%E7%97%9B%E6%84%9F"><span class="nav-number">1.</span> <span class="nav-text">开头：信息过载的真实痛感</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E6%8A%8A%E2%80%9D%E5%85%A8%E7%90%83%E6%80%81%E5%8A%BF%E6%84%9F%E7%9F%A5%E2%80%9D%E4%BB%8E%E6%94%BF%E5%BA%9C%E6%9C%BA%E6%9F%9C%E6%90%AC%E5%88%B0%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">项目背景：把” 全球态势感知” 从政府机柜搬到浏览器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E4%BA%AE%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">核心功能亮点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%F0%9F%8C%8D-56-%E5%B1%82%E5%9C%B0%E5%9B%BE-%E5%8F%8C%E5%BC%95%E6%93%8E"><span class="nav-number">3.1.</span> <span class="nav-text">🌍 56 层地图 + 双引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%F0%9F%A7%A0-Country-Instability-Index%EF%BC%88CII-v8%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">🧠 Country Instability Index（CII v8）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%F0%9F%93%B0-500-%E7%AD%96%E5%B1%95%E4%BF%A1%E6%81%AF%E6%B5%81-AI-%E7%AE%80%E6%8A%A5"><span class="nav-number">3.3.</span> <span class="nav-text">📰 500+ 策展信息流 + AI 简报</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%F0%9F%93%8A-7-signal-Market-Composite"><span class="nav-number">3.4.</span> <span class="nav-text">📊 7-signal Market Composite</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%F0%9F%9B%B0%EF%B8%8F-ADS-B-SGP4-%E5%8D%AB%E6%98%9F%E8%BF%87%E5%A2%83"><span class="nav-number">3.5.</span> <span class="nav-text">🛰️ ADS-B + SGP4 卫星过境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%F0%9F%9B%A0%EF%B8%8F-39-tool-MCP-Server"><span class="nav-number">3.6.</span> <span class="nav-text">🛠️ 39-tool MCP Server</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A3-%E5%88%86%E9%92%9F%E8%B7%91%E8%B5%B7%E6%9D%A5"><span class="nav-number">4.</span> <span class="nav-text">实战示例：3 分钟跑起来</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Web-%E7%89%88%EF%BC%88%E6%9C%80%E7%AE%80%E5%8D%95%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">1. Web 版（最简单）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%A1%8C%E9%9D%A2%E7%AB%AF%EF%BC%88Tauri-2%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">2. 桌面端（Tauri 2）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-CLI-npm-%E5%8C%85"><span class="nav-number">4.3.</span> <span class="nav-text">3. CLI &#x2F;npm 包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-MCP-%E6%8E%A5%E5%85%A5-Claude-Code"><span class="nav-number">4.4.</span> <span class="nav-text">4. MCP 接入 Claude Code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%9C%AC%E5%9C%B0-AI%EF%BC%88Ollama%EF%BC%89"><span class="nav-number">4.5.</span> <span class="nav-text">5. 本地 AI（Ollama）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-Self-host%EF%BC%88Docker%EF%BC%89"><span class="nav-number">4.6.</span> <span class="nav-text">6. Self-host（Docker）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">5.</span> <span class="nav-text">与同类项目的差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">6.</span> <span class="nav-text">适用场景和限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/22/worldmonitor-open-source-real-time-global-intelligence-dashboard/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="World Monitor：把全球态势感知塞进浏览器的开源 OSINT 仪表盘 | 小戴的网络日志">
+      <meta itemprop="description" content="koala73 开源的 World Monitor：500+ 信息流、56 地图层、CII v8 国家不稳定性评分、39-tool MCP server，单 docker compose 启动，把 Bloomberg 级情报视图搬到任何浏览器。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          World Monitor：把全球态势感知塞进浏览器的开源 OSINT 仪表盘
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-22 10:00:00" itemprop="dateCreated datePublished" datetime="2026-07-22T10:00:00+08:00">2026-07-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">AI 开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">koala73 开源的 World Monitor：500+ 信息流、56 地图层、CII v8 国家不稳定性评分、39-tool MCP server，单 docker compose 启动，把 Bloomberg 级情报视图搬到任何浏览器。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="开头：信息过载的真实痛感"><a href="#开头：信息过载的真实痛感" class="headerlink" title="开头：信息过载的真实痛感"></a>开头：信息过载的真实痛感</h2><p>你有没有过这种体验 —— 周五晚上你打开 Bloomberg、Reuters、新华、Telegram 群、Twitter、Substack、各种 RSS，几乎每条都在喊” 大事来了”，但你脑子里只有一句话：<strong>到底哪些是真的重要的？哪些之间是相互关联的？哪些会在下周一影响我的代码、我的仓位、我的工作？</strong></p>
+<p>真相是：现在全球每天产生的公开新闻、卫星过境、ADS-B 航班、电网异常、油轮轨迹、社交媒体信号加起来超过 10TB，但绝大多数人打开浏览器看到的还是一长串时间线加一个静态地图。每条信号都在喊” 看我”，但<strong>没人告诉你哪些信号在同一个故事里</strong>。</p>
+<p><code>koala73/worldmonitor</code>（GitHub Trending #1，1,295 stars 当日涨幅、累计 62.5k stars）就是为了把这堆” 碎信号” 压成一张可操作的态势图。今天这篇文章带你拆解一下这个开源项目到底做了什么、有多硬核、你能怎么用。</p>
+<h2 id="项目背景：把”全球态势感知”从政府机柜搬到浏览器"><a href="#项目背景：把”全球态势感知”从政府机柜搬到浏览器" class="headerlink" title="项目背景：把”全球态势感知”从政府机柜搬到浏览器"></a>项目背景：把” 全球态势感知” 从政府机柜搬到浏览器</h2><p>World Monitor 是 Elie Habib 自 2024 年开始的单人 / 百人协作项目，主仓库在 <code>github.com/koala73/worldmonitor</code>。它的目标不是再做一款” 新闻聚合器” 或者” 地图工具”—— 它要做的是<strong>专业级 OSINT（Open Source Intelligence，开源情报）仪表盘</strong>，把政府 / 对冲基金 / 智库日常用的那种” 实时态势感知” 能力，免费搬到任何有浏览器的电脑上。</p>
+<p>为什么是 2026 年才有可能？因为三件事同时到位了：</p>
+<ul>
+<li><strong>WebGL 性能溢出</strong> ——<code>deck.gl + MapLibre GL</code> 能在浏览器流畅渲染几万到几十万个矢量要素</li>
+<li><strong>廉价 AI 推理</strong> —— 本地 Ollama / LM Studio 让” 每天聚合 500 条新闻自动出摘要” 接近零成本</li>
+<li><strong>开放数据爆炸</strong> ——ADS-B、GPS jamming、SGP4 卫星过境、MarineTraffic 油轮、Solar 地磁、USGS 地震、FIRMS 野火…… 每一条数据流都开放，都可拉</li>
+</ul>
+<p>World Monitor 把这三股力量压成” 一个仪表盘、六个变体”。它的产品形态是<strong>六个域名 + 一个 Tauri 桌面端</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>变体</th>
+<th> URL</th>
+<th> 关注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> World</td>
+<td>worldmonitor.app</td>
+<td> 综合地缘 + 基础设施 + 财经</td>
+</tr>
+<tr>
+<td> Tech</td>
+<td>tech.worldmonitor.app</td>
+<td> 技术公司、AI 模型、开源项目</td>
+</tr>
+<tr>
+<td> Finance</td>
+<td>finance.worldmonitor.app</td>
+<td>29 家交易所 + 大宗商品 + 加密 + 7-signal 合成</td>
+</tr>
+<tr>
+<td> Commodity</td>
+<td>commodity.worldmonitor.app</td>
+<td> 大宗商品专项</td>
+</tr>
+<tr>
+<td> Energy</td>
+<td>energy.worldmonitor.app</td>
+<td> 能源 + 电网 + LNG</td>
+</tr>
+<tr>
+<td>Happy</td>
+<td>happy.worldmonitor.app</td>
+<td> 只推好消息（让人喘口气）</td>
+</tr>
+</tbody></table>
+<h2 id="核心功能亮点"><a href="#核心功能亮点" class="headerlink" title="核心功能亮点"></a>核心功能亮点</h2><h3 id="🌍-56-层地图-双引擎"><a href="#🌍-56-层地图-双引擎" class="headerlink" title="🌍 56 层地图 + 双引擎"></a>🌍 56 层地图 + 双引擎</h3><p>打开 <code>worldmonitor.app</code>，第一个让你愣住的是那颗 <strong>3D 地球</strong> ——<code>globe.gl + Three.js</code> 实时渲染，叠加 <code>deck.gl + MapLibre GL</code> 的 WebGL 平面图，可以在两个引擎之间秒切。</p>
+<p>地图上同时叠加 <strong>56 种图层</strong> —— 冲突区、军事基地、海底电缆、ADS-B 航班、SGP4 实时卫星过境（含 ISS / Starlink / 军用卫星）、GPS jamming 与 spoofing 区、MarineTraffic 油轮轨迹、USGS 地震、FIRMS 野火热点、NOAA 飓风、Solar 地磁风暴（Kp 指数）等等。所有图层都可以独立开关、调整透明度、设置地理过滤。</p>
+<h3 id="🧠-Country-Instability-Index（CII-v8）"><a href="#🧠-Country-Instability-Index（CII-v8）" class="headerlink" title="🧠 Country Instability Index（CII v8）"></a>🧠 Country Instability Index（CII v8）</h3><p>这是 World Monitor 最硬核的私有信号。<strong>CII</strong> 是一个<strong>服务端权威的、专有的国家不稳定性评分</strong>，覆盖 31 个 Tier-1 国家。每天根据公开数据自动打分，输出 0–100 的压力指数：</p>
+<ul>
+<li><strong>政治维度</strong> —— 议会动荡、罢工、抗议、突发戒严</li>
+<li><strong>经济维度</strong> —— 汇率跳水、CDS 利差、央行异常操作</li>
+<li><strong>安全维度</strong> —— 恐袭、军事调动、关键基础设施异常</li>
+<li><strong>社会维度</strong> —— 断网、通讯中断、大规模迁徙</li>
+</ul>
+<p>CII v8 不是简单的关键词计数，它跑在一个 server-authoritative 的 pipeline 里，把多源信号做归一化、加权、衰减。dashboard 上每个国家的卡片用颜色编码压力等级，旁边直接列出” 是哪些信号把分数推上来的”—— 可追溯、可证伪。</p>
+<h3 id="📰-500-策展信息流-AI-简报"><a href="#📰-500-策展信息流-AI-简报" class="headerlink" title="📰 500+ 策展信息流 + AI 简报"></a>📰 500+ 策展信息流 + AI 简报</h3><p>World Monitor 内置 <strong>500+ 个策展信息源</strong>，覆盖 15 个分类（地缘、防务、能源、科技、金融、加密、气候……）。每天这些信息流跑过一遍 AI 摘要引擎（Ollama / Groq / OpenRouter 任选），输出” 今天的全球要点 + 5 条关联信号”。</p>
+<p>更关键的是 <strong>cross-stream correlation（跨流关联）</strong>—— 比如一则” 红海航运中断” 的新闻、一组”Brent 油价跳涨” 的行情、一条” 苏伊士运河 GPS jamming 区域扩大” 的信号，会被自动归到<strong>同一个 story 卡片</strong>里，告诉你” 这三个东西是同一件事”。</p>
+<h3 id="📊-7-signal-Market-Composite"><a href="#📊-7-signal-Market-Composite" class="headerlink" title="📊 7-signal Market Composite"></a>📊 7-signal Market Composite</h3><p>Finance 变体里有个叫 <strong>7-signal Market Composite</strong> 的东西 —— 把 7 个相互弱相关的市场信号（VIX、DXY、Brent、铜油比、信用利差、比特币、新兴市场货币）合并成一个 0–100 的合成指数，让你一眼看出” 市场现在是不是处在系统性紧张状态”，而不是盯死一个 VIX。</p>
+<h3 id="🛰️-ADS-B-SGP4-卫星过境"><a href="#🛰️-ADS-B-SGP4-卫星过境" class="headerlink" title="🛰️ ADS-B + SGP4 卫星过境"></a>🛰️ ADS-B + SGP4 卫星过境</h3><p>浏览器的 <strong>Transformers.js</strong> 侧跑 SGP4 轨道计算器 —— 点开卫星图层，你能实时看到 ISS、Starlink 链、Hubble、各国军用侦察卫星过境头顶的轨迹。ADS-B 模块则把全球商用航班位置（带高度、速度、航向）实时画出来。两套叠在一起，就是个迷你版的” 太空 + 空中态势图”。</p>
+<h3 id="🛠️-39-tool-MCP-Server"><a href="#🛠️-39-tool-MCP-Server" class="headerlink" title="🛠️ 39-tool MCP Server"></a>🛠️ 39-tool MCP Server</h3><p>World Monitor 给 AI agent 用。它暴露一个 <strong>Streamable HTTP MCP server</strong>（<code>https://worldmonitor.app/mcp</code>），包含 <strong>39 个工具</strong> ——<code>get_country_cii</code>、<code>list_hotspots</code>、<code>get_oil_supply_disruptions</code>、<code>get_satellite_passes</code>…… 任何 MCP 兼容的 agent（Claude Code、Cursor、Codex）都能直接调用。</p>
+<p>比如你可以让 Claude Code：</p>
+<blockquote>
+<p>“用 worldmonitor MCP 帮我查一下过去 24 小时哪个 Tier-1 国家 CII 涨幅最大，给我三条关联新闻。”</p>
+</blockquote>
+<p>它会真的拉数据、聚关联、输出结论。</p>
+<h2 id="实战示例：3-分钟跑起来"><a href="#实战示例：3-分钟跑起来" class="headerlink" title="实战示例：3 分钟跑起来"></a>实战示例：3 分钟跑起来</h2><h3 id="1-Web-版（最简单）"><a href="#1-Web-版（最简单）" class="headerlink" title="1. Web 版（最简单）"></a>1. Web 版（最简单）</h3><p>直接打开 <a target="_blank" rel="noopener" href="https://worldmonitor.app,零注册、零账号、零信用卡.打开就是完整仪表盘./">https://worldmonitor.app，零注册、零账号、零信用卡。打开就是完整仪表盘。</a></p>
+<h3 id="2-桌面端（Tauri-2）"><a href="#2-桌面端（Tauri-2）" class="headerlink" title="2. 桌面端（Tauri 2）"></a>2. 桌面端（Tauri 2）</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># macOS</span></span><br><span class="line">brew install koala73/tap/worldmonitor</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或下载：https://github.com/koala73/worldmonitor/releases</span></span><br><span class="line"><span class="comment"># 选 macOS ARM / Intel / Windows / Linux AppImage</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>桌面端和 Web 版共享同一份后端数据，但本地有缓存 —— 断网时仍能查看最近一次同步的状态。</p>
+<h3 id="3-CLI-npm-包"><a href="#3-CLI-npm-包" class="headerlink" title="3. CLI / npm 包"></a>3. CLI /npm 包</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm install -g worldmonitor</span><br><span class="line">wm --<span class="built_in">help</span></span><br><span class="line">wm cii --country US</span><br><span class="line">wm hotspots --severity high</span><br><span class="line">wm oil --window 24h</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-MCP-接入-Claude-Code"><a href="#4-MCP-接入-Claude-Code" class="headerlink" title="4. MCP 接入 Claude Code"></a>4. MCP 接入 Claude Code</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claude mcp add --transport http worldmonitor https://worldmonitor.app/mcp</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后在 Claude Code 里：</p>
+<blockquote>
+<p>“用 worldmonitor 给我列一下 CII&gt; 70 的国家，并标注最近 24h 涨幅最大的前 3 个。”</p>
+</blockquote>
+<h3 id="5-本地-AI（Ollama）"><a href="#5-本地-AI（Ollama）" class="headerlink" title="5. 本地 AI（Ollama）"></a>5. 本地 AI（Ollama）</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ollama pull llama3.1:8b</span><br><span class="line"><span class="comment"># 在 dashboard 设置里把 AI backend 切到 Ollama，URL 填 http://localhost:11434</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>之后所有 AI 简报都在本地跑，零 token 成本、零数据外泄。</p>
+<h3 id="6-Self-host（Docker）"><a href="#6-Self-host（Docker）" class="headerlink" title="6. Self-host（Docker）"></a>6. Self-host（Docker）</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/koala73/worldmonitor.git</span><br><span class="line"><span class="built_in">cd</span> worldmonitor</span><br><span class="line">docker compose up -d</span><br><span class="line"><span class="comment"># 访问 http://localhost:8080</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>仓库提供了完整的 <code>docker-compose.yml</code>、<code>Dockerfile</code>、<code>Dockerfile.relay</code>、<code>Dockerfile.digest-notifications</code>，支持自托管 + 反向代理 + 邮件摘要。</p>
+<h2 id="与同类项目的差异"><a href="#与同类项目的差异" class="headerlink" title="与同类项目的差异"></a>与同类项目的差异</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th> World Monitor</th>
+<th>Bloomberg Terminal</th>
+<th>FlightRadar24</th>
+<th>Google Earth</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 部署形态</td>
+<td>开源 AGPL-3.0 + 6 个 Web 变体 + 桌面 + CLI</td>
+<td> 闭源客户端，$2k / 月起步</td>
+<td>免费 + 订阅层</td>
+<td>免费</td>
+</tr>
+<tr>
+<td>主要面向</td>
+<td> OSINT 研究者、独立分析师、记者、技术决策者</td>
+<td>金融机构</td>
+<td>航空爱好者</td>
+<td>普通用户</td>
+</tr>
+<tr>
+<td>数据源数量</td>
+<td> 500+ 策展信息流 + 56 地图层</td>
+<td>闭源 + 大量付费</td>
+<td>仅航班</td>
+<td>仅卫星图</td>
+</tr>
+<tr>
+<td> AI 简报</td>
+<td>内置 + Ollama 零成本本地跑</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td> CII 评分</td>
+<td>内置 v8 评分，31 个 Tier-1 国家</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td> MCP for agents</td>
+<td>✅ 39 工具</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>实时卫星过境</td>
+<td>✅ SGP4 浏览器侧计算</td>
+<td>❌</td>
+<td>❌</td>
+<td>静态</td>
+</tr>
+<tr>
+<td> ADS-B + GPS jamming</td>
+<td>✅</td>
+<td>仅商用订阅</td>
+<td>仅航班</td>
+<td>无</td>
+</tr>
+<tr>
+<td>价格</td>
+<td>免费（自托管零成本）/ 免费（云版）</td>
+<td>$2,000+/ 月</td>
+<td>免费层 / $4 / 月订阅</td>
+<td>免费</td>
+</tr>
+</tbody></table>
+<p>一句话总结：<strong>Bloomberg 卖你” 分析好的信息流”，World Monitor 给你” 造这个信息流的全部原料 + 引擎”</strong>。对个人开发者、独立研究员、技术决策者来说 —— 后者价值远大于前者，因为你能用 MCP 把它接进自己的 agent 工作流。</p>
+<h2 id="适用场景和限制"><a href="#适用场景和限制" class="headerlink" title="适用场景和限制"></a>适用场景和限制</h2><p><strong>最适合</strong>：</p>
+<ul>
+<li>你做地缘 / 宏观 / 能源 / 科技政策研究，需要每天看” 全球在发生什么”</li>
+<li> 你做 OSINT / 调查报道，需要把多源信号拼成故事</li>
+<li>你想给 Claude Code / Codex 接一个<strong>真实世界数据源</strong> ——MCP server 39 工具直接用</li>
+<li>你做 side project，需要一个免费、零运营成本的” 全球仪表盘” 作为背景数据</li>
+<li>你做产品 / 投资决策，需要一个<strong>比 Twitter 时间线更严肃</strong>的全局视图</li>
+</ul>
+<p><strong>不太适合</strong>：</p>
+<ul>
+<li>想要” 个股深度财务分析”——World Monitor 不替代 Bloomberg 的公司层数据</li>
+<li>需要高频交易信号（毫秒级延迟）—— 它的刷新周期是分钟级，不是 tick 级</li>
+<li>需要企业内部网 / 专网数据 —— 它是公开数据聚合器，不是企业情报平台</li>
+<li>完全离线场景 —— 大部分数据流要联网，但你可以在 self-host 模式下加 24h 缓存</li>
+</ul>
+<p><strong>需要留意的坑</strong>：</p>
+<ul>
+<li>CII v8 是 server-authoritative 的专有算法，自托管版本可能拿到的是上一日缓存，<strong>实时评分需要用云版</strong></li>
+<li> 56 个图层全开会吃显卡 —— 普通笔记本建议保持 ≤ 20 个图层</li>
+<li> AI 简报默认走云端（Groq / OpenRouter），要零成本必须切到本地 Ollama</li>
+<li> 自托管需要一定的反向代理 / Docker 经验，文档已经写得很细但仍要花半天</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>World Monitor 不是又一款” 漂亮的 dashboard”—— 它是把” 全球态势感知” 这件事<strong>第一次以开源 + AGPL + 自托管</strong>的形式交到普通开发者手里。它把 500 条信息流、56 个地图层、一个 CII 评分算法、一个 39-tool MCP server 压进同一个仓库，然后让 Ollama / Groq / OpenRouter 任你选。</p>
+<p>如果你最近被” 每天刷太多新闻源但拼不出一条完整故事” 困扰过，去 <a target="_blank" rel="noopener" href="https://worldmonitor.app/">https://worldmonitor.app</a> 打开它 ——3 分钟之内你就会明白这玩意儿和市面上所有” 信息聚合” 产品的差距在哪里。</p>
+<p>仓库地址：<a target="_blank" rel="noopener" href="https://github.com/koala73/worldmonitor%EF%BC%8862.5k">https://github.com/koala73/worldmonitor（62.5k</a> stars · AGPL-3.0 · TypeScript + Rust）</p>
+<p>下次再聊。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/22/worldmonitor-open-source-real-time-global-intelligence-dashboard/" title="World Monitor：把全球态势感知塞进浏览器的开源 OSINT 仪表盘">https://www.daishengli.top/2026/07/22/worldmonitor-open-source-real-time-global-intelligence-dashboard/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/World-Monitor/" rel="tag"># World Monitor</a>
+              <a href="/tags/OSINT/" rel="tag"># OSINT</a>
+              <a href="/tags/Dashboard/" rel="tag"># Dashboard</a>
+              <a href="/tags/%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE/" rel="tag"># 实时数据</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/21/desktop-commander-mcp-claude-terminal-control/" rel="prev" title="让 Claude 直接操控你的电脑：Desktop Commander MCP 把终端、文件、进程全交给 AI">
+                  <i class="fa fa-angle-left"></i> 让 Claude 直接操控你的电脑：Desktop Commander MCP 把终端、文件、进程全交给 AI
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/23/i-have-adhd-action-first-coding-agent-skill/" rel="next" title="i-have-adhd：让 AI 编程助手先给答案，再讲过程">
+                  i-have-adhd：让 AI 编程助手先给答案，再讲过程 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

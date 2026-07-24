@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="herdr 是一个用 Rust 写的 10MB 单文件终端多路复用器，专为同时跑 Claude Code &#x2F; Codex &#x2F; Copilot CLI 等多 Agent 场景设计，能自动识别每个 Agent 的&quot;blocked &#x2F; working &#x2F; done &#x2F; idle&quot;状态，断网后 Agent 不死，手机 SSH 也能继续看。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Herdr：tmux 为 AI 编程时代重写了一遍，让你一眼看清 6 个 Agent 谁在 &quot;摸鱼&quot;">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/05/herdr-terminal-agent-multiplexer/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="herdr 是一个用 Rust 写的 10MB 单文件终端多路复用器，专为同时跑 Claude Code &#x2F; Codex &#x2F; Copilot CLI 等多 Agent 场景设计，能自动识别每个 Agent 的&quot;blocked &#x2F; working &#x2F; done &#x2F; idle&quot;状态，断网后 Agent 不死，手机 SSH 也能继续看。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-05T02:00:28.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.405Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="herdr">
+<meta property="article:tag" content="terminal">
+<meta property="article:tag" content="tmux">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/05/herdr-terminal-agent-multiplexer/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/05/herdr-terminal-agent-multiplexer/","path":"2026/07/05/herdr-terminal-agent-multiplexer/","title":"Herdr：tmux 为 AI 编程时代重写了一遍，让你一眼看清 6 个 Agent 谁在 \"摸鱼\""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Herdr：tmux 为 AI 编程时代重写了一遍，让你一眼看清 6 个 Agent 谁在 "摸鱼" | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Herdr%EF%BC%9Atmux-%E4%B8%BA-AI-%E7%BC%96%E7%A8%8B%E6%97%B6%E4%BB%A3%E9%87%8D%E5%86%99%E4%BA%86%E4%B8%80%E9%81%8D%EF%BC%8C%E8%AE%A9%E4%BD%A0%E4%B8%80%E7%9C%BC%E7%9C%8B%E6%B8%85-6-%E4%B8%AA-Agent-%E8%B0%81%E5%9C%A8%E2%80%9D%E6%91%B8%E9%B1%BC%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">Herdr：tmux 为 AI 编程时代重写了一遍，让你一眼看清 6 个 Agent 谁在” 摸鱼”</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%89%E4%B8%AA-Terminal-%E6%A0%87%E7%AD%BE%E9%A1%B5%E5%90%8C%E6%97%B6%E8%B7%91-Claude-Code%EF%BC%8C%E6%88%91%E5%B7%AE%E7%82%B9%E2%80%9D%E7%B2%BE%E7%A5%9E%E5%88%86%E8%A3%82%E2%80%9D"><span class="nav-number">1.1.</span> <span class="nav-text">一、三个 Terminal 标签页同时跑 Claude Code，我差点” 精神分裂”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81herdr-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E4%B8%80%E4%B8%AA%E2%80%9D%E4%B8%BA-Agent-%E9%87%8D%E5%86%99%E2%80%9D%E7%9A%84-tmux"><span class="nav-number">1.2.</span> <span class="nav-text">二、herdr 是什么？一个” 为 Agent 重写” 的 tmux</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E4%BA%94%E5%A4%A7%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%88%E4%B8%80%E4%B8%AA%E4%B8%80%E4%B8%AA%E6%8B%86%E7%BB%99%E4%BD%A0%E7%9C%8B%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">三、五大核心功能（一个一个拆给你看）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E4%BE%A7%E6%A0%8F-Agent-%E7%8A%B6%E6%80%81%E5%8F%AF%E8%A7%86%E5%8C%96-%E2%80%94%E2%80%94-%E9%9B%B6%E9%85%8D%E7%BD%AE%E2%80%9D%E7%9C%8B%E8%84%B8%E8%89%B2%E2%80%9D"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 侧栏 Agent 状态可视化 —— 零配置” 看脸色”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E7%9C%9F%E5%AE%9E%E7%9A%84-PTY-%E2%80%94%E2%80%94-%E8%AE%A9%E5%85%A8%E5%B1%8F-TUI-%E6%B8%B2%E6%9F%93%E4%B8%8D%E7%B3%8A"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 真实的 PTY —— 让全屏 TUI 渲染不糊</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%8C%81%E4%B9%85%E5%8C%96-%E8%BF%9C%E7%A8%8B-Reattach-%E2%80%94%E2%80%94-%E7%9C%9F%E6%AD%A3%E7%9A%84%E2%80%9D%E5%85%B3%E7%94%B5%E8%84%91%E4%B8%8D%E4%B8%A2%E5%B7%A5%E4%BD%9C%E2%80%9D"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 持久化 + 远程 Reattach —— 真正的” 关电脑不丢工作”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E9%BC%A0%E6%A0%87%E5%8E%9F%E7%94%9F-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E5%8F%8B%E5%A5%BD"><span class="nav-number">1.3.4.</span> <span class="nav-text">3.4 鼠标原生 + 移动端友好</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-Socket-API-CLI%EF%BC%9A%E8%AE%A9-Agent-%E4%B9%9F%E8%83%BD%E2%80%9D%E7%AE%A1%E2%80%9DAgent"><span class="nav-number">1.3.5.</span> <span class="nav-text">3.5 Socket API + CLI：让 Agent 也能” 管”Agent</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%815-%E5%88%86%E9%92%9F%E5%AE%9E%E6%88%98%EF%BC%9A%E6%8A%8A-herdr-%E8%B7%91%E8%B5%B7%E6%9D%A5"><span class="nav-number">1.4.</span> <span class="nav-text">四、5 分钟实战：把 herdr 跑起来</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%AE%89%E8%A3%85"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%BC%80%E7%AC%AC%E4%B8%80%E4%B8%AA-workspace"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 开第一个 workspace</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%90%8C%E6%97%B6%E8%B7%91-3-%E4%B8%AA-Agent"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 同时跑 3 个 Agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E5%9C%A8%E6%89%8B%E6%9C%BA%E4%B8%8A%E7%BB%A7%E7%BB%AD%E7%9C%8B"><span class="nav-number">1.4.4.</span> <span class="nav-text">4.4 在手机上继续看</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%AE%83%E5%92%8C-tmux-cmux-warp-%E5%88%B0%E5%BA%95%E5%B7%AE%E5%9C%A8%E5%93%AA"><span class="nav-number">1.5.</span> <span class="nav-text">五、它和 tmux &#x2F;cmux&#x2F;warp 到底差在哪</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF-vs-%E9%99%90%E5%88%B6"><span class="nav-number">1.6.</span> <span class="nav-text">六、适用场景 vs 限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">七、总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/05/herdr-terminal-agent-multiplexer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Herdr：tmux 为 AI 编程时代重写了一遍，让你一眼看清 6 个 Agent 谁在 &quot;摸鱼&quot; | 小戴的网络日志">
+      <meta itemprop="description" content="herdr 是一个用 Rust 写的 10MB 单文件终端多路复用器，专为同时跑 Claude Code &#x2F; Codex &#x2F; Copilot CLI 等多 Agent 场景设计，能自动识别每个 Agent 的&quot;blocked &#x2F; working &#x2F; done &#x2F; idle&quot;状态，断网后 Agent 不死，手机 SSH 也能继续看。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Herdr：tmux 为 AI 编程时代重写了一遍，让你一眼看清 6 个 Agent 谁在 "摸鱼"
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-05 10:00:28" itemprop="dateCreated datePublished" datetime="2026-07-05T10:00:28+08:00">2026-07-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">herdr 是一个用 Rust 写的 10MB 单文件终端多路复用器，专为同时跑 Claude Code / Codex / Copilot CLI 等多 Agent 场景设计，能自动识别每个 Agent 的"blocked / working / done / idle"状态，断网后 Agent 不死，手机 SSH 也能继续看。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Herdr：tmux-为-AI-编程时代重写了一遍，让你一眼看清-6-个-Agent-谁在”摸鱼”"><a href="#Herdr：tmux-为-AI-编程时代重写了一遍，让你一眼看清-6-个-Agent-谁在”摸鱼”" class="headerlink" title="Herdr：tmux 为 AI 编程时代重写了一遍，让你一眼看清 6 个 Agent 谁在”摸鱼”"></a>Herdr：tmux 为 AI 编程时代重写了一遍，让你一眼看清 6 个 Agent 谁在” 摸鱼”</h1><h2 id="一、三个-Terminal-标签页同时跑-Claude-Code，我差点”精神分裂”"><a href="#一、三个-Terminal-标签页同时跑-Claude-Code，我差点”精神分裂”" class="headerlink" title="一、三个 Terminal 标签页同时跑 Claude Code，我差点”精神分裂”"></a>一、三个 Terminal 标签页同时跑 Claude Code，我差点” 精神分裂”</h2><p>如果你和我一样，最近半年同时挂着 Claude Code + Codex + Copilot CLI + Cursor Agent 写代码，那你大概率体验过这种” 精神分裂”：</p>
+<blockquote>
+<ul>
+<li><strong>标签页 1</strong>：Claude Code 在跑 refactor，已经 4 分钟没动了，是不是卡了？切过去看一眼 —— 其实在等 npm install。</li>
+<li><strong>标签页 2</strong>：Codex 在写测试，跑完了一直没回我，但我没注意，错过了它的提问。</li>
+<li><strong>标签页 3</strong>：Copilot CLI 早就跑完了，但我忘记收尾，浪费了 30 分钟。</li>
+<li><strong>手机 SSH 进服务器</strong>：刚才关电脑前开的 agent 全死了，回去一看啥都没干。</li>
+</ul>
+</blockquote>
+<p>这种” 我的 Agent 们到底谁在干嘛” 的焦虑，是 AI 编程时代每个多 Agent 用户都会撞上的墙。<strong>tmux 能让你挂很多个 pane，但它不知道哪个 pane 里的程序是个 Agent，更不知道这个 Agent 是” 在干活” 还是” 在等你确认”</strong>。GUI 类的 Agent 管理器（cmux、conductor、emdash）能显示状态，但它们要么只支持 macOS，要么要装一个 Electron App，要么把你的真实终端” 包” 在一个模拟器里 ——SSH 进服务器就废了。</p>
+<p>今天我们要聊的 <a target="_blank" rel="noopener" href="https://github.com/ogulcancelik/herdr">ogulcancelik/herdr</a>（11.4k stars，66 个 release，2026 年 6 月 30 日登顶 GitHub Trending #1）走了一条不一样的路：<strong>它就是一个 10MB 的 Rust 单文件二进制，但把 tmux 的” 持久化” 和 GUI 管理器的”Agent 状态感知” 结合在了一起</strong>。关键是 —— 它<strong>不接管你的终端</strong>，它是<strong>住进</strong>你终端里的。</p>
+<h2 id="二、herdr-是什么？一个”为-Agent-重写”的-tmux"><a href="#二、herdr-是什么？一个”为-Agent-重写”的-tmux" class="headerlink" title="二、herdr 是什么？一个”为 Agent 重写”的 tmux"></a>二、herdr 是什么？一个” 为 Agent 重写” 的 tmux</h2><p>官方原话是：</p>
+<blockquote>
+<p>if you’ve used tmux: it’s that, rebuilt for agents.</p>
+</blockquote>
+<p>拆开看三个关键词：</p>
+<ol>
+<li><strong>Agent Multiplexer</strong>：和 tmux 一样，它能在一个终端里开多个 pane、tab、workspace。但它在每个 pane 的边框 / 侧栏实时告诉你” 这个 Agent 当前是 blocked /working/done /idle 中的哪一种”。</li>
+<li><strong>Lives in your terminal</strong>：不像 cmux、warp、conductor 这种” 套壳终端”，herdr 不替换你的 iTerm / Ghostty / Kitty / Alacritty。它就在你现有的终端里跑。</li>
+<li><strong>Runs anywhere</strong>：一个～10MB 的 Rust 静态二进制，无 Electron、无 GUI、无 mac-only wrapper、无账号、无遥测。Linux /macOS 稳定版，Windows beta。<strong>手机 SSH 进去也能用</strong> —— 这点直接秒杀了 90% 的 GUI 类 Agent 管理器。</li>
+</ol>
+<p>它的设计哲学用一句话总结：<strong>tmux 解决了” 程序跑在比你的会话更长的寿命里”，herdr 解决了” 我同时挂了 6 个 Agent，但我知道哪个在干活、哪个在等我”</strong>。</p>
+<h2 id="三、五大核心功能（一个一个拆给你看）"><a href="#三、五大核心功能（一个一个拆给你看）" class="headerlink" title="三、五大核心功能（一个一个拆给你看）"></a>三、五大核心功能（一个一个拆给你看）</h2><h3 id="3-1-侧栏-Agent-状态可视化-——-零配置”看脸色”"><a href="#3-1-侧栏-Agent-状态可视化-——-零配置”看脸色”" class="headerlink" title="3.1 侧栏 Agent 状态可视化 —— 零配置”看脸色”"></a>3.1 侧栏 Agent 状态可视化 —— 零配置” 看脸色”</h3><p>herdr 最杀的功能是它的<strong>侧栏（sidebar）</strong>。每个 pane 旁边会自动出现一个彩色状态点：</p>
+<ul>
+<li>🔴 <strong>blocked</strong> —— Agent 在等你确认 / 答问题（这就是你最容易错过的”Agent 已经做完一半在等你” 的状态）</li>
+<li>🟡 <strong>working</strong> —— Agent 正在干活（写代码、跑命令）</li>
+<li>🔵 <strong>done</strong> —— Agent 已经完成这一轮，等待下一条指令</li>
+<li>🟢 <strong>idle</strong> —— 闲着的 pane（普通 shell）</li>
+</ul>
+<p>它怎么知道 Agent 在哪个状态？<strong>纯靠读 PTY 输出 + 进程名匹配</strong>，<strong>0 配置、0 hooks、0 插件</strong>。官方说它默认支持 Claude Code、Codex、GitHub Copilot CLI、Devin CLI、Amp、Cursor Agent、Grok CLI、Kimi、Qoder CLI、OpenCode 等 15+ 主流 Agent。任何 CLI Agent 都能用 ——herdr 不在你 Agent 里装任何东西，<strong>它只” 读” 你终端的输出流</strong>。</p>
+<p>这一招很关键：很多 GUI 管理器要你在每个 Agent 里装一个 plugin 才能上报状态，herdr 完全不需要，<strong>纯靠看屏幕</strong>。</p>
+<h3 id="3-2-真实的-PTY-——-让全屏-TUI-渲染不糊"><a href="#3-2-真实的-PTY-——-让全屏-TUI-渲染不糊" class="headerlink" title="3.2 真实的 PTY —— 让全屏 TUI 渲染不糊"></a>3.2 真实的 PTY —— 让全屏 TUI 渲染不糊</h3><p>很多 Agent（Claude Code、Codex）现在都带漂亮的全屏 TUI：进度条、diff 高亮、tool call 折叠面板。如果把它们塞进一个” 伪终端”（Electron 套壳），TUI 渲染要么糊要么错位。</p>
+<p>herdr 的做法是：<strong>每个 Agent 拿到的都是一个真实的 PTY</strong>（pseudo-terminal）。Claude Code 的全屏 TUI 在里面是什么样，在外面还是什么样。<strong>你的 shell、字体、配色、快捷键全部保持原样</strong>。</p>
+<h3 id="3-3-持久化-远程-Reattach-——-真正的”关电脑不丢工作”"><a href="#3-3-持久化-远程-Reattach-——-真正的”关电脑不丢工作”" class="headerlink" title="3.3 持久化 + 远程 Reattach —— 真正的”关电脑不丢工作”"></a>3.3 持久化 + 远程 Reattach —— 真正的” 关电脑不丢工作”</h3><p>这是 tmux 的老本行，herdr 完整继承：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 早上开工：开 3 个 agent 干活</span></span><br><span class="line">herdr</span><br><span class="line"><span class="comment"># ctrl+b shift+n 开新 workspace</span></span><br><span class="line"><span class="comment"># ctrl+b v 上下分屏</span></span><br><span class="line"><span class="comment"># ctrl+b - 左右分屏</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 午饭前：detach（agent 不死）</span></span><br><span class="line"><span class="comment"># ctrl+b 然后 q</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 下午地铁上：用手机 SSH 进服务器</span></span><br><span class="line">ssh workbox</span><br><span class="line">herdr   <span class="comment"># 自动 reattach，agent 还在跑</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>更狠的是它支持 <strong>thin-client 模式</strong>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">herdr --remote workbox</span><br><span class="line">herdr --remote ssh://you@yourserver:2222</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这会让<strong>你的本地终端变成远端 server 的客户端</strong> —— 不是简单的 <code>ssh + tmux</code>，而是<strong>保留了本地粘贴图片的能力</strong>（这条普通 ssh + tmux 直接断的）。</p>
+<h3 id="3-4-鼠标原生-移动端友好"><a href="#3-4-鼠标原生-移动端友好" class="headerlink" title="3.4 鼠标原生 + 移动端友好"></a>3.4 鼠标原生 + 移动端友好</h3><p>很多人讨厌 tmux，是因为它” 鼠标没用，全靠快捷键”。herdr 是<strong>鼠标原生</strong>的：</p>
+<ul>
+<li>点侧栏条目直接跳到对应 agent</li>
+<li> 拖拽调整 pane 大小</li>
+<li>鼠标点 workspace 切换</li>
+</ul>
+<p>而且它在<strong>窄屏（手机 / 平板 SSH）会自动切到 touch-friendly 模式</strong>：侧栏变成大按钮，pane 切换改成 swipe。对手机党极度友好。</p>
+<h3 id="3-5-Socket-API-CLI：让-Agent-也能”管”Agent"><a href="#3-5-Socket-API-CLI：让-Agent-也能”管”Agent" class="headerlink" title="3.5 Socket API + CLI：让 Agent 也能”管”Agent"></a>3.5 Socket API + CLI：让 Agent 也能” 管”Agent</h3><p>这是我觉得最有想象力的功能。herdr 暴露了一个<strong>本地 Unix Socket + JSON API</strong>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建工作区</span></span><br><span class="line">herdr --cwd ~/project --label api</span><br><span class="line">herdr --label logs</span><br><span class="line"></span><br><span class="line"><span class="comment"># 拆 pane</span></span><br><span class="line">herdr 1-1 --direction right</span><br><span class="line">herdr 1-2 <span class="string">"just test"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 等待 agent 完成</span></span><br><span class="line">herdr 1-1 --status <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取最近输出</span></span><br><span class="line">herdr 1-2 --<span class="built_in">source</span> recent-unwrapped</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这意味着：<strong>你的” 总指挥 Agent” 可以用 shell 调用 herdr，去 spawn /split/wait /read 其他 Agent</strong>。比如你有一个” 项目经理” Agent，它会自动开 3 个” 工程师” Agent 子 pane，分配任务，等 done 再合并报告。<strong>Agent 自己编排 Agent</strong>—— 这才是 AI 编程时代的” 真・多路复用”。</p>
+<p>官方还提供了一组社区插件做演示：Telegram 通知（agent 完了 @ 你）、GitHub PR 预览（一键侧栏打开）、三栏 Dev Layout 模板。<strong>任何能写 shell 的语言都能写 herdr 插件</strong>。</p>
+<h2 id="四、5-分钟实战：把-herdr-跑起来"><a href="#四、5-分钟实战：把-herdr-跑起来" class="headerlink" title="四、5 分钟实战：把 herdr 跑起来"></a>四、5 分钟实战：把 herdr 跑起来</h2><h3 id="4-1-安装"><a href="#4-1-安装" class="headerlink" title="4.1 安装"></a>4.1 安装</h3><p>一行命令，Linux /macOS 通吃：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://herdr.dev/install.sh | sh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>或者用你熟悉的包管理器：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew install herdr</span><br><span class="line">mise use -g herdr</span><br><span class="line">nix run github:ogulcancelik/herdr</span><br></pre></td></tr></tbody></table></figure>
+
+<p>更新：<code>herdr update</code>。</p>
+<h3 id="4-2-开第一个-workspace"><a href="#4-2-开第一个-workspace" class="headerlink" title="4.2 开第一个 workspace"></a>4.2 开第一个 workspace</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">herdr</span><br></pre></td></tr></tbody></table></figure>
+
+<p>默认进入一个 workspace。前缀键是 <code>ctrl+b</code>（先按 ctrl+b 松开，再按动作键）：</p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>动作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ctrl+b shift+n</code></td>
+<td>新 workspace</td>
+</tr>
+<tr>
+<td><code>ctrl+b v</code> 或 <code>ctrl+b -</code></td>
+<td>拆分 pane</td>
+</tr>
+<tr>
+<td><code>ctrl+b c</code></td>
+<td>新 tab</td>
+</tr>
+<tr>
+<td><code>ctrl+b w</code></td>
+<td>切 workspace</td>
+</tr>
+<tr>
+<td><code>ctrl+b q</code></td>
+<td>detach（agent 继续跑，下次 <code>herdr</code> 自动 reattach）</td>
+</tr>
+<tr>
+<td><code>ctrl+b ?</code></td>
+<td>查全部快捷键</td>
+</tr>
+</tbody></table>
+<h3 id="4-3-同时跑-3-个-Agent"><a href="#4-3-同时跑-3-个-Agent" class="headerlink" title="4.3 同时跑 3 个 Agent"></a>4.3 同时跑 3 个 Agent</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># pane 1：跑 Claude Code</span></span><br><span class="line">claude</span><br><span class="line"></span><br><span class="line"><span class="comment"># pane 2：跑 Codex</span></span><br><span class="line">codex</span><br><span class="line"></span><br><span class="line"><span class="comment"># pane 3：开个 git worktree + Cursor Agent</span></span><br><span class="line">git worktree add ../feature-x</span><br><span class="line"><span class="built_in">cd</span> ../feature-x &amp;&amp; cursor-agent</span><br></pre></td></tr></tbody></table></figure>
+
+<p>你会看到<strong>左侧自动出现 3 个状态点</strong>。当某个 agent 在等你确认（blocked），那个状态点会变红 —— <strong>再也不会错过 Agent 的提问了</strong>。</p>
+<h3 id="4-4-在手机上继续看"><a href="#4-4-在手机上继续看" class="headerlink" title="4.4 在手机上继续看"></a>4.4 在手机上继续看</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># VPS 上跑</span></span><br><span class="line">ssh workbox</span><br><span class="line">herdr</span><br><span class="line"></span><br><span class="line"><span class="comment"># 本地用 thin-client 连过去</span></span><br><span class="line">herdr --remote ssh://workbox</span><br></pre></td></tr></tbody></table></figure>
+
+<p>回家路上用 Termius SSH 进你的工作 VPS，<code>herdr</code> 一敲，<strong>早上开的 3 个 Agent 状态全在侧栏里</strong>，该等的等、该收的收。</p>
+<h2 id="五、它和-tmux-cmux-warp-到底差在哪"><a href="#五、它和-tmux-cmux-warp-到底差在哪" class="headerlink" title="五、它和 tmux / cmux / warp 到底差在哪"></a>五、它和 tmux /cmux/warp 到底差在哪</h2><p>官方列了一张表，我把它翻译成人话：</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th> tmux / Zellij</th>
+<th>GUI Agent 管理器（cmux 等）</th>
+<th><strong>herdr</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 持久化 session</td>
+<td>✓</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>detach / reattach</td>
+<td>✓</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>SSH 远程</td>
+<td>✓</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Agent 状态感知</td>
+<td>✗</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>住进现有终端</td>
+<td>✓</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>真实 PTY 渲染</td>
+<td>✓</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>鼠标原生</td>
+<td>✗</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>10MB 静态二进制</td>
+<td>✓</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>Agent 编排 Agent</strong></td>
+<td> 弱</td>
+<td>弱</td>
+<td><strong>✓</strong></td>
+</tr>
+</tbody></table>
+<p>简单说：</p>
+<ul>
+<li><strong>tmux 党</strong>：tmux 的” 持久化 + 多 pane + SSH” 它全有，还多了”Agent 状态” 和” 鼠标”。</li>
+<li><strong>GUI 党</strong>：cmux/warp/conductor 的” 状态可视化” 它全有，还多了” 不抢你的终端、不限 macOS、SSH 可用”。</li>
+<li><strong>二者的中间地带</strong>：它<strong>就长在终端里</strong>，<strong>不是套壳</strong>，<strong>还能被 Agent 用 API 驱动</strong>。</li>
+</ul>
+<h2 id="六、适用场景-vs-限制"><a href="#六、适用场景-vs-限制" class="headerlink" title="六、适用场景 vs 限制"></a>六、适用场景 vs 限制</h2><p><strong>最适合的人</strong>：</p>
+<ol>
+<li>同时跑 ≥ 2 个 AI 编程 Agent 的开发者（Claude Code + Codex、Cursor + Copilot 等）。</li>
+<li>在 VPS / 远程机器上跑 Agent，回家 / 出差用手机 SSH 跟进的人。</li>
+<li>想搭”Agent 编排 Agent” 工作流（比如一个 PM Agent 调度 3 个工程 Agent）的重度用户。</li>
+<li>不想装 Electron、不想换终端、不想登录账号的”tmux 原教旨主义者”。</li>
+</ol>
+<p><strong>当前的一些限制</strong>：</p>
+<ol>
+<li><strong>Windows 还在 beta</strong>，日常主力 Windows 的朋友要再等等。</li>
+<li><strong>快捷键模型和 tmux 不完全兼容</strong>（前缀是 <code>ctrl+b</code> 不是 <code>ctrl+a</code>），如果你重度依赖 tmux 脚本可能要稍微适应。</li>
+<li><strong>状态识别靠” 读 PTY + 进程名启发式”</strong>，对极其冷门的 Agent 可能识别不准；不过” 任何 CLI 都能跑” 是兜底。</li>
+<li><strong>协议</strong>：AGPL-3.0 + 商业双许可。如果你打算把它嵌进闭源产品里卖，需要买商业授权。</li>
+</ol>
+<h2 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a>七、总结</h2><p>herdr 的核心命题非常清晰：<strong>当 AI Agent 取代了” 一个人 + 一个终端” 的传统开发模型，你就需要一个新的” 终端操作系统” 来调度这些 Agent</strong>。tmux 解决了” 程序比会话活得久”，GUI 工具解决了” 我知道 Agent 在干嘛”，但<strong>没有任何一个工具同时做到了” 在终端里 + 持久的 + Agent 感知的 + 远程可用的 + Agent 也能编排的”</strong>。</p>
+<p>herdr 第一个把这个交集全部占住了。</p>
+<p><strong>如果你今天就要试一件事</strong>：装上 herdr，开 2 个 pane 分别跑 <code>claude</code> 和 <code>codex</code>，<strong>盯着侧栏看 5 分钟</strong> —— 你会发现<strong>这是你过去半年第一次真正知道” 我那 6 个 Agent 到底谁在摸鱼”</strong>。</p>
+<p>仓库：<a target="_blank" rel="noopener" href="https://github.com/ogulcancelik/herdr">github.com/ogulcancelik/herdr</a>・官网：<a target="_blank" rel="noopener" href="https://herdr.dev/">herdr.dev</a> · License: AGPL-3.0 / Commercial dual</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/05/herdr-terminal-agent-multiplexer/" title="Herdr：tmux 为 AI 编程时代重写了一遍，让你一眼看清 6 个 Agent 谁在 &quot;摸鱼&quot;">https://www.daishengli.top/2026/07/05/herdr-terminal-agent-multiplexer/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/herdr/" rel="tag"># herdr</a>
+              <a href="/tags/terminal/" rel="tag"># terminal</a>
+              <a href="/tags/tmux/" rel="tag"># tmux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/04/strix-ai-pentesting-open-source/" rel="prev" title="Strix：开源的 AI 渗透测试 Agent，登上 GitHub Trending 第一">
+                  <i class="fa fa-angle-left"></i> Strix：开源的 AI 渗透测试 Agent，登上 GitHub Trending 第一
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/06/alibaba-page-agent-in-page-gui-natural-language/" rel="next" title="alibaba&#x2F;page-agent：把网页变成 AI-native 应用，用一句话让用户操作任何界面">
+                  alibaba/page-agent：把网页变成 AI-native 应用，用一句话让用户操作任何界面 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

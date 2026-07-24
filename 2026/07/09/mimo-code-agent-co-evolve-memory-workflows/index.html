@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="小米开源的终端原生 AI 编码助手 MiMo Code，基于 OpenCode fork，加了持久内存、智能上下文、子代理编排、目标驱动自主循环和 dream&#x2F;distill 自进化。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小米开源 MiMo Code：把 &quot;长期记忆 + 自进化&quot; 还给终端 AI 编码 Agent">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/09/mimo-code-agent-co-evolve-memory-workflows/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="小米开源的终端原生 AI 编码助手 MiMo Code，基于 OpenCode fork，加了持久内存、智能上下文、子代理编排、目标驱动自主循环和 dream&#x2F;distill 自进化。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-09T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.406Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="开源工具">
+<meta property="article:tag" content="编码助手">
+<meta property="article:tag" content="小米 MiMo">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/09/mimo-code-agent-co-evolve-memory-workflows/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/09/mimo-code-agent-co-evolve-memory-workflows/","path":"2026/07/09/mimo-code-agent-co-evolve-memory-workflows/","title":"小米开源 MiMo Code：把 \"长期记忆 + 自进化\" 还给终端 AI 编码 Agent"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>小米开源 MiMo Code：把 "长期记忆 + 自进化" 还给终端 AI 编码 Agent | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E7%BC%96%E7%A0%81-Agent-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%80%BB%E6%98%AF%E2%80%9D%E9%87%91%E9%B1%BC%E8%AE%B0%E5%BF%86%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">项目背景：编码 Agent 为什么总是” 金鱼记忆”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E5%85%AD%E4%B8%AA%E8%AE%A9%E4%BA%BA%E6%83%B3%E6%8A%8A%E7%BB%88%E7%AB%AF%E9%87%8D%E8%A3%85%E4%B8%80%E9%81%8D%E7%9A%84%E7%89%B9%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">核心功能：六个让人想把终端重装一遍的特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%89%E7%A7%8D%E4%B8%BB%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F%EF%BC%8C%E6%8C%89-Tab-%E5%88%87%E6%8D%A2"><span class="nav-number">2.1.</span> <span class="nav-text">1. 三种主代理模式，按 Tab 切换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%8C%81%E4%B9%85%E5%86%85%E5%AD%98%EF%BC%9ASQLite-FTS5-%E5%85%A8%E6%96%87%E6%A3%80%E7%B4%A2%E6%89%93%E5%BA%95"><span class="nav-number">2.2.</span> <span class="nav-text">2. 持久内存：SQLite FTS5 全文检索打底</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%99%BA%E8%83%BD%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%EF%BC%9A%E8%87%AA%E5%8A%A8-checkpoint-%E6%8C%89-token-%E9%A2%84%E7%AE%97%E6%B3%A8%E5%85%A5"><span class="nav-number">2.3.</span> <span class="nav-text">3. 智能上下文管理：自动 checkpoint + 按 token 预算注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%A0%91%E5%BD%A2%E4%BB%BB%E5%8A%A1%E7%B3%BB%E7%BB%9F%EF%BC%9AT1%E3%80%81T1-1%E3%80%81T1-2"><span class="nav-number">2.4.</span> <span class="nav-text">4. 树形任务系统：T1、T1.1、T1.2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E7%9B%AE%E6%A0%87%E9%A9%B1%E5%8A%A8%E8%87%AA%E4%B8%BB%E5%BE%AA%E7%8E%AF%EF%BC%88-goal%EF%BC%89"><span class="nav-number">2.5.</span> <span class="nav-text">5. 目标驱动自主循环（&#x2F;goal）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-Compose-%E5%B7%A5%E4%BD%9C%E6%B5%81%EF%BC%9A%E6%8A%8A-spec-%E4%B8%80%E8%B7%AF%E6%8E%A8%E5%88%B0-merge"><span class="nav-number">2.6.</span> <span class="nav-text">6. Compose 工作流：把 spec 一路推到 merge</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E4%BA%94%E5%88%86%E9%92%9F%E8%B7%91%E9%80%9A%E7%AC%AC%E4%B8%80%E4%B8%AA-workflow"><span class="nav-number">3.</span> <span class="nav-text">实战示例：五分钟跑通第一个 workflow</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">适用场景和限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88"><span class="nav-number">4.1.</span> <span class="nav-text">适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%90%E5%88%B6"><span class="nav-number">4.2.</span> <span class="nav-text">限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">5.</span> <span class="nav-text">与同类项目的差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/09/mimo-code-agent-co-evolve-memory-workflows/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="小米开源 MiMo Code：把 &quot;长期记忆 + 自进化&quot; 还给终端 AI 编码 Agent | 小戴的网络日志">
+      <meta itemprop="description" content="小米开源的终端原生 AI 编码助手 MiMo Code，基于 OpenCode fork，加了持久内存、智能上下文、子代理编排、目标驱动自主循环和 dream&#x2F;distill 自进化。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          小米开源 MiMo Code：把 "长期记忆 + 自进化" 还给终端 AI 编码 Agent
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-09 10:00:00" itemprop="dateCreated datePublished" datetime="2026-07-09T10:00:00+08:00">2026-07-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">小米开源的终端原生 AI 编码助手 MiMo Code，基于 OpenCode fork，加了持久内存、智能上下文、子代理编排、目标驱动自主循环和 dream/distill 自进化。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>昨天半夜，我在给一个新项目写 README。Claude Code 一路顺畅地帮我把 README 草稿写完了，但关掉终端、第二天早上重新打开同一个项目的时候，它已经完全不记得昨天我们讨论过哪些字段、为什么选了这种命名风格、那条 lint 规则是为了绕开哪个库的 bug。</p>
+<p>我盯着空白上下文想了十秒钟：<strong>为什么一个号称” 智能” 的工具，连昨天自己说过的话都记不住？</strong></p>
+<p>早上刷 GitHub Trending，第 3 个仓库让我精神一振：</p>
+<blockquote>
+<p><strong>XiaomiMiMo/MiMo-Code</strong> — <em>MiMo Code: Where Models and Agents Co-Evolve.</em> Terminal-native AI coding assistant. Cross-session memory, intelligent context, goal-driven loops, self-evolving.</p>
+</blockquote>
+<p>11k stars，单日涨粉爆炸，仓库还在剧烈迭代。我点进去看 README，第一句话就把我钉住了：</p>
+<blockquote>
+<p><strong>MiMoCode is a terminal-native AI coding assistant. It can read and write code, run commands, manage Git, and use a persistent memory system to keep a deep understanding of your project across sessions while continuously improving itself.</strong></p>
+</blockquote>
+<p>就这一句，解决了我昨晚碰壁的痛点 ——“它记得，而且它会越用越好”。</p>
+<h2 id="项目背景：编码-Agent-为什么总是”金鱼记忆”"><a href="#项目背景：编码-Agent-为什么总是”金鱼记忆”" class="headerlink" title="项目背景：编码 Agent 为什么总是”金鱼记忆”"></a>项目背景：编码 Agent 为什么总是” 金鱼记忆”</h2><p>过去一年我几乎把所有主流编码 Agent 都用了一遍：Cursor、Claude Code、Codex、Cline、Aider。它们的共性问题是 ——</p>
+<ol>
+<li><strong>会话结束 = 记忆清零</strong>。每个新会话都要把项目背景讲一遍，token 没花在真正的工作上。</li>
+<li><strong>上下文窗口是死的</strong>。写到一半开始丢历史，要么手动 <code>/compact</code>，要么祈祷模型自己记得。</li>
+<li><strong>没有” 目标驱动”</strong>。你让它” 重构 auth 模块”，它可能改了一半觉得差不多了就停下，不会判断” 真的完成了吗”。</li>
+<li><strong>没有自进化</strong>。今天踩的坑，明天再踩一遍，没有任何” 经验沉淀”。</li>
+</ol>
+<p>小米这次开源的 MiMo Code，把这四件事一次性打包解决了。</p>
+<p>更关键的是它的定位 ——<strong>Where Models and Agents Co-Evolve</strong>。模型不是一成不变的，Agent 也不是一成不变的；它们彼此观察、彼此迭代。换句话说，MiMo Code 不只是” 接一个 LLM”，它是” 训练和被训练的循环”。</p>
+<h2 id="核心功能：六个让人想把终端重装一遍的特性"><a href="#核心功能：六个让人想把终端重装一遍的特性" class="headerlink" title="核心功能：六个让人想把终端重装一遍的特性"></a>核心功能：六个让人想把终端重装一遍的特性</h2><h3 id="1-三种主代理模式，按-Tab-切换"><a href="#1-三种主代理模式，按-Tab-切换" class="headerlink" title="1. 三种主代理模式，按 Tab 切换"></a>1. 三种主代理模式，按 <code>Tab</code> 切换</h3><table>
+<thead>
+<tr>
+<th>Agent</th>
+<th> 模式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> build</strong></td>
+<td> 默认</td>
+<td>全权限开发模式，能读写、能跑命令</td>
+</tr>
+<tr>
+<td><strong> plan</strong></td>
+<td> 只读</td>
+<td>纯分析和方案设计，不能改文件</td>
+</tr>
+<tr>
+<td><strong> compose</strong></td>
+<td> 编排</td>
+<td>规范驱动开发，调用 skill 编排完整生命周期</td>
+</tr>
+</tbody></table>
+<p>这个设计干净得有点过分 —— 你不需要给同一个 Agent 加一堆 <code>--mode</code> flag，直接 <code>Tab</code> 切。需要它老老实实只读分析？切到 plan；需要它直接动手？切回 build。</p>
+<h3 id="2-持久内存：SQLite-FTS5-全文检索打底"><a href="#2-持久内存：SQLite-FTS5-全文检索打底" class="headerlink" title="2. 持久内存：SQLite FTS5 全文检索打底"></a>2. 持久内存：SQLite FTS5 全文检索打底</h3><p>这是 MiMo Code 最让我兴奋的卖点。它不是把记忆塞到一堆 <code>.json</code> 里，而是用 SQLite FTS5 做全文检索，分四层：</p>
+<ul>
+<li><strong>项目级内存</strong>（<code>MEMORY.md</code>）：持久化的项目知识、规则、架构决策</li>
+<li><strong>会话快照</strong>（<code>checkpoint.md</code>）：自动维护的结构化状态快照</li>
+<li><strong>草稿区</strong>（<code>notes.md</code>）：临时笔记</li>
+<li><strong>任务进度</strong>（<code>tasks/&lt;id&gt;/progress.md</code>）：每个任务的独立日志</li>
+</ul>
+<p>下次打开同一个项目，MiMo Code <strong>自动把 MEMORY.md 和最近的 checkpoint 注入到上下文</strong>。你不需要重新讲一遍” 这个项目用 pnpm + monorepo”—— 它记得。</p>
+<h3 id="3-智能上下文管理：自动-checkpoint-按-token-预算注入"><a href="#3-智能上下文管理：自动-checkpoint-按-token-预算注入" class="headerlink" title="3. 智能上下文管理：自动 checkpoint + 按 token 预算注入"></a>3. 智能上下文管理：自动 checkpoint + 按 token 预算注入</h3><p>上下文快撑爆了怎么办？MiMo Code 的解法是：</p>
+<ul>
+<li><strong>自动判断时机</strong>：根据当前模型的上下文窗口，决定什么时候该存档</li>
+<li><strong>上下文重建</strong>：当 context 接近上限，从最新的 checkpoint + 项目内存 + 任务进度 + 保留的近期消息重建，让 Agent 能接着干当前任务</li>
+<li><strong>预算注入</strong>：用 token 预算控制 checkpoint、memory、notes 进上下文的量，按重要性排序</li>
+</ul>
+<p>这比单纯 “压缩” 强太多 —— 它重建的是” 项目的当前状态”，而不是” 聊天记录的摘要”。</p>
+<h3 id="4-树形任务系统：T1、T1-1、T1-2"><a href="#4-树形任务系统：T1、T1-1、T1-2" class="headerlink" title="4. 树形任务系统：T1、T1.1、T1.2"></a>4. 树形任务系统：T1、T1.1、T1.2</h3><p>它把任务做成树形结构，自动和 checkpoint 系统打通。这意味着：</p>
+<ul>
+<li>子任务的进度会被持久化</li>
+<li>会话断了重开，任务进度还在</li>
+<li>父子任务关系清晰可见</li>
+</ul>
+<p>对长程任务（” 把整个支付模块迁移到新 SDK”）来说，这是救命特性。</p>
+<h3 id="5-目标驱动自主循环（-goal）"><a href="#5-目标驱动自主循环（-goal）" class="headerlink" title="5. 目标驱动自主循环（/goal）"></a>5. 目标驱动自主循环（<code>/goal</code>）</h3><p>这是我最爱的功能。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/goal 把 src/auth/ 全部迁移到新 JWT 库，所有测试通过</span><br></pre></td></tr></tbody></table></figure>
+
+<p>之后 Agent 不会” 觉得自己干完了”。每到想停的时候，一个独立的 judge 模型会审视当前对话，判断” 这个 goal 真完成了吗？”—— 是就停，不是就继续。</p>
+<p>这意味着：<strong>你可以下班挂个 goal 让它跑，第二天早上来看结果</strong>。这是真正的” 自主工作”，不是” 半自动帮你按回车”。</p>
+<h3 id="6-Compose-工作流：把-spec-一路推到-merge"><a href="#6-Compose-工作流：把-spec-一路推到-merge" class="headerlink" title="6. Compose 工作流：把 spec 一路推到 merge"></a>6. Compose 工作流：把 spec 一路推到 merge</h3><p>MiMo Code 内置了三个 deterministic JavaScript 工作流：</p>
+<ul>
+<li><strong><code>compose</code></strong>：Brainstorm → Design → Implement → Verify → Review → Report → Merge。完整的开发流水线，自动把独立任务并行到隔离的 git worktree，每个任务跑 TDD，phase 之间链式传结构化输出。</li>
+<li><strong><code>deep-research</code></strong>：Brief → Plan → Research → Reflect → Write → Review。多源深度调研报告生成器，可通过文件 checkpoint 中途恢复。</li>
+<li><strong><code>fact-check</code></strong>：Plan → Search → Extract → Group → Crosscheck → Report。<strong>对抗式事实核查</strong> —— 并行 web 搜索 → 抽取可核查事实 → 去重 → 3 陪审员对抗投票。</li>
+</ul>
+<p>这三个工作流的设计哲学是：<strong>当任务分解清晰时，用确定性的 phase 序列而不是 agent 对话</strong>。这跟 Anthropic 的 “skills + subagents + workflows” 思路一脉相承，但 MiMo Code 把它做成了 first-class 概念。</p>
+<h2 id="实战示例：五分钟跑通第一个-workflow"><a href="#实战示例：五分钟跑通第一个-workflow" class="headerlink" title="实战示例：五分钟跑通第一个 workflow"></a>实战示例：五分钟跑通第一个 workflow</h2><p>假设你想验证一个开放问题 ——“Claude 4.5 到底支不支持 tool_use 的并行调用？”。直接用 <code>fact-check</code> 工作流：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一行安装（macOS / Linux）</span></span><br><span class="line">curl -fsSL https://mimo.xiaomi.com/install | bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">mimo</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第一次启动会自动引导你选择：</p>
+<ol>
+<li><strong>MiMo Auto</strong>（限时免费）—— 匿名通道，零配置</li>
+<li><strong> Xiaomi MiMo Platform</strong> —— OAuth 登录</li>
+<li><strong> Import from Claude Code</strong> —— 一键迁移现有认证</li>
+<li><strong> Custom Provider</strong> —— 加任意 OpenAI 兼容 API</li>
+</ol>
+<p>选完登录之后：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/goal 用 fact-check 工作流验证：</span><br><span class="line">  "Claude 4.5 是否原生支持 tool_use 的并行调用？"</span><br><span class="line">  要求 3 个独立信源交叉验证，每个事实必须可链接回原始来源。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>MiMo Code 会：</p>
+<ol>
+<li><strong>Plan</strong>：拆成” 官方文档 /changelog/ 社区报告” 三条独立线索</li>
+<li><strong> Search</strong>：并行调用 web 搜索</li>
+<li><strong> Extract</strong>：从每条结果里抽出可核查的事实</li>
+<li><strong> Group</strong>：去重</li>
+<li><strong> Crosscheck</strong>：3 个陪审员对抗投票</li>
+<li><strong> Report</strong>：生成可点击引用的 Markdown 报告</li>
+</ol>
+<p>你不需要写任何代码。这就是 “agent + workflow + memory” 的真正威力 ——<strong>Spec 进去，Verified 报告出来</strong>。</p>
+<h2 id="适用场景和限制"><a href="#适用场景和限制" class="headerlink" title="适用场景和限制"></a>适用场景和限制</h2><h3 id="适合"><a href="#适合" class="headerlink" title="适合"></a>适合</h3><ul>
+<li><strong>跨会话长期项目</strong>：今天写一半，明天接着干，Agent 不需要重新学</li>
+<li><strong>长程重构</strong>：一晚上挂个 goal，第二天来看结果</li>
+<li><strong>团队规范驱动开发</strong>：compose workflow 让 PR 流程标准化</li>
+<li><strong>需要对抗式核查的事实研究</strong>：fact-check 工作流是杀手锏</li>
+<li><strong>已经在用 OpenCode / Claude Code 的用户</strong>：迁移成本极低，一键导入</li>
+</ul>
+<h3 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h3><ul>
+<li><strong>还在早期</strong>：11k stars 但 release 节奏快，breaking change 不会少</li>
+<li><strong>部分高级功能需要登录 MiMo Platform</strong>：比如 <code>mimo-v2.5-asr</code> 语音输入、MiMo Auto 限时免费通道</li>
+<li><strong>自定义 workflow 要写 JavaScript</strong>：不像 plain YAML 那么轻量</li>
+<li><strong>依赖较多</strong>：Windows 上需要 PowerShell + UTF-8 系统区域，WSL 上要装 <code>xsel</code>、<code>sox</code>、<code>pulseaudio</code> 才能跑完整功能</li>
+</ul>
+<h2 id="与同类项目的差异"><a href="#与同类项目的差异" class="headerlink" title="与同类项目的差异"></a>与同类项目的差异</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>定位</th>
+<th>与 MiMo Code 的关键差异</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> Claude Code</strong></td>
+<td>Anthropic 官方</td>
+<td>没有内置 workflow 概念，记忆机制比较朴素</td>
+</tr>
+<tr>
+<td><strong> Codex CLI</strong></td>
+<td>OpenAI 官方</td>
+<td>上下文管理更简单，没有 goal-driven 自主循环</td>
+</tr>
+<tr>
+<td><strong> Cursor</strong></td>
+<td>GUI 编辑器</td>
+<td>不在终端原生，跟 git/CI 集成弱</td>
+</tr>
+<tr>
+<td><strong> OpenCode</strong></td>
+<td>MiMo Code 的上游 fork</td>
+<td> 没有持久内存、智能上下文、goal 机制</td>
+</tr>
+<tr>
+<td><strong> Aider</strong></td>
+<td> 终端编码 Agent</td>
+<td> 偏 PR 导向，没有 subagent 编排</td>
+</tr>
+<tr>
+<td><strong> Cline / Roo Code</strong></td>
+<td>VS Code 扩展</td>
+<td>强依赖 IDE，没有” 跨会话长期记忆” 概念</td>
+</tr>
+</tbody></table>
+<p>MiMo Code 的真正差异化在于：<strong>它把” 持久内存 + 智能上下文 + 目标驱动 + workflow 编排 + 自进化” 打包成了一个开箱即用的终端工具</strong>。这不是某个特性的领先，而是系统设计的领先。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>编码 Agent 这两年的进化路线，从 “我会写代码” 到 “我能理解整个项目” 到 “我能跨越会话工作”。MiMo Code 把这条线推到了下一站 ——<strong>“我能自己判断什么时候算做完，而且我能从自己的工作中学习”</strong>。</p>
+<p>如果你跟我一样被 “金鱼记忆” 折磨过，强烈建议花五分钟跑一下：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://mimo.xiaomi.com/install | bash</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后在你的项目里 <code>mimo</code> 起来，对它说一句 “记住这个项目用 pnpm + Turborepo，lint 规则是为了绕开 lodash 4.x 的 tree-shaking bug”—— 下次开会话，它会主动告诉你这件事。</p>
+<p>GitHub: <a target="_blank" rel="noopener" href="https://github.com/XiaomiMiMo/MiMo-Code">https://github.com/XiaomiMiMo/MiMo-Code</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/09/mimo-code-agent-co-evolve-memory-workflows/" title="小米开源 MiMo Code：把 &quot;长期记忆 + 自进化&quot; 还给终端 AI 编码 Agent">https://www.daishengli.top/2026/07/09/mimo-code-agent-co-evolve-memory-workflows/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/" rel="tag"># 开源工具</a>
+              <a href="/tags/%E7%BC%96%E7%A0%81%E5%8A%A9%E6%89%8B/" rel="tag"># 编码助手</a>
+              <a href="/tags/%E5%B0%8F%E7%B1%B3-MiMo/" rel="tag"># 小米 MiMo</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/08/ai-job-search-claude-code-job-application-framework/" rel="prev" title="ai-job-search：把求职这件事交给 Claude Code，你只负责最后一公里的判断">
+                  <i class="fa fa-angle-left"></i> ai-job-search：把求职这件事交给 Claude Code，你只负责最后一公里的判断
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/10/openclaw-local-personal-ai-assistant/" rel="next" title="把 AI 助理请进你自己的聊天软件：OpenClaw 让 WhatsApp&#x2F;Telegram&#x2F; 飞书里跑起一个 7×24 在线 Agent">
+                  把 AI 助理请进你自己的聊天软件：OpenClaw 让 WhatsApp/Telegram/ 飞书里跑起一个 7×24 在线 Agent <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

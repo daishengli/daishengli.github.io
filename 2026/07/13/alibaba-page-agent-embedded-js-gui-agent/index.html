@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="阿里开源的 26.1k stars 项目，用纯 JavaScript 把 GUI Agent 嵌入任何网页里——不靠 Playwright、不靠 OCR、不走后端，让用户用一句话就能完成「点 20 下后台才搞定的报销流程」，并在 HN 上线当天拿下 147 分、76 条讨论。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="alibaba&#x2F;page-agent：把 AI 操盘手塞进网页里，一段 JS 就能让用户「说人话」操作 UI">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/13/alibaba-page-agent-embedded-js-gui-agent/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="阿里开源的 26.1k stars 项目，用纯 JavaScript 把 GUI Agent 嵌入任何网页里——不靠 Playwright、不靠 OCR、不走后端，让用户用一句话就能完成「点 20 下后台才搞定的报销流程」，并在 HN 上线当天拿下 147 分、76 条讨论。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-13T02:02:00.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.402Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="GUI Agent">
+<meta property="article:tag" content="PageAgent">
+<meta property="article:tag" content="browser-use">
+<meta property="article:tag" content="前端开源">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/13/alibaba-page-agent-embedded-js-gui-agent/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/13/alibaba-page-agent-embedded-js-gui-agent/","path":"2026/07/13/alibaba-page-agent-embedded-js-gui-agent/","title":"alibaba/page-agent：把 AI 操盘手塞进网页里，一段 JS 就能让用户「说人话」操作 UI"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>alibaba/page-agent：把 AI 操盘手塞进网页里，一段 JS 就能让用户「说人话」操作 UI | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E8%AE%A9%E4%BA%A7%E5%93%81%E5%92%8C%E8%BF%90%E8%90%A5%E5%90%8C%E4%BA%8B%E9%9B%86%E4%BD%93%E6%B2%89%E9%BB%98%E7%9A%84%E4%B8%8B%E5%8D%88"><span class="nav-number">1.</span> <span class="nav-text">一个让产品和运营同事集体沉默的下午</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E3%80%8C%E6%8A%8A-Agent-%E5%A1%9E%E8%BF%9B%E7%BD%91%E9%A1%B5%E3%80%8D%E8%BF%99%E4%BB%B6%E4%BA%8B%E8%BF%99%E4%B9%88%E9%87%8D%E8%A6%81"><span class="nav-number">2.</span> <span class="nav-text">项目背景：为什么「把 Agent 塞进网页」这件事这么重要</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%93%E5%89%8D-GUI-Agent-%E7%9A%84%E4%B8%89%E7%A7%8D%E4%B8%BB%E6%B5%81%E5%BD%A2%E6%80%81"><span class="nav-number">2.1.</span> <span class="nav-text">当前 GUI Agent 的三种主流形态</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E4%B8%80%E6%AE%B5-%E5%B0%B1%E8%83%BD%E8%AE%A9%E7%BD%91%E9%A1%B5%E5%90%AC%E6%87%82%E4%BA%BA%E8%AF%9D"><span class="nav-number">3.</span> <span class="nav-text">核心功能：一段 &lt;script&gt; 就能让网页听懂人话</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%80%E8%A1%8C-CDN-%E9%9B%86%E6%88%90%EF%BC%8C30-%E7%A7%92%E8%B7%91%E8%B5%B7%E6%9D%A5"><span class="nav-number">3.1.</span> <span class="nav-text">1. 一行 CDN 集成，30 秒跑起来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%BA%AF-DOM-%E6%93%8D%E4%BD%9C%EF%BC%8C%E4%B8%8D%E8%A6%81%E8%A7%86%E8%A7%89%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.2.</span> <span class="nav-text">2. 纯 DOM 操作，不要视觉模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%A4%A9%E7%84%B6%E7%BB%A7%E6%89%BF%E7%94%A8%E6%88%B7%E4%BC%9A%E8%AF%9D%E5%92%8C%E6%9D%83%E9%99%90"><span class="nav-number">3.3.</span> <span class="nav-text">3. 天然继承用户会话和权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%87%AA%E5%B8%A6%E7%99%BD%E5%90%8D%E5%8D%95-%E9%BB%91%E5%90%8D%E5%8D%95-%E6%95%B0%E6%8D%AE%E8%84%B1%E6%95%8F"><span class="nav-number">3.4.</span> <span class="nav-text">4. 自带白名单 &#x2F; 黑名单 + 数据脱敏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%B7%A8-Tab-%E8%83%BD%E5%8A%9B%E7%94%A8-Chrome-%E6%89%A9%E5%B1%95%E8%A1%A5%E9%BD%90"><span class="nav-number">3.5.</span> <span class="nav-text">5. 跨 Tab 能力用 Chrome 扩展补齐</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A5-%E5%88%86%E9%92%9F%E6%8A%8A-page-agent-%E6%8E%A5%E8%BF%9B%E4%BD%A0%E7%9A%84-React-%E5%90%8E%E5%8F%B0"><span class="nav-number">4.</span> <span class="nav-text">实战示例：5 分钟把 page-agent 接进你的 React 后台</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-1%EF%BC%9ANPM-%E5%AE%89%E8%A3%85%EF%BC%88%E6%8E%A8%E8%8D%90%E7%94%A8%E4%BA%8E%E6%AD%A3%E5%BC%8F%E9%A1%B9%E7%9B%AE%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">步骤 1：NPM 安装（推荐用于正式项目）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-2%EF%BC%9AReact-%E9%A1%B9%E7%9B%AE%E9%87%8C%E6%8C%82%E8%BD%BD"><span class="nav-number">4.2.</span> <span class="nav-text">步骤 2：React 项目里挂载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-3%EF%BC%9A%E7%94%A8%E6%88%B7%E7%94%A8%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E6%93%8D%E4%BD%9C"><span class="nav-number">4.3.</span> <span class="nav-text">步骤 3：用户用自然语言操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-4%EF%BC%9A%E8%B0%83%E8%AF%95-%E5%85%9C%E5%BA%95"><span class="nav-number">4.4.</span> <span class="nav-text">步骤 4：调试 + 兜底</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">适用场景和限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/13/alibaba-page-agent-embedded-js-gui-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="alibaba&#x2F;page-agent：把 AI 操盘手塞进网页里，一段 JS 就能让用户「说人话」操作 UI | 小戴的网络日志">
+      <meta itemprop="description" content="阿里开源的 26.1k stars 项目，用纯 JavaScript 把 GUI Agent 嵌入任何网页里——不靠 Playwright、不靠 OCR、不走后端，让用户用一句话就能完成「点 20 下后台才搞定的报销流程」，并在 HN 上线当天拿下 147 分、76 条讨论。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          alibaba/page-agent：把 AI 操盘手塞进网页里，一段 JS 就能让用户「说人话」操作 UI
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-13 10:02:00" itemprop="dateCreated datePublished" datetime="2026-07-13T10:02:00+08:00">2026-07-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">阿里开源的 26.1k stars 项目，用纯 JavaScript 把 GUI Agent 嵌入任何网页里——不靠 Playwright、不靠 OCR、不走后端，让用户用一句话就能完成「点 20 下后台才搞定的报销流程」，并在 HN 上线当天拿下 147 分、76 条讨论。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="一个让产品和运营同事集体沉默的下午"><a href="#一个让产品和运营同事集体沉默的下午" class="headerlink" title="一个让产品和运营同事集体沉默的下午"></a>一个让产品和运营同事集体沉默的下午</h2><p>上周帮朋友的电商团队做内训。开场的需求评审会上，运营总监展示了一段用户调研视频 —— 一个 50 多岁的老板娘，第一次用某 SaaS 进销存系统去「把上周的订单导出给会计」。她花了 14 分钟、点了 78 下屏幕、中间误触了 3 次弹窗，最后在「批量导出 PDF 含税发票」这一步彻底放弃，打电话叫了儿子的大学同学过来代操作。</p>
+<p>视频放完之后，整个会议室沉默了一分钟。</p>
+<p>这个画面其实是无数 B2B 软件的常态：<strong>UI 是给熟练用户设计的，新手只能靠培训文档、客服话术、视频教程「忍」过去</strong>。但过去一年大模型进展神速，「让 AI 替用户点」已经成了显学 ——<code>browser-use</code> 用 Python 驱动整个浏览器、<code>Playwright + GPT-4o</code> 用截图 + 视觉模型做桌面自动化、<code>Anthropic Computer Use</code> 直接接管屏幕……</p>
+<p>但这些方案都有同一个问题：<strong>它们都活在网页的「外面」</strong>。</p>
+<p>要么得让用户手动启动一个外部进程，要么得在用户的浏览器 / 电脑上专门装一个客户端。对于一个普通的 SaaS 产品而言，这意味着每一个想「让用户开口说话就能操作」的产品经理，都得先说服公司拨预算、加机器、过安全审计、走合规流程，最后大概率死在「把这套东西部署到 50 万现有客户机器上」这一关。</p>
+<p>直到上周 GitHub Trending 上冒出来一个项目，把整件事翻了个面 ——<strong><a target="_blank" rel="noopener" href="https://github.com/alibaba/page-agent">alibaba/page-agent</a></strong>，26.1k stars、1,071 个 commits、33 个 Release（含 v1.12.1）。<strong>它是一个「住在网页里」的 GUI Agent</strong>：一段 <code>&lt;script&gt;</code> 标签就能塞进任何网站，让用户直接用自然语言操作当前页面，AI 像「真用户」一样去点、去填、去翻页。<strong>不需要 Playwright、不需要 Puppeteer、不需要 OCR、不走后端、零依赖（只依赖一个 <code>zod</code>）</strong>。</p>
+<p>Show HN 当天拿下 147 分、76 条评论，社区里最热的一句话是 ——「Alibaba just killed the browser automation stack」。</p>
+<p>下面我把它拆开讲清楚。</p>
+<h2 id="项目背景：为什么「把-Agent-塞进网页」这件事这么重要"><a href="#项目背景：为什么「把-Agent-塞进网页」这件事这么重要" class="headerlink" title="项目背景：为什么「把 Agent 塞进网页」这件事这么重要"></a>项目背景：为什么「把 Agent 塞进网页」这件事这么重要</h2><p>要理解 <code>page-agent</code> 在解决什么，得先理解现有 GUI Agent 架构的痛点。</p>
+<h3 id="当前-GUI-Agent-的三种主流形态"><a href="#当前-GUI-Agent-的三种主流形态" class="headerlink" title="当前 GUI Agent 的三种主流形态"></a>当前 GUI Agent 的三种主流形态</h3><p>第一类是 <strong>外部进程派</strong>。<code>browser-use</code>、<code>Playwright + LLM</code>、<code>Selenium</code> 集成都是这一派。它们跑在浏览器外面的 Python 脚本里，靠 Chrome DevTools Protocol (CDP) 给浏览器发指令。优势是能跨页面、能抓整站、能跑 CI；劣势是 <strong>没法继承用户当前已经登录的会话</strong>，对需要鉴权的 SaaS 后台基本抓瞎。</p>
+<p>第二类是 <strong>桌面自动化派</strong>。<code>Anthropic Computer Use</code>、<code>OpenAI Operator</code>、各种 RPA 平台。它们靠截图 + 视觉模型 + 模拟键鼠，把用户的整个桌面接管起来。优势是「通杀所有软件，包括桌面应用」；劣势是 <strong>贵、慢、需要视觉模型</strong>，且每次操作都得先把页面截成图，token 消耗惊人。</p>
+<p>第三类，是 <code>page-agent</code> 选择的 <strong>内嵌派</strong>。它直接作为一段 JavaScript 跑在你的网页里，<strong>和页面的 JavaScript 共享同一个 DOM 上下文、同一个浏览器会话、同一个 localStorage</strong>。结果是：</p>
+<ul>
+<li>用户已经登录？AI 自动继承。</li>
+<li>单页应用（SPA）？AI 直接看见 React/Vue 渲染好的真实 DOM。</li>
+<li>跨站？可选配一个 Chrome 扩展当「桥」，由用户在主动打开的 Tab 里授权。</li>
+<li>不需要后端？所有出网请求只去 LLM 接口，数据不出你的合规边界。</li>
+</ul>
+<p>它和 <code>browser-use</code> 的关系也有必要交代一下 ——<strong>page-agent 的 DOM 脱水（dehydration）脚本就是从 <code>browser-use</code> port 过来的</strong>，作者 Simon 在 HN 上明确致谢。但 <code>browser-use</code> 跑在 Python 外部进程里，<code>page-agent</code> 是把同一套 prompt 逻辑搬进了浏览器。</p>
+<p>这个「内嵌」架构有副作用：它对 Shadow DOM、canvas、iframe 有意留白（v1.12.1 还没覆盖）。但对绝大多数 <strong>「UI 稳定 + 操作链路长」的 B2B 系统</strong>（ERP、CRM、客服后台、低代码平台）来说，<strong>它就是把「点 20 下」变成「说一句话」的最短路径</strong>。</p>
+<h2 id="核心功能：一段-就能让网页听懂人话"><a href="#核心功能：一段-就能让网页听懂人话" class="headerlink" title="核心功能：一段 <script> 就能让网页听懂人话"></a>核心功能：一段 <code>&lt;script&gt;</code> 就能让网页听懂人话</h2><p><code>page-agent</code> 的设计哲学和之前写过的 <code>TencentDB Agent Memory</code>、<code>AG-UI 协议</code> 都不同 —— 它不是给 Agent 工程用的，是给 <strong>Web 开发者用的</strong>。你不需要懂 LangGraph、不需要懂 Tool Use schema、不需要懂 Vector DB，<strong>只要会 <code>npm install</code> 或者贴一段 <code>&lt;script&gt;</code> 就能上手</strong>。</p>
+<p>按官网文档和 README 总结，它的硬功夫可以拆成五个：</p>
+<h3 id="1-一行-CDN-集成，30-秒跑起来"><a href="#1-一行-CDN-集成，30-秒跑起来" class="headerlink" title="1. 一行 CDN 集成，30 秒跑起来"></a>1. 一行 CDN 集成，30 秒跑起来</h3><p>最快的方式就是贴一段 <code>&lt;script&gt;</code>：</p>
+<figure class="highlight html"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/page-agent@1.12.1/dist/iife/page-agent.demo.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>页面加载完会自动在右下角冒出一个 AI 操盘手 UI。默认调的是阿里云上的免费测试 Qwen LLM，加 <code>?autoInit=false</code> 可以自己 <code>new window.PageAgent(...)</code> 接管初始化。国内有 npmmirror 镜像可以替换。</p>
+<h3 id="2-纯-DOM-操作，不要视觉模型"><a href="#2-纯-DOM-操作，不要视觉模型" class="headerlink" title="2. 纯 DOM 操作，不要视觉模型"></a>2. 纯 DOM 操作，不要视觉模型</h3><p><code>browser-use</code> 的核心技巧叫「HTML dehydration」—— 把活的 DOM 树「脱水」成一份带交互元素索引的纯文本快照，发给 LLM。LLM 返回的不是坐标，而是「点击 ref=5 那个输入框」这样的引用。<code>page-agent</code> 把这套 prompt 完整继承下来，<strong>所以一个 9B 参数量的小模型（比如 Qwen3.5-4b）就能跑得动</strong> —— 它告诉 HN 评论者：「Anything smaller than 9b can’t really handle the complex tool call schema I use. Qwen3.5 4b is quite good but still gives messy json quite often.」</p>
+<p>省视觉模型 = 省 GPU = 省 token。一个 ERP 页面如果走截图路线，单次任务可能要消耗 5,000+ token 视觉输入；走 DOM 路线通常 200-800 token 就够，<strong>成本差距大约在一个数量级</strong>。</p>
+<h3 id="3-天然继承用户会话和权限"><a href="#3-天然继承用户会话和权限" class="headerlink" title="3. 天然继承用户会话和权限"></a>3. 天然继承用户会话和权限</h3><p>这是最关键的一条。当用户已经在浏览器里登录了 SaaS 后台，<code>page-agent</code> 自动拿到这整套会话上下文 ——Cookie、JWT、localStorage、Service Worker—— 它和网页共享同一个 DOM，<strong>不需要再去「模拟登录」、不需要处理验证码（设计上发现 CAPTCHA 会主动停下来交还控制权）</strong>。</p>
+<p>这意味着开发 B2B 集成时，<strong>再也不用为「浏览器自动化能登录但拿不到鉴权后的真实数据」写 workaround 了</strong>。</p>
+<h3 id="4-自带白名单-黑名单-数据脱敏"><a href="#4-自带白名单-黑名单-数据脱敏" class="headerlink" title="4. 自带白名单/黑名单 + 数据脱敏"></a>4. 自带白名单 / 黑名单 + 数据脱敏</h3><p>官方文档里有 <code>Custom Tools</code> 和 <code>Instructions</code> 两套配置口，允许开发者：</p>
+<ul>
+<li>限制 AI 只能操作特定 DOM 节点（避免 AI 跑到「删除账号」按钮上搞事）；</li>
+<li>对敏感字段（手机号、身份证）做 masking，发给 LLM 之前自动脱敏；</li>
+<li>注入自定义 prompt，引导 AI 按业务规则行事（比如客服系统的「必须先查工单再回复」）。</li>
+</ul>
+<p>这是面向「生产环境」必备的能力。HN 上一位资深前端工程师 <code>selimenes1</code> 专门提了一句：「If you plan to integrate it into your web app. It’s better to have a proxy api for the llm and auth the request with cookie or something.」—— <strong>别把 API key 直接塞前端</strong>。</p>
+<h3 id="5-跨-Tab-能力用-Chrome-扩展补齐"><a href="#5-跨-Tab-能力用-Chrome-扩展补齐" class="headerlink" title="5. 跨 Tab 能力用 Chrome 扩展补齐"></a>5. 跨 Tab 能力用 Chrome 扩展补齐</h3><p>内嵌模式只能控制当前页面。想跨 Tab 时，配套的 <strong>Chrome 扩展（Page Agent Ext）</strong> 派上用场。它的权限模型设计得非常克制：</p>
+<ul>
+<li>只有用户主动点扩展按钮，扩展才获得当前 Tab 的 <code>activeTab</code> 权限；</li>
+<li>AI 新开的 Tab 全部被自动归到一个 Tab Group 里；</li>
+<li>不会动用户已有的其他 Tab；</li>
+<li>跳到哪个网站需要用户明确授权。</li>
+</ul>
+<p>这套「Tab Group 隔离 + 明确授权」在 HN 评论区被反复点赞，因为它「给了用户肉眼可见的边界」。</p>
+<h2 id="实战示例：5-分钟把-page-agent-接进你的-React-后台"><a href="#实战示例：5-分钟把-page-agent-接进你的-React-后台" class="headerlink" title="实战示例：5 分钟把 page-agent 接进你的 React 后台"></a>实战示例：5 分钟把 page-agent 接进你的 React 后台</h2><p>下面我用一个假想的「报销后台」做例子，走一遍最常见的接入姿势。</p>
+<h3 id="步骤-1：NPM-安装（推荐用于正式项目）"><a href="#步骤-1：NPM-安装（推荐用于正式项目）" class="headerlink" title="步骤 1：NPM 安装（推荐用于正式项目）"></a>步骤 1：NPM 安装（推荐用于正式项目）</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install page-agent</span><br><span class="line"><span class="comment"># 当前版本：v1.12.1</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="步骤-2：React-项目里挂载"><a href="#步骤-2：React-项目里挂载" class="headerlink" title="步骤 2：React 项目里挂载"></a>步骤 2：React 项目里挂载</h3><figure class="highlight tsx"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> { <span class="title class_">PageAgent</span> } <span class="keyword">from</span> <span class="string">'page-agent'</span>;</span><br><span class="line"><span class="keyword">import</span> { useEffect } <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">ExpenseAdminWithAI</span>(<span class="params"></span>) {</span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> {</span><br><span class="line">    <span class="comment">// 建议通过自家后端代理 LLM API，避免 key 泄露</span></span><br><span class="line">    <span class="keyword">const</span> agent = <span class="keyword">new</span> <span class="title class_">PageAgent</span>({</span><br><span class="line">      <span class="attr">llm</span>: {</span><br><span class="line">        <span class="attr">baseURL</span>: <span class="string">'/api/agent-llm'</span>,  <span class="comment">// 你自己的代理端点</span></span><br><span class="line">        <span class="attr">apiKey</span>: <span class="string">'&lt;by-cookie-or-session&gt;'</span>,  <span class="comment">// 实际从后端注入</span></span><br><span class="line">        <span class="attr">model</span>: <span class="string">'qwen-plus'</span>,</span><br><span class="line">      },</span><br><span class="line">      <span class="comment">// 只让 AI 操作报销相关页面元素</span></span><br><span class="line">      <span class="attr">scopeSelector</span>: <span class="string">'[data-agent-scope="expense"]'</span>,</span><br><span class="line">      <span class="comment">// 把敏感字段脱敏</span></span><br><span class="line">      <span class="attr">dataMask</span>: {</span><br><span class="line">        <span class="attr">fields</span>: [<span class="string">'cardNumber'</span>, <span class="string">'idCard'</span>, <span class="string">'phone'</span>],</span><br><span class="line">      },</span><br><span class="line">      <span class="comment">// 注入业务规则</span></span><br><span class="line">      <span class="attr">customInstructions</span>: <span class="string">`</span></span><br><span class="line"><span class="string">        在提交报销单前，必须验证金额不超过用户剩余预算。</span></span><br><span class="line"><span class="string">        如果用户要求删除历史记录，必须先弹窗确认。</span></span><br><span class="line"><span class="string">      `</span>,</span><br><span class="line">    });</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> agent.<span class="title function_">destroy</span>();</span><br><span class="line">  }, []);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-agent-scope</span>=<span class="string">"expense"</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      {/* 报销后台 UI */}</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="步骤-3：用户用自然语言操作"><a href="#步骤-3：用户用自然语言操作" class="headerlink" title="步骤 3：用户用自然语言操作"></a>步骤 3：用户用自然语言操作</h3><p>假设这是一个需要点 8 步的传统 UI：</p>
+<blockquote>
+<p>用户：「帮我把 7 月所有金额超过 500 块的差旅报销单都标记为「待复核」。」</p>
+</blockquote>
+<p><code>page-agent</code> 内部大致是这样工作的：</p>
+<ol>
+<li>把当前 DOM 脱水成带 ref 的快照发给 LLM；</li>
+<li>LLM 返回类似 <code>[{action: "click", ref: 12}, {action: "type", ref: 27, text: "500"}, ...]</code> 的动作序列；</li>
+<li>page-agent 通过 <code>dispatchEvent</code> 派发真实的鼠标 / 键盘事件；</li>
+<li>每步执行完都重新脱水 DOM 确认结果，再发下一轮请求。</li>
+</ol>
+<p>整个过程对用户来说，就像一个看不见的「真用户」按在了屏幕那头。</p>
+<h3 id="步骤-4：调试-兜底"><a href="#步骤-4：调试-兜底" class="headerlink" title="步骤 4：调试 + 兜底"></a>步骤 4：调试 + 兜底</h3><p>如果想看 AI 当前在想什么，可以在 dev 环境加 <code>debug: true</code>，它会把每一步的 prompt、LLM 返回、执行结果都打到 Console。生产环境如果不想发车，可以一并开启 <code>requireApproval: 'always'</code>，每一步都让用户在右下角气泡里点「同意 / 拒绝」。</p>
+<h2 id="适用场景和限制"><a href="#适用场景和限制" class="headerlink" title="适用场景和限制"></a>适用场景和限制</h2><p>把目前文档、HN 讨论、第三方评测综合下来，<code>page-agent</code> <strong>最香</strong>的场景是这几类：</p>
+<ol>
+<li><strong>B2B 后台的客服话术换皮</strong> —— 让「请点击右上角设置 → 找到『通知偏好』→ 关闭『每日邮件汇总』」这种话术变成「别再给我发邮件了」，客户支持工单量直接砍一个数量级。</li>
+<li><strong>老旧系统的现代化外包</strong> —— 公司里总有那种「没人敢动、没人能换、但每天被吐槽」的 J2EE/.NET 老后台，加一段 <code>&lt;script&gt;</code> 就能让它听懂人话，比做完整 UI 重构便宜两个零。</li>
+<li><strong>无障碍访问</strong> —— 给视障、老年用户群体一个「说话就能用」的入口，文章开头的老板娘再也不用叫儿子同学过来帮忙了。</li>
+<li><strong>内部培训 / 演示</strong> ——AI 直接演一遍「提交报销的标准流程」，比录视频教学更有代入感。</li>
+<li><strong>复杂表单的「填空助手」</strong>——B2B 客户录入时，AI 根据历史数据自动填 80% 字段，把 30 分钟的录入缩短到 5 分钟。</li>
+</ol>
+<p>但它的边界也需要明确，<strong>不要硬上</strong>的场景：</p>
+<ul>
+<li><strong>跨站爬虫</strong> —— 内嵌模式下它只能动当前域，跨域需要爬取的话请走传统的 <code>browser-use</code>；</li>
+<li><strong>CAPTCHA / 验证码</strong> —— 设计上发现 CAPTCHA 就停手，需要真人介入；</li>
+<li><strong>Shadow DOM / WebGL Canvas</strong>——v1.12.1 暂未覆盖，重度可视化页面会看不到；</li>
+<li><strong>强 CSP 站点</strong> —— 会因 Content-Security-Policy 拦截 LLM 请求；HN 上有人提到这是企业 SaaS 的普遍痛点；</li>
+<li><strong>长按 / 拖拽交互</strong> —— 目前还不支持，需要等后续版本。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>alibaba/page-agent</code> 的意义不在于「它又是一个浏览器自动化框架」，而在于它把 GUI Agent 从「桌面 / 浏览器外的独立进程」拽回到了 <strong>「网页内部的 JavaScript 库」</strong> 这个位置。这个位置的好处是：</p>
+<ul>
+<li>一行 <code>&lt;script&gt;</code> 就能集成，不用部署新服务；</li>
+<li>天然继承用户登录态和会话，0 鉴权成本；</li>
+<li>不需要视觉模型，纯 DOM 文本就够了，省 token、省 GPU；</li>
+<li>26.1k stars + HN Show 147 分的社区信号，已经通过了早期采用者验证。</li>
+</ul>
+<p>如果你是前端开发，<strong>给自己公司的后台加一段试试，30 秒就能看到效果</strong>；如果你是产品经理 / 解决方案架构师，<strong>这是给「客户为什么不用我们」这个问题一个成本最低的回答</strong> —— 把「点 78 下」变成「说一句话」。</p>
+<p>它不是万能解药，但极可能是 <strong>「让 AI 真正进入企业的 B2B 工作流」这件大事上，最被低估的一块拼图</strong>。仓库地址 👉 <a target="_blank" rel="noopener" href="https://github.com/alibaba/page-agent">github.com/alibaba/page-agent</a>，官方文档 👉 <a target="_blank" rel="noopener" href="https://alibaba.github.io/page-agent/docs/introduction/overview">alibaba.github.io/page-agent</a>。如果你接进生产，欢迎回来分享你的坑。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/13/alibaba-page-agent-embedded-js-gui-agent/" title="alibaba&#x2F;page-agent：把 AI 操盘手塞进网页里，一段 JS 就能让用户「说人话」操作 UI">https://www.daishengli.top/2026/07/13/alibaba-page-agent-embedded-js-gui-agent/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/GUI-Agent/" rel="tag"># GUI Agent</a>
+              <a href="/tags/PageAgent/" rel="tag"># PageAgent</a>
+              <a href="/tags/browser-use/" rel="tag"># browser-use</a>
+              <a href="/tags/%E5%89%8D%E7%AB%AF%E5%BC%80%E6%BA%90/" rel="tag"># 前端开源</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/11/ag-ui-protocol-agent-user-interaction-frontend-bridge/" rel="prev" title="AG-UI 协议：把 AI Agent 接进前端应用的 &quot;最后一公里&quot;">
+                  <i class="fa fa-angle-left"></i> AG-UI 协议：把 AI Agent 接进前端应用的 "最后一公里"
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/14/marketingskills-ai-agent-marketing-workflows/" rel="next" title="Marketing Skills：给 Claude Code 装上 47 项营销工作流，开发者也能系统做增长">
+                  Marketing Skills：给 Claude Code 装上 47 项营销工作流，开发者也能系统做增长 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

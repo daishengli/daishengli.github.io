@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="OpenClaw（前身 Clawdbot&#x2F;Moltbot）是 38 万星的本地优先 AI 助理框架，一条命令把任意 LLM 装进 20+ 聊天软件，配心跳调度 + 沙箱 + 多 Agent 路由，MIT 协议全开源。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="把 AI 助理请进你自己的聊天软件：OpenClaw 让 WhatsApp&#x2F;Telegram&#x2F; 飞书里跑起一个 7×24 在线 Agent">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/10/openclaw-local-personal-ai-assistant/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="OpenClaw（前身 Clawdbot&#x2F;Moltbot）是 38 万星的本地优先 AI 助理框架，一条命令把任意 LLM 装进 20+ 聊天软件，配心跳调度 + 沙箱 + 多 Agent 路由，MIT 协议全开源。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-10T02:01:09.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.407Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="OpenClaw">
+<meta property="article:tag" content="个人助理">
+<meta property="article:tag" content="本地优先">
+<meta property="article:tag" content="多通道网关">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/10/openclaw-local-personal-ai-assistant/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/10/openclaw-local-personal-ai-assistant/","path":"2026/07/10/openclaw-local-personal-ai-assistant/","title":"把 AI 助理请进你自己的聊天软件：OpenClaw 让 WhatsApp/Telegram/ 飞书里跑起一个 7×24 在线 Agent"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>把 AI 助理请进你自己的聊天软件：OpenClaw 让 WhatsApp/Telegram/ 飞书里跑起一个 7×24 在线 Agent | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A4%B4%EF%BC%9A%E4%BD%A0%E7%9A%84-AI-%E5%8A%A9%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E6%80%BB%E5%9C%A8%E3%80%8C%E7%AD%89%E4%BD%A0%E3%80%8D%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">开头：你的 AI 助手为什么总在「等你」？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E8%A7%A3%E5%86%B3%E3%80%8CAI-%E5%8A%A9%E6%89%8B%E4%B8%8D%E8%83%BD%E8%90%BD%E5%9C%B0%E5%B7%A5%E4%BD%9C%E6%B5%81%E3%80%8D%E7%9A%84%E6%9C%80%E5%90%8E%E4%B8%80%E5%85%AC%E9%87%8C"><span class="nav-number">2.</span> <span class="nav-text">项目背景：解决「AI 助手不能落地工作流」的最后一公里</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E4%BA%AE%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">核心功能亮点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-20-%E8%81%8A%E5%A4%A9%E8%BD%AF%E4%BB%B6%E7%BB%9F%E4%B8%80%E7%BD%91%E5%85%B3%EF%BC%8C%E4%B8%80%E4%B8%AA%E8%BF%9B%E7%A8%8B%E6%8E%A5%E7%AE%A1%E6%89%80%E6%9C%89%E6%B6%88%E6%81%AF"><span class="nav-number">3.1.</span> <span class="nav-text">1. 20+ 聊天软件统一网关，一个进程接管所有消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%A4%9A-Agent-%E8%B7%AF%E7%94%B1%EF%BC%9A%E6%AF%8F%E4%B8%AA%E6%B8%A0%E9%81%93-%E8%B4%A6%E5%8F%B7-%E7%BE%A4%E7%8B%AC%E7%AB%8B%E4%BC%9A%E8%AF%9D"><span class="nav-number">3.2.</span> <span class="nav-text">2. 多 Agent 路由：每个渠道 &#x2F; 账号 &#x2F; 群独立会话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%BF%83%E8%B7%B3%E8%B0%83%E5%BA%A6-Cron-Webhook%EF%BC%9AAgent-%E4%B8%BB%E5%8A%A8%E6%89%BE%E4%BD%A0%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E7%AD%89%E4%BD%A0"><span class="nav-number">3.3.</span> <span class="nav-text">3. 心跳调度 + Cron + Webhook：Agent 主动找你，而不是等你</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%B2%99%E7%AE%B1%E4%B8%8E%E5%AE%89%E5%85%A8%EF%BC%9A%E9%BB%98%E8%AE%A4%E6%8B%92%E7%BB%9D%E9%AB%98%E5%8D%B1%E6%93%8D%E4%BD%9C"><span class="nav-number">3.4.</span> <span class="nav-text">4. 沙箱与安全：默认拒绝高危操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%8A%80%E8%83%BD%E7%94%9F%E6%80%81-ClawHub%EF%BC%9A%E4%BA%BA%E7%B1%BB%E5%8F%AF%E8%AF%BB%E7%9A%84-SKILL-md"><span class="nav-number">3.5.</span> <span class="nav-text">5. 技能生态 + ClawHub：人类可读的 SKILL.md</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A5-%E5%88%86%E9%92%9F%E8%B7%91%E9%80%9A%E4%B8%80%E4%B8%AA%E9%A3%9E%E4%B9%A6%E6%9C%BA%E5%99%A8%E4%BA%BA"><span class="nav-number">4.</span> <span class="nav-text">实战示例：5 分钟跑通一个飞书机器人</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF-vs-%E9%99%90%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">适用场景 vs 限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/10/openclaw-local-personal-ai-assistant/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="把 AI 助理请进你自己的聊天软件：OpenClaw 让 WhatsApp&#x2F;Telegram&#x2F; 飞书里跑起一个 7×24 在线 Agent | 小戴的网络日志">
+      <meta itemprop="description" content="OpenClaw（前身 Clawdbot&#x2F;Moltbot）是 38 万星的本地优先 AI 助理框架，一条命令把任意 LLM 装进 20+ 聊天软件，配心跳调度 + 沙箱 + 多 Agent 路由，MIT 协议全开源。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          把 AI 助理请进你自己的聊天软件：OpenClaw 让 WhatsApp/Telegram/ 飞书里跑起一个 7×24 在线 Agent
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-10 10:01:09" itemprop="dateCreated datePublished" datetime="2026-07-10T10:01:09+08:00">2026-07-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">AI 开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">OpenClaw（前身 Clawdbot/Moltbot）是 38 万星的本地优先 AI 助理框架，一条命令把任意 LLM 装进 20+ 聊天软件，配心跳调度 + 沙箱 + 多 Agent 路由，MIT 协议全开源。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="开头：你的-AI-助手为什么总在「等你」？"><a href="#开头：你的-AI-助手为什么总在「等你」？" class="headerlink" title="开头：你的 AI 助手为什么总在「等你」？"></a>开头：你的 AI 助手为什么总在「等你」？</h2><p>你有没有这种感觉：早上 9 点，脑子里冒出来一句「帮我查一下昨天那份竞品报告的链接，整理成三句话发到飞书群」—— 但打开 ChatGPT 输入框、复制粘贴、调整格式、再切到飞书、贴上去、回车，前后折腾了 5 分钟。本质问题在哪？<strong>主流 AI 助手都是一个「网页聊天框」，它永远在等你去找它，而不是活在你的工作流里。</strong></p>
+<p>而 <a target="_blank" rel="noopener" href="https://github.com/openclaw/openclaw">OpenClaw</a> 想做的事，刚好反过来：<strong>把 AI 装进你已经在用的聊天软件</strong> ——WhatsApp、Telegram、Slack、Discord、iMessage、Signal、飞书、QQ、微信公众号都行；配上一个 7×24 在线的小守护进程（daemon），它会按你定的心跳节奏主动来找你，甚至在你没问的时候就把活儿干了。</p>
+<p>GitHub 上 <strong>38.2 万 stars</strong>、220 个 release、2629 位贡献者。它是怎么做到的？今天拆给你看。</p>
+<h2 id="项目背景：解决「AI-助手不能落地工作流」的最后一公里"><a href="#项目背景：解决「AI-助手不能落地工作流」的最后一公里" class="headerlink" title="项目背景：解决「AI 助手不能落地工作流」的最后一公里"></a>项目背景：解决「AI 助手不能落地工作流」的最后一公里</h2><p><a target="_blank" rel="noopener" href="https://github.com/openclaw/openclaw">OpenClaw</a>（前身叫 Moltbot、Clawdbot）由 Peter Steinberger 主导，2026 年 1 月底开源后一周内就冲到 GitHub 趋势榜前三。它的产品定位不是「又一个 Agent 框架」，而是 <strong>「Personal AI Assistant + Control Plane」</strong>—— 一个跑在你本机的网关，把所有外部世界的消息入口（聊天软件、邮件、日历、Webhook）统一编排，路由到隔离的 Agent 会话里，再去调用 LLM 和工具。</p>
+<p>它的三大核心立场：</p>
+<ul>
+<li><strong>本地优先（local-first）</strong>：网关、工具调用、记忆、技能、配置全在你的机器上，硬盘上是普通 Markdown + YAML 文件，不锁进某个云服务。</li>
+<li><strong>MIT 协议</strong>：核心完全开源可商用。比起 Anthropic 曾经 DMCA Claude Code 反编译者、OpenAI Codex CLI 命令行开源但 Web UI 闭源、Manus 整个闭源 ——OpenClaw 是少有的「真・全栈开源」选项。</li>
+<li><strong>Autonomous by design</strong>：网关后台跑（macOS 上是 LaunchAgent，Linux 是 systemd），默认每 30 分钟一次心跳，读你写的 <code>HEARTBEAT.md</code> 清单，决定要不要主动发消息给你。</li>
+</ul>
+<p>如果说 LangChain、AutoGen 这类框架是「让开发者写 Agent」，OpenClaw 是「让 Agent 活在你的生活里」。</p>
+<h2 id="核心功能亮点"><a href="#核心功能亮点" class="headerlink" title="核心功能亮点"></a>核心功能亮点</h2><h3 id="1-20-聊天软件统一网关，一个进程接管所有消息"><a href="#1-20-聊天软件统一网关，一个进程接管所有消息" class="headerlink" title="1. 20+ 聊天软件统一网关，一个进程接管所有消息"></a>1. 20+ 聊天软件统一网关，一个进程接管所有消息</h3><p>OpenClaw 把 20+ 个 IM 平台的协议适配器塞进一个 Node.js 长连接进程 ——</p>
+<blockquote>
+<p>WhatsApp（Baileys）、Telegram（grammY）、Discord、Slack、iMessage、Signal、IRC、Microsoft Teams、Matrix、飞书、LINE、Mattermost、Nextcloud Talk、Nostr、Synology Chat、Tlon、Twitch、Zalo、Zalo Personal、微信、QQ、WebChat，还有 macOS /iOS/ Android 原生节点。</p>
+</blockquote>
+<p>每个平台一个 adapter，把收到的消息归一化进 OpenClaw 的内部事件总线；发出去的消息再序列化回对应平台。一句话：<strong>「一次开发，所有平台生效」</strong>。新人入职第一条消息提醒、自动播报客户邮件、新评论到达等多通道通知，统统在 <code>openclaw.json</code> 里加几行就完事。</p>
+<h3 id="2-多-Agent-路由：每个渠道-账号-群独立会话"><a href="#2-多-Agent-路由：每个渠道-账号-群独立会话" class="headerlink" title="2. 多 Agent 路由：每个渠道/账号/群独立会话"></a>2. 多 Agent 路由：每个渠道 / 账号 / 群独立会话</h3><p>不是所有 Agent 都该用同一个上下文。OpenClaw 的网关支持把不同渠道、账号、甚至群里的某个人路由到<strong>完全隔离的 Agent 工作区</strong> —— 内存、技能、历史互不污染：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># openclaw.json（节选）</span></span><br><span class="line"><span class="attr">agents:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">work-assistant</span></span><br><span class="line">    <span class="attr">workspace:</span> <span class="string">~/.openclaw/work</span></span><br><span class="line">    <span class="attr">channels:</span> [<span class="string">slack</span>, <span class="string">feishu</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">family-bot</span></span><br><span class="line">    <span class="attr">workspace:</span> <span class="string">~/.openclaw/family</span></span><br><span class="line">    <span class="attr">channels:</span> [<span class="string">whatsapp</span>]</span><br><span class="line">    <span class="attr">dmPolicy:</span> <span class="string">pairing</span>   <span class="comment"># 陌生人发消息只回配对码</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">dev-researcher</span></span><br><span class="line">    <span class="attr">workspace:</span> <span class="string">~/.openclaw/research</span></span><br><span class="line">    <span class="attr">sandbox:</span> <span class="string">docker</span></span><br><span class="line">    <span class="attr">allowedTools:</span> [<span class="string">bash</span>, <span class="string">read</span>, <span class="string">web_search</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>你可以让「工作助理」拿 GPT-5 跑重逻辑，让「家庭助手」用本地 Llama 跑轻量提醒，让「研究助手」在 Docker 沙箱里跑 shell 命令 —— 三个 Agent 共存一个网关，互不打扰。</p>
+<h3 id="3-心跳调度-Cron-Webhook：Agent-主动找你，而不是等你"><a href="#3-心跳调度-Cron-Webhook：Agent-主动找你，而不是等你" class="headerlink" title="3. 心跳调度 + Cron + Webhook：Agent 主动找你，而不是等你"></a>3. 心跳调度 + Cron + Webhook：Agent 主动找你，而不是等你</h3><p>这是 OpenClaw 跟「网页聊天框 AI」最大的区别：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 守护进程模式（推荐）</span></span><br><span class="line">openclaw onboard --install-daemon</span><br><span class="line">openclaw gateway status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 手动前台（调试用）</span></span><br><span class="line">openclaw gateway --port 18789 --verbose</span><br></pre></td></tr></tbody></table></figure>
+
+<p>网关启动后，按 <code>HEARTBEAT.md</code> 里的清单每 30 分钟（Anthropic OAuth 模式是 1 小时）触发一次 Agent 循环 —— 读清单 → 判断要不要执行 → 要么给你发消息，要么静默回 <code>HEARTBEAT_OK</code>（网关自动丢弃）。外部触发源除了心跳还有：cron 表达式、Webhook、聊天消息、子 Agent 调用。</p>
+<p>也就是说，你可以写这样一段：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># HEARTBEAT.md</span></span><br><span class="line"><span class="bullet">-</span> [ ] 检查 Gmail 是否有客户邮件，按优先级发到飞书</span><br><span class="line"><span class="bullet">-</span> [ ] 监控的 GitHub repo 有新 release 时，生成 changelog 摘要发到 Slack</span><br><span class="line"><span class="bullet">-</span> [ ] 每周五 17:00 汇总本周 OKR 进度推送给团队</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Agent 会自己决定什么时候、怎么处理这些事。</p>
+<h3 id="4-沙箱与安全：默认拒绝高危操作"><a href="#4-沙箱与安全：默认拒绝高危操作" class="headerlink" title="4. 沙箱与安全：默认拒绝高危操作"></a>4. 沙箱与安全：默认拒绝高危操作</h3><p>把 Agent 装进能跑 shell 的环境，最怕的不是它不行，而是它太行。OpenClaw 的安全模型分两层：</p>
+<ul>
+<li><strong>DM 配对（pairing）</strong>：默认对 Telegram、WhatsApp、Signal、iMessage 等私聊，陌生人发消息只会收到一段配对码，需要你 <code>openclaw pairing approve &lt;channel&gt; &lt;code&gt;</code> 才真正接通 —— 防止被骚扰或被钓鱼。</li>
+<li><strong>会话级沙箱</strong>：在 <code>agents.defaults.sandbox.mode: "non-main"</code> 下，主会话保留 host 全权限，其他 Agent 全部塞进 Docker / SSH / OpenShell 后端，默认<strong>禁止</strong> <code>browser</code> / <code>canvas</code> / <code>cron</code> / <code>discord</code> / <code>gateway</code> 这类高危工具。<code>openclaw doctor</code> 一键体检配置。</li>
+</ul>
+<p>对生产环境，这个「最小权限 + 默认安全」模型比 LangChain 默认给你 run_shell 友好得多。</p>
+<h3 id="5-技能生态-ClawHub：人类可读的-SKILL-md"><a href="#5-技能生态-ClawHub：人类可读的-SKILL-md" class="headerlink" title="5. 技能生态 + ClawHub：人类可读的 SKILL.md"></a>5. 技能生态 + ClawHub：人类可读的 SKILL.md</h3><p>OpenClaw 的技能是 <code>SKILL.md</code> + YAML frontmatter + 自然语言描述 —— 和 Claude Code、Cursor 兼容。社区建了一个叫 <a target="_blank" rel="noopener" href="https://clawhub.ai/">ClawHub</a> 的注册中心，Agent 自己会搜索、安装新技能。比如：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">name: feishu-bitable</span><br><span class="line"><span class="section">description: 在飞书多维表格（Base）里查询和新增记录。</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line"><span class="section"># feishu-bitable</span></span><br><span class="line"></span><br><span class="line">当用户说「查一下这个 base 表的最新一行」时：</span><br><span class="line"><span class="bullet">1.</span> 调用 <span class="code">`feishu.bitable.list_records`</span>，传入 app<span class="emphasis">_token 和 table_</span>id。</span><br><span class="line"><span class="bullet">2.</span> 把结果按日期倒序返回。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>可以本地写，也可以一条命令 <code>openclaw skill install feishu-bitable</code> 从 ClawHub 装上。技能越多，Agent 越像你团队的「老员工」，而不是「查 Google 的实习生」。</p>
+<h2 id="实战示例：5-分钟跑通一个飞书机器人"><a href="#实战示例：5-分钟跑通一个飞书机器人" class="headerlink" title="实战示例：5 分钟跑通一个飞书机器人"></a>实战示例：5 分钟跑通一个飞书机器人</h2><p>下面演示把 OpenClaw 接入飞书，搭一个会自动回复常见问题的客服机器人。</p>
+<p><strong>1. 安装</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install -g openclaw@latest   <span class="comment"># 需要 Node 24 或 22.19+</span></span><br><span class="line">openclaw onboard --install-daemon</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>2. 配置飞书 Channel</strong></p>
+<p>在 <code>openclaw.json</code> 里加：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"channels"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"feishu"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"appId"</span><span class="punctuation">:</span> <span class="string">"cli_xxx"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"appSecret"</span><span class="punctuation">:</span> <span class="string">"yyy"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"dmPolicy"</span><span class="punctuation">:</span> <span class="string">"pairing"</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"agents"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"defaults"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"model"</span><span class="punctuation">:</span> <span class="string">"anthropic/claude-sonnet-4.6"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"sandbox"</span><span class="punctuation">:</span> <span class="punctuation">{</span> <span class="attr">"mode"</span><span class="punctuation">:</span> <span class="string">"non-main"</span><span class="punctuation">,</span> <span class="attr">"backend"</span><span class="punctuation">:</span> <span class="string">"docker"</span> <span class="punctuation">}</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>3. 写第一个技能</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p ~/.openclaw/workspace/skills/order-status</span><br><span class="line"><span class="built_in">cat</span> &gt; ~/.openclaw/workspace/skills/order-status/SKILL.md &lt;&lt;<span class="string">'EOF'</span></span><br><span class="line">---</span><br><span class="line">name: order-status</span><br><span class="line">description: 查询订单物流状态（mock 数据，方便演示）。</span><br><span class="line">---</span><br><span class="line"><span class="comment"># order-status</span></span><br><span class="line">当用户问「我的订单到哪了」，回复「订单 <span class="comment">#12345 已从杭州发出，正在派送中，预计今天 18:00 前送达」。</span></span><br><span class="line">EOF</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>4. 启动网关 + 配对</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openclaw gateway start</span><br><span class="line">openclaw pairing approve feishu ABCD-1234   <span class="comment"># 用户收到配对码后用这条接通</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>5. 跟机器人说话</strong></p>
+<p>在飞书里给机器人发：<code>帮我查下订单 #12345</code>。Agent 会自动调用 <code>order-status</code> 技能，回你那句话 —— <strong>整个流程零代码上线</strong>。</p>
+<h2 id="适用场景-vs-限制"><a href="#适用场景-vs-限制" class="headerlink" title="适用场景 vs 限制"></a>适用场景 vs 限制</h2><p><strong>适合用 OpenClaw 的场景</strong>：</p>
+<ul>
+<li>个人 / 小团队需要「AI 活在 IM 里」而不是网页里 —— 尤其是经常用 Telegram、WhatsApp、飞书的跨境 / 远程团队。</li>
+<li>想做 <strong>AI 客服</strong>、<strong>AI 提醒机器人</strong>、<strong>AI 数据周报推送</strong>，又不想被 LangChain 那种「代码驱动」框架劝退。</li>
+<li>对<strong>数据本地化</strong>有强需求（金融、医疗、隐私敏感行业），不愿意让对话上下文出本机。</li>
+<li>想要 <strong>多 Agent 编排</strong> —— 一个网关统管「客服」「研发」「财务」几个隔离 Agent。</li>
+</ul>
+<p><strong>限制和坑</strong>：</p>
+<ul>
+<li>本地优先 ≠ 零成本：跑 20+ 通道 + 心跳 + 多 Agent，你的 LLM API 账单和机器内存都得跟上。普通笔电撑 2-3 个 Agent 还行，10 个 Agent 建议上小服务器。</li>
+<li>Node 24 是硬要求，老环境要先升级。</li>
+<li>DM 配对默认对私聊很安全，但<strong>公开群</strong>里的消息 OpenClaw 默认当 untrusted input 处理；你要在 <code>allowFrom</code> 里显式开白名单。</li>
+<li>跟 Hermes Agent 这类「自进化」框架不同，OpenClaw 的记忆和技能需要<strong>你主动维护</strong> ——HEARTBEAT.md 不写，Agent 就没活干；SOUL.md 不写，Agent 性格就模糊。它不会「越用越聪明」，但也不容易越界。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>OpenClaw 不是「又一个 LLM wrapper」，而是一套<strong>让 AI 真正住进你工作流的操作系统级框架</strong>。它把 20+ 聊天平台统一成一条消息总线，把多 Agent 编排、心跳调度、沙箱安全、技能生态这些「生产级 AI 助理」的必备组件打包到一个 Node 进程里 ——MIT 协议全开源，38 万星背书，社区活跃。</p>
+<p>如果你受够了「打开 ChatGPT → 粘贴 → 复制 → 关掉 → 切回 IM」的循环，明早第一件事推荐你跑一行 <code>npm install -g openclaw@latest</code>，给自己装一个会主动来找你聊天的 AI 同事。</p>
+<p>🔗 项目地址：<a target="_blank" rel="noopener" href="https://github.com/openclaw/openclaw">github.com/openclaw/openclaw</a><br>📚 官方文档：<a target="_blank" rel="noopener" href="https://docs.openclaw.ai/">docs.openclaw.ai</a><br>🎁 技能市场：<a target="_blank" rel="noopener" href="https://clawhub.ai/">clawhub.ai</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/10/openclaw-local-personal-ai-assistant/" title="把 AI 助理请进你自己的聊天软件：OpenClaw 让 WhatsApp&#x2F;Telegram&#x2F; 飞书里跑起一个 7×24 在线 Agent">https://www.daishengli.top/2026/07/10/openclaw-local-personal-ai-assistant/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/OpenClaw/" rel="tag"># OpenClaw</a>
+              <a href="/tags/%E4%B8%AA%E4%BA%BA%E5%8A%A9%E7%90%86/" rel="tag"># 个人助理</a>
+              <a href="/tags/%E6%9C%AC%E5%9C%B0%E4%BC%98%E5%85%88/" rel="tag"># 本地优先</a>
+              <a href="/tags/%E5%A4%9A%E9%80%9A%E9%81%93%E7%BD%91%E5%85%B3/" rel="tag"># 多通道网关</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/09/mimo-code-agent-co-evolve-memory-workflows/" rel="prev" title="小米开源 MiMo Code：把 &quot;长期记忆 + 自进化&quot; 还给终端 AI 编码 Agent">
+                  <i class="fa fa-angle-left"></i> 小米开源 MiMo Code：把 "长期记忆 + 自进化" 还给终端 AI 编码 Agent
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/11/ag-ui-protocol-agent-user-interaction-frontend-bridge/" rel="next" title="AG-UI 协议：把 AI Agent 接进前端应用的 &quot;最后一公里&quot;">
+                  AG-UI 协议：把 AI Agent 接进前端应用的 "最后一公里" <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

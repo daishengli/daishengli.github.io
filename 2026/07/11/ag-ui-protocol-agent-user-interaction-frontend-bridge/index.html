@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="AG-UI 是 CopilotKit 主导的开源、事件驱动协议，专为 Agent 与前端应用之间的双向交互而设计，Google ADK、LangGraph、AWS Strands、Microsoft Agent Framework 等 15+ 框架原生支持，是 MCP&#x2F;A2A 之后补齐的第三块协议拼图。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AG-UI 协议：把 AI Agent 接进前端应用的 &quot;最后一公里&quot;">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/11/ag-ui-protocol-agent-user-interaction-frontend-bridge/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="AG-UI 是 CopilotKit 主导的开源、事件驱动协议，专为 Agent 与前端应用之间的双向交互而设计，Google ADK、LangGraph、AWS Strands、Microsoft Agent Framework 等 15+ 框架原生支持，是 MCP&#x2F;A2A 之后补齐的第三块协议拼图。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-11T02:05:15.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.402Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="AG-UI">
+<meta property="article:tag" content="CopilotKit">
+<meta property="article:tag" content="协议">
+<meta property="article:tag" content="生成式 UI">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/11/ag-ui-protocol-agent-user-interaction-frontend-bridge/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/11/ag-ui-protocol-agent-user-interaction-frontend-bridge/","path":"2026/07/11/ag-ui-protocol-agent-user-interaction-frontend-bridge/","title":"AG-UI 协议：把 AI Agent 接进前端应用的 \"最后一公里\""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>AG-UI 协议：把 AI Agent 接进前端应用的 "最后一公里" | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E4%BB%8E-CopilotKit-%E5%88%B0-AG-UI"><span class="nav-number">1.</span> <span class="nav-text">项目背景：从 CopilotKit 到 AG-UI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E4%BA%AE%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">核心功能亮点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-16-%E7%A7%8D%E6%A0%87%E5%87%86%E4%BA%8B%E4%BB%B6%EF%BC%8C%E8%A6%86%E7%9B%96-Agent-%E5%85%A8%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.1.</span> <span class="nav-text">1. 16 种标准事件，覆盖 Agent 全生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%8F%8C%E5%90%91%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5%EF%BC%88Shared-State%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">2. 双向状态同步（Shared State）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%94%9F%E6%88%90%E5%BC%8F-UI%EF%BC%88Generative-UI%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">3. 生成式 UI（Generative UI）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%BA%BA%E6%9C%BA%E5%8D%8F%E5%90%8C%EF%BC%88Human-in-the-Loop%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">4. 人机协同（Human-in-the-Loop）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%A4%9A%E5%B9%B3%E5%8F%B0%E5%90%8C%E4%B8%80%E4%BB%BD-Agent"><span class="nav-number">2.5.</span> <span class="nav-text">5. 多平台同一份 Agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%8D%8F%E8%AE%AE%E6%A0%88%E9%87%8C%E7%9A%84%E2%80%9D%E7%AC%AC%E4%B8%89%E5%9D%97%E6%8B%BC%E5%9B%BE%E2%80%9D"><span class="nav-number">2.6.</span> <span class="nav-text">6. 协议栈里的” 第三块拼图”</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A5-%E5%88%86%E9%92%9F%E6%8E%A5%E5%85%A5"><span class="nav-number">3.</span> <span class="nav-text">实战示例：5 分钟接入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">4.</span> <span class="nav-text">与同类项目的差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E9%99%90%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">适用场景与限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-number">6.</span> <span class="nav-text">写在最后</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/11/ag-ui-protocol-agent-user-interaction-frontend-bridge/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="AG-UI 协议：把 AI Agent 接进前端应用的 &quot;最后一公里&quot; | 小戴的网络日志">
+      <meta itemprop="description" content="AG-UI 是 CopilotKit 主导的开源、事件驱动协议，专为 Agent 与前端应用之间的双向交互而设计，Google ADK、LangGraph、AWS Strands、Microsoft Agent Framework 等 15+ 框架原生支持，是 MCP&#x2F;A2A 之后补齐的第三块协议拼图。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AG-UI 协议：把 AI Agent 接进前端应用的 "最后一公里"
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-11 10:05:15" itemprop="dateCreated datePublished" datetime="2026-07-11T10:05:15+08:00">2026-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">AI 开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">AG-UI 是 CopilotKit 主导的开源、事件驱动协议，专为 Agent 与前端应用之间的双向交互而设计，Google ADK、LangGraph、AWS Strands、Microsoft Agent Framework 等 15+ 框架原生支持，是 MCP/A2A 之后补齐的第三块协议拼图。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>你有没有过这种体验：后端 Agent 已经能干活 —— 能查数据库、能调 API、能跑多步推理，但当你把它” 塞进” 自己的 Web 应用时，尴尬的事情就发生了：</p>
+<ul>
+<li>前端写好的表单状态传不进去，Agent 拿到的是残缺的上下文</li>
+<li> Agent 中途要向用户确认一个参数，只能抛一条文本消息，没有” 确认 / 取消” 按钮</li>
+<li>流式输出到一半，前端不知道该把光标放哪里、该不该禁用按钮</li>
+<li>想在 Slack 里用同一个 Agent，结果发现协议层只支持 Web</li>
+</ul>
+<p>这些问题的根本原因，是 <strong>Agent 与用户界面之间，缺一层统一的协议</strong>。</p>
+<p>MCP（Model Context Protocol）解决了”Agent 怎么调用工具”；A2A（Agent-to-Agent）解决了”Agent 之间怎么沟通”；那么”Agent 怎么跟真实用户交互” 呢？</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ag-ui-protocol/ag-ui">CopilotKit 团队给出的答案是 <strong>AG-UI Protocol</strong></a>—— 一个开源、轻量、事件驱动的协议，专门把 Agent 接进前端应用。它已经被 Google ADK、LangGraph、AWS Strands、Microsoft Agent Framework、Mastra、PydanticAI 等 15+ 主流框架原生支持，相当于补齐了智能体协议栈的” 第三块拼图”。</p>
+<h2 id="项目背景：从-CopilotKit-到-AG-UI"><a href="#项目背景：从-CopilotKit-到-AG-UI" class="headerlink" title="项目背景：从 CopilotKit 到 AG-UI"></a>项目背景：从 CopilotKit 到 AG-UI</h2><p>CopilotKit 是 2023 年起步的一个 React 库，定位是” 前端 Agent SDK”—— 给前端开发者提供 Chat UI、Generative UI、共享状态、人机协同这些能力，做了两年多，到现在已经积累了 36K+ Star。</p>
+<p>但在落地过程中，团队很快发现一个问题：<strong>Agent 后端和前端之间没有统一协议</strong>。每个 Agent 框架（LangGraph、CrewAI、自研 Agent）都有自己的事件格式，前端要么针对每种后端写一套适配，要么只能跑 demo。</p>
+<p>于是他们把 CopilotKit 里负责”Agent↔UI” 通信的那一层抽了出来，独立成项目 <strong><a target="_blank" rel="noopener" href="https://github.com/ag-ui-protocol/ag-ui">ag-ui-protocol/ag-ui</a></strong>（14K+ Star），并联合 LangGraph / CrewAI 一同设计协议规范。</p>
+<p>AG-UI 的设计目标很明确：</p>
+<ul>
+<li><strong>轻量</strong>：核心只定义约 16 种标准事件类型，不绑死任何传输方式</li>
+<li><strong>可插拔</strong>：支持 SSE、WebSocket、Webhook 等任意传输</li>
+<li><strong>宽松匹配</strong>：事件字段允许命名差异，最大化兼容性</li>
+<li><strong>多框架</strong>：今天不只有 React，Angular、Vue、React Native、Slack、MS Teams 都在路线图上</li>
+</ul>
+<p>它解决的问题，本质上是 <strong>Agent 想” 长出手脚” 碰用户时，没有一套通用语言</strong>。</p>
+<h2 id="核心功能亮点"><a href="#核心功能亮点" class="headerlink" title="核心功能亮点"></a>核心功能亮点</h2><h3 id="1-16-种标准事件，覆盖-Agent-全生命周期"><a href="#1-16-种标准事件，覆盖-Agent-全生命周期" class="headerlink" title="1. 16 种标准事件，覆盖 Agent 全生命周期"></a>1. 16 种标准事件，覆盖 Agent 全生命周期</h3><p>AG-UI 把 Agent 执行过程中可能产生的所有交互，抽象成大约 16 种标准事件，包括：</p>
+<ul>
+<li><code>RUN_STARTED</code> / <code>RUN_FINISHED</code> / <code>RUN_ERROR</code>：一次 Agent 调用的起止</li>
+<li><code>TEXT_MESSAGE_START</code> / <code>TEXT_MESSAGE_CONTENT</code> / <code>TEXT_MESSAGE_END</code>：流式文本</li>
+<li><code>TOOL_CALL_START</code> / <code>TOOL_CALL_ARGS</code> / <code>TOOL_CALL_END</code> / <code>TOOL_CALL_RESULT</code>：工具调用全过程</li>
+<li><code>STATE_SNAPSHOT</code> / <code>STATE_DELTA</code>：前端↔Agent 共享状态</li>
+<li><code>MESSAGES_SNAPSHOT</code>：历史消息快照</li>
+<li>以及 HITL（Human-in-the-Loop）相关的事件</li>
+</ul>
+<p>后端只需要” 按一种 AG-UI 兼容格式”emit 事件，前端按”AG-UI 兼容输入” 接收参数，中间用什么传输（SSE / WebSocket / Webhook）都可以。</p>
+<h3 id="2-双向状态同步（Shared-State）"><a href="#2-双向状态同步（Shared-State）" class="headerlink" title="2. 双向状态同步（Shared State）"></a>2. 双向状态同步（Shared State）</h3><p>这是 AG-UI 最实用的能力之一：前端表单、列表、配置项和 Agent 内部状态<strong>双向实时同步</strong>。</p>
+<figure class="highlight tsx"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 前端：声明这块 UI 与 Agent 共享 state</span></span><br><span class="line"><span class="keyword">const</span> { state, setState } = <span class="title function_">useCoAgent</span>({</span><br><span class="line">  <span class="attr">name</span>: <span class="string">"research_agent"</span>,</span><br><span class="line">  <span class="attr">initialState</span>: { <span class="attr">city</span>: <span class="string">"San Francisco"</span> }</span><br><span class="line">});</span><br><span class="line"></span><br><span class="line"><span class="comment">// Agent 内部更新 state，前端自动重渲染</span></span><br><span class="line"><span class="comment">// 前端点按钮改 city，Agent 下一步也能看到</span></span><br><span class="line"><span class="keyword">return</span> (</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>{state.city}<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">{()</span> =&gt;</span> setState({ city: "NYC" })}&gt;</span></span><br><span class="line"><span class="language-xml">      切换城市</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这背后靠的是 <code>STATE_SNAPSHOT</code>（全量）和 <code>STATE_DELTA</code>（增量）事件，加上 JSON Patch 兼容的 patch 格式。前端不用再自己写” 轮询拉状态” 的脏逻辑。</p>
+<h3 id="3-生成式-UI（Generative-UI）"><a href="#3-生成式-UI（Generative-UI）" class="headerlink" title="3. 生成式 UI（Generative UI）"></a>3. 生成式 UI（Generative UI）</h3><p>Agent 不只能吐文字，还能<strong>直接渲染 UI 组件</strong>。比如：</p>
+<ul>
+<li>Agent 决定展示一个航班对比表 → 后端 emit 一个 <code>TOOL_CALL</code>，前端拿到结构化数据后渲染 <code>&lt;FlightTable /&gt;</code></li>
+<li>Agent 需要用户选一个文件 → emit <code>TOOL_CALL</code> 配合自定义事件，前端弹出文件选择器</li>
+</ul>
+<p>CopilotKit 提供了 <code>renderAndWaitForResponse</code> 这种机制：Agent 渲染组件，用户在 UI 上操作，结果作为下一轮输入回传给 Agent。整个过程不需要前端写胶水代码。</p>
+<h3 id="4-人机协同（Human-in-the-Loop）"><a href="#4-人机协同（Human-in-the-Loop）" class="headerlink" title="4. 人机协同（Human-in-the-Loop）"></a>4. 人机协同（Human-in-the-Loop）</h3><p>Agent 执行到某一步，可以主动<strong>暂停并请求用户输入</strong>：</p>
+<ul>
+<li>“我准备调用 <code>delete_database</code>，确认吗？” → 弹一个确认框</li>
+<li> “我需要你提供 GitHub Token 才能继续” → 弹一个输入框</li>
+<li> “请从这 3 个分支里选一个” → 弹一个下拉</li>
+</ul>
+<p>HITL 通过专门的事件类型实现，前端可以用任何 UI 库（Material UI、Ant Design、Tailwind UI…）渲染。Agent 不会” 自作主张” 继续往下走，必须等用户响应。</p>
+<h3 id="5-多平台同一份-Agent"><a href="#5-多平台同一份-Agent" class="headerlink" title="5. 多平台同一份 Agent"></a>5. 多平台同一份 Agent</h3><p>这是 CopilotKit 在协议之上的延伸：<strong>同一个 Agent 后端，能跑在 Web、React Native、Slack、MS Teams</strong>。</p>
+<p>原理是：Agent 只 emit AG-UI 事件，CopilotKit 在不同平台提供对应的 UI 适配层（React 一个、Slack 一个、Teams 一个）。Agent 业务逻辑只写一遍，部署到哪都行。</p>
+<h3 id="6-协议栈里的”第三块拼图”"><a href="#6-协议栈里的”第三块拼图”" class="headerlink" title="6. 协议栈里的”第三块拼图”"></a>6. 协议栈里的” 第三块拼图”</h3><p>AG-UI 团队自己画的协议栈图：</p>
+<ul>
+<li><strong>MCP</strong>（Anthropic 主导）：让 Agent 拿到工具</li>
+<li><strong> A2A</strong>（Google 主导）：让 Agent 之间对话</li>
+<li><strong> AG-UI</strong>（CopilotKit 主导）：让 Agent 走进用户应用</li>
+</ul>
+<p>三块协议各管一摊，互不冲突。AG-UI 的定位是<strong>最贴近用户</strong>的那一层。</p>
+<h2 id="实战示例：5-分钟接入"><a href="#实战示例：5-分钟接入" class="headerlink" title="实战示例：5 分钟接入"></a>实战示例：5 分钟接入</h2><p>下面用一个最简的例子演示 AG-UI 的工作流。环境准备：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 创建一个新应用</span></span><br><span class="line">npx create-ag-ui-app my-agent-app</span><br><span class="line"><span class="built_in">cd</span> my-agent-app</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 安装依赖</span></span><br><span class="line">npm install</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 配置 LLM key</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"OPENAI_API_KEY=sk-..."</span> &gt; .<span class="built_in">env</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>假设我们用一个最简的” 行程规划”Agent，后端用 TypeScript（节选关键部分）：</p>
+<figure class="highlight ts"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// server/agent.ts —— Agent 后端</span></span><br><span class="line"><span class="keyword">import</span> { runAgent } <span class="keyword">from</span> <span class="string">"@ag-ui/core"</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">runAgent</span>({</span><br><span class="line">  <span class="attr">agentId</span>: <span class="string">"trip_planner"</span>,</span><br><span class="line">  <span class="attr">systemPrompt</span>: <span class="string">"你是一个贴心的行程规划助手。用户提到城市时，更新共享 state.city。"</span>,</span><br><span class="line">  <span class="attr">tools</span>: [</span><br><span class="line">    {</span><br><span class="line">      <span class="attr">name</span>: <span class="string">"update_city"</span>,</span><br><span class="line">      <span class="attr">description</span>: <span class="string">"更新当前行程目标城市"</span>,</span><br><span class="line">      <span class="attr">parameters</span>: { <span class="attr">city</span>: <span class="string">"string"</span> }</span><br><span class="line">    }</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">onStateChange</span>: <span class="function">(<span class="params">state</span>) =&gt;</span> {</span><br><span class="line">    <span class="comment">// 这里 emit STATE_DELTA 事件，前端会自动同步</span></span><br><span class="line">    <span class="keyword">return</span> { <span class="attr">delta</span>: { <span class="attr">city</span>: state.<span class="property">city</span> } };</span><br><span class="line">  }</span><br><span class="line">});</span><br></pre></td></tr></tbody></table></figure>
+
+<p>前端用 CopilotKit（已自动注入 AG-UI 客户端）：</p>
+<figure class="highlight tsx"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// app/page.tsx</span></span><br><span class="line"><span class="string">"use client"</span>;</span><br><span class="line"><span class="keyword">import</span> { useCoAgent } <span class="keyword">from</span> <span class="string">"@copilotkit/react-core"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">Page</span>(<span class="params"></span>) {</span><br><span class="line">  <span class="keyword">const</span> { state, setState } = <span class="title function_">useCoAgent</span>({</span><br><span class="line">    <span class="attr">name</span>: <span class="string">"trip_planner"</span>,</span><br><span class="line">    <span class="attr">initialState</span>: { <span class="attr">city</span>: <span class="string">"Tokyo"</span> }</span><br><span class="line">  });</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">main</span> <span class="attr">className</span>=<span class="string">"p-8"</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span> <span class="attr">className</span>=<span class="string">"text-3xl"</span>&gt;</span>当前行程目标：{state.city}<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">className</span>=<span class="string">"mt-4 px-4 py-2 bg-blue-500 text-white rounded"</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onClick</span>=<span class="string">{()</span> =&gt;</span> setState({ city: "Paris" })}</span></span><br><span class="line"><span class="language-xml">      &gt;</span></span><br><span class="line"><span class="language-xml">        切到巴黎</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">main</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑起来：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm run dev</span><br><span class="line"><span class="comment"># 浏览器打开 http://localhost:3000</span></span><br><span class="line"><span class="comment"># 在 CopilotKit 的 Chat 面板里说："我们去京都吧"</span></span><br><span class="line"><span class="comment"># 你会看到页面标题实时变成"当前行程目标：京都"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>不需要写 fetch / SSE / WebSocket 代码，不需要手动管理 eventSource，AG-UI 的中间件已经把双向通信打通了。</p>
+<p>如果想看更完整的 demo，可以直接跑 <a target="_blank" rel="noopener" href="https://dojo.ag-ui.com/">AG-UI Dojo</a>—— 官方用 50-200 行的最小例子展示了 9 个核心能力：共享状态、工具型生成式 UI、HITL 等，每一种都可以下载源码对照学习。</p>
+<h2 id="与同类项目的差异"><a href="#与同类项目的差异" class="headerlink" title="与同类项目的差异"></a>与同类项目的差异</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>定位</th>
+<th>与 AG-UI 的关系</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> MCP</strong></td>
+<td>Agent ↔ 工具</td>
+<td>协议栈上一层，AG-UI 与之正交，可同时使用</td>
+</tr>
+<tr>
+<td><strong> A2A</strong></td>
+<td>Agent ↔ Agent</td>
+<td> 协议栈上一层，AG-UI 不替代它</td>
+</tr>
+<tr>
+<td><strong> OpenAI Assistants API</strong></td>
+<td> 厂商私有 Agent 协议</td>
+<td>闭源、绑死 OpenAI；AG-UI 开放、中立</td>
+</tr>
+<tr>
+<td><strong> LangGraph Studio UI</strong></td>
+<td>LangGraph 专属前端</td>
+<td>框架绑定，AG-UI 跨 15+ 框架</td>
+</tr>
+<tr>
+<td><strong> Vercel AI SDK</strong></td>
+<td>Next.js 流式 AI UI</td>
+<td> 主要是 UI 层封装，AG-UI 还管协议层和 HITL</td>
+</tr>
+</tbody></table>
+<p>最关键的差异：<strong>AG-UI 是协议层，不是产品</strong>。CopilotKit 是协议的参考实现 + React SDK，但协议本身（事件类型、状态 patch 格式）任何人都可以独立实现，跨厂商、跨语言。</p>
+<h2 id="适用场景与限制"><a href="#适用场景与限制" class="headerlink" title="适用场景与限制"></a>适用场景与限制</h2><p><strong>适合用 AG-UI 的场景：</strong></p>
+<ul>
+<li>在自己的 SaaS 产品里嵌入 AI 助手，需要 Agent 与业务表单 / 数据双向同步</li>
+<li>同一个 Agent 后端要同时跑在 Web、Slack、Teams 三端</li>
+<li>多 Agent 编排后，需要一个统一的前端 UI 层（HITL 审批、状态确认、工具结果渲染）</li>
+<li>想用 LangGraph / CrewAI / PydanticAI 等开源 Agent 框架，又想给前端一套不锁死框架的接入方式</li>
+</ul>
+<p><strong>当前限制：</strong></p>
+<ul>
+<li>框架覆盖虽广，但 <strong>Angular / Vue / Slack / Teams 还在 Beta</strong>，生产用前要评估稳定性</li>
+<li> AG-UI 强调” 宽松匹配”，意味着不同实现的兼容程度需要自测，规范不如 MCP/A2A 那么严格</li>
+<li>协议本身不解决 <strong>Auth / 计费 / 审计</strong>，这些还得自己加</li>
+<li> React Native 客户端还在 Help Wanted 阶段，跨端团队得自己造轮子或者等社区</li>
+</ul>
+<p><strong>语言 SDK 现状（截至 2026-07）：</strong></p>
+<ul>
+<li>1st Party：Python、TypeScript、Kotlin、Go、Dart、Java、Rust、Ruby、C++</li>
+<li>Community：.NET/ Nim / Flowise / Langflow 等在路上</li>
+</ul>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>Agent 这两年的发展有一条很清楚的脉络：<strong>先把 Agent 本身做好（推理、工具调用、多步规划），再做协议（MCP、A2A），最后做” 长出手脚”</strong>。AG-UI 是这最后一公里的早期答案之一。</p>
+<p>它现在不像 MCP 那样有 Anthropic 这种大厂背书，但 14K+ 的 Star、15+ 框架原生集成、Google ADK / AWS Strands / Microsoft Agent Framework 这些” 标准制定者” 的 1st Party 支持，说明它已经在事实上成为 Agent↔UI 这层的” 事实协议”。</p>
+<p>如果你正在做 AI 产品，建议花一两个小时跑一下 <a target="_blank" rel="noopener" href="https://dojo.ag-ui.com/">AG-UI Dojo</a>—— 你大概率会和我一样，被 <code>STATE_DELTA</code> + <code>useCoAgent</code> 这种” 声明式共享状态” 的体验爽到。</p>
+<p>参考链接：</p>
+<ul>
+<li>协议仓库：<a target="_blank" rel="noopener" href="https://github.com/ag-ui-protocol/ag-ui">github.com/ag-ui-protocol/ag-ui</a></li>
+<li>SDK + Dojo：<a target="_blank" rel="noopener" href="https://github.com/CopilotKit/CopilotKit">github.com/CopilotKit/CopilotKit</a></li>
+<li> 文档：<a target="_blank" rel="noopener" href="https://docs.ag-ui.com/">docs.ag-ui.com</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/11/ag-ui-protocol-agent-user-interaction-frontend-bridge/" title="AG-UI 协议：把 AI Agent 接进前端应用的 &quot;最后一公里&quot;">https://www.daishengli.top/2026/07/11/ag-ui-protocol-agent-user-interaction-frontend-bridge/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/AG-UI/" rel="tag"># AG-UI</a>
+              <a href="/tags/CopilotKit/" rel="tag"># CopilotKit</a>
+              <a href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag"># 协议</a>
+              <a href="/tags/%E7%94%9F%E6%88%90%E5%BC%8F-UI/" rel="tag"># 生成式 UI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/10/openclaw-local-personal-ai-assistant/" rel="prev" title="把 AI 助理请进你自己的聊天软件：OpenClaw 让 WhatsApp&#x2F;Telegram&#x2F; 飞书里跑起一个 7×24 在线 Agent">
+                  <i class="fa fa-angle-left"></i> 把 AI 助理请进你自己的聊天软件：OpenClaw 让 WhatsApp/Telegram/ 飞书里跑起一个 7×24 在线 Agent
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/13/alibaba-page-agent-embedded-js-gui-agent/" rel="next" title="alibaba&#x2F;page-agent：把 AI 操盘手塞进网页里，一段 JS 就能让用户「说人话」操作 UI">
+                  alibaba/page-agent：把 AI 操盘手塞进网页里，一段 JS 就能让用户「说人话」操作 UI <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

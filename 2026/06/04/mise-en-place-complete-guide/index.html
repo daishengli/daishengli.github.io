@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="mise-en-place 是 Rust 写的&quot;全能 dev 环境管家&quot;——装 Node、Python、Go、Rust 都不在话下，还能管环境变量和任务运行。一份 mise.toml 顶 nvm + pyenv + nodenv + asdf + direnv + make 五个工具的活。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="抛弃 N 多个版本管理器后，我用 mise 一个搞定 Node&#x2F;Python&#x2F;Go&#x2F;Rust">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/04/mise-en-place-complete-guide/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="mise-en-place 是 Rust 写的&quot;全能 dev 环境管家&quot;——装 Node、Python、Go、Rust 都不在话下，还能管环境变量和任务运行。一份 mise.toml 顶 nvm + pyenv + nodenv + asdf + direnv + make 五个工具的活。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.daishengli.top/images/mise/from-6-tools-to-1-file.svg">
+<meta property="article:published_time" content="2026-06-04T07:59:18.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.406Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="效率">
+<meta property="article:tag" content="mise">
+<meta property="article:tag" content="版本管理">
+<meta property="article:tag" content="开发者工具">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.daishengli.top/images/mise/from-6-tools-to-1-file.svg">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/04/mise-en-place-complete-guide/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/04/mise-en-place-complete-guide/","path":"2026/06/04/mise-en-place-complete-guide/","title":"抛弃 N 多个版本管理器后，我用 mise 一个搞定 Node/Python/Go/Rust"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>抛弃 N 多个版本管理器后，我用 mise 一个搞定 Node/Python/Go/Rust | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%9B%E5%BC%83-N-%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E5%99%A8%E5%90%8E%EF%BC%8C%E6%88%91%E7%94%A8-mise-%E4%B8%80%E4%B8%AA%E6%90%9E%E5%AE%9A-Node-Python-Go-Rust"><span class="nav-number">1.</span> <span class="nav-text">抛弃 N 多个版本管理器后，我用 mise 一个搞定 Node&#x2F;Python&#x2F;Go&#x2F;Rust</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF-mise"><span class="nav-number">1.1.</span> <span class="nav-text">一、什么是 mise</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%AE%83%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 它解决了什么问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-mise-%E7%9A%84%E6%A0%B8%E5%BF%83%E5%AE%9A%E4%BD%8D"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 mise 的核心定位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E8%B0%81%E5%9C%A8%E7%94%A8"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 谁在用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%89%E8%A3%85-mise"><span class="nav-number">1.2.</span> <span class="nav-text">二、安装 mise</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%AE%89%E8%A3%85%E5%90%8E%E9%AA%8C%E8%AF%81"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 安装后验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%8E%A5%E5%85%A5-shell%EF%BC%88%E5%BF%85%E9%A1%BB%E5%81%9A%E4%B8%80%E6%AC%A1%EF%BC%89"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 接入 shell（必须做一次）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E8%A3%85%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%B7%A5%E5%85%B7%EF%BC%9A5-%E5%88%86%E9%92%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">1.3.</span> <span class="nav-text">三、装第一个工具：5 分钟上手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E8%A3%85-Node"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 装 Node</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E8%A3%85%E5%A4%9A%E4%B8%AA%E5%B7%A5%E5%85%B7"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 装多个工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E8%A3%85%E4%B8%AA%E7%89%B9%E5%AE%9A%E7%89%88%E6%9C%AC-latest-system"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 装个特定版本 &#x2F;latest&#x2F;system</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%A1%B9%E7%9B%AE%E7%BA%A7%E9%85%8D%E7%BD%AE%EF%BC%9A%E6%A0%B8%E5%BF%83%E7%8E%A9%E6%B3%95"><span class="nav-number">1.4.</span> <span class="nav-text">四、项目级配置：核心玩法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E8%BF%9B%E9%A1%B9%E7%9B%AE%E8%87%AA%E5%8A%A8%E5%88%87%E7%89%88%E6%9C%AC"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 进项目自动切版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-mise-install-%E4%B8%80%E6%AC%A1%E6%80%A7%E5%AE%89%E8%A3%85"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 mise install 一次性安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BC%98%E5%85%88%E7%BA%A7%EF%BC%88%E8%A6%86%E7%9B%96%E5%85%B3%E7%B3%BB%EF%BC%89"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 配置文件优先级（覆盖关系）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%AE%A1%E7%90%86%EF%BC%9A%E6%9B%BF%E4%BB%A3-direnv"><span class="nav-number">1.5.</span> <span class="nav-text">五、环境变量管理：替代 direnv</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 基本用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E5%8A%A0%E8%BD%BD-env-%E6%96%87%E4%BB%B6"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 加载 .env 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E5%BF%85%E5%A4%87%E5%8F%98%E9%87%8F%E6%A3%80%E6%9F%A5"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 必备变量检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E8%84%B1%E6%95%8F"><span class="nav-number">1.5.4.</span> <span class="nav-text">5.4 敏感信息脱敏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-%E6%A8%A1%E6%9D%BF%E5%8F%98%E9%87%8F%EF%BC%88%E6%87%92%E6%B1%82%E5%80%BC%EF%BC%89"><span class="nav-number">1.5.5.</span> <span class="nav-text">5.5 模板变量（懒求值）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E4%BB%BB%E5%8A%A1%E8%BF%90%E8%A1%8C%E5%99%A8%EF%BC%9A%E6%9B%BF%E4%BB%A3-make"><span class="nav-number">1.6.</span> <span class="nav-text">六、任务运行器：替代 make</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E5%9C%A8-mise-toml-%E9%87%8C%E5%86%99%E4%BB%BB%E5%8A%A1"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 在 mise.toml 里写任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E4%BB%BB%E5%8A%A1%E4%BE%9D%E8%B5%96"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 任务依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E4%BB%BB%E5%8A%A1%E9%87%8C%E8%83%BD%E7%94%A8%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3 任务里能用的环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E6%96%87%E4%BB%B6%E4%BB%BB%E5%8A%A1%EF%BC%88%E6%9B%B4%E5%A4%8D%E6%9D%82%E7%9A%84%E8%84%9A%E6%9C%AC%EF%BC%89"><span class="nav-number">1.6.4.</span> <span class="nav-text">6.4 文件任务（更复杂的脚本）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E4%BB%BB%E5%8A%A1%E5%8F%82%E6%95%B0"><span class="nav-number">1.6.5.</span> <span class="nav-text">6.5 任务参数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81900-%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">1.7.</span> <span class="nav-text">七、900+ 工具的安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E5%B7%A5%E5%85%B7%E6%9D%A5%E6%BA%90%EF%BC%88backends%EF%BC%89"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1 工具来源（backends）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E5%AE%9E%E6%93%8D%EF%BC%9A%E8%A3%85%E5%87%A0%E4%B8%AA%E5%B8%B8%E7%94%A8-CLI"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2 实操：装几个常用 CLI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E5%B9%B3%E5%8F%B0-%E7%B3%BB%E7%BB%9F%E9%99%90%E5%88%B6"><span class="nav-number">1.7.3.</span> <span class="nav-text">7.3 平台 &#x2F; 系统限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-%E8%A3%85%E5%A5%BD%E4%B9%8B%E5%90%8E%E8%B7%91%E5%91%BD%E4%BB%A4"><span class="nav-number">1.7.4.</span> <span class="nav-text">7.4 装好之后跑命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81mise-toml-%E5%AE%8C%E6%95%B4%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.8.</span> <span class="nav-text">八、mise.toml 完整示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%AF%B9%E6%AF%94%EF%BC%9Amise-vs-asdf-vs-%E5%90%84%E8%AF%AD%E8%A8%80%E5%8E%9F%E7%94%9F%E5%B7%A5%E5%85%B7"><span class="nav-number">1.9.</span> <span class="nav-text">九、对比：mise vs asdf vs 各语言原生工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E5%8A%9F%E8%83%BD%E5%AF%B9%E6%AF%94"><span class="nav-number">1.9.1.</span> <span class="nav-text">9.1 功能对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94%EF%BC%882025-%E5%B9%B4%E5%AE%9E%E6%B5%8B%EF%BC%89"><span class="nav-number">1.9.2.</span> <span class="nav-text">9.2 性能对比（2025 年实测）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-%E5%AE%89%E5%85%A8%E6%80%A7%E5%AF%B9%E6%AF%94"><span class="nav-number">1.9.3.</span> <span class="nav-text">9.3 安全性对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-4-%E8%BF%81%E7%A7%BB%E6%88%90%E6%9C%AC"><span class="nav-number">1.9.4.</span> <span class="nav-text">9.4 迁移成本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E5%AE%9E%E9%99%85%E5%B7%A5%E4%BD%9C%E6%B5%81%EF%BC%9Amise-%E7%9A%84%E4%B8%80%E5%A4%A9"><span class="nav-number">1.10.</span> <span class="nav-text">十、实际工作流：mise 的一天</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-%E6%97%A9%E4%B8%8A%E6%96%B0%E5%BC%80%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.10.1.</span> <span class="nav-text">10.1 早上新开项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-%E5%88%87%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.10.2.</span> <span class="nav-text">10.2 切到另一个项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3-%E9%83%A8%E7%BD%B2%E5%88%B0-CI"><span class="nav-number">1.10.3.</span> <span class="nav-text">10.3 部署到 CI</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E9%81%BF%E5%9D%91%E6%8C%87%E5%8D%97"><span class="nav-number">1.11.</span> <span class="nav-text">十一、避坑指南</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#11-1-%E8%A3%85%E4%BA%86-mise-%E4%BD%86%E6%B2%A1%E7%94%9F%E6%95%88"><span class="nav-number">1.11.1.</span> <span class="nav-text">11.1 装了 mise 但没生效</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-2-%E8%A3%85%E5%B7%A5%E5%85%B7%E6%85%A2"><span class="nav-number">1.11.2.</span> <span class="nav-text">11.2 装工具慢</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-3-%E4%BF%A1%E4%BB%BB%E6%8F%90%E7%A4%BA%E5%A4%AA%E7%83%A6"><span class="nav-number">1.11.3.</span> <span class="nav-text">11.3 信任提示太烦</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-4-zsh-%E4%B8%8B%E8%B7%9F%E5%85%B6%E5%AE%83-PATH-%E6%94%B9%E5%8A%A8%E5%86%B2%E7%AA%81"><span class="nav-number">1.11.4.</span> <span class="nav-text">11.4 zsh 下跟其它 PATH 改动冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-5-Windows-%E4%B8%8A%E5%91%A2%EF%BC%9F"><span class="nav-number">1.11.5.</span> <span class="nav-text">11.5 Windows 上呢？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E7%BB%93%E8%AF%AD"><span class="nav-number">1.12.</span> <span class="nav-text">十二、结语</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/04/mise-en-place-complete-guide/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="抛弃 N 多个版本管理器后，我用 mise 一个搞定 Node&#x2F;Python&#x2F;Go&#x2F;Rust | 小戴的网络日志">
+      <meta itemprop="description" content="mise-en-place 是 Rust 写的&quot;全能 dev 环境管家&quot;——装 Node、Python、Go、Rust 都不在话下，还能管环境变量和任务运行。一份 mise.toml 顶 nvm + pyenv + nodenv + asdf + direnv + make 五个工具的活。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          抛弃 N 多个版本管理器后，我用 mise 一个搞定 Node/Python/Go/Rust
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-04 15:59:18" itemprop="dateCreated datePublished" datetime="2026-06-04T15:59:18+08:00">2026-06-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7/%E5%BC%80%E5%8F%91%E6%95%88%E7%8E%87/" itemprop="url" rel="index"><span itemprop="name">开发效率</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7/%E5%BC%80%E5%8F%91%E6%95%88%E7%8E%87/Rust/" itemprop="url" rel="index"><span itemprop="name">Rust</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">mise-en-place 是 Rust 写的"全能 dev 环境管家"——装 Node、Python、Go、Rust 都不在话下，还能管环境变量和任务运行。一份 mise.toml 顶 nvm + pyenv + nodenv + asdf + direnv + make 五个工具的活。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="抛弃-N-多个版本管理器后，我用-mise-一个搞定-Node-Python-Go-Rust"><a href="#抛弃-N-多个版本管理器后，我用-mise-一个搞定-Node-Python-Go-Rust" class="headerlink" title="抛弃 N 多个版本管理器后，我用 mise 一个搞定 Node/Python/Go/Rust"></a>抛弃 N 多个版本管理器后，我用 mise 一个搞定 Node/Python/Go/Rust</h1><p>你有没有过这种经历：</p>
+<ul>
+<li>写 Node 项目要 <code>nvm use 20</code>，写 Python 项目要 <code>pyenv shell 3.11</code>，写 Go 项目要手动改 <code>PATH</code></li>
+<li>每个项目根目录塞着 <code>.nvmrc</code>、<code>.python-version</code>、<code>.tool-versions</code>、<code>.env</code>、一坨 Makefile</li>
+<li> 同事 clone 你的项目，第一件事就是” 我先装 nvm，再装 pyenv，再装 asdf……”</li>
+<li> 每次换电脑 / 起新机器，环境配置要重做一遍</li>
+</ul>
+<p><img src="https://www.daishengli.top/images/mise/from-6-tools-to-1-file.svg" alt="6 工具 vs 1 文件"></p>
+<p><strong>mise</strong>（法语” 备料” 的意思）就是来解决这个问题的。它是 <a target="_blank" rel="noopener" href="https://github.com/jdx/mise">jdx/mise</a> 维护的 <strong>Rust 写</strong>的多合一开发环境管理工具，一个 <code>mise.toml</code> 搞定所有事：</p>
+<ul>
+<li>✅ <strong>装任意版本的 Node、Python、Ruby、Go、Rust、Java、Terraform、jq、ripgrep……</strong>（900+ 工具）</li>
+<li>✅ <strong>按目录自动切换版本</strong>（cd 到项目里自动用对的版本）</li>
+<li>✅ <strong>管理环境变量</strong>（取代 direnv）</li>
+<li>✅ <strong>任务运行器</strong>（取代 make /npm scripts 链）</li>
+<li>✅ <strong>兼容 asdf</strong>（<code>.tool-versions</code> 直接能读）</li>
+</ul>
+<p>2026 年的今天，我真心觉得：<strong>如果你只能装一个版本管理工具，装 mise</strong>。</p>
+<hr>
+<h2 id="一、什么是-mise"><a href="#一、什么是-mise" class="headerlink" title="一、什么是 mise"></a>一、什么是 mise</h2><h3 id="1-1-它解决了什么问题"><a href="#1-1-它解决了什么问题" class="headerlink" title="1.1 它解决了什么问题"></a>1.1 它解决了什么问题</h3><p>传统多语言开发者的桌面环境长这样：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">~/</span><br><span class="line">├── .nvm/             # Node 版本</span><br><span class="line">├── .pyenv/           # Python 版本</span><br><span class="line">├── .rbenv/           # Ruby 版本</span><br><span class="line">├── .cargo/           # Rust 工具链</span><br><span class="line">├── .sdkman/          # Java + Maven</span><br><span class="line">├── .asdf/            # 各种杂项（Terraform / kubectl / ...）</span><br><span class="line">├── .envrc            # direnv 配的 PATH</span><br><span class="line">├── 各种 .zshrc 加载段</span><br><span class="line">└── 每个项目 .tool-versions / .nvmrc / .python-version ...</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>所有这些工具的核心任务都是同一件事</strong>：” 在我进这个目录的时候，把对的工具版本和对的环境变量塞给我”。</p>
+<p>mise 就是把这件事<strong>用一个工具做完</strong>。</p>
+<h3 id="1-2-mise-的核心定位"><a href="#1-2-mise-的核心定位" class="headerlink" title="1.2 mise 的核心定位"></a>1.2 mise 的核心定位</h3><p>用官网的话说，它是一个 <strong>polyglot tool version manager</strong>—— 一个支持多语言的版本管理器，外加环境变量和任务管理。三个能力合一：</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>替代谁</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> Dev Tools</strong></td>
+<td>nvm + pyenv + rbenv + nodenv + sdkman + asdf</td>
+</tr>
+<tr>
+<td><strong>Environments</strong></td>
+<td>direnv + dotenv + envchain</td>
+</tr>
+<tr>
+<td><strong>Tasks</strong></td>
+<td>make + npm scripts + just + task</td>
+</tr>
+</tbody></table>
+<h3 id="1-3-谁在用"><a href="#1-3-谁在用" class="headerlink" title="1.3 谁在用"></a>1.3 谁在用</h3><ul>
+<li><strong>GitHub 6,800+ commits / 568 个 release</strong>，主仓库 <a target="_blank" rel="noopener" href="https://github.com/jdx/mise">jdx/mise</a></li>
+<li> 活跃度极高（2026 年每月都有 release）</li>
+<li>用 <strong>Rust 写</strong>（性能、单一二进制），TypeScript/Node 写周边</li>
+<li> CI 用 Namespace 赞助</li>
+<li>项目作者 <strong>@jdx</strong>（同一个人维护的 rtx /aqua/aube 等工具）</li>
+</ul>
+<hr>
+<h2 id="二、安装-mise"><a href="#二、安装-mise" class="headerlink" title="二、安装 mise"></a>二、安装 mise</h2><blockquote>
+<p><strong>官方一句话安装</strong>（macOS / Linux 通用）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://mise.run | sh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>默认装到 <code>~/.local/bin/mise</code>，<strong>不需要手动加 PATH</strong>——mise 启动时会自己处理。</p>
+</blockquote>
+<h3 id="2-1-安装后验证"><a href="#2-1-安装后验证" class="headerlink" title="2.1 安装后验证"></a>2.1 安装后验证</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mise --version</span><br><span class="line">mise 2025.x.x</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="2-2-接入-shell（必须做一次）"><a href="#2-2-接入-shell（必须做一次）" class="headerlink" title="2.2 接入 shell（必须做一次）"></a>2.2 接入 shell（必须做一次）</h3><p>为了能 <code>cd</code> 项目时<strong>自动激活</strong>对应版本，shell 需要加载 mise：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Bash</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">'eval "$(~/.local/bin/mise activate bash)"'</span> &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># Zsh</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">'eval "$(~/.local/bin/mise activate zsh)"'</span> &gt;&gt; ~/.zshrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># Fish</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">'~/.local/bin/mise activate fish | source'</span> &gt;&gt; ~/.config/fish/config.fish</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>新开一个 shell</strong>，跑：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mise doctor</span><br><span class="line">✓ mise is ready</span><br></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h2 id="三、装第一个工具：5-分钟上手"><a href="#三、装第一个工具：5-分钟上手" class="headerlink" title="三、装第一个工具：5 分钟上手"></a>三、装第一个工具：5 分钟上手</h2><h3 id="3-1-装-Node"><a href="#3-1-装-Node" class="headerlink" title="3.1 装 Node"></a>3.1 装 Node</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 装一个全局版本（写进 ~/.config/mise/config.toml）</span></span><br><span class="line">$ mise use --global node@24</span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证</span></span><br><span class="line">$ node --version</span><br><span class="line">v24.x.x</span><br><span class="line">$ <span class="built_in">which</span> node</span><br><span class="line">/home/you/.local/share/mise/installs/node/24/bin/node</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="3-2-装多个工具"><a href="#3-2-装多个工具" class="headerlink" title="3.2 装多个工具"></a>3.2 装多个工具</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mise use --global node@24 python@3.13 go@1.23 terraform@1</span><br><span class="line">✓ wrote ~/.config/mise/config.toml</span><br></pre></td></tr></tbody></table></figure>
+
+<p>打开 <code>~/.config/mise/config.toml</code>，你会看到：</p>
+<figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[tools]</span></span><br><span class="line"><span class="attr">node</span> = <span class="string">"24"</span></span><br><span class="line"><span class="attr">python</span> = <span class="string">"3.13"</span></span><br><span class="line"><span class="attr">go</span> = <span class="string">"1.23"</span></span><br><span class="line"><span class="attr">terraform</span> = <span class="string">"1"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="3-3-装个特定版本-latest-system"><a href="#3-3-装个特定版本-latest-system" class="headerlink" title="3.3 装个特定版本 / latest / system"></a>3.3 装个特定版本 /latest/system</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mise use --global node@22            <span class="comment"># 具体版本</span></span><br><span class="line">mise use --global node@latest       <span class="comment"># 最新稳定版</span></span><br><span class="line">mise use --global node@lts          <span class="comment"># 最新 LTS</span></span><br><span class="line">mise use --global node@system       <span class="comment"># 用系统已装的</span></span><br></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h2 id="四、项目级配置：核心玩法"><a href="#四、项目级配置：核心玩法" class="headerlink" title="四、项目级配置：核心玩法"></a>四、项目级配置：核心玩法</h2><h3 id="4-1-进项目自动切版本"><a href="#4-1-进项目自动切版本" class="headerlink" title="4.1 进项目自动切版本"></a>4.1 进项目自动切版本</h3><p>在项目根目录建一个 <code>mise.toml</code>：</p>
+<figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[tools]</span></span><br><span class="line"><span class="attr">node</span> = <span class="string">"22.11.0"</span>     <span class="comment"># 锁死小版本</span></span><br><span class="line"><span class="attr">python</span> = <span class="string">"3.12"</span></span><br><span class="line"><span class="attr">go</span> = <span class="string">"1.22"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>然后 <code>cd</code> 进这个目录</strong>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> my-project</span><br><span class="line">$ node --version</span><br><span class="line">v22.11.0    ← 不是全局的 24，是项目要求的 22.11.0</span><br><span class="line">$ python --version</span><br><span class="line">Python 3.12.x</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>同事 clone 这个项目，只要装好 mise，进目录就自动安装并切换到正确版本</strong>。零配置。</p>
+<h3 id="4-2-mise-install-一次性安装"><a href="#4-2-mise-install-一次性安装" class="headerlink" title="4.2 mise install 一次性安装"></a>4.2 <code>mise install</code> 一次性安装</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ mise install</span><br><span class="line">✓ node 22.11.0 installed</span><br><span class="line">✓ python 3.12 installed</span><br><span class="line">✓ go 1.22 installed</span><br></pre></td></tr></tbody></table></figure>
+
+<p>或者<strong>只装特定工具</strong>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mise install node@22</span><br><span class="line">mise install python@3.12</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-3-配置文件优先级（覆盖关系）"><a href="#4-3-配置文件优先级（覆盖关系）" class="headerlink" title="4.3 配置文件优先级（覆盖关系）"></a>4.3 配置文件优先级（覆盖关系）</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~/.config/mise/config.toml         ← 全局默认</span><br><span class="line">~/work/mise.toml                   ← 工作目录通用</span><br><span class="line">~/work/myproj/mise.toml            ← 项目级（最高优先级）</span><br><span class="line">~/work/myproj/.tool-versions       ← 兼容 asdf 旧格式（也能读）</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>更深的目录会覆盖更浅的</strong>。这意味着你可以在公司项目用 Java 8，在个人项目用 Java 21，<strong>完全互不干扰</strong>。</p>
+<hr>
+<h2 id="五、环境变量管理：替代-direnv"><a href="#五、环境变量管理：替代-direnv" class="headerlink" title="五、环境变量管理：替代 direnv"></a>五、环境变量管理：替代 direnv</h2><h3 id="5-1-基本用法"><a href="#5-1-基本用法" class="headerlink" title="5.1 基本用法"></a>5.1 基本用法</h3><p><code>mise.toml</code> 加 <code>[env]</code> 段：</p>
+<figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[env]</span></span><br><span class="line"><span class="attr">NODE_ENV</span> = <span class="string">"production"</span></span><br><span class="line"><span class="attr">DATABASE_URL</span> = <span class="string">"postgres://localhost/orders"</span></span><br><span class="line"><span class="attr">API_PORT</span> = <span class="string">"8080"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>激活后：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$NODE_ENV</span></span><br><span class="line">production</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$DATABASE_URL</span></span><br><span class="line">postgres://localhost/orders</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="5-2-加载-env-文件"><a href="#5-2-加载-env-文件" class="headerlink" title="5.2 加载 .env 文件"></a>5.2 加载 .env 文件</h3><figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[env]</span></span><br><span class="line"><span class="attr">_.file</span> = <span class="string">".env"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>也可以按需加载多个</strong>：</p>
+<figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[env]</span></span><br><span class="line"><span class="attr">_.file</span> = [<span class="string">".env"</span>, <span class="string">".env.local"</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="5-3-必备变量检查"><a href="#5-3-必备变量检查" class="headerlink" title="5.3 必备变量检查"></a>5.3 必备变量检查</h3><figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[env]</span></span><br><span class="line"><span class="attr">DATABASE_URL</span> = { required = <span class="string">"Set DATABASE_URL to your PostgreSQL connection string"</span> }</span><br><span class="line"><span class="attr">STRIPE_API_KEY</span> = { required = <span class="string">"Get your key from https://dashboard.stripe.com/apikeys"</span> }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果 <code>DATABASE_URL</code> 没设，<strong>进入目录会直接报错</strong> —— 避免上游服务连不上才发现自己忘了配环境变量。</p>
+<h3 id="5-4-敏感信息脱敏"><a href="#5-4-敏感信息脱敏" class="headerlink" title="5.4 敏感信息脱敏"></a>5.4 敏感信息脱敏</h3><figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[env]</span></span><br><span class="line"><span class="attr">SECRET_KEY</span> = { value = <span class="string">"my_secret"</span>, redact = <span class="literal">true</span> }</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者按模式批量</span></span><br><span class="line"><span class="attr">redactions</span> = [<span class="string">"SECRET_*"</span>, <span class="string">"*_TOKEN"</span>, <span class="string">"PASSWORD"</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑 <code>mise run</code> 时这些值会被自动 mask——CI 日志里不会泄露 secret。</p>
+<h3 id="5-5-模板变量（懒求值）"><a href="#5-5-模板变量（懒求值）" class="headerlink" title="5.5 模板变量（懒求值）"></a>5.5 模板变量（懒求值）</h3><figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[env]</span></span><br><span class="line"><span class="attr">NODE_VERSION</span> = { value = <span class="string">"{{ tools.node.version }}"</span>, tools = <span class="literal">true</span> }</span><br><span class="line"><span class="attr">_.path</span> = { path = [<span class="string">"{{ env.GEM_HOME }}/bin"</span>], tools = <span class="literal">true</span> }</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>等等 —— 为什么 <code>tools = true</code>？</strong></p>
+<p>因为默认情况下 env vars 在 tools 之前求值。<code>tools = true</code> 让 env 在 tools 之后才能拿到 <code>tools.node.version</code>。需要引用” 工具刚装好的状态” 时用。</p>
+<hr>
+<h2 id="六、任务运行器：替代-make"><a href="#六、任务运行器：替代-make" class="headerlink" title="六、任务运行器：替代 make"></a>六、任务运行器：替代 make</h2><h3 id="6-1-在-mise-toml-里写任务"><a href="#6-1-在-mise-toml-里写任务" class="headerlink" title="6.1 在 mise.toml 里写任务"></a>6.1 在 <code>mise.toml</code> 里写任务</h3><figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[tasks]</span></span><br><span class="line"><span class="attr">build</span> = <span class="string">"cargo build"</span></span><br><span class="line"><span class="attr">test</span> = <span class="string">"cargo test"</span></span><br><span class="line"><span class="attr">lint</span> = <span class="string">"cargo clippy -- -D warnings"</span></span><br><span class="line"><span class="attr">format</span> = <span class="string">"cargo fmt"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ mise run <span class="built_in">test</span></span><br><span class="line">cargo <span class="built_in">test</span></span><br><span class="line">   Compiling myapp v0.1.0</span><br><span class="line">    Finished <span class="built_in">test</span> [unoptimized + debuginfo] target(s)</span><br><span class="line">     Running unittests</span><br><span class="line"><span class="built_in">test</span> result: ok. 42 passed; 0 failed</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="6-2-任务依赖"><a href="#6-2-任务依赖" class="headerlink" title="6.2 任务依赖"></a>6.2 任务依赖</h3><figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[tasks]</span></span><br><span class="line"><span class="attr">lint</span> = <span class="string">"eslint ."</span></span><br><span class="line"><span class="attr">typecheck</span> = <span class="string">"tsc --noEmit"</span></span><br><span class="line"><span class="attr">test</span> = <span class="string">"vitest run"</span></span><br><span class="line"><span class="attr">e2e</span> = <span class="string">"playwright test"</span></span><br><span class="line"></span><br><span class="line"><span class="section">[tasks.ci]</span></span><br><span class="line"><span class="attr">run</span> = [</span><br><span class="line">    <span class="string">"lint"</span>,</span><br><span class="line">    <span class="string">"typecheck"</span>,</span><br><span class="line">    <span class="string">"test"</span>,</span><br><span class="line">    <span class="string">"e2e"</span>,</span><br><span class="line">]</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>mise run ci</code> 会<strong>按顺序</strong>跑完所有 4 个任务，<strong>任一失败即停</strong>。</p>
+<h3 id="6-3-任务里能用的环境变量"><a href="#6-3-任务里能用的环境变量" class="headerlink" title="6.3 任务里能用的环境变量"></a>6.3 任务里能用的环境变量</h3><table>
+<thead>
+<tr>
+<th>变量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>MISE_ORIGINAL_CWD</code></td>
+<td>启动 mise 时的目录</td>
+</tr>
+<tr>
+<td><code>MISE_CONFIG_ROOT</code></td>
+<td>最近的 <code>mise.toml</code> 所在目录</td>
+</tr>
+<tr>
+<td><code>MISE_PROJECT_ROOT</code></td>
+<td>项目根</td>
+</tr>
+<tr>
+<td><code>MISE_TASK_NAME</code></td>
+<td>当前任务名</td>
+</tr>
+<tr>
+<td><code>MISE_TASK_DIR</code></td>
+<td>任务定义文件所在目录</td>
+</tr>
+<tr>
+<td><code>MISE_TASK_FILE</code></td>
+<td>任务定义文件路径</td>
+</tr>
+</tbody></table>
+<h3 id="6-4-文件任务（更复杂的脚本）"><a href="#6-4-文件任务（更复杂的脚本）" class="headerlink" title="6.4 文件任务（更复杂的脚本）"></a>6.4 文件任务（更复杂的脚本）</h3><p>如果任务比较复杂，可以放成 shell 脚本，文件名就是任务名：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">my-project/</span><br><span class="line">├── mise.toml</span><br><span class="line">└── mise-tasks/</span><br><span class="line">    └── deploy</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>mise-tasks/deploy</code>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"><span class="comment">#MISE description="Build and deploy the CLI"</span></span><br><span class="line"><span class="built_in">set</span> -euo pipefail</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Building..."</span></span><br><span class="line">cargo build --release</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Deploying to S3..."</span></span><br><span class="line">aws s3 <span class="built_in">sync</span> ./target/release/ s3://my-bucket/</span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑 <code>mise run deploy</code> 跟之前一样。</p>
+<h3 id="6-5-任务参数"><a href="#6-5-任务参数" class="headerlink" title="6.5 任务参数"></a>6.5 任务参数</h3><figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[tasks.greet]</span></span><br><span class="line"><span class="attr">run</span> = <span class="string">"echo hello {{arg(name='world')}}"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ mise run greet</span><br><span class="line">hello world</span><br><span class="line">$ mise run greet --name Alice</span><br><span class="line">hello Alice</span><br></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h2 id="七、900-工具的安装"><a href="#七、900-工具的安装" class="headerlink" title="七、900+ 工具的安装"></a>七、900+ 工具的安装</h2><p>mise 真正牛的地方：<strong>不是只能装语言运行时</strong>。它能装 CLI 工具。</p>
+<h3 id="7-1-工具来源（backends）"><a href="#7-1-工具来源（backends）" class="headerlink" title="7.1 工具来源（backends）"></a>7.1 工具来源（backends）</h3><table>
+<thead>
+<tr>
+<th>Backend</th>
+<th> 装什么</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>core</code></td>
+<td>内置工具（最快的路径）</td>
+<td><code>node</code> <code>python</code> <code>go</code> <code>ruby</code> <code>rust</code> <code>terraform</code> <code>kubectl</code> <code>jq</code> <code>ripgrep</code></td>
+</tr>
+<tr>
+<td><code>npm</code></td>
+<td>npm 上的包</td>
+<td><code>npm:@anthropic-ai/claude-code</code> <code>npm:typescript</code></td>
+</tr>
+<tr>
+<td><code>pipx</code></td>
+<td>PyPI 上的 Python CLI</td>
+<td><code>pipx:black</code> <code>pipx:ruff</code></td>
+</tr>
+<tr>
+<td><code>github</code></td>
+<td>GitHub release 直接下</td>
+<td><code>github:BurntSushi/ripgrep</code></td>
+</tr>
+<tr>
+<td><code>aqua</code></td>
+<td>aqua-registry 里的工具</td>
+<td><code>aqua:cli/cli</code> (即 <code>gh</code>)</td>
+</tr>
+<tr>
+<td><code>cargo</code></td>
+<td>crates.io</td>
+<td><code>cargo:eza</code></td>
+</tr>
+<tr>
+<td><code>http</code></td>
+<td>任意 URL + checksum</td>
+<td> 自定义二进制</td>
+</tr>
+</tbody></table>
+<h3 id="7-2-实操：装几个常用-CLI"><a href="#7-2-实操：装几个常用-CLI" class="headerlink" title="7.2 实操：装几个常用 CLI"></a>7.2 实操：装几个常用 CLI</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ripgrep（替代 grep）</span></span><br><span class="line">mise use --global github:BurntSushi/ripgrep</span><br><span class="line"></span><br><span class="line"><span class="comment"># 最新的 jq</span></span><br><span class="line">mise use --global jq@latest</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python 的 ruff（linter）</span></span><br><span class="line">mise use --global pipx:ruff</span><br><span class="line"></span><br><span class="line"><span class="comment"># 装个全局的 TypeScript</span></span><br><span class="line">mise use --global npm:typescript</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>省得用 brew、pipx、npm、cargo 四个地方分别装了</strong> —— 一个 <code>mise use --global</code> 全搞定。</p>
+<h3 id="7-3-平台-系统限制"><a href="#7-3-平台-系统限制" class="headerlink" title="7.3 平台 / 系统限制"></a>7.3 平台 / 系统限制</h3><figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[tools]</span></span><br><span class="line"><span class="attr">ripgrep</span> = { version = <span class="string">"latest"</span>, os = [<span class="string">"linux"</span>, <span class="string">"macos"</span>] }</span><br><span class="line"><span class="attr">"cargo:eza"</span> = { version = <span class="string">"latest"</span>, os = [<span class="string">"linux"</span>, <span class="string">"macos"</span>], locked = <span class="literal">false</span> }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>只在 macOS / Linux 装，Windows 不装。</p>
+<h3 id="7-4-装好之后跑命令"><a href="#7-4-装好之后跑命令" class="headerlink" title="7.4 装好之后跑命令"></a>7.4 装好之后跑命令</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不激活 shell，直接用</span></span><br><span class="line">$ mise <span class="built_in">exec</span> -- python@3.13 -- python -c <span class="string">"print(1+1)"</span></span><br><span class="line">2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者临时切版本</span></span><br><span class="line">$ mise shell python@3.11</span><br><span class="line">$ python --version</span><br><span class="line">Python 3.11.x</span><br></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h2 id="八、mise-toml-完整示例"><a href="#八、mise-toml-完整示例" class="headerlink" title="八、mise.toml 完整示例"></a>八、<code>mise.toml</code> 完整示例</h2><p>一个<strong>真实项目</strong>的 <code>mise.toml</code> 长这样：</p>
+<figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 工具版本</span></span><br><span class="line"><span class="section">[tools]</span></span><br><span class="line"><span class="attr">node</span> = <span class="string">"22.11.0"</span></span><br><span class="line"><span class="attr">python</span> = <span class="string">"3.12.7"</span></span><br><span class="line"><span class="attr">go</span> = <span class="string">"1.23.4"</span></span><br><span class="line"><span class="attr">terraform</span> = <span class="string">"1.10"</span></span><br><span class="line"><span class="attr">kubectl</span> = <span class="string">"1.31"</span></span><br><span class="line"><span class="attr">jq</span> = <span class="string">"latest"</span></span><br><span class="line"><span class="attr">"github:BurntSushi/ripgrep"</span> = <span class="string">"latest"</span></span><br><span class="line"><span class="attr">"npm:typescript"</span> = <span class="string">"5.7"</span></span><br><span class="line"><span class="attr">"pipx:ruff"</span> = <span class="string">"0.8"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 环境变量</span></span><br><span class="line"><span class="section">[env]</span></span><br><span class="line"><span class="attr">NODE_ENV</span> = <span class="string">"production"</span></span><br><span class="line"><span class="attr">DATABASE_URL</span> = { required = <span class="string">"Set DATABASE_URL before running"</span> }</span><br><span class="line"><span class="attr">_.file</span> = <span class="string">".env"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 任务</span></span><br><span class="line"><span class="section">[tasks]</span></span><br><span class="line"><span class="attr">fmt</span> = <span class="string">"ruff format ."</span></span><br><span class="line"><span class="attr">lint</span> = <span class="string">"ruff check ."</span></span><br><span class="line"><span class="attr">test</span> = <span class="string">"pytest -v"</span></span><br><span class="line"><span class="attr">build</span> = <span class="string">"go build -o bin/myapp ."</span></span><br><span class="line"></span><br><span class="line"><span class="section">[tasks.ci]</span></span><br><span class="line"><span class="attr">run</span> = [<span class="string">"fmt"</span>, <span class="string">"lint"</span>, <span class="string">"test"</span>, <span class="string">"build"</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 任务里用到的环境变量</span></span><br><span class="line"><span class="section">[tasks.test]</span></span><br><span class="line"><span class="attr">env</span> = { PYTHONPATH = <span class="string">"src"</span> }</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>这一个文件</strong>能替代：<code>.nvmrc</code> + <code>.python-version</code> + <code>.env</code> + Makefile + <code>direnv</code>。</p>
+<hr>
+<h2 id="九、对比：mise-vs-asdf-vs-各语言原生工具"><a href="#九、对比：mise-vs-asdf-vs-各语言原生工具" class="headerlink" title="九、对比：mise vs asdf vs 各语言原生工具"></a>九、对比：mise vs asdf vs 各语言原生工具</h2><p>很多人会问：” 我已经用了 nvm/pyenv/sdkman，干嘛换？”</p>
+<h3 id="9-1-功能对比"><a href="#9-1-功能对比" class="headerlink" title="9.1 功能对比"></a>9.1 功能对比</h3><table>
+<thead>
+<tr>
+<th>能力</th>
+<th> nvm</th>
+<th>pyenv</th>
+<th>sdkman</th>
+<th>asdf</th>
+<th><strong>mise</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Node 多版本</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Python 多版本</td>
+<td>❌</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Java/Maven/Gradle</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Go/Rust 多版本</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Terraform/kubectl 等 100+ 工具</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>环境变量管理</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>任务运行器</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>装任意 npm/pipx/cargo crate</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>兼容 <code>.tool-versions</code></td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>单文件统一配置</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>安装速度</td>
+<td>慢</td>
+<td>慢</td>
+<td>慢</td>
+<td>慢（要装 shims）</td>
+<td><strong>快</strong>（Rust + 真路径）</td>
+</tr>
+<tr>
+<td>插件信任模型</td>
+<td>自家</td>
+<td>自家</td>
+<td>官方</td>
+<td><strong>社区插件</strong></td>
+<td>官方 + 强信任提示</td>
+</tr>
+</tbody></table>
+<h3 id="9-2-性能对比（2025-年实测）"><a href="#9-2-性能对比（2025-年实测）" class="headerlink" title="9.2 性能对比（2025 年实测）"></a>9.2 性能对比（2025 年实测）</h3><p><code>asdf</code> 用了 5+ 个插件后，启动一个 shell 要 <strong>800ms-2s</strong>（每个插件一个 shim）。<code>mise</code> 启动只要 <strong>30-50ms</strong>—— 因为它<strong>不用 shim，直接改 PATH 指到真二进制</strong>。</p>
+<h3 id="9-3-安全性对比"><a href="#9-3-安全性对比" class="headerlink" title="9.3 安全性对比"></a>9.3 安全性对比</h3><p>asdf 最大的问题是 <strong>插件来自社区</strong> —— 你信任 asdf 工具作者，<strong>还得信任写 asdf 插件的第三方开发者</strong>。这些人写的脚本能跑任意代码。</p>
+<p>mise 的策略：</p>
+<ul>
+<li>核心工具用<strong>官方 backend</strong>（直接下 binary）</li>
+<li>npm/pipx/cargo 走包管理器自己的供应链</li>
+<li><strong>装别人的 <code>mise.toml</code> 时会弹” 是否信任” 提示</strong> —— 不会偷偷执行</li>
+</ul>
+<h3 id="9-4-迁移成本"><a href="#9-4-迁移成本" class="headerlink" title="9.4 迁移成本"></a>9.4 迁移成本</h3><p><strong>从 asdf 迁过来零成本</strong> ——mise 读 <code>.tool-versions</code>。装好 mise，旧的 asdf 项目不用改任何文件。</p>
+<p><strong>从 nvm/pyenv 迁过来</strong>：要把 <code>~/.nvmrc</code> / <code>~/.python-version</code> 改成 <code>mise.toml</code> 的 <code>[tools]</code> 段，或者用 <code>mise use</code> 命令自动生成。</p>
+<hr>
+<h2 id="十、实际工作流：mise-的一天"><a href="#十、实际工作流：mise-的一天" class="headerlink" title="十、实际工作流：mise 的一天"></a>十、实际工作流：mise 的一天</h2><h3 id="10-1-早上新开项目"><a href="#10-1-早上新开项目" class="headerlink" title="10.1 早上新开项目"></a>10.1 早上新开项目</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> git@github.com:acme/webapp.git</span><br><span class="line">$ <span class="built_in">cd</span> webapp</span><br><span class="line">$ <span class="built_in">cat</span> mise.toml</span><br><span class="line">[tools]</span><br><span class="line">node = <span class="string">"22.11.0"</span></span><br><span class="line">[<span class="built_in">env</span>]</span><br><span class="line">DATABASE_URL = { required = <span class="literal">true</span> }</span><br><span class="line">[tasks]</span><br><span class="line">dev = <span class="string">"vite"</span></span><br><span class="line"><span class="built_in">test</span> = <span class="string">"vitest"</span></span><br><span class="line"></span><br><span class="line">$ mise install</span><br><span class="line">✓ node 22.11.0 installed</span><br><span class="line"></span><br><span class="line">$ mise run dev</span><br><span class="line">vite v5.4.0 ready <span class="keyword">in</span> 234 ms</span><br><span class="line">➜ Local: http://localhost:5173/</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>没有” 先装 nvm、再装 Node、再装依赖” 这一长串</strong>。</p>
+<h3 id="10-2-切到另一个项目"><a href="#10-2-切到另一个项目" class="headerlink" title="10.2 切到另一个项目"></a>10.2 切到另一个项目</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/work/old-rails-app</span><br><span class="line">$ <span class="built_in">cat</span> mise.toml</span><br><span class="line">[tools]</span><br><span class="line">ruby = <span class="string">"3.1.2"</span></span><br><span class="line">node = <span class="string">"16.20"</span></span><br><span class="line"></span><br><span class="line">$ mise install</span><br><span class="line">✓ ruby 3.1.2 installed</span><br><span class="line">✓ node 16.20.0 installed</span><br><span class="line"></span><br><span class="line">$ ruby --version</span><br><span class="line">ruby 3.1.2p20   ← 自动切了</span><br><span class="line">$ node --version</span><br><span class="line">v16.20.0        ← 自动切了</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>完全不同的版本组合，cd 之间无缝切换</strong>。</p>
+<h3 id="10-3-部署到-CI"><a href="#10-3-部署到-CI" class="headerlink" title="10.3 部署到 CI"></a>10.3 部署到 CI</h3><p>mise 有官方 <a target="_blank" rel="noopener" href="https://github.com/jdx/mise-action">mise-action</a> 给 GitHub Actions 用：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .github/workflows/ci.yml</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">jdx/mise-action@v2</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">run:</span> <span class="string">mise</span> <span class="string">run</span> <span class="string">ci</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>CI 跟本地用的是完全一样的环境</strong> ——<code>mise.toml</code> 是 source of truth。</p>
+<hr>
+<h2 id="十一、避坑指南"><a href="#十一、避坑指南" class="headerlink" title="十一、避坑指南"></a>十一、避坑指南</h2><h3 id="11-1-装了-mise-但没生效"><a href="#11-1-装了-mise-但没生效" class="headerlink" title="11.1 装了 mise 但没生效"></a>11.1 装了 mise 但没生效</h3><p><strong>症状</strong>：<code>node --version</code> 还是系统版本。</p>
+<p><strong>原因</strong>：shell 启动时没加载 <code>mise activate</code>。</p>
+<p><strong>修法</strong>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 确认 ~/.zshrc 或 ~/.bashrc 有这行</span></span><br><span class="line"><span class="built_in">eval</span> <span class="string">"<span class="subst">$(~/.local/bin/mise activate zsh)</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新开 shell，或者</span></span><br><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="11-2-装工具慢"><a href="#11-2-装工具慢" class="headerlink" title="11.2 装工具慢"></a>11.2 装工具慢</h3><p><strong>症状</strong>：<code>mise install</code> 卡半天。</p>
+<p><strong>原因</strong>：默认从 GitHub / NodeSource 下载，国内可能慢。</p>
+<p><strong>修法</strong>：</p>
+<figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mise.toml</span></span><br><span class="line"><span class="section">[settings]</span></span><br><span class="line"><span class="comment"># 改成国内镜像</span></span><br><span class="line"><span class="attr">node.mirror_url</span> = <span class="string">"https://npmmirror.com/mirrors/node/"</span></span><br><span class="line"><span class="attr">github.access_token</span> = <span class="string">"ghp_xxx"</span>  <span class="comment"># 提高 API 限流</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="11-3-信任提示太烦"><a href="#11-3-信任提示太烦" class="headerlink" title="11.3 信任提示太烦"></a>11.3 信任提示太烦</h3><p><strong>症状</strong>：clone 别人的项目，弹” 是否信任 mise.toml”。</p>
+<p><strong>原因</strong>：安全设计 —— 别人的配置可能跑任意代码。</p>
+<p><strong>取舍</strong>：</p>
+<ul>
+<li><strong>团队内</strong>：<code>mise trust</code> 一次性信任</li>
+<li><strong> CI</strong>：环境变量 <code>MISE_TRUSTED_CONFIG_PATHS=/</code></li>
+<li><strong>个人</strong>：看情况</li>
+</ul>
+<h3 id="11-4-zsh-下跟其它-PATH-改动冲突"><a href="#11-4-zsh-下跟其它-PATH-改动冲突" class="headerlink" title="11.4 zsh 下跟其它 PATH 改动冲突"></a>11.4 zsh 下跟其它 PATH 改动冲突</h3><p>如果你之前用了 SDKMAN、jenv、asdf，<strong>别同时加载</strong> —— 它们会互相抢 PATH。</p>
+<p><strong>推荐</strong>：迁移到一个就够了。<code>mise + sdkman</code> 也能配合（mise 管 Node/Python，sdkman 管 Java），但 PATH 顺序要自己控制。</p>
+<h3 id="11-5-Windows-上呢？"><a href="#11-5-Windows-上呢？" class="headerlink" title="11.5 Windows 上呢？"></a>11.5 Windows 上呢？</h3><p><strong>能用</strong>，但需要 WSL。<strong>纯 Windows</strong> 支持有限（PowerShell 激活有部分功能缺失）。如果你主力 Windows，建议 WSL 2。</p>
+<hr>
+<h2 id="十二、结语"><a href="#十二、结语" class="headerlink" title="十二、结语"></a>十二、结语</h2><p>写到这里，我突然意识到 ——<strong>mise 真正解决的问题不是” 装工具”</strong>，而是” <strong>让一个项目的 setup 跟着仓库走</strong> “。</p>
+<p>过去 10 年我们学会了” 代码跟仓库走”（git），” 配置跟代码走”（CI/CD），” 基础设施跟代码走”（IaC）。<strong>但” 开发环境” 还是跟着人走</strong> —— 每个开发者自己装、自己配、自己维护、版本漂移、新人 onboarding 痛苦。</p>
+<p><strong><code>mise.toml</code> 把” 开发环境” 也变成代码</strong>。一个文件 + 几条命令，新人 5 分钟到位，CI 跟本地一致，老项目维护不再” 在我电脑能跑”。</p>
+<p>如果你 2026 年还在装 nvm + pyenv + sdkman + asdf + direnv + make 六个工具 —— <strong>试试 mise，可能直接省掉 4 个</strong>。</p>
+<hr>
+<p><strong>相关链接</strong>：</p>
+<ul>
+<li>官网：<a target="_blank" rel="noopener" href="https://mise.jdx.dev/">https://mise.jdx.dev/</a></li>
+<li>GitHub：<a target="_blank" rel="noopener" href="https://github.com/jdx/mise">https://github.com/jdx/mise</a></li>
+<li> 工具清单：<a target="_blank" rel="noopener" href="https://mise.jdx.dev/registry.html">https://mise.jdx.dev/registry.html</a></li>
+<li>vs asdf 对比：<a target="_blank" rel="noopener" href="https://mise.jdx.dev/dev-tools/comparison-to-asdf.html">https://mise.jdx.dev/dev-tools/comparison-to-asdf.html</a></li>
+<li>GitHub Action：<a target="_blank" rel="noopener" href="https://github.com/jdx/mise-action">https://github.com/jdx/mise-action</a></li>
+<li> 作者新项目 aube（Node 包管理器）：<a target="_blank" rel="noopener" href="https://aube.en.dev/">https://aube.en.dev</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/04/mise-en-place-complete-guide/" title="抛弃 N 多个版本管理器后，我用 mise 一个搞定 Node&#x2F;Python&#x2F;Go&#x2F;Rust">https://www.daishengli.top/2026/06/04/mise-en-place-complete-guide/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%95%88%E7%8E%87/" rel="tag"># 效率</a>
+              <a href="/tags/mise/" rel="tag"># mise</a>
+              <a href="/tags/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/" rel="tag"># 版本管理</a>
+              <a href="/tags/%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7/" rel="tag"># 开发者工具</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/04/everything-claude-code-ecc-harness-2026/" rel="prev" title="ECC：185k 星的 Claude Code 调教手册，到底在卷什么">
+                  <i class="fa fa-angle-left"></i> ECC：185k 星的 Claude Code 调教手册，到底在卷什么
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/05/scrapling-adaptive-scraping-self-healing/" rel="next" title="Scrapling：那个会 &quot;自我修复&quot; 的爬虫，让我的定时抓取终于不报警了">
+                  Scrapling：那个会 "自我修复" 的爬虫，让我的定时抓取终于不报警了 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

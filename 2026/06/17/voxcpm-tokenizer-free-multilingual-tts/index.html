@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="OpenBMB 开源 VoxCPM2：干掉语音分词器，扩散-自回归直接生成连续波形，30 种语言 + 9 种中文方言，48kHz 录音棚级，Apache-2.0 可商用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="没有分词器也能说话？OpenBMB 开源 VoxCPM，无 tokenizer 的多语种 TTS 做到 48kHz 录音棚级">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/17/voxcpm-tokenizer-free-multilingual-tts/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="OpenBMB 开源 VoxCPM2：干掉语音分词器，扩散-自回归直接生成连续波形，30 种语言 + 9 种中文方言，48kHz 录音棚级，Apache-2.0 可商用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-17T02:03:42.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.409Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="VoxCPM">
+<meta property="article:tag" content="TTS">
+<meta property="article:tag" content="OpenBMB">
+<meta property="article:tag" content="语音合成">
+<meta property="article:tag" content="扩散自回归">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/17/voxcpm-tokenizer-free-multilingual-tts/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/17/voxcpm-tokenizer-free-multilingual-tts/","path":"2026/06/17/voxcpm-tokenizer-free-multilingual-tts/","title":"没有分词器也能说话？OpenBMB 开源 VoxCPM，无 tokenizer 的多语种 TTS 做到 48kHz 录音棚级"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>没有分词器也能说话？OpenBMB 开源 VoxCPM，无 tokenizer 的多语种 TTS 做到 48kHz 录音棚级 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A4%B4%EF%BC%9A%E4%BD%A0%E7%9A%84-TTS-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E3%80%8C%E5%83%8F%E4%BA%BA%E3%80%8D%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">开头：你的 TTS 为什么不「像人」？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E8%A7%A3%E5%86%B3%E3%80%8C%E5%88%86%E8%AF%8D%E4%B8%A2%E6%8E%89%E6%83%85%E6%84%9F%E3%80%8D%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">项目背景：解决「分词丢掉情感」的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E4%BA%AE%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">核心功能亮点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%97%A0%E5%88%86%E8%AF%8D%E5%99%A8%E6%9E%B6%E6%9E%84%EF%BC%8C%E8%AF%AD%E9%9F%B3%E4%B8%8D%E5%86%8D%E8%A2%AB%E3%80%8C%E5%88%87%E7%89%87%E3%80%8D"><span class="nav-number">3.1.</span> <span class="nav-text">1. 无分词器架构，语音不再被「切片」</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-30-%E7%A7%8D%E8%AF%AD%E8%A8%80-9-%E7%A7%8D%E4%B8%AD%E6%96%87%E6%96%B9%E8%A8%80%EF%BC%8C%E8%87%AA%E5%8A%A8%E8%AF%86%E5%88%AB%E6%97%A0%E9%9C%80%E6%89%93%E6%A0%87%E7%AD%BE"><span class="nav-number">3.2.</span> <span class="nav-text">2. 30 种语言 + 9 种中文方言，自动识别无需打标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Voice-Design%EF%BC%9A%E7%94%A8%E6%96%87%E5%AD%97%E3%80%8C%E9%80%A0%E3%80%8D%E4%B8%80%E4%B8%AA%E6%96%B0%E5%A3%B0%E9%9F%B3"><span class="nav-number">3.3.</span> <span class="nav-text">3. Voice Design：用文字「造」一个新声音</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Controllable-Cloning%EF%BC%9A%E5%8F%AF%E8%B0%83%E6%8E%A7%E7%9A%84%E9%9F%B3%E8%89%B2%E5%85%8B%E9%9A%86"><span class="nav-number">3.4.</span> <span class="nav-text">4. Controllable Cloning：可调控的音色克隆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Ultimate-Cloning%EF%BC%9A%E6%9E%81%E8%87%B4%E7%9B%B8%E4%BC%BC%E5%BA%A6"><span class="nav-number">3.5.</span> <span class="nav-text">5. Ultimate Cloning：极致相似度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%AE%9E%E6%97%B6%E6%B5%81%E5%BC%8F-%E9%AB%98%E5%90%9E%E5%90%90%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.6.</span> <span class="nav-text">6. 实时流式 + 高吞吐服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A5-%E5%88%86%E9%92%9F%E8%B7%91%E8%B5%B7%E6%9D%A5"><span class="nav-number">4.</span> <span class="nav-text">实战示例：5 分钟跑起来</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">4.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80-TTS"><span class="nav-number">4.2.</span> <span class="nav-text">基础 TTS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E5%A3%B0%E9%9F%B3%E8%AE%BE%E8%AE%A1%E9%80%A0%E4%B8%80%E4%B8%AA%E3%80%8C%E5%B9%B4%E8%BD%BB%E5%A5%B3%E5%A3%B0%E3%80%8D"><span class="nav-number">4.3.</span> <span class="nav-text">用声音设计造一个「年轻女声」</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%99%E5%85%8B%E9%9A%86%E7%9A%84%E9%9F%B3%E8%89%B2%E5%8A%A0%E6%83%85%E7%BB%AA"><span class="nav-number">4.4.</span> <span class="nav-text">给克隆的音色加情绪</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E5%BC%8F%E8%BE%93%E5%87%BA%EF%BC%88%E9%80%82%E5%90%88%E5%AE%9E%E6%97%B6%E5%AF%B9%E8%AF%9D%EF%BC%89"><span class="nav-number">4.5.</span> <span class="nav-text">流式输出（适合实时对话）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CLI-%E4%B8%80%E8%A1%8C%E5%90%AF%E5%8A%A8"><span class="nav-number">4.6.</span> <span class="nav-text">CLI 一行启动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">适用场景和限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88%E7%94%A8-VoxCPM-%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">5.1.</span> <span class="nav-text">适合用 VoxCPM 的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%93%E5%89%8D%E9%99%90%E5%88%B6"><span class="nav-number">5.2.</span> <span class="nav-text">当前限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%92%8C%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">5.3.</span> <span class="nav-text">和同类项目的差异</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/17/voxcpm-tokenizer-free-multilingual-tts/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="没有分词器也能说话？OpenBMB 开源 VoxCPM，无 tokenizer 的多语种 TTS 做到 48kHz 录音棚级 | 小戴的网络日志">
+      <meta itemprop="description" content="OpenBMB 开源 VoxCPM2：干掉语音分词器，扩散-自回归直接生成连续波形，30 种语言 + 9 种中文方言，48kHz 录音棚级，Apache-2.0 可商用。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          没有分词器也能说话？OpenBMB 开源 VoxCPM，无 tokenizer 的多语种 TTS 做到 48kHz 录音棚级
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-17 10:03:42" itemprop="dateCreated datePublished" datetime="2026-06-17T10:03:42+08:00">2026-06-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">AI 开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">OpenBMB 开源 VoxCPM2：干掉语音分词器，扩散-自回归直接生成连续波形，30 种语言 + 9 种中文方言，48kHz 录音棚级，Apache-2.0 可商用。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="开头：你的-TTS-为什么不「像人」？"><a href="#开头：你的-TTS-为什么不「像人」？" class="headerlink" title="开头：你的 TTS 为什么不「像人」？"></a>开头：你的 TTS 为什么不「像人」？</h2><p>你有没有过这种体验：把一段中文丢进主流 TTS 服务，出来的声音字正腔圆，但总缺那么一口气 —— 读到「他轻轻地叹了口气」时，机器没有叹气；读到「这事儿，真让人头疼」时，机器也没有那种「啧」的无奈。一句话，技术上「对」，情感上「空」。</p>
+<p>这背后有个长期被忽视的工程问题：<strong>传统 TTS 几乎都要先做「分词（tokenization）」</strong>—— 把连续的语音波形切成离散的语音 token，然后让语言模型去预测这些 token，再用声码器（vocoder）把 token 还原成波形。这个过程叫「离散化」。它方便模型训练，但代价是：<strong>语音里最细腻的那些东西 —— 气息、颤抖、笑场、犹豫 —— 被一刀刀切碎了</strong>。</p>
+<p>所以当 OpenBMB（面壁智能）前几天在 GitHub 放出 <strong>VoxCPM</strong> 的 2.0 大版本（<strong>VoxCPM2</strong>），并且当天就冲上了 GitHub Trending Python 榜时，整个语音社区都愣了一下 —— 它<strong>直接把分词器干掉了</strong>。</p>
+<h2 id="项目背景：解决「分词丢掉情感」的问题"><a href="#项目背景：解决「分词丢掉情感」的问题" class="headerlink" title="项目背景：解决「分词丢掉情感」的问题"></a>项目背景：解决「分词丢掉情感」的问题</h2><p><a target="_blank" rel="noopener" href="https://github.com/OpenBMB/VoxCPM">VoxCPM</a>（GitHub stars 29.8k+，今日新增 400+）是面壁智能在 <a target="_blank" rel="noopener" href="https://github.com/OpenBMB/MiniCPM">MiniCPM-4</a> 系列上推出的 <strong>tokenizer-free（无分词器）TTS 系统</strong>。它用一个端到端的 <strong>扩散 - 自回归混合架构</strong>，直接在连续的语音潜在空间（latent space）里生成声音，跳过离散化这一步。</p>
+<p>VoxCPM2 是最新主版本：</p>
+<ul>
+<li><strong>2B 参数</strong>主干，训练数据 <strong>超 200 万小时</strong>多语种语音</li>
+<li>支持 <strong>30 种语言</strong> + 9 种中文方言（粤语、四川话、东北话、吴语、河南话、陕西话、山东话、天津话、闽南话）</li>
+<li>输出 <strong>48kHz 录音棚级</strong>音频</li>
+<li><strong> Apache-2.0 协议</strong>，可商用</li>
+</ul>
+<p>和上一代（VoxCPM-0.5B、VoxCPM1.5）相比，2.0 的核心升级是 <strong>Voice Design（声音设计）</strong> 和 <strong>Controllable Cloning（可控克隆）</strong>—— 前者用自然语言描述就能造一个全新的声音，后者能在克隆音色基础上精细调控情感、语速、风格。</p>
+<p>技术报告：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2606.06928">arXiv:2606.06928</a>。模型权重已在 <a target="_blank" rel="noopener" href="https://huggingface.co/openbmb/VoxCPM2">HuggingFace</a> 和 ModelScope 开源。</p>
+<h2 id="核心功能亮点"><a href="#核心功能亮点" class="headerlink" title="核心功能亮点"></a>核心功能亮点</h2><h3 id="1-无分词器架构，语音不再被「切片」"><a href="#1-无分词器架构，语音不再被「切片」" class="headerlink" title="1. 无分词器架构，语音不再被「切片」"></a>1. 无分词器架构，语音不再被「切片」</h3><p>传统 TTS 的 pipeline：文本 → 音素 → 离散语音 token → 声码器 → 波形。离散化这步最伤音质 —— 为了把波形压成有限词表，模型必须丢弃很多高频细节。</p>
+<p>VoxCPM 的做法：直接在一个 <strong>AudioVAE V2 的连续潜在空间</strong>里做扩散 + 自回归，整套流程是 <strong>LocEnc → TSLM → RALM → LocDiT</strong> 四阶段，全程不切词。结果是：<strong>保留气息、颤音、口头禅这些「人味儿」细节</strong>。</p>
+<h3 id="2-30-种语言-9-种中文方言，自动识别无需打标签"><a href="#2-30-种语言-9-种中文方言，自动识别无需打标签" class="headerlink" title="2. 30 种语言 + 9 种中文方言，自动识别无需打标签"></a>2. 30 种语言 + 9 种中文方言，自动识别无需打标签</h3><p><code>text="Bonjour, comment ça va?"</code> 直接喂进去就行，模型自动判断语种，不用预先指定 <code>lang="fr"</code>。</p>
+<p>中文方言支持尤其贴心 ——<code>text="今朝天气老好额，侬讲对伐？"</code>（吴语）也能用。给做有声书、播客、本地化配音的团队省了一大笔方言数据采集的钱。</p>
+<h3 id="3-Voice-Design：用文字「造」一个新声音"><a href="#3-Voice-Design：用文字「造」一个新声音" class="headerlink" title="3. Voice Design：用文字「造」一个新声音"></a>3. Voice Design：用文字「造」一个新声音</h3><p>不需要参考音频，直接在文本里加一段自然语言描述：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">"(A young woman, gentle and sweet voice)Hello, welcome to VoxCPM2!"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>年龄、性别、情绪、语速 —— 文字描述什么声音就给什么声音。这对<strong>游戏 NPC、AI 客服、有声书角色</strong>这种「需要 100 个不同声音但又不想录 100 个人的」场景是杀手级功能。</p>
+<h3 id="4-Controllable-Cloning：可调控的音色克隆"><a href="#4-Controllable-Cloning：可调控的音色克隆" class="headerlink" title="4. Controllable Cloning：可调控的音色克隆"></a>4. Controllable Cloning：可调控的音色克隆</h3><p>这是 VoxCPM2 才有的能力。给定一段参考音频（几秒就够），模型克隆出音色，但允许你<strong>叠加一层风格控制</strong>：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">"(slightly faster, cheerful tone)This is a cloned voice with style control."</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>意思是：声音是「我」的，但情绪可以是「明天的我」的。可控性拉满，避免克隆出「冷冰冰的本人」。</p>
+<h3 id="5-Ultimate-Cloning：极致相似度"><a href="#5-Ultimate-Cloning：极致相似度" class="headerlink" title="5. Ultimate Cloning：极致相似度"></a>5. Ultimate Cloning：极致相似度</h3><p>需要更保真？同时传<strong>参考音频 + 参考音频的字幕</strong>，模型做音频续接式克隆，能保留每一个语气词、每一次停顿。配合 <code>reference_wav_path</code> 同传还能进一步提分。</p>
+<h3 id="6-实时流式-高吞吐服务"><a href="#6-实时流式-高吞吐服务" class="headerlink" title="6. 实时流式 + 高吞吐服务"></a>6. 实时流式 + 高吞吐服务</h3><ul>
+<li>标准 PyTorch 推理：RTF ~0.30（4090）</li>
+<li>用 <a target="_blank" rel="noopener" href="https://github.com/a710128/nanovllm-voxcpm">Nano-vLLM-VoxCPM</a>：RTF ~0.13，支持并发 + FastAPI</li>
+<li> 用 <a target="_blank" rel="noopener" href="https://github.com/vllm-project/vllm-omni">vLLM-Omni</a>：多租户 + PagedAttention + OpenAI 兼容的 <code>/v1/audio/speech</code> 接口</li>
+</ul>
+<p>也就是说，<strong>直接拿现成 vLLM 部署栈就能上线</strong>，不用自己写推理服务。</p>
+<h2 id="实战示例：5-分钟跑起来"><a href="#实战示例：5-分钟跑起来" class="headerlink" title="实战示例：5 分钟跑起来"></a>实战示例：5 分钟跑起来</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install voxcpm</span><br></pre></td></tr></tbody></table></figure>
+
+<p>要求：Python ≥ 3.10（&lt;3.13）、PyTorch ≥ 2.5、CUDA ≥ 12.0。Apple Silicon Mac 会自动用 MPS（<code>--device auto</code>）。</p>
+<h3 id="基础-TTS"><a href="#基础-TTS" class="headerlink" title="基础 TTS"></a>基础 TTS</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> voxcpm <span class="keyword">import</span> VoxCPM</span><br><span class="line"><span class="keyword">import</span> soundfile <span class="keyword">as</span> sf</span><br><span class="line"></span><br><span class="line">model = VoxCPM.from_pretrained(<span class="string">"openbmb/VoxCPM2"</span>, load_denoiser=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">wav = model.generate(</span><br><span class="line">    text=<span class="string">"VoxCPM2 是当前推荐的多语种语音合成版本。"</span>,</span><br><span class="line">    cfg_value=<span class="number">2.0</span>,</span><br><span class="line">    inference_timesteps=<span class="number">10</span>,</span><br><span class="line">)</span><br><span class="line">sf.write(<span class="string">"demo.wav"</span>, wav, model.tts_model.sample_rate)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出默认就是 48kHz。</p>
+<h3 id="用声音设计造一个「年轻女声」"><a href="#用声音设计造一个「年轻女声」" class="headerlink" title="用声音设计造一个「年轻女声」"></a>用声音设计造一个「年轻女声」</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wav = model.generate(</span><br><span class="line">    text=<span class="string">"(A young woman, gentle and sweet voice)您好，欢迎收听本期节目。"</span>,</span><br><span class="line">    cfg_value=<span class="number">2.0</span>,</span><br><span class="line">    inference_timesteps=<span class="number">10</span>,</span><br><span class="line">)</span><br><span class="line">sf.write(<span class="string">"npc_greeting.wav"</span>, wav, model.tts_model.sample_rate)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>括号里的描述词可以是：年龄、性别、情绪、语速、口音、特殊效果（whispering、excited、calm）…… 全靠 prompt 工程。</p>
+<h3 id="给克隆的音色加情绪"><a href="#给克隆的音色加情绪" class="headerlink" title="给克隆的音色加情绪"></a>给克隆的音色加情绪</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wav = model.generate(</span><br><span class="line">    text=<span class="string">"(slightly faster, cheerful tone)哥，今儿天气真不错，出来走走吧！"</span>,</span><br><span class="line">    reference_wav_path=<span class="string">"path/to/my_voice.wav"</span>,</span><br><span class="line">    cfg_value=<span class="number">2.0</span>,</span><br><span class="line">    inference_timesteps=<span class="number">10</span>,</span><br><span class="line">)</span><br><span class="line">sf.write(<span class="string">"cloned_happy.wav"</span>, wav, model.tts_model.sample_rate)</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="流式输出（适合实时对话）"><a href="#流式输出（适合实时对话）" class="headerlink" title="流式输出（适合实时对话）"></a>流式输出（适合实时对话）</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">chunks = []</span><br><span class="line"><span class="keyword">for</span> chunk <span class="keyword">in</span> model.generate_streaming(text=<span class="string">"流式语音合成，就是这么简单。"</span>):</span><br><span class="line">    chunks.append(chunk)</span><br><span class="line">wav = np.concatenate(chunks)</span><br><span class="line">sf.write(<span class="string">"streaming.wav"</span>, wav, model.tts_model.sample_rate)</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="CLI-一行启动"><a href="#CLI-一行启动" class="headerlink" title="CLI 一行启动"></a>CLI 一行启动</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">voxcpm --text <span class="string">"今天天气真好"</span> --output out.wav --device cuda</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Apple Silicon Mac 用户把 <code>--device cuda</code> 改成 <code>--device mps</code> 就行。</p>
+<h2 id="适用场景和限制"><a href="#适用场景和限制" class="headerlink" title="适用场景和限制"></a>适用场景和限制</h2><h3 id="适合用-VoxCPM-的场景"><a href="#适合用-VoxCPM-的场景" class="headerlink" title="适合用 VoxCPM 的场景"></a>适合用 VoxCPM 的场景</h3><ul>
+<li><strong>有声书 / 播客</strong>：30 语种 + 9 种中文方言，本地化成本极低</li>
+<li><strong>游戏 NPC / 互动剧情</strong>：Voice Design 一天造 50 个不重样的声音</li>
+<li><strong> AI 数字人 / 智能客服</strong>：可控克隆 + 流式输出，实时对话自然</li>
+<li><strong>短视频 / 营销内容批量生产</strong>：一个主播音色 + 多种情绪，1 个工作流搞定</li>
+<li><strong>企业内训 / 教学课件</strong>：克隆讲师音色，多语种版本同步输出</li>
+</ul>
+<h3 id="当前限制"><a href="#当前限制" class="headerlink" title="当前限制"></a>当前限制</h3><ul>
+<li><strong>显存门槛</strong>：2B 版本要～8GB 显存，老黄卡或没独显的笔记本要量力而行</li>
+<li><strong>极端情感还在追赶</strong>：悲伤到颤抖、愤怒到哽咽这种「情绪爆点」仍然不如真人播音员</li>
+<li><strong>多说话人 / 长对话</strong>还没原生支持，需要切片处理</li>
+<li><strong>某些小语种质量差异较大</strong>：训练数据 200 万小时是平均值，部分小语种可能只有几小时数据</li>
+</ul>
+<h3 id="和同类项目的差异"><a href="#和同类项目的差异" class="headerlink" title="和同类项目的差异"></a>和同类项目的差异</h3><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>核心特点</th>
+<th>局限</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> VoxCPM2</strong></td>
+<td> 无分词器、30 语种、Voice Design、Apache-2.0</td>
+<td> 显存需求中等、社区较新</td>
+</tr>
+<tr>
+<td> CosyVoice 2</td>
+<td> 阿里达摩院、流式优秀</td>
+<td>商用授权有限制</td>
+</tr>
+<tr>
+<td> ChatTTS</td>
+<td> 轻量、对中文友好</td>
+<td>多语种支持弱、情感控制粗糙</td>
+</tr>
+<tr>
+<td> GPT-SoVITS</td>
+<td> 少样本克隆强、开源</td>
+<td>音质天花板不高、需要微调</td>
+</tr>
+<tr>
+<td> ElevenLabs</td>
+<td> 商业 SOTA、API 友好</td>
+<td>闭源、贵、隐私风险</td>
+</tr>
+</tbody></table>
+<p>简单说：<strong>VoxCPM 想做的事，是「开源 + 可商用 + 接近商业 SOTA」这个交集</strong>。在 2026 年这个时间点，它确实摸到了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>VoxCPM 给我的最大启发是：<strong>「分词」这个在 LLM 里看起来天经地义的步骤，在 TTS 领域可能是错的</strong>。LLM 处理文字时，token 是语言的基本单元；但语音的本质是连续波形，强行离散化就是「用象素画油画」。</p>
+<p>OpenBMB 这套无分词器方案的意义不止 TTS 本身 —— 它给所有「连续信号 + 大模型」的交叉领域（语音、音频、音乐、视频）提供了一个范式参考：<strong>与其把连续的东西变离散，不如让模型直接学连续</strong>。</p>
+<p>如果你正在做需要 30 语种 + 自然情感的语音产品，VoxCPM2 值得花一个下午跑跑 demo；如果你还在用商业 TTS API，可以拿它做个降本对比测试 ——Apache-2.0 + 本地部署 + 8GB 显存，这个组合在 2026 年的 TTS 开源生态里，已经是头部水准。</p>
+<p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/OpenBMB/VoxCPM">https://github.com/OpenBMB/VoxCPM</a><br><strong>HuggingFace 体验</strong>：<a target="_blank" rel="noopener" href="https://huggingface.co/spaces/OpenBMB/VoxCPM-Demo">https://huggingface.co/spaces/OpenBMB/VoxCPM-Demo</a></p>
+<hr>
+<blockquote>
+<p>戴老板，这是 2026-06-17 上午 10:00 的 GitHub Trending 选题。VoxCPM2 在当日 Python 趋势榜热度高、协议友好、技术差异化明显，写起来内容也扎实。如果觉得方向 OK 就这样发，要换主题告诉我，我明天再换。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/17/voxcpm-tokenizer-free-multilingual-tts/" title="没有分词器也能说话？OpenBMB 开源 VoxCPM，无 tokenizer 的多语种 TTS 做到 48kHz 录音棚级">https://www.daishengli.top/2026/06/17/voxcpm-tokenizer-free-multilingual-tts/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/VoxCPM/" rel="tag"># VoxCPM</a>
+              <a href="/tags/TTS/" rel="tag"># TTS</a>
+              <a href="/tags/OpenBMB/" rel="tag"># OpenBMB</a>
+              <a href="/tags/%E8%AF%AD%E9%9F%B3%E5%90%88%E6%88%90/" rel="tag"># 语音合成</a>
+              <a href="/tags/%E6%89%A9%E6%95%A3%E8%87%AA%E5%9B%9E%E5%BD%92/" rel="tag"># 扩散自回归</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/16/nvidia-skillspector-ai-agent-skill-security-scanner/" rel="prev" title="你的 AI Agent 技能包安全吗？NVIDIA 开源 SkillSpector，扫描 Agent Skill 的 &quot;杀毒软件&quot;">
+                  <i class="fa fa-angle-left"></i> 你的 AI Agent 技能包安全吗？NVIDIA 开源 SkillSpector，扫描 Agent Skill 的 "杀毒软件"
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/18/agent-reach-ai-agent-internet-router/" rel="next" title="Agent Reach：让你的 AI Agent 真正 &quot;看见&quot; 整个互联网">
+                  Agent Reach：让你的 AI Agent 真正 "看见" 整个互联网 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="ccglass 是本地代理 + 可视化仪表板，拦截 Claude Code&#x2F;Codex&#x2F;Kimi 等 agent 的请求，实时查看 token 消耗和提示词内容。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ccglass：让 AI 编程 agent 的 API 消耗一目了然">
+<meta property="og:url" content="https://www.daishengli.top/2026/05/28/ccglass-ai-agent-api-monitoring/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="ccglass 是本地代理 + 可视化仪表板，拦截 Claude Code&#x2F;Codex&#x2F;Kimi 等 agent 的请求，实时查看 token 消耗和提示词内容。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.daishengli.top/ccglass-cover.png">
+<meta property="article:published_time" content="2026-05-28T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.402Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="开发工具">
+<meta property="article:tag" content="效率">
+<meta property="article:tag" content="API 成本">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.daishengli.top/ccglass-cover.png">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/05/28/ccglass-ai-agent-api-monitoring/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/05/28/ccglass-ai-agent-api-monitoring/","path":"2026/05/28/ccglass-ai-agent-api-monitoring/","title":"ccglass：让 AI 编程 agent 的 API 消耗一目了然"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ccglass：让 AI 编程 agent 的 API 消耗一目了然 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ccglass%EF%BC%9A%E8%AE%A9-AI-%E7%BC%96%E7%A8%8B-agent-%E7%9A%84-API-%E6%B6%88%E8%80%97%E4%B8%80%E7%9B%AE%E4%BA%86%E7%84%B6"><span class="nav-number">1.</span> <span class="nav-text">ccglass：让 AI 编程 agent 的 API 消耗一目了然</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%8E%B0%E6%9C%89%E5%B7%A5%E5%85%B7%E7%9C%8B%E4%B8%8D%E5%88%B0%E6%B5%81%E9%87%8F"><span class="nav-number">1.1.</span> <span class="nav-text">为什么现有工具看不到流量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">安装与使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%AA%E8%A1%A8%E6%9D%BF%E8%83%BD%E7%9C%8B%E4%BB%80%E4%B9%88"><span class="nav-number">1.3.</span> <span class="nav-text">仪表板能看什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E5%93%AA%E4%BA%9B-Agent"><span class="nav-number">1.4.</span> <span class="nav-text">支持哪些 Agent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">1.5.</span> <span class="nav-text">日志存储方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E7%BB%8F%E5%B8%B8%E5%88%87%E6%8D%A2%E7%8E%AF%E5%A2%83%E7%9A%84%E4%BA%BA%E7%9A%84%E5%AE%9E%E9%99%85%E4%BB%B7%E5%80%BC"><span class="nav-number">1.6.</span> <span class="nav-text">对经常切换环境的人的实际价值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%80%E9%99%90%E6%80%A7"><span class="nav-number">1.7.</span> <span class="nav-text">局限性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.8.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/05/28/ccglass-ai-agent-api-monitoring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ccglass：让 AI 编程 agent 的 API 消耗一目了然 | 小戴的网络日志">
+      <meta itemprop="description" content="ccglass 是本地代理 + 可视化仪表板，拦截 Claude Code&#x2F;Codex&#x2F;Kimi 等 agent 的请求，实时查看 token 消耗和提示词内容。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ccglass：让 AI 编程 agent 的 API 消耗一目了然
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-05-28 10:00:00" itemprop="dateCreated datePublished" datetime="2026-05-28T10:00:00+08:00">2026-05-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/" itemprop="url" rel="index"><span itemprop="name">工具推荐</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">ccglass 是本地代理 + 可视化仪表板，拦截 Claude Code/Codex/Kimi 等 agent 的请求，实时查看 token 消耗和提示词内容。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="ccglass：让-AI-编程-agent-的-API-消耗一目了然"><a href="#ccglass：让-AI-编程-agent-的-API-消耗一目了然" class="headerlink" title="ccglass：让 AI 编程 agent 的 API 消耗一目了然"></a>ccglass：让 AI 编程 agent 的 API 消耗一目了然</h1><p><img src="https://img.daishengli.top/ccglass-cover.png" alt="ccglass"></p>
+<p>我每天在不同城市、不同咖啡馆、不同网络环境下工作。</p>
+<p>问题来了：Claude Code 跑了半小时，API 消耗了多少？Codex 今天处理了几个请求？Kimi 的 token 账单为什么比预想的高？</p>
+<p>这些答案，传统代理工具给不了我。</p>
+<p>今天发现一个工具叫 <strong>ccglass</strong>，解决了这个痛点。</p>
+<h2 id="为什么现有工具看不到流量"><a href="#为什么现有工具看不到流量" class="headerlink" title="为什么现有工具看不到流量"></a>为什么现有工具看不到流量</h2><p>用 Charles、mitmproxy 这类工具抓 HTTP 请求，是程序员日常。但当你对 Claude Code 开刀的时候，发现 —— 抓不到。</p>
+<p>原因是这些 coding agent <strong>忽略了 <code>HTTP_PROXY</code> 和 <code>HTTPS_PROXY</code> 环境变量</strong>。它们直连 API 域名，根本不走系统代理。常见的 <code>fetch</code> 补丁工具也因为版本更新频繁而失效。</p>
+<p>ccglass 的思路很聪明：不去拦截 HTTPS，而是<strong>拦截客户端到本地的 HTTP  hop</strong>。</p>
+<p>具体来说：客户端（Claude Code）通过 HTTPS 连接真实 API，但只把请求的<strong>明文 HTTP 版本</strong>发送到一个本地端口，ccglass 在那里做记录，然后再转发给真实 API。</p>
+<blockquote>
+<p>不需要 CA 证书，不需要破解 TLS pinning。</p>
+</blockquote>
+<h2 id="安装与使用"><a href="#安装与使用" class="headerlink" title="安装与使用"></a>安装与使用</h2><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过 npm 安装</span></span><br><span class="line">npm install -g ccglass</span><br><span class="line"></span><br><span class="line"><span class="comment"># 直接运行，自动检测已安装的 agent</span></span><br><span class="line">ccglass</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定 agent 类型</span></span><br><span class="line">ccglass claude    <span class="comment"># 监听 Claude Code</span></span><br><span class="line">ccglass codex     <span class="comment"># 监听 Codex (OpenAI)</span></span><br><span class="line">ccglass kimi      <span class="comment"># 监听 Kimi (Moonshot)</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>运行后会输出代理地址和仪表板地址：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">● ccglass watching Codex (OpenAI) → https://api.openai.com</span><br><span class="line">dashboard: http://127.0.0.1:57633</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在浏览器打开仪表板，就可以看到实时请求流。</p>
+<h2 id="仪表板能看什么"><a href="#仪表板能看什么" class="headerlink" title="仪表板能看什么"></a>仪表板能看什么</h2><p>ccglass 的仪表板提供了几个实用视图：</p>
+<p><strong>实时请求捕获</strong>：每个请求、每个响应、每个 tool call 都实时显示。</p>
+<p><strong>Token 和成本追踪</strong>：每次调用的 token 数量、缓存命中率、预估成本一一列出。</p>
+<p><strong>消息历史</strong>：完整的对话上下文，包括 system prompt、user message、assistant response、tool results。</p>
+<p><strong>Agent 工作流视图</strong>：能看到 agent 在多轮对话中是怎么思考、怎么调用工具的。</p>
+<p><strong>Turn-to-Turn 对比</strong>：比较相邻两次请求的差异，方便分析 agent 的推理路径。</p>
+<p>对于我这种经常在多个项目里切换的人来说，成本可视化特别有用 —— 有时候让 Claude Code 处理一个简单任务，结果 token 消耗比我预估的高出一个量级，现在能马上发现。</p>
+<h2 id="支持哪些-Agent"><a href="#支持哪些-Agent" class="headerlink" title="支持哪些 Agent"></a>支持哪些 Agent</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>监听对象</th>
+<th>上游</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ccglass claude</code></td>
+<td>Claude Code</td>
+<td>api.anthropic.com</td>
+</tr>
+<tr>
+<td><code>ccglass codex</code></td>
+<td>Codex</td>
+<td>api.openai.com</td>
+</tr>
+<tr>
+<td><code>ccglass deepseek</code></td>
+<td>DeepSeek-TUI</td>
+<td>api.deepseek.com</td>
+</tr>
+<tr>
+<td><code>ccglass kimi</code></td>
+<td>Kimi (通过 Claude Code)</td>
+<td>api.moonshot.ai</td>
+</tr>
+<tr>
+<td><code>ccglass opencode</code></td>
+<td>OpenCode</td>
+<td> 自动读取环境变量</td>
+</tr>
+<tr>
+<td><code>ccglass ollama</code></td>
+<td>Ollama 任意客户端</td>
+<td> 127.0.0.1:11434</td>
+</tr>
+<tr>
+<td><code>ccglass lmstudio</code></td>
+<td>LM Studio 任意客户端</td>
+<td> 127.0.0.1:1234</td>
+</tr>
+</tbody></table>
+<p>IDE 插件也支持：Cursor（Cline、Continue.dev 等）如果使用自己的 API key（BYOK 模式），可以用 <code>ccglass proxy</code> 开启透明代理。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ccglass proxy</span><br><span class="line"><span class="comment"># 设置 IDE 的 API base URL 为 http://127.0.0.1:PORT</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="日志存储方式"><a href="#日志存储方式" class="headerlink" title="日志存储方式"></a>日志存储方式</h2><p>ccglass 的日志采用内容寻址存储，类似 git 的设计：</p>
+<ul>
+<li>每个 message、tools 数组、system block 只写入一次</li>
+<li>后续请求通过哈希引用，避免重复存储</li>
+</ul>
+<p>存储路径：<code>~/.ccglass/sessions/&lt;项目路径&gt;-&lt;hash&gt;/&lt;session&gt;/NNNN.json</code></p>
+<p>对于长周期的 agent 会话，这个设计避免了日志体积的二次增长。切换项目时日志自动隔离，不会混淆。</p>
+<p>认证 token（authorization、x-api-key）默认是脱敏的，用 <code>--no-redact</code> 可以关闭脱敏方便调试。</p>
+<h2 id="对经常切换环境的人的实际价值"><a href="#对经常切换环境的人的实际价值" class="headerlink" title="对经常切换环境的人的实际价值"></a>对经常切换环境的人的实际价值</h2><p>我在移动办公场景下有几个具体用法：</p>
+<p><strong>多设备成本监控</strong>：在 MacBook Pro 上跑 Claude Code，在 iPad 上看 ccglass 仪表板，了解实时消耗。</p>
+<p><strong>网络波动时的请求分析</strong>：在酒店、咖啡馆网络不稳定时，看到哪些请求超时、哪些 token 重试。</p>
+<p><strong>多项目 API key 管理</strong>：不同项目用不同的 API key，ccglass 能帮我区分哪个项目消耗多、哪个 token 配额快用完。</p>
+<p><strong>调试 Prompt</strong>：Agent 行为异常时，直接看它实际收到的 system prompt，比猜测要高效得多。</p>
+<h2 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h2><p>需要注意几点：</p>
+<ol>
+<li><p><strong>不适用 Cursor 内置订阅</strong>：Cursor 的内置订阅走 <code>api2.cursor.sh</code>，ccglass 无法拦截。</p>
+</li>
+<li><p><strong>需要客户端支持 base URL 配置</strong>：Claude Code、Codex 这类 CLI 工具支持通过环境变量自定义上游，而有些工具没有这个能力。</p>
+</li>
+<li><p><strong>Node ≥ 18</strong>：运行环境要求。</p>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>ccglass 解决的是一个很具体的问题：当你用 AI coding agent 工作时，API 消耗对你是黑箱。</p>
+<p>它不是炫技的工具，是实打实的效率伴侣。对于我这样每天在不同环境里移动办公的人，能看到 API 消耗、成本趋势、agent 工作流 —— 这些信息帮我做决策：是优化 prompt、切换模型、还是改变使用方式。</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/jianshuo/ccglass">github.com/jianshuo/ccglass</a>，MIT 协议，值得一试。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/05/28/ccglass-ai-agent-api-monitoring/" title="ccglass：让 AI 编程 agent 的 API 消耗一目了然">https://www.daishengli.top/2026/05/28/ccglass-ai-agent-api-monitoring/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" rel="tag"># 开发工具</a>
+              <a href="/tags/%E6%95%88%E7%8E%87/" rel="tag"># 效率</a>
+              <a href="/tags/API-%E6%88%90%E6%9C%AC/" rel="tag"># API 成本</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/05/27/stop-slop-ai-writing/" rel="prev" title="去除 AI 腔调：stop-slop 让机器写作更像人">
+                  <i class="fa fa-angle-left"></i> 去除 AI 腔调：stop-slop 让机器写作更像人
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/05/28/superpowers-ai-agent-methodology/" rel="next" title="Superpowers：给 AI 编程 Agent 的一套完整方法论">
+                  Superpowers：给 AI 编程 Agent 的一套完整方法论 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

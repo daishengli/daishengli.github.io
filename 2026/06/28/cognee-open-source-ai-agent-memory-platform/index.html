@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="一个 22.6k stars 的开源项目，用「向量 + 知识图谱 + 认知科学本体」三件套解决 Agent 跨会话失忆的痛点，remember&#x2F;recall&#x2F;forget&#x2F;improve 四个 API 就能把文档、聊天、数据库、API 全变成 Agent 可调用的持久记忆，并自带 Claude Code &#x2F; MCP &#x2F; LangGraph 集成。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cognee：给 AI Agent 一块真正能用的「长期记忆」，开源知识图谱 + 向量检索双引擎">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/28/cognee-open-source-ai-agent-memory-platform/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="一个 22.6k stars 的开源项目，用「向量 + 知识图谱 + 认知科学本体」三件套解决 Agent 跨会话失忆的痛点，remember&#x2F;recall&#x2F;forget&#x2F;improve 四个 API 就能把文档、聊天、数据库、API 全变成 Agent 可调用的持久记忆，并自带 Claude Code &#x2F; MCP &#x2F; LangGraph 集成。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-28T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.403Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="开源框架">
+<meta property="article:tag" content="长期记忆">
+<meta property="article:tag" content="知识图谱">
+<meta property="article:tag" content="RAG">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/28/cognee-open-source-ai-agent-memory-platform/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/28/cognee-open-source-ai-agent-memory-platform/","path":"2026/06/28/cognee-open-source-ai-agent-memory-platform/","title":"Cognee：给 AI Agent 一块真正能用的「长期记忆」，开源知识图谱 + 向量检索双引擎"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Cognee：给 AI Agent 一块真正能用的「长期记忆」，开源知识图谱 + 向量检索双引擎 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E8%AE%A9%E4%BA%BA%E6%8A%93%E7%8B%82%E7%9A%84%E5%AF%B9%E8%AF%9D%E7%8E%B0%E5%9C%BA"><span class="nav-number">1.</span> <span class="nav-text">一个让人抓狂的对话现场</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9AAgent-%E7%9A%84%E3%80%8C%E5%A4%B1%E5%BF%86%E7%97%87%E3%80%8D%E5%88%B0%E5%BA%95%E6%98%AF%E6%80%8E%E4%B9%88%E6%9D%A5%E7%9A%84"><span class="nav-number">2.</span> <span class="nav-text">项目背景：Agent 的「失忆症」到底是怎么来的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E5%9B%9B%E4%B8%AA-API-%E4%B8%89%E4%B8%AA%E5%BC%95%E6%93%8E"><span class="nav-number">3.</span> <span class="nav-text">核心功能：四个 API + 三个引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-remember%EF%BC%9A%E6%8A%8A%E4%BB%BB%E6%84%8F%E6%95%B0%E6%8D%AE%E5%A1%9E%E8%BF%9B%E8%AE%B0%E5%BF%86"><span class="nav-number">3.1.</span> <span class="nav-text">1. remember：把任意数据塞进记忆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-recall%EF%BC%9A%E6%8C%89%E8%AF%AD%E4%B9%89-%E5%85%B3%E7%B3%BB%E8%81%94%E5%90%88%E6%A3%80%E7%B4%A2"><span class="nav-number">3.2.</span> <span class="nav-text">2. recall：按语义 + 关系联合检索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-forget%EF%BC%9A%E5%8F%AF%E6%B2%BB%E7%90%86%E7%9A%84%E9%81%97%E5%BF%98"><span class="nav-number">3.3.</span> <span class="nav-text">3. forget：可治理的遗忘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-improve%EF%BC%9A%E8%AE%A9%E8%AE%B0%E5%BF%86%E8%87%AA%E8%BF%9B%E5%8C%96"><span class="nav-number">3.4.</span> <span class="nav-text">4. improve：让记忆自进化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%83%A8%E7%BD%B2%E9%80%89%E9%A1%B9"><span class="nav-number">3.5.</span> <span class="nav-text">5. 部署选项</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E6%8A%8A-Cognee-%E6%8E%A5%E5%88%B0-Claude-Code"><span class="nav-number">4.</span> <span class="nav-text">实战示例：把 Cognee 接到 Claude Code</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%80%EF%BC%9A5-%E5%88%86%E9%92%9F%E7%BB%99-Claude-Code-%E8%A3%85%E4%B8%8A%E3%80%8C%E8%B7%A8%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86%E3%80%8D"><span class="nav-number">4.1.</span> <span class="nav-text">场景一：5 分钟给 Claude Code 装上「跨会话记忆」</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E4%BA%8C%EF%BC%9A%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AA%E3%80%8C%E4%BC%9A%E5%AD%A6%E4%B9%A0%E7%9A%84-SQL-Copilot%E3%80%8D"><span class="nav-number">4.2.</span> <span class="nav-text">场景二：构建一个「会学习的 SQL Copilot」</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%9F%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E6%AF%94%EF%BC%8CCognee-%E5%BC%BA%E5%9C%A8%E5%93%AA"><span class="nav-number">5.</span> <span class="nav-text">跟同类项目比，Cognee 强在哪</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">6.</span> <span class="nav-text">适用场景和限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%85-%E9%80%82%E5%90%88%E7%94%A8-Cognee-%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">6.1.</span> <span class="nav-text">✅ 适合用 Cognee 的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9D%8C-%E7%9B%AE%E5%89%8D%E4%B8%8D%E5%A4%AA%E9%80%82%E5%90%88%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">6.2.</span> <span class="nav-text">❌ 目前不太适合的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9A%A0%EF%B8%8F-%E5%87%A0%E4%B8%AA%E5%B7%A5%E7%A8%8B%E5%8C%96%E6%8F%90%E9%86%92"><span class="nav-number">6.3.</span> <span class="nav-text">⚠️ 几个工程化提醒</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/28/cognee-open-source-ai-agent-memory-platform/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Cognee：给 AI Agent 一块真正能用的「长期记忆」，开源知识图谱 + 向量检索双引擎 | 小戴的网络日志">
+      <meta itemprop="description" content="一个 22.6k stars 的开源项目，用「向量 + 知识图谱 + 认知科学本体」三件套解决 Agent 跨会话失忆的痛点，remember&#x2F;recall&#x2F;forget&#x2F;improve 四个 API 就能把文档、聊天、数据库、API 全变成 Agent 可调用的持久记忆，并自带 Claude Code &#x2F; MCP &#x2F; LangGraph 集成。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Cognee：给 AI Agent 一块真正能用的「长期记忆」，开源知识图谱 + 向量检索双引擎
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-28 10:00:00" itemprop="dateCreated datePublished" datetime="2026-06-28T10:00:00+08:00">2026-06-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">一个 22.6k stars 的开源项目，用「向量 + 知识图谱 + 认知科学本体」三件套解决 Agent 跨会话失忆的痛点，remember/recall/forget/improve 四个 API 就能把文档、聊天、数据库、API 全变成 Agent 可调用的持久记忆，并自带 Claude Code / MCP / LangGraph 集成。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="一个让人抓狂的对话现场"><a href="#一个让人抓狂的对话现场" class="headerlink" title="一个让人抓狂的对话现场"></a>一个让人抓狂的对话现场</h2><p>「我们昨天不是讨论过这个方案吗？你怎么又忘了？」</p>
+<p>这是我上周在一个 Agent 项目的 Slack 群里看到的真实对话。做产品经理的同事连续三天让同一个 AI 助手帮他梳理一份产品需求：第一天讨论用户画像，第二天梳理功能优先级，第三天准备评审材料。结果到第三天，助手一脸无辜地问「请问您能再描述一下这个产品的目标用户吗？」</p>
+<p>这不是孤例。今天几乎每一个用过 ChatGPT、Claude、文心一言开发 Agent 的人都会撞上同一面墙：<strong>大模型天然没有跨会话的长期记忆</strong>。你可以把上下文塞进 Prompt、用 RAG 检索临时文档、甚至把整段历史塞进 vector store—— 但这些方案要么撑不住会话长度，要么检索出的内容断章取义，要么干脆把成本烧到你怀疑人生。</p>
+<p>更扎心的是，绝大多数 Agent 产品的演示视频都光鲜亮丽，一到「多轮对话、跨会话协作」环节就开始掉链子。背后的根因只有一个：<strong>它们都没有真正解决「持久、结构化、可演化的长期记忆」问题</strong>。</p>
+<p>今天 GitHub Trending 上冒出来的一个项目，就是冲着这个根因去的 ——<strong><a target="_blank" rel="noopener" href="https://github.com/topoteretes/cognee">topoteretes/cognee</a></strong>，22.6k stars、7,800+ commits、114 个 Release，被官方定位为「the open-source AI memory platform for agents」。它把<strong>向量检索、知识图谱、认知科学本体生成</strong>三件套打包成四个极简 API：<code>remember</code>、<code>recall</code>、<code>forget</code>、<code>improve</code>。<strong>把文档、聊天记录、数据库、API 全变成 Agent 可以「记住、回忆、遗忘、自进化」的持久记忆</strong>。</p>
+<p>下面我把它彻底拆开聊聊。</p>
+<hr>
+<h2 id="项目背景：Agent-的「失忆症」到底是怎么来的"><a href="#项目背景：Agent-的「失忆症」到底是怎么来的" class="headerlink" title="项目背景：Agent 的「失忆症」到底是怎么来的"></a>项目背景：Agent 的「失忆症」到底是怎么来的</h2><p>要理解 Cognee 在解决什么，先得理解现代 LLM 应用的记忆结构。</p>
+<p>一个典型的 AI Agent 至少有四层「记忆」：</p>
+<ol>
+<li><strong>上下文窗口（Context Window）</strong>：模型在一次推理里能看到的全部输入。GPT-4o 是 128k token，Claude Sonnet 4 是 200k，本质上是「金鱼记忆」—— 会话一关就没了。</li>
+<li><strong>会话内历史（Conversation History）</strong>：把多轮对话拼成上下文塞回去。聊到第 30 轮就开始爆 token。</li>
+<li><strong>短期 RAG（Retrieval-Augmented Generation）</strong>：用向量数据库（pgvector、Qdrant、Pinecone）按相似度检索历史片段。问题是它<strong>只看相似度、不看关系</strong>，检索出来的内容经常风马牛不相及。</li>
+<li><strong>长期记忆（Long-term Memory）</strong>：跨会话、跨用户、跨任务的持久化记忆。<strong>这一层是当前行业普遍缺失的</strong>。</li>
+</ol>
+<p>Cognee 的切入点就是第 4 层。它的核心理念只有一句话：</p>
+<blockquote>
+<p><strong>把向量检索的「找相似」和知识图谱的「看关系」合并成一套 API，让 Agent 拥有既能按语义搜、又能按实体关系推理的持久记忆。</strong></p>
+</blockquote>
+<p>它甚至有一篇专门的学术论文背书：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2505.24478">《Optimizing the Interface Between Knowledge Graphs and LLMs for Complex Reasoning》</a>，Markovic 等 2025 年发表在 arXiv 上。在 2025 年这个「人人都在卷 RAG」的节点上，<strong>敢于把知识图谱重新搬回台面，并且让 KG 和 LLM 协同工作的项目并不多</strong>。</p>
+<p>更值得一提的是商业信任背书 —— 它的用户列表里出现了 Apple、AWS、Cloudflare、Adobe、Samsung、GitHub、PayPal、Microsoft、Google、Shopify、IBM、Uber、Intel、Alibaba、ByteDance、Capgemini、KPMG、Alipay、Bayer、Baidu 这些名字的工程师，Bayer 还专门有一个案例：从 AI chatbot 升级到 agentic research memory。</p>
+<p>合规层面也走得比较远：通过了 <strong>EU AI Act</strong> 和 <strong>GDPR</strong> 双认证（heyData 认证），并被 UC Berkeley Center for Responsible, Decentralized Intelligence 投资。</p>
+<hr>
+<h2 id="核心功能：四个-API-三个引擎"><a href="#核心功能：四个-API-三个引擎" class="headerlink" title="核心功能：四个 API + 三个引擎"></a>核心功能：四个 API + 三个引擎</h2><p>Cognee 的设计哲学我特别喜欢 ——<strong>API 极简，内核极深</strong>。表面看只有四个方法，但底层跑的是「向量 + 图 + 本体」三件套。</p>
+<h3 id="1-remember：把任意数据塞进记忆"><a href="#1-remember：把任意数据塞进记忆" class="headerlink" title="1. remember：把任意数据塞进记忆"></a>1. <code>remember</code>：把任意数据塞进记忆</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cognee</span><br><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="comment"># 写入「永久知识图谱」</span></span><br><span class="line">    <span class="keyword">await</span> cognee.remember(<span class="string">"Cognee turns documents into AI memory."</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 写入「会话级短期记忆」（后台异步合并到图里）</span></span><br><span class="line">    <span class="keyword">await</span> cognee.remember(<span class="string">"User prefers detailed explanations."</span>, session_id=<span class="string">"chat_1"</span>)</span><br><span class="line"></span><br><span class="line">asyncio.run(main())</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>remember</code> 不只是存一段文本，它会<strong>自动跑一遍完整的 ETL 流水线</strong>：</p>
+<ul>
+<li><strong>解析</strong>：支持 PDF、Office、Markdown、图片、音频、视频，几乎覆盖所有常见数据格式。</li>
+<li><strong>Chunking</strong>：按语义切分而不是固定窗口，避免一句话被拦腰斩断。</li>
+<li><strong>Embedding</strong>：用配置的 LLM Provider 生成向量。</li>
+<li><strong>Cognify</strong>：这是 Cognee 独创的步骤 —— <strong>用 LLM 抽取实体、关系、领域规则，存进图数据库（默认 Kuzu）</strong>。</li>
+<li><strong>Improve</strong>：基于反馈持续优化图的拓扑结构。</li>
+</ul>
+<p>也就是说，<strong>你 <code>remember</code> 一段话，Cognee 在背后已经帮你做完了 NER、关系抽取、图谱构建、向量化</strong> —— 这一整套手工在传统 RAG 方案里要写几百行代码。</p>
+<h3 id="2-recall：按语义-关系联合检索"><a href="#2-recall：按语义-关系联合检索" class="headerlink" title="2. recall：按语义 + 关系联合检索"></a>2. <code>recall</code>：按语义 + 关系联合检索</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 自动路由：挑最合适的检索策略</span></span><br><span class="line">results = <span class="keyword">await</span> cognee.recall(<span class="string">"What does Cognee do?"</span>)</span><br><span class="line"><span class="keyword">for</span> result <span class="keyword">in</span> results:</span><br><span class="line">    <span class="built_in">print</span>(result)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 会话级 recall：先看短期记忆，再穿透到长期图谱</span></span><br><span class="line">results = <span class="keyword">await</span> cognee.recall(<span class="string">"What does the user prefer?"</span>, session_id=<span class="string">"chat_1"</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意一个关键能力：<strong>Cognee 的 recall 不是单纯的「向量相似度 top-k」</strong>。它把检索分成了 Graph Completion、Vector Search、RAG Completion、Text Completion 多种策略，<strong>自动判断当前 query 适合用哪种</strong>。</p>
+<p>举个例子：</p>
+<ul>
+<li>问「Cognee 是干嘛的？」→ 走 RAG Completion，从文档里抠。</li>
+<li>问「这个项目跟 LangChain 有什么关系？」→ 走 Graph Completion，沿图边遍历。</li>
+<li>问「用户上次让我做什么来着？」→ 走 session memory fast path。</li>
+</ul>
+<p>这个「auto-routing」的能力是大多数 RAG 框架没有的 ——LangChain、LlamaIndex 默认就是「向量化 → top-k → 拼 prompt」三板斧。</p>
+<h3 id="3-forget：可治理的遗忘"><a href="#3-forget：可治理的遗忘" class="headerlink" title="3. forget：可治理的遗忘"></a>3. <code>forget</code>：可治理的遗忘</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">await</span> cognee.forget(dataset=<span class="string">"main_dataset"</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>GDPR 里有「被遗忘权（Right to be Forgotten）」，Cognee 把这个能力做成了一等公民。<strong>可以按 dataset、按 user、按 session 粒度删除记忆</strong>，并且会同步清理图谱里的孤儿节点。这对做 ToB 产品尤其是金融、医疗场景特别重要。</p>
+<h3 id="4-improve：让记忆自进化"><a href="#4-improve：让记忆自进化" class="headerlink" title="4. improve：让记忆自进化"></a>4. <code>improve</code>：让记忆自进化</h3><p>这是 Cognee 最具差异化的能力之一 —— <strong>记忆不是写进去就完事了，它会基于用户反馈持续调整</strong>。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">await</span> cognee.improve(user_feedback=<span class="string">"This answer was unhelpful because it missed the pricing detail."</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>improve</code> 会基于反馈信号重新评估相关节点、边的权重，让后续 recall 的结果更精准。这相当于给 Agent 装了一个<strong>记忆层面的 fine-tuning 机制</strong>。</p>
+<h3 id="5-部署选项"><a href="#5-部署选项" class="headerlink" title="5. 部署选项"></a>5. 部署选项</h3><p>Cognee 给生产化做得很全：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>平台</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>不想管基础设施</td>
+<td> Cognee Cloud（<code>await cognee.serve()</code>）</td>
+</tr>
+<tr>
+<td>Serverless + GPU</td>
+<td>Modal（<code>bash distributed/deploy/modal-deploy.sh</code>）</td>
+</tr>
+<tr>
+<td>极简 PaaS</td>
+<td>Railway（<code>railway init &amp;&amp; railway up</code>）</td>
+</tr>
+<tr>
+<td>边缘部署</td>
+<td> Fly.io（<code>bash distributed/deploy/fly-deploy.sh</code>）</td>
+</tr>
+<tr>
+<td>简单 PaaS</td>
+<td>Render（Deploy to Render 按钮）</td>
+</tr>
+<tr>
+<td>云端沙箱</td>
+<td> Daytona（<code>distributed/deploy/daytona_sandbox.py</code>）</td>
+</tr>
+</tbody></table>
+<p>Docker 镜像也开箱即用：<code>cognee/cognee</code>（API 8000）、<code>cognee/cognee-mcp</code>（MCP 8001），<strong>两个镜像端口不冲突，可以同时跑</strong>。</p>
+<hr>
+<h2 id="实战示例：把-Cognee-接到-Claude-Code"><a href="#实战示例：把-Cognee-接到-Claude-Code" class="headerlink" title="实战示例：把 Cognee 接到 Claude Code"></a>实战示例：把 Cognee 接到 Claude Code</h2><p>光说不练假把式。我来演示两个最常见的使用场景。</p>
+<h3 id="场景一：5-分钟给-Claude-Code-装上「跨会话记忆」"><a href="#场景一：5-分钟给-Claude-Code-装上「跨会话记忆」" class="headerlink" title="场景一：5 分钟给 Claude Code 装上「跨会话记忆」"></a>场景一：5 分钟给 Claude Code 装上「跨会话记忆」</h3><p>Cognee 官方提供了一个 <a target="_blank" rel="noopener" href="https://github.com/topoteretes/cognee-integrations/tree/main/integrations/claude-code">Claude Code 插件</a>。安装完之后，Claude Code 的整个生命周期都被接管：</p>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th> 做什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>SessionStart</code></td>
+<td>初始化记忆、加载相关上下文</td>
+</tr>
+<tr>
+<td><code>PostToolUse</code></td>
+<td>自动捕获工具调用行为</td>
+</tr>
+<tr>
+<td><code>UserPromptSubmit</code></td>
+<td>注入相关的历史上下文</td>
+</tr>
+<tr>
+<td><code>PreCompact</code></td>
+<td>上下文压缩前先把关键信息固化到图里</td>
+</tr>
+<tr>
+<td><code>SessionEnd</code></td>
+<td>把会话级数据桥接到永久图谱</td>
+</tr>
+</tbody></table>
+<p><strong>效果</strong>：你今天跟 Claude Code 聊了一个复杂的多文件重构方案，明天重新打开 —— 它会主动告诉你「根据我们昨天的讨论，你当时决定把 X 模块拆出去……」。<strong>这种体验在传统方案里几乎不可能实现</strong>，因为光是把昨天的对话塞进今天的 prompt 就会把 token 撑爆，而 Cognee 是按「相关实体 + 关系」精准召回的。</p>
+<h3 id="场景二：构建一个「会学习的-SQL-Copilot」"><a href="#场景二：构建一个「会学习的-SQL-Copilot」" class="headerlink" title="场景二：构建一个「会学习的 SQL Copilot」"></a>场景二：构建一个「会学习的 SQL Copilot」</h3><p>来自 Cognee 官方 Example 2（<a target="_blank" rel="noopener" href="https://github.com/topoteretes/cognee/blob/main/examples">Expert Knowledge Distillation</a>）：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cognee</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">setup_sql_copilot</span>():</span><br><span class="line">    <span class="comment"># 1. 把团队的 SQL 规范文档塞进记忆</span></span><br><span class="line">    <span class="keyword">await</span> cognee.remember(<span class="string">"""</span></span><br><span class="line"><span class="string">    - 财务相关的查询必须使用 partition_date 过滤</span></span><br><span class="line"><span class="string">    - 用户表大表 JOIN 必须带 LIMIT 10000</span></span><br><span class="line"><span class="string">    - 所有时间字段统一使用 ISO 8601</span></span><br><span class="line"><span class="string">    """</span>, dataset_name=<span class="string">"sql_guidelines"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 把历史「好 SQL」案例存进去</span></span><br><span class="line">    <span class="keyword">await</span> cognee.remember(<span class="built_in">open</span>(<span class="string">"historical_good_queries.sql"</span>).read(),</span><br><span class="line">                          dataset_name=<span class="string">"sql_examples"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 用户提问时直接 recall</span></span><br><span class="line">    results = <span class="keyword">await</span> cognee.recall(</span><br><span class="line">        <span class="string">"查询最近 30 天 DAU 按渠道拆分的 SQL 怎么写？"</span>,</span><br><span class="line">        dataset_name=[<span class="string">"sql_guidelines"</span>, <span class="string">"sql_examples"</span>]</span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">return</span> results</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这套方案相当于把团队多年沉淀的「SQL 编码规范 + 历史最佳实践」做成了一个<strong>可被 Agent 持续调用的知识库</strong>，新员工入职第一天就能拥有老员工的经验值。</p>
+<hr>
+<h2 id="跟同类项目比，Cognee-强在哪"><a href="#跟同类项目比，Cognee-强在哪" class="headerlink" title="跟同类项目比，Cognee 强在哪"></a>跟同类项目比，Cognee 强在哪</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th> Cognee</th>
+<th>LangChain Memory</th>
+<th>LlamaIndex</th>
+<th>mem0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 长期持久化</td>
+<td>✅ 自带图谱</td>
+<td>⚠️ 需自己接 DB</td>
+<td>⚠️ 需自己接 DB</td>
+<td>✅ 向量为主</td>
+</tr>
+<tr>
+<td>知识图谱</td>
+<td>✅ 一等公民</td>
+<td>❌ 无</td>
+<td>⚠️ 第三方插件</td>
+<td>❌ 无</td>
+</tr>
+<tr>
+<td>关系推理</td>
+<td>✅ Graph Completion</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>跨框架集成</td>
+<td>✅ Claude Code/MCP/LangGraph/CrewAI</td>
+<td>✅ LangChain 系</td>
+<td>✅ LlamaIndex 系</td>
+<td>⚠️ 有限</td>
+</tr>
+<tr>
+<td>自进化</td>
+<td>✅ <code>improve</code> API</td>
+<td>❌</td>
+<td>❌</td>
+<td>⚠️ 简单反馈</td>
+</tr>
+<tr>
+<td>可遗忘</td>
+<td>✅ GDPR 一等公民</td>
+<td>⚠️ 需手动</td>
+<td>⚠️ 需手动</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>学术背书</td>
+<td>✅ arXiv 论文</td>
+<td>❌</td>
+<td>⚠️ 有论文</td>
+<td>⚠️ 有论文</td>
+</tr>
+<tr>
+<td>部署成熟度</td>
+<td>✅ 6+ 平台</td>
+<td>⚠️ 自己拼</td>
+<td>⚠️ 自己拼</td>
+<td>✅ 较简单</td>
+</tr>
+</tbody></table>
+<p><strong>Cognee 的护城河在于「知识图谱是一等公民」</strong>。大多数 RAG 框架把 KG 当成外挂的 fancy 插件，Cognee 直接把它焊死在 API 表面，并且通过 <code>cognify</code> 步骤让 LLM 主动参与图谱构建 —— 这是它跟 LangChain/LlamaIndex/mem0 最大的差异。</p>
+<hr>
+<h2 id="适用场景和限制"><a href="#适用场景和限制" class="headerlink" title="适用场景和限制"></a>适用场景和限制</h2><h3 id="✅-适合用-Cognee-的场景"><a href="#✅-适合用-Cognee-的场景" class="headerlink" title="✅ 适合用 Cognee 的场景"></a>✅ 适合用 Cognee 的场景</h3><ul>
+<li><strong>企业知识库问答</strong>：跨部门、跨系统的文档统一 recall，需要关系推理。</li>
+<li><strong>客户支持 Agent</strong>：要把用户历史工单、产品手册、内部 SOP 全串起来。</li>
+<li><strong>研究类助手</strong>：论文、项目文档、会议纪要需要长期沉淀。</li>
+<li><strong>Claude Code / Cursor 类编码 Agent</strong>：跨会话的「项目记忆」。</li>
+<li><strong>多 Agent 协作</strong>：Cognee 提供 shared memory API，<strong>多个 Agent 可以读同一张图</strong>。</li>
+</ul>
+<h3 id="❌-目前不太适合的场景"><a href="#❌-目前不太适合的场景" class="headerlink" title="❌ 目前不太适合的场景"></a>❌ 目前不太适合的场景</h3><ul>
+<li><strong>超大规模（&gt;1 亿文档）</strong>：默认 Kuzu 适合中等规模，<strong>需要换 Neo4j 或自研 worker</strong>（仓库里有 <code>cognee_db_workers</code> 模板）。</li>
+<li><strong>纯流式聊天机器人</strong>：如果没有跨会话需求，传统方案更轻量。</li>
+<li><strong>对延迟极敏感（&lt; 100ms）</strong>：<code>cognify</code> 步骤需要 LLM 介入，<strong>首次写入会有秒级延迟</strong>。</li>
+<li><strong>完全不想碰 Python</strong>：Cognee 的核心 SDK 是 Python，<strong>其他语言目前要靠 MCP / REST 间接调用</strong>。</li>
+</ul>
+<h3 id="⚠️-几个工程化提醒"><a href="#⚠️-几个工程化提醒" class="headerlink" title="⚠️ 几个工程化提醒"></a>⚠️ 几个工程化提醒</h3><ul>
+<li><strong>LLM Provider 需要自己配</strong> ——Cognee 默认 OpenAI，但支持 Anthropic、Ollama、Bedrock 等 20+ 家，记得看 <a target="_blank" rel="noopener" href="https://docs.cognee.ai/setup-configuration/llm-providers">LLM Provider 文档</a>。</li>
+<li><strong>MCP server 默认跑在 Docker 里</strong> —— 需要 Docker Desktop / Colima / OCI 兼容 runtime。</li>
+<li><strong>首次跑 <code>remember</code> 会比较慢</strong> —— 因为要建图，建议先在小批量数据上试。</li>
+</ul>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Cognee 给我的最大启发是：<strong>Agent 真正的护城河不是模型能力，而是记忆质量</strong>。</p>
+<p>当所有人都在卷 context window 大小、卷 fine-tuning 技巧、卷 reasoning 能力的时候，Cognee 反其道而行 —— <strong>把记忆层做厚、做结构化、做可治理</strong>。它用四个极简的 API（<code>remember</code> / <code>recall</code> / <code>forget</code> / <code>improve</code>）封装了向量检索、知识图谱、认知科学本体这三件大事，让开发者 <strong>5 行代码就能给 Agent 装上真正的「长期记忆」</strong>。</p>
+<p>如果你的 Agent 项目正在被「跨会话失忆」「检索结果风马牛不相及」「用户反馈没沉淀」这三件事折磨，<strong>强烈建议花一个下午把 Cognee 跑起来</strong>。GitHub 地址：<a target="_blank" rel="noopener" href="https://github.com/topoteretes/cognee">https://github.com/topoteretes/cognee</a>，文档：<a target="_blank" rel="noopener" href="https://docs.cognee.ai/">https://docs.cognee.ai/</a>。</p>
+<p>下期我打算聊聊怎么把 Cognee 和 Hermes Agent 接起来，做一个「有持久记忆的日常助手」。如果你也在玩 Agent 记忆层，欢迎在评论区交流。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/28/cognee-open-source-ai-agent-memory-platform/" title="Cognee：给 AI Agent 一块真正能用的「长期记忆」，开源知识图谱 + 向量检索双引擎">https://www.daishengli.top/2026/06/28/cognee-open-source-ai-agent-memory-platform/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/" rel="tag"># 开源框架</a>
+              <a href="/tags/%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86/" rel="tag"># 长期记忆</a>
+              <a href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" rel="tag"># 知识图谱</a>
+              <a href="/tags/RAG/" rel="tag"># RAG</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/27/ai-berkshire-claude-code-value-investing-framework/" rel="prev" title="AI Berkshire：把巴菲特、芒格、段永平、李录装进 Claude Code，开源价值投资研究框架">
+                  <i class="fa fa-angle-left"></i> AI Berkshire：把巴菲特、芒格、段永平、李录装进 Claude Code，开源价值投资研究框架
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/29/ppt-master-ai-generates-natively-editable-pptx/" rel="next" title="30k Star 的 PPT Master：让 AI 直接吐出「能改的」PPTX，告别一张图糊弄人的时代">
+                  30k Star 的 PPT Master：让 AI 直接吐出「能改的」PPTX，告别一张图糊弄人的时代 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

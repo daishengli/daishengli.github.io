@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="alibaba&#x2F;page-agent 是一个纯 JavaScript 的&quot;页面内 GUI Agent&quot;，用一行 script 就能让你的 SaaS &#x2F; 后台 &#x2F; 旧系统支持&quot;用一句话操作&quot;。GitHub 19,863 stars，MCP 接入，零后端、零浏览器扩展、零视觉模型，今天 GitHub Trending 第 11。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Alibaba Page Agent：把 &quot;自然语言&quot; 直接接到你的网页里，AI 替用户点击的时代到了">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/26/page-agent-in-page-gui-agent-natural-language/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="alibaba&#x2F;page-agent 是一个纯 JavaScript 的&quot;页面内 GUI Agent&quot;，用一行 script 就能让你的 SaaS &#x2F; 后台 &#x2F; 旧系统支持&quot;用一句话操作&quot;。GitHub 19,863 stars，MCP 接入，零后端、零浏览器扩展、零视觉模型，今天 GitHub Trending 第 11。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-26T02:01:30.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.407Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="page-agent">
+<meta property="article:tag" content="GUI Agent">
+<meta property="article:tag" content="浏览器自动化">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/26/page-agent-in-page-gui-agent-natural-language/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/26/page-agent-in-page-gui-agent-natural-language/","path":"2026/06/26/page-agent-in-page-gui-agent-natural-language/","title":"Alibaba Page Agent：把 \"自然语言\" 直接接到你的网页里，AI 替用户点击的时代到了"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Alibaba Page Agent：把 "自然语言" 直接接到你的网页里，AI 替用户点击的时代到了 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Alibaba-Page-Agent%EF%BC%9A%E6%8A%8A%E2%80%9D%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E2%80%9D%E7%9B%B4%E6%8E%A5%E6%8E%A5%E5%88%B0%E4%BD%A0%E7%9A%84%E7%BD%91%E9%A1%B5%E9%87%8C%EF%BC%8CAI-%E6%9B%BF%E7%94%A8%E6%88%B7%E7%82%B9%E5%87%BB%E7%9A%84%E6%97%B6%E4%BB%A3%E5%88%B0%E4%BA%86"><span class="nav-number">1.</span> <span class="nav-text">Alibaba Page Agent：把” 自然语言” 直接接到你的网页里，AI 替用户点击的时代到了</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%A2%E6%9C%8D%E6%AF%8F%E5%A4%A9%E9%83%BD%E5%9C%A8%E9%87%8D%E5%A4%8D%E5%90%8C%E4%B8%80%E5%8F%A5%E8%AF%9D"><span class="nav-number">1.1.</span> <span class="nav-text">一、客服每天都在重复同一句话</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E8%BF%99%E4%B8%8D%E6%98%AF%E5%8F%88%E4%B8%80%E6%AC%BE%E2%80%9DAI-%E6%93%8D%E4%BD%9C%E7%94%B5%E8%84%91%E2%80%9D"><span class="nav-number">1.2.</span> <span class="nav-text">二、这不是又一款”AI 操作电脑”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E6%8A%8A%E2%80%9DAI-%E6%93%8D%E4%BD%9C%E7%BD%91%E9%A1%B5%E2%80%9D%E5%8E%8B%E5%88%B0%E6%9E%81%E8%87%B4%E7%AE%80%E5%8D%95"><span class="nav-number">1.3.</span> <span class="nav-text">三、核心功能：把”AI 操作网页” 压到极致简单</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%9B%B6%E4%BE%9D%E8%B5%96%E5%B5%8C%E5%85%A5%EF%BC%9A%E4%B8%80%E8%A1%8C-script-%E5%B0%B1%E8%83%BD%E7%94%A8"><span class="nav-number">1.3.1.</span> <span class="nav-text">1. 零依赖嵌入：一行 script 就能用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%BA%AF%E6%96%87%E6%9C%AC-DOM-%E8%A7%A3%E6%9E%90%EF%BC%9A%E4%B8%8D%E9%9C%80%E8%A6%81%E6%88%AA%E5%9B%BE%E3%80%81%E4%B8%8D%E8%A6%81%E5%A4%9A%E6%A8%A1%E6%80%81"><span class="nav-number">1.3.2.</span> <span class="nav-text">2. 纯文本 DOM 解析：不需要截图、不要多模态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%9A%8F%E4%BD%A0%E5%B8%A6-LLM%EF%BC%88Bring-Your-Own-LLM%EF%BC%89"><span class="nav-number">1.3.3.</span> <span class="nav-text">3. 随你带 LLM（Bring Your Own LLM）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%AE%89%E5%85%A8%E5%8F%AF%E6%8E%A7%EF%BC%9A%E7%99%BD%E5%90%8D%E5%8D%95-%E6%95%B0%E6%8D%AE%E8%84%B1%E6%95%8F"><span class="nav-number">1.3.4.</span> <span class="nav-text">4. 安全可控：白名单 + 数据脱敏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%B7%A8%E9%A1%B5%E9%9D%A2-MCP-%E6%89%A9%E5%B1%95%EF%BC%9ABeta-%E4%BD%86%E6%BD%9C%E5%8A%9B%E5%B7%A8%E5%A4%A7"><span class="nav-number">1.3.5.</span> <span class="nav-text">5. 跨页面 + MCP 扩展：Beta 但潜力巨大</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A5-%E5%88%86%E9%92%9F%E7%BB%99%E4%BD%A0%E7%9A%84%E5%90%8E%E5%8F%B0%E8%A3%85%E4%B8%8A-AI-%E5%8A%A9%E6%89%8B"><span class="nav-number">1.4.</span> <span class="nav-text">四、实战示例：5 分钟给你的后台装上 AI 助手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%EF%BC%9A%E8%AE%A9%E7%94%A8%E6%88%B7%E8%83%BD%E7%94%A8%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%93%8D%E4%BD%9C%E5%90%8E%E5%8F%B0"><span class="nav-number">1.4.1.</span> <span class="nav-text">场景：让用户能用一句话操作后台</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E8%A3%85%E5%8C%85"><span class="nav-number">1.4.2.</span> <span class="nav-text">第一步：装包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E5%88%9D%E5%A7%8B%E5%8C%96-Agent"><span class="nav-number">1.4.3.</span> <span class="nav-text">第二步：初始化 Agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E8%AE%A9%E5%90%8E%E7%AB%AF%E5%85%B3%E9%94%AE%E5%85%83%E7%B4%A0%E2%80%9D%E5%AF%B9-AI-%E5%8F%8B%E5%A5%BD%E2%80%9D"><span class="nav-number">1.4.4.</span> <span class="nav-text">第三步：让后端关键元素” 对 AI 友好”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9A%E5%9C%A8%E9%A1%B5%E9%9D%A2%E9%87%8C%E6%8C%82%E4%B8%8A%E6%B0%94%E6%B3%A1"><span class="nav-number">1.4.5.</span> <span class="nav-text">第四步：在页面里挂上气泡</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">1.5.</span> <span class="nav-text">五、适用场景和限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E5%88%AB%E9%80%82%E5%90%88"><span class="nav-number">1.5.1.</span> <span class="nav-text">特别适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-number">1.5.2.</span> <span class="nav-text">需要注意的限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">六、总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/26/page-agent-in-page-gui-agent-natural-language/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Alibaba Page Agent：把 &quot;自然语言&quot; 直接接到你的网页里，AI 替用户点击的时代到了 | 小戴的网络日志">
+      <meta itemprop="description" content="alibaba&#x2F;page-agent 是一个纯 JavaScript 的&quot;页面内 GUI Agent&quot;，用一行 script 就能让你的 SaaS &#x2F; 后台 &#x2F; 旧系统支持&quot;用一句话操作&quot;。GitHub 19,863 stars，MCP 接入，零后端、零浏览器扩展、零视觉模型，今天 GitHub Trending 第 11。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Alibaba Page Agent：把 "自然语言" 直接接到你的网页里，AI 替用户点击的时代到了
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-26 10:01:30" itemprop="dateCreated datePublished" datetime="2026-06-26T10:01:30+08:00">2026-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">alibaba/page-agent 是一个纯 JavaScript 的"页面内 GUI Agent"，用一行 script 就能让你的 SaaS / 后台 / 旧系统支持"用一句话操作"。GitHub 19,863 stars，MCP 接入，零后端、零浏览器扩展、零视觉模型，今天 GitHub Trending 第 11。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Alibaba-Page-Agent：把”自然语言”直接接到你的网页里，AI-替用户点击的时代到了"><a href="#Alibaba-Page-Agent：把”自然语言”直接接到你的网页里，AI-替用户点击的时代到了" class="headerlink" title="Alibaba Page Agent：把”自然语言”直接接到你的网页里，AI 替用户点击的时代到了"></a>Alibaba Page Agent：把” 自然语言” 直接接到你的网页里，AI 替用户点击的时代到了</h1><h2 id="一、客服每天都在重复同一句话"><a href="#一、客服每天都在重复同一句话" class="headerlink" title="一、客服每天都在重复同一句话"></a>一、客服每天都在重复同一句话</h2><p>“请先点右上角的设置，再点账户安全，再点修改密码，再……”——</p>
+<p>如果你做过 B2B SaaS、ERP、CRM、客服系统，这种对话你应该见过几百遍。<strong>用户其实不想看文档、不想学菜单，他们就想说一句” 把我上周的订单导成 Excel 发到我邮箱”</strong>。</p>
+<p>过去两年，”AI 操作电脑” 这个方向确实火过好几轮 ——browser-use、OpenAI Operator、Anthropic Computer Use、Manus、Claude in Chrome—— 但它们基本都长一个样：装个浏览器扩展、跑个 Python 进程、配个 headless 浏览器、再接一个会看截图的多模态大模型。<strong>这套东西对开发者很重，对用户更重</strong>：90% 的 B2B 产品根本不可能让用户为了用你的后台而去装一个 Chrome 扩展。</p>
+<p>今天登上 GitHub Trending 第 11 名的 <a target="_blank" rel="noopener" href="https://github.com/alibaba/page-agent">alibaba/page-agent</a>（19,863 stars，MIT 协议）走了一条完全不一样的路：它<strong>不接管浏览器，它就住在你的网页里</strong>。一行 <code>&lt;script&gt;</code>、NPM 一个包，纯 JavaScript 嵌入到任意网页后，<strong>你的用户就能用自然语言直接操作这个页面</strong>。零后端、零扩展、零视觉模型、零多模态。</p>
+<p>换句话说：<strong>AI 替用户点按钮这件事，第一次可以” 前端一发上线” 就搞定了</strong>。</p>
+<h2 id="二、这不是又一款”AI-操作电脑”"><a href="#二、这不是又一款”AI-操作电脑”" class="headerlink" title="二、这不是又一款”AI 操作电脑”"></a>二、这不是又一款”AI 操作电脑”</h2><p>把 page-agent 理解成”AI 自动化” 框架是一种典型误读。它和 browser-use、OpenAI Operator 这一票”AI 操作浏览器” 的工具，<strong>解决的问题根本不在一个维度上</strong>。看官方那张对比表就懂了：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>page-agent</th>
+<th>browser-use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 部署方式</td>
+<td>嵌入到网页里</td>
+<td>外部工具</td>
+</tr>
+<tr>
+<td>操作范围</td>
+<td>当前页面</td>
+<td>整个浏览器</td>
+</tr>
+<tr>
+<td>目标用户</td>
+<td>前端 / Web 开发者</td>
+<td>爬虫 / Agent 开发者</td>
+</tr>
+<tr>
+<td>典型场景</td>
+<td>给产品加 AI 体验</td>
+<td>跑自动化任务</td>
+</tr>
+</tbody></table>
+<p>翻译一下：</p>
+<ul>
+<li><strong>browser-use</strong> 解决的是” 我要让 AI 替我控制整个浏览器”—— 爬数据、跑回归测试、批量操作。它站在浏览器外面，是<strong>开发者的自动化工具</strong>。</li>
+<li><strong>page-agent</strong> 解决的是” 我要让我网站的用户说一句中文就能完成操作”—— 它是页面里的一个 SDK，是<strong>给产品加 AI 体验的组件</strong>。</li>
+</ul>
+<p>你往 page-agent 的官网 Demo 里丢一个真实网站，它就<strong>长在那个网站里</strong>，右下角浮一个对话气泡。用户点开说一句” 把这个商品加进购物车，然后跳到结算页”，它就真的在那个页面里找到按钮、点击、跳转。<strong>整个过程没有任何浏览器扩展、没有 Python 进程、没有 headless Chrome</strong>。</p>
+<p>这个定位差异，决定了它能解决另一类工具永远解决不了的问题：<strong>旧系统现代化</strong>。一个 2010 年写的 jQuery 后台，老板今天想加”AI 助手”，用 browser-use 那一套要装扩展、装 Python、配代理；用 page-agent 只需要把这个 SDK 打进去 —— <strong>老系统的代码一行都不用改</strong>。</p>
+<h2 id="三、核心功能：把”AI-操作网页”压到极致简单"><a href="#三、核心功能：把”AI-操作网页”压到极致简单" class="headerlink" title="三、核心功能：把”AI 操作网页”压到极致简单"></a>三、核心功能：把”AI 操作网页” 压到极致简单</h2><p>page-agent 的功能设计非常克制，全都是围绕” <strong>让前端开发者用最少的代码把 AI 体验塞进页面</strong> “这一件事展开的。我把它浓缩成 5 个亮点：</p>
+<h3 id="1-零依赖嵌入：一行-script-就能用"><a href="#1-零依赖嵌入：一行-script-就能用" class="headerlink" title="1. 零依赖嵌入：一行 script 就能用"></a>1. 零依赖嵌入：一行 script 就能用</h3><p>最快的接入方式就一行：</p>
+<figure class="highlight html"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span></span></span><br><span class="line"><span class="tag">  <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/page-agent@1.10.0/dist/iife/page-agent.demo.js"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">crossorigin</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>页面加载完，右下角立刻浮出一个 AI 对话气泡。<strong>用户不需要装任何东西</strong> —— 没有 Chrome 扩展、没有 Python 环境、没有 headless 浏览器。给 SaaS 客户、内网后台、政府 / 金融这种” 用户电脑被锁得很死” 的场景，简直是量身定做。</p>
+<p>中国大陆访问可以用 npmmirror 镜像：</p>
+<figure class="highlight html"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://registry.npmmirror.com/page-agent/1.10.0/files/dist/iife/page-agent.demo.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="2-纯文本-DOM-解析：不需要截图、不要多模态"><a href="#2-纯文本-DOM-解析：不需要截图、不要多模态" class="headerlink" title="2. 纯文本 DOM 解析：不需要截图、不要多模态"></a>2. 纯文本 DOM 解析：不需要截图、不要多模态</h3><p>传统 GUI Agent 的标准做法是截屏→丢给 GPT-4V / Claude 3.5 Sonnet 这种多模态模型看图。page-agent 选了另一条路：<strong>直接把 DOM 序列化成” 高密度脱水” 的纯文本</strong>喂给 LLM。</p>
+<p>这带来的好处是<strong>质变级别的</strong>：</p>
+<ul>
+<li><strong>任何 LLM 都能用</strong> —— 不挑多模态、不挑厂商，Qwen、GPT、Claude、DeepSeek、本地 Ollama 模型都行。</li>
+<li><strong>Token 成本砍掉一大截</strong> —— 一张截图的 token 量是同等信息量 DOM 文本的几十倍。</li>
+<li><strong>速度快、首字延迟低</strong> —— 文本 token 流式比图片推理快得多。</li>
+<li><strong>隐私好</strong> —— 截图里可能包含敏感信息（金额、姓名、未公开的 bug 提示），DOM 文本可以精确控制哪些元素被脱敏。</li>
+</ul>
+<h3 id="3-随你带-LLM（Bring-Your-Own-LLM）"><a href="#3-随你带-LLM（Bring-Your-Own-LLM）" class="headerlink" title="3. 随你带 LLM（Bring Your Own LLM）"></a>3. 随你带 LLM（Bring Your Own LLM）</h3><p>这是 page-agent 第二个杀手锏 —— <strong>模型完全由你定</strong>。NPM 包里默认接的是 Qwen3.5-Plus（阿里云百炼），但你可以换成任何 OpenAI 兼容的端点：</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> { <span class="title class_">PageAgent</span> } <span class="keyword">from</span> <span class="string">'page-agent'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> agent = <span class="keyword">new</span> <span class="title class_">PageAgent</span>({</span><br><span class="line">  <span class="attr">model</span>: <span class="string">'qwen3.5-plus'</span>,</span><br><span class="line">  <span class="attr">baseURL</span>: <span class="string">'https://dashscope.aliyuncs.com/compatible-mode/v1'</span>,</span><br><span class="line">  <span class="attr">apiKey</span>: <span class="string">'YOUR_API_KEY'</span>,</span><br><span class="line">  <span class="attr">language</span>: <span class="string">'zh-CN'</span>,</span><br><span class="line">})</span><br><span class="line"></span><br><span class="line"><span class="keyword">await</span> agent.<span class="title function_">execute</span>(<span class="string">'点击登录按钮'</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>国外用户可以接 OpenAI</strong>、<strong>国内用户接 Qwen / DeepSeek</strong>、<strong>对成本敏感接本地 Ollama</strong>、<strong>对数据合规要求高可以走私有化部署的 vLLM</strong>—— 只要是 OpenAI 兼容的 <code>/v1/chat/completions</code>，就能塞进去。</p>
+<h3 id="4-安全可控：白名单-数据脱敏"><a href="#4-安全可控：白名单-数据脱敏" class="headerlink" title="4. 安全可控：白名单 + 数据脱敏"></a>4. 安全可控：白名单 + 数据脱敏</h3><p>给”AI 替用户点按钮” 这种能力做安全设计是公认的难题。page-agent 给出了三个机制：</p>
+<ul>
+<li><strong>操作白名单（Operation Allowlist）</strong>：可以配置”AI 只能点 id 为 <code>add-to-cart</code> 的按钮”，或者”AI 不能访问路由 <code>/admin/*</code>“，<strong>从源头控制爆炸半径</strong>。</li>
+<li><strong>数据脱敏（Data Masking）</strong>：可以声明”DOM 里所有 class 为 <code>sensitive-*</code> 的元素，喂给 LLM 时替换成 <code>***</code>“，<strong>保护 PII 和商业敏感数据</strong>。</li>
+<li><strong>自定义知识注入（Custom Knowledge）</strong>：你可以告诉 AI “我们公司叫 ABC，登录页失败 3 次会锁账号 10 分钟”—— 让它按你定义的规则工作，而不是凭 LLM 自己的猜测。</li>
+</ul>
+<p>对于做 B2B / 金融 / 医疗 SaaS 的团队来说，这三点是<strong>能不能上生产</strong>的硬性条件。</p>
+<h3 id="5-跨页面-MCP-扩展：Beta-但潜力巨大"><a href="#5-跨页面-MCP-扩展：Beta-但潜力巨大" class="headerlink" title="5. 跨页面 + MCP 扩展：Beta 但潜力巨大"></a>5. 跨页面 + MCP 扩展：Beta 但潜力巨大</h3><p>1.10.0 版本里新加了两个 Beta 功能，<strong>点出了 page-agent 下一个阶段的形态</strong>：</p>
+<ul>
+<li><strong>Chrome 扩展版 Page Agent Ext</strong>：让单个页面 Agent 的能力扩展到整个浏览器 —— 跨标签页、跨会话操作。</li>
+<li><strong>MCP Server（<code>@page-agent/mcp</code>）</strong>：让本地任何 MCP 客户端（Claude Desktop / Cursor / 自研 Agent）都能<strong>通过 MCP 协议指挥这个浏览器</strong>：</li>
+</ul>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"mcpServers"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"page-agent"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"command"</span><span class="punctuation">:</span> <span class="string">"npx"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"args"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"-y"</span><span class="punctuation">,</span> <span class="string">"@page-agent/mcp"</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"env"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">        <span class="attr">"LLM_BASE_URL"</span><span class="punctuation">:</span> <span class="string">"https://api.openai.com/v1"</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">"LLM_API_KEY"</span><span class="punctuation">:</span> <span class="string">"sk-xxx"</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">"LLM_MODEL_NAME"</span><span class="punctuation">:</span> <span class="string">"gpt-5.2"</span></span><br><span class="line">      <span class="punctuation">}</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这两个能力叠在一起意味着：<strong>page-agent 既是” 页面内的体验组件”，也是” 页面外的 MCP 工具”</strong>。你的 Claude Desktop 在本地，可以直接说” 帮我打开 Shopify 后台，把昨天那 12 个订单标记为已发货”—— 执行不在 Claude 里完成，而是通过 MCP 转交给 page-agent 在你的真实浏览器里完成。<strong>本地 Agent + 真实浏览器 + 真实账号</strong>这个组合，是 OpenAI Operator 之外的另一条路。</p>
+<h2 id="四、实战示例：5-分钟给你的后台装上-AI-助手"><a href="#四、实战示例：5-分钟给你的后台装上-AI-助手" class="headerlink" title="四、实战示例：5 分钟给你的后台装上 AI 助手"></a>四、实战示例：5 分钟给你的后台装上 AI 助手</h2><p>下面是给一个真实后台” 加 AI 助手” 的最小可行示例。</p>
+<h3 id="场景：让用户能用一句话操作后台"><a href="#场景：让用户能用一句话操作后台" class="headerlink" title="场景：让用户能用一句话操作后台"></a>场景：让用户能用一句话操作后台</h3><p>假设你有一个 admin 后台，里面有个表格，用户经常要做” 筛选状态为待审核的订单 → 导出 Excel → 发邮件” 这一串操作。传统做法：写 5 个筛选器、3 个按钮、1 个导出 modal。<strong>用 page-agent 可以让用户直接说一句话搞定</strong>。</p>
+<h3 id="第一步：装包"><a href="#第一步：装包" class="headerlink" title="第一步：装包"></a>第一步：装包</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install page-agent</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="第二步：初始化-Agent"><a href="#第二步：初始化-Agent" class="headerlink" title="第二步：初始化 Agent"></a>第二步：初始化 Agent</h3><figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// resources/js/agent.js</span></span><br><span class="line"><span class="keyword">import</span> { <span class="title class_">PageAgent</span> } <span class="keyword">from</span> <span class="string">'page-agent'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1) 创建 Agent</span></span><br><span class="line"><span class="keyword">const</span> agent = <span class="keyword">new</span> <span class="title class_">PageAgent</span>({</span><br><span class="line">  <span class="attr">model</span>: process.<span class="property">env</span>.<span class="property">AGENT_MODEL</span> || <span class="string">'qwen3.5-plus'</span>,</span><br><span class="line">  <span class="attr">baseURL</span>: process.<span class="property">env</span>.<span class="property">AGENT_BASE_URL</span>,</span><br><span class="line">  <span class="attr">apiKey</span>: process.<span class="property">env</span>.<span class="property">AGENT_API_KEY</span>,</span><br><span class="line">  <span class="attr">language</span>: <span class="string">'zh-CN'</span>,</span><br><span class="line">})</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2) （可选）配置操作白名单和数据脱敏</span></span><br><span class="line">agent.<span class="title function_">setConfig</span>({</span><br><span class="line">  <span class="comment">// AI 只能点击这些 data-agent-safe 标记的元素</span></span><br><span class="line">  <span class="attr">allowedSelectors</span>: [<span class="string">'[data-agent-safe="true"]'</span>],</span><br><span class="line">  <span class="comment">// 喂给 LLM 之前，把 class 含 sensitive 的元素内容替换成 ***</span></span><br><span class="line">  <span class="attr">maskingRules</span>: [</span><br><span class="line">    { <span class="attr">selector</span>: <span class="string">'.sensitive'</span>, <span class="attr">replace</span>: <span class="string">'***'</span> },</span><br><span class="line">  ],</span><br><span class="line">})</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3) 暴露给 window，方便调试</span></span><br><span class="line"><span class="variable language_">window</span>.<span class="property">agent</span> = agent</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="第三步：让后端关键元素”对-AI-友好”"><a href="#第三步：让后端关键元素”对-AI-友好”" class="headerlink" title="第三步：让后端关键元素”对 AI 友好”"></a>第三步：让后端关键元素” 对 AI 友好”</h3><p>在关键按钮上加 <code>data-agent-safe</code>，给 AI 一个稳定锚点：</p>
+<figure class="highlight html"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">data-agent-safe</span>=<span class="string">"true"</span> <span class="attr">id</span>=<span class="string">"filter-pending"</span>&gt;</span>筛选待审核<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">data-agent-safe</span>=<span class="string">"true"</span> <span class="attr">id</span>=<span class="string">"export-excel"</span>&gt;</span>导出 Excel<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>data-agent-safe</code> 这个 attribute 是 page-agent 在 prompt 里” 信任” 过的标记，比 <code>id</code> / <code>class</code> 稳定，<strong>前端改样式不会影响 AI 识别</strong>。</p>
+<h3 id="第四步：在页面里挂上气泡"><a href="#第四步：在页面里挂上气泡" class="headerlink" title="第四步：在页面里挂上气泡"></a>第四步：在页面里挂上气泡</h3><p>最简单的做法是直接挂一个按钮触发：</p>
+<figure class="highlight html"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">"window.agent.execute('筛选出所有待审核的订单，导出 Excel，然后打开邮件草稿')"</span>&gt;</span></span><br><span class="line">  🤖 一键搞定</span><br><span class="line"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>更优雅的做法是引入一个浮动 UI——page-agent 的 IIFE 包已经自带一个右下角气泡，<strong>什么都不用写就有</strong>。如果你想自定义，也可以监听 <code>agent</code> 的事件自己渲染：</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">agent.<span class="title function_">on</span>(<span class="string">'taskStart'</span>, <span class="function">(<span class="params">task</span>) =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">'开始执行:'</span>, task))</span><br><span class="line">agent.<span class="title function_">on</span>(<span class="string">'step'</span>, <span class="function">(<span class="params">step</span>) =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">'当前步骤:'</span>, step))</span><br><span class="line">agent.<span class="title function_">on</span>(<span class="string">'taskEnd'</span>, <span class="function">(<span class="params">result</span>) =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">'执行结果:'</span>, result))</span><br></pre></td></tr></tbody></table></figure>
+
+<p>整个过程<strong>没有引入新后端、没有改后端代码、没有引入 Python 进程</strong> —— 前端一发上线，SaaS 客户就多了一个”AI 助手” 功能。</p>
+<h2 id="五、适用场景和限制"><a href="#五、适用场景和限制" class="headerlink" title="五、适用场景和限制"></a>五、适用场景和限制</h2><h3 id="特别适合"><a href="#特别适合" class="headerlink" title="特别适合"></a>特别适合</h3><ul>
+<li><strong>B2B SaaS / 后台系统</strong>：客服、内部运营、初级用户占比高，” 教用户点哪里” 成本巨大。</li>
+<li><strong>旧系统现代化</strong>：JQuery / 老 Vue / 老 React 后台，老板想加 AI 体验但不想重写。</li>
+<li><strong>企业内部工具</strong>：CRM、ERP、HR 系统，IT 部门可以” 一行 script 推” 到所有员工浏览器。</li>
+<li><strong>无障碍辅助</strong>：视障、老年用户、临时用户，<strong>自然语言比学菜单友好 10 倍</strong>。</li>
+<li><strong>教学 / 培训场景</strong>：AI 现场示范” 怎么提交报销”、” 怎么导出报表”，比录屏直观。</li>
+</ul>
+<h3 id="需要注意的限制"><a href="#需要注意的限制" class="headerlink" title="需要注意的限制"></a>需要注意的限制</h3><ul>
+<li><strong>跨页能力依赖 Chrome 扩展</strong>：单页内体验很顺，跨标签页要走 Beta 状态的 <code>Page Agent Ext</code>，<strong>生产环境要先做 PoC</strong>。</li>
+<li><strong>MCP Server 仍在 Beta</strong>：API 可能在 1.x 后续版本变动，不建议直接给终端用户。</li>
+<li><strong>复杂动态页面（Canvas / WebGL / 重度 Shadow DOM）解析精度会下降</strong>：DOM 脱水文本对这些场景不如截图模型稳。</li>
+<li><strong>长任务链路要做” 步骤回放 + 人工接管”</strong>：AI 一次跑 20 步失败时，需要 UI 兜底。</li>
+</ul>
+<h2 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h2><p>page-agent 给”AI 操作电脑” 这件事提供了一个<strong>前端可以独立完成</strong>的最小解：</p>
+<ol>
+<li><strong>形态上</strong>：纯 JS 嵌入，一行 script，零后端、零扩展、零多模态。</li>
+<li><strong>模型上</strong>：OpenAI 兼容的任意 LLM，国内外、本地云端都随便换。</li>
+<li><strong>安全上</strong>：白名单 + 脱敏 + 自定义知识，<strong>B2B 上生产的硬约束都覆盖了</strong>。</li>
+<li><strong>扩展上</strong>：Chrome 扩展 + MCP Server 已经开了 Beta，<strong>指向” 本地 Agent 操控真实浏览器” 的下一站</strong>。</li>
+</ol>
+<p>如果你的产品形态是” 用户要在网页里完成某个任务”，而你今天还在为” 教用户怎么操作” 而疲于奔命 —— <strong>花 5 分钟接一下 page-agent，可能是 ROI 最高的一次技术决策</strong>。</p>
+<p>仓库：<a target="_blank" rel="noopener" href="https://github.com/alibaba/page-agent">github.com/alibaba/page-agent</a><br>Demo：<a target="_blank" rel="noopener" href="https://alibaba.github.io/page-agent/">alibaba.github.io/page-agent</a><br>HN 讨论：<a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=47264138">news.ycombinator.com/item?id=47264138</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/26/page-agent-in-page-gui-agent-natural-language/" title="Alibaba Page Agent：把 &quot;自然语言&quot; 直接接到你的网页里，AI 替用户点击的时代到了">https://www.daishengli.top/2026/06/26/page-agent-in-page-gui-agent-natural-language/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/page-agent/" rel="tag"># page-agent</a>
+              <a href="/tags/GUI-Agent/" rel="tag"># GUI Agent</a>
+              <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag"># 浏览器自动化</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/25/design-md-google-labs-format-spec-ai-agent/" rel="prev" title="design.md：Google Labs 给 AI 编程 Agent 立的设计系统 &quot;宪法&quot;，一套 YAML 让 Agent 一次就生成对的设计">
+                  <i class="fa fa-angle-left"></i> design.md：Google Labs 给 AI 编程 Agent 立的设计系统 "宪法"，一套 YAML 让 Agent 一次就生成对的设计
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/27/ai-berkshire-claude-code-value-investing-framework/" rel="next" title="AI Berkshire：把巴菲特、芒格、段永平、李录装进 Claude Code，开源价值投资研究框架">
+                  AI Berkshire：把巴菲特、芒格、段永平、李录装进 Claude Code，开源价值投资研究框架 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

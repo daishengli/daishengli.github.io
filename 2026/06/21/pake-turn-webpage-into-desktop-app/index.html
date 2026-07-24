@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Pake 是基于 Rust + Tauri 的开源工具，一行命令把任意网页打包成 macOS&#x2F;Windows&#x2F;Linux 桌面 App，安装包只有 ~5MB，比 Electron 小 20 倍。今天 GitHub Trending 第 2 名，50k+ stars，日增 2,546 stars。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pake：一行命令把任意网页变成桌面 App，比 Electron 小 20 倍">
+<meta property="og:url" content="https://www.daishengli.top/2026/06/21/pake-turn-webpage-into-desktop-app/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="Pake 是基于 Rust + Tauri 的开源工具，一行命令把任意网页打包成 macOS&#x2F;Windows&#x2F;Linux 桌面 App，安装包只有 ~5MB，比 Electron 小 20 倍。今天 GitHub Trending 第 2 名，50k+ stars，日增 2,546 stars。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-21T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-24T02:04:35.408Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="Pake">
+<meta property="article:tag" content="Tauri">
+<meta property="article:tag" content="桌面应用">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/06/21/pake-turn-webpage-into-desktop-app/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/06/21/pake-turn-webpage-into-desktop-app/","path":"2026/06/21/pake-turn-webpage-into-desktop-app/","title":"Pake：一行命令把任意网页变成桌面 App，比 Electron 小 20 倍"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Pake：一行命令把任意网页变成桌面 App，比 Electron 小 20 倍 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">197</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">44</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Pake%EF%BC%9A%E4%B8%80%E8%A1%8C%E5%91%BD%E4%BB%A4%E6%8A%8A%E4%BB%BB%E6%84%8F%E7%BD%91%E9%A1%B5%E5%8F%98%E6%88%90%E6%A1%8C%E9%9D%A2-App%EF%BC%8C%E6%AF%94-Electron-%E5%B0%8F-20-%E5%80%8D"><span class="nav-number">1.</span> <span class="nav-text">Pake：一行命令把任意网页变成桌面 App，比 Electron 小 20 倍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%BD%A0%E6%98%AF%E4%B8%8D%E6%98%AF%E4%B9%9F%E8%BF%99%E4%B9%88%E5%B9%B2%E8%BF%87%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">一、你是不是也这么干过？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88-Electron-%E4%B8%8D%E5%A4%9F%E5%A5%BD%EF%BC%9F"><span class="nav-number">1.2.</span> <span class="nav-text">二、项目背景：为什么 Electron 不够好？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E8%AF%A6%E8%A7%A3"><span class="nav-number">1.3.</span> <span class="nav-text">三、核心功能详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E4%B8%80%E8%A1%8C%E5%91%BD%E4%BB%A4%E6%89%93%E5%8C%85"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 一行命令打包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%8C%85%E4%BD%93%E7%A7%AF%E5%8F%AA%E6%9C%89-5MB%EF%BC%8C%E6%AF%94-Electron-%E5%B0%8F-20-%E5%80%8D"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 包体积只有～5MB，比 Electron 小 20 倍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E4%B8%B0%E5%AF%8C%E7%9A%84%E5%BF%AB%E6%8D%B7%E9%94%AE%E5%92%8C%E5%8E%9F%E7%94%9F%E4%BD%93%E9%AA%8C"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 丰富的快捷键和原生体验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E6%B2%89%E6%B5%B8%E5%BC%8F%E7%AA%97%E5%8F%A3-%E6%A0%B7%E5%BC%8F%E8%87%AA%E5%AE%9A%E4%B9%89"><span class="nav-number">1.3.4.</span> <span class="nav-text">3.4 沉浸式窗口 + 样式自定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-12-%E5%BC%80%E7%AE%B1%E5%8D%B3%E7%94%A8%E7%9A%84%E7%8E%B0%E6%88%90-App"><span class="nav-number">1.3.5.</span> <span class="nav-text">3.5 12+ 开箱即用的现成 App</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-%E5%AE%8C%E5%85%A8%E6%9C%AC%E5%9C%B0%E3%80%81%E9%9A%90%E7%A7%81%E5%AE%89%E5%85%A8"><span class="nav-number">1.3.6.</span> <span class="nav-text">3.6 完全本地、隐私安全</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A5-%E5%88%86%E9%92%9F%E6%8A%8A%E4%BD%A0%E7%9A%84-ChatGPT-%E5%8F%98%E6%88%90%E6%A1%8C%E9%9D%A2-App"><span class="nav-number">1.4.</span> <span class="nav-text">四、实战示例：5 分钟把你的 ChatGPT 变成桌面 App</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-1%EF%BC%9A%E8%A3%85%E7%8E%AF%E5%A2%83%EF%BC%88%E4%B8%80%E6%AC%A1%E6%80%A7%EF%BC%89"><span class="nav-number">1.4.1.</span> <span class="nav-text">步骤 1：装环境（一次性）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-2%EF%BC%9A%E8%A3%85-Pake-CLI"><span class="nav-number">1.4.2.</span> <span class="nav-text">步骤 2：装 Pake CLI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-3%EF%BC%9A%E6%89%93%E5%8C%85%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA-App"><span class="nav-number">1.4.3.</span> <span class="nav-text">步骤 3：打包你的第一个 App</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-4%EF%BC%9A%E6%89%B9%E9%87%8F%E6%89%93%E5%8C%85%E4%BD%A0%E7%9A%84%E5%B8%B8%E7%94%A8%E7%AB%99%E7%82%B9"><span class="nav-number">1.4.4.</span> <span class="nav-text">步骤 4：批量打包你的常用站点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-5%EF%BC%9A%E9%AB%98%E7%BA%A7%E7%8E%A9%E6%B3%95%E2%80%94%E2%80%94%E5%8E%BB%E6%8E%89%E5%B9%BF%E5%91%8A"><span class="nav-number">1.4.5.</span> <span class="nav-text">步骤 5：高级玩法 —— 去掉广告</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E4%B8%8E%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">1.5.</span> <span class="nav-text">五、与同类项目的差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E9%99%90%E5%88%B6"><span class="nav-number">1.6.</span> <span class="nav-text">六、适用场景与限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88%E7%94%A8-Pake-%E7%9A%84%E4%BA%BA"><span class="nav-number">1.6.1.</span> <span class="nav-text">适合用 Pake 的人</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E5%89%8D%E4%B8%8D%E9%80%82%E5%90%88%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">1.6.2.</span> <span class="nav-text">目前不适合的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%9D%91"><span class="nav-number">1.6.3.</span> <span class="nav-text">一个小坑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">七、总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">197</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/06/21/pake-turn-webpage-into-desktop-app/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Pake：一行命令把任意网页变成桌面 App，比 Electron 小 20 倍 | 小戴的网络日志">
+      <meta itemprop="description" content="Pake 是基于 Rust + Tauri 的开源工具，一行命令把任意网页打包成 macOS&#x2F;Windows&#x2F;Linux 桌面 App，安装包只有 ~5MB，比 Electron 小 20 倍。今天 GitHub Trending 第 2 名，50k+ stars，日增 2,546 stars。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Pake：一行命令把任意网页变成桌面 App，比 Electron 小 20 倍
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-21 10:00:00" itemprop="dateCreated datePublished" datetime="2026-06-21T10:00:00+08:00">2026-06-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">效率工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Pake 是基于 Rust + Tauri 的开源工具，一行命令把任意网页打包成 macOS/Windows/Linux 桌面 App，安装包只有 ~5MB，比 Electron 小 20 倍。今天 GitHub Trending 第 2 名，50k+ stars，日增 2,546 stars。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Pake：一行命令把任意网页变成桌面-App，比-Electron-小-20-倍"><a href="#Pake：一行命令把任意网页变成桌面-App，比-Electron-小-20-倍" class="headerlink" title="Pake：一行命令把任意网页变成桌面 App，比 Electron 小 20 倍"></a>Pake：一行命令把任意网页变成桌面 App，比 Electron 小 20 倍</h1><h2 id="一、你是不是也这么干过？"><a href="#一、你是不是也这么干过？" class="headerlink" title="一、你是不是也这么干过？"></a>一、你是不是也这么干过？</h2><p>打开 ChatGPT 想用一下，先开浏览器，再开一个 tab；想听 YouTube Music，开浏览器；想读微信公众号，开浏览器；想刷小红书，开浏览器……</p>
+<p>你的任务栏上，Chrome 永远挂着十几个 tab，每个 tab 都在抢内存、抢焦点、抢 Cookie 状态。打开 Chrome 任务管理器一看：</p>
+<blockquote>
+<p>Renderer: 1.2 GB<br>GPU Process: 380 MB<br>标签页 × 24</p>
+</blockquote>
+<p>更让人抓狂的是，有些网页<strong>没有原生客户端</strong> —— 你想把它固定到 Dock 图标上一键启动？做不到。你想脱离浏览器专注用某一个网站？做不到。</p>
+<p>如果我告诉你，<strong>只要一行命令</strong>，就能把任意网页变成一个不到 5MB 的独立桌面 App，像原生 App 一样启动、像原生 App 一样常驻 Dock、还能去掉广告、自定义样式呢？</p>
+<p>今天 GitHub Trending 第 2 名，正是干这件事的 ——<strong><a target="_blank" rel="noopener" href="https://github.com/tw93/Pake">tw93/Pake</a></strong>，50k+ stars，今天单日新增 <strong>2,546 stars</strong>。</p>
+<h2 id="二、项目背景：为什么-Electron-不够好？"><a href="#二、项目背景：为什么-Electron-不够好？" class="headerlink" title="二、项目背景：为什么 Electron 不够好？"></a>二、项目背景：为什么 Electron 不够好？</h2><p>在聊 Pake 之前，先说一个老问题：<strong>怎么把网页变成桌面 App？</strong></p>
+<p>主流方案一直是 <a target="_blank" rel="noopener" href="https://www.electronjs.org/">Electron</a>。VS Code、Slack、Notion、Discord、WhatsApp…… 半个互联网的桌面端都是它。但 Electron 有三个绕不开的毛病：</p>
+<ol>
+<li><strong>包体积巨大</strong>：一个最简单的 Electron Hello World，打包出来就 <strong>150MB+</strong>。VS Code 的安装包 300MB 是基操。</li>
+<li><strong>内存占用高</strong>：每个 Electron 应用都要打包一套 Chromium 运行时。开个 Slack 跟开个 Chrome 没区别。</li>
+<li><strong>启动慢</strong>：因为要启动一个完整的浏览器内核，” 双击图标 → 看到内容” 通常要等 3-5 秒。</li>
+</ol>
+<p>这是因为 Electron 的本质是 <strong>“Node.js + Chromium + Web 前端”</strong>。它把整个浏览器塞进你的应用里。</p>
+<p><strong><a target="_blank" rel="noopener" href="https://tauri.app/">Tauri</a></strong> 的出现就是为了解决这个问题。它用 <strong>操作系统原生的 WebView</strong>（macOS 上是 WKWebView、Windows 上是 WebView2、Linux 上是 WebKitGTK）替代 Chromium，运行时只剩薄薄一层 Rust 内核。结果是：</p>
+<ul>
+<li>安装包 <strong>5MB 左右</strong></li>
+<li>内存占用是 Electron 的 <strong>1/3 到 1/2</strong></li>
+<li> 启动速度接近原生 App</li>
+</ul>
+<p>Pake 就是基于 Tauri 的” 成品工具”—— 你<strong>不用懂 Rust，不用懂 Tauri</strong>，一条命令就把网页变成桌面 App。</p>
+<h2 id="三、核心功能详解"><a href="#三、核心功能详解" class="headerlink" title="三、核心功能详解"></a>三、核心功能详解</h2><h3 id="3-1-一行命令打包"><a href="#3-1-一行命令打包" class="headerlink" title="3.1 一行命令打包"></a>3.1 一行命令打包</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 CLI</span></span><br><span class="line">pnpm install -g pake-cli</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把 GitHub 变成桌面 App</span></span><br><span class="line">pake https://github.com --name GitHub</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这条命令会自动：</p>
+<ul>
+<li>抓取网站 icon</li>
+<li> 拉取网页内容</li>
+<li>用 Tauri 编译成原生应用</li>
+<li>输出 <code>.dmg</code>（macOS）/ <code>.msi</code>（Windows）/ <code>.deb</code>（Linux）</li>
+</ul>
+<p>你什么都不用做，等编译完双击装上就行。</p>
+<h3 id="3-2-包体积只有-5MB，比-Electron-小-20-倍"><a href="#3-2-包体积只有-5MB，比-Electron-小-20-倍" class="headerlink" title="3.2 包体积只有 ~5MB，比 Electron 小 20 倍"></a>3.2 包体积只有～5MB，比 Electron 小 20 倍</h3><p>对比一下同样把 ChatGPT 变成桌面 App 的方案：</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>安装包大小</th>
+<th>内存占用（空闲）</th>
+<th>启动时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> Electron + Web 封装</strong></td>
+<td> ~150MB</td>
+<td>~250MB</td>
+<td>3-5 秒</td>
+</tr>
+<tr>
+<td><strong> Pake（Tauri）</strong></td>
+<td>~5MB</td>
+<td>~60MB</td>
+<td>&lt; 1 秒</td>
+</tr>
+</tbody></table>
+<p>这不是优化，是<strong>代际差异</strong>。底层运行时从 Chromium 换成系统原生 WebView，体积和性能自然断崖式下降。</p>
+<h3 id="3-3-丰富的快捷键和原生体验"><a href="#3-3-丰富的快捷键和原生体验" class="headerlink" title="3.3 丰富的快捷键和原生体验"></a>3.3 丰富的快捷键和原生体验</h3><p>Pake 不只是套个壳，它给每个打包出来的 App 都内置了一套<strong>贴近原生</strong>的快捷键：</p>
+<table>
+<thead>
+<tr>
+<th>Mac</th>
+<th>Windows/Linux</th>
+<th> 功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>⌘ + [</td>
+<td>Ctrl + ←</td>
+<td>返回上一页</td>
+</tr>
+<tr>
+<td>⌘ + ]</td>
+<td>Ctrl + →</td>
+<td>前进下一页</td>
+</tr>
+<tr>
+<td>⌘ + ↑ / ↓</td>
+<td>Ctrl + ↑ / ↓</td>
+<td>一键滚到顶 / 底</td>
+</tr>
+<tr>
+<td>⌘ + r</td>
+<td>Ctrl + r</td>
+<td> 刷新</td>
+</tr>
+<tr>
+<td>⌘ + w</td>
+<td>Ctrl + w</td>
+<td><strong> 隐藏窗口（不是退出）</strong></td>
+</tr>
+<tr>
+<td>⌘ + L</td>
+<td>Ctrl + L</td>
+<td> 复制当前页面 URL</td>
+</tr>
+<tr>
+<td>⌘ + ⇧ + ⌥ + V</td>
+<td>Ctrl + Shift + V</td>
+<td> 粘贴并匹配样式</td>
+</tr>
+<tr>
+<td>⌘ + ⌥ + I</td>
+<td>Ctrl + Shift + I</td>
+<td> 打开 DevTools（调试用）</td>
+</tr>
+<tr>
+<td>⌘ + ⇧ + ⌫</td>
+<td>Ctrl + Shift + Del</td>
+<td> 清缓存并重启</td>
+</tr>
+</tbody></table>
+<p>特别要说一句 <strong><code>⌘ + w</code> 隐藏而非退出</strong> —— 这是 macOS 原生 App 的标准行为，浏览器不是这样，但所有原生 Mac App 都这样。Pake 帮你把这个细节做到位了。</p>
+<h3 id="3-4-沉浸式窗口-样式自定义"><a href="#3-4-沉浸式窗口-样式自定义" class="headerlink" title="3.4 沉浸式窗口 + 样式自定义"></a>3.4 沉浸式窗口 + 样式自定义</h3><p>Pake 默认是<strong>沉浸式标题栏</strong>（macOS 上直接吃掉红绿黄三颗按钮的横条），整个窗口都是网页内容，视觉非常干净。</p>
+<p>如果你想自定义更狠，可以：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">pake https://weekly.tw93.fun \</span><br><span class="line">  --name Weekly \</span><br><span class="line">  --icon https://cdn.tw93.fun/pake/weekly.icns \</span><br><span class="line">  --width 1200 \</span><br><span class="line">  --height 800 \</span><br><span class="line">  --hide-title-bar</span><br></pre></td></tr></tbody></table></figure>
+
+<p>还可以注入自定义 CSS、注入 JS、屏蔽广告 —— 这是 Pake 文档里的”Advanced Usage”。</p>
+<h3 id="3-5-12-开箱即用的现成-App"><a href="#3-5-12-开箱即用的现成-App" class="headerlink" title="3.5 12+ 开箱即用的现成 App"></a>3.5 12+ 开箱即用的现成 App</h3><p>Pake 官方直接提供了 12+ 常用 App 的预编译包，下载即用：</p>
+<ul>
+<li>🇨🇳 <strong>微信读书</strong>、小红书、知乎</li>
+<li>🤖 <strong>ChatGPT</strong>、Grok、DeepSeek、Gemini</li>
+<li>🐦 <strong>Twitter (X)</strong></li>
+<li>🎵 <strong>YouTube</strong>、YouTube Music、荔枝、ProgramMusic</li>
+<li>🎨 <strong>Excalidraw</strong></li>
+</ul>
+<p>每个 App 都做了 macOS / Windows / Linux 三端适配。这是 Pake 的” 流量入口”—— 大多数人用 Pake 都是先装一个 ChatGPT App 开始，然后一发不可收拾。</p>
+<h3 id="3-6-完全本地、隐私安全"><a href="#3-6-完全本地、隐私安全" class="headerlink" title="3.6 完全本地、隐私安全"></a>3.6 完全本地、隐私安全</h3><p>跟 Electron 不同，Tauri 的 Rust 后端和前端 WebView 是<strong>隔离</strong>的：</p>
+<ul>
+<li>没有远程 CDN 注入</li>
+<li>没有匿名遥测</li>
+<li>网页的所有 JS 沙箱化运行</li>
+<li>你想审计源码，直接 clone 仓库看 Rust 代码</li>
+</ul>
+<p>Pake 的作者 tw93（淘气的小五）是个国内独立开发者，在前端社区很有名，口碑极好。</p>
+<h2 id="四、实战示例：5-分钟把你的-ChatGPT-变成桌面-App"><a href="#四、实战示例：5-分钟把你的-ChatGPT-变成桌面-App" class="headerlink" title="四、实战示例：5 分钟把你的 ChatGPT 变成桌面 App"></a>四、实战示例：5 分钟把你的 ChatGPT 变成桌面 App</h2><h3 id="步骤-1：装环境（一次性）"><a href="#步骤-1：装环境（一次性）" class="headerlink" title="步骤 1：装环境（一次性）"></a>步骤 1：装环境（一次性）</h3><p>macOS：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 装 Rust</span></span><br><span class="line">curl --proto <span class="string">'=https'</span> --tlsv1.2 -sSf https://sh.rustup.rs | sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 装 Node.js（建议 LTS，用 nvm 管理）</span></span><br><span class="line">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash</span><br><span class="line">nvm install --lts</span><br><span class="line"></span><br><span class="line"><span class="comment"># 装 pnpm</span></span><br><span class="line">npm install -g pnpm</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Windows：装 <a target="_blank" rel="noopener" href="https://rustup.rs/">Rust</a> + <a target="_blank" rel="noopener" href="https://nodejs.org/">Node.js LTS</a> + <a target="_blank" rel="noopener" href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">Microsoft Visual Studio C++ Build Tools</a>（勾选” 使用 C++ 的桌面开发” 工作负载）。</p>
+<p>Linux：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="步骤-2：装-Pake-CLI"><a href="#步骤-2：装-Pake-CLI" class="headerlink" title="步骤 2：装 Pake CLI"></a>步骤 2：装 Pake CLI</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm install -g pake-cli</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="步骤-3：打包你的第一个-App"><a href="#步骤-3：打包你的第一个-App" class="headerlink" title="步骤 3：打包你的第一个 App"></a>步骤 3：打包你的第一个 App</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pake https://chat.openai.com --name ChatGPT</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第一次跑会下载 Tauri 依赖、编译 Rust 核心，<strong>大约 3-5 分钟</strong>。之后会输出：</p>
+<ul>
+<li>macOS: <code>ChatGPT_0.1.0_aarch64.dmg</code> （Apple Silicon）</li>
+<li>macOS: <code>ChatGPT_0.1.0_x64.dmg</code> （Intel）</li>
+<li>Windows: <code>ChatGPT_0.1.0_x64.msi</code></li>
+<li>Linux: <code>ChatGPT_0.1.0_amd64.deb</code></li>
+</ul>
+<p>双击装上，<strong>Dock 上多一个 ChatGPT 图标</strong>，点开就是一个没有浏览器外壳、没有 tab、没有地址栏的纯净 ChatGPT。</p>
+<h3 id="步骤-4：批量打包你的常用站点"><a href="#步骤-4：批量打包你的常用站点" class="headerlink" title="步骤 4：批量打包你的常用站点"></a>步骤 4：批量打包你的常用站点</h3><p>我个人的 <code>~/.pake-batch.sh</code>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">set</span> -e</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生产力</span></span><br><span class="line">pake https://github.com --name GitHub</span><br><span class="line">pake https://app.notion.com --name Notion</span><br><span class="line">pake https://calendar.google.com --name Calendar</span><br><span class="line">pake https://web.telegram.org/a --name Telegram</span><br><span class="line"></span><br><span class="line"><span class="comment"># AI</span></span><br><span class="line">pake https://chat.openai.com --name ChatGPT</span><br><span class="line">pake https://gemini.google.com --name Gemini</span><br><span class="line">pake https://claude.ai --name Claude</span><br><span class="line"></span><br><span class="line"><span class="comment"># 阅读</span></span><br><span class="line">pake https://weread.qq.com --name WeRead</span><br><span class="line">pake https://www.xiaohongshu.com --name XiaohongShu</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Done!"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑一遍，下班回来所有 App 都装好了。</p>
+<h3 id="步骤-5：高级玩法——去掉广告"><a href="#步骤-5：高级玩法——去掉广告" class="headerlink" title="步骤 5：高级玩法——去掉广告"></a>步骤 5：高级玩法 —— 去掉广告</h3><p>把网页变成 App 之前，Pake 允许你注入 CSS。把这段放进 <code>inject.css</code>：</p>
+<figure class="highlight css"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 屏蔽 YouTube Shorts 按钮 */</span></span><br><span class="line">ytd-reel-shelf-renderer { <span class="attribute">display</span>: none <span class="meta">!important</span>; }</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 屏蔽 Twitter 推广推文 */</span></span><br><span class="line"><span class="selector-attr">[data-testid=<span class="string">"placementTracking"</span>]</span> { <span class="attribute">display</span>: none <span class="meta">!important</span>; }</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 屏蔽知乎登录弹窗 */</span></span><br><span class="line"><span class="selector-class">.Modal--signIn</span> { <span class="attribute">display</span>: none <span class="meta">!important</span>; }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>打包命令：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pake https://www.youtube.com \</span><br><span class="line">  --name YouTube \</span><br><span class="line">  --inject ./inject.css</span><br></pre></td></tr></tbody></table></figure>
+
+<p>得到一个<strong>去广告的 YouTube 桌面客户端</strong>。</p>
+<h2 id="五、与同类项目的差异"><a href="#五、与同类项目的差异" class="headerlink" title="五、与同类项目的差异"></a>五、与同类项目的差异</h2><p>把 Pake 放在” 网页 → 桌面 App” 这条赛道里看：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>技术栈</th>
+<th>包体积</th>
+<th>上手难度</th>
+<th>维护状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> Electron</strong></td>
+<td>Chromium + Node.js</td>
+<td>~150MB</td>
+<td> 中（要写 JS）</td>
+<td>主流</td>
+</tr>
+<tr>
+<td><strong> Neutralinojs</strong></td>
+<td> 系统 WebView</td>
+<td>~5MB</td>
+<td> 中（要写 JS）</td>
+<td>小众</td>
+</tr>
+<tr>
+<td><strong> WebView2 (微软)</strong></td>
+<td>Windows Only</td>
+<td>~2MB</td>
+<td> 高（要写 C#）</td>
+<td>微软自家</td>
+</tr>
+<tr>
+<td><strong> Pake</strong></td>
+<td>Tauri (Rust + 系统 WebView)</td>
+<td>~5MB</td>
+<td><strong> 极简（一行命令）</strong></td>
+<td>⭐ 50k stars，活跃</td>
+</tr>
+<tr>
+<td><strong> nativefier</strong>（已弃坑）</td>
+<td>Electron</td>
+<td>~150MB</td>
+<td> 简单</td>
+<td>停更</td>
+</tr>
+</tbody></table>
+<p>Pake 的差异化非常清楚：<strong>门槛最低的 Tauri 封装</strong>。</p>
+<ul>
+<li>Tauri 是底层技术，Pake 是上层产品。</li>
+<li>如果你想自己写功能（菜单、托盘、文件系统访问），用 Tauri 直接做。</li>
+<li>如果你<strong>只想把网页变 App</strong>，用 Pake，<strong>啥都不用学</strong>。</li>
+</ul>
+<h2 id="六、适用场景与限制"><a href="#六、适用场景与限制" class="headerlink" title="六、适用场景与限制"></a>六、适用场景与限制</h2><h3 id="适合用-Pake-的人"><a href="#适合用-Pake-的人" class="headerlink" title="适合用 Pake 的人"></a>适合用 Pake 的人</h3><ul>
+<li>✅ 想把<strong>高频使用的网页</strong>变成桌面 App（ChatGPT、Notion、Gemini、YouTube Music）</li>
+<li>✅ 不想装一堆臃肿的<strong>官方客户端</strong>（比如某些 App 没有 Linux 版，网页反而最干净）</li>
+<li>✅ 受够了 Chrome 几百个 tab，<strong>想把工作场景分窗口</strong></li>
+<li>✅ 想自己做一个<strong>只服务于自己</strong>的小工具（把内部 BI 仪表盘打包成 App）</li>
+</ul>
+<h3 id="目前不适合的场景"><a href="#目前不适合的场景" class="headerlink" title="目前不适合的场景"></a>目前不适合的场景</h3><ul>
+<li>❌ 需要<strong>深度系统集成</strong>的场景（文件拖拽、系统通知、托盘菜单、自动启动）—— 这些 Tauri 原生能做，但 Pake CLI 没暴露简单开关</li>
+<li>❌ 想把<strong>复杂的 SPA 应用</strong>（带 SSR、复杂状态管理）打包 —— 这种建议直接用 Tauri 自己开发</li>
+<li>❌ macOS App Store 上架 —— Pake 用的 GPL-3.0 + “Pake Output Exception” 许可，<strong>你自己打包出来的 App 可以商用</strong>（包括闭源），但 Pake 源码本身需要保留开源</li>
+</ul>
+<h3 id="一个小坑"><a href="#一个小坑" class="headerlink" title="一个小坑"></a>一个小坑</h3><p>如果你打包的网页<strong>重度依赖 Service Worker 或 Web Bluetooth / WebUSB 等 Web API</strong>，Pake 包装出来可能表现不一致。这是 Tauri/WebView 跟 Chrome 的固有差异，不是 Pake 的 bug。</p>
+<h2 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a>七、总结</h2><p>Pake 不是一个” 性感” 的项目 —— 它不训练模型，不生成视频，不重新定义 AI。但它<strong>解决了几乎每个开发者都遇到过的痛点</strong>：</p>
+<blockquote>
+<p>“我能不能把这个网页固定到 Dock 上，一键启动，背景跑着不占资源？”</p>
+</blockquote>
+<p>答案是：<strong>能，一条命令</strong>。</p>
+<p>如果今天你要装一个工具，强烈建议先把你的 ChatGPT 打包成本地 App：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pnpm install -g pake-cli</span><br><span class="line">pake https://chat.openai.com --name ChatGPT</span><br></pre></td></tr></tbody></table></figure>
+
+<p>你会发现，从此以后打开 ChatGPT 不再是” 开 Chrome → 翻 5 个 tab → 找到 ChatGPT tab”，而是 <strong>点 Dock 图标 → 立即进入</strong>。</p>
+<p>这 5MB 的安装包，可能是你今天装过的<strong>最有 ROI 的工具</strong>。</p>
+<hr>
+<blockquote>
+<p><strong>GitHub</strong>: <a target="_blank" rel="noopener" href="https://github.com/tw93/Pake">tw93/Pake</a><br><strong>License</strong>: GPL-3.0 + Pake Output Exception（你打包出来的 App 自由商用）<br><strong>技术栈</strong>: Rust + Tauri + 系统原生 WebView<br><strong>今日 Trending 排名</strong>: 第 2 名，单日新增 <strong>2,546 stars</strong>（截至 2026-06-21）</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/06/21/pake-turn-webpage-into-desktop-app/" title="Pake：一行命令把任意网页变成桌面 App，比 Electron 小 20 倍">https://www.daishengli.top/2026/06/21/pake-turn-webpage-into-desktop-app/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/Pake/" rel="tag"># Pake</a>
+              <a href="/tags/Tauri/" rel="tag"># Tauri</a>
+              <a href="/tags/%E6%A1%8C%E9%9D%A2%E5%BA%94%E7%94%A8/" rel="tag"># 桌面应用</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/20/headroom-llm-context-compression/" rel="prev" title="Headroom：让 LLM Agent 的 Token 消耗直接砍掉 60%-95%">
+                  <i class="fa fa-angle-left"></i> Headroom：让 LLM Agent 的 Token 消耗直接砍掉 60%-95%
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/22/deer-flow-bytedance-super-agent-harness/" rel="next" title="DeerFlow 2.0：字节跳动开源的 SuperAgent Harness，让一个 Agent 干完一队人的活">
+                  DeerFlow 2.0：字节跳动开源的 SuperAgent Harness，让一个 Agent 干完一队人的活 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
