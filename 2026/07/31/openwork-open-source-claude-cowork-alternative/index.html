@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="different-ai 开源 OpenWork：把 OpenCode 从命令行变成普通人也能用的桌面端 Agent 工作台，跨工具共享 skills&#x2F;MCPs&#x2F;团队市场，自带 SSO 和 Google Workspace 集成，今日 GitHub Trending 第一。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Claude Cowork 被锁在 SaaS 高墙里？OpenWork 把 AI Agent 工作台彻底开源">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/31/openwork-open-source-claude-cowork-alternative/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="different-ai 开源 OpenWork：把 OpenCode 从命令行变成普通人也能用的桌面端 Agent 工作台，跨工具共享 skills&#x2F;MCPs&#x2F;团队市场，自带 SSO 和 Google Workspace 集成，今日 GitHub Trending 第一。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-31T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-08T02:03:09.099Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="OpenWork">
+<meta property="article:tag" content="Claude Cowork">
+<meta property="article:tag" content="OpenCode">
+<meta property="article:tag" content="开源">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/31/openwork-open-source-claude-cowork-alternative/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/31/openwork-open-source-claude-cowork-alternative/","path":"2026/07/31/openwork-open-source-claude-cowork-alternative/","title":"Claude Cowork 被锁在 SaaS 高墙里？OpenWork 把 AI Agent 工作台彻底开源"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Claude Cowork 被锁在 SaaS 高墙里？OpenWork 把 AI Agent 工作台彻底开源 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">237</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">47</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">87</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A4%B4%EF%BC%9A%E5%BD%93%E4%BD%A0%E5%A6%88%E4%B9%9F%E6%83%B3%E7%94%A8-AI-Agent-%E6%97%B6%EF%BC%8C%E9%97%AE%E9%A2%98%E5%B0%B1%E5%8F%98%E4%BA%86"><span class="nav-number">1.</span> <span class="nav-text">开头：当你妈也想用 AI Agent 时，问题就变了</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E6%8A%8A-OpenCode-%E4%BB%8E-CLI-%E6%8B%BD%E5%88%B0%E6%A1%8C%E9%9D%A2%E4%B8%8A"><span class="nav-number">2.</span> <span class="nav-text">项目背景：把 OpenCode 从 CLI 拽到桌面上</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E4%BA%94%E4%BB%B6%E4%BA%8B%EF%BC%8C%E6%8A%8A-Agent-%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%8F%98%E6%88%90%E2%80%9D%E5%9B%A2%E9%98%9F%E8%B5%84%E4%BA%A7%E2%80%9D"><span class="nav-number">3.</span> <span class="nav-text">核心功能：五件事，把 Agent 工作流变成” 团队资产”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A1%8C%E9%9D%A2%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%9A%E6%99%AE%E9%80%9A%E4%BA%BA%E8%83%BD%E8%A3%85%E3%80%81%E8%83%BD%E7%82%B9%E3%80%81%E8%83%BD%E7%94%A8"><span class="nav-number">3.1.</span> <span class="nav-text">1. 桌面客户端：普通人能装、能点、能用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-OpenWork-MCP%EF%BC%9A%E4%B8%A4%E4%B8%AA%E6%8E%A5%E5%8F%A3%EF%BC%8C%E8%AE%A9%E4%BB%BB%E4%BD%95-Agent-%E4%B8%80%E9%94%AE%E6%8E%A5%E5%85%A5"><span class="nav-number">3.2.</span> <span class="nav-text">2. OpenWork MCP：两个接口，让任何 Agent 一键接入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-OpenWork-Den%EF%BC%9A%E7%AE%A1%E7%90%86%E9%9D%A2-%E4%BC%81%E4%B8%9A%E8%83%BD%E5%8A%9B"><span class="nav-number">3.3.</span> <span class="nav-text">3. OpenWork Den：管理面 + 企业能力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Extension-Marketplace%EF%BC%9A%E8%AE%A9%E7%9F%A5%E8%AF%86%E5%83%8F-npm-%E5%8C%85%E4%B8%80%E6%A0%B7%E6%B5%81%E8%BD%AC"><span class="nav-number">3.4.</span> <span class="nav-text">4. Extension Marketplace：让知识像 npm 包一样流转</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-50-LLM-Providers-Google-Workspace-Microsoft-365"><span class="nav-number">3.5.</span> <span class="nav-text">5. 50+ LLM Providers + Google Workspace &#x2F; Microsoft 365</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A5-%E5%88%86%E9%92%9F%E6%8A%8A%E4%B8%80%E4%B8%AA%E5%9B%A2%E9%98%9F%E5%B7%A5%E4%BD%9C%E5%8F%B0%E8%B7%91%E8%B5%B7%E6%9D%A5"><span class="nav-number">4.</span> <span class="nav-text">实战示例：5 分钟把一个团队工作台跑起来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">适用场景和限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A%E5%BC%80%E6%BA%90%E7%9A%84%E4%B8%8B%E4%B8%80%E6%88%98%EF%BC%8C%E6%98%AF%E6%8A%8A%E2%80%9D%E4%B8%AA%E4%BA%BA%E6%8F%90%E7%A4%BA%E8%AF%8D%E2%80%9D%E5%8F%98%E6%88%90%E2%80%9D%E7%BB%84%E7%BB%87%E8%B5%84%E4%BA%A7%E2%80%9D"><span class="nav-number">6.</span> <span class="nav-text">总结：开源的下一战，是把” 个人提示词” 变成” 组织资产”</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">87</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">237</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/31/openwork-open-source-claude-cowork-alternative/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Claude Cowork 被锁在 SaaS 高墙里？OpenWork 把 AI Agent 工作台彻底开源 | 小戴的网络日志">
+      <meta itemprop="description" content="different-ai 开源 OpenWork：把 OpenCode 从命令行变成普通人也能用的桌面端 Agent 工作台，跨工具共享 skills&#x2F;MCPs&#x2F;团队市场，自带 SSO 和 Google Workspace 集成，今日 GitHub Trending 第一。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Claude Cowork 被锁在 SaaS 高墙里？OpenWork 把 AI Agent 工作台彻底开源
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-31 10:00:00" itemprop="dateCreated datePublished" datetime="2026-07-31T10:00:00+08:00">2026-07-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">AI 开源项目</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">different-ai 开源 OpenWork：把 OpenCode 从命令行变成普通人也能用的桌面端 Agent 工作台，跨工具共享 skills/MCPs/团队市场，自带 SSO 和 Google Workspace 集成，今日 GitHub Trending 第一。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="开头：当你妈也想用-AI-Agent-时，问题就变了"><a href="#开头：当你妈也想用-AI-Agent-时，问题就变了" class="headerlink" title="开头：当你妈也想用 AI Agent 时，问题就变了"></a>开头：当你妈也想用 AI Agent 时，问题就变了</h2><p>你有没有遇到过这种” 尴尬”？</p>
+<p>你已经把 OpenCode、Claude Code、Codex 用得很熟，写提示词、改代码、跑任务一把梭。但你想让你妈、让你的运营同事、让你那个死活不愿开终端的合伙人，也来做点事 —— 比如把今天 50 张发票按金额排序、给客户邮件分类起草、统一往三个 Slack 频道发通知 —— 他们的第一反应是：</p>
+<blockquote>
+<p>“你告诉我那个 AI 在哪儿打开就行。”</p>
+</blockquote>
+<p>这一步，就卡住了。</p>
+<p>市场上确实有过答案：<strong>Anthropic 的 Claude Cowork</strong>。它把”AI Agent 跑在本地文件上” 这件事包成了一个桌面 App，普通人点开就能用。问题？闭源、SaaS、模型限死、贵。</p>
+<p>那有没有一个东西，能把” 命令行猛男用的 OpenCode” 反过来变成” 双击图标就能启动、但底子完全开源、还能团队共享配置” 的 Agent 工作台？</p>
+<p>有。<strong>different-ai/openwork</strong>，今天 GitHub Trending 排第一，2 小时前还在提交。</p>
+<hr>
+<h2 id="项目背景：把-OpenCode-从-CLI-拽到桌面上"><a href="#项目背景：把-OpenCode-从-CLI-拽到桌面上" class="headerlink" title="项目背景：把 OpenCode 从 CLI 拽到桌面上"></a>项目背景：把 OpenCode 从 CLI 拽到桌面上</h2><p>OpenWork 的作者在 Hacker News 上的原话讲得很干脆：</p>
+<blockquote>
+<p>“我搭了一个家用服务器。我希望我老婆和我都能在上面跑’特权级’的工作流 —— 比如控制 Home Assistant，部署家里的 Web App。OpenCode 太猛，但太工程师。” ——<a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=46612494">Show HN: OpenWork</a></p>
+</blockquote>
+<p>翻译过来：<strong>底层能力已经有了，但缺一层让非技术人员也能消费这些能力的” 皮”</strong>。OpenWork 就是这层皮。</p>
+<p>它的关键定位是：</p>
+<ul>
+<li><strong>开源</strong>：MIT-like 许可，主仓库 <a target="_blank" rel="noopener" href="https://github.com/different-ai/openwork">different-ai/openwork</a> 已经 18.7k stars，今日 +915 stars。</li>
+<li><strong>跨平台</strong>：macOS、Windows、Linux 全平台桌面端，Electron + Vite 实现的原生体验。</li>
+<li><strong>基座是 OpenCode</strong>：所有底层 agent 能力 —— 文件读写、shell 执行、子 agent 调度 —— 继承自 <a target="_blank" rel="noopener" href="https://opencode.ai/">opencode.ai</a>，所以” 为什么这个能干” 这事不用重新发明。</li>
+<li><strong>MCP-first</strong>：不绑定某一个 agent，每一个能挂 MCP 的客户端（Claude Code、Cursor、Codex、OpenCode 自家）都能复用同一套 skills、MCPs、连接配置。</li>
+<li><strong>进可攻退可守</strong>：可以纯本地跑（文件不出本机），也可以接 OpenWork Cloud 做团队共享 —— 这层是可选付费的 SaaS。</li>
+</ul>
+<p>一句话总结：<strong>OpenWork = OpenCode 的桌面 GUI + 跨 Agent 复用 + 团队市场</strong>。</p>
+<hr>
+<h2 id="核心功能：五件事，把-Agent-工作流变成”团队资产”"><a href="#核心功能：五件事，把-Agent-工作流变成”团队资产”" class="headerlink" title="核心功能：五件事，把 Agent 工作流变成”团队资产”"></a>核心功能：五件事，把 Agent 工作流变成” 团队资产”</h2><p>OpenWork 我看下来最值得讲清楚的不是 UI 多好看（它确实也还在打磨，作者自己都说 “very alpha, lots of rough edges”），而是它把”AI Agent 个人工具” 变成” 组织能力” 这件事的五个抓手。</p>
+<h3 id="1-桌面客户端：普通人能装、能点、能用"><a href="#1-桌面客户端：普通人能装、能点、能用" class="headerlink" title="1. 桌面客户端：普通人能装、能点、能用"></a>1. 桌面客户端：普通人能装、能点、能用</h3><p>三个平台都有原生安装包。下载 dmg/exe/deb 之后，是真正的桌面 App 而不是浏览器套壳。文件、上下文、提示词都走本地，符合多数企业最在意的” 数据不出本机” 红线。</p>
+<h3 id="2-OpenWork-MCP：两个接口，让任何-Agent-一键接入"><a href="#2-OpenWork-MCP：两个接口，让任何-Agent-一键接入" class="headerlink" title="2. OpenWork MCP：两个接口，让任何 Agent 一键接入"></a>2. OpenWork MCP：两个接口，让任何 Agent 一键接入</h3><p>这是我最喜欢的一点。OpenWork 暴露了一个远程 MCP Server：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://api.openworklabs.com/mcp/agent</span><br></pre></td></tr></tbody></table></figure>
+
+<p>任何支持 MCP 的客户端都可以加它。挂上之后只暴露两个工具：</p>
+<ul>
+<li><code>search_capabilities</code>：看当前账号能用什么 skill、什么插件、什么 MCP 连接。</li>
+<li><code>execute_capability</code>：挑选一个去执行。</li>
+</ul>
+<p>挂载命令直接复制官网给出的就行：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Codex</span></span><br><span class="line">codex mcp add openwork --url https://api.openworklabs.com/mcp/agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># Claude Code</span></span><br><span class="line">claude mcp add --transport http openwork https://api.openworklabs.com/mcp/agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># OpenCode，加到 opencode.json</span></span><br><span class="line">{</span><br><span class="line">  <span class="string">"mcp"</span>: {</span><br><span class="line">    <span class="string">"openwork"</span>: {</span><br><span class="line">      <span class="string">"type"</span>: <span class="string">"remote"</span>,</span><br><span class="line">      <span class="string">"enabled"</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="string">"url"</span>: <span class="string">"https://api.openworklabs.com/mcp/agent"</span>,</span><br><span class="line">      <span class="string">"oauth"</span>: {}</span><br><span class="line">    }</span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>挂好之后，你团队全员用的就是同一套 skill 库，不会出现” 小张在 Claude Code 里写了一个好用的脚本，小李在 Cursor 里就没法用” 的窘境。</p>
+<h3 id="3-OpenWork-Den：管理面-企业能力"><a href="#3-OpenWork-Den：管理面-企业能力" class="headerlink" title="3. OpenWork Den：管理面 + 企业能力"></a>3. OpenWork Den：管理面 + 企业能力</h3><p>Den 是组织级的控制平面。功能包括：</p>
+<ul>
+<li><strong>SSO</strong>：企业身份接入，团队成员统一登录。</li>
+<li><strong>推理配额</strong>：自己接 BYO inference（自带模型供应商），按团队按成员分配额度。</li>
+<li><strong>桌面策略</strong>：限制能跑哪些本地模型、哪些 App 版本。</li>
+<li><strong>成员 / 团队 / 插件市场</strong>：把 skill、plugin、MCP 服务打包发布，按组织、按团队、按人授权。</li>
+</ul>
+<p>它的定位相当于把”Agent 工作流” 这件事从 chatops 推到了 IGA（identity-governed automation）那一层。</p>
+<h3 id="4-Extension-Marketplace：让知识像-npm-包一样流转"><a href="#4-Extension-Marketplace：让知识像-npm-包一样流转" class="headerlink" title="4. Extension Marketplace：让知识像 npm 包一样流转"></a>4. Extension Marketplace：让知识像 npm 包一样流转</h3><p>官方说法是 “publish skills and plugins through marketplaces, then assign them to the organization, a team, or specific people”。你写好的一个 SKILL.md，不再是” 丢群文件大家自己下载”，而是发布到内部 marketplace，指定谁能用。这套体感已经非常接近企业内部的应用商店了。</p>
+<p>最关键的是它<strong>兼容 Anthropic 兼容的 plugin 协议</strong> —— 你给 Claude Code 写过的能力，可以直接被 OpenWork 挂出去卖 / 分享。</p>
+<h3 id="5-50-LLM-Providers-Google-Workspace-Microsoft-365"><a href="#5-50-LLM-Providers-Google-Workspace-Microsoft-365" class="headerlink" title="5. 50+ LLM Providers + Google Workspace / Microsoft 365"></a>5. 50+ LLM Providers + Google Workspace / Microsoft 365</h3><p>官网 FAQ 里直白写了：”works with 50+ LLMs from any provider instead of a single vendor, and runs locally”。BYOK（Bring Your Own Key）哲学贯彻到底。同时原生集成 Google Workspace、Microsoft 365，意味着你的” 员工入职流程”” 客户邮件整理”” 日历冲突检测” 这种企业级场景，第一次有了” 开源 + 跨供应商” 的标准实现。</p>
+<hr>
+<h2 id="实战示例：5-分钟把一个团队工作台跑起来"><a href="#实战示例：5-分钟把一个团队工作台跑起来" class="headerlink" title="实战示例：5 分钟把一个团队工作台跑起来"></a>实战示例：5 分钟把一个团队工作台跑起来</h2><p>以下是我在调研时跑的精简版脚本，对应 OpenWork 官方 <a target="_blank" rel="noopener" href="https://openworklabs.com/docs/cloud/get-started">Quickstart</a>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 装桌面端（macOS 为例）</span></span><br><span class="line">brew install --cask openwork    <span class="comment"># 假定后续上架 cask，目前官方提供 dmg</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 在桌面端里创建你的 workspace</span></span><br><span class="line"><span class="comment"># -&gt; 直接点开 OpenWork -&gt; "Create workspace"</span></span><br><span class="line"><span class="comment"># -&gt; 选一个本地目录（这会变成你的 Agent 沙箱根目录）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 在桌面端里创建一个 Skill（一份说明书）</span></span><br><span class="line"><span class="comment"># -&gt; Skills -&gt; + New -&gt; "weekly-report"</span></span><br><span class="line"><span class="comment"># -&gt; 写：把本周新增文件按 mtime 倒序列出，输出 markdown 表格，存到 ./reports/</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 把这个 Skill 通过 OpenWork MCP 挂到你已经在用的客户端</span></span><br><span class="line">claude mcp add --transport http openwork \</span><br><span class="line">  https://api.openworklabs.com/mcp/agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 在 Claude Code 里调用</span></span><br><span class="line"><span class="comment"># &gt; "请用 openwork 的 weekly-report 能力，生成本周的工作日报。"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑通之后你会看到：以前只是你的个人提示词技巧，现在变成了一个<strong>写一遍、整个团队都能复用的标准能力</strong>。</p>
+<hr>
+<h2 id="适用场景和限制"><a href="#适用场景和限制" class="headerlink" title="适用场景和限制"></a>适用场景和限制</h2><p><strong>适合</strong>：</p>
+<ul>
+<li>公司内部有自动化流程（财务对账、客户回访、报表汇总），但缺一个” 普通员工能跑 Agent” 的入口。</li>
+<li>已经在用 Claude Code / Codex / Cursor 做开发的团队，想把工具和经验沉淀成可复用资产。</li>
+<li>对”AI Agent 不能碰内部数据” 有顾虑，优先要本地化部署。</li>
+<li>想从单一 LLM 供应商（OpenAI/Anthropic/Google）解锁到 BYOK 模型池。</li>
+</ul>
+<p><strong>还不适合</strong>：</p>
+<ul>
+<li>追求” 开箱即用、零配置” 的非技术团队 —— 目前版本作者自己都承认很 alpha，rough edges 还多。</li>
+<li>只做代码生成、不涉及本地文件和工具调用的轻量场景 —— 直接用 Cursor/Claude Code 桌面版就够了。</li>
+<li>大型组织的合规 / 审计要求高于 OpenWork Den 当前能力覆盖 —— 目前 Den 还偏向中小企业。</li>
+</ul>
+<p><strong>和同类项目的差异</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>对手</th>
+<th>差异点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Claude Cowork</td>
+<td> 闭源 + 单供应商 vs OpenWork 开源 + 50+ LLM</td>
+</tr>
+<tr>
+<td>Eigent</td>
+<td> 多 agent workforce vs OpenWork 共享 capability 市场</td>
+</tr>
+<tr>
+<td> OpenClaw</td>
+<td> 聊天驱动 vs OpenWork MCP 驱动（更工程化）</td>
+</tr>
+<tr>
+<td>Cursor/Claude Code</td>
+<td> 单机 IDE 工具 vs OpenWork 团队共享工作台</td>
+</tr>
+</tbody></table>
+<p>OpenWork 的护城河就在 <strong>“它把 skill/plugin 当成可治理资源”</strong> 这一层，这是它和前面那些” 开源 Claude Cowork 套壳” 的最显著区别。</p>
+<hr>
+<h2 id="总结：开源的下一战，是把”个人提示词”变成”组织资产”"><a href="#总结：开源的下一战，是把”个人提示词”变成”组织资产”" class="headerlink" title="总结：开源的下一战，是把”个人提示词”变成”组织资产”"></a>总结：开源的下一战，是把” 个人提示词” 变成” 组织资产”</h2><p>OpenWork 让我眼前一亮的原因，不是它又一个开源版 Claude Cowork—— 开源套壳已经不少了。真正重要的是：<strong>它开始把 AI Agent 工具往” 组织级资产” 的方向做治理</strong>。</p>
+<p>LLM 不值钱、提示词不稀缺；但” 你公司里谁有权用什么 skill、哪些 MCP 是 QA 过的、谁调用了多少 token”—— 这些是值钱的企业资产，过去只有自建平台能做到。OpenWork 把这条路径做成了开源 + 标准（MCP）+ 可选云服务，第一次让中小团队也能享受这种治理能力。</p>
+<p>如果你恰好在做 Agent 工具选型，或者正在头疼” 团队里 OpenCode 用得参差不齐”——<a target="_blank" rel="noopener" href="https://github.com/different-ai/openwork">different-ai/openwork</a> 值得你花 30 分钟下载来玩一下。</p>
+<p>今日 GitHub Trending 第一，2 小时前还在 commit。这是我给你最强的推荐信号。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/31/openwork-open-source-claude-cowork-alternative/" title="Claude Cowork 被锁在 SaaS 高墙里？OpenWork 把 AI Agent 工作台彻底开源">https://www.daishengli.top/2026/07/31/openwork-open-source-claude-cowork-alternative/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/OpenWork/" rel="tag"># OpenWork</a>
+              <a href="/tags/Claude-Cowork/" rel="tag"># Claude Cowork</a>
+              <a href="/tags/OpenCode/" rel="tag"># OpenCode</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90/" rel="tag"># 开源</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/30/code-review-graph-ai-coding-token-saver/" rel="prev" title="给 AI 编程工具装上「代码地图」：code-review-graph 如何用结构化图谱砍掉 82 倍 token">
+                  <i class="fa fa-angle-left"></i> 给 AI 编程工具装上「代码地图」：code-review-graph 如何用结构化图谱砍掉 82 倍 token
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/01/huggingface-speech-to-speech-local-voice-agent/" rel="next" title="Hugging Face Speech-to-Speech：把语音 Agent 完整跑在本地">
+                  Hugging Face Speech-to-Speech：把语音 Agent 完整跑在本地 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

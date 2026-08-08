@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Prime Agent 用 RLM 递归语言模型与 Continual Harness，把&quot;会写代码的 Agent&quot;变成&quot;会自己总结教训的 Agent&quot;，让长任务、长时间运行的工程自动化真正可落地。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Prime Agent：把 Coding Agent 推到 &quot;自改进&quot; 的下一代">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/08/prime-agent-self-improving-rlm-coding-agent/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="Prime Agent 用 RLM 递归语言模型与 Continual Harness，把&quot;会写代码的 Agent&quot;变成&quot;会自己总结教训的 Agent&quot;，让长任务、长时间运行的工程自动化真正可落地。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-08T02:02:07.000Z">
+<meta property="article:modified_time" content="2026-08-08T02:03:09.099Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="开源工具">
+<meta property="article:tag" content="Coding Agent">
+<meta property="article:tag" content="RLM">
+<meta property="article:tag" content="Prime Intellect">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/08/prime-agent-self-improving-rlm-coding-agent/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/08/prime-agent-self-improving-rlm-coding-agent/","path":"2026/08/08/prime-agent-self-improving-rlm-coding-agent/","title":"Prime Agent：把 Coding Agent 推到 \"自改进\" 的下一代"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Prime Agent：把 Coding Agent 推到 "自改进" 的下一代 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">237</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">47</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">87</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E6%8A%8A%E2%80%9D%E9%95%BF%E4%BB%BB%E5%8A%A1%E2%80%9D%E4%BB%8E%E5%B7%A5%E7%A8%8B%E9%97%AE%E9%A2%98%E5%8F%98%E6%88%90%E4%BA%A7%E5%93%81%E8%83%BD%E5%8A%9B"><span class="nav-number">1.</span> <span class="nav-text">项目背景：把” 长任务” 从工程问题变成产品能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E4%BA%AE%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">核心功能亮点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-RLM%EF%BC%9A%E9%80%92%E5%BD%92%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%EF%BC%8C%E6%8A%8A-context-%E5%8F%98%E6%88%90%E5%8F%98%E9%87%8F"><span class="nav-number">2.1.</span> <span class="nav-text">1. RLM：递归语言模型，把 context 变成变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Continual-Harness%EF%BC%9AAgent-%E7%9A%84%E2%80%9D%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86-%E8%87%AA%E6%88%91%E6%94%B9%E8%BF%9B%E2%80%9D"><span class="nav-number">2.2.</span> <span class="nav-text">2. Continual Harness：Agent 的” 长期记忆 + 自我改进”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Skills-%E6%98%AF%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%9A%84-Python-%E5%8C%85"><span class="nav-number">2.3.</span> <span class="nav-text">3. Skills 是可执行的 Python 包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%90%8E%E5%8F%B0%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B-%E4%BC%9A%E8%AF%9D%E5%8F%AF%E9%87%8D%E8%BF%9E"><span class="nav-number">2.4.</span> <span class="nav-text">4. 后台守护进程 + 会话可重连</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Agent-to-Agent-%E7%9B%B4%E8%BF%9E%E9%80%9A%E4%BF%A1"><span class="nav-number">2.5.</span> <span class="nav-text">5. Agent-to-Agent 直连通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E9%95%BF%E4%BB%BB%E5%8A%A1%E8%87%AA%E5%B8%A6%E7%9A%84%E2%80%9D%E5%BF%83%E8%B7%B3%E4%B8%8E%E7%9B%AE%E6%A0%87%E2%80%9D"><span class="nav-number">2.6.</span> <span class="nav-text">6. 长任务自带的” 心跳与目标”</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A5-%E5%88%86%E9%92%9F%E8%B7%91%E9%80%9A%E4%B8%80%E4%B8%AA-Prime-Agent-%E4%BC%9A%E8%AF%9D"><span class="nav-number">3.</span> <span class="nav-text">实战示例：5 分钟跑通一个 Prime Agent 会话</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E9%99%90%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">适用场景与限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">5.</span> <span class="nav-text">与同类项目的差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">87</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">237</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/08/prime-agent-self-improving-rlm-coding-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Prime Agent：把 Coding Agent 推到 &quot;自改进&quot; 的下一代 | 小戴的网络日志">
+      <meta itemprop="description" content="Prime Agent 用 RLM 递归语言模型与 Continual Harness，把&quot;会写代码的 Agent&quot;变成&quot;会自己总结教训的 Agent&quot;，让长任务、长时间运行的工程自动化真正可落地。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Prime Agent：把 Coding Agent 推到 "自改进" 的下一代
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-08 10:02:07" itemprop="dateCreated datePublished" datetime="2026-08-08T10:02:07+08:00">2026-08-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Prime Agent 用 RLM 递归语言模型与 Continual Harness，把"会写代码的 Agent"变成"会自己总结教训的 Agent"，让长任务、长时间运行的工程自动化真正可落地。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>你有没有试过让 AI Agent 帮你跑一个多小时的重构任务，然后中途它把上下文搞丢了、或者重复犯同一个错误，最后你不得不从头来？这正是 GitHub 当日 trending 第一名 PrimeIntellect-ai/prime-agent 想解决的核心问题：把” 一次性编码 Agent” 升级成” 会从轨迹里自我改进的 Agent”。</p>
+<p>Prime Agent 是 Prime Intellect 团队开源的编码与研究 Agent。它在 trending 上单日拿到 <strong>2,293 个 star</strong>，总 star <strong>6,633</strong>，整个项目托管在 <code>https://github.com/PrimeIntellect-ai/prime-agent</code>，官方主页 <code>https://primeintellect.ai</code>。它把两个看起来很学术的概念 ——<strong>RLM（Recursive Language Model）</strong> 和 <strong>Continual Harness（持续化脚手架）</strong>—— 做成了一个能在终端里立刻跑起来的工具，今天我们就拆开看看它究竟厉害在哪里。</p>
+<h2 id="项目背景：把”长任务”从工程问题变成产品能力"><a href="#项目背景：把”长任务”从工程问题变成产品能力" class="headerlink" title="项目背景：把”长任务”从工程问题变成产品能力"></a>项目背景：把” 长任务” 从工程问题变成产品能力</h2><p>过去一年的 Coding Agent 几乎都遵循同一个剧本：用户输入任务，模型读上下文、调用工具、写代码、改文件、给结果。这个流程对 5 分钟能搞定的 PR 修复非常有效，可一旦任务变成” 跨 200 个文件的重构”、” 连续 6 小时的离线数据处理” 或者” 边写边写测试边看 CI 的滚动开发”，传统 Agent 就会开始暴露三个问题：</p>
+<ol>
+<li><strong>上下文被扁平化塞进 prompt</strong>：随着调用次数增长，模型的有效上下文窗口迅速被聊天记录占满，真正有用的代码片段反而被挤出去。</li>
+<li><strong>错误不会沉淀</strong>：今天踩过的坑，明天重新开始同一个项目时，Agent 又会再踩一遍。</li>
+<li><strong>任务没有生命周期</strong>：Agent 本质上是一个被用户” 看管” 的一次性进程，关闭终端、关闭电脑，任务就停了；想” 挂后台、明天接着看” 几乎做不到。</li>
+</ol>
+<p>Prime Agent 的解题思路非常工程师化 —— <strong>把 prompt 当变量、把 sub-agent 当函数、把脚手架当成可版本化的状态</strong>。所有这些能力最终落到一个本地 daemon-backed 的进程里，下面我们逐个看它的核心功能。</p>
+<h2 id="核心功能亮点"><a href="#核心功能亮点" class="headerlink" title="核心功能亮点"></a>核心功能亮点</h2><h3 id="1-RLM：递归语言模型，把-context-变成变量"><a href="#1-RLM：递归语言模型，把-context-变成变量" class="headerlink" title="1. RLM：递归语言模型，把 context 变成变量"></a>1. RLM：递归语言模型，把 context 变成变量</h3><p>Prime Agent 内置的核心抽象叫 <strong>Recursive Language Model (RLM)</strong>。它的关键设计是：上下文不再是一段被动的文本，而是持久 IPython REPL 里可以被引用、被计算、被二次调用的” 变量”。<code>prompt-as-a-variable</code> 让大模型本身变成一个可以在代码里被反复调用的函数，子 Agent（sub-agent）则通过 <code>rlm(...)</code> 真正地” 被调用”。</p>
+<p>这意味着你可以这样写：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把多份长文档当作变量塞进 REPL</span></span><br><span class="line">spec = read_file(<span class="string">"docs/spec.md"</span>)</span><br><span class="line">tests = read_file(<span class="string">"tests/legacy_api.py"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 让 RLM 帮忙对比 diff 并给出迁移建议</span></span><br><span class="line">plan = rlm(</span><br><span class="line">    <span class="string">"基于 spec 和 tests，输出逐步迁移计划，要求每步可单独 PR 化"</span>,</span><br><span class="line">    context={<span class="string">"spec"</span>: spec, <span class="string">"tests"</span>: tests},</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再起一个 RLM 子 agent 异步验证计划</span></span><br><span class="line">verifier = rlm(<span class="string">"审阅 plan 的兼容性与回归风险"</span>, background=<span class="literal">True</span>, deps=[plan])</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这种” 用代码指挥 LLM” 的方式，让 agent 不再是 prompt 串，而是真正可编程的工作流。</p>
+<h3 id="2-Continual-Harness：Agent-的”长期记忆-自我改进”"><a href="#2-Continual-Harness：Agent-的”长期记忆-自我改进”" class="headerlink" title="2. Continual Harness：Agent 的”长期记忆 + 自我改进”"></a>2. Continual Harness：Agent 的” 长期记忆 + 自我改进”</h3><p>如果说 RLM 解决的是” 一次任务里怎么把上下文管理好”，那 <strong>Continual Harness</strong> 解决的就是”Agent 如何从这次任务里学到东西，下一次做得更好”。</p>
+<p>具体机制是：</p>
+<ul>
+<li><code>/refine</code> 会回顾当前任务轨迹，提取可复用的提示、记忆、技能描述、子 Agent 规格，作为” 补充状态” 持久化下来。</li>
+<li>基础系统提示是<strong>不可变</strong>的，所有改进都是叠加在 supplemental state 上的小步、可回滚的更新。</li>
+<li>每次 refine 都会留下快照（snapshot），相当于给 Agent 的” 行为模式” 做了 Git 式的版本管理。</li>
+</ul>
+<p>效果是：你今天教它” 在这个 monorepo 里跑测试前先 <code>pnpm install</code>“，明天同一个 Agent 就已经默认会执行这一步，不再需要重新提示。</p>
+<h3 id="3-Skills-是可执行的-Python-包"><a href="#3-Skills-是可执行的-Python-包" class="headerlink" title="3. Skills 是可执行的 Python 包"></a>3. Skills 是可执行的 Python 包</h3><p>Prime Agent 把技能（skill）实现成<strong>可导入的 Python 包</strong>，而不是一堆 Markdown 片段。它还自带一个 skill creator，能把你” 反复在做的工作流” 一键固化成项目级或个人级 skill。这跟传统的 slash-command 类 Agent（如 Claude Skills）有本质区别 —— 后者更多是 prompt 模板，前者是真正可在 REPL 里 <code>import</code> 的代码。</p>
+<h3 id="4-后台守护进程-会话可重连"><a href="#4-后台守护进程-会话可重连" class="headerlink" title="4. 后台守护进程 + 会话可重连"></a>4. 后台守护进程 + 会话可重连</h3><p>Prime Agent 用 daemon-backed 模式跑会话：</p>
+<ul>
+<li>关闭 SSH、关闭终端、断开 VPN，Agent 还在跑。</li>
+<li>用 <code>prime-agent agents</code> 浏览活跃、空闲、已保存的会话。</li>
+<li><code>prime-agent attach &lt;id&gt;</code> 把后台进程重新拉回前台。</li>
+<li>配合 <code>prime-agent --resume &lt;path|id&gt;</code> 还能跨机器恢复。</li>
+</ul>
+<p>对需要” 挂一晚上跑构建、再挂一上午跑回归” 的工程场景，这是真正的生产力工具。</p>
+<h3 id="5-Agent-to-Agent-直连通信"><a href="#5-Agent-to-Agent-直连通信" class="headerlink" title="5. Agent-to-Agent 直连通信"></a>5. Agent-to-Agent 直连通信</h3><p>Prime Agent 内置了运行中 Agent 之间互相发现、发消息、协同编排的能力，不再把每个请求都路由回用户终端。你可以：</p>
+<ul>
+<li>让” 研究 Agent” 挖到一份新文档后，自动把关键 diff 推给” 重构 Agent”。</li>
+<li>让” 测试 Agent” 在某条 case 失败时主动回头戳” 修复 Agent” 重新分配子任务。</li>
+</ul>
+<p>这种点对点的消息协议在多 Agent 编排里比” 中央调度 + 队列” 模型更接近真实团队协作。</p>
+<h3 id="6-长任务自带的”心跳与目标”"><a href="#6-长任务自带的”心跳与目标”" class="headerlink" title="6. 长任务自带的”心跳与目标”"></a>6. 长任务自带的” 心跳与目标”</h3><p>Prime Agent 为长时间任务准备了一整套延续机制：</p>
+<ul>
+<li><strong>Heartbeat / Schedule</strong>：<code>/heartbeat</code> 和 <code>prime-agent schedule</code> 让你可以周期性或定点把 Agent 唤醒。</li>
+<li><strong>Persistent Goal</strong>：<code>/goal</code> 让一个目标在多轮交互里保持活跃，直到完成、暂停或被显式清理。</li>
+<li><strong>Automatic Compaction</strong>：自动压缩老的上下文，把宝贵的窗口留给真正还在用的信息。</li>
+<li><strong>Bounded Autonomous Mode</strong>：<code>/autonomous</code> 在你设定的 turn /token/ 时间预算内跑，并且可以挂自定义 quality gate，超过预算不会” 假装成功”。</li>
+</ul>
+<p>这些机制合在一起，让” 跑一整天” 和” 跑五分钟” 的体验是一致的 —— 你始终知道 Agent 在哪、预算还剩多少、能不能停下来。</p>
+<h2 id="实战示例：5-分钟跑通一个-Prime-Agent-会话"><a href="#实战示例：5-分钟跑通一个-Prime-Agent-会话" class="headerlink" title="实战示例：5 分钟跑通一个 Prime Agent 会话"></a>实战示例：5 分钟跑通一个 Prime Agent 会话</h2><p>下面是一段最小化的使用流程，假设你已经看过官方 Quickstart。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 一键安装（macOS / Linux）</span></span><br><span class="line">curl -fsSL https://app.primeintellect.ai/prime-agent/install.sh | sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 切到你想让 Agent 工作的目录</span></span><br><span class="line"><span class="built_in">cd</span> ~/work/legacy-monorepo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 启动 Agent（在 REPL 内直接对话）</span></span><br><span class="line">prime-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 首次启动做一次登录：选择 Prime Intellect 订阅 / 自带 API Key</span></span><br><span class="line"><span class="comment">#    在 REPL 里执行：</span></span><br><span class="line">/login</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 提出任务，比如"把 utils/ 下的旧 API 替换成 v2，保留兼容层"</span></span><br><span class="line"><span class="comment">#    Agent 会在持久 IPython 里：</span></span><br><span class="line"><span class="comment">#       a. 先扫仓库结构，列出 utils/ 下所有受影响的文件</span></span><br><span class="line"><span class="comment">#       b. 起一个 verifier 子 agent 并行评估风险</span></span><br><span class="line"><span class="comment">#       c. 在主进程里执行迁移并跑测试</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 6. 让 Agent 在你睡觉时继续推进</span></span><br><span class="line">/autonomous --turns 400 --minutes 360</span><br><span class="line"></span><br><span class="line"><span class="comment"># 7. 第二天 SSH 回来，重新挂上同一个会话</span></span><br><span class="line">prime-agent agents</span><br><span class="line">prime-agent attach 7c1a0f</span><br></pre></td></tr></tbody></table></figure>
+
+<p>整个过程里，最核心的体验差异在于：<strong>Agent 不再” 看起来聪明”，而是” 留下了证据”</strong>—— 它有 refine 记录、有 snapshot、有目标进度，任何一步你都可以暂停、回放、回滚。</p>
+<h2 id="适用场景与限制"><a href="#适用场景与限制" class="headerlink" title="适用场景与限制"></a>适用场景与限制</h2><p><strong>最值得用的场景</strong></p>
+<ul>
+<li>跨文件、跨数小时的大型重构或迁移任务。</li>
+<li>需要” 挂一晚上、明天接” 的离线数据处理 / 爬虫 / 评测脚本。</li>
+<li>团队里希望沉淀” 项目级工作流” 的场景，例如” 每次新需求都先跑这套压测 + 回归”。</li>
+<li>多 Agent 协作的研究项目（RLM 的递归调用正好契合论文级工作流）。</li>
+</ul>
+<p><strong>当前仍然需要谨慎的地方</strong></p>
+<ul>
+<li>Agent 会以<strong>当前用户的权限</strong>执行模型生成的 Python 与 shell 命令，<strong>它不是安全沙箱</strong>。官方 README 也明确警告：要在可丢弃的 clone、干净 worktree 或者你信任的仓库里跑；跑不可信指令务必放在外部 sandbox。</li>
+<li><code>/refine</code> 只能做” 小步、可证据化” 的改进，<strong>不要指望它代替代码审查</strong> —— 它降低了重复劳动，不是替代 reviewer。</li>
+<li>持续化状态默认是 local to the session，多人协作共享 skill /memory 还需要在团队仓库里再做一层治理。</li>
+</ul>
+<h2 id="与同类项目的差异"><a href="#与同类项目的差异" class="headerlink" title="与同类项目的差异"></a>与同类项目的差异</h2><p>横向看，目前主流的 Coding Agent 大致分三派：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>代表</th>
+<th>特点</th>
+<th>局限</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>编辑器内 Agent</td>
+<td>Cursor、Claude Code、Copilot Workspace</td>
+<td> 强 IDE 集成、短反馈环</td>
+<td>长任务能力弱、上下文管理粗放</td>
+</tr>
+<tr>
+<td>任务型 Agent</td>
+<td>Devin、Aider</td>
+<td> 单任务跑完即结束</td>
+<td>不擅长” 挂后台、跨天接续”</td>
+</tr>
+<tr>
+<td>Skill/Memory 框架</td>
+<td> Superpowers、Agent Skills、Claude Skills</td>
+<td> 提供 prompt/skill 模板</td>
+<td> skill 通常是 markdown，缺乏可执行性</td>
+</tr>
+</tbody></table>
+<p>Prime Agent 的差异点正好踩在三者之间的空隙：</p>
+<ol>
+<li><strong>RLM 把” 调用 LLM” 变成编程原语</strong>，而不是 prompt 字符串。</li>
+<li><strong>Continual Harness 给 Agent 真正的” 长期记忆 + 自我改进”</strong>，而不是每次从零开始。</li>
+<li><strong>Daemon-backed + attach/resume</strong> 让它天然适合长任务。</li>
+<li><strong>Skill 是可 import 的 Python 包</strong>，和传统 markdown skill 拉开身位。</li>
+</ol>
+<p>如果你的工作流是” 短小 PR + IDE 内即时反馈”，它不一定比 Cursor 更顺手；但如果你想要的是”AI 工程师同事 / AI 研究助手 / 能挂一整夜的项目级自动化”，Prime Agent 几乎是当下最接近这个愿景的开源实现。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Prime Agent 不是又一款” 对话式编码助手”，它把 AI Agent 从” 一次性脚本” 推向” 长期在线、可持续改进的工程协作者”。<strong>RLM</strong> 让上下文变得可编程，<strong>Continual Harness</strong> 让 Agent 拥有可版本化的记忆与技能，<strong>daemon + heartbeat + autonomous</strong> 让长时间运行真正可观测、可重连。再加上 RLM 子 Agent 之间能直接通信、做真正的多 Agent 编排，整套架构非常适合在工程团队里落地。</p>
+<p>如果你正在为” 长任务、长上下文、跨会话协作” 的 Agent 能力头疼，值得花一个晚上 clone 仓库、跑一遍 <code>/login</code> 与 <code>/refine</code>，亲身体验一下”AI Agent 自己写出第二版 skill” 的那种感觉。开源世界又一次把” 本以为是论文里的功能” 变成了 <code>curl | sh</code> 就能跑起来的东西，这是开源最让人兴奋的地方。</p>
+<blockquote>
+<p>仓库地址：<a target="_blank" rel="noopener" href="https://github.com/PrimeIntellect-ai/prime-agent">https://github.com/PrimeIntellect-ai/prime-agent</a><br>官方主页：<a target="_blank" rel="noopener" href="https://primeintellect.ai/">https://primeintellect.ai</a><br>一键安装：<code>curl -fsSL https://app.primeintellect.ai/prime-agent/install.sh | sh</code></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/08/prime-agent-self-improving-rlm-coding-agent/" title="Prime Agent：把 Coding Agent 推到 &quot;自改进&quot; 的下一代">https://www.daishengli.top/2026/08/08/prime-agent-self-improving-rlm-coding-agent/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/" rel="tag"># 开源工具</a>
+              <a href="/tags/Coding-Agent/" rel="tag"># Coding Agent</a>
+              <a href="/tags/RLM/" rel="tag"># RLM</a>
+              <a href="/tags/Prime-Intellect/" rel="tag"># Prime Intellect</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/06/agent-reach-ai-agent-internet-eyes/" rel="prev" title="Agent Reach：让 AI Coding Agent 真正拥有 &quot;看全网&quot; 的免费能力">
+                  <i class="fa fa-angle-left"></i> Agent Reach：让 AI Coding Agent 真正拥有 "看全网" 的免费能力
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

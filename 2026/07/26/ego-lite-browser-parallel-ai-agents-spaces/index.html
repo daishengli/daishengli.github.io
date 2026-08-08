@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="citrolabs&#x2F;ego-lite 是一个为「人和 AI 代理共享浏览器」设计的 Chromium 浏览器：每个代理独立 Space 并行跑、复用你 Chrome 的登录态、用 JavaScript 函数代替一连串 CLI 调用，让 Claude Code&#x2F;Codex&#x2F;Cursor 真正接管你登录过的那些网站。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ego lite：给 AI 代理一个能并行干活的浏览器，登录态和你的 Chrome 一起继承">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/26/ego-lite-browser-parallel-ai-agents-spaces/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="citrolabs&#x2F;ego-lite 是一个为「人和 AI 代理共享浏览器」设计的 Chromium 浏览器：每个代理独立 Space 并行跑、复用你 Chrome 的登录态、用 JavaScript 函数代替一连串 CLI 调用，让 Claude Code&#x2F;Codex&#x2F;Cursor 真正接管你登录过的那些网站。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-26T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-08T02:03:09.096Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="浏览器自动化">
+<meta property="article:tag" content="ego-lite">
+<meta property="article:tag" content="Chromium">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/26/ego-lite-browser-parallel-ai-agents-spaces/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/26/ego-lite-browser-parallel-ai-agents-spaces/","path":"2026/07/26/ego-lite-browser-parallel-ai-agents-spaces/","title":"ego lite：给 AI 代理一个能并行干活的浏览器，登录态和你的 Chrome 一起继承"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ego lite：给 AI 代理一个能并行干活的浏览器，登录态和你的 Chrome 一起继承 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">237</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">47</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">87</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E4%B8%89%E7%A7%8D%E6%96%B9%E6%A1%88%E9%83%BD%E5%B7%AE%E7%82%B9%E6%84%8F%E6%80%9D"><span class="nav-number">1.</span> <span class="nav-text">项目背景：三种方案都差点意思</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E5%B9%B6%E8%A1%8C-Space%E3%80%81JS-%E5%87%BD%E6%95%B0%E9%A9%B1%E5%8A%A8%E3%80%81%E7%99%BB%E5%BD%95%E6%80%81%E5%85%B1%E4%BA%AB"><span class="nav-number">2.</span> <span class="nav-text">核心功能：并行 Space、JS 函数驱动、登录态共享</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%AF%8F%E4%B8%AA-agent-%E4%B8%80%E4%B8%AA%E7%8B%AC%E7%AB%8B-Space%EF%BC%8C%E4%B8%8D%E6%8A%A2%E4%BD%A0%E7%9A%84-tab"><span class="nav-number">2.1.</span> <span class="nav-text">1. 每个 agent 一个独立 Space，不抢你的 tab</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-ego-browser%EF%BC%9A%E6%8A%8A%E6%B5%8F%E8%A7%88%E5%99%A8%E6%9A%B4%E9%9C%B2%E6%88%90-in-page-JavaScript-%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.</span> <span class="nav-text">2. ego-browser：把浏览器暴露成 in-page JavaScript 函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%A4%8D%E7%94%A8-Chrome-%E7%99%BB%E5%BD%95%E6%80%81%E2%80%94%E2%80%94%E5%BD%BB%E5%BA%95%E5%91%8A%E5%88%AB-re-auth"><span class="nav-number">2.3.</span> <span class="nav-text">3. 复用 Chrome 登录态 —— 彻底告别 re-auth</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A5-%E5%88%86%E9%92%9F%E6%8A%8A-ego-lite-%E6%8E%A5%E8%BF%9B-Claude-Code"><span class="nav-number">3.</span> <span class="nav-text">实战示例：5 分钟把 ego lite 接进 Claude Code</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-1%EF%BC%9A%E8%A3%85-ego-lite"><span class="nav-number">3.1.</span> <span class="nav-text">Step 1：装 ego lite</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-2%EF%BC%9A%E8%AE%A9-agent-%E6%8E%A5%E7%AE%A1%E7%AC%AC%E4%B8%80%E4%B8%AA%E4%BB%BB%E5%8A%A1"><span class="nav-number">3.2.</span> <span class="nav-text">Step 2：让 agent 接管第一个任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-3%EF%BC%9A%E5%B9%B6%E8%A1%8C%E5%BC%80%E5%A4%9A%E4%B8%AA-Space"><span class="nav-number">3.3.</span> <span class="nav-text">Step 3：并行开多个 Space</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-4%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89%EF%BC%9A%E8%87%AA%E5%B7%B1%E5%86%99%E8%87%AA%E5%AE%9A%E4%B9%89-JS-%E8%84%9A%E6%9C%AC"><span class="nav-number">3.4.</span> <span class="nav-text">Step 4（可选）：自己写自定义 JS 脚本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">适用场景和限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">87</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">237</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/26/ego-lite-browser-parallel-ai-agents-spaces/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ego lite：给 AI 代理一个能并行干活的浏览器，登录态和你的 Chrome 一起继承 | 小戴的网络日志">
+      <meta itemprop="description" content="citrolabs&#x2F;ego-lite 是一个为「人和 AI 代理共享浏览器」设计的 Chromium 浏览器：每个代理独立 Space 并行跑、复用你 Chrome 的登录态、用 JavaScript 函数代替一连串 CLI 调用，让 Claude Code&#x2F;Codex&#x2F;Cursor 真正接管你登录过的那些网站。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ego lite：给 AI 代理一个能并行干活的浏览器，登录态和你的 Chrome 一起继承
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-26 10:00:00" itemprop="dateCreated datePublished" datetime="2026-07-26T10:00:00+08:00">2026-07-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">citrolabs/ego-lite 是一个为「人和 AI 代理共享浏览器」设计的 Chromium 浏览器：每个代理独立 Space 并行跑、复用你 Chrome 的登录态、用 JavaScript 函数代替一连串 CLI 调用，让 Claude Code/Codex/Cursor 真正接管你登录过的那些网站。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>你有没有过这种时刻 ——Claude Code 正在帮你抓竞品 LinkedIn 数据，Cursor 又被叫去给一组 X 推文做归档，两个 AI 同时想用你的浏览器跑自动化，结果就是 tab 互相抢、登录态来回掉、验证码连环弹，最后你自己那点搜索请求被挤得没影？更别提每次都得重新登录、装插件、搬 Cookie 的那种烦躁。</p>
+<p><strong>有没有可能让 AI 代理直接用你正在用的浏览器，并行地、登录态不掉地跑完一摞活？</strong></p>
+<p>这是今天登顶 GitHub Trending 第 2 名、当日新增 36 颗星的 <a target="_blank" rel="noopener" href="https://github.com/citrolabs/ego-lite">citrolabs/ego-lite</a> 想回答的问题。它用 1 周时间从 1.7k Stars 冲到 2.1k，license 是 MIT，作者把它定位成「给人和 AI 代理同时用的浏览器」。和 Browser-Use、agent-browser、ChatGPT Atlas 都不一样，它不是再做一个 agent 框架，也不是把浏览器塞回 AI 助手，而是把浏览器本身变成共享基建。</p>
+<h2 id="项目背景：三种方案都差点意思"><a href="#项目背景：三种方案都差点意思" class="headerlink" title="项目背景：三种方案都差点意思"></a>项目背景：三种方案都差点意思</h2><p>过去两年，AI 代理想在浏览器里干点实事，基本就三条路，但每条都卡在一个老问题上：</p>
+<p><strong>第一条是「浏览器自动化框架」。</strong> 这条路的代表是 <a target="_blank" rel="noopener" href="https://github.com/browser-use/browser-use">Browser-Use</a> 和 Vercel 的 <a target="_blank" rel="noopener" href="https://github.com/vercel-labs/agent-browser">agent-browser</a>。它们的思路是给 agent 一个 Python/Node 库，让 agent 通过 Playwright/Puppeteer 控制一个独立浏览器实例。问题是：要驱动这个浏览器，你得先彻底关掉自己的 Chrome；它不带扩展；要登录就得在脚本里塞凭证；agent 跑起来还可能把你的鼠标抢走。最后你和你自己的浏览器变成两套世界。</p>
+<p><strong>第二条是「AI 浏览器」。</strong> ChatGPT Atlas、Perplexity Comet 都是这条路的产物。它们的思路是直接造一个新浏览器，里面塞一个内置的 agent。问题是：这个浏览器只能它自带的 agent 干活 —— 你想让 Claude Code 来接管，得换一套流程；想用 Codex 再接管一遍，又得换一套；登录态更是各自为政。</p>
+<p><strong>第三条就是 ego lite 想做的事：「一个浏览器，为你和你带进来的任何 agent 同时设计」。</strong></p>
+<p>ego lite 是一个定制过的 Chromium 浏览器。它在首次启动时会问一句「要不要从 Chrome 迁数据」，你回答 yes 之后，你的标签页、保存的密码、扩展、Cookie、登录会话全部会搬过来。<strong>从此以后，任何能跑 shell 的 agent（Claude Code、Codex、Cursor、Continue、Gemini CLI、Hermes Agent、OpenCode，甚至你自己写的脚本）都可以通过同一个 <code>ego-browser</code> 技能，把自己的浏览器任务塞进 ego lite 里跑。</strong></p>
+<h2 id="核心功能：并行-Space、JS-函数驱动、登录态共享"><a href="#核心功能：并行-Space、JS-函数驱动、登录态共享" class="headerlink" title="核心功能：并行 Space、JS 函数驱动、登录态共享"></a>核心功能：并行 Space、JS 函数驱动、登录态共享</h2><p>ego lite 的杀手锏可以拆成三块。</p>
+<h3 id="1-每个-agent-一个独立-Space，不抢你的-tab"><a href="#1-每个-agent-一个独立-Space，不抢你的-tab" class="headerlink" title="1. 每个 agent 一个独立 Space，不抢你的 tab"></a>1. 每个 agent 一个独立 Space，不抢你的 tab</h3><p>传统框架下，agent 跑浏览器任务时会占用你的标签页和焦点。ego lite 引入了「Space」的概念 —— 每一个 agent 任务都在自己的 Space 里跑，标签页、Cookie、登录会话都和你日常浏览的 Space 隔离开。</p>
+<p>官方举的例子很直观：</p>
+<blockquote>
+<p>「让 Claude Code 在 10 个 Space 里同时给 10 个 lead 做 enrichment，让 Codex 在另外 5 个 Space 里抓 5 个竞品站点。你自己的标签页一个都不会被打扰。」</p>
+</blockquote>
+<p>这意味着你可以一边继续刷自己的 Slack，一边让 agent 在后台把数据采集跑完。要看 agent 在干嘛，就切到它的 Space；不想看，就彻底无视。所有 tab 都不互相打架，所有焦点都不互相抢占。</p>
+<h3 id="2-ego-browser：把浏览器暴露成-in-page-JavaScript-函数"><a href="#2-ego-browser：把浏览器暴露成-in-page-JavaScript-函数" class="headerlink" title="2. ego-browser：把浏览器暴露成 in-page JavaScript 函数"></a>2. ego-browser：把浏览器暴露成 in-page JavaScript 函数</h3><p>这是 ego lite 真正拉开身位的部分。传统的 Playwright/Puppeteer 调用模式是「一次 round trip 干一件事」—— 先 snapshot、然后 fill、然后 click、然后 wait，每一步都是 agent ↔ 浏览器之间的同步阻塞调用。</p>
+<p>ego-browser 把浏览器能力直接暴露成 in-page JavaScript 函数（<code>snapshot</code>、<code>fill</code>、<code>click</code>、<code>wait</code>、<code>navigate</code>、<code>capture</code>），让 agent <strong>在浏览器页面里一次性写一段 JS 脚本，把多步操作组合起来跑</strong>。结果就是：</p>
+<ul>
+<li>复杂工作流完成速度提升到原来的 <strong>2.5 倍</strong>；</li>
+<li>同时每条任务的 token 消耗显著下降（不用每一步都把当前页面状态 round-trip 回 LLM）；</li>
+<li>任务越复杂，差距越夸张。</li>
+</ul>
+<p>官方 benchmark 对比 Vercel 的 agent-browser，在四个真实浏览器自动化任务上跑出来：</p>
+<table>
+<thead>
+<tr>
+<th>任务类型</th>
+<th> agent-browser</th>
+<th>ego lite</th>
+<th> 加速比</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>复杂表单填写</td>
+<td> 100%</td>
+<td>~40%</td>
+<td>2.5×</td>
+</tr>
+<tr>
+<td> 多步骤抓取</td>
+<td> 100%</td>
+<td>~50%</td>
+<td>2.0×</td>
+</tr>
+<tr>
+<td> 跨 iframe 交互</td>
+<td>经常失败</td>
+<td> 100%</td>
+<td>∞</td>
+</tr>
+<tr>
+<td>登录态持久操作</td>
+<td>需重登录</td>
+<td>一次登录</td>
+<td> N/A</td>
+</tr>
+</tbody></table>
+<h3 id="3-复用-Chrome-登录态——彻底告别-re-auth"><a href="#3-复用-Chrome-登录态——彻底告别-re-auth" class="headerlink" title="3. 复用 Chrome 登录态——彻底告别 re-auth"></a>3. 复用 Chrome 登录态 —— 彻底告别 re-auth</h3><p>这是最戳痛点的一项。你装好 ego lite，迁移完 Chrome 数据之后，你的 agent 第一次想抓 X 推文、抓 LinkedIn profile、抓 Reddit 帖子、抓 Instagram 数据 —— 这些<strong>登录后才看得到的内容</strong> ——agent 直接就能用，因为你的会话已经在浏览器里了。</p>
+<p>官方说得直白：</p>
+<blockquote>
+<p>「用它作为默认浏览器，你的 AI 代理再也不会卡在验证码、2FA、SSO 跳转里。」</p>
+</blockquote>
+<p>更关键的是这个能力是<strong>跨 agent 的</strong>：今天 Claude Code 用你的 X 账号做归档，明天 Codex 想接着抓数据，它直接接管 Claude Code 留下的会话就行，不用你重新登录一遍。</p>
+<p>另外还有一些值得单独提的能力：</p>
+<ul>
+<li><strong>Kernel 级自定义的 Snapshot 引擎</strong>：ego lite 不是在标准 Chrome 上套一层 JS shim，而是在 Chromium 内核里改了 snapshot 生成逻辑。结果是 snapshot 体积更小、速度更快，并且能稳定处理跨域 iframe、Shadow DOM、Stripe/Salesforce/Intercom 这类第三方 SDK widget—— 这些是其它方案经常翻车的地方。</li>
+<li><strong>引用稳定</strong>：<code>@N</code> 形式的元素引用在 className 改名之后依然保持不变，agent 不会因为页面改版就把脚本写崩。</li>
+<li><strong>本地优先、零数据上传</strong>：历史、Cookie、密码、每个页面加载的内容全部存在本机；ego lite 只在首次启动时记录「你是否同意从 Chrome 迁数据」这一个布尔值。</li>
+</ul>
+<h2 id="实战示例：5-分钟把-ego-lite-接进-Claude-Code"><a href="#实战示例：5-分钟把-ego-lite-接进-Claude-Code" class="headerlink" title="实战示例：5 分钟把 ego lite 接进 Claude Code"></a>实战示例：5 分钟把 ego lite 接进 Claude Code</h2><p>下面是最小可用路径 ——Mac 用户从零跑通。</p>
+<h3 id="Step-1：装-ego-lite"><a href="#Step-1：装-ego-lite" class="headerlink" title="Step 1：装 ego lite"></a>Step 1：装 ego lite</h3><p>去 <a target="_blank" rel="noopener" href="https://github.com/citrolabs/ego-lite">GitHub Releases</a> 选对应架构的 dmg：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Apple Silicon</span></span><br><span class="line">open https://cdn.ego.app/channel/github_github_referral/setup/macos/arm64/egolite.dmg</span><br><span class="line"></span><br><span class="line"><span class="comment"># Intel</span></span><br><span class="line">open https://cdn.ego.app/channel/github_github_referral/setup/macos/x64/egolite.dmg</span><br></pre></td></tr></tbody></table></figure>
+
+<p>或者如果你已经有 Claude Code / Codex / Cursor 在跑，可以直接：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx skills add citrolabs/ego-lite</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第一次启动时它会问你要不要从 Chrome 迁数据 —— <strong>强烈建议选 yes</strong>。迁完之后你的 agent 就自动继承了所有登录态、扩展、书签。</p>
+<h3 id="Step-2：让-agent-接管第一个任务"><a href="#Step-2：让-agent-接管第一个任务" class="headerlink" title="Step 2：让 agent 接管第一个任务"></a>Step 2：让 agent 接管第一个任务</h3><p>打开 Claude Code（或者任何支持 skill 的 agent CLI），敲：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/ego-browser 帮我关注 @ego_agent，回复一条：「这个浏览器方案挺有意思！」</span><br></pre></td></tr></tbody></table></figure>
+
+<p>agent 拿到 <code>ego-browser</code> skill，会按这个流程跑：</p>
+<ol>
+<li>在自己的 Space 里打开 x.com；</li>
+<li>用 snapshot 读出当前页面结构；</li>
+<li>调用 click/fill 等 in-page JS 函数把整个交互跑完；</li>
+<li>报告结果给你。</li>
+</ol>
+<p>你完全可以一边继续刷自己的 tab，一边等它跑完。中间它<strong>不会</strong>抢你的鼠标、不会切换你的 Space、不会要求你手动确认任何东西。</p>
+<h3 id="Step-3：并行开多个-Space"><a href="#Step-3：并行开多个-Space" class="headerlink" title="Step 3：并行开多个 Space"></a>Step 3：并行开多个 Space</h3><p>要让多个代理同时跑，可以在 Claude Code 里开多个 session（每个 session 独立 Space），或者在不同 agent 里同时下发任务：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 终端 1：让 Claude Code 抓 LinkedIn</span></span><br><span class="line">/ego-browser 帮我在 LinkedIn 上找出 10 个 AI agent 方向的创始人，记录他们的职位和最近一条 post</span><br><span class="line"></span><br><span class="line"><span class="comment"># 终端 2：让 Codex 抓 Reddit</span></span><br><span class="line">/ego-browser 帮我把 r/LocalLLaMA 今天置顶的 5 个帖子抓下来，存成 markdown</span><br></pre></td></tr></tbody></table></figure>
+
+<p>两个 Space 并行跑，互不干扰。你切回自己的 Space 还是继续刷 GitHub Trending，没有任何 tab 被抢。</p>
+<h3 id="Step-4（可选）：自己写自定义-JS-脚本"><a href="#Step-4（可选）：自己写自定义-JS-脚本" class="headerlink" title="Step 4（可选）：自己写自定义 JS 脚本"></a>Step 4（可选）：自己写自定义 JS 脚本</h3><p>如果你是开发者，可以绕过 agent 直接写 JS 调用浏览器能力。<code>ego-browser</code> 把所有能力都暴露成了 in-page JS 函数，意味着你可以用 Node 脚本直接驱动：</p>
+<figure class="highlight js"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 伪代码：直接调用 ego-browser 暴露的 JS 工具</span></span><br><span class="line"><span class="keyword">await</span> ego.<span class="title function_">snapshot</span>();              <span class="comment">// 拿到当前页面结构</span></span><br><span class="line"><span class="keyword">await</span> ego.<span class="title function_">fill</span>(<span class="string">'#username'</span>, <span class="string">'me'</span>); <span class="comment">// 填表单</span></span><br><span class="line"><span class="keyword">await</span> ego.<span class="title function_">click</span>(<span class="string">'#submit'</span>);        <span class="comment">// 点按钮</span></span><br><span class="line"><span class="keyword">await</span> ego.<span class="title function_">wait</span>(<span class="string">'.result-loaded'</span>);  <span class="comment">// 等结果</span></span><br><span class="line"><span class="keyword">const</span> html = <span class="keyword">await</span> ego.<span class="title function_">capture</span>();  <span class="comment">// 抓最终 HTML</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这一层抽象让 ego lite 不止是给 agent 用的，也能直接当 headless 浏览器的本地替代品。</p>
+<h2 id="适用场景和限制"><a href="#适用场景和限制" class="headerlink" title="适用场景和限制"></a>适用场景和限制</h2><p>ego lite 的设计目标是「登录态 + 并行 + agent 友好」，这让它特别适合以下场景：</p>
+<ul>
+<li><strong>社交媒体运营</strong>：在 X、LinkedIn、Reddit、Instagram、Threads 上批量跟帖、采集、监控，这些站点都重度依赖登录态和反爬虫指纹，ego lite 因为直接复用你的真实浏览器，绕过了一半的麻烦。</li>
+<li><strong>竞品情报抓取</strong>：让 Codex 在 5 个 Space 里同时抓 5 个竞品网站的结构化数据，互不打架。</li>
+<li><strong>个人 CRM 自动化</strong>：让 Claude Code 给一批 lead 批量发个性化消息，登录态不丢，验证码不弹。</li>
+<li><strong>本地 MCP 服务对接</strong>：ego-browser skill 本身也可以作为一个 MCP server，暴露给任何支持 MCP 的 agent host。</li>
+</ul>
+<p>但 ego lite 目前的限制也很清楚，写在它首页：</p>
+<ul>
+<li><strong>仅支持 macOS</strong>：Apple Silicon 和 Intel 都支持，但 Windows 和 Linux 还在路线图里。Linux 用户如果想用，得等一等或者自己打包。</li>
+<li><strong>「可复用 Skills」功能还未上线</strong>：官方预告的「把成功操作蒸馏成可复用 skill，下次跑同类型任务快 5 倍」目前还在开发中。</li>
+<li><strong>内核改 Chromium 意味着更重的客户端</strong>：ego lite 不是 Chrome extension，它是一个完整的浏览器安装包，体积比 Chrome 略小，但首次安装需要迁移数据。</li>
+<li><strong>依赖 agent 的 skill 系统</strong>：要发挥完整能力，agent 需要支持 <code>/ego-browser</code> 这种 slash command 或者 skills 协议；纯黑盒的 agent（比如只接受 prompt 的在线服务）用不了。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>ego lite 不是一个新 agent 框架，也不是又一个 AI 浏览器。它做了一件更基础的事：<strong>把浏览器本身变成可以共享的基建</strong>。当你和你带进来的 Claude Code、Codex、Cursor、Hermes Agent 一起用同一个 ego lite 时，你们登录一次、并行跑、互不抢 tab。</p>
+<p>这种「共享浏览器 + 共享登录态 + 并行 Space」的设计，正好踩中了当下 AI agent 落地最大的那块短板 ——<strong>「agent 在登录后的网站里能不能像人一样干活」</strong>。如果你一直在为 re-auth、tab 抢占、并行冲突头疼，ego lite 可能是当下最值得一试的方案。</p>
+<blockquote>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/citrolabs/ego-lite">https://github.com/citrolabs/ego-lite</a><br>官网：<a target="_blank" rel="noopener" href="https://lite.ego.app/">https://lite.ego.app</a><br>文档：<a target="_blank" rel="noopener" href="https://lite.ego.app/document/">https://lite.ego.app/document/</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/26/ego-lite-browser-parallel-ai-agents-spaces/" title="ego lite：给 AI 代理一个能并行干活的浏览器，登录态和你的 Chrome 一起继承">https://www.daishengli.top/2026/07/26/ego-lite-browser-parallel-ai-agents-spaces/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag"># 浏览器自动化</a>
+              <a href="/tags/ego-lite/" rel="tag"># ego-lite</a>
+              <a href="/tags/Chromium/" rel="tag"># Chromium</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/25/ruview-wifi-densepose-through-wall-sensing/" rel="prev" title="π RuView：让家里的 WiFi 路由器变成「穿墙雷达」，无摄像头追踪 17 个身体关键点">
+                  <i class="fa fa-angle-left"></i> π RuView：让家里的 WiFi 路由器变成「穿墙雷达」，无摄像头追踪 17 个身体关键点
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/27/t3-code-web-gui-coding-agents/" rel="next" title="T3 Code：把 Codex、Claude 和 Cursor 装进一个轻量 Web 工作台">
+                  T3 Code：把 Codex、Claude 和 Cursor 装进一个轻量 Web 工作台 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

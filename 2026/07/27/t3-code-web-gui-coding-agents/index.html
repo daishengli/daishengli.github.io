@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="T3 Code 是一个面向 Codex、Claude、Cursor 和 OpenCode 的轻量 Web 编程 Agent 工作台。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="T3 Code：把 Codex、Claude 和 Cursor 装进一个轻量 Web 工作台">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/27/t3-code-web-gui-coding-agents/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="T3 Code 是一个面向 Codex、Claude、Cursor 和 OpenCode 的轻量 Web 编程 Agent 工作台。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-27T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-08T02:03:09.100Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="开发效率">
+<meta property="article:tag" content="开源工具">
+<meta property="article:tag" content="Codex">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/27/t3-code-web-gui-coding-agents/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/27/t3-code-web-gui-coding-agents/","path":"2026/07/27/t3-code-web-gui-coding-agents/","title":"T3 Code：把 Codex、Claude 和 Cursor 装进一个轻量 Web 工作台"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>T3 Code：把 Codex、Claude 和 Cursor 装进一个轻量 Web 工作台 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">237</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">47</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">87</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#T3-Code%EF%BC%9A%E6%8A%8A-Codex%E3%80%81Claude-%E5%92%8C-Cursor-%E8%A3%85%E8%BF%9B%E4%B8%80%E4%B8%AA%E8%BD%BB%E9%87%8F-Web-%E5%B7%A5%E4%BD%9C%E5%8F%B0"><span class="nav-number">1.</span> <span class="nav-text">T3 Code：把 Codex、Claude 和 Cursor 装进一个轻量 Web 工作台</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9AAgent-%E8%B6%8A%E5%A4%9A%EF%BC%8C%E6%93%8D%E4%BD%9C%E6%88%90%E6%9C%AC%E8%B6%8A%E9%AB%98"><span class="nav-number">1.1.</span> <span class="nav-text">项目背景：Agent 越多，操作成本越高</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="nav-number">1.2.</span> <span class="nav-text">核心功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%80%E4%B8%AA%E7%95%8C%E9%9D%A2%E7%AE%A1%E7%90%86%E5%A4%9A%E4%B8%AA-coding-agent"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. 一个界面管理多个 coding agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%9B%B4%E6%8E%A5%E9%80%9A%E8%BF%87-npx-%E5%90%AF%E5%8A%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. 直接通过 npx 启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%90%8C%E6%97%B6%E6%8F%90%E4%BE%9B%E6%A1%8C%E9%9D%A2%E5%BA%94%E7%94%A8"><span class="nav-number">1.2.3.</span> <span class="nav-text">3. 同时提供桌面应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%AF%B9%E5%B7%B2%E6%9C%89%E8%AE%A4%E8%AF%81%E6%96%B9%E5%BC%8F%E4%BF%9D%E6%8C%81%E5%85%BC%E5%AE%B9"><span class="nav-number">1.2.4.</span> <span class="nav-text">4. 对已有认证方式保持兼容</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%EF%BC%9A%E4%BA%94%E5%88%86%E9%92%9F%E5%90%AF%E5%8A%A8%E7%AC%AC%E4%B8%80%E4%B8%AA%E4%BB%BB%E5%8A%A1"><span class="nav-number">1.3.</span> <span class="nav-text">实战：五分钟启动第一个任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E5%92%8C%E5%90%8C%E7%B1%BB%E5%B7%A5%E5%85%B7%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C"><span class="nav-number">1.4.</span> <span class="nav-text">它和同类工具有什么不同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E9%99%90%E5%88%B6"><span class="nav-number">1.5.</span> <span class="nav-text">适用场景与限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">87</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">237</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/27/t3-code-web-gui-coding-agents/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="T3 Code：把 Codex、Claude 和 Cursor 装进一个轻量 Web 工作台 | 小戴的网络日志">
+      <meta itemprop="description" content="T3 Code 是一个面向 Codex、Claude、Cursor 和 OpenCode 的轻量 Web 编程 Agent 工作台。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          T3 Code：把 Codex、Claude 和 Cursor 装进一个轻量 Web 工作台
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-27 10:00:00" itemprop="dateCreated datePublished" datetime="2026-07-27T10:00:00+08:00">2026-07-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">T3 Code 是一个面向 Codex、Claude、Cursor 和 OpenCode 的轻量 Web 编程 Agent 工作台。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="T3-Code：把-Codex、Claude-和-Cursor-装进一个轻量-Web-工作台"><a href="#T3-Code：把-Codex、Claude-和-Cursor-装进一个轻量-Web-工作台" class="headerlink" title="T3 Code：把 Codex、Claude 和 Cursor 装进一个轻量 Web 工作台"></a>T3 Code：把 Codex、Claude 和 Cursor 装进一个轻量 Web 工作台</h1><p>你是否同时使用 Codex、Claude Code 和 Cursor，却要在多个终端窗口之间来回切换？一个 Agent 在修改代码，另一个正在运行测试，第三个等待你确认命令。终端本身很强大，但当任务变多，真正消耗精力的往往不是写代码，而是管理这些会话。</p>
+<p>最近 GitHub Trending 上的 <a target="_blank" rel="noopener" href="https://github.com/pingdotgg/t3code">T3 Code</a> 就是在解决这件事。它不是新的大模型，也不是又一个封装 API 的聊天窗口，而是一个极简的 Web GUI，把多个现有 coding agent 放进同一套工作流里。</p>
+<h2 id="项目背景：Agent-越多，操作成本越高"><a href="#项目背景：Agent-越多，操作成本越高" class="headerlink" title="项目背景：Agent 越多，操作成本越高"></a>项目背景：Agent 越多，操作成本越高</h2><p>AI 编程工具已经从 “帮我补全一段代码” 发展到可以阅读仓库、修改文件、执行命令和处理多步任务。问题也随之出现：不同 Agent 有不同的 CLI、登录方式和会话界面，开发者需要记住每个工具的启动命令，还要持续观察它们的输出。</p>
+<p>T3 Code 的思路很直接：保留 Codex、Claude Code、Cursor Agent 和 OpenCode 的能力，只负责提供一个统一的图形界面。项目 README 将它定义为 “a minimal web GUI for coding agents”，当前支持这四类 provider，并明确提醒项目仍处于早期阶段，使用时应预期存在 bug。</p>
+<p>这个定位很重要。T3 Code 不试图替代底层 Agent，也没有承诺自动解决所有工程问题。它更像一个调度台：让你更容易启动、查看和管理正在运行的编程任务。</p>
+<h2 id="核心功能"><a href="#核心功能" class="headerlink" title="核心功能"></a>核心功能</h2><h3 id="1-一个界面管理多个-coding-agent"><a href="#1-一个界面管理多个-coding-agent" class="headerlink" title="1. 一个界面管理多个 coding agent"></a>1. 一个界面管理多个 coding agent</h3><p>T3 Code 当前支持 Codex、Claude、Cursor 和 OpenCode。你可以根据任务特点选择不同的 Agent，而不必为每个工具打开一套独立的交互界面。</p>
+<p>例如，代码重构可以交给 Claude Code，快速生成补丁可以使用 Codex，习惯 Cursor 工作流的项目则继续使用 Cursor Agent。底层能力没有被抹平，只是入口被统一了。</p>
+<h3 id="2-直接通过-npx-启动"><a href="#2-直接通过-npx-启动" class="headerlink" title="2. 直接通过 npx 启动"></a>2. 直接通过 npx 启动</h3><p>项目提供了零安装体验：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx t3@latest</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这对想先试用的人很友好。Node.js 环境准备好后，不需要先下载桌面安装包，也不用手动配置一堆前端依赖。需要查看命令行参数时，可以运行：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx t3@latest --<span class="built_in">help</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="3-同时提供桌面应用"><a href="#3-同时提供桌面应用" class="headerlink" title="3. 同时提供桌面应用"></a>3. 同时提供桌面应用</h3><p>如果你更喜欢固定的桌面窗口，T3 Code 也提供 GitHub Releases 和包管理器安装方式。macOS 可以使用 Homebrew：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install --cask t3-code</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Arch Linux 用户可以通过 AUR 安装，Windows 用户则可以使用 winget。CLI 与桌面应用覆盖了两种典型习惯：临时试用时快速启动，长期使用时固定在桌面上。</p>
+<h3 id="4-对已有认证方式保持兼容"><a href="#4-对已有认证方式保持兼容" class="headerlink" title="4. 对已有认证方式保持兼容"></a>4. 对已有认证方式保持兼容</h3><p>T3 Code 不负责替你创建模型账号。使用前，至少需要安装并登录一个 provider：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Codex</span></span><br><span class="line">codex login</span><br><span class="line"></span><br><span class="line"><span class="comment"># Claude Code</span></span><br><span class="line">claude auth login</span><br><span class="line"></span><br><span class="line"><span class="comment"># Cursor</span></span><br><span class="line">cursor-agent login</span><br><span class="line"></span><br><span class="line"><span class="comment"># OpenCode</span></span><br><span class="line">opencode auth login</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这种设计减少了额外的密钥搬运。认证仍由各个官方 CLI 管理，T3 Code 只调用已经准备好的 Agent。对于公司代码或个人私有仓库，这比把 API Key 再复制到一个新服务中更容易理解和控制。</p>
+<h2 id="实战：五分钟启动第一个任务"><a href="#实战：五分钟启动第一个任务" class="headerlink" title="实战：五分钟启动第一个任务"></a>实战：五分钟启动第一个任务</h2><p>下面以已经安装 Node.js 和 Claude Code 为例。</p>
+<p>第一步，确认 CLI 已经完成认证：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">claude auth login</span><br><span class="line">claude --version</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第二步，在任意位置启动 T3 Code：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx t3@latest</span><br></pre></td></tr></tbody></table></figure>
+
+<p>启动后打开它提示的本地地址，在界面中选择 Claude provider，并指定一个本地项目目录。接下来可以输入一个边界清晰的任务，例如：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">阅读这个项目的 README 和测试目录，找出登录失败时没有覆盖的边界情况。</span><br><span class="line">先不要修改代码，先列出问题、涉及文件和建议增加的测试。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>当 Agent 给出分析后，再继续要求它实现测试。这样分两步做，既能保留人的判断，也能避免一上来就让 Agent 修改整个仓库。</p>
+<p>如果想换成 Codex，只需先完成 <code>codex login</code>，然后在工作台中选择对应 provider。T3 Code 的价值就在这里：切换工具时，思考仍然围绕项目任务，而不是围绕 “这个 CLI 的窗口在哪里”。</p>
+<h2 id="它和同类工具有什么不同"><a href="#它和同类工具有什么不同" class="headerlink" title="它和同类工具有什么不同"></a>它和同类工具有什么不同</h2><p>与 Cursor、Claude Code、Codex 本身相比，T3 Code 不是模型或 Agent 能力的提供者，而是统一入口。它适合已经认可多个 coding agent、但不想被各自界面分割的人。</p>
+<p>与 OpenHands、Aider 这类项目相比，T3 Code 的重点也不同。OpenHands 更强调自主软件工程流程，Aider 更强调终端里的对话式代码修改；T3 Code 则尽量保持轻量，把现有 provider 放到 Web GUI 中，学习成本更低，但自主编排能力也没有那么重。</p>
+<p>它也不同于传统 IDE 插件。IDE 插件通常围绕当前编辑器和文件树展开，T3 Code 更像独立的 Agent 工作台，适合同时观察多个任务。代价是它不能替代 IDE 的调试器、代码导航和完整编辑体验。</p>
+<h2 id="适用场景与限制"><a href="#适用场景与限制" class="headerlink" title="适用场景与限制"></a>适用场景与限制</h2><p>T3 Code 适合以下场景：</p>
+<ul>
+<li>需要在多个 coding agent 之间快速切换的开发者；</li>
+<li>想用浏览器界面管理终端 Agent 的团队；</li>
+<li>希望先用 <code>npx</code> 试用，再决定是否安装桌面版本的人；</li>
+<li>已经有 provider 账号，不想再维护一套模型接入层的项目。</li>
+</ul>
+<p>它的限制同样需要提前说清楚。第一，项目目前仍然很早期，README 直接提示 “Expect bugs”，不适合未经验证就放进关键生产流程。第二，它依赖底层 provider 的安装和认证，T3 Code 本身不能解决账号权限、额度和模型可用性问题。第三，多个 Agent 同时修改同一个仓库时，仍然可能产生文件冲突，统一界面不会自动替你进行版本控制。</p>
+<p>实际使用时，建议为不同任务准备独立分支或工作区，给 Agent 明确的修改范围，并在合并前运行测试。GUI 解决的是会话管理问题，工程质量仍然需要靠 Git、测试和人工 review 来保证。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>T3 Code 的亮点不在于功能数量，而在于抓住了 AI 编程工作流中的一个真实摩擦点：当开发者开始同时使用多个 Agent，终端窗口和认证入口本身就变成了管理负担。</p>
+<p>它通过一个极简 Web GUI 统一 Codex、Claude、Cursor 和 OpenCode，并提供 <code>npx</code>、桌面安装和既有 CLI 认证兼容。对于想降低切换成本的人，这是一个值得试用的开源项目；对于追求成熟度的人，则应把它当作快速变化中的实验性工具，先在非关键仓库验证，再逐步纳入日常流程。</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/pingdotgg/t3code">github.com/pingdotgg/t3code</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/27/t3-code-web-gui-coding-agents/" title="T3 Code：把 Codex、Claude 和 Cursor 装进一个轻量 Web 工作台">https://www.daishengli.top/2026/07/27/t3-code-web-gui-coding-agents/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/%E5%BC%80%E5%8F%91%E6%95%88%E7%8E%87/" rel="tag"># 开发效率</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/" rel="tag"># 开源工具</a>
+              <a href="/tags/Codex/" rel="tag"># Codex</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/26/ego-lite-browser-parallel-ai-agents-spaces/" rel="prev" title="ego lite：给 AI 代理一个能并行干活的浏览器，登录态和你的 Chrome 一起继承">
+                  <i class="fa fa-angle-left"></i> ego lite：给 AI 代理一个能并行干活的浏览器，登录态和你的 Chrome 一起继承
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/28/open-code-review-ali-baba-precision-first-ai-cr/" rel="next" title="阿里开源 Open Code Review：把 &quot;代码审查&quot; 从 &quot;猜你想说啥&quot; 变成 &quot;我只看真正的 Bug&quot;">
+                  阿里开源 Open Code Review：把 "代码审查" 从 "猜你想说啥" 变成 "我只看真正的 Bug" <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
