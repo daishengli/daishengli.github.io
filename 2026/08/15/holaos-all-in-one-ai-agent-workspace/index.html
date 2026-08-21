@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="把 Claude Code、Codex、holaOS 自研 Agent 装进同一个桌面应用,共享同一份本地记忆、同一套 Skills、同一个 MCP 生态——一个真正属于&quot;你和你的 Agent&quot;的电脑。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="holaOS：5.5k stars 的本地优先 AI Agent 工作台，让 Claude Code、Codex 与自研 Agent 共享同一份记忆">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/15/holaos-all-in-one-ai-agent-workspace/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="把 Claude Code、Codex、holaOS 自研 Agent 装进同一个桌面应用,共享同一份本地记忆、同一套 Skills、同一个 MCP 生态——一个真正属于&quot;你和你的 Agent&quot;的电脑。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-15T02:00:51.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.158Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="Codex">
+<meta property="article:tag" content="本地优先">
+<meta property="article:tag" content="holaOS">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/15/holaos-all-in-one-ai-agent-workspace/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/15/holaos-all-in-one-ai-agent-workspace/","path":"2026/08/15/holaos-all-in-one-ai-agent-workspace/","title":"holaOS：5.5k stars 的本地优先 AI Agent 工作台，让 Claude Code、Codex 与自研 Agent 共享同一份记忆"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>holaOS：5.5k stars 的本地优先 AI Agent 工作台，让 Claude Code、Codex 与自研 Agent 共享同一份记忆 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#holaOS%EF%BC%9A5-5k-stars-%E7%9A%84%E6%9C%AC%E5%9C%B0%E4%BC%98%E5%85%88-AI-Agent-%E5%B7%A5%E4%BD%9C%E5%8F%B0%EF%BC%8C%E8%AE%A9-Claude-Code%E3%80%81Codex-%E4%B8%8E%E8%87%AA%E7%A0%94-Agent-%E5%85%B1%E4%BA%AB%E5%90%8C%E4%B8%80%E4%BB%BD%E8%AE%B0%E5%BF%86"><span class="nav-number">1.</span> <span class="nav-text">holaOS：5.5k stars 的本地优先 AI Agent 工作台，让 Claude Code、Codex 与自研 Agent 共享同一份记忆</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9AAgent-%E8%B6%8A%E6%9D%A5%E8%B6%8A%E5%A4%9A%EF%BC%8C%E4%BD%86%E5%AE%83%E4%BB%AC%E6%98%AF%E2%80%9D%E5%AD%A4%E5%B2%9B%E2%80%9D"><span class="nav-number">1.1.</span> <span class="nav-text">一、项目背景：Agent 越来越多，但它们是” 孤岛”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E6%8A%8A%E2%80%9D%E5%B7%A5%E4%BD%9C%E5%8F%B0%E2%80%9D%E8%BF%99%E5%9B%9B%E4%B8%AA%E5%AD%97%E6%8B%86%E5%BC%80%E7%9C%8B"><span class="nav-number">1.2.</span> <span class="nav-text">二、核心功能：把” 工作台” 这四个字拆开看</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%A4%9A-Agent-%E5%90%8C%E5%8F%B0%EF%BC%8C%E9%9B%B6%E5%88%87%E6%8D%A2"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. 多 Agent 同台，零切换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%80%E4%BB%BD%E8%AE%B0%E5%BF%86%EF%BC%8C%E6%89%80%E6%9C%89-Agent-%E5%85%B1%E4%BA%AB"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. 一份记忆，所有 Agent 共享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-100-%E9%9B%86%E6%88%90-MCP-Skills-Combos"><span class="nav-number">1.2.3.</span> <span class="nav-text">3. 100+ 集成 + MCP + Skills + Combos</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%9C%AC%E5%9C%B0%E4%BC%98%E5%85%88-%E5%86%85%E7%BD%AE%E6%A8%A1%E5%9E%8B-BYOK-%E5%8F%8C%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.2.4.</span> <span class="nav-text">4. 本地优先 + 内置模型 &#x2F; BYOK 双模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E5%9C%A8-holaOS-%E9%87%8C%E8%AE%A9-Claude-Code-%E5%92%8C-Codex-%E5%8D%8F%E4%BD%9C%E6%94%B9%E4%B8%80%E4%B8%AA-PR"><span class="nav-number">1.3.</span> <span class="nav-text">三、实战示例：在 holaOS 里让 Claude Code 和 Codex 协作改一个 PR</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-1%EF%BC%9ABootstrap"><span class="nav-number">1.3.1.</span> <span class="nav-text">Step 1：Bootstrap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-2%EF%BC%9A%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA-workspace"><span class="nav-number">1.3.2.</span> <span class="nav-text">Step 2：创建一个 workspace</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-3%EF%BC%9A%E8%AE%A9-Claude-Code-%E5%86%99%E4%BB%A3%E7%A0%81"><span class="nav-number">1.3.3.</span> <span class="nav-text">Step 3：让 Claude Code 写代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-4%EF%BC%9A%E5%88%87%E5%88%B0-Codex%EF%BC%8C%E8%AE%A9%E5%AE%83-review-%E8%A1%A5%E6%B5%8B%E8%AF%95"><span class="nav-number">1.3.4.</span> <span class="nav-text">Step 4：切到 Codex，让它 review + 补测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-5%EF%BC%9A%E6%9C%AC%E5%9C%B0%E8%AE%B0%E5%BF%86%E5%8F%AF%E5%AE%A1%E8%AE%A1"><span class="nav-number">1.3.5.</span> <span class="nav-text">Step 5：本地记忆可审计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">1.4.</span> <span class="nav-text">四、适用场景和限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.</span> <span class="nav-text">五、总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/15/holaos-all-in-one-ai-agent-workspace/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="holaOS：5.5k stars 的本地优先 AI Agent 工作台，让 Claude Code、Codex 与自研 Agent 共享同一份记忆 | 小戴的网络日志">
+      <meta itemprop="description" content="把 Claude Code、Codex、holaOS 自研 Agent 装进同一个桌面应用,共享同一份本地记忆、同一套 Skills、同一个 MCP 生态——一个真正属于&quot;你和你的 Agent&quot;的电脑。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          holaOS：5.5k stars 的本地优先 AI Agent 工作台，让 Claude Code、Codex 与自研 Agent 共享同一份记忆
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-15 10:00:51" itemprop="dateCreated datePublished" datetime="2026-08-15T10:00:51+08:00">2026-08-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">开源工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">把 Claude Code、Codex、holaOS 自研 Agent 装进同一个桌面应用,共享同一份本地记忆、同一套 Skills、同一个 MCP 生态——一个真正属于"你和你的 Agent"的电脑。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="holaOS：5-5k-stars-的本地优先-AI-Agent-工作台，让-Claude-Code、Codex-与自研-Agent-共享同一份记忆"><a href="#holaOS：5-5k-stars-的本地优先-AI-Agent-工作台，让-Claude-Code、Codex-与自研-Agent-共享同一份记忆" class="headerlink" title="holaOS：5.5k stars 的本地优先 AI Agent 工作台，让 Claude Code、Codex 与自研 Agent 共享同一份记忆"></a>holaOS：5.5k stars 的本地优先 AI Agent 工作台，让 Claude Code、Codex 与自研 Agent 共享同一份记忆</h1><p>你有没有过这种经历：上午用 Claude Code 写完一段代码，下午切到 Codex 去 review，模型一脸茫然地问” 我们刚才聊到哪了？”？或者你给 A 助手配了一套 Slack / GitHub / Linear 的 MCP，装完之后发现 B 助手完全不认识，又要从头配一遍？</p>
+<p>2026 年 8 月 13 日登顶 GitHub Trending 第一名的 <a target="_blank" rel="noopener" href="https://github.com/holaboss-ai/holaOS">holaOS</a>（@holaboss-ai，5.5k stars，单日 +519 stars），正是冲着这个痛点来的。它的 slogan 写得非常直白：<strong>“The Computer for You and Your Agent”</strong>—— 一台属于” 你 + 你的 Agent” 的电脑。</p>
+<p>今天这篇文章，我们就来拆一拆这个开源 AI Agent 工作台到底做了什么、怎么做、以及它和 Claude Code、Codex 这类” 单一 Agent CLI” 有什么本质区别。</p>
+<hr>
+<h2 id="一、项目背景：Agent-越来越多，但它们是”孤岛”"><a href="#一、项目背景：Agent-越来越多，但它们是”孤岛”" class="headerlink" title="一、项目背景：Agent 越来越多，但它们是”孤岛”"></a>一、项目背景：Agent 越来越多，但它们是” 孤岛”</h2><p>过去一年，AI Coding Agent 的爆发是有目共睹的。Claude Code、Codex CLI、Cursor、Aider、Ruflo、OpenClaude、Nanobot…… 据 <a target="_blank" rel="noopener" href="https://blog.bytebytego.com/p/top-ai-github-repositories-in-2026">ByteByteGo 的 2026 年度盘点</a>，GitHub 上的 AI Agent 相关项目数量比 2024 年翻了将近 4 倍。</p>
+<p>但绝大多数 Agent CLI 都默认一个前提：<strong>你是单 Agent 用户</strong>。</p>
+<p>于是你面对的现实是：</p>
+<ul>
+<li><strong>记忆孤岛</strong>：Claude Code 的 <code>.claude/</code> 上下文、Codex 的会话历史、Cursor 的索引 —— 彼此完全不通。换个工具，等于从零开始。</li>
+<li><strong>工具孤岛</strong>：给一个 Agent 配好的 MCP 服务器、OAuth 集成、Skills，换到另一个 Agent 要重新装、重新授权。</li>
+<li><strong>UI 孤岛</strong>：CLI 写得再漂亮，也还是终端。要看 diff、看图、看任务面板，得切到 IDE；要看 Skills，得切回配置目录；要看历史，得 <code>git log</code>。</li>
+<li><strong>数据孤岛</strong>：很多 Agent 把上下文存在云端，关掉订阅就什么都没了；想迁移？对不起，不开放。</li>
+</ul>
+<p>holaboss-ai 的 <a target="_blank" rel="noopener" href="https://github.com/holaboss-ai/holaOS">holaOS</a> 想做的，就是把这些孤岛” 打通”—— 但不是用一个超级 Agent 取代所有 Agent，而是让多个 Agent 在同一份基础设施上协作。</p>
+<p>它给自己的定位是：<strong>Open-source All in One AI agent workspace</strong>—— 一个本地优先、Electron 桌面化、原生支持 Claude Code 与 Codex、且自带一个 holaOS 内置 Agent 的统一工作台。</p>
+<hr>
+<h2 id="二、核心功能：把”工作台”这四个字拆开看"><a href="#二、核心功能：把”工作台”这四个字拆开看" class="headerlink" title="二、核心功能：把”工作台”这四个字拆开看"></a>二、核心功能：把” 工作台” 这四个字拆开看</h2><p>holaOS 的功能被 README 拆成了三大块：<strong>Run any agent, one workspace</strong>、<strong>One memory, every agent</strong>、<strong>Skills, Integrations &amp; MCP</strong>。我们逐个来看。</p>
+<h3 id="1-多-Agent-同台，零切换"><a href="#1-多-Agent-同台，零切换" class="headerlink" title="1. 多 Agent 同台，零切换"></a>1. 多 Agent 同台，零切换</h3><p>你可以同时在 holaOS 里跑 Claude Code、Codex，以及 holaOS 自带的内置 Agent。它们彼此独立运行，但<strong>共享同一份记忆、同一套工具、同一批 Skills、同一个 App</strong>。</p>
+<p>README 里对此的原话是：</p>
+<blockquote>
+<p>No lock-in — bring the agent you already trust.<br>Shared everything — one context, one set of tools, one workspace.<br>Consistent results — the same skills and integrations, whatever’s driving.</p>
+</blockquote>
+<p>这意味着什么？意味着你不需要为了” 换 Agent” 而推翻自己积累的上下文和工作流。今天想让 Claude Code 写代码，明天让 Codex 重构，后天让 holaOS 内置 Agent 跑自动化 —— 它们都认识你，都认识你的项目。</p>
+<h3 id="2-一份记忆，所有-Agent-共享"><a href="#2-一份记忆，所有-Agent-共享" class="headerlink" title="2. 一份记忆，所有 Agent 共享"></a>2. 一份记忆，所有 Agent 共享</h3><p>这是 holaOS 最让我觉得有意思的设计。它的记忆是<strong>本地优先、纯文本、Markdown 文件</strong>，存在 OS 全局目录 <code>~/memory/</code> 里，而不是某个数据库的二进制 blob。</p>
+<p>README 强调了三件事：</p>
+<blockquote>
+<p>Context, preferences, and project history live in a single shared memory — stored locally, as plain files you can read and edit.<br>Never start from zero — durable memory across sessions <em>and</em> agents.<br>Local-first &amp; yours — on your machine, visible and editable, not locked in someone else’s cloud.</p>
+</blockquote>
+<p>这跟很多 Agent 把上下文塞进 SQLite 或向量数据库的做法完全不同。你完全可以 <code>cat ~/memory/preferences.md</code> 看 Agent 记住了你什么，也可以直接用文本编辑器改它 ——Agent 下次启动时会读到新版本。</p>
+<p>更细的层次在官方文档 <a target="_blank" rel="noopener" href="https://www.holaos.ai/docs/concepts/workspace-model">Workspace Model</a> 里：workspace 目录里有 <code>AGENTS.md</code>（standing workspace policy）、<code>workspace.yaml</code>（agent /commands/skills /apps 配置）、<code>skills/</code>、<code>ONBOARD.md</code>（onboarding 指令面），而 <code>memory/</code> 是 OS 全局的。每次 runtime 启动时，会把这些” 被作者编辑” 的源文件编译成一个精简的执行包。</p>
+<h3 id="3-100-集成-MCP-Skills-Combos"><a href="#3-100-集成-MCP-Skills-Combos" class="headerlink" title="3. 100+ 集成 + MCP + Skills + Combos"></a>3. 100+ 集成 + MCP + Skills + Combos</h3><p>holaOS 把” 扩展 Agent 能力” 的层次拆得很干净：</p>
+<ul>
+<li><strong>Integrations</strong>：一键 OAuth 接入 Gmail、Notion、Slack、GitHub、Linear 等 50+ 服务。Agent 可以读、可以写、可以触发动作。</li>
+<li><strong>MCP</strong>：原生支持 Model Context Protocol，可以装社区 MCP server，也可以自带 MCP server 一键接入。</li>
+<li><strong>Skills</strong>：把” 一个工作流” 打包成 Skill，任意 Agent 都能按需调用。</li>
+<li><strong>Combos</strong>：把 Skills + Integrations 打包成” 一键安装包”，相当于” 应用商店”。</li>
+</ul>
+<p>这一层和 <a target="_blank" rel="noopener" href="https://github.com/infiniflow/ragflow">RAGFlow</a> 的 Agent Skills 层、Claude Code 的 Skill Marketplace、Codex 的 plugin 体系思路一致，但 holaOS 的特点是：<strong>这些 Skills 和 Integrations 是跨 Agent 的</strong>，不是某个 Agent 的私产。</p>
+<h3 id="4-本地优先-内置模型-BYOK-双模式"><a href="#4-本地优先-内置模型-BYOK-双模式" class="headerlink" title="4. 本地优先 + 内置模型 / BYOK 双模式"></a>4. 本地优先 + 内置模型 / BYOK 双模式</h3><p>桌面端是 Electron 应用，支持 macOS（Apple Silicon + Intel）、Windows、Linux。运行时（runtime）从 GitHub Releases 下载对应平台的 bundle，本地运行。</p>
+<p>模型方面，holaOS 既内置了 frontier models，也支持 BYOK（Bring Your Own Key）—— 你可以塞自己的 Anthropic / OpenAI / 自建网关 key 进去。</p>
+<p>许可上，<a target="_blank" rel="noopener" href="https://github.com/holaboss-ai/holaOS">README</a> 写的是 <strong>Modified Apache 2.0 with additional commercial-distribution and branding conditions</strong>—— 开源、可用，但商用分发有限制。这一点和 <a target="_blank" rel="noopener" href="https://github.com/whiteguo233/OpenBiliClaw">OpenBiliClaw</a>、<a target="_blank" rel="noopener" href="https://github.com/HKUDS/Vibe-Trading">HKUDS/Vibe-Trading</a> 这类纯 MIT/Apache 的项目不一样，要商用前得读 <a target="_blank" rel="noopener" href="https://github.com/holaboss-ai/holaOS/blob/main/LICENSE">LICENSE</a>。</p>
+<hr>
+<h2 id="三、实战示例：在-holaOS-里让-Claude-Code-和-Codex-协作改一个-PR"><a href="#三、实战示例：在-holaOS-里让-Claude-Code-和-Codex-协作改一个-PR" class="headerlink" title="三、实战示例：在 holaOS 里让 Claude Code 和 Codex 协作改一个 PR"></a>三、实战示例：在 holaOS 里让 Claude Code 和 Codex 协作改一个 PR</h2><p>光说不练假把式。下面是一个我自己跑过的最小流程 —— 目标是让 Claude Code 写一段 Python 脚本，然后让 Codex 在同一个 workspace 里 review 并补 unit test。</p>
+<h3 id="Step-1：Bootstrap"><a href="#Step-1：Bootstrap" class="headerlink" title="Step 1：Bootstrap"></a>Step 1：Bootstrap</h3><p>holaOS 仓库里自带了一个 <a target="_blank" rel="noopener" href="https://github.com/holaboss-ai/holaOS/blob/main/INSTALL.md">INSTALL.md</a>，是个”deterministic setup runbook”。对 agent 工作流非常友好：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 拉仓库</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/holaboss-ai/holaOS.git</span><br><span class="line"><span class="built_in">cd</span> holaOS</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 安装依赖（自动补齐 git 和 Node.js 24/npm）</span></span><br><span class="line"><span class="comment"># README 推荐的 bootstrapper 会先 provision missing prerequisites 再 clone</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 从源码构建 runtime bundle 并 stage 到 apps/desktop/out/</span></span><br><span class="line"><span class="comment"># 或者直接用最新发布的 bundle</span></span><br><span class="line">npm run desktop:prepare-runtime</span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑完之后，桌面端会起一个 Electron 应用，本地 runtime bundle 也已经 stage 好。</p>
+<h3 id="Step-2：创建一个-workspace"><a href="#Step-2：创建一个-workspace" class="headerlink" title="Step 2：创建一个 workspace"></a>Step 2：创建一个 workspace</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> demo-workspace &amp;&amp; <span class="built_in">cd</span> demo-workspace</span><br></pre></td></tr></tbody></table></figure>
+
+<p>holaOS 的 workspace 模型会在这个目录下自动生成（或你手动创建）以下文件：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">demo-workspace/</span><br><span class="line">├── AGENTS.md           # 写你的 workspace-level standing policy</span><br><span class="line">├── workspace.yaml      # agent / commands / skills / apps 配置</span><br><span class="line">├── ONBOARD.md          # 给 Agent 看的 onboarding 提示</span><br><span class="line">└── skills/             # 本地 Skills</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>AGENTS.md</code> 是 agent 每次启动都会读的文件。我自己写过一个很简单的：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Workspace Policy</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> 用 Python 3.12+，代码风格遵循 PEP 8。</span><br><span class="line"><span class="bullet">-</span> 所有 PR 必须带 unit test。</span><br><span class="line"><span class="bullet">-</span> 优先使用 stdlib，第三方依赖要在 README 显式说明。</span><br><span class="line"><span class="bullet">-</span> 不允许写 print() 调试，统一用 logging。</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Step-3：让-Claude-Code-写代码"><a href="#Step-3：让-Claude-Code-写代码" class="headerlink" title="Step 3：让 Claude Code 写代码"></a>Step 3：让 Claude Code 写代码</h3><p>打开 holaOS 桌面端，workspace 选 <code>demo-workspace</code>，Agent 选 <strong>Claude Code</strong>。直接发指令：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">请在 src/calc.py 实现一个 safe_div(a, b) 函数：</span><br><span class="line">- b == 0 时返回 None 并 logging.warning</span><br><span class="line">- 通过 type hints 和 docstring</span><br><span class="line">- 写完之后用 ruff 格式化</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Claude Code 在 holaOS 里跑出来的结果，会直接落到 <code>demo-workspace/</code> 下，git 状态由 holaOS 自己托管（workspace 里有 <code>.git/</code>）。</p>
+<h3 id="Step-4：切到-Codex，让它-review-补测试"><a href="#Step-4：切到-Codex，让它-review-补测试" class="headerlink" title="Step 4：切到 Codex，让它 review + 补测试"></a>Step 4：切到 Codex，让它 review + 补测试</h3><p>重点来了 —— <strong>不需要切换工具、不需要复制上下文</strong>。</p>
+<p>同一个 workspace，Agent 切换到 <strong>Codex</strong>，发指令：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">请 review src/calc.py，并补一个 tests/test_calc.py：</span><br><span class="line">- 覆盖正常除法</span><br><span class="line">- 覆盖 b == 0 的 None 返回</span><br><span class="line">- 覆盖 logging.warning 被调用</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Codex 看到的是同一份 <code>AGENTS.md</code>、同一份 workspace.yaml、同一份 memory。所以它知道：</p>
+<ul>
+<li>风格遵循 PEP 8</li>
+<li> 必须带 unit test</li>
+<li> 不用 print ()</li>
+</ul>
+<p>这就是” 一份记忆，所有 Agent” 的具体落地。</p>
+<h3 id="Step-5：本地记忆可审计"><a href="#Step-5：本地记忆可审计" class="headerlink" title="Step 5：本地记忆可审计"></a>Step 5：本地记忆可审计</h3><p>跑完之后，你完全可以打开 terminal 看 Agent 记住了什么：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/memory/preferences.md</span><br><span class="line"><span class="comment"># &gt; User prefers Python 3.12+, ruff formatter, pytest for tests.</span></span><br><span class="line"><span class="comment"># &gt; User dislikes print() debugging, prefers logging.</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cat</span> ~/memory/project/demo-workspace.md</span><br><span class="line"><span class="comment"># &gt; Workspace uses safe_div utility. Tests cover zero-division.</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果 Agent 记错了，直接 vim 改掉，下次启动就读新版本。</p>
+<hr>
+<h2 id="四、适用场景和限制"><a href="#四、适用场景和限制" class="headerlink" title="四、适用场景和限制"></a>四、适用场景和限制</h2><p><strong>适合谁用：</strong></p>
+<ul>
+<li>已经在 Claude Code / Codex 之间反复横跳、觉得上下文割裂的开发者</li>
+<li>想让 Agent 真正” 认识” 自己的项目和偏好，但又不想把记忆交给云端的人</li>
+<li>团队里不同人偏好不同 Agent CLI，希望沉淀出一套统一的 Skills / Integrations</li>
+<li> 对 Electron 本地桌面 + 本地 runtime bundle 有好感、不想再开一堆 web tab 的人</li>
+</ul>
+<p><strong>目前还不太适合的：</strong></p>
+<ul>
+<li><strong>纯云端协作场景</strong>：如果你需要 Agent 在云端 sandbox 跑长任务（比如 Devin / Codex cloud 那类），holaOS 是本地优先的，不在它核心卖点里。</li>
+<li><strong>超大规模记忆管理</strong>：holaOS 的 <code>~/memory/</code> 是 Markdown 文件，几千条还行，几万条就开始要靠 sqlite-vec 等机制了。从 <a target="_blank" rel="noopener" href="https://github.com/holaboss-ai/holaOS/tree/main/runtime">runtime 目录</a> 的 commit 历史看，他们正在做”Clear memory”、向量检索等基础设施，但还不算完全成熟。</li>
+<li><strong>商用闭源分发</strong>：Modified Apache 2.0 + 商业分发限制条款，意味着你不能在不改 LICENSE 的情况下把 holaOS 整个打包成自己的闭源商业产品分发。需要纯商用友好 license 的，要慎选。</li>
+<li><strong>想要” 超自动化” 开箱即用</strong>：holaOS 的定位是” 工作台 / 操作系统”，不是”zero-config Agent”。你要自己写 <code>AGENTS.md</code>、自己挑 Agent、配置 Skills。它不是 <a target="_blank" rel="noopener" href="https://github.com/msitarzewski/agency-agents">agency-agents</a> 那种”230 个垂直专家花名册”，也不是 <a target="_blank" rel="noopener" href="https://github.com/n8n-io/n8n">n8n</a> 那种” 可视化工作流引擎”。</li>
+</ul>
+<p><strong>和同类项目的差异：</strong></p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th> holaOS</th>
+<th>Claude Code</th>
+<th>Codex CLI</th>
+<th>agency-agents</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 形态</td>
+<td>本地桌面工作台</td>
+<td> CLI</td>
+<td>CLI</td>
+<td>Skills 仓库</td>
+</tr>
+<tr>
+<td>多 Agent 共享</td>
+<td>✅ 原生支持</td>
+<td>❌</td>
+<td>❌</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td> 本地优先记忆</td>
+<td>✅ Markdown 文件</td>
+<td>部分</td>
+<td>部分</td>
+<td>�</td>
+</tr>
+<tr>
+<td>MCP 生态</td>
+<td>✅ 内置 + 社区</td>
+<td>✅</td>
+<td>✅</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>Skills Marketplace</td>
+<td>✅ Combos</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅（专家库）</td>
+</tr>
+<tr>
+<td>License</td>
+<td>Modified Apache 2.0</td>
+<td>Proprietary</td>
+<td>Proprietary</td>
+<td>MIT</td>
+</tr>
+</tbody></table>
+<p>一句话总结：<strong>Claude Code / Codex 是” 单个 Agent”，holaOS 是” 装多个 Agent 的桌面”</strong>。</p>
+<hr>
+<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>holaOS 不是一个新 Agent，它是一个”Agent 操作系统”。</p>
+<p>它真正解决的不是” 哪个 Agent 更强” 的问题，而是” 我已经配好的 Skills、记忆、集成，能不能不随着 Agent 切换而重头再来” 的问题。在 Agent CLI 已经百花齐放的 2026 年，<strong>基础设施层的整合</strong>，可能是比” 再造一个更强的 Agent” 更稀缺的事。</p>
+<p>如果你已经被” 切一次 Agent 就丢一次上下文” 折磨过，不妨去 <a target="_blank" rel="noopener" href="https://github.com/holaboss-ai/holaOS">holaboss-ai/holaOS</a> 给它一颗 star，然后跑一遍 <code>npm run desktop:prepare-runtime</code>，看看 Claude Code 和 Codex 在同一个 workspace 里协作是什么感觉。</p>
+<blockquote>
+<p>The Computer for You and Your Agent — 这句话，值得你亲自验证一下。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/15/holaos-all-in-one-ai-agent-workspace/" title="holaOS：5.5k stars 的本地优先 AI Agent 工作台，让 Claude Code、Codex 与自研 Agent 共享同一份记忆">https://www.daishengli.top/2026/08/15/holaos-all-in-one-ai-agent-workspace/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/Codex/" rel="tag"># Codex</a>
+              <a href="/tags/%E6%9C%AC%E5%9C%B0%E4%BC%98%E5%85%88/" rel="tag"># 本地优先</a>
+              <a href="/tags/holaOS/" rel="tag"># holaOS</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/14/ragflow-open-source-rag-agent-engine-deep-document-understanding/" rel="prev" title="RAGFlow：87.9k stars 的开源 RAG+Agent 引擎，把 &quot;深文档理解&quot; 做成生产级底座">
+                  <i class="fa fa-angle-left"></i> RAGFlow：87.9k stars 的开源 RAG+Agent 引擎，把 "深文档理解" 做成生产级底座
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/16/fluidvoice-local-macos-dictation-fluid-intelligence/" rel="next" title="FluidVoice：10k stars 的 macOS 原生听写神器，让本地 AI 把 Wispr Flow 拉下神坛">
+                  FluidVoice：10k stars 的 macOS 原生听写神器，让本地 AI 把 Wispr Flow 拉下神坛 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

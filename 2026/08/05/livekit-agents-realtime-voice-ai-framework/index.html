@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="LiveKit 开源的实时多模态 Agent 框架，把 STT、LLM、TTS、WebRTC、SIP 电话、多 Agent 协作和测试框架打包成一个 Python SDK，帮你 30 行代码搭出一个能听能说的生产级语音 Agent。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LiveKit Agents：让任何 LLM 都能跑成实时语音 AI 的开源框架">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/05/livekit-agents-realtime-voice-ai-framework/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="LiveKit 开源的实时多模态 Agent 框架，把 STT、LLM、TTS、WebRTC、SIP 电话、多 Agent 协作和测试框架打包成一个 Python SDK，帮你 30 行代码搭出一个能听能说的生产级语音 Agent。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-05T02:03:03.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.159Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="语音 AI">
+<meta property="article:tag" content="LiveKit">
+<meta property="article:tag" content="WebRTC">
+<meta property="article:tag" content="实时通信">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/05/livekit-agents-realtime-voice-ai-framework/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/05/livekit-agents-realtime-voice-ai-framework/","path":"2026/08/05/livekit-agents-realtime-voice-ai-framework/","title":"LiveKit Agents：让任何 LLM 都能跑成实时语音 AI 的开源框架"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>LiveKit Agents：让任何 LLM 都能跑成实时语音 AI 的开源框架 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LiveKit-Agents%EF%BC%9A%E8%AE%A9%E4%BB%BB%E4%BD%95-LLM-%E9%83%BD%E8%83%BD%E8%B7%91%E6%88%90%E5%AE%9E%E6%97%B6%E8%AF%AD%E9%9F%B3-AI-%E7%9A%84%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6"><span class="nav-number">1.</span> <span class="nav-text">LiveKit Agents：让任何 LLM 都能跑成实时语音 AI 的开源框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E2%80%9D%E8%AF%AD%E9%9F%B3-Agent-%E6%A1%86%E6%9E%B6%E2%80%9D"><span class="nav-number">1.1.</span> <span class="nav-text">项目背景：为什么需要” 语音 Agent 框架”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E4%BA%AE%E7%82%B9"><span class="nav-number">1.2.</span> <span class="nav-text">核心功能亮点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BB%BB%E6%84%8F%E7%BB%84%E5%90%88-STT-LLM-TTS%EF%BC%8C%E4%B8%8D%E7%BB%91%E5%AE%9A%E4%BE%9B%E5%BA%94%E5%95%86"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. 任意组合 STT&#x2F;LLM&#x2F;TTS，不绑定供应商</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%86%85%E7%BD%AE-Agent-%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E5%99%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. 内置 Agent 任务调度器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%AF%AD%E4%B9%89%E8%BD%AE%E6%AC%A1%E6%A3%80%E6%B5%8B%EF%BC%88Semantic-Turn-Detection%EF%BC%89"><span class="nav-number">1.2.3.</span> <span class="nav-text">3. 语义轮次检测（Semantic Turn Detection）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-MCP-%E4%B8%80%E8%A1%8C%E9%9B%86%E6%88%90"><span class="nav-number">1.2.4.</span> <span class="nav-text">4. MCP 一行集成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-SIP-%E7%94%B5%E8%AF%9D%E9%9B%86%E6%88%90-%E9%80%9A%E8%AF%9D%E6%B5%8B%E8%AF%95"><span class="nav-number">1.2.5.</span> <span class="nav-text">5. SIP 电话集成 &amp; 通话测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%86%85%E7%BD%AE%E6%B5%8B%E8%AF%95%E6%A1%86%E6%9E%B6"><span class="nav-number">1.2.6.</span> <span class="nav-text">6. 内置测试框架</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A30-%E8%A1%8C%E5%86%99%E4%B8%80%E4%B8%AA%E8%83%BD%E5%90%AC%E8%83%BD%E8%AF%B4%E7%9A%84%E8%AF%AD%E9%9F%B3%E5%8A%A9%E6%89%8B"><span class="nav-number">1.3.</span> <span class="nav-text">实战示例：30 行写一个能听能说的语音助手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E9%98%B6%EF%BC%9A%E5%A4%9A-Agent-%E6%8E%A5%E7%AE%A1"><span class="nav-number">1.3.1.</span> <span class="nav-text">进阶：多 Agent 接管</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">1.4.</span> <span class="nav-text">适用场景和限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%92%8C%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">1.5.</span> <span class="nav-text">和同类项目的差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/05/livekit-agents-realtime-voice-ai-framework/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="LiveKit Agents：让任何 LLM 都能跑成实时语音 AI 的开源框架 | 小戴的网络日志">
+      <meta itemprop="description" content="LiveKit 开源的实时多模态 Agent 框架，把 STT、LLM、TTS、WebRTC、SIP 电话、多 Agent 协作和测试框架打包成一个 Python SDK，帮你 30 行代码搭出一个能听能说的生产级语音 Agent。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LiveKit Agents：让任何 LLM 都能跑成实时语音 AI 的开源框架
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-05 10:03:03" itemprop="dateCreated datePublished" datetime="2026-08-05T10:03:03+08:00">2026-08-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">LiveKit 开源的实时多模态 Agent 框架，把 STT、LLM、TTS、WebRTC、SIP 电话、多 Agent 协作和测试框架打包成一个 Python SDK，帮你 30 行代码搭出一个能听能说的生产级语音 Agent。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="LiveKit-Agents：让任何-LLM-都能跑成实时语音-AI-的开源框架"><a href="#LiveKit-Agents：让任何-LLM-都能跑成实时语音-AI-的开源框架" class="headerlink" title="LiveKit Agents：让任何 LLM 都能跑成实时语音 AI 的开源框架"></a>LiveKit Agents：让任何 LLM 都能跑成实时语音 AI 的开源框架</h1><p>你有没有遇到过这种场景：在公司客服系统上线一个 AI 语音助手，结果发现 OpenAI Realtime API 只支持自家模型？换到 Deepgram STT + Anthropic Claude + Cartesia TTS，延迟飙升到 5 秒以上？想加个” 用户没说完就打断” 的语义判断，自己写 VAD 模型调了半个月？最后生产环境还要解决并发分发、电话接入、PSTN 拨号……</p>
+<p>如果你正在被这些细节折磨，今天 GitHub trending 上的 <strong>LiveKit Agents</strong> 值得你花 10 分钟了解一下：一个 Apache-2.0 开源的实时多模态 Agent 框架，把语音 AI 全栈打包装进了一个 Python 包。12.2k stars，今天还在以 432 stars/day 的速度增长。它解决的恰恰是上面提到的每个工程痛点。</p>
+<h2 id="项目背景：为什么需要”语音-Agent-框架”"><a href="#项目背景：为什么需要”语音-Agent-框架”" class="headerlink" title="项目背景：为什么需要”语音 Agent 框架”"></a>项目背景：为什么需要” 语音 Agent 框架”</h2><p>2024 年起，OpenAI Realtime API、xAI Voice、Moshi 等” 原生多模态” 模型把语音 AI 拉到了 Demo 惊艳、生产拉胯的尴尬境地。Demo 里你说一句它就能秒回，但生产里你马上会遇到三个问题：</p>
+<ol>
+<li><strong>供应商绑定</strong>。Realtime API 通常只跑自家或少数合作模型，一旦你想换 LLM 就要重写整套轮子。</li>
+<li><strong>延迟叠加</strong>。把 STT + LLM + TTS 串起来，” 流式 + 流式 + 流式” 听起来很美，实际断句、首字延迟、端点检测每一步都可能踩坑。</li>
+<li><strong>部署和测试</strong>。Demo 跑通不等于生产能跑：怎么水平扩展？怎么接电话？怎么做端到端评测？</li>
+</ol>
+<p>LiveKit（一家做开源 WebRTC 基础设施的公司）过去几年一直在做实时音视频的传输层，2024 年开始把所有这些经验抽象出来，发布了 <code>livekit-agents</code> Python SDK：它<strong>不发明自己的模型</strong>，而是把任意 STT / LLM / TTS 组件像乐高一样拼成一个” 实时语音 AI Agent”，并且自带上线所需的所有脚手架 —— 并发分发、SIP 电话、多 Agent 接管、内置测试框架。</p>
+<h2 id="核心功能亮点"><a href="#核心功能亮点" class="headerlink" title="核心功能亮点"></a>核心功能亮点</h2><p>下面这几个是它在 GitHub README 里主推的能力，也是把它和” 又一个大模型 SDK” 区分开的关键：</p>
+<h3 id="1-任意组合-STT-LLM-TTS，不绑定供应商"><a href="#1-任意组合-STT-LLM-TTS，不绑定供应商" class="headerlink" title="1. 任意组合 STT/LLM/TTS，不绑定供应商"></a>1. 任意组合 STT/LLM/TTS，不绑定供应商</h3><p>最大的特点是 <strong>pipeline 化</strong>。不强制你用某个模型，而是定义好统一的接口（<code>STT</code> / <code>LLM</code> / <code>TTS</code>），用哪个就 import 哪个。Realtime API（OpenAI、Google Gemini Live、阿里 Qwen-Omni）也能直接用作一整段大模型，跳过 STT/TTS。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> livekit.agents <span class="keyword">import</span> inference</span><br><span class="line">stt = inference.STT(<span class="string">"deepgram/nova-3"</span>, language=<span class="string">"multi"</span>)</span><br><span class="line">llm = inference.LLM(<span class="string">"google/gemma-4-31b-it"</span>)     <span class="comment"># LiveKit Inference 托管的低延迟 Gemma</span></span><br><span class="line">tts = inference.TTS(<span class="string">"cartesia/sonic-3"</span>, voice=<span class="string">"9626c31c-bec5-4cca-baa8-f8ba9e84c8bc"</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>想换 OpenAI 也只需要把 <code>inference.LLM(...)</code> 换成 <code>openai.LLM(model="gpt-4.1-mini")</code>。这种” 组件可插拔” 的结构对生产环境特别友好：你可以根据成本和合规需要随时替换底层。</p>
+<h3 id="2-内置-Agent-任务调度器"><a href="#2-内置-Agent-任务调度器" class="headerlink" title="2. 内置 Agent 任务调度器"></a>2. 内置 Agent 任务调度器</h3><p><code>AgentServer</code> 不只是一个类，它是一个能<strong>水平扩展</strong>的多 Agent 调度器。你把服务进程跑在 N 台机器上，LiveKit Cloud（或自托管 server）会按房间、Worker 注册情况自动分发 job。这是它和” 裸写一个 FastAPI + WebSocket” 最大的区别 —— 你不需要自己撸一套分配系统。</p>
+<p><code>@server.rtc_session()</code> 装饰器 + <code>JobContext</code> 一行起步，没有样板代码。</p>
+<h3 id="3-语义轮次检测（Semantic-Turn-Detection）"><a href="#3-语义轮次检测（Semantic-Turn-Detection）" class="headerlink" title="3. 语义轮次检测（Semantic Turn Detection）"></a>3. 语义轮次检测（Semantic Turn Detection）</h3><p>传统 VAD（Voice Activity Detection）只看能量阈值，用户说到一半” 嗯……” 就会被错断。LiveKit Agents 自带一个基于 Transformer 的语义判断模型，能识别” 用户只是停顿思考” vs “用户真的讲完了”—— 这是 2025 年后所有做语音 AI 的公司集体补齐的能力，但它直接帮你内置好了。</p>
+<h3 id="4-MCP-一行集成"><a href="#4-MCP-一行集成" class="headerlink" title="4. MCP 一行集成"></a>4. MCP 一行集成</h3><p>工具调用支持 MCP（Model Context Protocol），只需要一行：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> livekit.agents <span class="keyword">import</span> mcp</span><br><span class="line">agent = Agent(instructions=<span class="string">"..."</span>, tools=[mcp.MCPServer(<span class="string">"http://localhost:3000"</span>)])</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这意味着你可以把你已有的 MCP 工具（数据库查询、订单系统、CRM）直接当成 Agent 工具用，不需要为每个业务系统再写一层适配。</p>
+<h3 id="5-SIP-电话集成-通话测试"><a href="#5-SIP-电话集成-通话测试" class="headerlink" title="5. SIP 电话集成 &amp; 通话测试"></a>5. SIP 电话集成 &amp; 通话测试</h3><p>通过 LiveKit SIP，能让你的 Agent <strong>接听和拨打真实电话</strong>。README 里直接给了 outbound caller 的示例代码（外呼销售、外呼提醒、客服回访）。这一点是 OpenAI Realtime API 到今天还做不漂亮的部分。</p>
+<h3 id="6-内置测试框架"><a href="#6-内置测试框架" class="headerlink" title="6. 内置测试框架"></a>6. 内置测试框架</h3><p>Voice Agent 最难的是测，因为结果不是布尔值。LiveKit Agents 提供了一个 <code>pytest</code> 风格的测试 DSL：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">result = <span class="keyword">await</span> sess.run(user_input=<span class="string">"Hello, I need to place an order."</span>)</span><br><span class="line">result.expect_next_event().is_function_call(name=<span class="string">"start_order"</span>)</span><br><span class="line"><span class="keyword">await</span> result.expect_next_event().is_message(role=<span class="string">"assistant"</span>)</span><br><span class="line">judge_with(llm, intent=<span class="string">"assistant should be asking the user what they would like"</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>可以断言事件顺序，再用 LLM-as-judge 验证语义 —— 这是把 AI Agent 从” 跑通就好” 推进到”CI 永远绿” 的关键。</p>
+<h2 id="实战示例：30-行写一个能听能说的语音助手"><a href="#实战示例：30-行写一个能听能说的语音助手" class="headerlink" title="实战示例：30 行写一个能听能说的语音助手"></a>实战示例：30 行写一个能听能说的语音助手</h2><p>下面这段代码来自 README 的入门示例，几乎是” 最短可用版本”：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> livekit.agents <span class="keyword">import</span> (</span><br><span class="line">    Agent, AgentServer, AgentSession,</span><br><span class="line">    JobContext, RunContext, cli, function_tool, inference,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="meta">@function_tool</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">lookup_weather</span>(<span class="params">context: RunContext, location: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">"""Used to look up weather information."""</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">f"weather in <span class="subst">{location}</span> is sunny, temperature 70 degrees"</span></span><br><span class="line"></span><br><span class="line">server = AgentServer()</span><br><span class="line"></span><br><span class="line"><span class="meta">@server.rtc_session()</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">entrypoint</span>(<span class="params">ctx: JobContext</span>):</span><br><span class="line">    session = AgentSession(vad=inference.VAD())</span><br><span class="line"></span><br><span class="line">    stt = inference.STT(<span class="string">"deepgram/nova-3"</span>, language=<span class="string">"multi"</span>)</span><br><span class="line">    llm = inference.LLM(<span class="string">"google/gemma-4-31b-it"</span>)</span><br><span class="line">    tts = inference.TTS(<span class="string">"cartesia/sonic-3"</span>, voice=<span class="string">"9626c31c-bec5-4cca-baa8-f8ba9e84c8bc"</span>)</span><br><span class="line"></span><br><span class="line">    agent = Agent(</span><br><span class="line">        instructions=<span class="string">"You are a friendly voice assistant built by LiveKit."</span>,</span><br><span class="line">        tools=[lookup_weather],</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">await</span> session.start(agent=agent, room=ctx.room)</span><br><span class="line">    <span class="keyword">await</span> session.generate_reply(instructions=<span class="string">"greet the user and ask about their day"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    cli.run_app(server)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>把这个跑起来需要：</p>
+<ol>
+<li><code>pip install "livekit-agents[openai,deepgram,cartesia]"</code></li>
+<li>配置环境变量：<code>LIVEKIT_URL</code>、<code>LIVEKIT_API_KEY</code>、<code>LIVEKIT_API_SECRET</code></li>
+<li>注册一个 LiveKit Cloud 项目（或者 <code>livekit server start</code> 本地起一个）</li>
+<li>用 LiveKit 自带的 Web 客户端连进同一个 Room，就能和你的 Agent 对话了。</li>
+</ol>
+<p>可以看到它把 <strong>WebRTC 房间管理、模型编排、工具调用、首句引导</strong>全部藏在 SDK 里，业务开发者只需要写” 这个 Agent 应该会什么、提供哪些 function_tool”。</p>
+<h3 id="进阶：多-Agent-接管"><a href="#进阶：多-Agent-接管" class="headerlink" title="进阶：多 Agent 接管"></a>进阶：多 Agent 接管</h3><p>README 里还有一个有意思的 pattern——handoff：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@function_tool</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">information_gathered</span>(<span class="params">self, context, name: <span class="built_in">str</span>, location: <span class="built_in">str</span></span>):</span><br><span class="line">    context.userdata.name = name</span><br><span class="line">    context.userdata.location = location</span><br><span class="line">    story_agent = StoryAgent(name, location)   <span class="comment"># 切换到一个更专精的 Agent</span></span><br><span class="line">    <span class="keyword">return</span> story_agent, <span class="string">"Let's start the story!"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这种” 采集用户的名字和地点后切到故事 Agent” 的设计，本质上是把<strong>人设 / 职责切换</strong>变成了一层函数调用，比 CrewAI 那种多 Agent 编排要轻很多，适合电话客服那种” 开场先问身份、根据答案分流到不同专业 Agent” 的真实业务。</p>
+<h2 id="适用场景和限制"><a href="#适用场景和限制" class="headerlink" title="适用场景和限制"></a>适用场景和限制</h2><p><strong>适合用它的场景：</strong></p>
+<ul>
+<li><strong>企业语音客服</strong>：需要接电话、转人工、查工单、和 CRM 对接。</li>
+<li><strong>多模态 AI 助手</strong>：接入摄像头后能” 看见” 用户（README 里给了 Gemini Live Vision + iOS App 的端到端示例）。</li>
+<li><strong>语音工作流自动化</strong>：和销售 / 排程系统对接，用自然语言完成” 帮我约下周二下午的客户”。</li>
+<li><strong>快速做 PoC</strong>：上面那段 30 行代码就是” 听你说、答你话、能查天气”，足够做内部 demo。</li>
+</ul>
+<p><strong>目前的限制和坑：</strong></p>
+<ul>
+<li><strong>强依赖 LiveKit Cloud 或自部署 LiveKit Server</strong>。即便你的模型是自托管的，信令 / 媒体服务还是绕不开 LiveKit。如果你的 IT 政策严禁使用任何托管 SaaS，需要自己准备一套 LiveKit Server 集群。</li>
+<li><strong>Python only 是主仓库</strong>，Node.js 用的是另一个 <code>agents-js</code> 仓库，功能会落后一段时间。</li>
+<li><strong>Realtime 模型 vs Pipeline 模型</strong>的选择仍然要自己做：Realtime（OpenAI、Google Live）首字延迟最低但模型黑盒；Pipeline（STT+LLM+TTS）每一步可观测、可换供应商，但调试更繁琐。</li>
+<li><strong>测试框架好用，但 judge 模型本身需要额外成本</strong> ——CI 里跑 LLM-as-judge 不便宜，建议只在关键路径用。</li>
+</ul>
+<h2 id="和同类项目的差异"><a href="#和同类项目的差异" class="headerlink" title="和同类项目的差异"></a>和同类项目的差异</h2><p>如果和同样在做” 语音 Agent 编排” 的几个项目对比：</p>
+<ul>
+<li><strong>Pipecat（Daily）</strong>：另一个很流行的 Python 语音 pipeline 框架，组件也很丰富，但调度、测试、SIP 这层基础设施比 LiveKit 弱，更适合做研究型 pipeline 原型而不是直接上线。</li>
+<li><strong>OpenAI Realtime API</strong>：用最简单，但模型绑死 OpenAI、延迟和定价都是它说了算，且接电话这种” 运营商级” 事情做不了。</li>
+<li><strong>Vapi / Retell / Bland 等 SaaS</strong>：开箱即用、托管化，但你的对话数据要过它们的服务器，定制空间也有限。LiveKit Agents 是” 给你源码、给你 SDK、给你自托管的路” 那种姿势。</li>
+<li><strong>Vocode / FastRTC</strong>：聚焦 dev 友好，但生产部署需要自己写一堆 WebRTC / 状态管理代码。</li>
+</ul>
+<p>一句话总结：<strong>LiveKit Agents 的卖点不是” 我有一个特别聪明的模型”，而是” 我能让你用一个普通的 LLM 在生产环境里安全稳定地接电话、跑并发、被测试”</strong>。这正是 2026 年语音 AI 真正想落地的团队缺的东西。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>LiveKit Agents 不是又一个玩具级的” 语音对话 demo”，它补齐的是从 demo 到 production 之间那道最深的沟：<strong>任意模型组合、并发分发、电话接入、语义轮次、测试断言</strong> —— 这些是真正能把”AI 语音客服” 卖给企业客户的工程能力。Apache-2.0 开源、自带 LiveKit Cloud 也能自托管、Python SDK 写得相当克制。如果你最近在为语音 AI Agent 选型，强烈建议拿它和你现有的方案对一下清单，看看它能帮你省下多少行 WebSocket 管理代码。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/05/livekit-agents-realtime-voice-ai-framework/" title="LiveKit Agents：让任何 LLM 都能跑成实时语音 AI 的开源框架">https://www.daishengli.top/2026/08/05/livekit-agents-realtime-voice-ai-framework/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/%E8%AF%AD%E9%9F%B3-AI/" rel="tag"># 语音 AI</a>
+              <a href="/tags/LiveKit/" rel="tag"># LiveKit</a>
+              <a href="/tags/WebRTC/" rel="tag"># WebRTC</a>
+              <a href="/tags/%E5%AE%9E%E6%97%B6%E9%80%9A%E4%BF%A1/" rel="tag"># 实时通信</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/04/airllm-70b-llm-inference-on-single-4gb-gpu/" rel="prev" title="AirLLM：让 70B 大模型塞进 4GB 显存，Kimi K3 2.8T 也只要 3.72GB">
+                  <i class="fa fa-angle-left"></i> AirLLM：让 70B 大模型塞进 4GB 显存，Kimi K3 2.8T 也只要 3.72GB
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/06/agent-reach-ai-agent-internet-eyes/" rel="next" title="Agent Reach：让 AI Coding Agent 真正拥有 &quot;看全网&quot; 的免费能力">
+                  Agent Reach：让 AI Coding Agent 真正拥有 "看全网" 的免费能力 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

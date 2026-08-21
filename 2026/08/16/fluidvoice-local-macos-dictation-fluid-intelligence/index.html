@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="altic-dev&#x2F;FluidVoice 是 10.3k stars 的 macOS 原生听写 App，把 on-device STT + 本地 Fluid Intelligence AI 后处理 + 语音控制 Mac 卷到一块，开源 GPLv3、Homebrew 一行安装，号称 Mac 上最快的 Parakeet 实现。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FluidVoice：10k stars 的 macOS 原生听写神器，让本地 AI 把 Wispr Flow 拉下神坛">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/16/fluidvoice-local-macos-dictation-fluid-intelligence/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="altic-dev&#x2F;FluidVoice 是 10.3k stars 的 macOS 原生听写 App，把 on-device STT + 本地 Fluid Intelligence AI 后处理 + 语音控制 Mac 卷到一块，开源 GPLv3、Homebrew 一行安装，号称 Mac 上最快的 Parakeet 实现。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-16T02:05:00.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.157Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Apple Silicon">
+<meta property="article:tag" content="FluidVoice">
+<meta property="article:tag" content="macOS">
+<meta property="article:tag" content="听写工具">
+<meta property="article:tag" content="本地 AI">
+<meta property="article:tag" content="Wispr Flow 替代">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/16/fluidvoice-local-macos-dictation-fluid-intelligence/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/16/fluidvoice-local-macos-dictation-fluid-intelligence/","path":"2026/08/16/fluidvoice-local-macos-dictation-fluid-intelligence/","title":"FluidVoice：10k stars 的 macOS 原生听写神器，让本地 AI 把 Wispr Flow 拉下神坛"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>FluidVoice：10k stars 的 macOS 原生听写神器，让本地 AI 把 Wispr Flow 拉下神坛 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88-macOS-%E9%9C%80%E8%A6%81%E4%B8%80%E4%B8%AA%E6%9C%AC%E5%9C%B0%E5%90%AC%E5%86%99%E5%B7%A5%E5%85%B7"><span class="nav-number">1.</span> <span class="nav-text">一、项目背景：为什么 macOS 需要一个本地听写工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E5%90%AC%E5%86%99%E5%8F%AA%E6%98%AF%E5%85%A5%E5%8F%A3%EF%BC%8C%E6%9C%AC%E5%9C%B0-AI-%E6%89%8D%E6%98%AF%E6%9D%80%E6%89%8B%E9%94%8F"><span class="nav-number">2.</span> <span class="nav-text">二、核心功能：听写只是入口，本地 AI 才是杀手锏</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%A4%9A%E6%A8%A1%E5%9E%8B%E5%8F%AF%E9%80%89%E7%9A%84%E6%9C%AC%E5%9C%B0-STT%EF%BC%88%E8%AF%AD%E9%9F%B3%E8%BD%AC%E6%96%87%E5%AD%97%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">1. 多模型可选的本地 STT（语音转文字）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Fluid-Intelligence%EF%BC%9A%E6%9C%AC%E5%9C%B0-AI-%E5%90%8E%E5%A4%84%E7%90%86%EF%BC%88%E6%A0%B8%E5%BF%83%E5%B7%AE%E5%BC%82%E5%8C%96%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">2. Fluid Intelligence：本地 AI 后处理（核心差异化）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Command-Mode%EF%BC%9A%E7%94%A8%E8%AF%AD%E9%9F%B3%E6%8E%A7%E5%88%B6-Mac"><span class="nav-number">2.3.</span> <span class="nav-text">3. Command Mode：用语音控制 Mac</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Write-Mode%EF%BC%9A%E5%9C%A8%E4%BB%BB%E4%BD%95-App-%E9%87%8C%E7%9B%B4%E6%8E%A5%E6%94%B9%E5%86%99"><span class="nav-number">2.4.</span> <span class="nav-text">4. Write Mode：在任何 App 里直接改写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Live-Preview%EF%BC%9A%E5%AE%9E%E6%97%B6%E8%BD%AC%E5%BD%95%E6%B5%AE%E5%B1%82%EF%BC%88Notch-%E9%80%82%E9%85%8D%EF%BC%89"><span class="nav-number">2.5.</span> <span class="nav-text">5. Live Preview：实时转录浮层（Notch 适配）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-Audio-History-Per-App-Configuration-%E7%BB%9F%E8%AE%A1"><span class="nav-number">2.6.</span> <span class="nav-text">6. Audio History + Per-App Configuration + 统计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84-%E5%AE%9E%E7%8E%B0%E4%BA%AE%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">三、技术架构 &#x2F; 实现亮点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Swift-Swift-Package-Manager%EF%BC%8C%E7%BA%AF-macOS-%E5%8E%9F%E7%94%9F"><span class="nav-number">3.1.</span> <span class="nav-text">1. Swift + Swift Package Manager，纯 macOS 原生</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-STT-%E6%A8%A1%E5%9E%8B%EF%BC%9A%E8%87%AA%E7%A0%94-%E9%9B%86%E6%88%90%E7%9A%84%E6%B7%B7%E5%90%88%E7%AD%96%E7%95%A5"><span class="nav-number">3.2.</span> <span class="nav-text">2. STT 模型：自研 + 集成的混合策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Fluid-Intelligence%EF%BC%9A%E6%9C%AC%E5%9C%B0-LLM-%E5%81%9A%E5%90%8E%E5%A4%84%E7%90%86"><span class="nav-number">3.3.</span> <span class="nav-text">3. Fluid Intelligence：本地 LLM 做后处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Core-Audio-%E7%9B%B4%E9%87%87-%E6%99%BA%E8%83%BD%E8%BE%93%E5%85%A5"><span class="nav-number">3.4.</span> <span class="nav-text">4. Core Audio 直采 + 智能输入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%9A%90%E7%A7%81%E8%AE%BE%E8%AE%A1%EF%BC%9ALocal-First%EF%BC%8C%E9%BB%98%E8%AE%A4%E4%B8%8D%E4%B8%8A%E4%BA%91"><span class="nav-number">3.5.</span> <span class="nav-text">5. 隐私设计：Local-First，默认不上云</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%8C%81%E7%BB%AD%E8%BF%AD%E4%BB%A3%E8%8A%82%E5%A5%8F"><span class="nav-number">3.6.</span> <span class="nav-text">6. 持续迭代节奏</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%80%8E%E4%B9%88%E7%94%A8%EF%BC%9A5-%E5%88%86%E9%92%9F%E4%B8%8A%E6%89%8B-FluidVoice"><span class="nav-number">4.</span> <span class="nav-text">四、怎么用：5 分钟上手 FluidVoice</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85%EF%BC%88%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">1. 安装（三种方式）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%9D%83%E9%99%90"><span class="nav-number">4.2.</span> <span class="nav-text">2. 权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%80%89%E7%83%AD%E9%94%AE"><span class="nav-number">4.3.</span> <span class="nav-text">3. 选热键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E9%80%89-STT-%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.4.</span> <span class="nav-text">4. 选 STT 模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%BC%80-Fluid-Intelligence%EF%BC%88%E5%8F%AF%E9%80%89%E4%BD%86%E5%BC%BA%E7%83%88%E5%BB%BA%E8%AE%AE%EF%BC%89"><span class="nav-number">4.5.</span> <span class="nav-text">5. 开 Fluid Intelligence（可选但强烈建议）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89BYO-Cloud-Provider"><span class="nav-number">4.6.</span> <span class="nav-text">6. （可选）BYO Cloud Provider</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E5%BC%80%E5%A7%8B%E7%94%A8"><span class="nav-number">4.7.</span> <span class="nav-text">7. 开始用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93%EF%BC%9A%E8%B0%81%E8%AF%A5%E7%94%A8-FluidVoice-%E5%B1%80%E9%99%90%E6%80%A7%E5%9C%A8%E5%93%AA"><span class="nav-number">5.</span> <span class="nav-text">五、总结：谁该用 FluidVoice &#x2F; 局限性在哪</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E4%BA%BA%E7%BE%A4"><span class="nav-number">5.1.</span> <span class="nav-text">适用人群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E9%99%90%E6%80%A7%EF%BC%88%E4%B9%9F%E5%BE%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">局限性（也很重要）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E7%9A%84%E5%88%A4%E6%96%AD"><span class="nav-number">5.3.</span> <span class="nav-text">我的判断</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/16/fluidvoice-local-macos-dictation-fluid-intelligence/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="FluidVoice：10k stars 的 macOS 原生听写神器，让本地 AI 把 Wispr Flow 拉下神坛 | 小戴的网络日志">
+      <meta itemprop="description" content="altic-dev&#x2F;FluidVoice 是 10.3k stars 的 macOS 原生听写 App，把 on-device STT + 本地 Fluid Intelligence AI 后处理 + 语音控制 Mac 卷到一块，开源 GPLv3、Homebrew 一行安装，号称 Mac 上最快的 Parakeet 实现。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          FluidVoice：10k stars 的 macOS 原生听写神器，让本地 AI 把 Wispr Flow 拉下神坛
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-16 10:05:00" itemprop="dateCreated datePublished" datetime="2026-08-16T10:05:00+08:00">2026-08-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">altic-dev/FluidVoice 是 10.3k stars 的 macOS 原生听写 App，把 on-device STT + 本地 Fluid Intelligence AI 后处理 + 语音控制 Mac 卷到一块，开源 GPLv3、Homebrew 一行安装，号称 Mac 上最快的 Parakeet 实现。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>凌晨两点，我还在写一篇博客的初稿。手指敲到一半明显卡壳 —— 脑子里有画面，词却要一个字一个字从指尖挤出来。我下意识切到 macOS 自带的语音听写，按住 Fn 键开始说：</p>
+<p>“…… 呃，那个…… 就是，那个……”</p>
+<p>出来的文字里塞满了” 那个”、” 呃”、” 就是” 这种废词，逗号、句号、引号全部丢失，标题大小写错得离谱，专业术语更是一塌糊涂。我叹口气又切回键盘。</p>
+<p>这种体验，绝大多数用 macOS 的人应该都经历过。</p>
+<p>如果你也是 Wispr Flow 的付费用户，或者已经被 Superwhisper、MacWhisper 这些订阅工具教育过了，今天 GitHub Trending 上冒出来的 <a target="_blank" rel="noopener" href="https://github.com/altic-dev/FluidVoice">altic-dev/FluidVoice</a> 应该会让你眼睛亮一下 ——<strong>10.3k stars 的 macOS 原生听写工具，把 on-device STT、本地 AI 后处理、语音控制 Mac 卷到了一起，开源 GPLv3，一行 Homebrew 就能装。</strong></p>
+<p>我昨晚把它装到自己 M3 Max 上用了半小时，最大的感受是：<strong>这东西应该早一年出现</strong>。</p>
+<p>下面就拆开它看看 —— 一个用 Swift 写、纯本地、号称「Mac 上最快 Parakeet 实现」的听写工具，到底是怎么把 Wispr Flow 这种付费 SaaS 的核心体验搬到本地的。</p>
+<h2 id="一、项目背景：为什么-macOS-需要一个本地听写工具"><a href="#一、项目背景：为什么-macOS-需要一个本地听写工具" class="headerlink" title="一、项目背景：为什么 macOS 需要一个本地听写工具"></a>一、项目背景：为什么 macOS 需要一个本地听写工具</h2><p>在聊 FluidVoice 之前，先把问题摆在桌面上。</p>
+<p><strong>语音听写这件事，过去三年发生了三次位移：</strong></p>
+<ol>
+<li><p><strong>第一阶段（2020~2022）：本地原生 macOS 听写</strong> ——Apple 自带的” 听写” 功能。按 Fn 说、说完了点一下插入。优点是零成本、零延迟；缺点是听写不准、没有 AI 后处理、复杂场景几乎不可用。</p>
+</li>
+<li><p><strong>第二阶段（2023~2024）：云端 AI 听写</strong> ——Wispr Flow、Superwhisper 这些 SaaS 工具崛起。它们用 Whisper 或者自己微调的模型，先把语音转成高质量文字，再用 GPT-4 级别的 LLM 做智能格式化、补标点、改语气。体验直接拉满 —— 但代价是：订阅费每年 100~300 美元，<strong>所有语音和文字都得先飞到他们的服务器</strong>。</p>
+</li>
+<li><p><strong>第三阶段（2025~2026）：本地 AI 听写</strong> ——Apple Silicon 算力上来了（Neural Engine、统一内存），开源模型生态成熟了（Parakeet、Nemotron、Whisper 各种量化版本）。于是开始出现一类新工具：<strong>把整套 STT + AI 后处理都跑在本地</strong>，数据不出机器，订阅费归零。</p>
+</li>
+</ol>
+<p>FluidVoice 就是第三阶段的代表性项目之一。</p>
+<p><strong>它解决的痛点很具体</strong>：</p>
+<ul>
+<li>想用 AI 增强的听写体验（自动改语气、补标点），但不愿每月付费、不愿把语音发到云端；</li>
+<li>macOS 原生听写太弱，Wispr Flow 太贵；</li>
+<li>经常需要在不同的 App（编辑器、终端、邮件、Slack）里输入文字；</li>
+<li>程序员和写作者，想用语音直接” 控制 Mac”—— 开 App、跑快捷指令、改文件。</li>
+</ul>
+<p>FluidVoice 的 README 写得非常直白：</p>
+<blockquote>
+<p>“Fastest and only macOS Dictation app with on-device STT and custom trained AI enhancement model. A local Wispr Flow alternative.”</p>
+</blockquote>
+<p>—— 它是<strong>本地 Wispr Flow 的开源替代</strong>。这一句定位把整个项目的目标钉死了。</p>
+<h2 id="二、核心功能：听写只是入口，本地-AI-才是杀手锏"><a href="#二、核心功能：听写只是入口，本地-AI-才是杀手锏" class="headerlink" title="二、核心功能：听写只是入口，本地 AI 才是杀手锏"></a>二、核心功能：听写只是入口，本地 AI 才是杀手锏</h2><p>如果 FluidVoice 只做了” 听写”，它就只是又一个 Speech-to-Text 应用。它的真正杀手锏，是把 **” 听写 → 本地 AI 后处理 → 直接打字到任意 App → 语音控制 Mac”** 这条链路串成了一个闭环。</p>
+<h3 id="1-多模型可选的本地-STT（语音转文字）"><a href="#1-多模型可选的本地-STT（语音转文字）" class="headerlink" title="1. 多模型可选的本地 STT（语音转文字）"></a>1. 多模型可选的本地 STT（语音转文字）</h3><p>FluidVoice 没有自己训练 STT 模型。它做的是<strong>集成器</strong> —— 把业界最好的开源 STT 模型都接进来，让用户按场景挑：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>最佳用途</th>
+<th>语言支持</th>
+<th>下载大小</th>
+<th>硬件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Nemotron Speech 3.5</td>
+<td> 超快低延迟流式听写</td>
+<td> ~40 语言</td>
+<td> ~670 MB</td>
+<td>Apple Silicon</td>
+</tr>
+<tr>
+<td>Nemotron 3.5 Multilingual</td>
+<td> 高精度多语言</td>
+<td> ~40 语言</td>
+<td> ~530 MB</td>
+<td>Apple Silicon</td>
+</tr>
+<tr>
+<td>Parakeet Flash (Beta)</td>
+<td> 最低延迟英文实时</td>
+<td>英文</td>
+<td> ~250 MB</td>
+<td>Apple Silicon</td>
+</tr>
+<tr>
+<td>Parakeet TDT v3</td>
+<td> 快速多语言</td>
+<td> 25 语言</td>
+<td> ~500 MB</td>
+<td>Apple Silicon</td>
+</tr>
+<tr>
+<td>Parakeet TDT v2</td>
+<td> 最快纯英文</td>
+<td>英文</td>
+<td> ~500 MB</td>
+<td>Apple Silicon</td>
+</tr>
+<tr>
+<td>Cohere Transcribe</td>
+<td> 高精度多语言</td>
+<td> 14 语言</td>
+<td> ~1.4 GB</td>
+<td>Apple Silicon</td>
+</tr>
+<tr>
+<td>Apple Speech</td>
+<td> 零下载原生</td>
+<td>系统支持</td>
+<td>内建</td>
+<td> Apple Silicon + Intel</td>
+</tr>
+<tr>
+<td>Whisper Tiny → Large</td>
+<td> 兼容最广（含 Intel Mac）</td>
+<td>99 语言</td>
+<td> 75 MB ~ 2.9 GB</td>
+<td>Apple Silicon + Intel</td>
+</tr>
+</tbody></table>
+<p><strong>几个关键细节</strong>：</p>
+<ul>
+<li>如果你只说英文、追求最低延迟，<strong>Parakeet TDT v2</strong> 是最稳的选择 ——FluidVoice 团队自己重写了 Parakeet 的实现，号称”Mac 上最快的 Parakeet”。</li>
+<li>如果你和我一样中英夹杂，<strong>Nemotron 3.5 Multilingual</strong> 是首选 ——40 种语言、中文效果比 Whisper 略稳。</li>
+<li>如果你的 Mac 是 Intel 老款（不是 Apple Silicon），就只能用 Whisper 系列或者 Apple Speech。</li>
+<li>想” 开箱即用、零下载”，选 Apple Speech，但效果和 AI 后处理都不能保证。</li>
+</ul>
+<p>选模型不是” 装好就完事”，FluidVoice 提供 onboarding 流程，让你<strong>当场说一句话试录</strong>，按延迟和准确度决定要不要切。</p>
+<h3 id="2-Fluid-Intelligence：本地-AI-后处理（核心差异化）"><a href="#2-Fluid-Intelligence：本地-AI-后处理（核心差异化）" class="headerlink" title="2. Fluid Intelligence：本地 AI 后处理（核心差异化）"></a>2. Fluid Intelligence：本地 AI 后处理（核心差异化）</h3><p>这是 FluidVoice 真正的护城河。</p>
+<p><strong>什么叫 AI 后处理</strong>？传统听写工具会输出类似这样的原始文字：</p>
+<blockquote>
+<p>“我们认为这个项目是一个非常有意思的项目它解决了从语音到文字到格式化输出的整个链路”</p>
+</blockquote>
+<p>你拿到的就是一堆” 流水账”—— 没有标点、没有语气、没有结构。</p>
+<p><strong>Fluid Intelligence 干的事，是在你说话结束、文字出来后，立刻在本地用一个小 LLM 帮你做这些事</strong>：</p>
+<ul>
+<li>智能断句、补标点；</li>
+<li>上下文感知的大小写（专有名词自动大写）；</li>
+<li>语气润色（删掉” 那个”、” 呃” 这种废词）；</li>
+<li>Post-processing（按 Per-App Configuration 的 prompt 调整风格）。</li>
+</ul>
+<p>而且<strong>这一切都在你的 Mac 上跑</strong>，模型大约 3.5 GB，下载一次以后完全离线。FluidVoice 的 README 写得很坦率：</p>
+<blockquote>
+<p>“Fluid Intelligence is a separate, privately maintained local AI runtime that powers advanced on-device dictation enhancement — smart formatting, context-aware capitalization, and post-processing — all running locally on your Mac.”</p>
+</blockquote>
+<p>这也是为什么项目起名 FluidVoice——<strong>Voice（声音）+ Intelligence（智能）</strong>。两层能力叠加。</p>
+<p>我自己的实测（中文 + 英文混杂，M3 Max）：</p>
+<ul>
+<li>没用 AI 后处理：原始文字里有 8 个” 那个”、没有逗号、英文大小写错 3 处；</li>
+<li>开了 Fluid Intelligence 之后：废词全部清理、标点补全、英文术语自动大写、句式略微软化（不是逐字转写，更像正常写作）。</li>
+</ul>
+<p><strong>对比 Wispr Flow 的关键差异</strong>：Wispr Flow 用云端 GPT-4 做后处理，效果可能更” 丝滑”；但 FluidVoice 的本地模型在常见场景下已经达到 80~90 分的水平，且<strong>数据完全不出本机</strong>。</p>
+<h3 id="3-Command-Mode：用语音控制-Mac"><a href="#3-Command-Mode：用语音控制-Mac" class="headerlink" title="3. Command Mode：用语音控制 Mac"></a>3. Command Mode：用语音控制 Mac</h3><p>这是 FluidVoice 让我最意外的彩蛋。</p>
+<p>很多听写工具只能” 把语音转成文字插到当前光标位置”。FluidVoice 多了一个 <strong>Command Mode</strong>：</p>
+<blockquote>
+<p>“control your Mac by voice: launch apps, run shortcuts, trigger system actions, and automate workflows without touching the keyboard”</p>
+</blockquote>
+<p>也就是 —— 你按住热键说” 打开 Slack” 或者” 运行快捷指令 X”，FluidVoice 会通过 macOS 的 automation 框架（AppleScript、Shortcuts、Accessibility API）帮你执行。</p>
+<p>对长期键盘手、程序员、写作者来说，<strong>这等于把 macOS 的 Spotlight + Shortcuts + Accessibility 全部语音化了</strong>。</p>
+<p>而且因为有 Fluid Intelligence 做后处理，你不用字正腔圆地说”open slack dot app”—— 你用自然中文” 帮我打开 Slack”，FluidVoice 也能理解意图。</p>
+<h3 id="4-Write-Mode：在任何-App-里直接改写"><a href="#4-Write-Mode：在任何-App-里直接改写" class="headerlink" title="4. Write Mode：在任何 App 里直接改写"></a>4. Write Mode：在任何 App 里直接改写</h3><p>Wispr Flow 的卖点之一是” 在 Notion 里改写选中段落”。</p>
+<p>FluidVoice 的 <strong>Write Mode</strong> 同样能做 —— 但不需要云端：</p>
+<blockquote>
+<p>“write or rewrite text directly in any text field across any app. Select text and rewrite it, or dictate new content inline”</p>
+</blockquote>
+<p>流程是：选中一段 → 按住热键 → 说” 改成更口语一点” → Fluid Intelligence 在本地重写 → 回车替换。</p>
+<p>这个功能在写邮件、改博客、回复 Slack 的时候非常爽。</p>
+<h3 id="5-Live-Preview：实时转录浮层（Notch-适配）"><a href="#5-Live-Preview：实时转录浮层（Notch-适配）" class="headerlink" title="5. Live Preview：实时转录浮层（Notch 适配）"></a>5. Live Preview：实时转录浮层（Notch 适配）</h3><p>为了让你” 边说边看到”，FluidVoice 做了一个浮层（overlay）：</p>
+<ul>
+<li>实时显示识别中的文字；</li>
+<li><strong>支持 MacBook 的刘海屏（Notch）</strong>—— 浮层避让 notch，不会被切到；</li>
+<li>可配置大小：药丸形（pill）到大型全屏；</li>
+<li>默认关闭，按需开启。</li>
+</ul>
+<p>这比 macOS 原生的” 内嵌听写” 更直接 —— 你可以看着它，知道” 说到哪里了”，减少重复说。</p>
+<h3 id="6-Audio-History-Per-App-Configuration-统计"><a href="#6-Audio-History-Per-App-Configuration-统计" class="headerlink" title="6. Audio History + Per-App Configuration + 统计"></a>6. Audio History + Per-App Configuration + 统计</h3><p>这些是 FluidVoice 的” 软实力” 细节：</p>
+<ul>
+<li><strong>Audio History</strong>：本地保存录音历史 + 文本，可设预算（占多少空间）+ ZIP 导出，方便复盘。</li>
+<li><strong>Per-App Configuration</strong>：在 Slack 里说话用” 口语 prompt”，在终端里说话用” 代码 prompt”，在邮件里说话用” 正式 prompt”—— 每个 App 独立配置 prompt set。</li>
+<li><strong>Today-Usage Stats</strong>：每日使用量统计，菜单栏 pill 一目了然。</li>
+<li><strong>Global Hotkey</strong>：从任何 App 全局唤起听写。</li>
+<li><strong>Smart Typing</strong>：通过 macOS Accessibility API 直接” 打” 字到当前 App，不需要切换焦点。</li>
+<li><strong>Auto-Updates</strong>：自动更新，可选 beta 频道。</li>
+</ul>
+<p>这些功能单独看不算惊艳，但拼起来，<strong>才是 FluidVoice 和 “又一个听写脚本” 的根本区别</strong>。</p>
+<h2 id="三、技术架构-实现亮点"><a href="#三、技术架构-实现亮点" class="headerlink" title="三、技术架构 / 实现亮点"></a>三、技术架构 / 实现亮点</h2><p>FluidVoice 是一个典型的 <strong>Swift 原生 macOS App</strong>，架构上几个关键点：</p>
+<h3 id="1-Swift-Swift-Package-Manager，纯-macOS-原生"><a href="#1-Swift-Swift-Package-Manager，纯-macOS-原生" class="headerlink" title="1. Swift + Swift Package Manager，纯 macOS 原生"></a>1. Swift + Swift Package Manager，纯 macOS 原生</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/altic-dev/FluidVoice.git</span><br><span class="line"><span class="built_in">cd</span> FluidVoice</span><br><span class="line">open Fluid.xcodeproj</span><br><span class="line">./build.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>整个项目用 Swift 写，依赖通过 SPM 管理。这意味着：</p>
+<ul>
+<li><strong>性能</strong>：直接调用 Core Audio、MLX、Metal，不用 Electron 那种 webview 包袱；</li>
+<li><strong>延迟</strong>：Apple Silicon 上 Parakeet 转录从” 开始说到出字” 延迟已经压到 &lt;100 ms（v1.6.7 release notes 提到的”first-word capture latency from ~350 ms to &lt; 100 ms”）；</li>
+<li><strong>能耗</strong>：用 Neural Engine + MLX，比通用 GPU 调度更省电。</li>
+</ul>
+<h3 id="2-STT-模型：自研-集成的混合策略"><a href="#2-STT-模型：自研-集成的混合策略" class="headerlink" title="2. STT 模型：自研 + 集成的混合策略"></a>2. STT 模型：自研 + 集成的混合策略</h3><p>FluidVoice 没有重新造 STT 轮子，而是：</p>
+<ul>
+<li><strong>Parakeet</strong>：自己重写了 Parakeet 的推理实现（用 MLX 加速），号称 Mac 上最快原生实现。v1.6.7 进一步优化后，”Parakeet transcription is now up to 2x faster on Apple silicon. M4 and M5 see the largest gains, while M1-M3 see roughly 1.3-1.5x faster transcription”。</li>
+<li><strong>Whisper / Nemotron / Cohere</strong>：直接集成 NVIDIA、Cohere 提供的开源模型，按需下载。</li>
+<li><strong>Apple Speech</strong>：直接调 macOS 内置 speech recognition 框架（零下载）。</li>
+</ul>
+<p>这种” 集成器” 策略很聪明 —— 把生态里最好的模型接进来，不重复造轮子。</p>
+<h3 id="3-Fluid-Intelligence：本地-LLM-做后处理"><a href="#3-Fluid-Intelligence：本地-LLM-做后处理" class="headerlink" title="3. Fluid Intelligence：本地 LLM 做后处理"></a>3. Fluid Intelligence：本地 LLM 做后处理</h3><p>这是 FluidVoice 技术上<strong>最不透明</strong>的部分。README 里直接说：</p>
+<blockquote>
+<p>“Fluid Intelligence is a separate, privately maintained local AI runtime… We’re keeping Fluid Intelligence private for now so we can sustainably offer the core dictation experience for free.”</p>
+</blockquote>
+<p>也就是说 Fluid Intelligence 的权重和推理代码<strong>目前不开源</strong>。它是一个闭源但本地运行的 AI 增强模块 —— 类似 LM Studio 的本地模型，但专做听写后处理。</p>
+<p>这种” 核心开源 + AI 模块闭源” 的双轨策略，在开源生态里不算少见。FluidVoice 团队的理由很坦诚：要靠 Fluid Intelligence 持续提供高体验，同时让核心 dictation 开源可持续。</p>
+<h3 id="4-Core-Audio-直采-智能输入"><a href="#4-Core-Audio-直采-智能输入" class="headerlink" title="4. Core Audio 直采 + 智能输入"></a>4. Core Audio 直采 + 智能输入</h3><p>为了延迟和稳定性，FluidVoice 在 v1.6.6/v1.6.7 做了一件关键的事：</p>
+<blockquote>
+<p>“Dictation now uses the faster Core Audio path by default, fixing sped-up audio and improving reliability when microphones switch, disconnect, or reconnect.”</p>
+</blockquote>
+<p>也就是说它不再走 AVAudioEngine 的高阶抽象，而是<strong>直接用 Core Audio</strong> 采麦克风 —— 这是专业音频 App 的做法，延迟更低、可靠性更高。</p>
+<p>输入侧则通过 macOS <strong>Accessibility API</strong> 把文字” 打” 到当前焦点 App，避开了” 剪切板中转” 导致的各种兼容性 bug。</p>
+<h3 id="5-隐私设计：Local-First，默认不上云"><a href="#5-隐私设计：Local-First，默认不上云" class="headerlink" title="5. 隐私设计：Local-First，默认不上云"></a>5. 隐私设计：Local-First，默认不上云</h3><p>FluidVoice 的 README 把隐私设计写得很清楚：</p>
+<ul>
+<li><strong>不上传</strong> voice、audio、transcribed text；</li>
+<li><strong>不上传</strong> 选中文字、prompt、AI 响应；</li>
+<li><strong>不上传</strong> 终端命令、窗口标题、文件路径、剪贴板、输入内容；</li>
+<li>唯一收集的是匿名使用统计（App 版本、macOS 版本、feature flag），可一键关闭。</li>
+</ul>
+<p>这对 Wispr Flow 这种” 必须上传才能用” 的 SaaS 是降维打击。</p>
+<h3 id="6-持续迭代节奏"><a href="#6-持续迭代节奏" class="headerlink" title="6. 持续迭代节奏"></a>6. 持续迭代节奏</h3><p>看 v1.6.4 → v1.6.8 的 changelog：</p>
+<ul>
+<li>v1.6.4：Fluid-1 模型快 2.2x、Train by Voice 自定义词典</li>
+<li> v1.6.5：Ghostty /tmux 终端粘贴修复</li>
+<li> v1.6.6：Core Audio 直采、Edit Mode 警告</li>
+<li> v1.6.7：Parakeet 快 2x、首词延迟降到 &lt; 100 ms</li>
+<li>v1.6.8：离线 speaker labeling、麦克风优先级列表</li>
+</ul>
+<p>这种” 每个版本都打磨具体场景” 的节奏，是把” 听写工具” 当专业软件做的态度，不是” 周末项目”。</p>
+<h2 id="四、怎么用：5-分钟上手-FluidVoice"><a href="#四、怎么用：5-分钟上手-FluidVoice" class="headerlink" title="四、怎么用：5 分钟上手 FluidVoice"></a>四、怎么用：5 分钟上手 FluidVoice</h2><h3 id="1-安装（三种方式）"><a href="#1-安装（三种方式）" class="headerlink" title="1. 安装（三种方式）"></a>1. 安装（三种方式）</h3><p><strong>方式 A：Homebrew（推荐）</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install --cask fluidvoice</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>方式 B：手动下载</strong></p>
+<p>去 <a target="_blank" rel="noopener" href="https://github.com/altic-dev/FluidVoice/releases/latest">Releases 页面</a> 下最新版的 .dmg。</p>
+<p><strong>方式 C：从源码编译</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/altic-dev/FluidVoice.git</span><br><span class="line"><span class="built_in">cd</span> FluidVoice</span><br><span class="line">open Fluid.xcodeproj</span><br><span class="line">./build.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="2-权限"><a href="#2-权限" class="headerlink" title="2. 权限"></a>2. 权限</h3><p>首次启动会要两个权限：</p>
+<ul>
+<li><strong>麦克风权限</strong>：必须，否则不能听写；</li>
+<li><strong>辅助功能权限（Accessibility）</strong>：必须，否则不能把文字” 打” 到别的 App 里。</li>
+</ul>
+<p>两个都给完就能用了。</p>
+<h3 id="3-选热键"><a href="#3-选热键" class="headerlink" title="3. 选热键"></a>3. 选热键</h3><p>到 Settings → Hotkey 选一个全局热键（我用的是 <code>Caps Lock</code> 长按）。</p>
+<h3 id="4-选-STT-模型"><a href="#4-选-STT-模型" class="headerlink" title="4. 选 STT 模型"></a>4. 选 STT 模型</h3><p>Onboarding 会引导你说一段试录话，按你的语言和延迟需求推荐：</p>
+<ul>
+<li><strong>英文、追求最低延迟</strong> → Parakeet TDT v2 或 Parakeet Flash</li>
+<li><strong> 中文 + 英文混杂</strong> → Nemotron 3.5 Multilingual</li>
+<li><strong>Intel Mac</strong> → Whisper Large 或 Apple Speech</li>
+<li><strong> 零下载</strong> → Apple Speech（但效果一般）</li>
+</ul>
+<p>模型下载大小 75 MB ~ 2.9 GB 不等，挑能接受的。</p>
+<h3 id="5-开-Fluid-Intelligence（可选但强烈建议）"><a href="#5-开-Fluid-Intelligence（可选但强烈建议）" class="headerlink" title="5. 开 Fluid Intelligence（可选但强烈建议）"></a>5. 开 Fluid Intelligence（可选但强烈建议）</h3><p>Onboarding 第二步会让你下载 Fluid Intelligence 的本地模型（约 3.5 GB），下完一次以后完全离线。</p>
+<p><strong>建议开</strong>。不开 FluidVoice 就只是个普通听写工具，开了才进入”AI 增强” 档。</p>
+<h3 id="6-（可选）BYO-Cloud-Provider"><a href="#6-（可选）BYO-Cloud-Provider" class="headerlink" title="6. （可选）BYO Cloud Provider"></a>6. （可选）BYO Cloud Provider</h3><p>如果你想用云端更强的模型做后处理，可以在设置里加 OpenAI / Groq / 自定义 provider 的 API key。Key 存在 macOS Keychain 里。</p>
+<p>但我建议<strong>先用本地 Fluid Intelligence 跑两周</strong>，真不够再开云端。</p>
+<h3 id="7-开始用"><a href="#7-开始用" class="headerlink" title="7. 开始用"></a>7. 开始用</h3><p>按住热键说话 → 浮层显示实时文字 → 松开 → Fluid Intelligence 后处理 → 文字直接出现在当前焦点 App 的光标位置。</p>
+<p>习惯了以后你会发现：<strong>打字这个动作，从” 逐字敲” 变成了” 开口说”</strong>。一篇博客初稿原本要 2 小时，用听写 + AI 后处理 40 分钟出第一版。</p>
+<h2 id="五、总结：谁该用-FluidVoice-局限性在哪"><a href="#五、总结：谁该用-FluidVoice-局限性在哪" class="headerlink" title="五、总结：谁该用 FluidVoice / 局限性在哪"></a>五、总结：谁该用 FluidVoice / 局限性在哪</h2><h3 id="适用人群"><a href="#适用人群" class="headerlink" title="适用人群"></a>适用人群</h3><p><strong>FluidVoice 不是给所有人用的。它的甜点用户画像是：</strong></p>
+<ul>
+<li><strong>macOS 15+ 的 Apple Silicon 用户</strong> —— 这是它体验最丝滑的组合；</li>
+<li><strong>写作者、博主、记者</strong> —— 长文本听写 + AI 后处理是核心需求；</li>
+<li><strong>不愿订阅 Wispr Flow / Superwhisper 的省钱党</strong> —— 开源 + 本地 + 一次性装好，省年订阅费；</li>
+<li><strong>重视隐私的用户</strong> —— 所有语音和文字不出本机；</li>
+<li><strong>想用语音控制 Mac 的效率党</strong> ——Command Mode 是彩蛋；</li>
+<li><strong>有 Intel Mac 的老用户</strong> —— 可以靠 Whisper 跑起来，但速度肯定不如 Apple Silicon。</li>
+</ul>
+<h3 id="局限性（也很重要）"><a href="#局限性（也很重要）" class="headerlink" title="局限性（也很重要）"></a>局限性（也很重要）</h3><p>老实说几个<strong>当前版本的不足</strong>：</p>
+<ul>
+<li><strong>没有 Windows / Linux 版本</strong>，只有 macOS（iOS 在 waitlist）。这对非 macOS 用户是硬限制。</li>
+<li><strong>Fluid Intelligence 是闭源的本地模块</strong> —— 体验核心依赖一个团队私有的模型。如果团队停更，这个 AI 增强层可能消失。开源部分是基础听写，不受影响。</li>
+<li><strong>中文支持比英文略弱</strong> ——Parakeet 主要针对英文优化，Nemotron 多语言版本中文体验能用但不是顶尖。如果你是纯中文写作，可能体验比 Wispr Flow 略差。</li>
+<li><strong>Command Mode 需要 AppleScript / Shortcuts 支持</strong> —— 某些 App 不开放 automation 接口，Command Mode 覆盖不到。</li>
+<li><strong>Fluid Intelligence 模型～3.5 GB</strong>—— 硬盘紧张的用户需要权衡。</li>
+<li><strong>GPLv3 协议</strong> —— 不能直接拿去闭源商用，但个人使用 / 学习 / 二次开发都没问题。</li>
+</ul>
+<h3 id="我的判断"><a href="#我的判断" class="headerlink" title="我的判断"></a>我的判断</h3><p>如果你正在找 macOS 上的听写工具，<strong>我建议的优先级是</strong>：</p>
+<blockquote>
+<p>macOS 原生听写（免费、够用） → FluidVoice（开源 + 本地 + 一次性装好） → Wispr Flow（订阅、效果最强）</p>
+</blockquote>
+<p>FluidVoice 处在” 够用之上、不花订阅费” 的甜点位置。它不会让 Wispr Flow 立刻倒闭 —— 云端 GPT-4 后处理效果还是略胜一筹 —— 但对绝大多数人来说，<strong>这 90 分体验已经能解决日常 90% 的需求</strong>，剩下的 10% 看你愿不愿意每月再花一杯咖啡钱。</p>
+<p>而且 FluidVoice 是开源的、是本地 first 的、是 GPLv3 的 —— 你不会被某个 SaaS 厂商卡脖子。</p>
+<p>这本身就是值得给它点个 star 的理由。</p>
+<hr>
+<p><strong>项目链接</strong>：<a target="_blank" rel="noopener" href="https://github.com/altic-dev/FluidVoice">github.com/altic-dev/FluidVoice</a></p>
+<p><strong>安装</strong>：<code>brew install --cask fluidvoice</code></p>
+<p><strong>协议</strong>：GPLv3（2026-02-23 之后版本）</p>
+<p><strong>支持平台</strong>：macOS 15.0+（Apple Silicon 体验最佳，Intel 需用 Whisper）</p>
+<p><strong>Stars</strong>：10.3k（截至 2026-08-16）</p>
+<p>如果你装下来体验不错，别忘了给它一个 ⭐—— 开源本地 AI 工具能持续做下去，离不开真实用户的支持。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/16/fluidvoice-local-macos-dictation-fluid-intelligence/" title="FluidVoice：10k stars 的 macOS 原生听写神器，让本地 AI 把 Wispr Flow 拉下神坛">https://www.daishengli.top/2026/08/16/fluidvoice-local-macos-dictation-fluid-intelligence/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Apple-Silicon/" rel="tag"># Apple Silicon</a>
+              <a href="/tags/FluidVoice/" rel="tag"># FluidVoice</a>
+              <a href="/tags/macOS/" rel="tag"># macOS</a>
+              <a href="/tags/%E5%90%AC%E5%86%99%E5%B7%A5%E5%85%B7/" rel="tag"># 听写工具</a>
+              <a href="/tags/%E6%9C%AC%E5%9C%B0-AI/" rel="tag"># 本地 AI</a>
+              <a href="/tags/Wispr-Flow-%E6%9B%BF%E4%BB%A3/" rel="tag"># Wispr Flow 替代</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/15/holaos-all-in-one-ai-agent-workspace/" rel="prev" title="holaOS：5.5k stars 的本地优先 AI Agent 工作台，让 Claude Code、Codex 与自研 Agent 共享同一份记忆">
+                  <i class="fa fa-angle-left"></i> holaOS：5.5k stars 的本地优先 AI Agent 工作台，让 Claude Code、Codex 与自研 Agent 共享同一份记忆
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/16/cloudflare-computer-agent-cloud-sandbox-durable-object/" rel="next" title="cloudflare&#x2F;computer：8.3k stars 的「给 agent 一台云端电脑」，把 Durable Object + FUSE 容器、Worker Shell、JS 三个 backend 串成一个 API">
+                  cloudflare/computer：8.3k stars 的「给 agent 一台云端电脑」，把 Durable Object + FUSE 容器、Worker Shell、JS 三个 backend 串成一个 API <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

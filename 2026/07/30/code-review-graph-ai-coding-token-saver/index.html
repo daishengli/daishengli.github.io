@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="GitHub 27k+ stars 的 tirth8205&#x2F;code-review-graph 用 Tree-sitter 把仓库解析成 AST 知识图谱，通过 MCP 暴露给 Claude Code&#x2F;Codex&#x2F;Cursor 等 15+ AI 编程工具，让 AI 只读真正相关的文件——中位数 82 倍 token 削减，最高 528 倍。AI Agent 时代的代码 RAG 新范式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给 AI 编程工具装上「代码地图」：code-review-graph 如何用结构化图谱砍掉 82 倍 token">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/30/code-review-graph-ai-coding-token-saver/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="GitHub 27k+ stars 的 tirth8205&#x2F;code-review-graph 用 Tree-sitter 把仓库解析成 AST 知识图谱，通过 MCP 暴露给 Claude Code&#x2F;Codex&#x2F;Cursor 等 15+ AI 编程工具，让 AI 只读真正相关的文件——中位数 82 倍 token 削减，最高 528 倍。AI Agent 时代的代码 RAG 新范式。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-30T02:04:17.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.156Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="代码图谱">
+<meta property="article:tag" content="Tree-sitter">
+<meta property="article:tag" content="AI 编程">
+<meta property="article:tag" content="成本优化">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/30/code-review-graph-ai-coding-token-saver/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/30/code-review-graph-ai-coding-token-saver/","path":"2026/07/30/code-review-graph-ai-coding-token-saver/","title":"给 AI 编程工具装上「代码地图」：code-review-graph 如何用结构化图谱砍掉 82 倍 token"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>给 AI 编程工具装上「代码地图」：code-review-graph 如何用结构化图谱砍掉 82 倍 token | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88-AI-%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%E9%9C%80%E8%A6%81%E2%80%9D%E4%BB%A3%E7%A0%81%E5%9C%B0%E5%9B%BE%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">一、项目背景：为什么 AI 编程工具需要” 代码地图”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E4%B8%80%E5%BC%A0%E5%9B%BE%EF%BC%8C%E4%BA%94%E7%A7%8D%E8%83%BD%E5%8A%9B"><span class="nav-number">2.</span> <span class="nav-text">二、核心功能：一张图，五种能力</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9C%80%E5%B0%8F%E4%B8%8A%E4%B8%8B%E6%96%87%E6%9F%A5%E8%AF%A2%EF%BC%88Minimal-Context-Query%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">1. 最小上下文查询（Minimal Context Query）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%BD%B1%E5%93%8D%E5%8D%8A%E5%BE%84%E5%88%86%E6%9E%90%EF%BC%88Blast-radius-Analysis%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">2. 影响半径分析（Blast-radius Analysis）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0%EF%BC%88Incremental-Reindex-2-%E7%A7%92%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">3. 增量更新（Incremental Reindex &lt; 2 秒）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Monorepo-%E5%8F%8B%E5%A5%BD"><span class="nav-number">2.4.</span> <span class="nav-text">4. Monorepo 友好</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-14-%E8%AF%AD%E8%A8%80%E7%BB%9F%E4%B8%80%E5%9B%BE%E8%B0%B1"><span class="nav-number">2.5.</span> <span class="nav-text">5. 14+ 语言统一图谱</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E6%8A%8A-code-review-graph-%E6%8E%A5%E5%88%B0-Claude-Code"><span class="nav-number">3.</span> <span class="nav-text">三、实战示例：把 code-review-graph 接到 Claude Code</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-1%EF%BC%9A%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">3.1.</span> <span class="nav-text">Step 1：环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-2%EF%BC%9A%E8%BF%9B%E5%85%A5%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95%EF%BC%8C%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">3.2.</span> <span class="nav-text">Step 2：进入项目目录，自动配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-3%EF%BC%9A%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%BB%BA%E5%9B%BE"><span class="nav-number">3.3.</span> <span class="nav-text">Step 3：第一次建图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-4%EF%BC%9A%E8%AE%A9-Claude-Code-%E7%94%A8%E4%B8%8A%E5%9B%BE%E8%B0%B1"><span class="nav-number">3.4.</span> <span class="nav-text">Step 4：让 Claude Code 用上图谱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-5%EF%BC%9Awatch-%E6%A8%A1%E5%BC%8F-CI-%E9%9B%86%E6%88%90"><span class="nav-number">3.5.</span> <span class="nav-text">Step 5：watch 模式 + CI 集成</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">四、适用场景和限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">4.1.</span> <span class="nav-text">适用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%B2%E7%9F%A5%E9%99%90%E5%88%B6%EF%BC%88README-%E8%AF%9A%E5%AE%9E%E5%A3%B0%E6%98%8E%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">已知限制（README 诚实声明）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%92%8C%E5%90%8C%E7%B1%BB%E6%96%B9%E6%A1%88%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">5.</span> <span class="nav-text">五、和同类方案的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">六、总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/30/code-review-graph-ai-coding-token-saver/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="给 AI 编程工具装上「代码地图」：code-review-graph 如何用结构化图谱砍掉 82 倍 token | 小戴的网络日志">
+      <meta itemprop="description" content="GitHub 27k+ stars 的 tirth8205&#x2F;code-review-graph 用 Tree-sitter 把仓库解析成 AST 知识图谱，通过 MCP 暴露给 Claude Code&#x2F;Codex&#x2F;Cursor 等 15+ AI 编程工具，让 AI 只读真正相关的文件——中位数 82 倍 token 削减，最高 528 倍。AI Agent 时代的代码 RAG 新范式。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          给 AI 编程工具装上「代码地图」：code-review-graph 如何用结构化图谱砍掉 82 倍 token
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-30 10:04:17" itemprop="dateCreated datePublished" datetime="2026-07-30T10:04:17+08:00">2026-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">GitHub 27k+ stars 的 tirth8205/code-review-graph 用 Tree-sitter 把仓库解析成 AST 知识图谱，通过 MCP 暴露给 Claude Code/Codex/Cursor 等 15+ AI 编程工具，让 AI 只读真正相关的文件——中位数 82 倍 token 削减，最高 528 倍。AI Agent 时代的代码 RAG 新范式。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>凌晨一点，你的 Claude Code 正在 review 一个 2000 文件的 monorepo PR。它刚刚第三次重新读 <code>package.json</code>，又一次展开整个 <code>src/utils/</code> 目录去” 理解结构”，又一次把已经看过的测试文件重新加载一遍 —— 单次 review 的 token 账单悄悄爬到了 87 万，眼看就要触发速率限制。这一幕对任何用过 AI 编程工具做 code review 的人来说都不陌生：<strong>AI 不缺能力，缺的是一张地图</strong>。今天要拆解的 <a target="_blank" rel="noopener" href="https://github.com/tirth8205/code-review-graph">tirth8205/code-review-graph</a>，正是为这个问题而生的 —— 一个本地优先的代码智能图谱，已经在 GitHub 上拿下 26.9k stars、2.5k forks，并且在 Trending 当日榜上稳居前列。</p>
+<h2 id="一、项目背景：为什么-AI-编程工具需要”代码地图”"><a href="#一、项目背景：为什么-AI-编程工具需要”代码地图”" class="headerlink" title="一、项目背景：为什么 AI 编程工具需要”代码地图”"></a>一、项目背景：为什么 AI 编程工具需要” 代码地图”</h2><p>过去两年，AI 编程工具（Claude Code、Codex、Cursor、Copilot 等）的演进一直围绕一个矛盾展开：<strong>模型上下文窗口越来越大，但仓库本身在爆炸</strong>。</p>
+<p>一个真实的中型 monorepo 往往有：</p>
+<ul>
+<li><strong>代码体量</strong>：5 万到 50 万行，文件数 2,000 到 30,000</li>
+<li><strong> 依赖深度</strong>：从入口函数到底层工具函数，调用链可能 8 层以上</li>
+<li><strong>测试覆盖</strong>：每个核心模块都伴随大量 mock、fixture、集成测试</li>
+<li><strong>跨语言模块</strong>：前端 TS、后端 Go、算法 Rust、配置 YAML 混杂</li>
+</ul>
+<p>当 AI 工具被要求” 理解这个 PR 影响哪些文件” 或” 为这个函数补一个测试” 时，它的默认行为是：</p>
+<ol>
+<li><strong>盲目 ls + read</strong>：把入口文件和它能看到的依赖全部加载</li>
+<li><strong>反复重读</strong>：每次新工具结果回来，都要重新” 认识” 项目结构</li>
+<li><strong>过度展开</strong>：把 5 个相关文件展开成 50 个上下文片段，因为没有结构化的” 哪些调用了哪些” 信息</li>
+</ol>
+<p>直接后果：</p>
+<ul>
+<li><strong>token 消耗爆炸</strong>：单次中型 review 动辄 50-100 万 token，单次任务成本可能超过 $1</li>
+<li><strong> 精度反降</strong>：上下文窗口被无关文件填满，关键信号被稀释</li>
+<li><strong>响应变慢</strong>：网络往返 + 推理时间都拉长</li>
+<li><strong>撞上速率限制</strong>：tool-heavy 任务最容易触发 RPM 上限</li>
+</ul>
+<p>传统解决方案各有缺陷：</p>
+<ul>
+<li><strong>RAG 向量检索</strong>：粒度太粗，给回大段代码片段</li>
+<li><strong> cgrep/ripgrep</strong>：只能搜文本，看不出调用图</li>
+<li><strong> LSP / 语言服务</strong>：每个 IDE 各一套，跨工具不通用</li>
+<li><strong>手写索引脚本</strong>：只为单次任务写，不可复现</li>
+</ul>
+<p><code>code-review-graph</code> 走的是另一条路：<strong>用 Tree-sitter 把整个仓库解析成结构化图谱（节点 = 函数 / 类 / 导入，边 = 调用 / 继承 / 测试覆盖），存进本地 SQLite，然后通过 MCP 协议暴露给 AI 工具</strong>。这样 AI 不是” 读代码”，而是” 查询图”。</p>
+<h2 id="二、核心功能：一张图，五种能力"><a href="#二、核心功能：一张图，五种能力" class="headerlink" title="二、核心功能：一张图，五种能力"></a>二、核心功能：一张图，五种能力</h2><p><code>code-review-graph</code> 的设计哲学是” 一次建图，处处查询”。安装和初始化极其轻量：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip install code-review-graph      <span class="comment"># 或 pipx install code-review-graph</span></span><br><span class="line">code-review-graph install          <span class="comment"># 自动探测并配置 15+ AI 平台</span></span><br><span class="line">code-review-graph build            <span class="comment"># 建图，500 文件约 10 秒</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>install</code> 子命令会智能检测你已经安装了哪些 AI 编程工具，自动写好 MCP 配置，无需手动编辑 JSON。支持范围包括：Codex、Claude Code、CodeBuddy Code、Cursor、Windsurf、Zed、Continue、OpenCode、Antigravity、Gemini CLI、Qwen、Qoder、Kiro、GitHub Copilot、GitHub Copilot CLI。</p>
+<p>建图完成后，你的 AI 工具获得了五个关键能力：</p>
+<h3 id="1-最小上下文查询（Minimal-Context-Query）"><a href="#1-最小上下文查询（Minimal-Context-Query）" class="headerlink" title="1. 最小上下文查询（Minimal Context Query）"></a>1. 最小上下文查询（Minimal Context Query）</h3><p>这是最核心的能力。AI 不再 <code>cat</code> 整个文件，而是查询：” 要理解 <code>AuthService.login</code> 的修改，我需要读哪些文件？” 图谱直接返回最小集合。</p>
+<p>在 6 个真实开源仓库上做的基准测试，平均削减 <strong>82 倍 token</strong>，最高 fastapi 仓库达 <strong>528 倍</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>仓库</th>
+<th align="right">朴素全文 token</th>
+<th align="right"> 图谱查询平均 token</th>
+<th align="right"> 削减倍数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> fastapi</td>
+<td align="right">951,071</td>
+<td align="right">2,169</td>
+<td align="right"><strong>528.4x</strong></td>
+</tr>
+<tr>
+<td>code-review-graph</td>
+<td align="right">208,821</td>
+<td align="right">2,495</td>
+<td align="right">93.0x</td>
+</tr>
+<tr>
+<td>gin</td>
+<td align="right">166,868</td>
+<td align="right">1,990</td>
+<td align="right">91.8x</td>
+</tr>
+<tr>
+<td>flask</td>
+<td align="right">125,022</td>
+<td align="right">1,986</td>
+<td align="right">71.4x</td>
+</tr>
+<tr>
+<td>express</td>
+<td align="right">135,955</td>
+<td align="right">3,465</td>
+<td align="right">40.6x</td>
+</tr>
+<tr>
+<td>httpx</td>
+<td align="right">89,492</td>
+<td align="right">2,438</td>
+<td align="right">38.0x</td>
+</tr>
+</tbody></table>
+<h3 id="2-影响半径分析（Blast-radius-Analysis）"><a href="#2-影响半径分析（Blast-radius-Analysis）" class="headerlink" title="2. 影响半径分析（Blast-radius Analysis）"></a>2. 影响半径分析（Blast-radius Analysis）</h3><p>一个 PR 改了 <code>utils/parser.py</code>，影响半径有多大？哪些业务函数调用了它？哪些测试会失败？哪些文档需要同步？</p>
+<p>通过图谱的” 反向可达性” 查询，AI 可以一次问清楚：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">查询：被 parse_expression() 直接或间接调用的所有函数 + 它们的测试用例</span><br><span class="line">返回：23 个生产函数 + 11 个测试用例 = 最小影响范围</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这比让 AI 自己 <code>grep -r parse_expression</code> 然后人工总结快一个数量级。</p>
+<h3 id="3-增量更新（Incremental-Reindex-2-秒）"><a href="#3-增量更新（Incremental-Reindex-2-秒）" class="headerlink" title="3. 增量更新（Incremental Reindex < 2 秒）"></a>3. 增量更新（Incremental Reindex &lt; 2 秒）</h3><p>代码图谱不是” 一次性快照”。它用 SHA-256 哈希检测文件变化，只重解析变动的部分。<strong>对一个 2,900 文件的项目，reindex 稳定在 2 秒内</strong>。</p>
+<p>你的工作流变成：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ code-review-graph watch   # 后台守护，自动监听文件保存</span><br><span class="line"># 改完一个文件，立刻触发增量更新</span><br><span class="line"># 下次 AI 问问题，图谱已经是最新状态</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-Monorepo-友好"><a href="#4-Monorepo-友好" class="headerlink" title="4. Monorepo 友好"></a>4. Monorepo 友好</h3><p><code>code-review-graph</code> 自己就是一个 monorepo：27,700+ 文件。它能识别哪些文件属于” 应该索引的核心代码”，哪些是 <code>node_modules</code>、<code>dist</code>、<code>vendor</code>、<code>__pycache__</code> 这类应该排除的目录。<strong>查询时只返回～15 个真正相关的文件</strong>。</p>
+<h3 id="5-14-语言统一图谱"><a href="#5-14-语言统一图谱" class="headerlink" title="5. 14+ 语言统一图谱"></a>5. 14+ 语言统一图谱</h3><p>不像 LSP 每个语言一套，code-review-graph 用 Tree-sitter 的统一接口支持：Python、JavaScript/TypeScript/TSX、Go、Rust、Java、C/C++、C#、VB.NET、Ruby、Kotlin、Swift、PHP、Scala、Solidity、Dart、R、Perl、Lua、Objective-C、Shell、Elixir、Zig、PowerShell、Julia。这意味着跨语言 monorepo（前端 TS + 后端 Go + 工具 Rust）也能用同一张图。</p>
+<h2 id="三、实战示例：把-code-review-graph-接到-Claude-Code"><a href="#三、实战示例：把-code-review-graph-接到-Claude-Code" class="headerlink" title="三、实战示例：把 code-review-graph 接到 Claude Code"></a>三、实战示例：把 code-review-graph 接到 Claude Code</h2><p>理论说完，下面走一遍真实操作流程。我假设你有一个中小型 Node + Python 混合项目，对接 Claude Code。</p>
+<h3 id="Step-1：环境准备"><a href="#Step-1：环境准备" class="headerlink" title="Step 1：环境准备"></a>Step 1：环境准备</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 推荐 uv（更快的 Python 包管理）</span></span><br><span class="line">curl -LsSf https://astral.sh/uv/install.sh | sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 code-review-graph（推荐 pipx 隔离环境）</span></span><br><span class="line">pipx install code-review-graph</span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证安装</span></span><br><span class="line">code-review-graph --version</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Step-2：进入项目目录，自动配置"><a href="#Step-2：进入项目目录，自动配置" class="headerlink" title="Step 2：进入项目目录，自动配置"></a>Step 2：进入项目目录，自动配置</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/projects/my-app</span><br><span class="line"></span><br><span class="line"><span class="comment"># 自动探测 Claude Code 并写入 MCP 配置</span></span><br><span class="line">code-review-graph install --platform claude-code</span><br><span class="line"></span><br><span class="line"><span class="comment"># 控制台会输出：</span></span><br><span class="line"><span class="comment"># ✓ Detected Claude Code at ~/.claude/mcp.json</span></span><br><span class="line"><span class="comment"># ✓ Wrote MCP server config for code-review-graph</span></span><br><span class="line"><span class="comment"># ✓ Registered .code-review-graph/ in .gitignore suggestion</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Step-3：第一次建图"><a href="#Step-3：第一次建图" class="headerlink" title="Step 3：第一次建图"></a>Step 3：第一次建图</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">code-review-graph build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># [1/4] Indexing 487 files...</span></span><br><span class="line"><span class="comment"># [2/4] Parsing AST with Tree-sitter (Python + TypeScript + Go)...</span></span><br><span class="line"><span class="comment"># [3/4] Building graph edges (calls, inheritance, imports)...</span></span><br><span class="line"><span class="comment"># [4/4] Writing to .code-review-graph/graph.db (SQLite, 12MB)</span></span><br><span class="line"><span class="comment"># ✓ Done in 9.3s</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>.code-review-graph/graph.db</code> 就是本地知识图谱。<strong>它是纯 SQLite 文件，意味着可以 <code>git diff</code>、备份、跨机器迁移，不像向量数据库那样需要单独服务</strong>。</p>
+<h3 id="Step-4：让-Claude-Code-用上图谱"><a href="#Step-4：让-Claude-Code-用上图谱" class="headerlink" title="Step 4：让 Claude Code 用上图谱"></a>Step 4：让 Claude Code 用上图谱</h3><p>打开 Claude Code，直接自然语言提问：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我刚改了 src/auth/login.py 的 login() 函数，返回值从 Optional[User] 改成 AuthResult。</span><br><span class="line">请用代码图谱分析：</span><br><span class="line">1. 这个变更的影响半径（列出所有直接/间接调用方）</span><br><span class="line">2. 需要同步更新的测试文件</span><br><span class="line">3. 是否有任何公开 API 文档需要改</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Claude Code 会调用 code-review-graph 暴露的 MCP 工具 <code>query_impact_radius</code>、<code>find_callers</code>、<code>find_tests_for</code>，而不是 read 一堆文件。最终回复会附上 token 节省估算（v2.3.4+ 自动附加）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">【分析完成】context_savings: 减少 87.3% token (从 ~91k 降到 ~12k)</span><br><span class="line"></span><br><span class="line">影响函数（4 层深度）：</span><br><span class="line">  1. AuthService.login() (src/auth/service.py:42)</span><br><span class="line">     └─ AuthController.handle_login() (src/api/auth.py:18)</span><br><span class="line">        └─ api_router /auth/login (src/api/routes.py:88)</span><br><span class="line">           └─ 测试: tests/integration/test_auth_flow.py::test_login_success</span><br><span class="line">           └─ 测试: tests/unit/test_service.py::test_login_invalid_token</span><br><span class="line"></span><br><span class="line">需要更新文档：</span><br><span class="line">  - docs/api/auth.md (描述了旧的 Optional[User] 返回值)</span><br><span class="line">  - CHANGELOG.md (新增 breaking change 条目)</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Step-5：watch-模式-CI-集成"><a href="#Step-5：watch-模式-CI-集成" class="headerlink" title="Step 5：watch 模式 + CI 集成"></a>Step 5：watch 模式 + CI 集成</h3><p>开发时持续监听：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">code-review-graph watch</span><br><span class="line"><span class="comment"># 监听文件保存，自动 reindex 变动的文件</span></span><br><span class="line"><span class="comment"># 一个 2,900 文件的项目，reindex &lt; 2s</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>CI 里可以加 GitHub Action：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .github/workflows/crg.yml</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">tirth8205/code-review-graph@v2</span></span><br><span class="line">  <span class="attr">with:</span></span><br><span class="line">    <span class="attr">action:</span> <span class="string">impact-analysis</span></span><br><span class="line">    <span class="attr">base:</span> <span class="string">main</span></span><br><span class="line">    <span class="attr">head:</span> <span class="string">${{</span> <span class="string">github.head_ref</span> <span class="string">}}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这样 PR 提交流程会自动运行影响分析，AI 编程 agent 拿到的就是已经结构化好的 blast-radius 报告，而不是把整个 PR diff 重新塞进上下文。</p>
+<h2 id="四、适用场景和限制"><a href="#四、适用场景和限制" class="headerlink" title="四、适用场景和限制"></a>四、适用场景和限制</h2><h3 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h3><ul>
+<li><strong>中型及以上代码库的 code review</strong>：5,000+ 文件的仓库效果最明显</li>
+<li><strong>跨语言 monorepo</strong>：前后端 / 工具链混合项目</li>
+<li><strong>高频 AI 重构任务</strong>：长会话、跨多个 PR 的连续工作</li>
+<li><strong> CI 中的自动化影响分析</strong>：配合 GitHub Action 拦截 PR 风险</li>
+<li><strong>成本敏感的个人 / 小团队开发者</strong>：每省一倍 token，等于省一倍账单</li>
+</ul>
+<h3 id="已知限制（README-诚实声明）"><a href="#已知限制（README-诚实声明）" class="headerlink" title="已知限制（README 诚实声明）"></a>已知限制（README 诚实声明）</h3><p>作者在 README 中明确标注了几条重要限制：</p>
+<ol>
+<li><strong>召回上限是循环的</strong>：平均 recall 显示 1.000，但这是因为 ground truth 来自同一张图 —— 基本上是上限值。作者提到”honest co-change mode” 会更低但更真实，正在补测。</li>
+<li><strong>小修改不如全文本</strong>：单行 typo fix 建图不划算</li>
+<li><strong>不支持的语言不索引</strong>：Tree-sitter 不识别的语言文件直接跳过</li>
+<li><strong>首次建图成本</strong>：500 文件～10s，超大 monorepo 可能需要预热缓存</li>
+<li><strong> MCP 协议依赖</strong>：必须用支持 MCP 的 AI 工具，老式 chat-only 模型无法直接受益</li>
+</ol>
+<p>另外提一个工程现实：<strong>528x 是 fastapi 的极端 case，~82x 才是中位数</strong>。这数字仍然惊人，但如果项目方沟通时被” 用 528x 当 headline” 误导就尴尬了 ——README 也专门加了一行注释澄清。</p>
+<h2 id="五、和同类方案的对比"><a href="#五、和同类方案的对比" class="headerlink" title="五、和同类方案的对比"></a>五、和同类方案的对比</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th> code-review-graph</th>
+<th> 向量 RAG (e.g. Cognee)</th>
+<th>cgrep / ripgrep</th>
+<th>LSP 单语言</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>粒度</td>
+<td>函数 / 类节点</td>
+<td>文本块</td>
+<td>文本行</td>
+<td>符号级</td>
+</tr>
+<tr>
+<td>跨语言</td>
+<td>✅ 14+</td>
+<td>✅ 通用</td>
+<td>✅ 通用</td>
+<td>❌ 单语言</td>
+</tr>
+<tr>
+<td>调用图</td>
+<td>✅ 原生</td>
+<td>❌ 需后处理</td>
+<td>❌</td>
+<td>✅（但单语言）</td>
+</tr>
+<tr>
+<td>持久化</td>
+<td>✅ SQLite</td>
+<td>✅ 向量库</td>
+<td>❌ 无状态</td>
+<td>⚠️ IDE 进程</td>
+</tr>
+<tr>
+<td> AI 集成</td>
+<td>✅ MCP 一键</td>
+<td>⚠️ 需自己接</td>
+<td>❌</td>
+<td>⚠️ IDE 限定</td>
+</tr>
+<tr>
+<td> Token 削减</td>
+<td> 82x 中位数</td>
+<td> 5-10x</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td> 本地优先</td>
+<td>✅</td>
+<td>⚠️ 多数要云</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<p>定位上，code-review-graph 更像”AI 编程工具专用的代码图谱层”，而不是通用代码搜索引擎 —— 这一定位让它在 AI Agent 时代找到了非常精准的缝隙。</p>
+<h2 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h2><p><code>tirth8205/code-review-graph</code> 不性感、不复杂，但它解决的是 AI 编程时代一个具体到刺痛的体验问题：<strong>AI 浪费在读无关文件上的时间、金钱、上下文窗口</strong>。</p>
+<p>它的产品决策值得借鉴：</p>
+<ul>
+<li><strong>本地优先 + SQLite</strong>：消除部署摩擦，背靠 git diff 友好的纯文件</li>
+<li><strong> MCP 原生集成</strong>：不与某个 IDE/Agent 绑定，而是成为它们共同依赖的能力层</li>
+<li><strong>诚实公开 limitation</strong>：README 主动标注 circular recall 等边界问题，比画大饼的项目让人放心得多</li>
+</ul>
+<p>如果你正在用 Claude Code / Codex / Cursor 做中型以上项目的 review、开发、重构，强烈建议花 5 分钟装一下。一周下来你能直观感受到的不只是 token 账单下降，更是 AI 突然变得” 懂你的代码” 的那种流畅 —— 因为它终于拿到了地图。</p>
+<blockquote>
+<p>仓库地址：<a target="_blank" rel="noopener" href="https://github.com/tirth8205/code-review-graph">https://github.com/tirth8205/code-review-graph</a><br>PyPI：<a target="_blank" rel="noopener" href="https://pypi.org/project/code-review-graph/">https://pypi.org/project/code-review-graph/</a><br>项目官网：<a target="_blank" rel="noopener" href="https://code-review-graph.com/">https://code-review-graph.com</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/30/code-review-graph-ai-coding-token-saver/" title="给 AI 编程工具装上「代码地图」：code-review-graph 如何用结构化图谱砍掉 82 倍 token">https://www.daishengli.top/2026/07/30/code-review-graph-ai-coding-token-saver/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/%E4%BB%A3%E7%A0%81%E5%9B%BE%E8%B0%B1/" rel="tag"># 代码图谱</a>
+              <a href="/tags/Tree-sitter/" rel="tag"># Tree-sitter</a>
+              <a href="/tags/AI-%E7%BC%96%E7%A8%8B/" rel="tag"># AI 编程</a>
+              <a href="/tags/%E6%88%90%E6%9C%AC%E4%BC%98%E5%8C%96/" rel="tag"># 成本优化</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/29/worldmonitor-open-source-real-time-global-intelligence-dashboard/" rel="prev" title="World Monitor：把 Palantir 级全球情报仪表盘装进你的浏览器，开源且免费">
+                  <i class="fa fa-angle-left"></i> World Monitor：把 Palantir 级全球情报仪表盘装进你的浏览器，开源且免费
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/01/huggingface-speech-to-speech-local-voice-agent/" rel="next" title="Hugging Face Speech-to-Speech：把语音 Agent 完整跑在本地">
+                  Hugging Face Speech-to-Speech：把语音 Agent 完整跑在本地 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

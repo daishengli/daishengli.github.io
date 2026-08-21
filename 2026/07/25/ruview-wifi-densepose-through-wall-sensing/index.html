@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="不装摄像头、不戴手环，只靠家里的 WiFi 信号，RuView 就能穿透墙体实时追踪 17 个身体关键点、监测呼吸心率、判断跌倒——今天我们就来拆解这个 85k stars 的开源项目。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="π RuView：让家里的 WiFi 路由器变成「穿墙雷达」，无摄像头追踪 17 个身体关键点">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/25/ruview-wifi-densepose-through-wall-sensing/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="不装摄像头、不戴手环，只靠家里的 WiFi 信号，RuView 就能穿透墙体实时追踪 17 个身体关键点、监测呼吸心率、判断跌倒——今天我们就来拆解这个 85k stars 的开源项目。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-25T02:00:54.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.161Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="WiFi Sensing">
+<meta property="article:tag" content="Edge AI">
+<meta property="article:tag" content="ESP32">
+<meta property="article:tag" content="Channel State Information">
+<meta property="article:tag" content="DensePose">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/25/ruview-wifi-densepose-through-wall-sensing/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/25/ruview-wifi-densepose-through-wall-sensing/","path":"2026/07/25/ruview-wifi-densepose-through-wall-sensing/","title":"π RuView：让家里的 WiFi 路由器变成「穿墙雷达」，无摄像头追踪 17 个身体关键点"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>π RuView：让家里的 WiFi 路由器变成「穿墙雷达」，无摄像头追踪 17 个身体关键点 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E4%BB%AC%E9%9C%80%E8%A6%81%E3%80%8C%E4%B8%8D%E7%94%A8%E6%91%84%E5%83%8F%E5%A4%B4%E3%80%8D%E7%9A%84%E6%84%9F%E7%9F%A5%E6%96%B9%E6%A1%88%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">一、项目背景：为什么我们需要「不用摄像头」的感知方案？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E6%91%84%E5%83%8F%E5%A4%B4%E7%9A%84%E5%A4%A9%E8%8A%B1%E6%9D%BF"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 摄像头的天花板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-WiFi-%E4%BF%A1%E5%8F%B7%E7%9A%84%E3%80%8C%E9%9A%90%E8%97%8F%E4%BF%A1%E6%81%AF%E3%80%8D"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 WiFi 信号的「隐藏信息」</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-RuView-%E6%83%B3%E5%B9%B2%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 RuView 想干什么？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E4%BA%AE%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">二、核心功能亮点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%BA%94%E5%A4%A7%E6%84%9F%E7%9F%A5%E8%83%BD%E5%8A%9B"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 五大感知能力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E8%87%AA%E5%AD%A6%E4%B9%A0%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 自学习世界模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E8%BE%B9%E7%BC%98%E6%99%BA%E8%83%BD%E4%B8%8E%E6%9E%81%E5%B0%8F%E5%8D%A0%E7%94%A8"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 边缘智能与极小占用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E5%A4%9A%E5%8D%8F%E8%AE%AE%E8%BE%93%E5%87%BA"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 多协议输出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E7%94%A8-Docker-%E4%B8%89%E5%88%86%E9%92%9F%E8%B7%91%E8%B5%B7%E6%9D%A5"><span class="nav-number">3.</span> <span class="nav-text">三、实战示例：用 Docker 三分钟跑起来</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E9%9B%B6%E7%A1%AC%E4%BB%B6%E4%BD%93%E9%AA%8C"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 零硬件体验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Python-SDK-%E8%B7%AF%E7%BA%BF%EF%BC%88ADR-117%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Python SDK 路线（ADR-117）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E7%9C%9F%E7%A1%AC%E4%BB%B6%E8%B7%AF%E7%BA%BF"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 真硬件路线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E4%B8%80%E6%AE%B5%E6%9C%80%E7%AE%80%E3%80%8C%E8%B7%8C%E5%80%92%E6%8A%A5%E8%AD%A6%E3%80%8D%E4%BB%A3%E7%A0%81"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 一段最简「跌倒报警」代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E9%99%90%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">四、适用场景与限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E9%80%82%E5%90%88%E7%9A%84-6-%E4%B8%AA%E5%9C%BA%E6%99%AF"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 适合的 6 个场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%BF%85%E9%A1%BB%E6%AD%A3%E8%A7%86%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 必须正视的限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E4%B8%8E%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">5.</span> <span class="nav-text">五、与同类项目的差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">六、总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/25/ruview-wifi-densepose-through-wall-sensing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="π RuView：让家里的 WiFi 路由器变成「穿墙雷达」，无摄像头追踪 17 个身体关键点 | 小戴的网络日志">
+      <meta itemprop="description" content="不装摄像头、不戴手环，只靠家里的 WiFi 信号，RuView 就能穿透墙体实时追踪 17 个身体关键点、监测呼吸心率、判断跌倒——今天我们就来拆解这个 85k stars 的开源项目。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          π RuView：让家里的 WiFi 路由器变成「穿墙雷达」，无摄像头追踪 17 个身体关键点
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-25 10:00:54" itemprop="dateCreated datePublished" datetime="2026-07-25T10:00:54+08:00">2026-07-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">不装摄像头、不戴手环，只靠家里的 WiFi 信号，RuView 就能穿透墙体实时追踪 17 个身体关键点、监测呼吸心率、判断跌倒——今天我们就来拆解这个 85k stars 的开源项目。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>你有没有想过，家里那台 24 小时开着、谁都不会多看一眼的 WiFi 路由器，居然可以充当「穿墙雷达」？</p>
+<p>不开摄像头、不戴手环、不装红外传感器 —— 它就能：</p>
+<ul>
+<li>透过墙壁数清楚房间里到底有几个人；</li>
+<li>无接触地测出你的呼吸频率（6–30 BPM）和心率（40–120 BPM）；</li>
+<li>用 17 个关键点重建你此刻的姿势（站着、坐着、跌倒……）；</li>
+<li>在凌晨悄悄判断你是否进入了深睡眠阶段。</li>
+</ul>
+<p>这听起来像是科幻小说的设定，却是 GitHub 上一个 8.5 万 stars 的开源项目 <a target="_blank" rel="noopener" href="https://github.com/ruvnet/RuView">ruvnet/RuView</a> 正在做的事。今天这篇博客，我们就来拆开它的原理，看它是如何「让 WiFi 看见人」的。</p>
+<hr>
+<h2 id="一、项目背景：为什么我们需要「不用摄像头」的感知方案？"><a href="#一、项目背景：为什么我们需要「不用摄像头」的感知方案？" class="headerlink" title="一、项目背景：为什么我们需要「不用摄像头」的感知方案？"></a>一、项目背景：为什么我们需要「不用摄像头」的感知方案？</h2><h3 id="1-1-摄像头的天花板"><a href="#1-1-摄像头的天花板" class="headerlink" title="1.1 摄像头的天花板"></a>1.1 摄像头的天花板</h3><p>过去十年，室内感知几乎被摄像头垄断。无论是商场的客流统计、养老院的跌倒报警，还是智能家居的人来灯亮，背后都是一颗颗镜头。但摄像头有三大硬伤：</p>
+<ul>
+<li><strong>隐私焦虑</strong>：卧室、卫生间、浴室 —— 这些最需要监测生命体征的场景，恰恰最不适合装摄像头。</li>
+<li><strong>环境受限</strong>：黑暗、强光逆光、烟雾、被遮挡…… 摄像头几乎全部失效。</li>
+<li><strong>攻击面过大</strong>：一台联网摄像头意味着一个能拍到屋内的实时端口，黑产里「破解家庭摄像头」早就成了一门生意。</li>
+</ul>
+<h3 id="1-2-WiFi-信号的「隐藏信息」"><a href="#1-2-WiFi-信号的「隐藏信息」" class="headerlink" title="1.2 WiFi 信号的「隐藏信息」"></a>1.2 WiFi 信号的「隐藏信息」</h3><p>你可能没注意过，WiFi 信号在空间里传播时，会被人体的呼吸、抬手、转身这些细微动作「扰动」。学术上把这种细粒度信息叫做 <strong>CSI（Channel State Information，信道状态信息）</strong>。</p>
+<p>CSI 比常见的 RSSI（信号强度）精细得多 —— 它记录的是每一个子载波的幅度与相位，本质上是一段「无线电指纹」。当一个人在房间里呼吸，他的胸腔每分钟起伏 12–20 次，这套起伏会叠加进 CSI 中；只要算法够好，就能从 CSI 里把呼吸和心跳单独挑出来。</p>
+<h3 id="1-3-RuView-想干什么？"><a href="#1-3-RuView-想干什么？" class="headerlink" title="1.3 RuView 想干什么？"></a>1.3 RuView 想干什么？</h3><p>RuView 把 WiFi DensePose（卡耐基梅隆 2018 年提出的学术概念）落地成了一个低成本的边缘 AI 平台。它做的是三件事：</p>
+<ol>
+<li>把 CSI 从廉价的 ESP32 节点里抓出来；</li>
+<li>在边缘设备上跑信号处理 + 神经网络，提取 17 个身体关键点 + 生命体征；</li>
+<li>把结果通过 MCP / WebSocket / MQTT 暴露给 Home Assistant、智能家居、家庭安防等下游应用。</li>
+</ol>
+<p>截至今天，仓库已有 <strong>85.5k stars / 11.4k forks / 1,084 次提交</strong>，连续多天霸榜 GitHub Trending，是 2026 年最值得关注的「物理 + AI」项目之一。</p>
+<hr>
+<h2 id="二、核心功能亮点"><a href="#二、核心功能亮点" class="headerlink" title="二、核心功能亮点"></a>二、核心功能亮点</h2><h3 id="2-1-五大感知能力"><a href="#2-1-五大感知能力" class="headerlink" title="2.1 五大感知能力"></a>2.1 五大感知能力</h3><p>RuView 一口气把五件原本需要不同硬件的事做到了同一个平台里：</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>输入</th>
+<th>原理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>🫁 <strong>呼吸监测</strong></td>
+<td> CSI 振幅 + 相位</td>
+<td> 0.1–0.5 Hz 带通 + FFT 峰值检测</td>
+</tr>
+<tr>
+<td>💓 <strong>心率监测</strong></td>
+<td> CSI 振幅 + 相位</td>
+<td> 0.8–2.0 Hz 带通 + 零交叉 BPM</td>
+</tr>
+<tr>
+<td>👤 <strong>存在检测</strong></td>
+<td> CSI 头部嵌入（HF <code>ruvnet/wifi-densepose-pretrained</code>）</td>
+<td>训练好的头部位姿检测器 + 相位方差回退</td>
+</tr>
+<tr>
+<td>🦴 <strong>17 关键点姿势</strong></td>
+<td> CSI 嵌入</td>
+<td><code>cog-pose-estimation</code> Cog v0.0.1，Pi 5 上 8.4 ms 冷启动</td>
+</tr>
+<tr>
+<td>🚨 <strong>跌倒检测</strong></td>
+<td>相位加速度</td>
+<td>阈值 + 三帧去抖 + 5 秒冷却</td>
+</tr>
+</tbody></table>
+<h3 id="2-2-自学习世界模型"><a href="#2-2-自学习世界模型" class="headerlink" title="2.2 自学习世界模型"></a>2.2 自学习世界模型</h3><p>最有意思的是，RuView 不只是一个「检测器」，而是一个能预测未来 15 帧空间占用的小型世界模型（OccWorld TransVQVAE）。在 RTX 5080 上推理 209 ms，3.4 GB 显存，意味着它可以提前告诉你「这个人接下来会走向哪里」。</p>
+<h3 id="2-3-边缘智能与极小占用"><a href="#2-3-边缘智能与极小占用" class="headerlink" title="2.3 边缘智能与极小占用"></a>2.3 边缘智能与极小占用</h3><ul>
+<li><strong>128 维对比编码器</strong>，4-bit 量化后只占 <strong>8 KB</strong>；</li>
+<li>单核 M4 Pro 笔记本上能跑到 <strong>164,183 emb/s</strong>；</li>
+<li>完整的传感器 + 推理 BOM 总成本压到 <strong>140 美元</strong>，最低方案（3 个 ESP32-S3 + 现有路由器）只要 <strong>54 美元</strong>。</li>
+</ul>
+<h3 id="2-4-多协议输出"><a href="#2-4-多协议输出" class="headerlink" title="2.4 多协议输出"></a>2.4 多协议输出</h3><p>最后，RuView 不打算「圈住」你。它通过以下方式把结果喂给下游：</p>
+<ul>
+<li><strong>REST API</strong> <code>/api/v1/vital-signs</code></li>
+<li><strong>WebSocket</strong> <code>/ws/sensing</code></li>
+<li><strong>MQTT</strong> <code>RuViewMqttClient</code></li>
+<li><strong>MCP 代理</strong>：能被 Claude、Cursor 这类 AI Agent 直接当工具调用</li>
+<li><strong> Home Assistant 集成</strong>：原生支持 <code>presence</code>、<code>vital-signs</code>、<code>fall-detected</code> 等实体</li>
+</ul>
+<p>这种「不抢戏」的架构，是它在 Trending 上持续被关注的关键。</p>
+<hr>
+<h2 id="三、实战示例：用-Docker-三分钟跑起来"><a href="#三、实战示例：用-Docker-三分钟跑起来" class="headerlink" title="三、实战示例：用 Docker 三分钟跑起来"></a>三、实战示例：用 Docker 三分钟跑起来</h2><h3 id="3-1-零硬件体验"><a href="#3-1-零硬件体验" class="headerlink" title="3.1 零硬件体验"></a>3.1 零硬件体验</h3><p>如果你只是想先看看效果，仓库已经提供了预录的 CSI 数据 + Docker 镜像：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull ruvnet/wifi-densepose:latest</span><br><span class="line">docker run -p 3000:3000 ruvnet/wifi-densepose:latest</span><br></pre></td></tr></tbody></table></figure>
+
+<p>打开浏览器访问 <code>http://localhost:3000</code>，就能看到一个 <strong>60 FPS 的 3D 观测台</strong>：姿态融合、生命体征、信号强度、跌倒警报全部在一个 WebGL 视图里。</p>
+<h3 id="3-2-Python-SDK-路线（ADR-117）"><a href="#3-2-Python-SDK-路线（ADR-117）" class="headerlink" title="3.2 Python SDK 路线（ADR-117）"></a>3.2 Python SDK 路线（ADR-117）</h3><p>如果你已经有自己的 ESP32 节点在采集 CSI，可以直接用 PyPI 上的 <code>wifi-densepose</code> 包：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ruview <span class="keyword">import</span> BreathingExtractor, HeartRateExtractor</span><br><span class="line"><span class="keyword">from</span> ruview.client <span class="keyword">import</span> SensingClient, RuViewMqttClient</span><br><span class="line"></span><br><span class="line"><span class="comment"># 假设你的 ESP32 在 UDP 5005 上推送 CSI</span></span><br><span class="line">client = SensingClient(udp_port=<span class="number">5005</span>)</span><br><span class="line"></span><br><span class="line">breath = BreathingExtractor()</span><br><span class="line">heart = HeartRateExtractor()</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">for</span> frame <span class="keyword">in</span> client.stream():</span><br><span class="line">    bpm_breath = breath.process(frame)   <span class="comment"># 6-30 BPM</span></span><br><span class="line">    bpm_heart = heart.process(frame)     <span class="comment"># 40-120 BPM</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f"呼吸 <span class="subst">{bpm_breath:<span class="number">.1</span>f}</span> BPM | 心率 <span class="subst">{bpm_heart:<span class="number">.1</span>f}</span> BPM"</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果你想走 MQTT：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install <span class="string">"ruview[client]"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>会额外装上 <code>asyncio WebSocket</code> 与 <code>paho-mqtt</code>。</p>
+<h3 id="3-3-真硬件路线"><a href="#3-3-真硬件路线" class="headerlink" title="3.3 真硬件路线"></a>3.3 真硬件路线</h3><p>最完整的部署路径是用 ESP32-S3 + <strong>Cognitum Seed</strong>（~140 美元）。整套系统会包含：</p>
+<ul>
+<li>17 关键点姿势</li>
+<li>跌倒检测</li>
+<li> 105 cog 的边缘目录（实时从 <code>app-registry.json</code> 加载）</li>
+<li>向量数据库 + kNN 检索</li>
+<li>见证链（witness chain）</li>
+<li>MCP 代理</li>
+</ul>
+<p>而如果你只是想验证「WiFi 6 / 802.15.4」能不能用，单个 ESP32-C6 DevKit（约 10 美元）就够了。仓库给出的实测是 <strong>99.56% 的 ESP-NOW mesh 匹配率、相位偏移标准差仅 104 µs</strong>。</p>
+<h3 id="3-4-一段最简「跌倒报警」代码"><a href="#3-4-一段最简「跌倒报警」代码" class="headerlink" title="3.4 一段最简「跌倒报警」代码"></a>3.4 一段最简「跌倒报警」代码</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ruview.detectors <span class="keyword">import</span> FallDetector</span><br><span class="line"></span><br><span class="line">fall = FallDetector(phase_accel_threshold=<span class="number">2.5</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">for</span> frame <span class="keyword">in</span> client.stream():</span><br><span class="line">    <span class="keyword">if</span> fall.update(frame):</span><br><span class="line">        <span class="keyword">await</span> mqtt.publish(<span class="string">"home/fall_detected"</span>, payload={<span class="string">"room"</span>: <span class="string">"living"</span>})</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"🚨 跌倒事件已上报"</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>配合 Home Assistant，你可以直接把这条 MQTT 桥接成手机的 Push 通知。</p>
+<hr>
+<h2 id="四、适用场景与限制"><a href="#四、适用场景与限制" class="headerlink" title="四、适用场景与限制"></a>四、适用场景与限制</h2><h3 id="4-1-适合的-6-个场景"><a href="#4-1-适合的-6-个场景" class="headerlink" title="4.1 适合的 6 个场景"></a>4.1 适合的 6 个场景</h3><ol>
+<li><strong>养老照护</strong>：夜间无接触监测呼吸 + 自动跌倒报警，避开摄像头伦理问题；</li>
+<li><strong>智慧酒店</strong>：不靠门磁、不靠摄像头的「房间有人 / 无人」判断；</li>
+<li><strong>办公空间</strong>：会议室占用率统计，比门口的 PIR 更准；</li>
+<li><strong>睡眠实验室</strong>：替代 PSG（多导睡眠图），做睡眠分期 + 呼吸暂停筛查；</li>
+<li><strong>安防入侵检测</strong>：夜间有人在院子里走动就能触发警报；</li>
+<li><strong>AI Agent 场景</strong>：让 Agent 能感知房间状态 ——「房间里有几个人在开会」可以直接是 MCP tool 的返回值。</li>
+</ol>
+<h3 id="4-2-必须正视的限制"><a href="#4-2-必须正视的限制" class="headerlink" title="4.2 必须正视的限制"></a>4.2 必须正视的限制</h3><ul>
+<li><strong>需要 ESP32-S3 / C6 / Intel 5300 这一类支持 CSI 的硬件</strong>。ESP32-C3、ESP32 经典款因为是单核、DSP 不够，不被支持。</li>
+<li><strong>穿墙距离大约 5 米</strong>，且高度依赖墙体材质和路由器位置 —— 混凝土墙会显著衰减。</li>
+<li><strong>多目标拥挤场景仍是难点</strong>，单人 / 双人准确率高，五人以上会出现 ID 切换。</li>
+<li><strong>隐私问题是双刃剑</strong>：能测心率，意味着同样能测「你半夜有没有出门」。仓库在 README 里特意写了「Ethical Use」段落，并强调部署时应当通知同住人。</li>
+<li><strong>不是医学器械</strong>，生命体征读数仅供研究 / 日常参考。</li>
+</ul>
+<hr>
+<h2 id="五、与同类项目的差异"><a href="#五、与同类项目的差异" class="headerlink" title="五、与同类项目的差异"></a>五、与同类项目的差异</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>切入点</th>
+<th>核心差异</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> WiFi DensePose（CMU 论文）</strong></td>
+<td>学术</td>
+<td>论文原型，无现成硬件 + 软件栈</td>
+</tr>
+<tr>
+<td><strong> Aerosense / Xandem</strong></td>
+<td> 商业</td>
+<td>闭源、贵、不能本地化</td>
+</tr>
+<tr>
+<td><strong> Google Nest 感知 / Amazon Sidewalk</strong></td>
+<td> 商业</td>
+<td>黑盒，且依附于具体产品生态</td>
+</tr>
+<tr>
+<td><strong> RuView</strong></td>
+<td> 开源</td>
+<td>完整软件栈 + 廉价硬件 + MCP/MQTT 输出 + 边缘自学习模型</td>
+</tr>
+</tbody></table>
+<p>简单说，<strong>RuView 是目前唯一一个把 WiFi DensePose 从论文搬进「10–140 美元」硬件、并且愿意把数据流交给任何下游系统的开源项目</strong>。</p>
+<hr>
+<h2 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h2><p>RuView 的爆火不是偶然。它踩中了三个时代情绪：</p>
+<ul>
+<li><strong>隐私觉醒</strong>：用户开始拒绝「房间里再多一颗镜头」；</li>
+<li><strong>边缘 AI 成熟</strong>：M4 Pro、Raspberry Pi 5 已经能在本地跑 17 关键点姿势；</li>
+<li><strong>Agent 时代</strong>：MCP 让任何模型都能直接调用这套感知能力。</li>
+</ul>
+<p>如果你是智能家居玩家，3 个 ESP32-S3 + 现有路由器，54 美元就能给你的家装上一套「无摄像头雷达」；如果你是 AI Agent 开发者，它的 MCP 代理就是下一波「Agent 感知物理世界」的最佳 demo。</p>
+<blockquote>
+<p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/ruvnet/RuView">github.com/ruvnet/RuView</a><br><strong>在线 Demo</strong>：<a target="_blank" rel="noopener" href="https://ruvnet.github.io/RuView/">ruvnet.github.io/RuView</a></p>
+</blockquote>
+<p>值得花一个周末，把它跑起来，看看自家 WiFi 究竟能「看见」多少你从没意识到的东西。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/25/ruview-wifi-densepose-through-wall-sensing/" title="π RuView：让家里的 WiFi 路由器变成「穿墙雷达」，无摄像头追踪 17 个身体关键点">https://www.daishengli.top/2026/07/25/ruview-wifi-densepose-through-wall-sensing/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/WiFi-Sensing/" rel="tag"># WiFi Sensing</a>
+              <a href="/tags/Edge-AI/" rel="tag"># Edge AI</a>
+              <a href="/tags/ESP32/" rel="tag"># ESP32</a>
+              <a href="/tags/Channel-State-Information/" rel="tag"># Channel State Information</a>
+              <a href="/tags/DensePose/" rel="tag"># DensePose</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/24/dioxus-rust-fullstack-cross-platform-framework/" rel="prev" title="Dioxus：用一份 Rust 代码同时搞定 Web、桌面和移动端的全栈框架">
+                  <i class="fa fa-angle-left"></i> Dioxus：用一份 Rust 代码同时搞定 Web、桌面和移动端的全栈框架
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/26/ego-lite-browser-parallel-ai-agents-spaces/" rel="next" title="ego lite：给 AI 代理一个能并行干活的浏览器，登录态和你的 Chrome 一起继承">
+                  ego lite：给 AI 代理一个能并行干活的浏览器，登录态和你的 Chrome 一起继承 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

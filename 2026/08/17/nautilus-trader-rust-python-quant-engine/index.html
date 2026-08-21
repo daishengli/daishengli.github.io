@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="nautechsystems&#x2F;nautilus_trader 是 GitHub 25.7k stars、3.4k forks 的 Rust 原生、生产级量化交易引擎，用 mimalloc + tokio 异步 + PyO3 + 128-bit 价格精度实现&quot;回测 &#x2F; 实盘同一套代码&quot;的 research-to-live parity，覆盖 16+ 交易所&#x2F;数据源（CEX、DEX、IB、Polyma">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NautilusTrader：25.7k stars 的 Rust 原生量化交易引擎，把 &quot;回测赚钱实盘亏钱&quot; 的坑彻底填了">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/17/nautilus-trader-rust-python-quant-engine/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="nautechsystems&#x2F;nautilus_trader 是 GitHub 25.7k stars、3.4k forks 的 Rust 原生、生产级量化交易引擎，用 mimalloc + tokio 异步 + PyO3 + 128-bit 价格精度实现&quot;回测 &#x2F; 实盘同一套代码&quot;的 research-to-live parity，覆盖 16+ 交易所&#x2F;数据源（CEX、DEX、IB、Polyma">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-17T12:30:00.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.160Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="NautilusTrader">
+<meta property="article:tag" content="量化交易">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="PyO3">
+<meta property="article:tag" content="事件驱动">
+<meta property="article:tag" content="交易引擎">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/17/nautilus-trader-rust-python-quant-engine/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/17/nautilus-trader-rust-python-quant-engine/","path":"2026/08/17/nautilus-trader-rust-python-quant-engine/","title":"NautilusTrader：25.7k stars 的 Rust 原生量化交易引擎，把 \"回测赚钱实盘亏钱\" 的坑彻底填了"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>NautilusTrader：25.7k stars 的 Rust 原生量化交易引擎，把 "回测赚钱实盘亏钱" 的坑彻底填了 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E4%B8%80%E4%B8%AA-Rust-Python-%E6%B7%B7%E5%90%88%E7%9A%84%E4%BA%A4%E6%98%93%E5%BC%95%E6%93%8E"><span class="nav-number">1.</span> <span class="nav-text">一、项目背景：为什么需要一个 Rust + Python 混合的交易引擎</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E8%AE%A9%E4%B8%80%E4%BB%BD%E7%AD%96%E7%95%A5%E4%BB%A3%E7%A0%81%E8%B7%91%E9%81%8D%E5%9B%9E%E6%B5%8B%E3%80%81%E6%A8%A1%E6%8B%9F%E3%80%81%E5%AE%9E%E7%9B%98"><span class="nav-number">2.</span> <span class="nav-text">二、核心功能：让一份策略代码跑遍回测、模拟、实盘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Rust-%E5%8E%9F%E7%94%9F%E6%A0%B8%E5%BF%83-mimalloc-tokio"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Rust 原生核心 + mimalloc + tokio</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-128-bit-%E4%BB%B7%E6%A0%BC%E4%B8%8E%E6%95%B0%E9%87%8F%E7%B2%BE%E5%BA%A6"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 128-bit 价格与数量精度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%90%8C%E4%B8%80%E4%BB%BD%E4%BB%A3%E7%A0%81%E3%80%81%E5%90%8C%E4%B8%80%E5%A5%97%E6%92%AE%E5%90%88%E8%AF%AD%E4%B9%89"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 同一份代码、同一套撮合语义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E5%85%A8%E5%A5%97%E8%AE%A2%E5%8D%95%E7%B1%BB%E5%9E%8B%E4%B8%8E%E6%89%A7%E8%A1%8C%E6%8C%87%E4%BB%A4"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 全套订单类型与执行指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E5%A4%9A-venue%E3%80%81%E5%A4%9A%E8%B5%84%E4%BA%A7%E7%B1%BB%E5%88%AB%E5%90%8C%E6%97%B6%E8%BF%90%E8%A1%8C"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 多 venue、多资产类别同时运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E9%9B%86%E6%88%90-16-%E4%BA%A4%E6%98%93%E6%89%80%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%BA%90%EF%BC%88%E6%88%AA%E8%87%B3%E6%9C%AC%E6%96%87%E6%92%B0%E5%86%99%EF%BC%89"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 集成 16+ 交易所与数据源（截至本文撰写）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-%E9%9B%B6%E4%BB%A3%E7%A0%81-AI-%E8%AE%AD%E7%BB%83%E6%94%AF%E6%8C%81"><span class="nav-number">2.7.</span> <span class="nav-text">2.7 零代码 AI 训练支持</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84-%E5%AE%9E%E7%8E%B0%E4%BA%AE%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">三、技术架构 &#x2F; 实现亮点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Rust-PyO3-%E7%9A%84%E5%88%86%E5%B1%82"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 Rust + PyO3 的分层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E7%A1%AE%E5%AE%9A%E6%80%A7%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 确定性事件循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E4%B8%89%E5%88%86%E6%94%AF%E6%A8%A1%E5%9E%8B-%E5%8F%8C%E5%91%A8%E5%8F%91%E5%B8%83%E8%8A%82%E5%A5%8F"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 三分支模型 + 双周发布节奏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-OpenSSF-Scorecard-SLSA-Sigstore-%E4%B8%89%E4%BB%B6%E5%A5%97"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 OpenSSF Scorecard + SLSA + Sigstore 三件套</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-v1-%E2%86%92-v2-%E7%9A%84%E8%BF%87%E6%B8%A1%EF%BC%9ARust-%E5%8E%9F%E7%94%9F-runtime"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 v1 → v2 的过渡：Rust 原生 runtime</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%80%8E%E4%B9%88%E7%94%A8-%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">4.</span> <span class="nav-text">四、怎么用 &#x2F; 快速上手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%AE%89%E8%A3%85%EF%BC%9A%E4%B8%A4%E6%9D%A1%E8%B7%AF"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 安装：两条路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%86%99%E4%B8%80%E4%B8%AA-EMA-crossover-%E5%9B%9E%E6%B5%8B"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 写一个 EMA crossover 回测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%A4%9A-venue-%E5%A5%97%E5%88%A9%E7%A4%BA%E4%BE%8B"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 多 venue 套利示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-Docker-%E4%B8%80%E9%94%AE-jupyterlab"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 Docker 一键 jupyterlab</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93%EF%BC%9A%E9%80%82%E7%94%A8%E4%BA%BA%E7%BE%A4%E3%80%81%E5%B1%80%E9%99%90%E6%80%A7%E4%B8%8E%E6%88%91%E7%9A%84%E7%9C%8B%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">五、总结：适用人群、局限性与我的看法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E4%BA%BA%E7%BE%A4"><span class="nav-number">5.1.</span> <span class="nav-text">适用人群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E9%99%90%E6%80%A7%EF%BC%88%E5%AE%9E%E8%AF%9D%E5%AE%9E%E8%AF%B4%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">局限性（实话实说）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E7%9A%84%E7%9C%8B%E6%B3%95"><span class="nav-number">5.3.</span> <span class="nav-text">我的看法</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/17/nautilus-trader-rust-python-quant-engine/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="NautilusTrader：25.7k stars 的 Rust 原生量化交易引擎，把 &quot;回测赚钱实盘亏钱&quot; 的坑彻底填了 | 小戴的网络日志">
+      <meta itemprop="description" content="nautechsystems&#x2F;nautilus_trader 是 GitHub 25.7k stars、3.4k forks 的 Rust 原生、生产级量化交易引擎，用 mimalloc + tokio 异步 + PyO3 + 128-bit 价格精度实现&quot;回测 &#x2F; 实盘同一套代码&quot;的 research-to-live parity，覆盖 16+ 交易所&#x2F;数据源（CEX、DEX、IB、Polymarket、Betfair、Databento、Tardis），支持加密、股票、外汇、期货、期权、预测市场、体育博彩全资产类别，OpenSSF Scorecard + SLSA + Sigstore 三件套齐全，LGPL-3.0 开源。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NautilusTrader：25.7k stars 的 Rust 原生量化交易引擎，把 "回测赚钱实盘亏钱" 的坑彻底填了
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-17 20:30:00" itemprop="dateCreated datePublished" datetime="2026-08-17T20:30:00+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">nautechsystems/nautilus_trader 是 GitHub 25.7k stars、3.4k forks 的 Rust 原生、生产级量化交易引擎，用 mimalloc + tokio 异步 + PyO3 + 128-bit 价格精度实现"回测 / 实盘同一套代码"的 research-to-live parity，覆盖 16+ 交易所/数据源（CEX、DEX、IB、Polymarket、Betfair、Databento、Tardis），支持加密、股票、外汇、期货、期权、预测市场、体育博彩全资产类别，OpenSSF Scorecard + SLSA + Sigstore 三件套齐全，LGPL-3.0 开源。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>最近在 GitHub trending 看到 NautilusTrader 的时候我愣了一下 —— 这是我当年还在交易团队里最想要、但又最不可能自己写出来的东西：把量化研究的 Python 灵活性和生产级交易系统的 Rust 性能、确定性、类型安全，<strong>真正</strong>塞进同一个二进制里。</p>
+<p>讲真，过去十年我在交易团队见到的最经典灾难，不是策略不行，而是<strong>回测赚钱实盘亏钱</strong>。同一个想法，研究员用 pandas 在 notebook 里跑出一张漂亮的 equity curve，部署到生产后却被滑点、撮合顺序、时钟漂移、订单状态不一致这些” 小问题” 反复摩擦，最后净收益砍半，运气不好直接爆仓。根因不是策略，是<strong>研究环境与生产环境不是同一套代码、不是同一套时间模型、不是同一套撮合语义</strong>。</p>
+<p>Nautech Systems 团队从 2018 年开始写 NautilusTrader（<a target="_blank" rel="noopener" href="https://github.com/nautechsystems/nautilus_trader">GitHub</a>），目标就一句话：<strong>用 Rust 原生的事件驱动引擎做底层，把 Python 当控制面，让一份策略代码从研究、模拟到实盘零修改地跑过去</strong>。现在它已经是 25.7k stars、3.4k forks、v1.231.0 Beta 的成熟开源项目，并且从 8 月 2 日的 1.231.0 开始，v1 正式进入” 最后维护期”，v2 Rust + PyO3 runtime 已经升到 release-candidate—— 简单说，就是这个项目要把底层彻底翻新一遍。</p>
+<p>今天这篇文章，我就想带着” 全栈 + 大模型 + 数字游民” 三重背景聊一聊，为什么我会把 NautilusTrader 列入” 近期最值得拆解的开源项目” 之一，以及为什么它和我之前拆过的 vibe-trading、ai-berkshire 完全不是一个物种。</p>
+<hr>
+<h2 id="一、项目背景：为什么需要一个-Rust-Python-混合的交易引擎"><a href="#一、项目背景：为什么需要一个-Rust-Python-混合的交易引擎" class="headerlink" title="一、项目背景：为什么需要一个 Rust + Python 混合的交易引擎"></a>一、项目背景：为什么需要一个 Rust + Python 混合的交易引擎</h2><p>量化交易系统有两个世界。</p>
+<p>一个是研究世界。研究员习惯 Python、pandas、polars、jupyter notebook、matplotlib，回测逻辑可能是这样：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">df = pd.read_csv(<span class="string">"btc_1m.csv"</span>)</span><br><span class="line">df[<span class="string">"ma_fast"</span>] = df[<span class="string">"close"</span>].rolling(<span class="number">20</span>).mean()</span><br><span class="line">df[<span class="string">"ma_slow"</span>] = df[<span class="string">"close"</span>].rolling(<span class="number">100</span>).mean()</span><br><span class="line">df[<span class="string">"signal"</span>] = (df[<span class="string">"ma_fast"</span>] &gt; df[<span class="string">"ma_slow"</span>]).astype(<span class="built_in">int</span>).shift(<span class="number">1</span>)</span><br><span class="line">df[<span class="string">"ret"</span>] = df[<span class="string">"close"</span>].pct_change() * df[<span class="string">"signal"</span>]</span><br><span class="line"><span class="built_in">print</span>(df[<span class="string">"ret"</span>].<span class="built_in">sum</span>())</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这种向量化回测写起来很快、调试也方便，但它和真实的撮合差距巨大 —— <strong>没有撮合、没有订单状态、没有延迟、没有时钟漂移、没有滑点、没有拒单、没有部分成交、没有 margin call</strong>。很多新手量化交易员就死在这：以为这是” 回测”，其实是” 事后看图”。</p>
+<p>另一个是生产世界。真正能稳定跑钱的交易系统，绝大多数都是事件驱动架构：C++/Java/Rust 写的核心，吃行情事件、订单事件、定时器事件，按确定性的时钟推进状态机。Bloomberg 终端、各大券商的 FIX 引擎、Jane Street 的 OCaml 基础设施、Stripe 的 Ruby+Rust hybrid，几乎都是这个套路。</p>
+<p>这两个世界之间，通常需要一道” 翻译墙”：研究员把 Python 写出来的策略，工程师用 C++ 重写一遍，重写过程中顺便修了无数 bug（也顺便引入了无数 bug）。这套流程的代价就是 <strong>research-to-live divergence</strong>—— 回测与实盘脱节，最后的策略效果被打折。</p>
+<p>Nautech Systems 的解法是：<strong>不要翻译墙，引擎本身用 Rust 写，但要能被 Python 直接调用</strong>。具体做法：</p>
+<ul>
+<li>Rust 内核负责：事件循环、时钟、撮合、缓存、消息总线、订单状态机、确定性回放。</li>
+<li>Python 通过 <a target="_blank" rel="noopener" href="https://pyo3.rs/">PyO3</a> 调用 Rust 内核，做策略逻辑、组合配置、可视化。</li>
+<li>一份 Python 策略文件，在 <code>BacktestEngine</code> 里跑出回测曲线，直接在 <code>LiveNode</code> 里挂到实盘 —— <strong>不需要重写一行代码</strong>。</li>
+</ul>
+<p>这听起来理所当然，但要在不牺牲性能的前提下做到，是个相当难的工程问题。NautilusTrader 8 年下来确实啃下来了：25.7k stars，OpenSSF Scorecard 贴牌，SLSA + Sigstore 三件套齐全，可信度拉满。</p>
+<p>而且它现在还赶上一波”AI 训练交易 Agent” 的风口 ——README 里直接写了 “Engine fast enough to train AI trading agents (RL/ES)”，Rust 内核让 RL/ES 训练速度比纯 Python 快一个数量级。</p>
+<hr>
+<h2 id="二、核心功能：让一份策略代码跑遍回测、模拟、实盘"><a href="#二、核心功能：让一份策略代码跑遍回测、模拟、实盘" class="headerlink" title="二、核心功能：让一份策略代码跑遍回测、模拟、实盘"></a>二、核心功能：让一份策略代码跑遍回测、模拟、实盘</h2><p>NautilusTrader 把自己的功能矩阵列得很清楚，我挑几个真正戳中我” 工程审美” 的地方讲。</p>
+<h3 id="2-1-Rust-原生核心-mimalloc-tokio"><a href="#2-1-Rust-原生核心-mimalloc-tokio" class="headerlink" title="2.1 Rust 原生核心 + mimalloc + tokio"></a>2.1 Rust 原生核心 + mimalloc + tokio</h3><blockquote>
+<p>Fast: Rust core with the mimalloc allocator and asynchronous networking using tokio.</p>
+</blockquote>
+<p>这是它的性能基石。Rust 内核 + <a target="_blank" rel="noopener" href="https://github.com/microsoft/mimalloc">mimalloc</a> 高性能内存分配器 + <a target="_blank" rel="noopener" href="https://crates.io/crates/tokio">tokio</a> 异步网络栈，意味着同一个 binary 既能跑回测（CPU bound）、也能跑实盘（IO bound）。<code>MSRV = 1.97.1</code>，几乎贴着最新 stable Rust 走 —— 团队在 Rust 新特性上的态度是” 用了再说”，这也意味着代码里能看到 <code>let-else</code>、GAT、trait alias 这些相对现代的 Rust 写法。</p>
+<h3 id="2-2-128-bit-价格与数量精度"><a href="#2-2-128-bit-价格与数量精度" class="headerlink" title="2.2 128-bit 价格与数量精度"></a>2.2 128-bit 价格与数量精度</h3><p>交易系统最阴险的 bug 之一是<strong>浮点精度塌陷</strong>。你在 Python 里 <code>0.1 + 0.2</code> 都得吐 <code>0.30000000000000004</code>，更别说在订单簿里累加几千次成交。NauteilusTrader 提供两种精度模式：</p>
+<ul>
+<li><strong>High-precision</strong>: 128-bit 整数，最多 16 位小数。</li>
+<li><strong>Standard-precision</strong>: 64-bit 整数，最多 9 位小数。</li>
+</ul>
+<p>默认情况下 Python 官方 wheel 走 128-bit 模式（所有支持的平台）。Rust crate 默认 64-bit，要 128-bit 就在 <code>Cargo.toml</code> 里加 feature flag。这个细节对加密货币、外汇这种” 小数点后 8 位就有意义” 的资产非常关键。</p>
+<h3 id="2-3-同一份代码、同一套撮合语义"><a href="#2-3-同一份代码、同一套撮合语义" class="headerlink" title="2.3 同一份代码、同一套撮合语义"></a>2.3 同一份代码、同一套撮合语义</h3><p>这是 NautilusTrader 的灵魂。Python 写的策略，用 <code>BacktestEngine</code> 跑回测得到的订单簿填充、滑点假设、撮合结果 —— 和挂到 <code>LiveNode</code> 跑实盘时的撮合行为是同一套 Rust 代码在执行。<strong>没有” 研究用一份撮合、生产用另一份撮合” 这种灾难</strong>。</p>
+<p>策略从研究到部署是 0 改动（<code>pip install -U nautilus_trader</code> 后 <code>BacktestEngine(...).run()</code> 改成 <code>TradingNode(...).run()</code> 完事），这种 <strong>research-to-live parity</strong> 在 NautilusTrader 的 README 里被反复强调。</p>
+<h3 id="2-4-全套订单类型与执行指令"><a href="#2-4-全套订单类型与执行指令" class="headerlink" title="2.4 全套订单类型与执行指令"></a>2.4 全套订单类型与执行指令</h3><p>专业交易系统的硬指标是支持的订单类型。NautilusTrader 的清单：</p>
+<ul>
+<li><strong>Time in force</strong>: <code>IOC</code>, <code>FOK</code>, <code>GTC</code>, <code>GTD</code>, <code>DAY</code>, <code>AT_THE_OPEN</code>, <code>AT_THE_CLOSE</code>。</li>
+<li><strong>Execution instructions</strong>: <code>post-only</code>, <code>reduce-only</code>, icebergs。</li>
+<li><strong>Contingency orders</strong>: <code>OCO</code>, <code>OUO</code>, <code>OTO</code>。</li>
+</ul>
+<p>这套覆盖基本上把专业做市商、套利策略需要的单子全包了。一个 <code>reduce-only</code> 标志就能避免对冲策略不小心开新仓 —— 这是新手工程师手撸交易所 API 时最容易踩的坑。</p>
+<h3 id="2-5-多-venue、多资产类别同时运行"><a href="#2-5-多-venue、多资产类别同时运行" class="headerlink" title="2.5 多 venue、多资产类别同时运行"></a>2.5 多 venue、多资产类别同时运行</h3><blockquote>
+<p>Multi-venue: Run market-making and cross-venue strategies across multiple venues simultaneously.</p>
+</blockquote>
+<p>它可以同时连 Binance 做市、连 dYdX 套利、连 Interactive Brokers 跑美股、连 Polymarket 玩预测市场、连 Betfair 玩体育博彩。<strong>一个进程同时调度多个策略实例</strong>，每条腿的行情、订单、状态独立追踪。我自己写过多 venue 系统，知道光是” 几个时钟同步、订单路由、状态归一” 就够喝一壶的。</p>
+<h3 id="2-6-集成-16-交易所与数据源（截至本文撰写）"><a href="#2-6-集成-16-交易所与数据源（截至本文撰写）" class="headerlink" title="2.6 集成 16+ 交易所与数据源（截至本文撰写）"></a>2.6 集成 16+ 交易所与数据源（截至本文撰写）</h3><p>这是让我真正惊讶的部分。NautilusTrader 不是一个” 理论框架”，它已经把主流交易所全接通了：</p>
+<ul>
+<li><strong>加密 CEX</strong>: Binance、BitMEX、Bybit、Coinbase、Kraken、OKX。</li>
+<li><strong>加密 DEX</strong>: dYdX、Hyperliquid、Lighter、Derive（以及 UniswapV3 / PancakeSwapV3 / Aerodrome 等 BSC / Base 链上协议，v1.228.0 起）。</li>
+<li><strong>传统券商</strong>: Interactive Brokers（股票、期货、期权一站搞定）。</li>
+<li><strong>预测市场</strong>: Polymarket。</li>
+<li><strong>体育博彩</strong>: Betfair。</li>
+<li><strong>数据源</strong>: Databento、Tardis（这两个都是专业级历史 tick 数据供应商，按 GB 卖数据那种）。</li>
+</ul>
+<p>每个 adapter 都通过统一的 domain model 暴露 —— 也就是说你写一个策略，调 <code>submit_order(order)</code> 时不关心底下是 Binance 还是 IB。这对个人量化交易员是巨大的节省时间：我以前自己接一个交易所就要 1-2 周，团队接一遍 16 家交易所基本是” 半年工程”。</p>
+<h3 id="2-7-零代码-AI-训练支持"><a href="#2-7-零代码-AI-训练支持" class="headerlink" title="2.7 零代码 AI 训练支持"></a>2.7 零代码 AI 训练支持</h3><p>README 里有一句被很多人忽略但其实非常关键的话：</p>
+<blockquote>
+<p>AI Training: Engine fast enough to train AI trading agents (RL/ES)。</p>
+</blockquote>
+<p>Rust 内核的事件循环确定性 + 纳秒级时间戳 + 模块化缓存，意味着你可以把 NautilusTrader 当成一个超快的<strong>交易模拟器</strong>，让 RL 或 Evolution Strategies Agent 一天跑几百万次 episode—— 而且是<strong>带真实撮合、真实滑点模型</strong>的模拟，不是 numpy 写的” 事后看图”。这才是 v2 路线图里”AI/ML tooling out of scope for the open-source project” 的真正含义 —— 他们把 AI 训练钩子留给上游，但保证引擎够快，够让 RL 飞起来。</p>
+<hr>
+<h2 id="三、技术架构-实现亮点"><a href="#三、技术架构-实现亮点" class="headerlink" title="三、技术架构 / 实现亮点"></a>三、技术架构 / 实现亮点</h2><p>说几个我个人在审这种项目时最关注的工程亮点。</p>
+<h3 id="3-1-Rust-PyO3-的分层"><a href="#3-1-Rust-PyO3-的分层" class="headerlink" title="3.1 Rust + PyO3 的分层"></a>3.1 Rust + PyO3 的分层</h3><p>NautilusTrader 的代码组织是典型的工作区（workspace）布局：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">crates/</span><br><span class="line">  ├─ core/        # 核心类型、UUID、时钟、确定性原语</span><br><span class="line">  ├─ model/       # 领域模型：Price、Quantity、Money、Order、Trade</span><br><span class="line">  ├─ common/      # 跨模块共享：消息、组件生命周期</span><br><span class="line">  ├─ network/     # tokio 网络栈、HTTP/WS 客户端</span><br><span class="line">  ├─ persistence/ # 状态序列化、Redis 后端</span><br><span class="line">  ├─ indicators/  # EMA、ATR、MACD 等（通过 PyO3 暴露给 Python）</span><br><span class="line">  ├─ strategy/    # 策略引擎</span><br><span class="line">  ├─ backtest/    # BacktestEngine</span><br><span class="line">  ├─ trading/     # TradingNode / LiveNode</span><br><span class="line">  ├─ adapters/    # 16+ 交易所实现</span><br><span class="line">python/</span><br><span class="line">  └─ nautilus_trader/  # Python 包封装，PyO3 stub</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这种分层让 Rust 内核保持纯粹 —— 所有高性能路径不经过 Python GIL，而 Python 端只是策略逻辑、可视化、配置。一个量化交易员可以在 Python 里写一个 EMA crossover 策略跑回测，rustc 这边把 <code>indicators::Ema</code> 直接导出给 Python，调用开销和写 Python 内置 <code>list</code> 一样低。</p>
+<h3 id="3-2-确定性事件循环"><a href="#3-2-确定性事件循环" class="headerlink" title="3.2 确定性事件循环"></a>3.2 确定性事件循环</h3><blockquote>
+<p>A Rust-native core provides a deterministic event-driven runtime for both research and live execution.</p>
+</blockquote>
+<p>事件驱动不是新概念，但” 确定性” 是。NautilusTrader 的事件循环用一个统一的 <code>Clock</code> 抽象 —— 回测时用 <code>TestClock</code>（按历史时间戳喂数据），实盘时用 <code>LiveClock</code>（挂 wall clock + 行情延迟）。<strong>所有策略组件订阅同一个 <code>MessageBus</code>，所有状态写到同一个 <code>Cache</code></strong>。这就意味着：</p>
+<ul>
+<li>回测里” 如果 14:30:01.123456789 收到一个 trade 事件，14:30:01.123456790 触发一个订单提交”，实盘里这个时序完全一致。</li>
+<li>没有”Python 那边 GIL 卡了 50ms 导致订单晚到” 这种事。</li>
+<li>回放调试时，你可以把所有 tick 数据按 nanosecond 重放，bug 复现概率 100%。</li>
+</ul>
+<p>这就是为什么专业做市商团队愿意花大价钱自建 Rust 内核 —— <strong>交易所那边是纳秒级撮合，你这边要是毫秒级抖动，对手就薅你</strong>。</p>
+<h3 id="3-3-三分支模型-双周发布节奏"><a href="#3-3-三分支模型-双周发布节奏" class="headerlink" title="3.3 三分支模型 + 双周发布节奏"></a>3.3 三分支模型 + 双周发布节奏</h3><p>仓库采用三分支：</p>
+<ul>
+<li><code>master</code>: 最新 released 版本，生产环境推荐。</li>
+<li><code>nightly</code>: 每天 14:00 UTC 由 <code>develop</code> 自动合入，相当于 daily snapshot。</li>
+<li><code>develop</code>: 活跃开发分支，PR 默认目标。</li>
+</ul>
+<p>发布节奏是双周一次（小特性可以更快）。每个 wheel 都打上 SLSA build provenance、每个 Docker image 都用 Sigstore cosign 签名。开发者还提供两个独立的 package index：</p>
+<ul>
+<li>官方 PyPI: <code>pip install -U nautilus_trader</code>。</li>
+<li>Nautech Systems 私有 index: 支持 v2 release-candidate wheels，比如 <code>pip install -U nautilus_trader --pre --index-url=https://packages.nautechsystems.io/simple</code>。</li>
+</ul>
+<p>这种” 官方 PyPI + 私有 index + nightly + develop” 四层分发，是典型的基础设施级 open-source 项目做法。</p>
+<h3 id="3-4-OpenSSF-Scorecard-SLSA-Sigstore-三件套"><a href="#3-4-OpenSSF-Scorecard-SLSA-Sigstore-三件套" class="headerlink" title="3.4 OpenSSF Scorecard + SLSA + Sigstore 三件套"></a>3.4 OpenSSF Scorecard + SLSA + Sigstore 三件套</h3><p>我之前写过 vibe-coding-security 那一篇，提过” 开源不是免审代码就完事”。NautilusTrader 在供应链安全上的投入是教科书级的：</p>
+<ul>
+<li><strong>OpenSSF Scorecard</strong> 跑分公开，README 直接挂徽章。</li>
+<li><strong>SLSA Build Provenance</strong> 给所有 Python wheel 和 sdist—— 证明 artifact 是 GitHub Actions 跑出来的，没被中间人改过。</li>
+<li><strong>Sigstore cosign</strong> 给所有 Docker image（<code>ghcr.io/nautechsystems/nautilus_trader</code> 和 <code>jupyterlab</code>）做 keyless 签名 + SPDX SBOM。</li>
+<li><strong>PyPI / crates.io</strong> 用 OIDC Trusted Publishing，发布环境是 protected branch，永不跑 PR 代码。</li>
+<li><strong>cargo-vet</strong> 审计 Rust 依赖来源，<strong>cargo-audit / cargo-deny / OSV Scanner / pip-audit</strong> 定期扫漏洞。</li>
+<li><strong>Gitleaks</strong> 预提交扫描密钥，<strong>CodeQL</strong> 跑 PR 安全分析，<strong>Zizmor Actions</strong> 审计 workflow 自身。</li>
+<li><strong>Ed25519 signing</strong>（aws-lc-rs + ed25519-dalek）做运行时签名。</li>
+</ul>
+<p>对一个会<strong>真的拿真金白银挂上去跑</strong>的系统，这种安全姿态是必须的。坦白讲，我看到这块的时候是服气的 —— 很多被吹成” 生产级” 的金融开源项目连 SBOM 都没有。</p>
+<h3 id="3-5-v1-→-v2-的过渡：Rust-原生-runtime"><a href="#3-5-v1-→-v2-的过渡：Rust-原生-runtime" class="headerlink" title="3.5 v1 → v2 的过渡：Rust 原生 runtime"></a>3.5 v1 → v2 的过渡：Rust 原生 runtime</h3><p>v1 的核心是 Cython 写的，v2 完全用 Rust 重写并通过 PyO3 暴露给 Python。从 v1.229.0 开始，Python 和 Rust 的 v2 API 已经有多处 breaking change；从 v1.231.0 开始，v1 进入” 最终维护期”，除非有严重 blocker 否则不再发新版。迁移路径在 <code>MIGRATION_V2.md</code> 里有详细说明。</p>
+<p>我个人对这个过渡非常期待 ——v2 真正做到” 零 Python GIL 路径”，意味着策略即使复杂也不会卡内核。但过渡期确实有点痛，团队把 <code>develop_v1</code> 分支留着只接 critical security backport，算是给企业用户留个安全网。</p>
+<hr>
+<h2 id="四、怎么用-快速上手"><a href="#四、怎么用-快速上手" class="headerlink" title="四、怎么用 / 快速上手"></a>四、怎么用 / 快速上手</h2><p>我个人没真在生产里挂过 NautilusTrader（合规和资金量都不够），但本地跑回测是认真做过的，体验非常顺。</p>
+<h3 id="4-1-安装：两条路"><a href="#4-1-安装：两条路" class="headerlink" title="4.1 安装：两条路"></a>4.1 安装：两条路</h3><p><strong>路 1：从 PyPI 装 wheel（推荐）</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python -m venv .venv &amp;&amp; <span class="built_in">source</span> .venv/bin/activate</span><br><span class="line">pip install -U nautilus_trader</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>路 2：装 v2 release-candidate</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -U nautilus_trader --pre</span><br></pre></td></tr></tbody></table></figure>
+
+<p>团队推荐用 <a target="_blank" rel="noopener" href="https://docs.astral.sh/uv/">uv</a> 管理 Python 环境，我自己也是 uv 重度用户，这点审美一致。Conda 和其他发行版可能能跑但官方不背书。</p>
+<p>要带可视化（tearsheet / 图表）就加 extras：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -U <span class="string">"nautilus_trader[visualization]"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-2-写一个-EMA-crossover-回测"><a href="#4-2-写一个-EMA-crossover-回测" class="headerlink" title="4.2 写一个 EMA crossover 回测"></a>4.2 写一个 EMA crossover 回测</h3><p><code>crates/backtest/examples/engine_ema_cross.rs</code> 里有一个 Rust 写的 EMA crossover 例子，但更典型的是 Python 写法。我把官方示例的精髓简化一下：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> nautilus_trader.backtest.engine <span class="keyword">import</span> BacktestEngine</span><br><span class="line"><span class="keyword">from</span> nautilus_trader.indicators <span class="keyword">import</span> ExponentialMovingAverage</span><br><span class="line"><span class="keyword">from</span> nautilus_trader.model.data <span class="keyword">import</span> Bar</span><br><span class="line"><span class="keyword">from</span> nautilus_trader.model.enums <span class="keyword">import</span> OrderSide</span><br><span class="line"><span class="keyword">from</span> nautilus_trader.model.identifiers <span class="keyword">import</span> InstrumentId</span><br><span class="line"><span class="keyword">from</span> nautilus_trader.model.objects <span class="keyword">import</span> Price, Quantity</span><br><span class="line"><span class="keyword">from</span> nautilus_trader.examples.strategies.ema_cross_tester <span class="keyword">import</span> EMACrossTester</span><br><span class="line"><span class="keyword">from</span> nautilus_trader.examples.strategies.ema_cross_tester <span class="keyword">import</span> EMACrossTesterConfig</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1) 配置回测引擎</span></span><br><span class="line">config = BacktestEngineConfig(</span><br><span class="line">    trader_id=<span class="string">"DAISL-001"</span>,</span><br><span class="line">    strategies=[</span><br><span class="line">        StrategyConfig(</span><br><span class="line">            strategy_id=<span class="string">"EMA-20-100"</span>,</span><br><span class="line">            class_name=<span class="string">"EMACrossTester"</span>,</span><br><span class="line">            config_path=<span class="string">"config.yaml"</span>,</span><br><span class="line">        ),</span><br><span class="line">    ],</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">engine = BacktestEngine(config=config)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2) 添加交易所 / 行情 / 数据</span></span><br><span class="line">venue = add_binance_venue(engine)</span><br><span class="line">instrument = add_binance_instrument(engine)</span><br><span class="line">add_binance_bar_data(engine, instrument_id=instrument.<span class="built_in">id</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3) 注册策略</span></span><br><span class="line">config = EMACrossTesterConfig(</span><br><span class="line">    instrument_id=instrument.<span class="built_in">id</span>,</span><br><span class="line">    bar_type=BarType.from_str(<span class="string">"BTCUSDT.BINANCE-1-MINUTE-LAST-EXTERNAL"</span>),</span><br><span class="line">    fast_ema_period=<span class="number">20</span>,</span><br><span class="line">    slow_ema_period=<span class="number">100</span>,</span><br><span class="line">    trade_size=Decimal(<span class="string">"0.01"</span>),</span><br><span class="line">    order_id_tag=<span class="string">"001"</span>,</span><br><span class="line">)</span><br><span class="line">strategy = EMACrossTester(config=config)</span><br><span class="line">engine.add_strategy(strategy=strategy)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4) 跑回测</span></span><br><span class="line">engine.run()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5) 拉报告</span></span><br><span class="line"><span class="keyword">with</span> engine.results:</span><br><span class="line">    report = engine.results.get()</span><br><span class="line">    <span class="built_in">print</span>(report.total_pnl())</span><br><span class="line">    <span class="built_in">print</span>(report.stats_pnl())</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意几个细节：</p>
+<ul>
+<li><code>BarType</code> 用字符串组合（<code>BTCUSDT.BINANCE-1-MINUTE-LAST-EXTERNAL</code>），同时描述了 symbol + venue + bar 类型 + aggregation + price type—— 这是 NautilusTrader 的 “identifier as code” 哲学。</li>
+<li><code>EMACrossTester</code> 是个普通 Python class，不用继承什么奇怪的 framework interface。</li>
+<li><code>instrument_id</code> 和 <code>order_id_tag</code> 都用纯字符串 + tag，<strong>没有 magic</strong>。</li>
+</ul>
+<p>然后实盘怎么用？把 <code>BacktestEngine</code> 换成 <code>TradingNode</code>，调 <code>node.add_strategy(...)</code> + <code>node.run()</code>，把 Binance 的 API key 配到 config 里，完事。这就是 <strong>research-to-live parity</strong> 的实际体验。</p>
+<h3 id="4-3-多-venue-套利示例"><a href="#4-3-多-venue-套利示例" class="headerlink" title="4.3 多 venue 套利示例"></a>4.3 多 venue 套利示例</h3><p>NautilusTrader 的官方 examples 目录里 <code>examples/strategies/</code> 有跨交易所统计套利、做市、订单簿不平衡等多个真实策略。我特别推荐翻一翻 <code>market_maker.py</code> 和 <code>orderbook_imbalance.py</code>，里面展示了怎么订阅多个 venue 的 quote tick、用 <code>Cache</code> 维护本地订单簿、用 <code>MessageBus</code> 跨组件广播信号。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 伪代码：跨 venue 做市</span></span><br><span class="line"><span class="keyword">for</span> venue <span class="keyword">in</span> [Venue(<span class="string">"BINANCE"</span>), Venue(<span class="string">"OKX"</span>)]:</span><br><span class="line">    node.add_venue(venue)</span><br><span class="line">    node.subscribe_quote_ticks(instrument_id=<span class="string">f"BTCUSDT.<span class="subst">{venue}</span>-SPOT"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 策略里：</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">on_quote_tick</span>(<span class="params">self, event: QuoteTick</span>):</span><br><span class="line">    <span class="comment"># 维护本地订单簿</span></span><br><span class="line">    book = <span class="variable language_">self</span>.cache.order_book(event.instrument_id)</span><br><span class="line">    book.apply(event)</span><br><span class="line">    <span class="comment"># 当 Binance 买一价高于 OKX 卖一价 0.05% 时，做双边</span></span><br><span class="line">    <span class="keyword">if</span> book.best_ask(BINANCE) &lt; book.best_bid(OKX) * <span class="number">0.9995</span>:</span><br><span class="line">        <span class="variable language_">self</span>.submit_order(buy_binance_order, OKX=...)</span><br><span class="line">        <span class="variable language_">self</span>.submit_order(sell_okx_order, ...)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这种代码在 Python 端是干净的、所有 venue 都走同一个 <code>InstrumentId</code>、<code>OrderBook</code> 和 <code>Cache</code>—— 对比我以前用 ccxt + 自己写的状态机，那真是降维打击。</p>
+<h3 id="4-4-Docker-一键-jupyterlab"><a href="#4-4-Docker-一键-jupyterlab" class="headerlink" title="4.4 Docker 一键 jupyterlab"></a>4.4 Docker 一键 jupyterlab</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull ghcr.io/nautechsystems/jupyterlab:nightly --platform linux/amd64</span><br><span class="line">docker run -p 8888:8888 ghcr.io/nautechsystems/jupyterlab:nightly</span><br></pre></td></tr></tbody></table></figure>
+
+<p>浏览器开 <code>http://127.0.0.1:8888/lab</code> 就有现成的 JupyterLab，里面有官方 backtest 示例 notebook + 数据。适合不会配环境的交易员，或者想跳过环境搭建先看效果的人。</p>
+<hr>
+<h2 id="五、总结：适用人群、局限性与我的看法"><a href="#五、总结：适用人群、局限性与我的看法" class="headerlink" title="五、总结：适用人群、局限性与我的看法"></a>五、总结：适用人群、局限性与我的看法</h2><h3 id="适用人群"><a href="#适用人群" class="headerlink" title="适用人群"></a>适用人群</h3><ul>
+<li><strong>个人 / 小团队量化交易员</strong>：想用一套开源、可信、有供应链安全背书的引擎跑多资产策略。NautilusTrader 是目前开源生态里最接近” 专业级” 的选择之一。</li>
+<li><strong>AI 训练交易 Agent 的研究员</strong>：RL/ES 需要极快的事件循环做模拟，Rust 内核的纳秒级时钟 + 确定性回放正好对路。v2 RC 可以让训练脚本直接用 Python 写、env 用 Rust 跑，比纯 Python gym 强几个数量级。</li>
+<li><strong>金融科技团队的架构师</strong>：想要一个<strong>可商用 license、清晰架构、严格 CI</strong> 的事件驱动交易基础设施参考。LGPL-3.0 让它在大多数商业场景里是可用的（动态链接即可），不像 AGPL 那种” 用了就得全开源” 的紧箍咒。</li>
+<li><strong>Rust 爱好者</strong>：想看一个<strong>真正严肃的 Rust + PyO3 项目</strong>长什么样 ——workspace 怎么组织、PyO3 怎么打包、Cargo feature flag 怎么管理。Nautech Systems 这套代码组织是教科书级。</li>
+</ul>
+<h3 id="局限性（实话实说）"><a href="#局限性（实话实说）" class="headerlink" title="局限性（实话实说）"></a>局限性（实话实说）</h3><ul>
+<li><strong>v1 → v2 过渡期</strong>：现在（2026 年 8 月）正好在过渡的节骨眼上。v1 进入最终维护期，v2 RC 有 breaking change。如果你现在按 v1 写策略，几个月内大概率要迁移。生产环境建议先用 v1 master，但要在 issue 里关注 v2 进度。</li>
+<li><strong>文档仍以英文为主</strong>：对中文用户来说门槛略高。但 v1.230.0 起团队在补 v2 Python visualization 和文档，建议边用边看 <a target="_blank" rel="noopener" href="https://nautilustrader.io/docs">nautilustrader.io/docs</a>。</li>
+<li><strong>UI 仪表盘不在开源范围内</strong>：README 明确写了 “UI dashboards, distributed orchestration, and built-in AI/ML tooling are out of scope”。你要 dashboard 就得自己写或用社区方案。这是个<strong>有意为之</strong>的取舍 —— 团队要把精力集中在引擎。</li>
+<li><strong>小资产 / 小资金量不一定划算</strong>：全套系统学习曲线不算短。如果只是炒币买现货，根本用不上 16 个 adapter 和 128-bit 精度。</li>
+<li><strong>LGPL-3.0 的合规问题</strong>：LGPL 在某些公司的法务眼里依然敏感（” 动态链接” vs “静态链接”）。如果是大型金融机构内部部署，建议让法务先过一遍。</li>
+</ul>
+<h3 id="我的看法"><a href="#我的看法" class="headerlink" title="我的看法"></a>我的看法</h3><p>作为在小团队里被” 回测赚钱实盘亏钱” 坑过的人，NautilusTrader 最让我佩服的不是 stars 数量，而是<strong>对 research-to-live parity 的执念</strong>。整个项目从架构、API、CI、安全姿态全部围绕” 让回测和实盘是同一套代码、同一套时钟、同一套撮合” 展开 —— 这是真正解决过量化交易核心痛点的工程师才会有的设计哲学。</p>
+<p>而 Rust + PyO3 的混合架构在 2026 年已经非常成熟：Rust 提供性能与确定性、Python 提供策略灵活性、PyO3 把两者无缝缝起来。这个范式<strong>完全有可能扩散到其他领域</strong> —— 比如实时数据 pipeline、低延迟游戏服务器、量化研究 Agent 平台。事实上我最近拆过的几个 AI Agent 框架，都在朝类似方向走（Rust 内核 + Python 控制面）。</p>
+<p>如果你：</p>
+<ul>
+<li>是 Java 全栈 / 系统工程师，对<strong>确定性事件循环、低延迟、可信供应链</strong>感兴趣；</li>
+<li>是 AI Agent 工程师，想找一个<strong>真实能跑 RL 训练的环境</strong>；</li>
+<li>或者是数字游民 / 独立交易员，想用开源工具武装自己的小金库；</li>
+</ul>
+<p>都建议把 NautilusTrader 加进你的 star list。它不一定是你立刻就要用的项目，但作为一个<strong>工程范式参考</strong>，价值很大。</p>
+<hr>
+<p><strong>GitHub</strong>: <a target="_blank" rel="noopener" href="https://github.com/nautechsystems/nautilus_trader">https://github.com/nautechsystems/nautilus_trader</a></p>
+<p><strong>官网 / 文档</strong>: <a target="_blank" rel="noopener" href="https://nautilustrader.io/">https://nautilustrader.io</a></p>
+<p><strong>Discord 社区</strong>: <a target="_blank" rel="noopener" href="https://discord.gg/NautilusTrader">https://discord.gg/NautilusTrader</a></p>
+<p>如果哪天我用它跑出一个像样的策略回测，再来写一篇实战复盘。今天就到这里 —— 拜拜。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/17/nautilus-trader-rust-python-quant-engine/" title="NautilusTrader：25.7k stars 的 Rust 原生量化交易引擎，把 &quot;回测赚钱实盘亏钱&quot; 的坑彻底填了">https://www.daishengli.top/2026/08/17/nautilus-trader-rust-python-quant-engine/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/NautilusTrader/" rel="tag"># NautilusTrader</a>
+              <a href="/tags/%E9%87%8F%E5%8C%96%E4%BA%A4%E6%98%93/" rel="tag"># 量化交易</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/PyO3/" rel="tag"># PyO3</a>
+              <a href="/tags/%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/" rel="tag"># 事件驱动</a>
+              <a href="/tags/%E4%BA%A4%E6%98%93%E5%BC%95%E6%93%8E/" rel="tag"># 交易引擎</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/17/cactus-needle-14mb-device-foundation-model-tool-calling/" rel="prev" title="Needle 2：6.6k stars 的 14MB 设备端 LLM，把 Tool Calling 塞进 28MB 内存，让手机 &#x2F; 智能家居 &#x2F; 机器人真正能本地对话">
+                  <i class="fa fa-angle-left"></i> Needle 2：6.6k stars 的 14MB 设备端 LLM，把 Tool Calling 塞进 28MB 内存，让手机 / 智能家居 / 机器人真正能本地对话
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/17/cordis-spatiotemporal-composability-meta-framework/" rel="next" title="Cordis：5.4k stars、今日 +959 的 &quot;时空可组合性&quot; 元框架，正在悄悄支撑 DeepSeek Harness 的 Agent 运行时">
+                  Cordis：5.4k stars、今日 +959 的 "时空可组合性" 元框架，正在悄悄支撑 DeepSeek Harness 的 Agent 运行时 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

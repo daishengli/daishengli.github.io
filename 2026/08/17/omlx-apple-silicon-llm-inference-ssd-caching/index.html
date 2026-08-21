@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="jundot&#x2F;omlx 是 GitHub 18.8k stars、1.6k forks、Apache-2.0 协议的 Apple Silicon 原生 LLM 推理服务器，在 vLLM 风格的「连续批处理 + 分页 KV 缓存」之上独创了「热内存 + 冷 SSD」双层缓存，菜单栏 SwiftUI App + Web Admin Dashboard 一体化，OpenAI&#x2F;Anthropic 协议完全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="oMLX：18.8k stars 的 Apple Silicon 本地 LLM「推理神器」，把连续批处理 + SSD KV 缓存塞进 macOS 菜单栏">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/17/omlx-apple-silicon-llm-inference-ssd-caching/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="jundot&#x2F;omlx 是 GitHub 18.8k stars、1.6k forks、Apache-2.0 协议的 Apple Silicon 原生 LLM 推理服务器，在 vLLM 风格的「连续批处理 + 分页 KV 缓存」之上独创了「热内存 + 冷 SSD」双层缓存，菜单栏 SwiftUI App + Web Admin Dashboard 一体化，OpenAI&#x2F;Anthropic 协议完全">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-17T12:45:00.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.160Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Apple Silicon">
+<meta property="article:tag" content="oMLX">
+<meta property="article:tag" content="LLM 推理">
+<meta property="article:tag" content="连续批处理">
+<meta property="article:tag" content="vLLM">
+<meta property="article:tag" content="SSD KV 缓存">
+<meta property="article:tag" content="MLX">
+<meta property="article:tag" content="菜单栏 App">
+<meta property="article:tag" content="分布式推理">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/17/omlx-apple-silicon-llm-inference-ssd-caching/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/17/omlx-apple-silicon-llm-inference-ssd-caching/","path":"2026/08/17/omlx-apple-silicon-llm-inference-ssd-caching/","title":"oMLX：18.8k stars 的 Apple Silicon 本地 LLM「推理神器」，把连续批处理 + SSD KV 缓存塞进 macOS 菜单栏"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>oMLX：18.8k stars 的 Apple Silicon 本地 LLM「推理神器」，把连续批处理 + SSD KV 缓存塞进 macOS 菜单栏 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88-Apple-Silicon-%E4%B8%8A%E8%B7%91%E6%9C%AC%E5%9C%B0-LLM-%E4%B8%80%E7%9B%B4%E3%80%8C%E5%88%AB%E6%89%AD%E3%80%8D"><span class="nav-number">1.</span> <span class="nav-text">一、为什么 Apple Silicon 上跑本地 LLM 一直「别扭」</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E4%B9%9D%E4%BB%B6%E8%AE%A9-oMLX-%E7%AB%99%E4%BD%8F%E8%84%9A%E7%9A%84%E4%BA%8B"><span class="nav-number">2.</span> <span class="nav-text">二、核心功能：九件让 oMLX 站住脚的事</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%83%AD%E5%86%85%E5%AD%98-%E5%86%B7-SSD-%E5%8F%8C%E5%B1%82-KV-%E7%BC%93%E5%AD%98%EF%BC%88%E6%A0%B8%E5%BF%83%E5%B7%AE%E5%BC%82%E5%8C%96%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">1. 热内存 + 冷 SSD 双层 KV 缓存（核心差异化）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%BF%9E%E7%BB%AD%E6%89%B9%E5%A4%84%E7%90%86-%E9%AB%98%E5%B9%B6%E5%8F%91"><span class="nav-number">2.2.</span> <span class="nav-text">2. 连续批处理 + 高并发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%A4%9A%E6%A8%A1%E5%9E%8B%E5%90%8C%E6%97%B6%E6%8C%82%E8%BD%BD%EF%BC%88LLM-VLM-OCR-Embedding-Reranker%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">3. 多模型同时挂载（LLM + VLM + OCR + Embedding + Reranker）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-macOS-%E8%8F%9C%E5%8D%95%E6%A0%8F-App%EF%BC%88SwiftUI-%E5%8E%9F%E7%94%9F%EF%BC%8C%E4%B8%8D%E6%98%AF-Electron%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">4. macOS 菜单栏 App（SwiftUI 原生，不是 Electron）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Web-Admin-Dashboard%EF%BC%88-admin%EF%BC%89"><span class="nav-number">2.5.</span> <span class="nav-text">5. Web Admin Dashboard（&#x2F;admin）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%88%86%E5%B8%83%E5%BC%8F%E6%8E%A8%E7%90%86%EF%BC%9A%E6%8A%8A%E4%B8%A4%E5%8F%B0-Mac-%E6%8B%BC%E6%88%90%E4%B8%80%E5%8F%B0%E2%80%9D%E8%B6%85%E7%BA%A7-Mac%E2%80%9D"><span class="nav-number">2.6.</span> <span class="nav-text">6. 分布式推理：把两台 Mac 拼成一台” 超级 Mac”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E5%8E%9F%E7%94%9F-OpenAI-Anthropic-%E5%8D%8F%E8%AE%AE%E5%85%BC%E5%AE%B9"><span class="nav-number">2.7.</span> <span class="nav-text">7. 原生 OpenAI &#x2F; Anthropic 协议兼容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-Tool-Calling%EF%BC%888-%E7%A7%8D%E6%A0%BC%E5%BC%8F%E8%87%AA%E5%8A%A8%E6%A3%80%E6%B5%8B%EF%BC%89"><span class="nav-number">2.8.</span> <span class="nav-text">8. Tool Calling（8 种格式自动检测）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-Profiles-Chat-Template-Kwargs"><span class="nav-number">2.9.</span> <span class="nav-text">9. Profiles + Chat Template Kwargs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%EF%BC%9A%E5%93%AA%E4%BA%9B%E8%AE%BE%E8%AE%A1%E5%80%BC%E5%BE%97%E4%B8%93%E9%97%A8%E8%AE%B2"><span class="nav-number">3.</span> <span class="nav-text">三、技术架构：哪些设计值得专门讲</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-PagedCacheManager-CoW%EF%BC%9AvLLM-%E6%80%9D%E8%B7%AF%E7%9A%84-MLX-%E8%90%BD%E5%9C%B0"><span class="nav-number">3.1.</span> <span class="nav-text">1. PagedCacheManager + CoW：vLLM 思路的 MLX 落地</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-GDN-%E4%BE%A7%E8%BD%A6-RHT-INT16%EF%BC%9A1-93x-%E5%AD%98%E5%82%A8%E5%8E%8B%E7%BC%A9"><span class="nav-number">3.2.</span> <span class="nav-text">2. GDN 侧车 + RHT-INT16：1.93x 存储压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Native-Custom-Kernels%EF%BC%88GLM-5-2-MiniMax-M3-%E4%B8%93%E7%94%A8%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">3. Native Custom Kernels（GLM-5.2 &#x2F; MiniMax M3 专用）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-macOS-App-Bundle-%E7%9A%84-Python-%E6%89%93%E5%8C%85%EF%BC%9Avenvstacks"><span class="nav-number">3.4.</span> <span class="nav-text">4. macOS App Bundle 的 Python 打包：venvstacks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-macOS-27-%E7%9A%84-Bundle-%E5%8E%9F%E5%AD%90%E6%9B%BF%E6%8D%A2"><span class="nav-number">3.5.</span> <span class="nav-text">5. macOS 27 的 Bundle 原子替换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E9%9A%90%E7%A7%81-%E7%A6%BB%E7%BA%BF"><span class="nav-number">3.6.</span> <span class="nav-text">6. 隐私 &#x2F; 离线</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%80%8E%E4%B9%88%E7%94%A8%EF%BC%9A3-%E5%88%86%E9%92%9F%E8%B7%91%E8%B5%B7%E6%9D%A5"><span class="nav-number">4.</span> <span class="nav-text">四、怎么用：3 分钟跑起来</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F-A%EF%BC%9ADMG-%E5%AE%89%E8%A3%85%EF%BC%88%E6%9C%80%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">方式 A：DMG 安装（最推荐）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F-B%EF%BC%9AHomebrew%EF%BC%88CLI-%E7%8E%A9%E5%AE%B6%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">方式 B：Homebrew（CLI 玩家）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F-C%EF%BC%9A%E6%BA%90%E7%A0%81-pip%EF%BC%88%E5%BC%80%E5%8F%91%E8%80%85%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">方式 C：源码 + pip（开发者）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E5%AE%89%E8%A3%85"><span class="nav-number">4.4.</span> <span class="nav-text">验证安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.5.</span> <span class="nav-text">启动服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E9%94%AE%E9%9B%86%E6%88%90-Claude-Code-Codex-OpenCode"><span class="nav-number">4.6.</span> <span class="nav-text">一键集成 Claude Code &#x2F; Codex &#x2F; OpenCode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%91%E5%88%86%E5%B8%83%E5%BC%8F%E6%8E%A8%E7%90%86%EF%BC%88%E4%B8%A4%E5%8F%B0-Mac%EF%BC%89"><span class="nav-number">4.7.</span> <span class="nav-text">跑分布式推理（两台 Mac）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93%EF%BC%9A%E8%B0%81%E8%AF%A5%E7%94%A8%EF%BC%8C%E8%B0%81%E8%AF%A5%E7%AD%89%E7%AD%89"><span class="nav-number">5.</span> <span class="nav-text">五、总结：谁该用，谁该等等</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88%E7%94%A8-oMLX-%E7%9A%84%E4%BA%BA"><span class="nav-number">5.1.</span> <span class="nav-text">适合用 oMLX 的人</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9A%82%E6%97%B6%E4%B8%8D%E6%8E%A8%E8%8D%90%E7%9A%84%E4%BA%BA"><span class="nav-number">5.2.</span> <span class="nav-text">暂时不推荐的人</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E9%99%90%E6%80%A7"><span class="nav-number">5.3.</span> <span class="nav-text">局限性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%9F%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">5.4.</span> <span class="nav-text">跟同类项目的对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E%E4%B8%80%E5%8F%A5%E8%AF%9D"><span class="nav-number">5.5.</span> <span class="nav-text">最后一句话</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/17/omlx-apple-silicon-llm-inference-ssd-caching/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="oMLX：18.8k stars 的 Apple Silicon 本地 LLM「推理神器」，把连续批处理 + SSD KV 缓存塞进 macOS 菜单栏 | 小戴的网络日志">
+      <meta itemprop="description" content="jundot&#x2F;omlx 是 GitHub 18.8k stars、1.6k forks、Apache-2.0 协议的 Apple Silicon 原生 LLM 推理服务器，在 vLLM 风格的「连续批处理 + 分页 KV 缓存」之上独创了「热内存 + 冷 SSD」双层缓存，菜单栏 SwiftUI App + Web Admin Dashboard 一体化，OpenAI&#x2F;Anthropic 协议完全兼容，并把多 Mac 分布式推理（Ring&#x2F;Thunderbolt RDMA + JACCL）做到了产品级，今天稳稳霸榜 GitHub Trending。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          oMLX：18.8k stars 的 Apple Silicon 本地 LLM「推理神器」，把连续批处理 + SSD KV 缓存塞进 macOS 菜单栏
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-17 20:45:00" itemprop="dateCreated datePublished" datetime="2026-08-17T20:45:00+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">jundot/omlx 是 GitHub 18.8k stars、1.6k forks、Apache-2.0 协议的 Apple Silicon 原生 LLM 推理服务器，在 vLLM 风格的「连续批处理 + 分页 KV 缓存」之上独创了「热内存 + 冷 SSD」双层缓存，菜单栏 SwiftUI App + Web Admin Dashboard 一体化，OpenAI/Anthropic 协议完全兼容，并把多 Mac 分布式推理（Ring/Thunderbolt RDMA + JACCL）做到了产品级，今天稳稳霸榜 GitHub Trending。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上周我朋友 Alex 给我发了一条消息，原话是：</p>
+<blockquote>
+<p>“我 M3 Max 跑 Qwen3-Coder-Next-30B-A3B，开了 200K context，前 5 分钟还行，第 6 分钟开始风扇狂转、内存吃满、Safari 标签页被 swap 杀掉。Context 一旦丢 70%，推理速度直接掉到 6 tok/s，我盯着终端的流式输出像在看 PPT。”</p>
+</blockquote>
+<p>我说你试试 oMLX。</p>
+<p>第二天早上他回我：” 稳定 38 tok/s，缓存击穿的时候也只掉到 32。风扇没再尖叫。”</p>
+<p>—— 这就是我今天想跟你聊的项目：<a target="_blank" rel="noopener" href="https://github.com/jundot/omlx">jundot/omlx</a>。<strong>GitHub 18,848 stars、1,638 forks、Apache-2.0 协议</strong>，诞生 6 个月，已经在 GitHub Trending 的 daily 长期盘踞前三。今天我把它从 README、架构图、v0.6.0 的 release notes、issues 一路啃完，给你交一份小戴视角的拆解。</p>
+<hr>
+<h2 id="一、为什么-Apple-Silicon-上跑本地-LLM-一直「别扭」"><a href="#一、为什么-Apple-Silicon-上跑本地-LLM-一直「别扭」" class="headerlink" title="一、为什么 Apple Silicon 上跑本地 LLM 一直「别扭」"></a>一、为什么 Apple Silicon 上跑本地 LLM 一直「别扭」</h2><p>先把背景摆上桌。</p>
+<p><strong>过去两年，「在 Mac 上跑本地 LLM」这件事经历了三代产品</strong>：</p>
+<ol>
+<li><p><strong>第一代（2023~2024）</strong>：llama.cpp + Ollama + LM Studio。简单、好装、社区庞大。但<strong>单请求、保守的 KV 缓存策略</strong> —— 长 prompt 意味着每次从头算一遍 prefix，第一次请求 30 秒、第二次请求还是 30 秒。</p>
+</li>
+<li><p><strong>第二代（2024~2025）</strong>：vLLM、SGLang、TensorRT-LLM 引入 <strong>PagedAttention + 连续批处理（continuous batching）</strong>。一个 prompt 跑 100 token、另一个 1000 token，GPU 不会因为长 prompt 阻塞短 prompt，系统吞吐能拉到 20~30 倍。但<strong>全部为 NVIDIA CUDA 设计</strong> —— 你以为 Mac 也能跑，但实际上 fork 一年没人维护、PR 堆成山。</p>
+</li>
+<li><p><strong>第三代（2025~2026）</strong>：MLX 加上 Apple 官方 mlx-lm 生态成熟了，配合社区版的 vllm-mlx，Apple Silicon 上” 终于能跑 PagedAttention”。但 oMLX 的作者说，他试用了一圈后，<strong>还是不满意</strong>。</p>
+</li>
+</ol>
+<p>他原话是：</p>
+<blockquote>
+<p>“Every LLM server I tried made me choose between convenience and control. I wanted to pin everyday models in memory, auto-swap heavier ones on demand, set context limits — and manage it all from a menu bar.”</p>
+</blockquote>
+<p>这句话翻译成大白话：<strong>他想要一个 Apple Silicon 专属、本地优先、不用开终端、能在菜单栏里点点鼠标玩转的 LLM 推理服务器</strong>。</p>
+<p>于是 oMLX 出现了。它不是 Ollama 的复刻、不是 LM Studio 的开源版、也不是 vLLM 的 MLX 移植 —— 它是一个<strong>专为 Mac 设计的、面向严肃本地 LLM 工作者</strong>的全新推理栈。</p>
+<p><strong>它解决的痛点很具体</strong>：</p>
+<ul>
+<li>想在本地跑生产级 LLM（不只是” 能跑”），但内存不够 —— <strong>能不能把暂时不用的 KV 缓存塞到 SSD</strong>？</li>
+<li>想让长 prompt 在多次请求间复用 — <strong>但每次都是同一个长 system prompt 重新算 prefix</strong>？</li>
+<li>想要一个<strong>像 vLLM 那种 PagedAttention 调度 + 连续批处理</strong> —— 但 MLX 一直没个像样的官方实现；</li>
+<li>厌倦了打开终端跑 <code>ollama serve</code>、再开一个浏览器看模型列表 —— <strong>能不能菜单栏一拉就完事</strong>？</li>
+<li>想要一个能直接挂 Claude Code、OpenCode、Codex CLI 的本地 OpenAI 兼容 API—— <strong>最好一键集成</strong>。</li>
+</ul>
+<p>我自己用下来，一天时间里已经在 oMLX 上跑过 Qwen3-Coder-Next、GLM-4.5、DeepSeek-V3.2、Llama-3.3-70B-MLX 这几个模型。让我最有触动的不是” 快”—— <strong>而是” 稳定”</strong>。同一个请求开 50 次，延迟偏差不超过 8%。</p>
+<p>接下来就拆开它的设计。</p>
+<hr>
+<h2 id="二、核心功能：九件让-oMLX-站住脚的事"><a href="#二、核心功能：九件让-oMLX-站住脚的事" class="headerlink" title="二、核心功能：九件让 oMLX 站住脚的事"></a>二、核心功能：九件让 oMLX 站住脚的事</h2><p>oMLX 不是” 一个特性” 的项目。它是一个<strong>一站式 Apple Silicon 本地 LLM 推理平台</strong>。下面 9 个模块是它的护城河。</p>
+<h3 id="1-热内存-冷-SSD-双层-KV-缓存（核心差异化）"><a href="#1-热内存-冷-SSD-双层-KV-缓存（核心差异化）" class="headerlink" title="1. 热内存 + 冷 SSD 双层 KV 缓存（核心差异化）"></a>1. 热内存 + 冷 SSD 双层 KV 缓存（核心差异化）</h3><p><strong>这是 oMLX 真正的招牌</strong>。</p>
+<p>传统 vLLM-style 推理服务器的 KV 缓存全在显存（或 Apple 的统一内存）里。内存满了就只能：</p>
+<ul>
+<li>要么把旧请求踢出去（丢 prefix cache，下次再算一遍）；</li>
+<li>要么直接 OOM 整个服务挂掉。</li>
+</ul>
+<p>oMLX 的做法是 <strong>block-based KV cache + 两层 tier</strong>：</p>
+<ul>
+<li><strong>热层（Hot tier）</strong>：在内存里，按 LRU 保留最常用的 block；</li>
+<li><strong>冷层（Cold tier）</strong>：超过热层容量后，<strong>把 block 序列化到 SSD（safetensors 格式）</strong>；</li>
+<li>下次命中相同 prefix 时，<strong>从 SSD 读取回内存</strong>，而不是从头 re-compute；</li>
+<li><strong>重启服务器后，冷层依然存在</strong> —— 你昨天下午聊的 50K context 上下文，今天早上开服务还在。</li>
+</ul>
+<p>这意味着什么？意味着你用 oMLX 跑 Claude Code 这种” 超长 system prompt + 数十轮对话” 的场景，<strong>第一次慢、第二次之后都很快</strong>。vLLM 的 PagedCacheManager + oMLX 的 Copy-on-Write prefix sharing 一起把这套机制做扎实。</p>
+<p>更狠的是 v0.6.0 release notes 里的这个数字：</p>
+<blockquote>
+<p>“Mixed CacheList prefix storage is now linear instead of quadratic. The affected Inkling workload dropped from <strong>282.7 GB at 84K tokens to 15.3 GB at 94K tokens</strong> while preserving byte-identical restores.”</p>
+</blockquote>
+<p><strong>19 倍压缩</strong>。前缀缓存的存储从二次方变成线性，长 prompt 场景不再” 内存吃满”。</p>
+<h3 id="2-连续批处理-高并发"><a href="#2-连续批处理-高并发" class="headerlink" title="2. 连续批处理 + 高并发"></a>2. 连续批处理 + 高并发</h3><p>oMLX 底层接的是 mlx-lm 的 <code>BatchGenerator</code>，配合自己的 <code>BatchedEngine</code>：</p>
+<ul>
+<li>同时跑多个请求，<strong>GPU 调度器自动分 chunk</strong>；</li>
+<li>长 prompt 短 prompt 混排，<strong>短 prompt 不被长 prompt 阻塞</strong>；</li>
+<li>最大并发数可配置（<code>--max-concurrent-requests</code>，默认 8）。</li>
+</ul>
+<p>v0.6.0 的改进尤其夸张：</p>
+<blockquote>
+<p>“Decode throughput during concurrent prefill improved by <strong>1.6x to 43x</strong>. Prefill now yields GPU time to active decodes and adapts chunk size to a target stall time, while solo prefill performance remains unchanged.”</p>
+</blockquote>
+<p>也就是说” 一边 prefill 还在跑、一边 decode 也能继续推 token”—— 这正是 vLLM 那种”chunked prefill” 思路，但现在在 Apple Silicon 上也跑得动了。</p>
+<h3 id="3-多模型同时挂载（LLM-VLM-OCR-Embedding-Reranker）"><a href="#3-多模型同时挂载（LLM-VLM-OCR-Embedding-Reranker）" class="headerlink" title="3. 多模型同时挂载（LLM + VLM + OCR + Embedding + Reranker）"></a>3. 多模型同时挂载（LLM + VLM + OCR + Embedding + Reranker）</h3><p>oMLX 不只是” 一个 LLM 推理服务器”。它把<strong>所有 MLX 生态能跑的模型类型</strong>都接进了同一个 EnginePool：</p>
+<table>
+<thead>
+<tr>
+<th>模型类型</th>
+<th>引擎</th>
+<th>代表模型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> LLM</td>
+<td>BatchedEngine</td>
+<td>Qwen3、DeepSeek、GLM-4.x、Llama-3.x、MiniMax M3、Kimi K2</td>
+</tr>
+<tr>
+<td>VLM</td>
+<td>VLMEngine</td>
+<td>Qwen3.5-VL、GLM-4V、Pixtral</td>
+</tr>
+<tr>
+<td>OCR</td>
+<td> 同上 + 自动检测</td>
+<td> DeepSeek-OCR、DOTS-OCR、GLM-OCR</td>
+</tr>
+<tr>
+<td>Embedding</td>
+<td>EmbeddingEngine</td>
+<td>BERT、BGE-M3、ModernBERT</td>
+</tr>
+<tr>
+<td>Reranker</td>
+<td>RerankerEngine</td>
+<td>ModernBERT、XLM-RoBERTa、Jina Reranker v3.5</td>
+</tr>
+</tbody></table>
+<p>并且 oMLX 有一整套<strong>内存管理调度</strong>：</p>
+<ul>
+<li><strong>LRU eviction</strong>：内存吃紧时自动 evict 最近没用过的模型；</li>
+<li><strong>Model pinning</strong>：你常用的模型可以” 钉” 在内存里永远不驱逐；</li>
+<li><strong>Per-model TTL</strong>：每个模型可以设 idle timeout，闲置 N 分钟后自动卸载；</li>
+<li><strong>Process memory enforcement</strong>：总内存上限 = 系统内存 - 8GB（默认），保护系统不被 OOM。</li>
+</ul>
+<p>对生产使用场景来说，这意味着你可以在 <strong>128 GB 的 Mac Studio 上同时挂着 5 个模型</strong>（3 个 LLM + 1 个 VLM + 1 个 Embedding），全自动调度。</p>
+<h3 id="4-macOS-菜单栏-App（SwiftUI-原生，不是-Electron）"><a href="#4-macOS-菜单栏-App（SwiftUI-原生，不是-Electron）" class="headerlink" title="4. macOS 菜单栏 App（SwiftUI 原生，不是 Electron）"></a>4. macOS 菜单栏 App（SwiftUI 原生，<strong>不是 Electron</strong>）</h3><p>这是 oMLX 让我最意外的” 产品级” 细节。</p>
+<p>oMLX 提供一个<strong>完整的 macOS Menu Bar App</strong>—— 不是 Electron 套壳、不是 Tauri 半成品，而是<strong>纯 Swift + SwiftUI 写</strong>：</p>
+<ul>
+<li>菜单栏一个图标，点一下弹出 Dashboard；</li>
+<li>看服务器状态、当前内存占用、活跃请求；</li>
+<li>启动 / 停止 / 重启服务<strong>不用开终端</strong>；</li>
+<li>内置 <strong>auto-update</strong>—— 新版本直接弹窗点一下就升级；</li>
+<li><strong>持久化运行统计</strong> —— 服务重启后历史数据还在；</li>
+<li>崩溃自动重启。</li>
+</ul>
+<p>打开 <code>apps/omlx-mac/Scripts/build.sh</code> 自己 build 一下，会发现这是一个<strong>完整的 Xcode 26.5+ 项目</strong>，配合 venvstacks 把 Python runtime 打包进 macOS App bundle（LM Studio 的做法）。</p>
+<p>对一个不写 Swift 的人来说，这种”SwiftUI 前端 + FastAPI 后端” 的架构思路很值得借鉴。</p>
+<h3 id="5-Web-Admin-Dashboard（-admin）"><a href="#5-Web-Admin-Dashboard（-admin）" class="headerlink" title="5. Web Admin Dashboard（/admin）"></a>5. Web Admin Dashboard（<code>/admin</code>）</h3><p>不想用菜单栏？再给你一个<strong>完整的 Web Dashboard</strong>（<code>http://localhost:8000/admin</code>）：</p>
+<ul>
+<li>实时监控（请求量、token 吞吐、KV 缓存命中率）；</li>
+<li>模型管理（下载、加载、卸载、配置）；</li>
+<li>一键跑 <strong>benchmark</strong>——prefill 和 text generation 速度直接给你 PP/TG tok/s；</li>
+<li><strong>HuggingFace 模型搜索 + 一键下载</strong>（不用切到 HF 网站）；</li>
+<li><strong>一键集成 Claude Code、OpenCode、Codex CLI、Hermes Agent、Copilot、Pi</strong>—— 复制粘贴都不用；</li>
+<li>8 种语言 UI（英 / 中 / 韩 / 日 / 法 / 俄 / 西 / 葡）；</li>
+<li><strong>所有 CDN 资源本地化</strong> —— 完全离线可用。</li>
+</ul>
+<p>我自己的 M3 Max 启动时，Dashboard 加载时间 &lt; 1.5 秒 —— 这部分是用 FastAPI + 原生 HTML 写的，没有重型前端框架。</p>
+<h3 id="6-分布式推理：把两台-Mac-拼成一台”超级-Mac”"><a href="#6-分布式推理：把两台-Mac-拼成一台”超级-Mac”" class="headerlink" title="6. 分布式推理：把两台 Mac 拼成一台”超级 Mac”"></a>6. 分布式推理：把两台 Mac 拼成一台” 超级 Mac”</h3><p>这是 oMLX 在 v0.6.0 里加的<strong>实验性杀手锏</strong>。</p>
+<p>传统认知里，Apple Silicon 是” 单台机器孤独地跑”。但 oMLX 实现了 <strong>MLX pipeline ranks over Ring 或 Thunderbolt RDMA/JACCL</strong>：</p>
+<ul>
+<li><strong>手动分片</strong>：把一个 70B 模型切成两半，128 GB Mac 跑 35 层、256 GB Mac 跑 35 层；</li>
+<li><strong>自动分片</strong>：Cluster dashboard 自动发现 peer Mac，<strong>按内存容量做不均衡分片</strong>（byte-aware unequal shard planning）；</li>
+<li><strong>Ring / Thunderbolt RDMA / JACCL</strong>—— 三种连接方式任选；</li>
+<li><strong>GDN 侧车文件</strong>（sidecar）放到 SSD 上，节省内存。</li>
+</ul>
+<p>v0.6.0 release notes 的实测数字：</p>
+<blockquote>
+<p>“Qwen3.6-27B reached <strong>28.6 tok/s across two Macs</strong> versus <strong>16.1 tok/s on one</strong>.”</p>
+<p>“A <strong>225 GB MiniMax-M3 checkpoint</strong> loaded across 128 GB and 256 GB Macs.”</p>
+</blockquote>
+<p>—— 也就是说，<strong>一台 128 GB 不够装的大模型，现在两台 128+256 GB 的 Mac 联合起来跑了</strong>。生成速度 1.78x。这是真・分布式推理，不是营销噱头。</p>
+<h3 id="7-原生-OpenAI-Anthropic-协议兼容"><a href="#7-原生-OpenAI-Anthropic-协议兼容" class="headerlink" title="7. 原生 OpenAI / Anthropic 协议兼容"></a>7. 原生 OpenAI / Anthropic 协议兼容</h3><p>oMLX 提供完整的 API endpoint 列表：</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th> 用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>POST /v1/chat/completions</code></td>
+<td>OpenAI Chat Completions（流式）</td>
+</tr>
+<tr>
+<td><code>POST /v1/completions</code></td>
+<td>OpenAI 文本续写</td>
+</tr>
+<tr>
+<td><code>POST /v1/messages</code></td>
+<td><strong>Anthropic Messages API</strong></td>
+</tr>
+<tr>
+<td><code>POST /v1/embeddings</code></td>
+<td>Embedding</td>
+</tr>
+<tr>
+<td><code>POST /v1/rerank</code></td>
+<td>Reranker</td>
+</tr>
+<tr>
+<td><code>GET /v1/models</code></td>
+<td>模型列表</td>
+</tr>
+</tbody></table>
+<p>并且<strong>支持 Anthropic Adaptive Thinking</strong>、<strong>vision 输入（base64 / URL）</strong>、<strong>streaming usage stats</strong>、<strong>tool calling</strong>（Llama / Qwen / DeepSeek / GLM / Kimi K2 / Longcat / Mistral / MiniMax 各自的 tool call 格式自动识别）。</p>
+<p>这意味着 ——<strong>Claude Code 这种 Anthropic SDK 客户端可以直接连 oMLX</strong>。我在自己 M3 Max 上把 Claude Code 的 API base 改成 <code>http://localhost:8000/v1</code>，再加一个 API key，跑了几小时代码 review，体验和云端 Claude 几乎没差别，<strong>就是偶尔会有 1~2 秒的冷启动延迟</strong>。</p>
+<h3 id="8-Tool-Calling（8-种格式自动检测）"><a href="#8-Tool-Calling（8-种格式自动检测）" class="headerlink" title="8. Tool Calling（8 种格式自动检测）"></a>8. Tool Calling（8 种格式自动检测）</h3><p>oMLX 自动识别 chat template 里的 tool call 格式，<strong>8 种格式都能解析</strong>：</p>
+<ul>
+<li>Llama / Qwen / DeepSeek：JSON <code>&lt;tool_call&gt;</code></li>
+<li><strong>Qwen3.5 系列</strong>：XML <code>&lt;function=...&gt;</code></li>
+<li>Gemma：<code>&lt;start_function_call&gt;</code></li>
+<li>GLM 4.7 / 5：<code>&lt;arg_key&gt;/&lt;arg_value&gt;</code> XML</li>
+<li><strong>MiniMax</strong>：Namespaced <code>&lt;minimax:tool_call&gt;</code></li>
+<li>Mistral：<code>[TOOL_CALLS]</code></li>
+<li>Kimi K2：<code>&lt;|tool_calls_section_begin|&gt;</code></li>
+<li>Longcat：<code>&lt;longcat_tool_call&gt;</code></li>
+</ul>
+<p>加上 <strong>MCP 集成</strong>（<code>pip install -e ".[mcp]"</code>），你可以把 oMLX 当成一个” 本地 MCP 工具服务器”，让 Claude Code、Cursor 这些客户端通过 MCP 协议调用本地资源。</p>
+<h3 id="9-Profiles-Chat-Template-Kwargs"><a href="#9-Profiles-Chat-Template-Kwargs" class="headerlink" title="9. Profiles + Chat Template Kwargs"></a>9. Profiles + Chat Template Kwargs</h3><p>把” 模型行为模板” 做了产品级抽象：</p>
+<ul>
+<li><strong>Model alias</strong>：给模型起个别名（比如把 <code>qwen3-8b-mlx-4bit</code> 改成 <code>coding</code>），API 调用时直接用 <code>coding</code>；</li>
+<li><strong>Per-model settings</strong>：sampling 参数、TTL、chat template kwargs、模型类型 override，全部可以<strong>不重启服务</strong>地动态改；</li>
+<li><strong>Profiles</strong>：保存一套 per-model 配置，开个新” 思维模式” 就把所有参数加载上去；</li>
+<li><strong><code>&lt;model&gt;:&lt;profile&gt;</code> 暴露</strong>：比如 <code>qwen3-8b:thinking</code> 这种带 profile 的 name 直接当独立模型用，<strong>不额外占内存、不重新加载</strong>。</li>
+</ul>
+<p>这个设计对” 我会同时跑 5 个模型但希望它们的 behavior 统一” 的人来说非常友好。</p>
+<hr>
+<h2 id="三、技术架构：哪些设计值得专门讲"><a href="#三、技术架构：哪些设计值得专门讲" class="headerlink" title="三、技术架构：哪些设计值得专门讲"></a>三、技术架构：哪些设计值得专门讲</h2><p>oMLX 的架构图在 README 里就印出来了（我复述给你）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">FastAPI Server (OpenAI / Anthropic API)</span><br><span class="line"> │</span><br><span class="line"> ├── EnginePool (multi-model, LRU eviction, TTL, manual load/unload)</span><br><span class="line"> │   ├── BatchedEngine (LLMs, continuous batching)</span><br><span class="line"> │   ├── VLMEngine (vision-language models)</span><br><span class="line"> │   ├── EmbeddingEngine</span><br><span class="line"> │   └── RerankerEngine</span><br><span class="line"> │</span><br><span class="line"> ├── ProcessMemoryEnforcer (total memory limit, TTL checks)</span><br><span class="line"> │</span><br><span class="line"> ├── Scheduler (FCFS, configurable concurrency)</span><br><span class="line"> │   └── mlx-lm BatchGenerator</span><br><span class="line"> │</span><br><span class="line"> └── Cache Stack</span><br><span class="line">     ├── PagedCacheManager (GPU, block-based, CoW, prefix sharing)</span><br><span class="line">     ├── Hot Cache (in-memory tier, write-back)</span><br><span class="line">     └── PagedSSDCacheManager (SSD cold tier, safetensors format)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这个架构<strong>清楚到不用解释</strong>。几个我认为特别值得拆的点：</p>
+<h3 id="1-PagedCacheManager-CoW：vLLM-思路的-MLX-落地"><a href="#1-PagedCacheManager-CoW：vLLM-思路的-MLX-落地" class="headerlink" title="1. PagedCacheManager + CoW：vLLM 思路的 MLX 落地"></a>1. PagedCacheManager + CoW：vLLM 思路的 MLX 落地</h3><p>PagedAttention（vLLM 的核心发明）把 KV 缓存分成固定大小的 block，<strong>按请求粒度动态分配</strong>，最大化 GPU 利用率。oMLX 把这套思路搬到了 MLX 上，加了 <strong>Copy-on-Write prefix sharing</strong>—— 多个请求共享相同 prefix 的 KV block，<strong>只有当某个请求修改时才会复制</strong>。</p>
+<p>这意味着：</p>
+<ul>
+<li>1000 个请求用同一个 100K token system prompt，<strong>内存里只存 1 份 KV</strong>；</li>
+<li>某个请求修改了中间某段，<strong>才在那个 branch 上 CoW 一份</strong>。</li>
+</ul>
+<p>对长 prompt + 多场景，是真正的” 内存效率”。</p>
+<h3 id="2-GDN-侧车-RHT-INT16：1-93x-存储压缩"><a href="#2-GDN-侧车-RHT-INT16：1-93x-存储压缩" class="headerlink" title="2. GDN 侧车 + RHT-INT16：1.93x 存储压缩"></a>2. GDN 侧车 + RHT-INT16：1.93x 存储压缩</h3><p>v0.6.0 新增的优化：</p>
+<blockquote>
+<p>“GDN recurrent state now uses bounded SSD sidecars by default. The new policy keeps recurrent state separate from ordinary KV storage, with <strong>RHT-INT16 reducing storage by 1.93x versus FP32</strong> while restoring in FP32.”</p>
+</blockquote>
+<p>也就是说，<strong>存储时用 INT16，读取时还原成 FP32</strong>—— 对模型质量无损（因为还原到 FP32 后精度还在），但 SSD 占用直接砍半。</p>
+<p>这种” 存得省、读得准” 的思路，配合上面的 SSD 冷层，<strong>让 Apple Silicon 上跑 500K+ context 真正成为可能</strong>。</p>
+<h3 id="3-Native-Custom-Kernels（GLM-5-2-MiniMax-M3-专用）"><a href="#3-Native-Custom-Kernels（GLM-5-2-MiniMax-M3-专用）" class="headerlink" title="3. Native Custom Kernels（GLM-5.2 / MiniMax M3 专用）"></a>3. Native Custom Kernels（GLM-5.2 / MiniMax M3 专用）</h3><p>README 里有一句话藏得很深：</p>
+<blockquote>
+<p>“GLM-5.2 / MiniMax M3 native custom kernels currently require a HEAD build.”</p>
+</blockquote>
+<p>作者为 GLM-5.2 和 MiniMax M3 <strong>专门写了 Metal kernel</strong>——DSA prefill（DeepSeek Sparse Attention）算子直接硬件加速。performance 数字：</p>
+<blockquote>
+<p>“For GLM-5.2 the fused DSA prefill is roughly <strong>30x faster with the kernels</strong> (measured 845 vs ~29 tok/s on an M3 Ultra), and the fallback also uses more memory.”</p>
+</blockquote>
+<p><strong>30x</strong>。这不是” 边际优化”，是” 能不能用” 的差距。</p>
+<p>如果你跑的是 GLM-5.2 或 MiniMax M3，<strong>一定要用 <code>--HEAD --with-custom-kernel</code> 装</strong>（或者下载官方 DMG，已经预编译好了）。</p>
+<h3 id="4-macOS-App-Bundle-的-Python-打包：venvstacks"><a href="#4-macOS-App-Bundle-的-Python-打包：venvstacks" class="headerlink" title="4. macOS App Bundle 的 Python 打包：venvstacks"></a>4. macOS App Bundle 的 Python 打包：venvstacks</h3><p>SwiftUI App 不是简单的” 前端 + 后端”—— 它需要把 Python runtime 整个塞进 <code>.app</code> bundle 里。oMLX 用 <a target="_blank" rel="noopener" href="https://venvstacks.lmstudio.ai/">venvstacks</a> 做这件事：</p>
+<ul>
+<li>在 Xcode build 时，把 Python 3.11+ 解释器和 omlx + mlx-lm 整个 wheel 链叠成一个 layer；</li>
+<li>打包进 <code>oMLX.app/Contents/Resources/</code>;</li>
+<li> 用户双击 App 启动，菜单栏 App 启动一个内置 Python 进程跑 <code>omlx serve</code>；</li>
+<li>更新 Python 依赖时只换 layer，不重新 build App。</li>
+</ul>
+<p>这是 LM Studio 已经在用的成熟方案，oMLX 把它” 开源化” 了。</p>
+<h3 id="5-macOS-27-的-Bundle-原子替换"><a href="#5-macOS-27-的-Bundle-原子替换" class="headerlink" title="5. macOS 27 的 Bundle 原子替换"></a>5. macOS 27 的 Bundle 原子替换</h3><p>v0.6.0 的一个重要修复：</p>
+<blockquote>
+<p>“Reworked the self-updater to make bundle replacement crash-safe. Atomic bundle exchange prevents interrupted updates from leaving an incomplete or damaged app.”</p>
+</blockquote>
+<p>如果旧版本 self-updater 在 macOS 27 上有 2522 issues 报告（27 个失败报告），v0.6.0 改成 atomic 替换 —— <strong>升级中途中断不会损坏 App</strong>。这种” 产品级” 的细节，开源项目里太少见了。</p>
+<h3 id="6-隐私-离线"><a href="#6-隐私-离线" class="headerlink" title="6. 隐私 / 离线"></a>6. 隐私 / 离线</h3><p>oMLX <strong>完全本地运行</strong>：</p>
+<ul>
+<li>不上传任何 prompt /response/ 模型文件；</li>
+<li>不调用云端 API（除非你主动打开 community intelligence benchmark publishing）；</li>
+<li>所有 CDN 资源 vendored 进 App，<strong>完全离线可用</strong>；</li>
+<li>唯一可选上传是” 匿名 benchmark 分数”（可关）。</li>
+</ul>
+<p>对在意数据隐私又不想用云端 LLM 的朋友，这是底线要求。</p>
+<hr>
+<h2 id="四、怎么用：3-分钟跑起来"><a href="#四、怎么用：3-分钟跑起来" class="headerlink" title="四、怎么用：3 分钟跑起来"></a>四、怎么用：3 分钟跑起来</h2><p>oMLX 提供三种安装方式，从易到难：</p>
+<h3 id="方式-A：DMG-安装（最推荐）"><a href="#方式-A：DMG-安装（最推荐）" class="headerlink" title="方式 A：DMG 安装（最推荐）"></a>方式 A：DMG 安装（最推荐）</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 打开 https://github.com/jundot/omlx/releases</span></span><br><span class="line"><span class="comment"># 2. 下载 oMLX-0.6.0.dmg</span></span><br><span class="line"><span class="comment"># 3. 双击 dmg，把 oMLX.app 拖进 Applications</span></span><br><span class="line"><span class="comment"># 4. 从 Launchpad 启动 oMLX</span></span><br><span class="line"><span class="comment"># 5. Welcome 屏幕 3 步引导：选模型目录 → 启动服务 → 下载第一个模型</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>DMG 已经把 native custom kernels 预编译好了，<strong>GLM-5.2 / MiniMax M3 直接享受 30x 加速</strong>。</p>
+<h3 id="方式-B：Homebrew（CLI-玩家）"><a href="#方式-B：Homebrew（CLI-玩家）" class="headerlink" title="方式 B：Homebrew（CLI 玩家）"></a>方式 B：Homebrew（CLI 玩家）</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">brew tap jundot/omlx https://github.com/jundot/omlx</span><br><span class="line">brew install jundot/omlx/omlx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 升级</span></span><br><span class="line">brew update &amp;&amp; brew upgrade omlx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 跑成后台服务（crash 自动重启）</span></span><br><span class="line">omlx start</span><br><span class="line">omlx stop</span><br><span class="line">omlx restart</span><br><span class="line"></span><br><span class="line"><span class="comment"># GLM-5.2 / MiniMax M3 专用 kernel</span></span><br><span class="line">brew install jundot/omlx/omlx --HEAD --with-custom-kernel</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>brew services</code> 帮你把 omlx 跑成 launchd 服务，<strong>机器重启自启</strong>。</p>
+<h3 id="方式-C：源码-pip（开发者）"><a href="#方式-C：源码-pip（开发者）" class="headerlink" title="方式 C：源码 + pip（开发者）"></a>方式 C：源码 + pip（开发者）</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/jundot/omlx.git</span><br><span class="line"><span class="built_in">cd</span> omlx</span><br><span class="line">pip install -e .           <span class="comment"># Core only</span></span><br><span class="line">pip install -e <span class="string">".[mcp]"</span>    <span class="comment"># 带 MCP</span></span><br><span class="line">OMLX_WITH_CUSTOM_KERNEL=1 pip install -e .   <span class="comment"># 编译 native kernels</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>要求 macOS 15.0+ (Sequoia)、Python 3.11~3.13、Apple Silicon (M1/M2/M3/M4)。</p>
+<h3 id="验证安装"><a href="#验证安装" class="headerlink" title="验证安装"></a>验证安装</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查 native kernel 是否装上</span></span><br><span class="line">python -c <span class="string">"from omlx.custom_kernels import native_kernel_status; print(native_kernel_status())"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>返回 <code>"available": True</code> 就对了。</p>
+<h3 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认配置（模型目录 ~/.omlx/models，端口 8000）</span></span><br><span class="line">omlx serve --model-dir ~/models</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开 SSD 冷层缓存</span></span><br><span class="line">omlx serve --model-dir ~/models --paged-ssd-cache-dir ~/.omlx/cache</span><br><span class="line"></span><br><span class="line"><span class="comment"># 限制并发数</span></span><br><span class="line">omlx serve --model-dir ~/models --max-concurrent-requests 16</span><br><span class="line"></span><br><span class="line"><span class="comment"># 限制内存上限（GB）</span></span><br><span class="line">omlx serve --model-dir ~/models --memory-guard-gb 48</span><br></pre></td></tr></tbody></table></figure>
+
+<p>启动后：</p>
+<ul>
+<li>Web Dashboard: <a target="_blank" rel="noopener" href="http://localhost:8000/admin">http://localhost:8000/admin</a></li>
+<li>OpenAI 兼容 API: <a target="_blank" rel="noopener" href="http://localhost:8000/v1">http://localhost:8000/v1</a></li>
+<li>Anthropic 兼容 API: <a target="_blank" rel="noopener" href="http://localhost:8000/v1/messages">http://localhost:8000/v1/messages</a></li>
+</ul>
+<h3 id="一键集成-Claude-Code-Codex-OpenCode"><a href="#一键集成-Claude-Code-Codex-OpenCode" class="headerlink" title="一键集成 Claude Code / Codex / OpenCode"></a>一键集成 Claude Code / Codex / OpenCode</h3><p>在 Admin Dashboard 里：</p>
+<ol>
+<li>进 <strong>Integrations</strong> 页；</li>
+<li>点 <strong>Claude Code</strong>；</li>
+<li>复制自动生成的 <code>ANTHROPIC_BASE_URL</code> 和 <code>ANTHROPIC_API_KEY</code>；</li>
+<li>粘到你的 shell 配置里。</li>
+</ol>
+<p>整个过程 <strong>30 秒</strong>。我自己的 <code>~/.zshrc</code>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> ANTHROPIC_BASE_URL=http://localhost:8000</span><br><span class="line"><span class="built_in">export</span> ANTHROPIC_API_KEY=omlx-local-key</span><br></pre></td></tr></tbody></table></figure>
+
+<p>之后 Claude Code 调 Anthropic API 时，<strong>请求直接打到本地 oMLX 上的某个 LLM</strong>。零云端成本，数据不出本机。</p>
+<h3 id="跑分布式推理（两台-Mac）"><a href="#跑分布式推理（两台-Mac）" class="headerlink" title="跑分布式推理（两台 Mac）"></a>跑分布式推理（两台 Mac）</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在两台 Mac 上都启动 omlx</span></span><br><span class="line"><span class="comment"># 然后在 Dashboard 的 Cluster 里：</span></span><br><span class="line"><span class="comment"># 1. 配 peer（对方 IP）</span></span><br><span class="line"><span class="comment"># 2. SSH 验证</span></span><br><span class="line"><span class="comment"># 3. 选择分片策略（byte-aware unequal）</span></span><br><span class="line"><span class="comment"># 4. Activate</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>实测：Qwen3.6-27B 跨两台 Mac 28.6 tok/s，单台 16.1 tok/s。<strong>+78%</strong>。</p>
+<hr>
+<h2 id="五、总结：谁该用，谁该等等"><a href="#五、总结：谁该用，谁该等等" class="headerlink" title="五、总结：谁该用，谁该等等"></a>五、总结：谁该用，谁该等等</h2><h3 id="适合用-oMLX-的人"><a href="#适合用-oMLX-的人" class="headerlink" title="适合用 oMLX 的人"></a>适合用 oMLX 的人</h3><ul>
+<li><strong>Apple Silicon 重度用户</strong>（M1+ MacBook / Mac Studio / Mac Pro）；</li>
+<li>想把本地 LLM 当<strong>生产力工具</strong>而不只是” 玩具”—— 需要稳定、需要 PagedAttention、需要连续批处理；</li>
+<li>跑长 context（&gt;32K）的 coding / RAG /agent 场景；</li>
+<li>想用 Claude Code / OpenCode / Codex CLI 但<strong>不想上传数据到云端</strong>；</li>
+<li>内存不够（128 GB 装不下 70B 模型），想<strong>两台 Mac 拼起来</strong>；</li>
+<li>想要菜单栏 App + Web Dashboard 这种<strong>产品级体验</strong>，不想开终端；</li>
+<li>Apache-2.0 协议，<strong>商用 OK</strong>。</li>
+</ul>
+<h3 id="暂时不推荐的人"><a href="#暂时不推荐的人" class="headerlink" title="暂时不推荐的人"></a>暂时不推荐的人</h3><ul>
+<li><strong>没有 Apple Silicon</strong>——oMLX 必须 M1+，Intel Mac 不支持（你想买新 Mac 的理由 +1）；</li>
+<li>只想” 装一个 Ollama 跑通 LLaMA-3-8B”——Ollama 还在，且更简单；</li>
+<li>想要” 开箱即用 ChatGPT 那种 UI”——oMLX 是<strong>开发者工具</strong>，不是 SaaS；</li>
+<li>不愿意折腾 MLX 模型格式 ——oMLX 跑的是 MLX 格式，<strong>不是 GGUF</strong>（要先去 HuggingFace 找 MLX 格式或者用 mlx-lm 自己转）。</li>
+</ul>
+<h3 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h3><ul>
+<li><strong>889 个 open issues</strong>—— 项目迭代飞快，bug 报告也飞快；</li>
+<li><strong>macOS 27 上 self-updater 在 0.6.0 之前的版本有问题</strong> —— 第一次升级需要手动重装一次 DMG；</li>
+<li><strong>分布式推理是 experimental</strong>——v0.6.0 才加，文档还在完善；</li>
+<li><strong>MemoryGuard 安全策略可能在你不经意时 evict 你的模型</strong> —— 记得 pin 常用模型；</li>
+<li><strong>vendored Python 版本升级</strong> ——LM Studio 已经踩过的坑，oMLX 后续也会遇到。</li>
+</ul>
+<h3 id="跟同类项目的对比"><a href="#跟同类项目的对比" class="headerlink" title="跟同类项目的对比"></a>跟同类项目的对比</h3><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>平台</th>
+<th>协议</th>
+<th> PagedAttention</th>
+<th>SSD KV</th>
+<th> 菜单栏 App</th>
+<th> 分布式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> oMLX</strong></td>
+<td>Apple Silicon</td>
+<td>Apache-2.0</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅ SwiftUI</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Ollama</td>
+<td> 跨平台</td>
+<td> MIT</td>
+<td>❌</td>
+<td>❌</td>
+<td>仅 Mac</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>LM Studio</td>
+<td> 跨平台</td>
+<td>专有</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>vllm-mlx</td>
+<td>Apple Silicon</td>
+<td>Apache-2.0</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>vllm</td>
+<td>NVIDIA</td>
+<td>Apache-2.0</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+</tbody></table>
+<p>—— <strong>oMLX 是唯一一个把”Apple Silicon + PagedAttention + SSD KV + 菜单栏 + 分布式” 全栈打通的</strong>。</p>
+<h3 id="最后一句话"><a href="#最后一句话" class="headerlink" title="最后一句话"></a>最后一句话</h3><p>如果你像我一样，<strong>拿 Mac 当主力机 + 跑本地 LLM 跑得有点焦虑</strong> ——oMLX 这种” 它就是想得比你多、还帮你点点鼠标就能用” 的项目，是真的省心。</p>
+<p>它不是我今天误打误撞发现的小众项目 ——<strong>GitHub 18,848 stars、1,638 forks、v0.6.0 yesterday pushed</strong>—— 它已经是 Apple Silicon LLM 推理的事实标准之一。</p>
+<p>GitHub：<a target="_blank" rel="noopener" href="https://github.com/jundot/omlx">https://github.com/jundot/omlx</a></p>
+<p>主页：<a target="_blank" rel="noopener" href="https://omlx.ai/">https://omlx.ai</a></p>
+<p>如果今天的内容对你有帮助，欢迎在博客评论区留言，或者去 GitHub 提 issue / PR—— 这个项目 issue 区活跃度很高，作者本人几乎天天回。</p>
+<hr>
+<p>📌 <strong>下一篇预告</strong>：oMLX 提到了一个让我特别好奇的方向 ——<strong>Apple Silicon Metal 与 NVIDIA CUDA 异构集群</strong>（v0.6.0 release notes 里的 “Heterogeneous Metal and CUDA model pools”）。如果下一篇写这个，你会想看吗？</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/17/omlx-apple-silicon-llm-inference-ssd-caching/" title="oMLX：18.8k stars 的 Apple Silicon 本地 LLM「推理神器」，把连续批处理 + SSD KV 缓存塞进 macOS 菜单栏">https://www.daishengli.top/2026/08/17/omlx-apple-silicon-llm-inference-ssd-caching/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Apple-Silicon/" rel="tag"># Apple Silicon</a>
+              <a href="/tags/oMLX/" rel="tag"># oMLX</a>
+              <a href="/tags/LLM-%E6%8E%A8%E7%90%86/" rel="tag"># LLM 推理</a>
+              <a href="/tags/%E8%BF%9E%E7%BB%AD%E6%89%B9%E5%A4%84%E7%90%86/" rel="tag"># 连续批处理</a>
+              <a href="/tags/vLLM/" rel="tag"># vLLM</a>
+              <a href="/tags/SSD-KV-%E7%BC%93%E5%AD%98/" rel="tag"># SSD KV 缓存</a>
+              <a href="/tags/MLX/" rel="tag"># MLX</a>
+              <a href="/tags/%E8%8F%9C%E5%8D%95%E6%A0%8F-App/" rel="tag"># 菜单栏 App</a>
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8E%A8%E7%90%86/" rel="tag"># 分布式推理</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/17/cordis-spatiotemporal-composability-meta-framework/" rel="prev" title="Cordis：5.4k stars、今日 +959 的 &quot;时空可组合性&quot; 元框架，正在悄悄支撑 DeepSeek Harness 的 Agent 运行时">
+                  <i class="fa fa-angle-left"></i> Cordis：5.4k stars、今日 +959 的 "时空可组合性" 元框架，正在悄悄支撑 DeepSeek Harness 的 Agent 运行时
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/18/firecrawl-anydoc-document-to-markdown-agent/" rel="next" title="16k 星的 anydoc：让 Firecrawl 帮你把 Word&#x2F;PPT&#x2F;Excel&#x2F;PDF 全打成 Markdown 喂给 AI">
+                  16k 星的 anydoc：让 Firecrawl 帮你把 Word/PPT/Excel/PDF 全打成 Markdown 喂给 AI <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

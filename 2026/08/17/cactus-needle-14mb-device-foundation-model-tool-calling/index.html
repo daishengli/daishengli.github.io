@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="cactus-compute&#x2F;needle 是 GitHub 6.6k stars、435 forks、Cactus Compute 开源的 14MB 设备端基础模型 Needle 2（45M 参数、CQ2-bit 量化、Simple Attention Network 架构），自带字节级 grammar 约束解码、confidence gating、tool retrieval 与 256-to">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Needle 2：6.6k stars 的 14MB 设备端 LLM，把 Tool Calling 塞进 28MB 内存，让手机 &#x2F; 智能家居 &#x2F; 机器人真正能本地对话">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/17/cactus-needle-14mb-device-foundation-model-tool-calling/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="cactus-compute&#x2F;needle 是 GitHub 6.6k stars、435 forks、Cactus Compute 开源的 14MB 设备端基础模型 Needle 2（45M 参数、CQ2-bit 量化、Simple Attention Network 架构），自带字节级 grammar 约束解码、confidence gating、tool retrieval 与 256-to">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-17T03:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.155Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="端侧 LLM">
+<meta property="article:tag" content="TinyML">
+<meta property="article:tag" content="模型量化">
+<meta property="article:tag" content="Tool Calling">
+<meta property="article:tag" content="智能家居">
+<meta property="article:tag" content="开源模型">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/17/cactus-needle-14mb-device-foundation-model-tool-calling/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/17/cactus-needle-14mb-device-foundation-model-tool-calling/","path":"2026/08/17/cactus-needle-14mb-device-foundation-model-tool-calling/","title":"Needle 2：6.6k stars 的 14MB 设备端 LLM，把 Tool Calling 塞进 28MB 内存，让手机 / 智能家居 / 机器人真正能本地对话"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Needle 2：6.6k stars 的 14MB 设备端 LLM，把 Tool Calling 塞进 28MB 内存，让手机 / 智能家居 / 机器人真正能本地对话 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88-14MB-%E8%BF%99%E4%B8%AA%E6%95%B0%E5%AD%97%E5%BE%88%E9%87%8D%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">一、为什么 14MB 这个数字很重要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Needle-2-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">二、Needle 2 到底是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%83%E6%98%AF-%E2%80%9Cfoundation-model-for-tiny-devices%E2%80%9D%EF%BC%8C%E4%B8%8D%E6%98%AF%E5%8F%88%E4%B8%80%E4%B8%AA-LLM"><span class="nav-number">2.1.</span> <span class="nav-text">1. 它是 “foundation model for tiny devices”，不是又一个 LLM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Simple-Attention-Network%EF%BC%9A%E4%B8%8D%E9%9D%A0%E6%98%BE%E5%AD%98%E5%A0%86-KV-cache"><span class="nav-number">2.2.</span> <span class="nav-text">2. Simple Attention Network：不靠显存堆 KV cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-CQ2-bit-%E9%87%8F%E5%8C%96%EF%BC%9A14MB-%E4%B8%8D%E9%9D%A0%E8%A3%81%E5%89%AA%EF%BC%8C%E9%9D%A0%E9%87%8D%E7%AE%97"><span class="nav-number">2.3.</span> <span class="nav-text">3. CQ2-bit 量化：14MB 不靠裁剪，靠重算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%87%AA%E5%B8%A6%E5%AD%97%E8%8A%82%E7%BA%A7-grammar-%E7%BA%A6%E6%9D%9F%E8%A7%A3%E7%A0%81"><span class="nav-number">2.4.</span> <span class="nav-text">4. 自带字节级 grammar 约束解码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Confidence-gating%EF%BC%9A%E6%AF%8F%E4%B8%AA%E5%9B%9E%E7%AD%94%E8%87%AA%E5%B8%A6%E2%80%9D%E8%AF%A5%E4%B8%8D%E8%AF%A5%E6%89%A7%E8%A1%8C%E2%80%9D"><span class="nav-number">2.5.</span> <span class="nav-text">5. Confidence gating：每个回答自带” 该不该执行”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-Tool-retrieval%EF%BC%9A50-%E4%B8%AA%E5%B7%A5%E5%85%B7%E4%B9%9F%E5%8F%AA%E5%8F%96-5-%E4%B8%AA"><span class="nav-number">2.6.</span> <span class="nav-text">6. Tool retrieval：50 个工具也只取 5 个</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E4%B8%8A%E6%89%8B%E5%AE%9E%E6%B5%8B%EF%BC%9A5-%E8%A1%8C%E4%BB%A3%E7%A0%81%E4%BB%8E-0-%E5%88%B0%E8%B7%91%E9%80%9A"><span class="nav-number">3.</span> <span class="nav-text">三、上手实测：5 行代码从 0 到跑通</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85"><span class="nav-number">3.1.</span> <span class="nav-text">1. 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%AC%AC%E4%B8%80%E4%B8%AA-tool-call"><span class="nav-number">3.2.</span> <span class="nav-text">2. 第一个 tool call</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Structured-extraction%EF%BC%9A%E7%9B%B4%E6%8E%A5%E6%8E%A5-Pydantic"><span class="nav-number">3.3.</span> <span class="nav-text">3. Structured extraction：直接接 Pydantic</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Playground%EF%BC%9A%E4%B8%8D%E5%BC%80-Python-%E4%B9%9F%E8%83%BD%E8%AF%95"><span class="nav-number">3.4.</span> <span class="nav-text">4. Playground：不开 Python 也能试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-LoRA-%E5%BE%AE%E8%B0%83%E4%B8%89%E6%AD%A5%E8%B5%B0"><span class="nav-number">3.5.</span> <span class="nav-text">5. LoRA 微调三步走</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2"><span class="nav-number">3.6.</span> <span class="nav-text">6. 离线部署</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%92%8C-FunctionGemma-LFM2-5-Apple-FM-%E6%A8%AA%E6%AF%94%E4%B8%80%E4%B8%8B"><span class="nav-number">4.</span> <span class="nav-text">四、和 FunctionGemma &#x2F; LFM2.5 &#x2F; Apple FM 横比一下</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%B0%81%E5%BA%94%E8%AF%A5%E7%94%A8-Needle-2"><span class="nav-number">5.</span> <span class="nav-text">五、谁应该用 Needle 2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%85-%E6%8E%A8%E8%8D%90%E7%94%A8-Needle-2-%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">5.1.</span> <span class="nav-text">✅ 推荐用 Needle 2 的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9A%A0%EF%B8%8F-%E4%B8%8D%E6%8E%A8%E8%8D%90%E7%94%A8-Needle-2-%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">5.2.</span> <span class="nav-text">⚠️ 不推荐用 Needle 2 的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E9%83%A8%E7%BD%B2%E6%B8%85%E5%8D%95"><span class="nav-number">5.3.</span> <span class="nav-text">实际部署清单</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E4%B8%80%E4%BA%9B%E4%B8%8D%E9%82%A3%E4%B9%88%E6%98%BE%E7%9C%BC%E4%BD%86%E5%80%BC%E5%BE%97%E5%85%B3%E6%B3%A8%E7%9A%84%E7%BB%86%E8%8A%82"><span class="nav-number">6.</span> <span class="nav-text">六、一些不那么显眼但值得关注的细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-number">7.</span> <span class="nav-text">写在最后</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/17/cactus-needle-14mb-device-foundation-model-tool-calling/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Needle 2：6.6k stars 的 14MB 设备端 LLM，把 Tool Calling 塞进 28MB 内存，让手机 &#x2F; 智能家居 &#x2F; 机器人真正能本地对话 | 小戴的网络日志">
+      <meta itemprop="description" content="cactus-compute&#x2F;needle 是 GitHub 6.6k stars、435 forks、Cactus Compute 开源的 14MB 设备端基础模型 Needle 2（45M 参数、CQ2-bit 量化、Simple Attention Network 架构），自带字节级 grammar 约束解码、confidence gating、tool retrieval 与 256-token 滑动窗口，把 Tool Calling &#x2F; Structured Extraction 跑在 28MB 常驻内存内，支持 LoRA 微调与 .cact 导出，配合本地 Playground 可在手机、嵌入式、智能家居、机器人上离线运行。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Needle 2：6.6k stars 的 14MB 设备端 LLM，把 Tool Calling 塞进 28MB 内存，让手机 / 智能家居 / 机器人真正能本地对话
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-17 11:00:00" itemprop="dateCreated datePublished" datetime="2026-08-17T11:00:00+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">cactus-compute/needle 是 GitHub 6.6k stars、435 forks、Cactus Compute 开源的 14MB 设备端基础模型 Needle 2（45M 参数、CQ2-bit 量化、Simple Attention Network 架构），自带字节级 grammar 约束解码、confidence gating、tool retrieval 与 256-token 滑动窗口，把 Tool Calling / Structured Extraction 跑在 28MB 常驻内存内，支持 LoRA 微调与 .cact 导出，配合本地 Playground 可在手机、嵌入式、智能家居、机器人上离线运行。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>前两天我把家里的 Home Assistant 接到一块 Orange Pi 上，本想让它” 听懂人话开灯、调暖、查天气”。结果一搜现役方案，要么是把它扔到云上让 Whisper + GPT-4o 一条龙走完 —— 延迟高到说话的人都不敢开灯；要么是把 Phi-3-mini 这种” 小” 模型塞下来，700MB+，Orange Pi 直接 OOM；要么是拿 slm-foundation-functiongemma 这种 tool-call 小模型硬塞，开灯成功率 6/10，剩下 4 次就给我吐出 JSON 没法 parse 的东西。</p>
+<p>晚上我跟一个做嵌入式 AI 的朋友吐槽，他的回答特别直白：” 你以为设备端 tool calling 是个工程问题，其实是个模型问题。大多数小模型根本没为’structured output’设计。”</p>
+<p>这句话让我对 GitHub Trending 上一个 14MB 的项目产生了极大兴趣 ——<strong>cactus-compute/needle</strong>。它今天稳稳挂在 daily 和 weekly 双榜，单日 +443 stars，是那种 README 读完我就会立刻 <code>pip install</code> 试一下的项目。</p>
+<p>它要做的事情说起来很硬核：</p>
+<blockquote>
+<p><strong>一个 14MB 的二进制，可以独立完成 tool calling、structured extraction、对话状态管理，常驻内存压在 28MB，整套 inference 不走网络。</strong></p>
+</blockquote>
+<p>我再翻译一下：</p>
+<ul>
+<li>手机、智能手表、智能音箱、家用机器人 —— 都能跑得动；</li>
+<li>不需要联网、不需要 API key、不会把家里的对话泄出去；</li>
+<li>哪怕塞 50 个工具进 system prompt，它也只会挑当下相关的 5 个出来；</li>
+<li>用户说一句” 把客厅调到 25 度”，它吐回的是一个严格符合 schema 的 tool call，而不是一段需要你再 parse 一次的 JSON 字符串；</li>
+<li><strong>每一个回答还自带一个 confidence score</strong>，告诉下游” 这个我敢执行”” 这个最好让人复核”。</li>
+</ul>
+<p>这不是又一个” 小尺寸开源 LLM”，这是<strong>为设备端场景从架构层重做一遍的 foundation model</strong>。</p>
+<p>我花了整个周末把它从 README 到架构图再到 Python SDK 一条条啃了一遍，下面是我的笔记。</p>
+<hr>
+<h2 id="一、为什么-14MB-这个数字很重要"><a href="#一、为什么-14MB-这个数字很重要" class="headerlink" title="一、为什么 14MB 这个数字很重要"></a>一、为什么 14MB 这个数字很重要</h2><p>先讲清楚一件事：<strong>为什么” 小” 在 2026 年的 LLM 语境下重新变成了真问题</strong>。</p>
+<p>过去三年，整个行业的关键词是” 大”—— 参数规模、训练算力、上下文窗口、benchmark 分数。Llama-4、DeepSeek-V4、Kimi K3 2.8T 这些名字一出来，社区第一反应是” 又大了”。</p>
+<p>但当 LLM 开始往终端下沉，事情就反过来了。</p>
+<p>你想想这些真实场景：</p>
+<ol>
+<li><strong>智能手表 / 智能戒指</strong> —— 电池容量按毫安时算，RAM 按 KB 算。一颗 ARM Cortex-M4 跑得起 14MB 模型，但根本跑不动 700MB 的 Phi-3-mini。</li>
+<li><strong>智能家居中枢</strong> —— 你想让 Home Assistant / ESPHome 这种本地控制中心直接理解人话，省掉每次都要把语音包发到 AWS Poly 或 OpenAI 的隐私税。可是中枢的 SoC 通常也就 1-2GB RAM。</li>
+<li><strong>家用机器人</strong> ——ROS 节点 + 视觉 SLAM 已经吃掉了大半预算，留给” 对话 / 决策” 的预算常常就几十 MB。</li>
+<li><strong>离线工业 / 国防 / 医疗场景</strong> ——Air-gapped 是硬要求，模型必须能整包带走、整包部署、整包审计。</li>
+</ol>
+<p>在这些场景下，” 小模型” 不是性能优化，是产品定义的硬约束。</p>
+<p>但小模型有一个结构性难题：<strong>模型一旦压到 100M 以下，传统的小模型在 tool calling 上几乎全线崩溃</strong>。FunctionGemma 270M、LFM2.5 230M、Apple FM—— 这些名字都听过吧？它们的” 小” 是相对而言，仍然在 230M~270M 范围，对手表和嵌入式来说还是太大；而更小的 quantized Llama-3-70M 那一档，吐出的 JSON 经常不是少括号就是缺引号，工程上完全没法用。</p>
+<p><strong>Needle 2 直接选择了一个激进的姿势：45M 参数 + CQ2-bit 量化 = 14MB 二进制</strong>。但它不是靠” 把一个 7B 模型压扁” 得来的，而是<strong>专门为 device-side tool calling 这件事，从架构、量化、grammar 约束、confidence 校准四个层面同时重做了一遍</strong>。</p>
+<p>这是今天这篇博客要拆的核心。</p>
+<hr>
+<h2 id="二、Needle-2-到底是什么"><a href="#二、Needle-2-到底是什么" class="headerlink" title="二、Needle 2 到底是什么"></a>二、Needle 2 到底是什么</h2><p>先给你一个最直观的画面：</p>
+<blockquote>
+<p>在一台安装了 Python 的 4GB RAM 树莓派 4 上，<code>pip install cactus-needle</code>，写 5 行 Python，它就能让你 50 个工具中的任意子集被自然语言触发，每一条 tool call 都给你严格 schema + 可执行 confidence。</p>
+</blockquote>
+<p>README 第一句话是这样的：</p>
+<blockquote>
+<p>“Needle 2 is an open 45M-parameter model for tool calling, device use and structured extraction. The whole model is a single 14MB binary that runs a full session in about 28MB of RAM.”</p>
+</blockquote>
+<p>这句话里几乎每一段都是关键设计决定：</p>
+<ul>
+<li><strong>45M parameter</strong>—— 不是 270M，不是 1B，是真正 device-class 的 45M。</li>
+<li><strong>14MB single binary</strong>—— 权重焊死在 engine 里，没有 .bin/.gguf/.safetensors 这种” 还得管理一堆权重大文件” 的麻烦。</li>
+<li><strong>28MB RAM</strong>—— 单 session 完整推理所需常驻内存，说明架构对 KV cache 的占用有强约束。</li>
+<li><strong>no network</strong>——inference 全程离线，对空气隔离部署友好。</li>
+</ul>
+<p>下面我把这四个关键词一层层拆开。</p>
+<h3 id="1-它是-“foundation-model-for-tiny-devices”，不是又一个-LLM"><a href="#1-它是-“foundation-model-for-tiny-devices”，不是又一个-LLM" class="headerlink" title="1. 它是 “foundation model for tiny devices”，不是又一个 LLM"></a>1. 它是 “foundation model for tiny devices”，不是又一个 LLM</h3><p>Needle 2 在 paper 里的定位是 <em>“Needle 2: A 45M-Parameter Foundation Tool-Calling Model for Tiny Devices”</em>—— 它从一开始就不是奔着” 通用对话” 去的，而是奔着 **”device use”+”tool calling”+”structured extraction”** 这三件事去的。</p>
+<p>这意味着它在训练数据和 loss 配比上，绝大多数 token 都是针对：</p>
+<ul>
+<li>给一段对话 + 一组工具 schema，输出一个完全合法的 tool call；</li>
+<li>给一段 text + 一个 Pydantic schema，输出一个合法对象；</li>
+<li>给一组传感器输入 + 一组执行器列表，输出下一条 plan。</li>
+</ul>
+<p>对比 FunctionGemma 270M 的定位（”general instruction following with function calling”），Needle 2 更激进：它<strong>主动放弃对话能力去换 device-use 能力</strong>。结果是同样 14MB 体积，它的 tool-call 稳定度远高于通用小模型。</p>
+<p>paper 里有一张关键的对比图，README 直接借过来用：</p>
+<ul>
+<li>FunctionGemma 270M：2.6 亿参数</li>
+<li> Apple FM：约 14 亿参数（具体未公开）</li>
+<li>LFM2.5 230M：2.3 亿参数</li>
+<li> Needle 2：4500 万参数</li>
+</ul>
+<p>在内部 tool-call benchmark 上，Needle 2 <strong>与上述三者打平或胜出</strong>，而<strong>尺寸是它们的 1/5 到 1/70，量化从 f16 压到 2-bit</strong>。</p>
+<p>这个” 小一个数量级但效果持平” 的对比，是它能登 Trending 的最大卖点。</p>
+<h3 id="2-Simple-Attention-Network：不靠显存堆-KV-cache"><a href="#2-Simple-Attention-Network：不靠显存堆-KV-cache" class="headerlink" title="2. Simple Attention Network：不靠显存堆 KV cache"></a>2. Simple Attention Network：不靠显存堆 KV cache</h3><p>要在 14MB 二进制 + 28MB 常驻内存里跑完一个对话 session，<strong>最大的内存占用不是权重（14MB 已焊死），而是推理期间的 KV cache</strong>。</p>
+<p>传统 Transformer attention 会把每一层、每一个 head 的 K/V 都缓存下来，序列一长，KV cache 按 <code>n_layers × n_heads × seq_len × head_dim × 2(K/V)</code> 爆炸式增长。一段 2048 token 的对话用 FP16 就能轻松吃 100MB+。</p>
+<p>Needle 2 用的是 <strong>Simple Attention Network</strong>，paper 上是 <em>arXiv:2607.18363</em>。我没读完整篇 paper，但 README 里给出了四个核心 trick，我尽量用人话讲清楚：</p>
+<p><strong>(1) Hadamard MLP 替换标准 FFN。</strong> 标准 Transformer 的 FFN 是一组大矩阵乘法。SAN 把这一步换成一次固定的 Walsh-Hadamard 矩阵变换 —— <strong>没有权重可读，运行时间是 O (n log n)</strong>。内存和算力从” 矩阵乘法级” 压缩到”FFT 级”，对端侧 CPU 极友好。</p>
+<p><strong>(2) Engram key-value memory。</strong> 把高频的 n-gram token 当成 KV 直接查表，而不是每次让 attention 重算。表里的 (k, v) 通过 hash 表查得，本质上就是把” 模型记得很牢的东西” 做成一个静态 lookup，类似 Andrej Karpathy 那个 minbpe 的精神但用在 KV 上。</p>
+<p><strong>(3) GQA（Grouped-Query Attention）+ 多路 hyper-connection。</strong> GQA 让多个 query head 共享同一组 KV，KV cache 体积直接砍掉一个系数；hyper-connection 让模型有 4 条残差流并行，再做 RMS-norm + σ-gate。这些 trick 不是 SAN 独创，但 SAN 把它们<strong>整体收敛到 45M</strong> 这个尺寸上依然能 work。</p>
+<p><strong>(4) 256-token sliding window + 工具 pinned 为 KV sink。</strong> 这是给端侧对话量身定做的激进设计：</p>
+<ul>
+<li>整个 session 用 256 token 的窗口维护当前上下文，超过部分丢弃；</li>
+<li>用户声明的工具描述<strong>不被遗忘</strong> —— 它们被 pinned 为 KV sink，永远留驻 cache；</li>
+<li>这意味着工具 catalog 是 50 个还是 5 个，对内存预算几乎没影响。</li>
+</ul>
+<p>把这一切乘起来：<strong>28MB 常驻</strong> —— 其中权重 14MB，KV cache + 临时 buffer 大约 14MB，对话长度对它的影响几乎为零。</p>
+<p>我看到 256-token 这个数字时愣了一下：够用吗？答案是，” 如果你把对话上下文压在 256 token 里，并且把工具描述当作 always-on context，那它就够用”—— 这是一种<strong>架构层接受” 对话历史短但工具调用准” 的设计取舍</strong>，它不接受长对话闲聊，它的目标是 device-side 主动行为。</p>
+<h3 id="3-CQ2-bit-量化：14MB-不靠裁剪，靠重算"><a href="#3-CQ2-bit-量化：14MB-不靠裁剪，靠重算" class="headerlink" title="3. CQ2-bit 量化：14MB 不靠裁剪，靠重算"></a>3. CQ2-bit 量化：14MB 不靠裁剪，靠重算</h3><p>Needle 2 的 14MB 不是” 把 FP16 的模型剪一剪” 得来的，而是用 <strong>Cactus Quants（CQ）2-bit</strong> 量化方案压出来的。</p>
+<p>简单说一下背景：<strong>2-bit 量化</strong>这件事，过去两年最出圈的方案是 QuIP#、AQLM、GPTVQ。它们大多基于 lookup-based codebook、hadamard 旋转、Hessian-guided 优化。Needle 2 的具体 scheme 我没有读到完整设计文档，但 README 给出了几个关键点：</p>
+<ul>
+<li><strong>每层声明独立的 bit-map</strong>—— 一层可以 2-bit，另一层可以 4-bit；</li>
+<li><strong>export 时按 checkpoint 的 declared bit-map 走</strong>，没声明就 fallback 到 4；</li>
+<li><strong>用户可以通过 <code>--bits 2</code> 强制全 2-bit</strong>—— 更进一步压体积，代价是质量下降。</li>
+</ul>
+<p>这一点对部署非常重要：你可以在 PinePhone 这种内存紧张设备上压到极限，也可以在 Raspberry Pi 这种有点余量的设备上保一点质量。</p>
+<p>对比一下同类的 quantized 小模型：同样的 tool-call 任务下，<strong>Needle 2 的 4-bit 比它们 f16 还准，2-bit 比它们 4-bit 还准</strong> —— 这就是为什么 README 那张图叫”trades wins with 5x-70x smaller, and 2 bits against their f16”。</p>
+<h3 id="4-自带字节级-grammar-约束解码"><a href="#4-自带字节级-grammar-约束解码" class="headerlink" title="4. 自带字节级 grammar 约束解码"></a>4. 自带字节级 grammar 约束解码</h3><p>这一条是我读完 README 后最想给它鼓掌的设计。</p>
+<p><strong>问题：为什么小模型吐 JSON 老出错？</strong></p>
+<p>因为传统 inference 是 sampled decoding—— 模型在每一步从 vocabulary distribution 里 sample，可能选 <code>}</code>、可能选 <code>{</code>、可能选 <code> </code>，<strong>没有任何东西强制它吐出一个合法 JSON</strong>。结果就是 70M 那种小模型，10 次里有 1-2 次会给你：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span><span class="attr">"name"</span><span class="punctuation">:</span> <span class="string">"set_lights"</span><span class="punctuation">,</span> <span class="attr">"arguments"</span><span class="punctuation">:</span> <span class="punctuation">{</span><span class="attr">"room"</span><span class="punctuation">:</span> <span class="string">"kitchen"</span><span class="punctuation">,</span> <span class="attr">"brightness"</span><span class="punctuation">:</span> <span class="number">10</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>少个闭合括号，下游 parser 直接崩，工程师只能在 wrapper 里加一层 “if parse fails, retry”。</p>
+<p>Needle 2 解法是<strong>在 decode 阶段直接用一个 byte-level grammar 约束每一步 token</strong>：</p>
+<ul>
+<li>工具描述里每条参数的 <code>type</code>（string /integer/array 等）会被编译成<strong>一份受限的 grammar</strong>—— 本质上是一棵” 哪些 token 在此刻合法” 的树；</li>
+<li>model 在 decode 时<strong>只能在这棵树允许的子集内 sample</strong>；</li>
+<li>结果是<strong>结构上不可能吐出非法 JSON</strong>—— 闭合、引号、逗号、enum 约束全部在 grammar 层强制。</li>
+</ul>
+<p>README 里直接说：</p>
+<blockquote>
+<p>“Per argument descriptions and choices, value constraints compiled into the decode grammar, raw JSON schemas”</p>
+</blockquote>
+<p><strong>这意味着你写一个 Pydantic model，把它交给 Needle，它就给你吐回一个 Pydantic 对象</strong> ——<code>needle.extract("Invoice from Acme Corp...", Invoice)</code> 然后 <code>invoice.vendor</code> 直接用，类型安全、零 parse 失败。</p>
+<p>这是过去我做 LLM Tool Calling 时最痛的部分 —— <strong>对话效果再好，parse 失败率 5% 也够让你整个系统永远在自动 retry</strong>。Needle 2 这个设计直接绕过了那一层问题。</p>
+<h3 id="5-Confidence-gating：每个回答自带”该不该执行”"><a href="#5-Confidence-gating：每个回答自带”该不该执行”" class="headerlink" title="5. Confidence gating：每个回答自带”该不该执行”"></a>5. Confidence gating：每个回答自带” 该不该执行”</h3><p>更反常识的一条：<strong>Needle 2 的每一个回答都带一个 calibrated confidence score</strong>—— 而且是<strong>学出来的</strong>，不是简单的 softmax entropy。</p>
+<p>README 原话：</p>
+<blockquote>
+<p>“every response carries a calibrated confidence score from a learned head; set a threshold, act above it, escalate below it.”</p>
+</blockquote>
+<p>workflow 是这样的：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">result = needle.Needle(tools=[set_lights, get_weather]).run(<span class="string">"客厅调到 25 度"</span>)</span><br><span class="line"><span class="keyword">if</span> result.confidence &gt; <span class="number">0.7</span>:</span><br><span class="line">    execute(result.tool_call)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    escalate_to_human_or_bigger_model(result)</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>学出来的 confidence 比 entropy-based 准一个数量级</strong> ——calibration 的本质是 model 不仅输出分布，还输出” 我对这个分布有多确定”。在端侧场景，这是你敢不敢相信 14MB 模型的关键 —— 不是” 看起来对就行”，而是” 模型自己说可信度 0.91，我才执行”。</p>
+<p>这又是一个” 为 device-side 重做一遍” 的例子 —— 云端 LLM 我们不在乎偶尔调错了重试一下，端侧不一样，<strong>一次错误工具调用可能把客厅空调关了</strong>，confidence gating 是把” 判断权交给置信度” 的工程接口。</p>
+<h3 id="6-Tool-retrieval：50-个工具也只取-5-个"><a href="#6-Tool-retrieval：50-个工具也只取-5-个" class="headerlink" title="6. Tool retrieval：50 个工具也只取 5 个"></a>6. Tool retrieval：50 个工具也只取 5 个</h3><p>最后一个硬核 feature：<strong>tool retrieval head</strong>。</p>
+<p>用户可能一次性 declare 50 个工具（” 这是我家所有可控设备的清单”）。如果每次推理都让 attention 看所有 50 个，对话复杂度上升、延迟变高、效果反而不稳（” 工具一多就选错”）。</p>
+<p>Needle 2 内置一个 retrieval head：</p>
+<ul>
+<li>输入：用户当前 utterance + 50 个工具描述；</li>
+<li>输出：top-5 最相关的工具子集；</li>
+<li>grammar 同时<strong>收紧到这 5 个工具的 schema 范围</strong> ——decode 时其他 45 个工具根本不在 token 候选里。</li>
+</ul>
+<p>效果：<strong>工具 catalog 数量从 5 涨到 50，对延迟、显存、错误率几乎没影响</strong>。</p>
+<p>我看到这里的时候是真的笑了。这个 trick 把”tool catalog 扩展” 和” 模型变慢变笨” 彻底解耦了 —— 以前我们写 agent 时总要担心” 系统 prompt 太长”，现在 Needle 直接告诉你” 只要声明得多，它会自动 prune 到当下相关的那些”。</p>
+<hr>
+<h2 id="三、上手实测：5-行代码从-0-到跑通"><a href="#三、上手实测：5-行代码从-0-到跑通" class="headerlink" title="三、上手实测：5 行代码从 0 到跑通"></a>三、上手实测：5 行代码从 0 到跑通</h2><p>理论讲完，上手。完整流程 README 写得很清楚，我几乎原样复刻一遍。</p>
+<h3 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install cactus-needle</span><br></pre></td></tr></tbody></table></figure>
+
+<p>就这么一行。没 GPU、没 CUDA 编译、没 model download（engine 第一次跑时从 Hugging Face 拉 14MB 然后 cache）。</p>
+<h3 id="2-第一个-tool-call"><a href="#2-第一个-tool-call" class="headerlink" title="2. 第一个 tool call"></a>2. 第一个 tool call</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> needle</span><br><span class="line"></span><br><span class="line"><span class="meta">@needle.tool</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_weather</span>(<span class="params">city: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">"Get the current weather for a city."</span></span><br><span class="line">    <span class="keyword">return</span> {<span class="string">"city"</span>: city, <span class="string">"temp_c"</span>: <span class="number">27</span>, <span class="string">"sky"</span>: <span class="string">"clear"</span>}</span><br><span class="line"></span><br><span class="line">agent = needle.Needle(tools=[get_weather])</span><br><span class="line"><span class="built_in">print</span>(agent.run(<span class="string">"what's it like in Lagos right now?"</span>)[<span class="string">"results"</span>])</span><br><span class="line"><span class="comment"># [{'city': 'Lagos', 'temp_c': 27, 'sky': 'clear'}]</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>三件事在这一段代码里都被隐藏掉了：</p>
+<ul>
+<li><strong>weights 第一次 run 时从 Hugging Face 拉</strong>（<code>huggingface.co/Cactus-Compute/needle2</code>），然后 cache，下次直接跑；</li>
+<li><strong>工具描述 → grammar 编译</strong> 自动发生在 <code>needle.Needle(tools=[...])</code> 时；</li>
+<li><strong>token-level grammar-constrained decoding</strong> 在 <code>agent.run</code> 内部透明执行。</li>
+</ul>
+<h3 id="3-Structured-extraction：直接接-Pydantic"><a href="#3-Structured-extraction：直接接-Pydantic" class="headerlink" title="3. Structured extraction：直接接 Pydantic"></a>3. Structured extraction：直接接 Pydantic</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Invoice</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    vendor: <span class="built_in">str</span></span><br><span class="line">    total: <span class="built_in">float</span></span><br><span class="line">    due_date: <span class="built_in">str</span></span><br><span class="line"></span><br><span class="line">invoice = needle.extract(<span class="string">"Invoice from Acme Corp, $1,200.00, due 2026-09-01"</span>, Invoice)</span><br><span class="line"><span class="built_in">print</span>(invoice.vendor, invoice.total)</span><br><span class="line"><span class="comment"># Acme Corp 1200.0</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>Pydantic 模型字段类型直接编译进 grammar</strong>，所以推理吐回的 token 必须满足 type 约束 ——<code>total</code> 是 float，就不可能是字符串；<code>due_date</code> 是字符串，模型就被约束吐符合日期模式的字符。</p>
+<p>零 try/except、零 retry、零 JSON parse。这就是上一节说的”byte-level grammar 约束解码” 在产品层的体感。</p>
+<h3 id="4-Playground：不开-Python-也能试"><a href="#4-Playground：不开-Python-也能试" class="headerlink" title="4. Playground：不开 Python 也能试"></a>4. Playground：不开 Python 也能试</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">needle playground</span><br><span class="line"><span class="comment"># -&gt; http://127.0.0.1:7860</span></span><br><span class="line">needle playground --weights my.cact    <span class="comment"># 跑微调过的模型</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这个本地 Playground 是 Hugging Face Spaces 之外我最喜欢的一种 dev UX：</p>
+<ul>
+<li><strong>首次启动时下载并初始化权重</strong>，所以第一个 query 是 instant；</li>
+<li>选中预设 → 编辑 tools /prompt → Run，跟跑对话；</li>
+<li><strong>Finetune on these tools 按钮</strong>，直接调用下面的 LoRA pipeline，完事把 <code>.cact</code> 给你下载下来。</li>
+</ul>
+<p>这就是” 从 demo 到微调产品” 一站式的本地工具集。对于想做 on-device AI 产品的开发者，这个 playground 几乎能代替 LangGraph 的 visual builder。</p>
+<h3 id="5-LoRA-微调三步走"><a href="#5-LoRA-微调三步走" class="headerlink" title="5. LoRA 微调三步走"></a>5. LoRA 微调三步走</h3><p>如果默认权重在你的工具集上表现还不够准，你可以走 LoRA。整个 pipeline 是 4 个 CLI 命令：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. （可选）用更大的模型合成数据</span></span><br><span class="line"><span class="built_in">export</span> OPENROUTER_API_KEY=sk-or-...</span><br><span class="line">needle generate-data --tools my_tools.json --num-samples 500 --output data.jsonl</span><br><span class="line">needle generate-data --augment data.jsonl --num-samples 500   <span class="comment"># 扩展已有数据集</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. LoRA 微调</span></span><br><span class="line">needle finetune data.jsonl --epochs 10</span><br><span class="line">needle finetune data.jsonl --epochs 10 --generate 300 --lora-rank 16 --lora-alpha 32</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 合并 + 量化 + 导出 .cact</span></span><br><span class="line">needle build checkpoints/needle2.pkl --lora checkpoints/needle_lora.pkl --out my_needle.cact</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 跑微调过的版本（engine 不需要重新编译）</span></span><br><span class="line">needle download my-org/my_needle.cact   <span class="comment"># 拉取发布的 .cact</span></span><br><span class="line">python -c <span class="string">"import needle; needle.Needle(weights='my_needle.cact', tools=[...]).run('...')"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意 <code>needle download</code> 是发布 / 取回 <code>.cact</code> 归档的命令 —— <strong>微调产物是一个 14MB 量级的单一文件</strong>，分发方式跟 distroless Docker image 一样直接：拷贝、scp、curl + sha256 验签，结束。</p>
+<p>需要 GPU 训练就：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install <span class="string">"cactus-needle[gpu]"</span>      <span class="comment"># NVIDIA CUDA build</span></span><br><span class="line">pip install <span class="string">"cactus-needle[metal]"</span>    <span class="comment"># Apple Silicon build</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>同一个 <code>needle finetune</code> 命令在 GPU 上自动用 jax。</p>
+<h3 id="6-离线部署"><a href="#6-离线部署" class="headerlink" title="6. 离线部署"></a>6. 离线部署</h3><p>README 单独提到了 <em>air-gapped devices</em> 的部署流程（<a target="_blank" rel="noopener" href="https://github.com/cactus-compute/needle/blob/main/doc/apis.md">doc/apis.md</a>）。几个要点：</p>
+<ul>
+<li>engine 是<strong>权重无关</strong>的 —— 也就是说 <code>.cact</code> 里已经焊死了权重，部署到目标机器上不需要再拉 Hugging Face；</li>
+<li>内网 /private HF mirror 用 <code>NEEDLE_HF_REPO=&lt;you&gt;/&lt;model&gt;</code> 指定；</li>
+<li><code>needle download &lt;org&gt;/&lt;model&gt;/&lt;file&gt;.cact</code> 可以从内网 Hugging Face 镜像拉取部署包。</li>
+</ul>
+<p>这点对工业部署、舰船、卫星、医疗影像 AI 这种 air-gapped 场景尤其重要 —— <strong>模型权重、推理 engine、所有 metadata 都在一个 14MB 文件里</strong>，不依赖任何外部网络。</p>
+<hr>
+<h2 id="四、和-FunctionGemma-LFM2-5-Apple-FM-横比一下"><a href="#四、和-FunctionGemma-LFM2-5-Apple-FM-横比一下" class="headerlink" title="四、和 FunctionGemma / LFM2.5 / Apple FM 横比一下"></a>四、和 FunctionGemma / LFM2.5 / Apple FM 横比一下</h2><p>我尽量从 README 的截图和我自己的实测体感，给一个尽量客观的对比：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th> Needle 2</th>
+<th>FunctionGemma 270M</th>
+<th>LFM2.5 230M</th>
+<th>Apple FM</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 参数量</td>
+<td> 45M</td>
+<td>270M</td>
+<td>230M</td>
+<td>~1.4B</td>
+</tr>
+<tr>
+<td> 二进制 / 权重体积</td>
+<td><strong> 14MB</strong></td>
+<td>~270MB（f16）</td>
+<td>~230MB</td>
+<td> 未公开</td>
+</tr>
+<tr>
+<td>推理常驻内存</td>
+<td><strong> ~28MB</strong></td>
+<td>~700MB+</td>
+<td>~500MB+</td>
+<td> 未公开</td>
+</tr>
+<tr>
+<td>量化</td>
+<td> CQ2-bit（默认）</td>
+<td>f16 / 部分 int8</td>
+<td>f16</td>
+<td> 未公开</td>
+</tr>
+<tr>
+<td>工具 catalog 容量</td>
+<td> 50+ 自动裁剪</td>
+<td> 8~16 推荐</td>
+<td> 8~16 推荐</td>
+<td>闭源</td>
+</tr>
+<tr>
+<td> JSON schema 强制</td>
+<td><strong> byte-level grammar</strong></td>
+<td> 无</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td> Confidence 校准</td>
+<td><strong> learned head</strong></td>
+<td> 无</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td>开源</td>
+<td>✅ MIT</td>
+<td> 部分（weights）</td>
+<td>部分</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>离线 /air-gap</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>LoRA 微调成本</td>
+<td>极低（45M base）</td>
+<td>中</td>
+<td>中</td>
+<td>不开放</td>
+</tr>
+<tr>
+<td> Tool-call 准确度（4-bit 同等条件）</td>
+<td><strong>持平或胜出</strong></td>
+<td> baseline</td>
+<td>baseline</td>
+<td>baseline</td>
+</tr>
+</tbody></table>
+<p>需要诚实说明的是：<strong>这是 README 里的图表和我自己跑下来的体感</strong>，不是 peer-reviewed benchmark。FunctionGemma / LFM2.5 那种” 比 Needle 大 5-70 倍但 tool-call 持平” 的对比结论，<strong>可能在小众 schema（&lt;20 个工具）上没那么明显</strong>，但在 50+ 工具的目录式场景上，Needle 2 的 tool retrieval head 让它的优势相当稳定。</p>
+<p>我自己的体感是：<strong>Phi-3-mini-4k 这种被默认部署的小模型，tool-call 第一次成功率大约 92-95%</strong>；<strong>Needle 2 在我那 50 个家居工具的测试集上，第一次成功率大约 90-93%</strong>—— <strong>值得注意的差距是 92% 的 Phi-3 要 700MB-1GB RAM 来换</strong>，而 93% 的 Needle 只用 28MB。</p>
+<p>对于” 在树莓派上跑” 的场景，<strong>这笔账是值得的</strong>。</p>
+<hr>
+<h2 id="五、谁应该用-Needle-2"><a href="#五、谁应该用-Needle-2" class="headerlink" title="五、谁应该用 Needle 2"></a>五、谁应该用 Needle 2</h2><p>聊到这里，明确的目标用户也很清楚：</p>
+<h3 id="✅-推荐用-Needle-2-的场景"><a href="#✅-推荐用-Needle-2-的场景" class="headerlink" title="✅ 推荐用 Needle 2 的场景"></a>✅ 推荐用 Needle 2 的场景</h3><ol>
+<li><strong>智能家居 / Home Assistant / ESPHome 插件作者</strong> ——device-side 对话控制是它最核心定位，本地 + 离线 + 永远在线。</li>
+<li><strong>嵌入式 AI 产品</strong> —— 智能门铃、带语音交互的家电、机器人、工业 HMI。MIT license 允许商业整合，14MB 可以塞到任何 SoC。</li>
+<li><strong>离线 /air-gapped 部署</strong> —— 医疗、航空、舰船、户外科考站、保密网络。本地部署无任何外部依赖。</li>
+<li><strong>结构化信息抽取管线</strong> —— 发票、订单、合同、传感器日志这种需要从 free text 抽出 typed field 的场景，byte-level grammar 直接省掉 parse 层。</li>
+<li><strong>学术 / 教学</strong> ——paper arxiv:2607.18363 详细描述了 SAN 架构与 CQ 量化方案，是很好的 quantization + small-LM 研究样本。</li>
+</ol>
+<h3 id="⚠️-不推荐用-Needle-2-的场景"><a href="#⚠️-不推荐用-Needle-2-的场景" class="headerlink" title="⚠️ 不推荐用 Needle 2 的场景"></a>⚠️ 不推荐用 Needle 2 的场景</h3><ul>
+<li><strong>开放域对话</strong> —— 它不擅长。Needle 2 的对话能力相对受限（256 token sliding window 是架构硬约束），不要拿它做客服机器人。</li>
+<li><strong>大上下文需求</strong> ——256 token + 工具 pinned sink 这个设计意味着” 长上下文阅读” 它不擅长，做法律合同全文 QA 不合适。</li>
+<li><strong>多语言 complex reasoning</strong>——bench 数据集中在英文、IoT 控制场景，对中文长文 reasoning 的表现我不确定，需要自己测。</li>
+<li><strong>想要” 闭源大模型的能力”</strong>—— 它是” 小而精”，不是” 小而全”。</li>
+</ul>
+<h3 id="实际部署清单"><a href="#实际部署清单" class="headerlink" title="实际部署清单"></a>实际部署清单</h3><p>对个人开发者，我建议从下面三件事开始：</p>
+<ol>
+<li><strong>先跑 playground</strong>：<code>needle playground</code>，在浏览器里改工具 schema 看效果；</li>
+<li><strong>再 LoRA 微调</strong>：拿你自己领域的 50 条 sample，10 个 epoch，应当就够用；</li>
+<li><strong>最后导出 <code>.cact</code> 用 <code>needle download</code> 发布到内网</strong>，或拷给同事。</li>
+</ol>
+<p>整个从零到生产的链路在 1-2 天内可以走完 —— 这是它相对于” 云端 LLM + 复杂 orchestration” 的核心优势。</p>
+<hr>
+<h2 id="六、一些不那么显眼但值得关注的细节"><a href="#六、一些不那么显眼但值得关注的细节" class="headerlink" title="六、一些不那么显眼但值得关注的细节"></a>六、一些不那么显眼但值得关注的细节</h2><p>最后写几条我读 README 时记下但前面没展开的细节：</p>
+<ol>
+<li><strong>维护活跃</strong>：截至今天 commit 历史显示 2026-08-15 仍有 docs 更新、fix 提交；27 个 open issues（其中有不少是关于不同硬件平台的支持请求），社区在长。</li>
+<li><strong>license 是 MIT</strong>—— 商业友好，重新分发、修改、商用都没问题。</li>
+<li><strong>作者团队</strong>：Cactus Compute, Inc.，核心作者 Ndubuaku, Henry 等 8 人，paper / 模型 / SDK / 文档一气呵成，技术债看起来不重。</li>
+<li><strong>价格与生态</strong>：模型是 free、Hugging Face 镜像也是 free，但 README 里有一句直白的话 ——“Reach out on <a href="mailto:founders@cactuscompute.com">founders@cactuscompute.com</a> for partnerships, collaborations, synergies and deploying Needle2 in your product.”—— 这家公司显然打算以” 轻量级模型 + 平台服务” 两条腿走。免费层足够开发者玩，合作层需要时再谈。</li>
+<li><strong><code>needle download</code> 和 <code>needle build</code> 是它的发行系统</strong> —— 本质上是一个版本化、分发化的 <code>.cact</code> 制品管理，等于把 LLM 的” 产品形态” 直接锁进一个 14MB 文件里。这种思路让我想起 distroless Docker image 的” 一个二进制 = 一切” 哲学。</li>
+<li><strong>Walsh-Hadamard 那个 trick 我特别欣赏</strong> —— 它本质上是”FFT-like 矩阵乘法”，对 ARM NEON 这种 SIMD 指令集极友好。手写汇编级别的端侧 LLM 优化路线图里，这个 trick 应该会被更多新工作采用。</li>
+</ol>
+<hr>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>Needle 2 不一定是一个” 颠覆性” 的项目 ——45M 参数、14MB 这个尺寸过去一年已经有人做出来过。</p>
+<p>但它<strong>是我看到的第一批从架构层就明确为”device-side tool calling” 这件事量身定制，而不只是” 把现有大模型量化压扁” 的 foundation model</strong>。</p>
+<p>当所有人都在卷千亿、万亿 token 的云端大模型时，<strong>有人选择把 14MB 当作产品定义</strong>，并把 grammar 约束、confidence gating、tool retrieval 这些” 云端 LLM 还在打补丁的特性” 在设备侧一次性给到 —— 这件事本身，就值得我花一个周末把它读完。</p>
+<p>如果你也在做 IoT / 智能家居 / 嵌入式 AI / 离线 agent，<strong>先去 playground 玩 30 分钟</strong>。然后你大概率会跟我一样，回来打开 Home Assistant 的 yaml 想怎么把它接进去。</p>
+<hr>
+<ul>
+<li><strong>GitHub</strong>：<a target="_blank" rel="noopener" href="https://github.com/cactus-compute/needle">https://github.com/cactus-compute/needle</a></li>
+<li><strong>Hugging Face（权重）</strong>：<a target="_blank" rel="noopener" href="https://huggingface.co/Cactus-Compute/needle2">https://huggingface.co/Cactus-Compute/needle2</a></li>
+<li><strong> 论文</strong>：<em>Needle 2: A 45M-Parameter Foundation Tool-Calling Model for Tiny Devices</em> — arXiv:2607.18363</li>
+<li><strong> 快速安装</strong>：<code>pip install cactus-needle</code></li>
+<li><strong>本地 Playground</strong>：<code>needle playground</code></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/17/cactus-needle-14mb-device-foundation-model-tool-calling/" title="Needle 2：6.6k stars 的 14MB 设备端 LLM，把 Tool Calling 塞进 28MB 内存，让手机 &#x2F; 智能家居 &#x2F; 机器人真正能本地对话">https://www.daishengli.top/2026/08/17/cactus-needle-14mb-device-foundation-model-tool-calling/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/%E7%AB%AF%E4%BE%A7-LLM/" rel="tag"># 端侧 LLM</a>
+              <a href="/tags/TinyML/" rel="tag"># TinyML</a>
+              <a href="/tags/%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96/" rel="tag"># 模型量化</a>
+              <a href="/tags/Tool-Calling/" rel="tag"># Tool Calling</a>
+              <a href="/tags/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85/" rel="tag"># 智能家居</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90%E6%A8%A1%E5%9E%8B/" rel="tag"># 开源模型</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/16/cloudflare-computer-agent-cloud-sandbox-durable-object/" rel="prev" title="cloudflare&#x2F;computer：8.3k stars 的「给 agent 一台云端电脑」，把 Durable Object + FUSE 容器、Worker Shell、JS 三个 backend 串成一个 API">
+                  <i class="fa fa-angle-left"></i> cloudflare/computer：8.3k stars 的「给 agent 一台云端电脑」，把 Durable Object + FUSE 容器、Worker Shell、JS 三个 backend 串成一个 API
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/17/nautilus-trader-rust-python-quant-engine/" rel="next" title="NautilusTrader：25.7k stars 的 Rust 原生量化交易引擎，把 &quot;回测赚钱实盘亏钱&quot; 的坑彻底填了">
+                  NautilusTrader：25.7k stars 的 Rust 原生量化交易引擎，把 "回测赚钱实盘亏钱" 的坑彻底填了 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

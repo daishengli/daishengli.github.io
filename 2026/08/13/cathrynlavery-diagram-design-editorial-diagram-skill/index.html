@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="当日增 1.6k stars 的 diagram-design 是一套专为 Claude Code 设计的&quot;编辑级&quot;图表技能集合，29 种图表类型全部以自包含 HTML + SVG 输出，硬性约束无阴影、4 像素栅格、统一字体搭配，把 AI 生成的&quot;Mermaid 风&quot;架构图直接拉高到杂志栏目级别。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="diagram-design：29 种编辑级图表技能，让 Claude Code 直接吐出 &quot;杂志风&quot; 架构图">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/13/cathrynlavery-diagram-design-editorial-diagram-skill/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="当日增 1.6k stars 的 diagram-design 是一套专为 Claude Code 设计的&quot;编辑级&quot;图表技能集合，29 种图表类型全部以自包含 HTML + SVG 输出，硬性约束无阴影、4 像素栅格、统一字体搭配，把 AI 生成的&quot;Mermaid 风&quot;架构图直接拉高到杂志栏目级别。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-13T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.155Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="开源工具">
+<meta property="article:tag" content="图表生成">
+<meta property="article:tag" content="可视化">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/13/cathrynlavery-diagram-design-editorial-diagram-skill/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/13/cathrynlavery-diagram-design-editorial-diagram-skill/","path":"2026/08/13/cathrynlavery-diagram-design-editorial-diagram-skill/","title":"diagram-design：29 种编辑级图表技能，让 Claude Code 直接吐出 \"杂志风\" 架构图"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>diagram-design：29 种编辑级图表技能，让 Claude Code 直接吐出 "杂志风" 架构图 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9AAI-%E7%94%BB%E5%9B%BE%E7%9A%84%E2%80%9D%E5%AE%A1%E7%BE%8E%E5%A4%A9%E8%8A%B1%E6%9D%BF%E2%80%9D%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">项目背景：AI 画图的” 审美天花板” 问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A29-%E7%A7%8D%E5%9B%BE%E8%A1%A8-%E7%A1%AC%E6%80%A7%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83"><span class="nav-number">2.</span> <span class="nav-text">核心功能：29 种图表 + 硬性设计规范</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#29-%E7%A7%8D%E5%9B%BE%E8%A1%A8%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.1.</span> <span class="nav-text">29 种图表类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AC%E6%80%A7%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83"><span class="nav-number">2.2.</span> <span class="nav-text">硬性设计规范</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8C%85%E5%90%AB-HTML-%E8%BE%93%E5%87%BA"><span class="nav-number">2.3.</span> <span class="nav-text">自包含 HTML 输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E6%B3%A8%EF%BC%88Annotation%EF%BC%89%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.4.</span> <span class="nav-text">标注（Annotation）系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sketchy-%E6%BB%A4%E9%95%9C"><span class="nav-number">2.5.</span> <span class="nav-text">Sketchy 滤镜</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E8%AE%A9-Claude-Code-%E7%94%BB%E4%B8%80%E5%BC%A0%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="nav-number">3.</span> <span class="nav-text">实战示例：让 Claude Code 画一张用户登录架构图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%AE%89%E8%A3%85"><span class="nav-number">3.1.</span> <span class="nav-text">第一步：安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E6%B5%8F%E8%A7%88%E5%9B%BE%E5%BA%93"><span class="nav-number">3.2.</span> <span class="nav-text">第二步：浏览图库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E8%AE%A9-Claude-Code-%E7%94%9F%E6%88%90%E5%9B%BE"><span class="nav-number">3.3.</span> <span class="nav-text">第三步：让 Claude Code 生成图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9A%E5%AF%BC%E5%87%BA"><span class="nav-number">3.4.</span> <span class="nav-text">第四步：导出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E8%BE%93%E5%87%BA%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="nav-number">3.5.</span> <span class="nav-text">实际输出长什么样？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">适用场景和限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E9%80%82%E5%90%88%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">4.1.</span> <span class="nav-text">最适合的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">4.2.</span> <span class="nav-text">不适合的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%9F%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">4.3.</span> <span class="nav-text">跟同类项目的差异</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/13/cathrynlavery-diagram-design-editorial-diagram-skill/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="diagram-design：29 种编辑级图表技能，让 Claude Code 直接吐出 &quot;杂志风&quot; 架构图 | 小戴的网络日志">
+      <meta itemprop="description" content="当日增 1.6k stars 的 diagram-design 是一套专为 Claude Code 设计的&quot;编辑级&quot;图表技能集合，29 种图表类型全部以自包含 HTML + SVG 输出，硬性约束无阴影、4 像素栅格、统一字体搭配，把 AI 生成的&quot;Mermaid 风&quot;架构图直接拉高到杂志栏目级别。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          diagram-design：29 种编辑级图表技能，让 Claude Code 直接吐出 "杂志风" 架构图
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-13 10:00:00" itemprop="dateCreated datePublished" datetime="2026-08-13T10:00:00+08:00">2026-08-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">当日增 1.6k stars 的 diagram-design 是一套专为 Claude Code 设计的"编辑级"图表技能集合，29 种图表类型全部以自包含 HTML + SVG 输出，硬性约束无阴影、4 像素栅格、统一字体搭配，把 AI 生成的"Mermaid 风"架构图直接拉高到杂志栏目级别。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>你有没有过这种体验：让 Claude Code 帮忙画一张” 用户登录流程” 的时序图，出来的图长这样 ——</p>
+<p>圆角矩形、蓝灰阴影、Helvetica 同款系统字、节点间距乱七八糟、箭头穿过文本框、配色一股”PPT 模板 2019” 的味儿。然后你跟模型说” 画得高级一点”，它再吐一版，又回到了那个圆角矩形。</p>
+<p>问题不在 Claude，也不在 Mermaid。Mermaid 本身是个伟大的工具，但它的语法决定了：LLM 只能产出” 能跑就行” 的工程图，离” 可以直接放进博客头图” 的视觉水准差了十万八千里。</p>
+<p>今天 GitHub Trending 榜首的 <a target="_blank" rel="noopener" href="https://github.com/cathrynlavery/diagram-design">cathrynlavery/diagram-design</a> 就是来解决这个问题的。它不是另一个图表渲染器，而是一套<strong>专门喂给 Claude Code 的” 图表设计技能”</strong>——29 种编辑级图表类型，全部以自包含 HTML + SVG 输出，硬性约束设计规范，让 AI 直接吐出能上杂志的架构图。</p>
+<h2 id="项目背景：AI-画图的”审美天花板”问题"><a href="#项目背景：AI-画图的”审美天花板”问题" class="headerlink" title="项目背景：AI 画图的”审美天花板”问题"></a>项目背景：AI 画图的” 审美天花板” 问题</h2><p>过去两年，AI Coding Agent 已经把” 读代码、写代码、跑测试、改 bug” 这些活儿卷到了极致。但一旦涉及到” 画一张图”，绝大多数 Agent 还是会直接吐出 Mermaid/PlantUML 的渲染结果 —— 能用，但不好看。</p>
+<p>更深层的问题有三：</p>
+<p><strong>1. 渲染语法限制了审美空间。</strong> Mermaid 的 <code>graph TD</code>、<code>sequenceDiagram</code>、<code>erDiagram</code> 这些语法非常适合 LLM 写出” 对的图”，但要让 LLM 同时控制字距、阴影方向、强调色、留白比例，几乎不可能。语法里就没有这些旋钮。</p>
+<p><strong>2. 缺乏统一的设计系统。</strong> 即便给 LLM 一段” 用 editorial style” 的 prompt，它每次产出的” 高级感” 都是不同的。颜色随机、字体不一致、间距凭感觉。</p>
+<p><strong>3. 输出格式不可二次编辑。</strong> Mermaid 渲染出来就是 PNG/SVG，但这些 SVG 里所有节点都是硬编码的 path，<strong>想手动改一行字都得重新生成</strong>。</p>
+<p>diagram-design 的解题思路是：<strong>别让 LLM 写 Mermaid，让它写 HTML。</strong> 把每个图表类型拆成一个独立 skill（技能），每个 skill 都内置一套硬性设计规范（design constraints），LLM 只负责” 组合 + 填内容”，风格部分被规范锁死。</p>
+<h2 id="核心功能：29-种图表-硬性设计规范"><a href="#核心功能：29-种图表-硬性设计规范" class="headerlink" title="核心功能：29 种图表 + 硬性设计规范"></a>核心功能：29 种图表 + 硬性设计规范</h2><h3 id="29-种图表类型"><a href="#29-种图表类型" class="headerlink" title="29 种图表类型"></a>29 种图表类型</h3><p>项目里把” 编辑级图表” 分成三大类：</p>
+<ul>
+<li><strong>结构类</strong>：Architecture（架构）、Flowchart（流程）、Sequence（时序）、State machine（状态机）、ER（数据模型）、Org chart（组织）、Tree（树形）、Nested（嵌套层级）。</li>
+<li><strong>定位 / 分析类</strong>：Quadrant（两轴定位）、Consultant 2×2（场景矩阵）、Radar/Spider（多轴雷达）、Venn（韦恩图）、Swimlane（跨职能泳道）。</li>
+<li><strong>叙事类</strong>：Timeline（时间轴）、Pyramid/Funnel（金字塔 / 漏斗）、Layers（层叠抽象）、Loop（飞轮）、IT current-state（IT 现代化现状图）。</li>
+</ul>
+<p>每种图表都对应一个独立的 <code>references/primitive-xxx.md</code> 文件，里面写死了布局算法、节点尺寸、连线样式、标注规则。</p>
+<h3 id="硬性设计规范"><a href="#硬性设计规范" class="headerlink" title="硬性设计规范"></a>硬性设计规范</h3><p>这是这个项目最值钱的地方。它把” 什么算好看” 翻译成了一组<strong>可执行的硬性约束</strong>：</p>
+<ul>
+<li><strong>一个强调色</strong>：每个图只有 1 种 accent color，所有焦点元素都用它。</li>
+<li><strong>1–2 个焦点元素</strong>：超过就稀释注意力。</li>
+<li><strong>三种字体</strong>：Instrument Serif（标题 + 斜体批注）、Geist Sans（节点名）、Geist Mono（技术子标签，如端口号、URL、字段类型）。</li>
+<li><strong>1px 发丝边框</strong>：所有边框都是 1 像素。</li>
+<li><strong>无阴影</strong>：彻底禁用 drop-shadow、box-shadow。</li>
+<li><strong>最大圆角 10px</strong>：避免” 儿童画风”。</li>
+<li><strong>4 像素栅格</strong>：每个坐标、宽度、间距都必须能被 4 整除 —— 这是它原话：”non-negotiable, it’s what keeps the diagrams from feeling AI-generated.”</li>
+</ul>
+<p>这最后一条尤其重要。4 像素栅格是出版行业的硬规矩。AI 生成的图之所以一眼假，就是因为坐标都是奇数位、间距都是 3px、7px 这种凭感觉的数。强制 4 像素栅格之后，整个图会立刻显得” 被人设计过”。</p>
+<h3 id="自包含-HTML-输出"><a href="#自包含-HTML-输出" class="headerlink" title="自包含 HTML 输出"></a>自包含 HTML 输出</h3><p>每张图都是一个<strong>单文件 HTML</strong>——HTML 里嵌了 CSS、SVG、所有数据。意味着：</p>
+<ul>
+<li>直接双击在浏览器里打开就能看</li>
+<li>可以塞进博客、文章、Notion、Confluence</li>
+<li> 可以导出为独立 SVG（提取 <code>&lt;svg&gt;</code> 节点，注入 Google Fonts），用于 Figma、Illustrator</li>
+<li> 可以用 Playwright 栅格化为 PNG（默认 2× 分辨率）</li>
+</ul>
+<p>没有任何外部依赖，没有 CDN 引用，没有 build step。</p>
+<h3 id="标注（Annotation）系统"><a href="#标注（Annotation）系统" class="headerlink" title="标注（Annotation）系统"></a>标注（Annotation）系统</h3><p>每张图都可以叠加斜体 Instrument Serif 的批注 + 虚线 Bézier 引导线，模拟杂志栏目的” 旁注” 效果。这个能力来自 <code>primitive-annotation.md</code> 技能包。技术文档里加这种批注，可读性会比单纯的方框图高一档。</p>
+<h3 id="Sketchy-滤镜"><a href="#Sketchy-滤镜" class="headerlink" title="Sketchy 滤镜"></a>Sketchy 滤镜</h3><p>项目还内置了一个 SVG turbulence + displacement map 的手绘滤镜（<code>primitive-sketchy.md</code>）。让原本严谨的工程图瞬间变成” 手绘风”。项目原话：”Good for essays, not for technical docs.” —— 适合博客随笔，不适合技术文档。</p>
+<h2 id="实战示例：让-Claude-Code-画一张用户登录架构图"><a href="#实战示例：让-Claude-Code-画一张用户登录架构图" class="headerlink" title="实战示例：让 Claude Code 画一张用户登录架构图"></a>实战示例：让 Claude Code 画一张用户登录架构图</h2><h3 id="第一步：安装"><a href="#第一步：安装" class="headerlink" title="第一步：安装"></a>第一步：安装</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方式 1：作为 Claude Code 插件</span></span><br><span class="line">/plugin marketplace add cathrynlavery/diagram-design</span><br><span class="line">/plugin install diagram-design@diagram-design</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方式 2：作为 Claude Cowork 插件</span></span><br><span class="line"><span class="comment"># Customize → Directory → Plugins → + → 粘贴 cathrynlavery/diagram-design → Sync</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 方式 3：作为 Codex skill</span></span><br><span class="line">npx skills add &lt;your-fork-or-mirror&gt; --skill diagram-design</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="第二步：浏览图库"><a href="#第二步：浏览图库" class="headerlink" title="第二步：浏览图库"></a>第二步：浏览图库</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/cathrynlavery/diagram-design</span><br><span class="line">open skills/diagram-design/assets/index.html</span><br></pre></td></tr></tbody></table></figure>
+
+<p>浏览器里会打开一个交互图库，包含全部 29 张图，分别有 light /dark/full-editorial 三种主题。挑一个最接近你想要的风格。</p>
+<h3 id="第三步：让-Claude-Code-生成图"><a href="#第三步：让-Claude-Code-生成图" class="headerlink" title="第三步：让 Claude Code 生成图"></a>第三步：让 Claude Code 生成图</h3><p>在 Claude Code 里直接说：</p>
+<blockquote>
+<p>“用 diagram-design 的 Architecture 类型，给我画一张用户登录流程的架构图，包含前端、API 网关、认证服务、用户库、Redis 缓存这五个节点。强调色用 coral（珊瑚色），焦点放在认证服务上。”</p>
+</blockquote>
+<p>Claude 会自动调用 <code>/diagram-design</code> 这个 skill，输出一段自包含 HTML，保存到当前目录。</p>
+<h3 id="第四步：导出"><a href="#第四步：导出" class="headerlink" title="第四步：导出"></a>第四步：导出</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 Claude Code 里用 slash command</span></span><br><span class="line">/diagram-design <span class="built_in">export</span> output/login.html --format svg</span><br><span class="line">/diagram-design <span class="built_in">export</span> output/login.html --format png</span><br></pre></td></tr></tbody></table></figure>
+
+<p>PNG 导出需要一次性安装 Playwright：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install playwright &amp;&amp; playwright install chromium</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="实际输出长什么样？"><a href="#实际输出长什么样？" class="headerlink" title="实际输出长什么样？"></a>实际输出长什么样？</h3><p>我拿项目自带的一个示例改造了一下：一张 “Web 应用登录流程” 的时序图，焦点元素是后端认证服务，其它节点用低饱和度灰色，标注栏写着 “Single source of truth for sessions”。</p>
+<p>打开 HTML 文件的效果是 ——</p>
+<p>页面背景是 <code>#FAFAF7</code> 这种米白色，而不是纯白 <code>#FFFFFF</code>。节点圆角 6px（小于 10px 上限），边框 1px <code>#E5E5E0</code>。标题用 Instrument Serif 斜体：”User authentication flow”。节点名用 Geist Sans：”Browser”、”API gateway”、”Auth service”、”Postgres”、”Redis”。技术子标签用 Geist Mono：”POST /login”、”SET session:xxx”、”SELECT * FROM users”。认证服务那个节点用珊瑚色 <code>#FF6B5C</code> 描边，里面写着 “Single source of truth”。连线是 1px 实线，转角处直角不圆滑。整张图所有间距都是 8、16、24、32、48—— 清一色 4 的倍数。</p>
+<p>一眼看过去就是” 杂志专栏图” 的味道，而不是”AI 出图” 的味道。</p>
+<h2 id="适用场景和限制"><a href="#适用场景和限制" class="headerlink" title="适用场景和限制"></a>适用场景和限制</h2><h3 id="最适合的场景"><a href="#最适合的场景" class="headerlink" title="最适合的场景"></a>最适合的场景</h3><ul>
+<li><strong>技术博客头图</strong>：直接放进博客文章，质量比 Mermaid 高两档。</li>
+<li><strong>产品文档架构图</strong>：给客户看的设计文档。</li>
+<li><strong>公司内部 Wiki</strong>：Confluence、Notion 都支持嵌入 HTML。</li>
+<li><strong>演讲幻灯片</strong>：导出 SVG 拖进 Keynote/Figma，二次编辑没问题。</li>
+<li><strong>AI Coding Agent 的” 画图” 任务</strong>：替代 Mermaid 作为默认输出。</li>
+</ul>
+<h3 id="不适合的场景"><a href="#不适合的场景" class="headerlink" title="不适合的场景"></a>不适合的场景</h3><ul>
+<li><strong>需要” 实时数据驱动” 的图</strong>：它是静态 HTML，不支持数据绑定。如果你要” 点击节点看详情”、”hover 显示 tooltip” 这种交互，得用 Excalidraw、tldraw、miro AI。</li>
+<li><strong>极复杂的企业架构</strong>：29 种类型里没有专门给” 几百个微服务关系” 用的图。超大架构还是 Structurizr（C4 模型）更合适。</li>
+<li><strong>需要 Git diff 友好</strong>：因为输出是 HTML，不是文本语法，PR review 里只能看到 HTML 改动，看不到” 图本身的变化”。Mermaid/D2 在这点上更强。</li>
+<li><strong>非 Claude Code 用户</strong>：虽然技术上是 HTML + SVG，但整套技能是为 Claude Code 设计的。Codex 用户能用，Cursor/Cline 用户体验会打折扣。</li>
+</ul>
+<h3 id="跟同类项目的差异"><a href="#跟同类项目的差异" class="headerlink" title="跟同类项目的差异"></a>跟同类项目的差异</h3><ul>
+<li><strong>vs Mermaid</strong>：Mermaid 是” 语法 + 渲染器”，diagram-design 是” 技能 + 设计规范”。Mermaid 输出工程图，diagram-design 输出杂志图。</li>
+<li><strong>vs Excalidraw</strong>：Excalidraw 是” 可视化画板 + AI”，diagram-design 是”AI 直接吐图”。如果你想自己画，Excalidraw 更好；如果你想 AI 帮你画，diagram-design 更快。</li>
+<li><strong>vs Napkin / Whimsical / Lucidchart</strong>：这些是 SaaS 平台，diagram-design 是开源 + 自包含。SaaS 平台有协作、模板市场、品牌管理；diagram-design 给你完全控制权和可二次编辑的 HTML。</li>
+<li><strong>vs D2 / PlantUML</strong>：D2/PlantUML 是” 代码生成图”，diagram-design 是” 技能约束设计”。D2 给你的是” 能用就行”，diagram-design 给你的是” 高级感”。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>cathrynlavery/diagram-design 不是一个” 工具”，它是一种 **” 让 AI 画图也能出片” 的工作流 **。它通过 29 个细分的图表技能 + 一组硬性设计规范（特别是 4 像素栅格这个反直觉但有效的约束），把 LLM 的图表输出从”Mermaid 风” 拉到了” 杂志风”。</p>
+<p>如果你已经重度使用 Claude Code，并且经常需要给博客、文档、PPT 配架构图，这个项目值得直接装上。如果你只是偶尔画个流程图，Mermaid 还是够用的 —— 但你会越来越嫌弃它。</p>
+<p>下一个阶段我比较期待的方向是：把这种” 硬性设计约束” 思路推广到 UI 设计（design tokens + 技能）、数据可视化（chart-design skill）、PPT 排版（slide-design skill）。一旦 AI 学会遵守” 行业硬规矩”，它产出内容的可信度会再上一个台阶。</p>
+<p>仓库地址：<a target="_blank" rel="noopener" href="https://github.com/cathrynlavery/diagram-design">https://github.com/cathrynlavery/diagram-design</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/13/cathrynlavery-diagram-design-editorial-diagram-skill/" title="diagram-design：29 种编辑级图表技能，让 Claude Code 直接吐出 &quot;杂志风&quot; 架构图">https://www.daishengli.top/2026/08/13/cathrynlavery-diagram-design-editorial-diagram-skill/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/" rel="tag"># 开源工具</a>
+              <a href="/tags/%E5%9B%BE%E8%A1%A8%E7%94%9F%E6%88%90/" rel="tag"># 图表生成</a>
+              <a href="/tags/%E5%8F%AF%E8%A7%86%E5%8C%96/" rel="tag"># 可视化</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/12/agency-agents-230-specialized-ai-agent-roster/" rel="prev" title="agency-agents：143k stars 的 &quot;AI 全职员工花名册&quot;，把 230 个垂直专家塞进你的 Coding Agent">
+                  <i class="fa fa-angle-left"></i> agency-agents：143k stars 的 "AI 全职员工花名册"，把 230 个垂直专家塞进你的 Coding Agent
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/14/ragflow-open-source-rag-agent-engine-deep-document-understanding/" rel="next" title="RAGFlow：87.9k stars 的开源 RAG+Agent 引擎，把 &quot;深文档理解&quot; 做成生产级底座">
+                  RAGFlow：87.9k stars 的开源 RAG+Agent 引擎，把 "深文档理解" 做成生产级底座 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

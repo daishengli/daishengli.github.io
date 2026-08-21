@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="basecamp&#x2F;omarchy 是 Basecamp（GitHub 26.8k stars、2.7k forks、weekly +2.2k stars）由 DHH 主导的开源「主观美」Linux 发行版，底层是 Arch Linux + Hyprland 平铺窗口管理器 + Quickshell 桌面构造工具，上层预装了 Neovim、Chromium、Obsidian、OBS、Kdenlive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="basecamp&#x2F;omarchy：26.8k stars 的 &quot;主观美&quot;Linux 发行版，DHH 把 Arch + Hyprland + AI Coding Agent 揉成了一台开箱即用的开发者电脑">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/20/basecamp-omarchy-beautiful-modern-opinionated-linux/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="basecamp&#x2F;omarchy 是 Basecamp（GitHub 26.8k stars、2.7k forks、weekly +2.2k stars）由 DHH 主导的开源「主观美」Linux 发行版，底层是 Arch Linux + Hyprland 平铺窗口管理器 + Quickshell 桌面构造工具，上层预装了 Neovim、Chromium、Obsidian、OBS、Kdenlive">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-20T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.155Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Hyprland">
+<meta property="article:tag" content="Arch Linux">
+<meta property="article:tag" content="桌面环境">
+<meta property="article:tag" content="DHH">
+<meta property="article:tag" content="AI Coding Agent">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/20/basecamp-omarchy-beautiful-modern-opinionated-linux/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/20/basecamp-omarchy-beautiful-modern-opinionated-linux/","path":"2026/08/20/basecamp-omarchy-beautiful-modern-opinionated-linux/","title":"basecamp/omarchy：26.8k stars 的 \"主观美\"Linux 发行版，DHH 把 Arch + Hyprland + AI Coding Agent 揉成了一台开箱即用的开发者电脑"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>basecamp/omarchy：26.8k stars 的 "主观美"Linux 发行版，DHH 把 Arch + Hyprland + AI Coding Agent 揉成了一台开箱即用的开发者电脑 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81DHH-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E9%87%8D%E6%96%B0%E5%81%9A%E4%B8%80%E5%8F%B0-Linux-%E7%94%B5%E8%84%91"><span class="nav-number">1.</span> <span class="nav-text">一、DHH 为什么要重新做一台 Linux 电脑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E4%BD%93%E9%AA%8C%EF%BC%9A%E6%8A%8A-macOS-%E7%9A%84%E8%82%8C%E8%82%89%E8%AE%B0%E5%BF%86%E7%BF%BB%E8%AF%91%E6%88%90%E9%94%AE%E7%9B%98"><span class="nav-number">2.</span> <span class="nav-text">二、核心体验：把 macOS 的肌肉记忆翻译成键盘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Super-%E9%94%AE%E6%98%AF%E4%B8%AD%E5%BF%83"><span class="nav-number">2.1.</span> <span class="nav-text">1. Super 键是中心</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%AA%97%E5%8F%A3%E4%B8%8D%E5%86%8D%E2%80%9D%E5%8F%A0%E2%80%9D"><span class="nav-number">2.2.</span> <span class="nav-text">2. 窗口不再” 叠”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E5%9C%A8%E7%BB%88%E7%AB%AF%E5%92%8C-GUI-%E4%B8%8B%E7%BB%9F%E4%B8%80"><span class="nav-number">2.3.</span> <span class="nav-text">3. 复制粘贴在终端和 GUI 下统一</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81omarchy-CLI%EF%BC%9A%E6%8A%8A%E6%95%B4%E5%A5%97%E8%83%BD%E5%8A%9B%E8%84%9A%E6%9C%AC%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">三、omarchy CLI：把整套能力脚本化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%8122-%E5%A5%97%E4%B8%BB%E9%A2%98%EF%BC%8C%E4%BD%86%E6%AF%8F%E5%A5%97%E4%B8%BB%E9%A2%98%E7%AE%A1%E7%9A%84%E4%B8%8D%E5%8F%AA%E6%98%AF%E6%A1%8C%E9%9D%A2%E9%A2%9C%E8%89%B2"><span class="nav-number">4.</span> <span class="nav-text">四、22 套主题，但每套主题管的不只是桌面颜色</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81AI-Coding-Agent-%E6%98%AF%E4%B8%80%E7%AD%89%E5%85%AC%E6%B0%91"><span class="nav-number">5.</span> <span class="nav-text">五、AI Coding Agent 是一等公民</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%A2%84%E8%A3%85-8-%E4%B8%AA-Agent%EF%BC%8C%E6%8C%89%E9%9C%80%E4%B8%8B%E8%BD%BD"><span class="nav-number">5.1.</span> <span class="nav-text">1. 预装 8 个 Agent，按需下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%BB%98%E8%AE%A4-Agent-%E5%85%A8%E5%B1%80%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-number">5.2.</span> <span class="nav-text">2. 默认 Agent + 全局快捷键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%A1%B6%E9%83%A8%E6%A0%8F%E7%9A%84-Agents-Panel"><span class="nav-number">5.3.</span> <span class="nav-text">3. 顶部栏的 Agents Panel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Crash-%E8%87%AA%E5%8A%A8%E8%AF%8A%E6%96%AD"><span class="nav-number">5.4.</span> <span class="nav-text">4. Crash 自动诊断</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%8E%E4%B9%88%E8%A3%85-%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">6.</span> <span class="nav-text">六、怎么装 &#x2F; 快速上手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%A1%AC%E4%BB%B6%E5%87%86%E5%A4%87"><span class="nav-number">6.1.</span> <span class="nav-text">1. 硬件准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%83%A7-ISO-%E5%90%AF%E5%8A%A8"><span class="nav-number">6.2.</span> <span class="nav-text">2. 烧 ISO + 启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%BC%80%E6%9C%BA"><span class="nav-number">6.3.</span> <span class="nav-text">3. 第一次开机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%8D%87%E7%BA%A7"><span class="nav-number">6.4.</span> <span class="nav-text">4. 第一次升级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%B1%80%E9%99%90%E6%80%A7%E5%92%8C%E9%80%82%E7%94%A8%E4%BA%BA%E7%BE%A4"><span class="nav-number">7.</span> <span class="nav-text">七、局限性和适用人群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-number">8.</span> <span class="nav-text">写在最后</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/20/basecamp-omarchy-beautiful-modern-opinionated-linux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="basecamp&#x2F;omarchy：26.8k stars 的 &quot;主观美&quot;Linux 发行版，DHH 把 Arch + Hyprland + AI Coding Agent 揉成了一台开箱即用的开发者电脑 | 小戴的网络日志">
+      <meta itemprop="description" content="basecamp&#x2F;omarchy 是 Basecamp（GitHub 26.8k stars、2.7k forks、weekly +2.2k stars）由 DHH 主导的开源「主观美」Linux 发行版，底层是 Arch Linux + Hyprland 平铺窗口管理器 + Quickshell 桌面构造工具，上层预装了 Neovim、Chromium、Obsidian、OBS、Kdenlive、Waybar 等 50+ 应用，自带 22 套主题、统一剪贴板、TTS&#x2F;OCR、Super 键体系、omarchy CLI，并把 Claude Code &#x2F; Codex &#x2F; OpenCode &#x2F; Gemini &#x2F; Copilot &#x2F; Pi &#x2F; Grok &#x2F; Oh-My-Pi 八个 AI Coding Agent 当一等公民预装，崩溃诊断由 systemd-coredump + agent 自动跑。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          basecamp/omarchy：26.8k stars 的 "主观美"Linux 发行版，DHH 把 Arch + Hyprland + AI Coding Agent 揉成了一台开箱即用的开发者电脑
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-20 10:00:00" itemprop="dateCreated datePublished" datetime="2026-08-20T10:00:00+08:00">2026-08-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">basecamp/omarchy 是 Basecamp（GitHub 26.8k stars、2.7k forks、weekly +2.2k stars）由 DHH 主导的开源「主观美」Linux 发行版，底层是 Arch Linux + Hyprland 平铺窗口管理器 + Quickshell 桌面构造工具，上层预装了 Neovim、Chromium、Obsidian、OBS、Kdenlive、Waybar 等 50+ 应用，自带 22 套主题、统一剪贴板、TTS/OCR、Super 键体系、omarchy CLI，并把 Claude Code / Codex / OpenCode / Gemini / Copilot / Pi / Grok / Oh-My-Pi 八个 AI Coding Agent 当一等公民预装，崩溃诊断由 systemd-coredump + agent 自动跑。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上周我把一台闲置的旧 MacBook Air 翻出来擦灰。机器是 2017 款的，电池循环 800 多次，macOS Sonoma 已经卡得只能跑 Safari；可我又不想把它扔给爸妈当上网本，用两天他们就会怀念 iPad 的便利。</p>
+<p>我本来打算给它刷个 Ubuntu GNOME 了事。正巧这两天 GitHub Trending 周榜上挂着一个我从来没见过的项目，README 第一句话就写着：</p>
+<blockquote>
+<p>Omarchy is a beautiful, modern &amp; opinionated Linux distribution by DHH.</p>
+</blockquote>
+<p>点进去一看，作者是 DHH（David Heinemeier Hansson），Ruby on Rails 的创始人、Basecamp / HEY 的合伙人。这些年他在 world.hey.com 上写的 “I have left macOS for Linux” 系列长文几乎把整个 Ruby 圈和 Web 圈都点燃了。26.8k stars、weekly +2.2k stars、2.7k forks。这是一个有产品思想的工程师在亲手做一套他每天用的桌面系统，不是又一个 distro 爱好者写的小玩具。</p>
+<p>我花了两个晚上把它从头到尾啃了一遍。我看到的，是一份把” 主观美” 做成产品定义的 Linux 发行版，它的目标是让愿意信它的开发者开箱就能写代码，同时把 AI Coding Agent 当成一等公民。</p>
+<p>下面是我的笔记。</p>
+<hr>
+<h2 id="一、DHH-为什么要重新做一台-Linux-电脑"><a href="#一、DHH-为什么要重新做一台-Linux-电脑" class="headerlink" title="一、DHH 为什么要重新做一台 Linux 电脑"></a>一、DHH 为什么要重新做一台 Linux 电脑</h2><p>先把背景讲清楚。</p>
+<p>过去 15 年，Linux 桌面对普通开发者基本是三种选择：</p>
+<ul>
+<li>Ubuntu / Fedora 的 GNOME。开箱即用，但桌面体验越来越像 macOS 的劣化版，扩展性差。</li>
+<li>Elementary OS / Pop!_OS。想做出差异化，但都死在” 既要又要还要” 的中庸里。</li>
+<li>自己折腾 Arch + i3 / Sway。自由度拉满，但每次换新机器都要重配一遍，dotfiles 一旦丢了就是回到石器时代。</li>
+</ul>
+<p>DHH 自己公开说过离开 macOS 的几个具体原因：Apple Silicon 把 boot camp 砍了让他没法本地跑 Linux；Touch Bar 是倒退；开发者对 Apple 的控制权越来越弱；macOS 这两年的 UI 越来越封闭。这些抱怨在 Ruby 圈流行过一阵，但大多数 Linux 用户解决的方式是” 装个 Ubuntu 凑合”。</p>
+<p>DHH 走的是另一条路：既然没有满意的桌面，就自己做一个。</p>
+<p>他没有从零造轮子。Omarchy 选了三件已经成熟、社区巨大的现成组件搭骨架：</p>
+<table>
+<thead>
+<tr>
+<th>层次</th>
+<th>组件</th>
+<th>为什么是它</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>底层</td>
+<td> Arch Linux</td>
+<td> 滚动更新，包管理 (pacman) 干净，AUR 仓库量大</td>
+</tr>
+<tr>
+<td>窗口管理</td>
+<td> Hyprland</td>
+<td>Wayland 协议，动态平铺，有动画，社区最活跃的 Wayland compositor</td>
+</tr>
+<tr>
+<td> 桌面外壳</td>
+<td> Quickshell</td>
+<td> 用 QML 写 Wayland 状态栏和菜单的” 乐高积木”，声明式，动态主题，热重载</td>
+</tr>
+</tbody></table>
+<p>这三层组合在 2024 年之前都不是” 普通人能装出来” 的，光 Hyprland 的配置就够写一本手册，更别提还要把它跟 Quickshell 接起来、在 Wayland 下让 Electron 应用不闪屏、统一所有应用的主题。</p>
+<p>Omarchy 的价值就在这一步：它把这三层、50 个常用应用、一整套键位、22 套主题、一个统一的 <code>omarchy</code> CLI，用一份 config 加一键脚本全部打包好。然后把整套决策以 DHH 自己的偏好凝固成” 主观美”。他不喜欢的，DHH 直接砍掉，比如 Snap、Flatpak 默认关闭；他喜欢的，被设为默认，比如 Neovim、Obsidian、OBS Studio、Kdenlive。</p>
+<p>最后一句话来自 README：</p>
+<blockquote>
+<p>This isn’t just a grab bag of preinstalled packages. It’s a complete system designed with both aesthetics and productivity in mind.</p>
+</blockquote>
+<p>翻译过来就是，它是一台完整设计好的电脑，不是预装应用的合集。</p>
+<hr>
+<h2 id="二、核心体验：把-macOS-的肌肉记忆翻译成键盘"><a href="#二、核心体验：把-macOS-的肌肉记忆翻译成键盘" class="headerlink" title="二、核心体验：把 macOS 的肌肉记忆翻译成键盘"></a>二、核心体验：把 macOS 的肌肉记忆翻译成键盘</h2><p>我读完 <code>manual/03-coming-from-mac-or-windows.md</code> 之后，最直接的感受是，Omarchy 干的事是把从 macOS / Windows 带过来的肌肉记忆，翻译成键盘。</p>
+<p>这种” 翻译” 体现在三层。</p>
+<h3 id="1-Super-键是中心"><a href="#1-Super-键是中心" class="headerlink" title="1. Super 键是中心"></a>1. Super 键是中心</h3><p>你在 macOS 用了十年的 <code>Cmd + Space</code>（Spotlight）、Windows 上的 <code>Win</code> 键（开始菜单），在 Omarchy 里都叫 <code>Super</code>。在 PC 键盘上 Super 就是 Win 键；在 Mac 键盘上 Linux 把 Command 当 Super，所以你的拇指不用重新定位。</p>
+<p><code>Super + Space</code> 打开的是 Omarchy Menu，一个全局 launcher，能启动应用、改设置、装软件、截屏、发通知。它能干的事比 Raycast 多，因为它的能力直接绑在 <code>omarchy</code> CLI 上（后面展开）。</p>
+<h3 id="2-窗口不再”叠”"><a href="#2-窗口不再”叠”" class="headerlink" title="2. 窗口不再”叠”"></a>2. 窗口不再” 叠”</h3><p>Omarchy 默认用 Hyprland 的平铺（tiling）布局。开一个窗口就占满屏幕，开第二个就自动一分为二，开第三个就变三列。不存在窗口堆叠、不用拖、不用 snap。</p>
+<p>我在 macOS 上的痛苦之一就是同时开 4 个窗口、写代码时候总要去把终端” 挖出来”。在 Omarchy 里这个问题没了，每个窗口都按平铺规则摆在屏幕上，按 <code>Super + Arrow</code> 在它们之间跳。</p>
+<p>需要浮动窗口的时候，<code>Super + T</code> 切换。</p>
+<p>多 workspace 也走简化路线，<code>Super + 1/2/3/4</code> 跳过去、<code>Super + Shift + 1/2/3/4</code> 把当前窗口丢过去。没有动画延迟，是瞬切。和 macOS Mission Control 的” 飘过去” 比起来，这是另一个时代。</p>
+<h3 id="3-复制粘贴在终端和-GUI-下统一"><a href="#3-复制粘贴在终端和-GUI-下统一" class="headerlink" title="3. 复制粘贴在终端和 GUI 下统一"></a>3. 复制粘贴在终端和 GUI 下统一</h3><p>macOS 的 <code>Cmd + C / V</code>、Windows 的 <code>Ctrl + C / V</code>，但在 Windows 的终端里 <code>Ctrl + C</code> 会杀掉进程。这个 bug 从 1980s 一直活到今天。</p>
+<p>Omarchy 的解法是统一用 <code>Super + C / X / V</code>，在终端里也用同一套。Terminal 不再是 GUI 的” 另一个世界”。</p>
+<p>剪贴板历史则在 <code>Super + Ctrl + V</code>，支持图片，对应 macOS 上的 Raycast Clipboard 和 Windows 上的 Win + V。</p>
+<p>把这三层叠加起来，一个 Mac 用户打开 Omarchy 的第一感觉是” 换了一个长得不一样的 macOS”。这种” 翻译” 工作是大量体力活，你看 <code>manual/</code> 下面有 52 个章节，每一个可能踩坑的地方都写了。</p>
+<hr>
+<h2 id="三、omarchy-CLI：把整套能力脚本化"><a href="#三、omarchy-CLI：把整套能力脚本化" class="headerlink" title="三、omarchy CLI：把整套能力脚本化"></a>三、omarchy CLI：把整套能力脚本化</h2><p>Omarchy 的另一个杀手锏是 <code>omarchy</code> CLI。菜单能干的事，CLI 几乎全能干。它是 Omarchy 的后台。</p>
+<p><code>omarchy</code> 不带任何参数直接跑，输出是这样的：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Usage:</span><br><span class="line">  omarchy &lt;command&gt; [args...]</span><br><span class="line">  omarchy commands [--all] [--json] [--check]</span><br><span class="line">  omarchy &lt;group&gt; --help</span><br><span class="line">  omarchy &lt;group&gt; &lt;command&gt; --help</span><br><span class="line"></span><br><span class="line">Common commands:</span><br><span class="line">  omarchy update              Update Omarchy and system packages</span><br><span class="line">  omarchy theme list          list available themes</span><br><span class="line">  omarchy theme set &lt;name&gt;    Apply a theme</span><br><span class="line">  omarchy font list           list available fonts</span><br><span class="line">  omarchy screenshot          Take a screenshot</span><br><span class="line">  omarchy debug               Print debugging information</span><br><span class="line"></span><br><span class="line">Groups:</span><br><span class="line">  agent          AI coding agent usage data</span><br><span class="line">  audio          Audio input and output controls</span><br><span class="line">  bar            Omarchy shell bar layout and settings</span><br><span class="line">  battery        Battery status helpers</span><br><span class="line">  bluetooth      Bluetooth device controls</span><br><span class="line">  branch         Omarchy git branch management</span><br><span class="line">  ...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意几个 group：</p>
+<ul>
+<li><code>agent</code>，AI Coding Agent 的用量统计</li>
+<li><code>bar</code>，顶部栏的布局配置</li>
+<li><code>capture</code>，截屏、录屏、OCR、QR 码解码</li>
+<li><code>channel</code>，Omarchy 的 release channel 切换</li>
+<li><code>theme</code>，主题管理</li>
+<li><code>updates</code>，整个系统的升级</li>
+</ul>
+<p>每个 group 下面都有具体子命令。比如 <code>omarchy capture screenrecording --with-webcam --with-microphone-audio</code> 就能直接开始录屏带摄像头和麦克风。</p>
+<p>这套 CLI 设计对开发者友好。<code>omarchy commands --json</code> 输出 JSON 让你写 shell 脚本；每个子命令都支持 <code>--help</code>；菜单本身也可以脚本化，比如 <code>omarchy menu summon style.theme</code> 直接跳到主题选择器。</p>
+<p>这条命令尤其体现 Omarchy 的产品哲学：</p>
+<blockquote>
+<p>This is particularly helpful when you’re having an AI agent work with you on customization or configuration.</p>
+</blockquote>
+<p>CLI 是给 AI Coding Agent 用的接口。当你想让 Claude Code 帮你调一下 Hyprland 配置、改一下 bar 的位置、加一个新的快捷键，直接告诉 agent “omarchy bar height 24” 这种自然语言映射就行，背后是结构化 CLI。</p>
+<p>这种” 产品 + AI agent 协同” 的思路，比” 给 agent 装 MCP” 或” 让 agent 自己 shell 执行” 的方案都更优雅。CLI 本身就是 LLM 最容易理解的接口。</p>
+<hr>
+<h2 id="四、22-套主题，但每套主题管的不只是桌面颜色"><a href="#四、22-套主题，但每套主题管的不只是桌面颜色" class="headerlink" title="四、22 套主题，但每套主题管的不只是桌面颜色"></a>四、22 套主题，但每套主题管的不只是桌面颜色</h2><p>打开 <code>manual/06-themes.md</code>，你会看到一个列表：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tokyo-night / catppuccin / lumon / ethereal / everforest /</span><br><span class="line">gruvbox / miasma / hackerman / osaka-jade / kanagawa /</span><br><span class="line">nord / matte-black / vantablack / ristretto / retro-82 /</span><br><span class="line">flexoki-light / rose-pine / catppuccin-latte / white ...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>22 套主题，每一套都带预览图，看上去都像正经的” 主题作品集”。</p>
+<p>关键不是” 多”，很多 Linux 主题包都提供几百套。关键在” 全”：一套 Omarchy 主题切换，会同时改：</p>
+<ul>
+<li>桌面壁纸，每套主题带 3-5 张可切</li>
+<li> Hyprland 配色</li>
+<li>终端（Kitty / Alacritty）配色</li>
+<li> Neovim 配色</li>
+<li> btop（系统监视器）配色</li>
+<li> Chromium 主题</li>
+<li> Omarchy 自己的 shell（top bar、菜单、通知、OSD、锁屏）</li>
+<li>解锁界面（boot 时输入加密密码的界面）</li>
+</ul>
+<p>第 8 项尤其细节。Omarchy 把开机输入磁盘加密密码的界面也按主题重画了。你在开机那一刻看到的画面，和你平时在 IDE 里写的代码，是同一套配色。</p>
+<p>我用主题的时候操作很简单：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">omarchy theme list                  # 看所有主题</span><br><span class="line">omarchy theme set tokyo-night       # 切到 Tokyo Night</span><br><span class="line">omarchy theme set catppuccin        # 切到 Catppuccin</span><br><span class="line">Super + Ctrl + Shift + Space        # 键盘直接弹主题选择器</span><br><span class="line">Super + Ctrl + Space                # 切当前主题的背景图</span><br></pre></td></tr></tbody></table></figure>
+
+<p>主题切换是热重载的，不用 logout、不会闪屏、Chromium 的配色也会跟着变。这一点比 macOS 的” 系统强调色” 更彻底。</p>
+<hr>
+<h2 id="五、AI-Coding-Agent-是一等公民"><a href="#五、AI-Coding-Agent-是一等公民" class="headerlink" title="五、AI Coding Agent 是一等公民"></a>五、AI Coding Agent 是一等公民</h2><p>Omarchy 最让我意外的章节是 <code>manual/17-ai.md</code>。它把 AI Coding Agent 当作操作系统级公民。这件事我还没在别的发行版看到过。</p>
+<h3 id="1-预装-8-个-Agent，按需下载"><a href="#1-预装-8-个-Agent，按需下载" class="headerlink" title="1. 预装 8 个 Agent，按需下载"></a>1. 预装 8 个 Agent，按需下载</h3><p>Omarchy 默认在 <code>~/.local/bin/</code> 下挂了一组 lazy-loaded launcher：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th> Agent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>claude</code></td>
+<td>Claude Code</td>
+</tr>
+<tr>
+<td><code>codex</code></td>
+<td>OpenAI Codex</td>
+</tr>
+<tr>
+<td><code>opencode</code></td>
+<td>OpenCode</td>
+</tr>
+<tr>
+<td><code>gemini</code></td>
+<td>Google Gemini CLI</td>
+</tr>
+<tr>
+<td><code>copilot</code></td>
+<td>GitHub Copilot CLI</td>
+</tr>
+<tr>
+<td><code>crush</code></td>
+<td>Charmbracelet Crush</td>
+</tr>
+<tr>
+<td><code>grok</code></td>
+<td>xAI Grok CLI</td>
+</tr>
+<tr>
+<td><code>pi</code></td>
+<td>Mario Zechner’s Pi-mono</td>
+</tr>
+<tr>
+<td><code>omp</code></td>
+<td>Oh My Pi</td>
+</tr>
+</tbody></table>
+<p>这些 launcher 都是 mise 管理的 stub。第一次跑的时候才下载对应 CLI，平时不占空间。</p>
+<p>要装额外的，Omarchy 给你一行：<code>omarchy-mise-install &lt;package&gt; [command-name]</code>。</p>
+<p>跑 <code>omarchy update</code>（或别名 <code>mup</code>）的时候，这些 stub 会跟着系统包一起升。你不会因为某个 Agent 升级而手动改 path。</p>
+<h3 id="2-默认-Agent-全局快捷键"><a href="#2-默认-Agent-全局快捷键" class="headerlink" title="2. 默认 Agent + 全局快捷键"></a>2. 默认 Agent + 全局快捷键</h3><p>第一次启动 Omarchy，它会通过系统通知问你” 选一个默认 Agent”。选完之后：</p>
+<ul>
+<li><code>Super + Shift + Ctrl + A</code>：在专属终端窗口里启动默认 Agent（如果没选就先弹选择器）</li>
+<li><code>a</code>：在当前终端里 inline 跑默认 Agent</li>
+<li><code>c</code> / <code>cx</code> / <code>cy</code>：分别启动 OpenCode / Claude Code / Codex</li>
+</ul>
+<p>默认 Agent 会带着” 不要停下来问我” 的 auto-approve 模式跑。DHH 在 manual 里直说：”be ready for them to actually do things!”</p>
+<blockquote>
+<p>agents refuse to remember trust for your home directory, launches from <code>$HOME</code> start in <code>~/Work</code> instead.</p>
+</blockquote>
+<p>Agent 启动时如果当前路径是 <code>$HOME</code>，会自动跳到 <code>~/Work</code>，避免 Agent 在用户目录里乱跑。</p>
+<p>主题切换也会同步到 Agent。Claude Code、Pi、OpenCode 三家会自动跟着 Omarchy 当前主题变色。你看终端里 Claude Code 跑的 TUI 跟系统配色是同一套，这件事比听上去更解压。</p>
+<h3 id="3-顶部栏的-Agents-Panel"><a href="#3-顶部栏的-Agents-Panel" class="headerlink" title="3. 顶部栏的 Agents Panel"></a>3. 顶部栏的 Agents Panel</h3><p>Omarchy 顶部栏会在系统第一次检测到 AI Coding 用量时长出一个 agents 图标。左键点开看到的面板：</p>
+<ul>
+<li>你的订阅 plan</li>
+<li>5 小时 session 限额已用百分比，周限额，预付费余额</li>
+<li>按日、按模型的 token 用量分布</li>
+<li>支持 Claude Code、Codex、Fireworks 出厂自带</li>
+</ul>
+<p>数据每 15 分钟自动从 <code>omarchy agent usage-update</code> 重新生成。如果你有多台机器，还能通过一个同步文件夹把用量合并到一台的总面板上。</p>
+<p>这套设计对订阅了 Claude Code Max 5 / Codex Pro / Cursor Pro 的用户很有用。你再也不用登三个网站去看自己” 还剩多少”。</p>
+<h3 id="4-Crash-自动诊断"><a href="#4-Crash-自动诊断" class="headerlink" title="4. Crash 自动诊断"></a>4. Crash 自动诊断</h3><p>最后一件让我服气的事：Omarchy 会监听 systemd-coredump。任何进程 segfault，它会推一条”Process crashed” 通知。点击之后默认 Agent 会被唤起，配上 <code>diagnose-crash</code> skill，自动从 coredump 里取信息、判断这个崩溃值不值得往上游报。</p>
+<p>你也能手动跑：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">omarchy agent crash &lt;pid&gt;   # 来自 coredumpctl list 的 PID</span><br></pre></td></tr></tbody></table></figure>
+
+<p>开关在 <em>Trigger &gt; Toggle &gt; Crash Capture</em>（或 <code>omarchy toggle crash-capture</code>）。</p>
+<p>这件事的工程含量很高。把 OS 级的崩溃处理和 LLM 的诊断能力串成一个 zero-touch 流程，Linux 桌面社区里我还没见过第二家做。</p>
+<hr>
+<h2 id="六、怎么装-快速上手"><a href="#六、怎么装-快速上手" class="headerlink" title="六、怎么装 / 快速上手"></a>六、怎么装 / 快速上手</h2><p>如果你想自己试一下，最快路径是这样的。</p>
+<h3 id="1-硬件准备"><a href="#1-硬件准备" class="headerlink" title="1. 硬件准备"></a>1. 硬件准备</h3><ul>
+<li>一台 PC 或 Intel Mac（Apple Silicon 不在官方支持列表，需要走 Mac 支持章节）</li>
+<li>U 盘一个，用来烧 ISO</li>
+<li> 先关掉 BIOS 里的 Secure Boot 和 TPM。Omarchy 的 README 里特别提醒：这两个是 Microsoft 的安全机制，会挡掉大多数 Linux 发行版，包括 Omarchy。</li>
+<li>蓝牙键盘没法用来输磁盘加密密码，必须用有线或 2.4G 键盘（README 推荐 Lofree Flow84）</li>
+</ul>
+<h3 id="2-烧-ISO-启动"><a href="#2-烧-ISO-启动" class="headerlink" title="2. 烧 ISO + 启动"></a>2. 烧 ISO + 启动</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">下载 Omarchy ISO（omarchy.org）</span><br><span class="line">Mac/Windows: balenaEtcher 烧到 U 盘</span><br><span class="line">Linux: caligula（github.com/ifd3f/caligula）</span><br><span class="line"></span><br><span class="line">开机选 U 盘启动 → 回答几个配置问题 → 选驱动器</span><br><span class="line">最快机器 &lt; 1 分钟完成；旧机器 &lt; 5 分钟</span><br></pre></td></tr></tbody></table></figure>
+
+<p>默认是全盘安装加全盘加密。如果你不想加密，在磁盘格式化确认那一步按 <code>Ctrl + C</code>。</p>
+<p>如果你想双启动 macOS / Windows，先关 BitLocker，再选”free-space install”，它会把 Omarchy 装到空闲分区。</p>
+<h3 id="3-第一次开机"><a href="#3-第一次开机" class="headerlink" title="3. 第一次开机"></a>3. 第一次开机</h3><p>进去之后按 <code>Super + Space</code>，Omarchy 菜单就出来了。从菜单里挑一个主题（推荐 Tokyo Night 或 Catppuccin），然后：</p>
+<ul>
+<li><code>Super + Return</code> 启动终端</li>
+<li><code>Super + Shift + Return</code> 启动浏览器</li>
+<li><code>Super + K</code> 看所有热键</li>
+<li><code>omarchy default agent claude</code> 把默认 Agent 设成 Claude Code</li>
+<li> 跟着一次性通知走完默认 Agent 登录</li>
+</ul>
+<h3 id="4-第一次升级"><a href="#4-第一次升级" class="headerlink" title="4. 第一次升级"></a>4. 第一次升级</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">omarchy update          # 更新 Omarchy 本身 + 全系统包 + AI Agent stub</span><br><span class="line">omarchy theme list      # 看看新增了哪些主题</span><br><span class="line">omarchy commands --all  # 看 CLI 多了什么</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Omarchy 的 <code>update</code> 命令会在升级之前先做一次系统快照，出问题可以秒回滚。这一点是从 macOS Time Machine 学过来的工程实践。</p>
+<hr>
+<h2 id="七、局限性和适用人群"><a href="#七、局限性和适用人群" class="headerlink" title="七、局限性和适用人群"></a>七、局限性和适用人群</h2><p>写到这里我也得说清楚 Omarchy 不适合谁。</p>
+<p><strong>它不适合</strong>：</p>
+<ul>
+<li>Linux 新手。Omarchy 把” 主观美” 做到极致，意味着很多” 我能不能改成 GNOME 那样” 的请求不会有答复。它欢迎你提 PR，不欢迎你争论审美。</li>
+<li>企业 IT 管控。Omarchy 默认关掉 Secure Boot、关掉 Snap/Flatpak、不走 Microsoft 的安全机制。对企业内网、需要 Active Directory / Intune / MDM 的场景，它不是合适底座。</li>
+<li>NVIDIA 显卡用户。Wayland 下的 NVIDIA 闭源驱动一直有兼容性问题，Omarchy 不例外。我建议 NVIDIA 用户先去 Discord <code>#omarchy-help</code> 看看自己显卡型号有没有坑。</li>
+</ul>
+<p><strong>它适合</strong>：</p>
+<ul>
+<li>个人开发者。你想要一台打开就能写代码的 Linux 桌面，不想花两周末配 i3 / Sway / Hyprland。</li>
+<li>从 macOS 跑过来的用户。<code>manual/03</code> 那一章基本就是为你写的。</li>
+<li>重度 AI Coding Agent 用户。Claude Code / Codex / Pi 一天跑几十次的人，那个顶部栏的 Agents Panel 会让你回不去。</li>
+<li>对审美有要求的人。22 套主题做到了” 美”，不只是” 够用”。</li>
+</ul>
+<p><strong>它的局限性</strong>：</p>
+<ul>
+<li>配置高度集中于 DHH 个人审美。你不会想要去把 Super 键改回 Ctrl，也没必要改。</li>
+<li>更新节奏激进。Omarchy 走 Arch 滚动更新加 DHH 一周推好几次 commit。如果你追求” 装一次用五年”，它会让你不舒服。</li>
+<li>AI Agent skill 是实验性的。Omarchy 自带的 omarchy skill 让 agent 帮你改 Hyprland / 主题，最好先开 plan mode，因为不同 model 用它的效果差异大。我自己被 agent 改坏过一次主题，最后用 <code>omarchy reinstall configs</code> 救回来。</li>
+</ul>
+<hr>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>Omarchy 不是” 又一个 Linux 发行版”。</p>
+<p>它是 DHH 把自己过去两年从 macOS 跑回 Linux 的工程经验，连同审美偏好、键盘哲学、对 AI Coding Agent 的拥抱，打包成的一份” 打开就能用” 的开发者电脑。weekly +2.2k stars 是开发者社区用脚投票，告诉 DHH “我们也要一台这样的电脑”。</p>
+<p>26.8k stars、weekly +2.2k、quattro 分支、Pushing PGP 签名 commit、DHH 本人每天在写。这是 DHH 正在产品化的操作系统，不是 demo。</p>
+<p>如果你对 Linux 桌面犹豫了三年，或者你已经被 macOS Sonoma 逼到崩溃，或者你只是个每天开 30 次 Claude Code 的人，去 omarchy.org 下个 ISO，烧到 U 盘，给自己两小时。</p>
+<p>你会发现，一台让你每天写代码的电脑，长得并不像 Mac。</p>
+<hr>
+<ul>
+<li><strong>GitHub</strong>：<a target="_blank" rel="noopener" href="https://github.com/basecamp/omarchy">https://github.com/basecamp/omarchy</a></li>
+<li><strong> 官网</strong>：<a target="_blank" rel="noopener" href="https://omarchy.org/">https://omarchy.org</a></li>
+<li><strong> 社区 Discord</strong>：<a target="_blank" rel="noopener" href="https://omarchy.org/discord">https://omarchy.org/discord</a></li>
+<li><strong> 手册镜像</strong>：<a target="_blank" rel="noopener" href="https://learn.omacom.io/2/the-omarchy-manual">https://learn.omacom.io/2/the-omarchy-manual</a></li>
+<li><strong> 额外主题</strong>：<a target="_blank" rel="noopener" href="https://omarchy.org/themes/">https://omarchy.org/themes/</a></li>
+<li><strong> 一键安装</strong>：下载 ISO → balenaEtcher → U 盘启动 → 跟着 5 个问题走完</li>
+<li><strong>快速命令</strong>：<code>omarchy update</code>、<code>omarchy theme set tokyo-night</code>、<code>omarchy default agent claude</code></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/20/basecamp-omarchy-beautiful-modern-opinionated-linux/" title="basecamp&#x2F;omarchy：26.8k stars 的 &quot;主观美&quot;Linux 发行版，DHH 把 Arch + Hyprland + AI Coding Agent 揉成了一台开箱即用的开发者电脑">https://www.daishengli.top/2026/08/20/basecamp-omarchy-beautiful-modern-opinionated-linux/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/Hyprland/" rel="tag"># Hyprland</a>
+              <a href="/tags/Arch-Linux/" rel="tag"># Arch Linux</a>
+              <a href="/tags/%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83/" rel="tag"># 桌面环境</a>
+              <a href="/tags/DHH/" rel="tag"># DHH</a>
+              <a href="/tags/AI-Coding-Agent/" rel="tag"># AI Coding Agent</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/19/volcengine-openviking-context-database-ai-agent/" rel="prev" title="volcengine&#x2F;OpenViking：30k stars 的「AI Agent 上下文数据库」，把 viking:&#x2F;&#x2F; 虚拟文件系统 + L0&#x2F;L1&#x2F;L2 三层加载塞给 Agent，token 砍掉 91%">
+                  <i class="fa fa-angle-left"></i> volcengine/OpenViking：30k stars 的「AI Agent 上下文数据库」，把 viking:// 虚拟文件系统 + L0/L1/L2 三层加载塞给 Agent，token 砍掉 91%
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/21/aprilnea-openlogi-logitech-options-rust-alternative/" rel="next" title="AprilNEA&#x2F;OpenLogi：12k stars 的本地 Logitech Options+ 替代品，Rust 写、HID++ 直连、零账号零遥测">
+                  AprilNEA/OpenLogi：12k stars 的本地 Logitech Options+ 替代品，Rust 写、HID++ 直连、零账号零遥测 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

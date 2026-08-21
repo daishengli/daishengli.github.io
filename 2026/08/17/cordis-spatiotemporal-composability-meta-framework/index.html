@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="cordiverse&#x2F;cordis 是 GitHub 5.4k stars、290 forks、MIT 协议的 Node.js &quot;时空可组合性（Spatiotemporal Composability）&quot;元框架，五个核心概念（插件 &#x2F; 上下文 &#x2F; inject 依赖声明 &#x2F; 类型化事件分发 &#x2F; 可逆注册）补齐了&quot;插件可装可卸、副作用全可回滚&quot;的工程空白，凭借一篇正式 paper 的编程范式论证和整">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cordis：5.4k stars、今日 +959 的 &quot;时空可组合性&quot; 元框架，正在悄悄支撑 DeepSeek Harness 的 Agent 运行时">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/17/cordis-spatiotemporal-composability-meta-framework/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="cordiverse&#x2F;cordis 是 GitHub 5.4k stars、290 forks、MIT 协议的 Node.js &quot;时空可组合性（Spatiotemporal Composability）&quot;元框架，五个核心概念（插件 &#x2F; 上下文 &#x2F; inject 依赖声明 &#x2F; 类型化事件分发 &#x2F; 可逆注册）补齐了&quot;插件可装可卸、副作用全可回滚&quot;的工程空白，凭借一篇正式 paper 的编程范式论证和整">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-17T12:40:00.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.156Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Cordis">
+<meta property="article:tag" content="Spatiotemporal Composability">
+<meta property="article:tag" content="编程范式">
+<meta property="article:tag" content="DeepSeek Harness">
+<meta property="article:tag" content="插件框架">
+<meta property="article:tag" content="元框架">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/17/cordis-spatiotemporal-composability-meta-framework/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/17/cordis-spatiotemporal-composability-meta-framework/","path":"2026/08/17/cordis-spatiotemporal-composability-meta-framework/","title":"Cordis：5.4k stars、今日 +959 的 \"时空可组合性\" 元框架，正在悄悄支撑 DeepSeek Harness 的 Agent 运行时"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Cordis：5.4k stars、今日 +959 的 "时空可组合性" 元框架，正在悄悄支撑 DeepSeek Harness 的 Agent 运行时 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%88%E4%B8%80%E6%AC%BE%E2%80%9D%E6%8F%92%E4%BB%B6%E6%A1%86%E6%9E%B6%E2%80%9D%E8%83%BD%E4%B8%8A-Trending%E2%80%94%E2%80%94%E8%80%8C%E4%B8%94%E6%97%A5%E5%A2%9E%E8%BF%91%E5%8D%83"><span class="nav-number">1.</span> <span class="nav-text">一、为什么又一款” 插件框架” 能上 Trending—— 而且日增近千</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BA%94%E4%B8%AA%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%9ACordis-%E7%9A%84%E5%85%A8%E9%83%A8%E4%B8%96%E7%95%8C%E8%A7%82"><span class="nav-number">2.</span> <span class="nav-text">二、五个核心概念：Cordis 的全部世界观</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%8F%92%E4%BB%B6-%E5%AE%9E%E7%8E%B0-Service-%E7%9A%84%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.1.</span> <span class="nav-text">1. 插件 &#x3D; 实现 Service 的对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Context-%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%AE%B9%E5%99%A8%EF%BC%8C%E6%AF%8F%E4%B8%AA%E6%9C%8D%E5%8A%A1%E5%8D%A0%E6%8D%AE%E4%B8%80%E4%B8%AA%E7%A8%B3%E5%AE%9A%E7%9A%84-ctx"><span class="nav-number">2.2.</span> <span class="nav-text">2. Context &#x3D; 服务的容器，每个服务占据一个稳定的 ctx.&lt;key&gt;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-inject-%E5%A3%B0%E6%98%8E%E5%BC%8F%E4%BE%9D%E8%B5%96%EF%BC%8C%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F%E7%94%B1%E4%BE%9D%E8%B5%96%E6%8E%A8%E5%AF%BC"><span class="nav-number">2.3.</span> <span class="nav-text">3. inject &#x3D; 声明式依赖，加载顺序由依赖推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%B1%BB%E5%9E%8B%E5%8C%96%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%EF%BC%88emit-waterfall-parallel-serial%EF%BC%89"><span class="nav-number">2.4.</span> <span class="nav-text">4. 类型化事件分发（emit &#x2F;waterfall&#x2F;parallel &#x2F;serial）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%B3%A8%E5%86%8C-%E5%8F%AF%E9%80%86%E7%9A%84%E5%89%AF%E4%BD%9C%E7%94%A8"><span class="nav-number">2.5.</span> <span class="nav-text">5. 注册 &#x3D; 可逆的副作用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%EF%BC%9Aeffect-%C3%97-coeffect-%E7%9A%84%E2%80%9D%E5%BD%A2%E5%BC%8F%E5%8C%96%E9%AA%A8%E6%9E%B6%E2%80%9D"><span class="nav-number">3.</span> <span class="nav-text">三、技术架构：effect × coeffect 的” 形式化骨架”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E4%B8%A4%E4%B8%AA-Context%EF%BC%9AEffect-context-Coeffect-context"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 两个 Context：Effect context + Coeffect context</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E4%B8%80%E4%B8%AA%E7%BB%9F%E4%B8%80%E7%9A%84-Context-type"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 一个统一的 Context type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Component-%E4%B8%8E%E5%8A%A8%E6%80%81%E7%BB%84%E5%90%88%E6%BC%94%E7%AE%97%EF%BC%88Calculus-of-dynamic-composition%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 Component 与动态组合演算（Calculus of dynamic composition）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E5%AE%9E%E9%99%85%E4%BB%A3%E7%A0%81%E9%AA%A8%E6%9E%B6"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 实际代码骨架</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E8%B0%81%E5%9C%A8%E7%94%A8-Cordis%EF%BC%9ADeepSeek-Harness-%E6%98%AF%E5%86%B0%E5%B1%B1%E4%B8%80%E8%A7%92"><span class="nav-number">4.</span> <span class="nav-text">四、谁在用 Cordis：DeepSeek Harness 是冰山一角</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%EF%BC%9A%E4%B8%80%E4%B8%AA%E8%83%BD%E5%9C%A8-5-%E5%88%86%E9%92%9F%E5%86%85%E8%B7%91%E5%AE%8C%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">5.</span> <span class="nav-text">五、快速上手：一个能在 5 分钟内跑完的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E5%AE%89%E8%A3%85%EF%BC%88Yarn-workspace-%E6%A8%A1%E5%BC%8F%EF%BC%89"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 安装（Yarn workspace 模式）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E7%94%A8-Cordis-%E5%86%99%E4%B8%80%E4%B8%AA%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84-plugin-%E4%B8%8E%E4%B8%80%E4%B8%AA-hot-reload-%E5%AE%9E%E9%AA%8C"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 用 Cordis 写一个最简单的 plugin 与一个 hot reload 实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E4%B8%80%E4%BA%9B%E4%B8%8D%E9%82%A3%E4%B9%88%E5%8F%8B%E5%A5%BD%E7%9A%84%E7%9C%9F%E7%9B%B8"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 一些不那么友好的真相</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93%EF%BC%9A%E8%B0%81%E5%BA%94%E8%AF%A5%E7%8E%B0%E5%9C%A8%E5%85%B3%E6%B3%A8-Cordis"><span class="nav-number">6.</span> <span class="nav-text">六、总结：谁应该现在关注 Cordis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%99%E2%80%9D%E9%80%A0-AI-Agent-%E6%A1%86%E6%9E%B6%E2%80%9D%E7%9A%84%E4%BA%BA"><span class="nav-number">6.1.</span> <span class="nav-text">给” 造 AI Agent 框架” 的人</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%99%E2%80%9D%E7%94%A8-AI-Agent-%E6%A1%86%E6%9E%B6%E2%80%9D%E7%9A%84%E4%BA%BA"><span class="nav-number">6.2.</span> <span class="nav-text">给” 用 AI Agent 框架” 的人</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/17/cordis-spatiotemporal-composability-meta-framework/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Cordis：5.4k stars、今日 +959 的 &quot;时空可组合性&quot; 元框架，正在悄悄支撑 DeepSeek Harness 的 Agent 运行时 | 小戴的网络日志">
+      <meta itemprop="description" content="cordiverse&#x2F;cordis 是 GitHub 5.4k stars、290 forks、MIT 协议的 Node.js &quot;时空可组合性（Spatiotemporal Composability）&quot;元框架，五个核心概念（插件 &#x2F; 上下文 &#x2F; inject 依赖声明 &#x2F; 类型化事件分发 &#x2F; 可逆注册）补齐了&quot;插件可装可卸、副作用全可回滚&quot;的工程空白，凭借一篇正式 paper 的编程范式论证和整套 effect &#x2F; coeffect 形式化抽象，成为 DeepSeek Harness（@deepseek-ai&#x2F;cordis fork）以及多个 AI Agent harness 的底层 plugin runtime，单日 +959 stars 冲上 GitHub Trending。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Cordis：5.4k stars、今日 +959 的 "时空可组合性" 元框架，正在悄悄支撑 DeepSeek Harness 的 Agent 运行时
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-17 20:40:00" itemprop="dateCreated datePublished" datetime="2026-08-17T20:40:00+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">cordiverse/cordis 是 GitHub 5.4k stars、290 forks、MIT 协议的 Node.js "时空可组合性（Spatiotemporal Composability）"元框架，五个核心概念（插件 / 上下文 / inject 依赖声明 / 类型化事件分发 / 可逆注册）补齐了"插件可装可卸、副作用全可回滚"的工程空白，凭借一篇正式 paper 的编程范式论证和整套 effect / coeffect 形式化抽象，成为 DeepSeek Harness（@deepseek-ai/cordis fork）以及多个 AI Agent harness 的底层 plugin runtime，单日 +959 stars 冲上 GitHub Trending。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>有一类开源项目，作者的代码量很克制，文档却厚得像论文；他们不发 Twitter，不在 Discord 里” 营销”，GitHub Trending 上也从来不是那种” 一次最多待两小时就掉榜” 的流星。这种项目往往是某个被悄悄复用的” 基础设施级” 东西 —— 你日常用的一个大玩具底下，可能就垫着它。</p>
+<p>上周我就撞到了一起。</p>
+<p>我本来在研究 DeepSeek 前一阵开源的 <strong>DeepSeek Harness（DSH）</strong>—— 一个跟 LangGraph / CrewAI 同一梯队的 AI Agent 编排框架，按理说它的 plugin 体系应该自己写一套嘛，对吧？结果翻到 DSH 的 vendor 目录，第一条注释就把我逗笑了：</p>
+<blockquote>
+<p>“Cordis is vendored in DeepSeek Harness as the underlying plugin framework.”</p>
+</blockquote>
+<p>DSH 不是” 用了” Cordis—— <strong>它是把 <code>@deepseek-ai/cordis</code> 4.0.1 整包 vendor 进仓库里</strong>。换句话说，DeepSeek 在做自己那一整套 Agent 编排哲学的时候，选择不重新发明插件系统，而是把一个名字你可能没听过、社区讨论不多、只在 paper 一栏挂了一篇 PDF 的 Node.js 框架，请到工程的心脏位置。</p>
+<p>这个框架就是 <strong>cordiverse/cordis</strong>—— 一款自称 <strong>“A Meta-Framework of Spatiotemporal Composability”</strong>（时空可组合性的元框架）的 TypeScript 开源项目。它今天已经爬到 GitHub Trending 的 #9，<strong>5,378 stars / 290 forks</strong>，<strong>但更炸的数字是今日 +959 stars</strong>—— 对一个 4 年历史的 repo 来说，这种日增量是反常的。</p>
+<p>我花了周末把它的 paper（2026 年 8 月 13 日的最新草稿）、cordis-primer、核心包代码、最近一周的 PR 全过了一遍。下面是我最关心的那几个问题，以及我给出的答案。</p>
+<hr>
+<h2 id="一、为什么又一款”插件框架”能上-Trending——而且日增近千"><a href="#一、为什么又一款”插件框架”能上-Trending——而且日增近千" class="headerlink" title="一、为什么又一款”插件框架”能上 Trending——而且日增近千"></a>一、为什么又一款” 插件框架” 能上 Trending—— 而且日增近千</h2><p>先把” 为什么这件事重要” 说清楚。</p>
+<p>我自己写过的、或者读过的 Node.js 插件框架，少说也有十几款了：NestJS 的 Module、Vue 的 Plugin、Rollup 的 Plugin、Fastify 的 Plugin、vscode 的 extension host、Electron 的 IPC、Koishi 的 plugin，甚至 Cordova 的 hook…… 每款都说自己是” 插件系统的最优解”。</p>
+<p>但如果你把” 插件系统” 这个词拆开看，每家其实只回答了其中一部分问题：</p>
+<ul>
+<li><strong>NestJS / Vue</strong> 答了” 组件怎么挂到根上下文”—— 但完全没有” 插件卸载的时候副作用能不能干净地回滚”。</li>
+<li><strong>Rollup / Webpack</strong> 答了” 如何按声明的依赖驱动加载顺序”—— 但你问它” 插件之间能不能互相 override 配置、有冲突时回退到上一次的 committed 值”，它就沉默了。</li>
+<li><strong>VSCode extension host</strong> 答了” 插件之间靠 extension API 通信，进程隔离”—— 但它是用进程隔离换隔离，代价是 IPC，而且 Undo 仍然 owner 在插件自己手里。</li>
+<li><strong>LangGraph / CrewAI / AutoGen</strong> 这种 2024 年以后火起来的 AI Agent 编排层，看上去” 很动态”—— 但它们在底层仍然要落一个插件系统，最后要么自己写一个迷你版（LangGraph 的 Pregel），要么干脆把 LangChain 那套 Retryable / Runnable 的迁移语义直接当配置层用。</li>
+</ul>
+<p><strong>真正难的问题是这样的</strong>：</p>
+<blockquote>
+<p>当你装一个 AI Agent 框架的时候，你装进去的不只是一个对象 —— 你装进去的是一个可能 30 秒后会<strong>重写自己上下文</strong>的、有副作用的、可能还会在执行到一半时<strong>被要求撤回</strong>的活物。</p>
+</blockquote>
+<p>想清楚这件事，你才能体会 Cordis 想要解决的” 两个正交维度”：</p>
+<ul>
+<li><strong>时间可组合性（Temporal Composability）</strong>：组件卸载时，它的副作用能不能<strong>完整地、可预测地</strong>回滚？</li>
+<li><strong>空间可组合性（Spatial Composability）</strong>：组件之间互相声明依赖，加载顺序由依赖关系自动推导，而不是手工编排启动序列？</li>
+</ul>
+<p>Cordis 把这两个维度形式化成 <strong>effect（效应）</strong> 与 <strong>coeffect（余效应）</strong> 两套 runtime 机制。这一点，跟经典的 algebraic effects /coeffects 一脉相承，但项目方把它” 焊接” 到了一个具体的、能跑、能 hot reload、能 inspect 的 TypeScript 框架里。</p>
+<p>paper 摘要里有句话特别点睛：</p>
+<blockquote>
+<p>“Modern software—from plugin systems to self-evolving agent harnesses—increasingly requires dynamic composition, yet its formal foundations remain underdeveloped.”</p>
+</blockquote>
+<p><strong>self-evolving agent harnesses</strong>. 我很久没在 paper 里读到一个这么有野心的词组了。</p>
+<hr>
+<h2 id="二、五个核心概念：Cordis-的全部世界观"><a href="#二、五个核心概念：Cordis-的全部世界观" class="headerlink" title="二、五个核心概念：Cordis 的全部世界观"></a>二、五个核心概念：Cordis 的全部世界观</h2><p>cordis-primer（也就是 DSH 给 harness 插件作者写的入门手册）一开始就把整套系统压成了<strong>五个核心概念</strong>。我把它原样翻译，再补一些我的解读。</p>
+<h3 id="1-插件-实现-Service-的对象"><a href="#1-插件-实现-Service-的对象" class="headerlink" title="1. 插件 = 实现 Service 的对象"></a>1. 插件 = 实现 Service 的对象</h3><figure class="highlight ts"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> { <span class="title class_">Context</span>, <span class="title class_">Service</span> } <span class="keyword">from</span> <span class="string">'@cordis/core'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Hello</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Service</span> {</span><br><span class="line">  <span class="keyword">static</span> inject = [<span class="string">'http'</span>]</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"><span class="attr">ctx</span>: <span class="title class_">Context</span>, <span class="attr">options</span>: { greeting: <span class="built_in">string</span> }</span>) {</span><br><span class="line">    <span class="variable language_">super</span>(ctx, <span class="string">'hello'</span>, <span class="literal">true</span>)</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">greeting</span> = options.<span class="property">greeting</span></span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="title function_">say</span>(<span class="params"><span class="attr">name</span>: <span class="built_in">string</span></span>) {</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`<span class="subst">${<span class="variable language_">this</span>.greeting}</span>, <span class="subst">${name}</span>!`</span></span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一个插件要么是个<strong>带 <code>inject</code> 和 <code>apply(ctx)</code> 的函数</strong>，要么是上面这种 <strong>Service 子类</strong>。它的整个生命周期由 Cordis 挂到当前 context 上：实例化靠 inject 等待依赖、活跃期间可以通过 <code>ctx.foo</code> 拿其他服务、被卸载时所有 <code>ctx.effect</code> 注册的内容自动反转。</p>
+<p>这跟 NestJS 的 Provider 看上去很像，但<strong>关键差异在第 5 点</strong>。</p>
+<h3 id="2-Context-服务的容器，每个服务占据一个稳定的-ctx"><a href="#2-Context-服务的容器，每个服务占据一个稳定的-ctx" class="headerlink" title="2. Context = 服务的容器，每个服务占据一个稳定的 ctx.<key>"></a>2. Context = 服务的容器，每个服务占据一个稳定的 <code>ctx.&lt;key&gt;</code></h3><figure class="highlight ts"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ctx = <span class="keyword">new</span> <span class="title class_">Context</span>()</span><br><span class="line">ctx.<span class="title function_">plugin</span>(<span class="title class_">Hello</span>, { <span class="attr">greeting</span>: <span class="string">'Hi'</span> })</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(ctx.<span class="property">hello</span>.<span class="title function_">say</span>(<span class="string">'小戴'</span>)) <span class="comment">// Hi, 小戴!</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意是 <code>ctx.hello</code> 而不是 <code>Hello.say(...)</code>。整个框架里你几乎不会”import 实现类”—— 所有跨插件通信都通过 <code>ctx.&lt;key&gt;</code> 拿服务。这就把” 插件之间是平等的、互相不知道实现细节” 这件事做死了，是后面 effect 反转能干净的基础。</p>
+<h3 id="3-inject-声明式依赖，加载顺序由依赖推导"><a href="#3-inject-声明式依赖，加载顺序由依赖推导" class="headerlink" title="3. inject = 声明式依赖，加载顺序由依赖推导"></a>3. inject = 声明式依赖，加载顺序由依赖推导</h3><figure class="highlight ts"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> inject = [<span class="string">'http'</span>, <span class="string">'database'</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>写完上面这一行，<strong>Cordis 会自动等 <code>ctx.http</code> 和 <code>ctx.database</code> 都 ready，再启动你的插件</strong>。需要多轮依赖也没问题，依赖图是 DAG 的话就一定能解出来。</p>
+<p>这对于写 Agent harness 的人来说极友好：你写个 LLM 调用插件，只关心 <code>ctx.llm</code>、<code>ctx.tools</code>、<code>ctx.sessions</code> 在不在；至于谁先谁后，由 harness 编排层决定。</p>
+<h3 id="4-类型化事件分发（emit-waterfall-parallel-serial）"><a href="#4-类型化事件分发（emit-waterfall-parallel-serial）" class="headerlink" title="4. 类型化事件分发（emit / waterfall / parallel / serial）"></a>4. 类型化事件分发（emit /waterfall/parallel /serial）</h3><p>这是 Cordis 我觉得最值得吹的设计。</p>
+<p>它把事件分发模式<strong>显式做成四种</strong>，每种只能用自己的方法触发：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>是否 await</th>
+<th> 顺序</th>
+<th>返回值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>emit</code></td>
+<td>否</td>
+<td>注册顺序</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>waterfall</code></td>
+<td>否</td>
+<td>注册顺序</td>
+<td><strong>有</strong>（每个监听器可包 / 可短路）</td>
+</tr>
+<tr>
+<td><code>parallel</code></td>
+<td>是</td>
+<td>并行</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>serial</code></td>
+<td>是</td>
+<td>注册顺序</td>
+<td>有</td>
+</tr>
+</tbody></table>
+<p>注意一个非常硬核的细节：<strong>事件分发模式是事件公开约定的一部分</strong>。也就是说你定义事件时就要声明它是 emit 还是 waterfall，然后这个声明会被 harness 生成的目录跟实际分发调用点做交叉校验 —— 一个 typecheck 帮你找出” 我以为是 waterfall 但被当 emit 用了” 的 bug。</p>
+<p><code>waterfall</code> 的语义最像 Koa / Express 的中间件：</p>
+<figure class="highlight ts"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ctx.<span class="title function_">on</span>(<span class="string">'strategy/select'</span>, <span class="title function_">async</span> (req, next) =&gt; {</span><br><span class="line">  <span class="keyword">if</span> (req.<span class="property">kind</span> === <span class="string">'simple'</span>) <span class="keyword">return</span> <span class="string">'short-circuit'</span></span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">next</span>() <span class="comment">// 下游监听器处理</span></span><br><span class="line">})</span><br></pre></td></tr></tbody></table></figure>
+
+<p>策略类插件如果不调用 <code>next()</code>，就拿到了” 最终决策权”，相当于短路返回；如果是观察类插件，不调用 <code>next()</code> 是错的 —— 你必须委托。</p>
+<h3 id="5-注册-可逆的副作用"><a href="#5-注册-可逆的副作用" class="headerlink" title="5. 注册 = 可逆的副作用"></a>5. 注册 = 可逆的副作用</h3><p>这一条才是 Cordis 跟” 另一个 NestJS” 的关键差异。</p>
+<p>所有” 会留下痕迹” 的操作 —— 挂个 listener、注册个 tool schema、装一个 prompt 片段、初始化一条 WS 连接 —— <strong>都通过 <code>ctx.effect()</code> 或者 <code>ctx.on()</code> 注册并返回一个 disposer</strong>：</p>
+<figure class="highlight ts"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ctx.<span class="title function_">effect</span>(<span class="function">() =&gt;</span> {</span><br><span class="line">  <span class="keyword">const</span> id = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> <span class="title function_">tick</span>(), <span class="number">1000</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(id) <span class="comment">// dispose 时跑</span></span><br><span class="line">})</span><br></pre></td></tr></tbody></table></figure>
+
+<p>卸载插件 / 热重载 /harness roll back 时，Cordis <strong>按注册相反顺序</strong>遍历 disposer，依次执行回滚。</p>
+<p><strong>这才是 AI Agent 框架真正想要的特性</strong>。</p>
+<p>你想想看：一个 agent 在执行第 7 步的时候，用户说了” 算了，撤销”。那么从第 7 步到第 1 步之间注册的 timer、订阅的消息队列、申请到的临时文件、产生的中间状态 —— 能 100% 还原吗？传统插件框架里，这件事 100% 是写插件的人自己保证的（”please remember to clearInterval on dispose”）。Cordis 把” 可逆” 从道德劝说升级成了 <strong>runtime contract</strong>。</p>
+<p>paper 把这个特性叫做 <strong>revertible effects</strong>：每个 context 变换都自带一个 inverse，runtime 帮你追踪。</p>
+<hr>
+<h2 id="三、技术架构：effect-×-coeffect-的”形式化骨架”"><a href="#三、技术架构：effect-×-coeffect-的”形式化骨架”" class="headerlink" title="三、技术架构：effect × coeffect 的”形式化骨架”"></a>三、技术架构：effect × coeffect 的” 形式化骨架”</h2><p>光看五点概念还不够炸。我把 paper 和核心包交叉看了一遍之后，画一个简化版的架构图给感兴趣的读者。</p>
+<h3 id="3-1-两个-Context：Effect-context-Coeffect-context"><a href="#3-1-两个-Context：Effect-context-Coeffect-context" class="headerlink" title="3.1 两个 Context：Effect context + Coeffect context"></a>3.1 两个 Context：Effect context + Coeffect context</h3><p>传统插件系统只有一个 context（” 我有什么”），Cordis 把它劈成两个：</p>
+<ul>
+<li><strong>Effect context</strong>：记录” 我这个插件对外造成了什么”—— 已注册的 listeners、已分配的 timer、已 effect 化的资源。Cordis 通过这些记录反推” 卸载时该怎么撤销”。</li>
+<li><strong>Coeffect context</strong>：记录” 我这个插件<strong>依赖</strong>别人提供了什么”—— 通过 <code>inject</code> 声明的服务集，加上 <code>ctx.on(...)</code> 的监听器对应的” 我希望上游给我什么”。</li>
+</ul>
+<p>每个 context 变化，runtime 都会通知所有相关组件（component）。</p>
+<p>这听起来抽象，换个 AI Agent 场景就具体了：</p>
+<blockquote>
+<p>你写一个 <code>prompt-rewrite</code> 插件，声明 <code>inject = ['llm', 'prompt-policy']</code>，并 <code>ctx.on('prompt/build', ...)</code> 注册了一个监听器。</p>
+<ul>
+<li><strong>coeffect 端</strong>：Cordis 看到 inject，发现你依赖 <code>ctx.llm</code>、<code>ctx.prompt-policy</code>，等它们 ready。</li>
+<li><strong>effect 端</strong>：Cordis 把你的 <code>prompt/build</code> 监听器登记进分发器，<strong>生成对应的 disposer</strong>—— 一旦插件卸载，<code>prompt/build</code> 上别人再 emit 的时候，你这个监听器不在了。</li>
+</ul>
+</blockquote>
+<p><code>prompt-policy</code> 后来改了一版，harness 触发 hot reload，Cordis 会沿着依赖图反推” 谁依赖了 prompt-policy → 谁要重 build → 谁注册的 prompt 要 recompose”，整个过程是<strong>用 effect/coeffect 机制推导出来</strong>的，不是手工编排。</p>
+<h3 id="3-2-一个统一的-Context-type"><a href="#3-2-一个统一的-Context-type" class="headerlink" title="3.2 一个统一的 Context type"></a>3.2 一个统一的 Context type</h3><p>paper 第二段提到，Cordis 把 effect 和 coeffect <strong>统一到一个 context type</strong> 里。这件事读起来像废话，做起来却意味着：</p>
+<ul>
+<li>一段代码不需要在” 我现在是 producer” 和” 我现在是 consumer” 之间反复横跳；</li>
+<li><strong>type 系统</strong>天然就能告诉你：现在调用 <code>ctx.effect(fn)</code>，fn 的返回值就是 disposer；现在写 <code>static inject = [...]</code>，声明的就是上游该给你什么。</li>
+</ul>
+<p>这给了 Cordis 一个 Node.js 生态少见的东西：<strong>“插件系统” 作为 type-level 的契约</strong>，而不仅仅是一组函数调用约定。</p>
+<h3 id="3-3-Component-与动态组合演算（Calculus-of-dynamic-composition）"><a href="#3-3-Component-与动态组合演算（Calculus-of-dynamic-composition）" class="headerlink" title="3.3 Component 与动态组合演算（Calculus of dynamic composition）"></a>3.3 Component 与动态组合演算（Calculus of dynamic composition）</h3><blockquote>
+<p>“After that, we combine these mechanisms into the notion of a component and give a calculus of dynamic composition, whose metatheory carries spatiotemporal composability from a single component to a whole system of interleaved components.”</p>
+</blockquote>
+<p>这句是 paper 里最不容易啃的一段，但核心意思其实可以一句话转述：</p>
+<p><strong>单组件的时空可组合性，可以被元理论 (metatheory) 推到整个系统的可组合性</strong>。</p>
+<p>也就是说，paper 给出了一个<strong>数学化的保证</strong>：每个 plugin 自身可逆 + 每个 plugin 显式声明依赖 → 整个组合系统也是可逆、可推导的。</p>
+<p>这种” 用形式化保证动态组件系统正确性” 的论文路线，函数式编程那一支比较熟（见 Eff 语言 / Koka 的 coeffect 论文），Cordis 是少有的把它工程化到一个 producer-grade runtime 的尝试。</p>
+<h3 id="3-4-实际代码骨架"><a href="#3-4-实际代码骨架" class="headerlink" title="3.4 实际代码骨架"></a>3.4 实际代码骨架</h3><p>不写代码就跑题了。Cordis 的最小完整例子：</p>
+<figure class="highlight ts"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> { <span class="title class_">Context</span>, <span class="title class_">Service</span> } <span class="keyword">from</span> <span class="string">'@cordis/core'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> ctx = <span class="keyword">new</span> <span class="title class_">Context</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Database</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Service</span> {</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"><span class="attr">ctx</span>: <span class="title class_">Context</span></span>) {</span><br><span class="line">    <span class="variable language_">super</span>(ctx, <span class="string">'database'</span>, <span class="literal">true</span>)</span><br><span class="line">  }</span><br><span class="line">  <span class="title function_">query</span>(<span class="params"></span>) { <span class="keyword">return</span> <span class="string">'SELECT 1'</span> }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Reporter</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Service</span> {</span><br><span class="line">  <span class="keyword">static</span> inject = [<span class="string">'database'</span>]</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"><span class="attr">ctx</span>: <span class="title class_">Context</span></span>) {</span><br><span class="line">    <span class="variable language_">super</span>(ctx, <span class="string">'reporter'</span>, <span class="literal">true</span>)</span><br><span class="line">    ctx.<span class="title function_">on</span>(<span class="string">'report/build'</span>, <span class="function">(<span class="params">req, next</span>) =&gt;</span> {</span><br><span class="line">      req.<span class="property">batches</span>.<span class="title function_">push</span>(<span class="variable language_">this</span>.<span class="property">ctx</span>.<span class="property">database</span>.<span class="title function_">query</span>())</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">next</span>()</span><br><span class="line">    })</span><br><span class="line">  }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">ctx.<span class="title function_">plugin</span>(<span class="title class_">Database</span>)</span><br><span class="line">ctx.<span class="title function_">plugin</span>(<span class="title class_">Reporter</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">await</span> ctx.<span class="title function_">parallel</span>(<span class="string">'report/build'</span>, { <span class="attr">batches</span>: [] }))</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果你接下来 <code>ctx.registry.delete(Reporter.service)</code>，所有 <code>Reporter</code> 注册的东西 ——<code>report/build</code> 监听器、<code>database</code> 依赖图中的边 —— 都会被 <strong>inverse</strong> 回滚。</p>
+<hr>
+<h2 id="四、谁在用-Cordis：DeepSeek-Harness-是冰山一角"><a href="#四、谁在用-Cordis：DeepSeek-Harness-是冰山一角" class="headerlink" title="四、谁在用 Cordis：DeepSeek Harness 是冰山一角"></a>四、谁在用 Cordis：DeepSeek Harness 是冰山一角</h2><p>我以为 DSH 是孤例，于是顺手扫了一圈 issue 区。</p>
+<p><strong>Issue #76</strong>（2026-08-16 提交，作者 mook-wenyu）的标题非常直观：</p>
+<blockquote>
+<p>“Subagent’s ask_user_question never surfaces to the parent agent — child keeps running until max-tokens (report from DSH, a cordis-based framework)”</p>
+</blockquote>
+<p>内容翻译过来是：DSH 是基于 cordis fork 的应用，它的 Web GUI 里子 agent 调用 <code>ask_user_question</code> 这个工具，结果<strong>问题不会透到主 agent 或 UI</strong>，子 agent 会一直被 token 限制顶死。Issue 里把 DSH 内部 5 个包的具体代码位置 + 报错路径 + 修复期望全列了。</p>
+<p>这种” 上游 issue 区里写应用层 bug report” 的现象很有意思 —— 因为 DSH 仓库自己关了 issues，所以团队把反馈 sheet 写到了 cordiverse/cordis 这边。<strong>这间接证明 Cordis 的 vendoring 不是一次性的” 塞个库进去”，而是 DSH 的整个 agent 模型都深深地靠着 cordis 的 dispose /inject 语义在工作</strong>。</p>
+<p>另外几个间接的” 重度用户” 线索：</p>
+<ul>
+<li>仓库的 contributors 最近一周里有 <strong><code>tdwhere123</code></strong>（来自 cordis loader 的复杂 PR）、<strong><code>randomcat4</code></strong>（另一位持续贡献者），以及更早的 <strong>OpenAI Codex</strong> 自动 PR（PR #75 <code>docs: add contribution guide</code> 由 GPT-5 代写，author disclosure 写了 Autonomous by OpenAI Codex）。</li>
+<li><strong>Claude Code</strong> 本身作为 PR generator 在 §6.7 substrate 的 Wasm 路线实验中现身（issue #78，作者 inso1337 用 Claude Code 写了一整套 WAT / AssemblyScript / Python 组件化实验）。</li>
+<li>上游 cordiverse 跟 deepseek-ai 的关系，从 <code>@deepseek-ai/cordis</code> 这个 fork package name 一眼可见 —— 两个组织之间的依赖路径是”cordiverse 发布 core，deepseek-ai vendor 一份做修改，挂自己的 issue 追踪”。</li>
+</ul>
+<p><strong>这给我们一个非常关键的旁证</strong>：</p>
+<blockquote>
+<p>一个严肃的 AI Agent 框架团队，没有自己造 plugin runtime，而是选择 fork 一款学术味道很重、正在快速迭代的 Node.js 元框架。这是” 开源界对 Cordis 投的现实票”。</p>
+</blockquote>
+<hr>
+<h2 id="五、快速上手：一个能在-5-分钟内跑完的例子"><a href="#五、快速上手：一个能在-5-分钟内跑完的例子" class="headerlink" title="五、快速上手：一个能在 5 分钟内跑完的例子"></a>五、快速上手：一个能在 5 分钟内跑完的例子</h2><p>如果你想自己验证一下，不是花 5 分钟就能跑通的 ——Cordis 仍然处在 <code>4.0.x</code> 阶段，作者在 README 里写得很直白：</p>
+<blockquote>
+<p>“Cordis is under active development. The API is not yet stable and may change without notice.”</p>
+</blockquote>
+<p>这句话非常诚实。如果你打算把它接到生产 Agent harness 上，至少要做好两件事：锁版本 + 跟 upstream 同步 PR。</p>
+<h3 id="5-1-安装（Yarn-workspace-模式）"><a href="#5-1-安装（Yarn-workspace-模式）" class="headerlink" title="5.1 安装（Yarn workspace 模式）"></a>5.1 安装（Yarn workspace 模式）</h3><p>Cordis 自己用 Yarn 4 + Corepack：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">corepack <span class="built_in">enable</span></span><br><span class="line">yarn --no-immutable</span><br><span class="line">yarn install</span><br><span class="line">yarn <span class="built_in">test</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>JS / TS 端的依赖入口：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"dependencies"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"@cordis/core"</span><span class="punctuation">:</span> <span class="string">"workspace:*"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"@cordisjs/plugin-loader"</span><span class="punctuation">:</span> <span class="string">"workspace:*"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"@cordisjs/plugin-group"</span><span class="punctuation">:</span> <span class="string">"workspace:*"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"@cordisjs/plugin-include"</span><span class="punctuation">:</span> <span class="string">"workspace:*"</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="5-2-用-Cordis-写一个最简单的-plugin-与一个-hot-reload-实验"><a href="#5-2-用-Cordis-写一个最简单的-plugin-与一个-hot-reload-实验" class="headerlink" title="5.2 用 Cordis 写一个最简单的 plugin 与一个 hot reload 实验"></a>5.2 用 Cordis 写一个最简单的 plugin 与一个 hot reload 实验</h3><figure class="highlight ts"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// greeter.ts</span></span><br><span class="line"><span class="keyword">import</span> { <span class="title class_">Service</span>, <span class="title class_">Context</span> } <span class="keyword">from</span> <span class="string">'@cordis/core'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> <span class="title class_">Greeter</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Service</span> {</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"><span class="attr">ctx</span>: <span class="title class_">Context</span>, <span class="keyword">public</span> <span class="attr">greeting</span>: <span class="built_in">string</span></span>) {</span><br><span class="line">    <span class="variable language_">super</span>(ctx, <span class="string">'greeter'</span>, <span class="literal">true</span>)</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="title function_">hello</span>(<span class="params"><span class="attr">name</span>: <span class="built_in">string</span></span>) {</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`<span class="subst">${<span class="variable language_">this</span>.greeting}</span>, <span class="subst">${name}</span>!`</span></span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight ts"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.ts</span></span><br><span class="line"><span class="keyword">import</span> { <span class="title class_">Context</span> } <span class="keyword">from</span> <span class="string">'@cordis/core'</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Greeter</span> <span class="keyword">from</span> <span class="string">'./greeter'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> ctx = <span class="keyword">new</span> <span class="title class_">Context</span>()</span><br><span class="line"><span class="keyword">const</span> sub = ctx.<span class="title function_">plugin</span>(<span class="title class_">Greeter</span>, { <span class="attr">greeting</span>: <span class="string">'Hi'</span> })</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(sub.<span class="property">greeter</span>.<span class="title function_">hello</span>(<span class="string">'小戴'</span>))   <span class="comment">// Hi, 小戴!</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 改 greeting → hot reload</span></span><br><span class="line">sub.<span class="title function_">update</span>({ <span class="attr">greeting</span>: <span class="string">'Hello'</span> })</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(sub.<span class="property">greeter</span>.<span class="title function_">hello</span>(<span class="string">'小戴'</span>))   <span class="comment">// Hello, 小戴!</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>sub.update()</code> 触发的就是 <strong>时空可组合性</strong> ——effect context 把 greeting 的旧值 dispose、coeffect 解析重新跑一遍依赖、运行时切换到新 config。<strong>整个过程不需要重启进程、不需要重 import 模块</strong>。</p>
+<p>这就是 Cordis 想给 AI Agent harness 的那种” 边跑边换零件” 的能力。</p>
+<h3 id="5-3-一些不那么友好的真相"><a href="#5-3-一些不那么友好的真相" class="headerlink" title="5.3 一些不那么友好的真相"></a>5.3 一些不那么友好的真相</h3><p>实话说，如果你想” 立刻把 Cordis 接到生产”，目前会有几个痛点：</p>
+<ol>
+<li><strong>API 不稳定</strong>：作者在 README 里白纸黑字写了”may change without notice”，我读代码也确认 <code>Effect</code> 类型和 <code>Fiber</code> 状态机在最近 5 个 PR 里都还在大改。生产集成建议锁 patch 版本，等 minor 稳定了再升级。</li>
+<li><strong>学习曲线靠 paper 而不是文档</strong>：<code>cordis-primer</code> 写得简洁且数学，但 <code>internal/plugin</code>、<code>internal/update</code>、<code>internal/filter</code> 三层之间的差别，没有一个完整 tour 走完，你很难做出” 我要不要 fork 这个 loader” 的判断。</li>
+<li><strong>Niche</strong>：生态不大，遇到坑大概率要直接看 <code>packages/core/src/*.ts</code> 源码。Cordis 当前的” 出货” 是给你一个<strong>元框架 + 一组 helper</strong>，不是给你一个” 开箱即用” 的 Agent SDK。</li>
+</ol>
+<p>但反过来 —— 这恰恰是 DeepSeek Harness 在做的事：<strong>自己 fork 一份 + 自己补上层 + 跟 upstream 一起演进</strong>。Cordis 的真实身份更像一个<strong>研究型基础设施</strong>，而不是一个” 普通开发者今天就拿来用的工具”。</p>
+<hr>
+<h2 id="六、总结：谁应该现在关注-Cordis"><a href="#六、总结：谁应该现在关注-Cordis" class="headerlink" title="六、总结：谁应该现在关注 Cordis"></a>六、总结：谁应该现在关注 Cordis</h2><p>写到这里我已经想清楚了今天这篇博客的结论，应该分两段说。</p>
+<h3 id="给”造-AI-Agent-框架”的人"><a href="#给”造-AI-Agent-框架”的人" class="headerlink" title="给”造 AI Agent 框架”的人"></a>给” 造 AI Agent 框架” 的人</h3><p>Cordis 给你的是一套<strong>可形式化推理的 plugin 系统</strong>。如果你正在设计一个 agent harness，并且开始被以下问题困扰：</p>
+<ul>
+<li>加载顺序复杂到需要写一堆插件优先级，</li>
+<li>HMR 重新装插件之后有副作用泄漏，</li>
+<li>多 agent 上下文切换时工具注册 / 卸载不可控，</li>
+<li>撤销 /rollback 流程需要每个插件自己维护 dispose，</li>
+</ul>
+<p>那 Cordis 的 effect /coeffect 模型值得你<strong>花一两个周末读一遍 paper + 跑一遍 primer</strong>。哪怕最终你决定自己造 —— 你至少能清楚地知道自己要放弃什么。</p>
+<h3 id="给”用-AI-Agent-框架”的人"><a href="#给”用-AI-Agent-框架”的人" class="headerlink" title="给”用 AI Agent 框架”的人"></a>给” 用 AI Agent 框架” 的人</h3><p>如果你和我一样，平时更多是 LangGraph / CrewAI / DSH / OpenAI Agents SDK 的使用者，那 Cordis 今天的 959 日增 stars 至少说明一件事：</p>
+<blockquote>
+<p>严肃团队正在认真地把” 动态可组合性” 这件事当成一等公民来设计。这件事最终会渗透到你日常用的 Agent 框架里，让 hot reload、rollback、tool registration 变得越来越自然。</p>
+</blockquote>
+<p>你不用立刻学 Cordis 的 API。但你<strong>应该知道这个流派的存在</strong>，因为它会在接下来一两年决定 AI Agent 框架的能力上限。</p>
+<p>最后照例贴上链接：</p>
+<ul>
+<li><strong>GitHub 仓库</strong>：<a target="_blank" rel="noopener" href="https://github.com/cordiverse/cordis">https://github.com/cordiverse/cordis</a></li>
+<li><strong> 配套 paper</strong>：<a target="_blank" rel="noopener" href="https://github.com/cordiverse/paper">https://github.com/cordiverse/paper</a>（2026-08-13 草稿）</li>
+<li><strong>入门手册 cordis-primer</strong>：<a target="_blank" rel="noopener" href="https://deepseek-harness.github.io/deepseek-harness/reference/cordis-primer">https://deepseek-harness.github.io/deepseek-harness/reference/cordis-primer</a></li>
+<li><strong> 依赖案例 DeepSeek Harness</strong>：<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/deepseek-harness">https://github.com/deepseek-ai/deepseek-harness</a></li>
+<li><strong>MIT 协议</strong>：可商用、可 fork、可 vendor，跟 <code>@deepseek-ai/cordis</code> 一样。</li>
+</ul>
+<p>今天就到这里。如果周末有空，我打算把 Cordis 的 effect 形式化部分再翻译一版 —— 重点对照 paper 的 §3～§4，把”revertible effects 的 monotone trace” 那段拆开讲讲。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/17/cordis-spatiotemporal-composability-meta-framework/" title="Cordis：5.4k stars、今日 +959 的 &quot;时空可组合性&quot; 元框架，正在悄悄支撑 DeepSeek Harness 的 Agent 运行时">https://www.daishengli.top/2026/08/17/cordis-spatiotemporal-composability-meta-framework/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Cordis/" rel="tag"># Cordis</a>
+              <a href="/tags/Spatiotemporal-Composability/" rel="tag"># Spatiotemporal Composability</a>
+              <a href="/tags/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/" rel="tag"># 编程范式</a>
+              <a href="/tags/DeepSeek-Harness/" rel="tag"># DeepSeek Harness</a>
+              <a href="/tags/%E6%8F%92%E4%BB%B6%E6%A1%86%E6%9E%B6/" rel="tag"># 插件框架</a>
+              <a href="/tags/%E5%85%83%E6%A1%86%E6%9E%B6/" rel="tag"># 元框架</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/17/nautilus-trader-rust-python-quant-engine/" rel="prev" title="NautilusTrader：25.7k stars 的 Rust 原生量化交易引擎，把 &quot;回测赚钱实盘亏钱&quot; 的坑彻底填了">
+                  <i class="fa fa-angle-left"></i> NautilusTrader：25.7k stars 的 Rust 原生量化交易引擎，把 "回测赚钱实盘亏钱" 的坑彻底填了
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/17/omlx-apple-silicon-llm-inference-ssd-caching/" rel="next" title="oMLX：18.8k stars 的 Apple Silicon 本地 LLM「推理神器」，把连续批处理 + SSD KV 缓存塞进 macOS 菜单栏">
+                  oMLX：18.8k stars 的 Apple Silicon 本地 LLM「推理神器」，把连续批处理 + SSD KV 缓存塞进 macOS 菜单栏 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

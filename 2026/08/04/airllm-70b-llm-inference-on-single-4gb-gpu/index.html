@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="今天 GitHub Trending 上一款让社区反复刷屏的开源项目：仅靠「分层推理」把 70B 模型塞进单张 4GB 显卡，更支持 405B Llama 3.1、671B DeepSeek-V3，甚至把 2.8T 参数的 Kimi K3 跑到 3.72GB——这是把&quot;大模型本地化&quot;门槛彻底砸穿的一次工程胜利。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AirLLM：让 70B 大模型塞进 4GB 显存，Kimi K3 2.8T 也只要 3.72GB">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/04/airllm-70b-llm-inference-on-single-4gb-gpu/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="今天 GitHub Trending 上一款让社区反复刷屏的开源项目：仅靠「分层推理」把 70B 模型塞进单张 4GB 显卡，更支持 405B Llama 3.1、671B DeepSeek-V3，甚至把 2.8T 参数的 Kimi K3 跑到 3.72GB——这是把&quot;大模型本地化&quot;门槛彻底砸穿的一次工程胜利。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-04T02:02:40.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.154Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="开源工具">
+<meta property="article:tag" content="AirLLM">
+<meta property="article:tag" content="大模型推理">
+<meta property="article:tag" content="显存优化">
+<meta property="article:tag" content="分层推理">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/04/airllm-70b-llm-inference-on-single-4gb-gpu/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/04/airllm-70b-llm-inference-on-single-4gb-gpu/","path":"2026/08/04/airllm-70b-llm-inference-on-single-4gb-gpu/","title":"AirLLM：让 70B 大模型塞进 4GB 显存，Kimi K3 2.8T 也只要 3.72GB"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>AirLLM：让 70B 大模型塞进 4GB 显存，Kimi K3 2.8T 也只要 3.72GB | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E5%BC%A0-4GB-%E6%98%BE%E5%8D%A1%EF%BC%8C%E8%83%BD%E8%B7%91-70B-%E6%A8%A1%E5%9E%8B%E5%90%97%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">一张 4GB 显卡，能跑 70B 模型吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A70B-%E6%A8%A1%E5%9E%8B%E5%88%B0%E5%BA%95%E5%8D%A1%E5%9C%A8%E5%93%AA"><span class="nav-number">2.</span> <span class="nav-text">项目背景：70B 模型到底卡在哪</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9AAirLLM-%E7%9A%84%E4%B8%89%E5%B1%82%E6%AD%A6%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">核心功能：AirLLM 的三层武器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%88%86%E5%B1%82%E5%8A%A0%E8%BD%BD%EF%BC%9A%E6%98%BE%E5%AD%98%E9%9C%80%E6%B1%82-%E4%B8%80%E7%89%87%E5%B1%82%E5%A4%A7%E5%B0%8F%EF%BC%8C%E4%B8%8D-%E6%80%BB%E4%BD%93%E7%A7%AF"><span class="nav-number">3.1.</span> <span class="nav-text">1. 分层加载：显存需求 &#x3D; 一片层大小，不 &#x3D; 总体积</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%9D%97%E7%8A%B6%E9%87%8F%E5%8C%96%E5%8E%8B%E7%BC%A9%EF%BC%9A%E7%A3%81%E7%9B%98-IO-%E4%B8%8D%E6%98%AF%E8%AE%A1%E7%AE%97%E7%9A%84%E7%93%B6%E9%A2%88%EF%BC%8C%E6%98%AF%E6%8E%A8%E7%90%86%E7%9A%84%E7%93%B6%E9%A2%88"><span class="nav-number">3.2.</span> <span class="nav-text">2. 块状量化压缩：磁盘 IO 不是计算的瓶颈，是推理的瓶颈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-MoE-%E6%B5%81%E5%BC%8F%E5%8A%A0%E8%BD%BD%EF%BC%9A%E6%8A%8A-2-8T-%E6%A8%A1%E5%9E%8B%E4%B9%9F%E5%8E%8B%E8%BF%9B-3-72GB"><span class="nav-number">3.3.</span> <span class="nav-text">3. MoE 流式加载：把 2.8T 模型也压进 3.72GB</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A30-%E7%A7%92%E5%90%AF%E5%8A%A8%E8%87%AA%E5%B7%B1%E7%9A%84%E6%9C%AC%E5%9C%B0-70B"><span class="nav-number">4.</span> <span class="nav-text">实战示例：30 秒启动自己的本地 70B</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E9%99%90%E5%88%B6%EF%BC%9A%E7%9C%8B%E6%B8%85%E8%BE%B9%E7%95%8C%E5%86%8D%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">适用场景和限制：看清边界再用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9C%9F%E6%AD%A3%E9%80%82%E5%90%88%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">5.1.</span> <span class="nav-text">真正适合的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E9%A1%BB%E6%B8%85%E6%A5%9A%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-number">5.2.</span> <span class="nav-text">必须清楚的限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E%EF%BC%9A%E6%8A%8A%E2%80%9D%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%99%AE%E5%8F%8A%E2%80%9D%E7%9A%84%E5%A4%A9%E8%8A%B1%E6%9D%BF%E6%8A%AC%E9%AB%98%E4%B8%80%E6%88%AA"><span class="nav-number">6.</span> <span class="nav-text">写在最后：把” 大模型普及” 的天花板抬高一截</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/04/airllm-70b-llm-inference-on-single-4gb-gpu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="AirLLM：让 70B 大模型塞进 4GB 显存，Kimi K3 2.8T 也只要 3.72GB | 小戴的网络日志">
+      <meta itemprop="description" content="今天 GitHub Trending 上一款让社区反复刷屏的开源项目：仅靠「分层推理」把 70B 模型塞进单张 4GB 显卡，更支持 405B Llama 3.1、671B DeepSeek-V3，甚至把 2.8T 参数的 Kimi K3 跑到 3.72GB——这是把&quot;大模型本地化&quot;门槛彻底砸穿的一次工程胜利。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AirLLM：让 70B 大模型塞进 4GB 显存，Kimi K3 2.8T 也只要 3.72GB
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-04 10:02:40" itemprop="dateCreated datePublished" datetime="2026-08-04T10:02:40+08:00">2026-08-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">开源工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">今天 GitHub Trending 上一款让社区反复刷屏的开源项目：仅靠「分层推理」把 70B 模型塞进单张 4GB 显卡，更支持 405B Llama 3.1、671B DeepSeek-V3，甚至把 2.8T 参数的 Kimi K3 跑到 3.72GB——这是把"大模型本地化"门槛彻底砸穿的一次工程胜利。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="一张-4GB-显卡，能跑-70B-模型吗？"><a href="#一张-4GB-显卡，能跑-70B-模型吗？" class="headerlink" title="一张 4GB 显卡，能跑 70B 模型吗？"></a>一张 4GB 显卡，能跑 70B 模型吗？</h2><p>上个月我帮朋友搭一个本地 RAG，原计划很朴素：拿一张矿潮后的二手 RTX 3060（12GB 显存，三千元价位），跑一个 70B 的 Llama 3 拿来读他那一箱 PDF。结果真机一上手，整套流程在加载阶段就 OUT OF MEMORY——70B 的全精度权重光是搬到显存就要 140GB。</p>
+<p>退而求其次，4-bit 量化到 35GB，依然塞不进 12GB；GGUF + 部分 CPU 卸载倒是能跑，但吞吐跌到每 token 几秒，朋友体验完只回了一句” 算了吧，我还是用 ChatGPT”。</p>
+<p>直到刷到 GitHub Trending 上一个名叫 <a target="_blank" rel="noopener" href="https://github.com/lyogavin/airllm">AirLLM</a> 的项目，作者 Gavin Li 在 README 里写了一句让人瞳孔地震的话：</p>
+<blockquote>
+<p>Run 70B large language models on a single 4GB GPU card — <strong>without quantization, distillation, or pruning</strong>.</p>
+</blockquote>
+<p>不用量化、不用蒸馏、不用剪枝 —— 单张 4GB 显卡跑 70B。它是怎么做到的？这事为什么能跑得通、为什么不牺牲精度、又为什么能撑到 2.8T 规模的 Kimi K3？这篇文章就把 AirLLM 一次拆透。</p>
+<h2 id="项目背景：70B-模型到底卡在哪"><a href="#项目背景：70B-模型到底卡在哪" class="headerlink" title="项目背景：70B 模型到底卡在哪"></a>项目背景：70B 模型到底卡在哪</h2><p>要谈 AirLLM 的解法，先得看问题的反面 —— 为什么 70B 模型传统上” 必须” 装在高端卡上？</p>
+<p>一个标准的 70B 模型以 FP16 精度保存，需要 <strong>140GB 磁盘</strong>，全部加载进显存也要 <strong>140GB VRAM</strong>。这就是 4-bit、3-bit、1-bit 量化技术之所以在过去两年成为显学：大家都在跟显存死磕。</p>
+<p>但量化的代价是” 沉默的成本”——</p>
+<ul>
+<li><strong>精度塌陷</strong>：4-bit 之下的量化在小模型还行，在 70B 这种” 全靠细节取胜” 的规模下，会有可感知的逻辑与数学下降；</li>
+<li><strong>硬件门槛虚高</strong>：加载阶段 OOM 的问题被” 模型必须留 30% 余量” 反复放大，让” 我能跑 7B / 13B” 和” 我能跑 70B” 之间出现一道硬墙；</li>
+<li><strong>冷启动昂贵</strong>：分布式多卡推理需要 NVLink、InfiniBand、统一的并行框架，对单机玩家极不友好。</li>
+</ul>
+<p>Gavin Li 在 Hugging Face 博客里给出一个相当反直觉的观察：</p>
+<blockquote>
+<p>A very large transformer is made of an embedding layer, many repeated transformer layers, and output layers. During inference, those layers are executed sequentially. <strong>Because only one layer is actively executing at a time, there is no need to keep the entire model resident in GPU memory simultaneously.</strong></p>
+</blockquote>
+<p>翻译一下就是：推理时 transformer 是一层一层串行执行的，<strong>任意时刻真正需要驻留在显存里的，其实只有” 当前那一片层”</strong>。剩下几十 GB 的” 沉睡权重”，完全可以放在磁盘或内存里等着被换入。</p>
+<p>AirLLM 把这个观察工程化了 —— 核心思路就叫 <strong>Layer-wise Inference（分层推理）</strong>。</p>
+<h2 id="核心功能：AirLLM-的三层武器"><a href="#核心功能：AirLLM-的三层武器" class="headerlink" title="核心功能：AirLLM 的三层武器"></a>核心功能：AirLLM 的三层武器</h2><h3 id="1-分层加载：显存需求-一片层大小，不-总体积"><a href="#1-分层加载：显存需求-一片层大小，不-总体积" class="headerlink" title="1. 分层加载：显存需求 = 一片层大小，不 = 总体积"></a>1. 分层加载：显存需求 = 一片层大小，不 = 总体积</h3><p>AirLLM 的关键代码只有几行（来自官方 README）：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> airllm <span class="keyword">import</span> AutoModel</span><br><span class="line"></span><br><span class="line">model = AutoModel.from_pretrained(<span class="string">"Qwen/Qwen3-32B"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 想再大？换一行就行：</span></span><br><span class="line"><span class="comment"># model = AutoModel.from_pretrained("Qwen/Qwen3-235B-A22B")  # 235B 模型，~3GB</span></span><br><span class="line"><span class="comment"># model = AutoModel.from_pretrained("deepseek-ai/DeepSeek-V3")  # 671B 模型，~12GB</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>它本质上是把 <code>transformers</code> 的模型预训练权重按层切成 sharded 文件（<code>layer_shards_saving_path</code> 可指定路径），第一次 <code>from_pretrained</code> 时只把当前 layer 装进 GPU、跑完前向、卸载、加载下一层。KV-cache 也会做精细的 layer-wise 管理，避免重复占用。</p>
+<p>代价是吞吐：每生成一个 token，要在磁盘和显存之间来回倒。Gavin 在博客里也直说” 低端卡会很慢，更适合离线场景而不是对话机器人”。</p>
+<h3 id="2-块状量化压缩：磁盘-IO-不是计算的瓶颈，是推理的瓶颈"><a href="#2-块状量化压缩：磁盘-IO-不是计算的瓶颈，是推理的瓶颈" class="headerlink" title="2. 块状量化压缩：磁盘 IO 不是计算的瓶颈，是推理的瓶颈"></a>2. 块状量化压缩：磁盘 IO 不是计算的瓶颈，是推理的瓶颈</h3><p>分层推理的瓶颈被搬到磁盘 IO 上，所以单纯” 少装一层” 并不能压缩耗时。AirLLM v2.0 之后引入了 <strong>基于块状量化（block-wise quantization）的模型压缩</strong>（参考论文 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2212.09720">arXiv 2212.09720</a>）：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">model = AutoModel.from_pretrained(</span><br><span class="line">    <span class="string">"garage-bAInd/Platypus2-70B-instruct"</span>,</span><br><span class="line">    compression=<span class="string">"4bit"</span>,   <span class="comment"># 或 "8bit"</span></span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>为什么不做标准的 activation-aware 量化？因为 <strong>AirLLM 瓶颈在加载而不是计算</strong> —— 只需要压缩” 权重” 就能提速，激活保持 FP16 不变。这意味着 loss 几乎不可察觉地上升，但推理速度可以提升 <strong>3 倍</strong>。</p>
+<p>这也是 AirLLM 区别于 GPTQ/AWQ 的关键：它不打算让 GPU 算得更快，而是让 GPU 不必一直等磁盘。</p>
+<h3 id="3-MoE-流式加载：把-2-8T-模型也压进-3-72GB"><a href="#3-MoE-流式加载：把-2-8T-模型也压进-3-72GB" class="headerlink" title="3. MoE 流式加载：把 2.8T 模型也压进 3.72GB"></a>3. MoE 流式加载：把 2.8T 模型也压进 3.72GB</h3><p>2026 年 7 月的这次更新最炸裂 ——AirLLM 加入了 <strong>Kimi K3（2.8T）</strong> 支持，能在单张 RTX 6000 Ada（48GB 显存）上只用 <strong>3.72GB VRAM</strong> 就跑起来。</p>
+<p>诀窍在于 K3 是稀疏 MoE—— 一个 token 只路由到少数几个专家。AirLLM 因此只需要把” 被路由到的那部分专家权重” 流式加载进显存，而不是整层模型：</p>
+<ul>
+<li>235B 的 Qwen3 MoE → ~3GB VRAM；</li>
+<li>671B 的 DeepSeek-V3 → ~12GB VRAM；</li>
+<li>2.8T 的 Kimi K3 → 3.72GB VRAM。</li>
+</ul>
+<p>官方 README 把这一句摆在最显眼的位置：</p>
+<blockquote>
+<p>Sparse MoE models stream one expert at a time rather than a whole layer.</p>
+</blockquote>
+<p>这种” 按需流式” 的设计，让” 消费级显卡跑超大规模 MoE” 从一个梗变成了可复现的工具。</p>
+<h2 id="实战示例：30-秒启动自己的本地-70B"><a href="#实战示例：30-秒启动自己的本地-70B" class="headerlink" title="实战示例：30 秒启动自己的本地 70B"></a>实战示例：30 秒启动自己的本地 70B</h2><p>我把在自己机器上跑通的最简流程贴出来（macOS Apple Silicon 也支持，但要装 mlx）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 准备环境（建议 Python 3.10+，CUDA ≥ 11.7）</span></span><br><span class="line">python -m venv .venv &amp;&amp; <span class="built_in">source</span> .venv/bin/activate</span><br><span class="line">pip install -U airllm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 写下 inference.py</span></span><br><span class="line"><span class="built_in">cat</span> &gt; inference.py &lt;&lt;<span class="string">'PY'</span></span><br><span class="line">from airllm import AutoModel</span><br><span class="line"></span><br><span class="line">MAX_LENGTH = 128</span><br><span class="line">model = AutoModel.from_pretrained(</span><br><span class="line">    <span class="string">"Qwen/Qwen3-32B"</span>,          <span class="comment"># 任何 HF repo ID</span></span><br><span class="line">    profiling_mode=True,        <span class="comment"># 想看每层耗时打开这个</span></span><br><span class="line">    delete_original=True,      <span class="comment"># 磁盘吃紧就开，删掉切分前的原权重</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">prompt = <span class="string">"用一段话总结大模型推理显存优化的关键思路。"</span></span><br><span class="line">input_tokens = model.tokenizer(</span><br><span class="line">    prompt,</span><br><span class="line">    return_tensors=<span class="string">"pt"</span>,</span><br><span class="line">    return_attention_mask=False,</span><br><span class="line">    truncation=True,</span><br><span class="line">    max_length=MAX_LENGTH,</span><br><span class="line">    padding=False,</span><br><span class="line">)</span><br><span class="line">generation_output = model.generate(</span><br><span class="line">    input_tokens[<span class="string">"input_ids"</span>].cuda(),</span><br><span class="line">    max_new_tokens=128,</span><br><span class="line">    use_cache=True,</span><br><span class="line">    return_dict_in_generate=True,</span><br><span class="line">)</span><br><span class="line"><span class="built_in">print</span>(model.tokenizer.decode(generation_output.sequences[0]))</span><br><span class="line">PY</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 跑（第一次会按层切分权重，第二次就快了）</span></span><br><span class="line">python inference.py</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第一次运行 <code>from_pretrained</code> 会把整个原始权重切分成 layer-wise shards，<strong>务必保证 HuggingFace cache 目录有足够磁盘</strong> ——Qwen3-32B 大约 65GB，原权重要空间，shards 也要空间。</p>
+<p>如果嫌慢，可以加 <code>compression="4bit"</code>：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">model = AutoModel.from_pretrained(</span><br><span class="line">    <span class="string">"garage-bAInd/Platypus2-70B-instruct"</span>,</span><br><span class="line">    compression=<span class="string">"4bit"</span>,</span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>或者直接选一个本来就小的模型试水 ——Qwen3-8B、Phi-3、Mistral-7B 都能在～1–2GB VRAM 里跑。</p>
+<h2 id="适用场景和限制：看清边界再用"><a href="#适用场景和限制：看清边界再用" class="headerlink" title="适用场景和限制：看清边界再用"></a>适用场景和限制：看清边界再用</h2><h3 id="真正适合的场景"><a href="#真正适合的场景" class="headerlink" title="真正适合的场景"></a>真正适合的场景</h3><ul>
+<li><strong>本地离线 RAG / 长文档分析</strong>：朋友那个 PDF 仓库场景就属于这一类，吞吐量不重要，能在 4GB 卡上跑出 70B 质量是关键；</li>
+<li><strong>学术研究和消融实验</strong>：要在不同大小的模型上做 ablation，又不想反复租 A100，AirLLM 把” 小机器也能跑大模型” 变成事实；</li>
+<li><strong>企业内网私有化部署</strong>：数据不能出域、预算又不允许上 H100，AirLLM + 量化压缩能在 2–3 张消费级卡上把 70B 服务起来；</li>
+<li><strong>Apple Silicon 上的原型验证</strong>：配合 mlx，AirLLM 也能在 M2/M3/M4 上跑 70B，只是更慢，适合” 先验证、后选型”。</li>
+</ul>
+<h3 id="必须清楚的限制"><a href="#必须清楚的限制" class="headerlink" title="必须清楚的限制"></a>必须清楚的限制</h3><ul>
+<li><strong>吞吐天花板低</strong>：单 token 需要一次” 换层”，所以单请求延迟远高于 vLLM/TensorRT-LLM。Gavin 自己说” 低端卡不适合对话机器人”；</li>
+<li><strong>不能用来训练</strong>：训练需要每一层前向 + 反向的中间激活，不能只保留一层。AirLLM 是纯推理工具；</li>
+<li><strong>首次分层慢</strong>：切权重是 IO 密集型操作，磁的 NVMe 是底线，HDD 不建议；</li>
+<li><strong>闪存寿命</strong>：把百 GB 模型反复从 SSD 加载会显著消耗写入寿命，企业级 SSD 更合适；</li>
+<li><strong>依赖版本敏感</strong>：最新 Kimi K3 支持需要 CUDA 12 的 torch、<code>transformers 4.56.x</code>、<code>compressed-tensors</code>、<code>flash-attn</code>，少一个就跑不起来。</li>
+</ul>
+<p>如果你的场景是” 在线对话、低延迟、高并发”，请直接看 vLLM / SGLang / TensorRT-LLM；如果你想的是” 在 4GB 显存里把 70B 跑起来给老板交差”，AirLLM 现在是最务实的选择。</p>
+<h2 id="写在最后：把”大模型普及”的天花板抬高一截"><a href="#写在最后：把”大模型普及”的天花板抬高一截" class="headerlink" title="写在最后：把”大模型普及”的天花板抬高一截"></a>写在最后：把” 大模型普及” 的天花板抬高一截</h2><p>AirLLM 不是要把 4GB GPU 变成 A100 集群，它的真实价值在于<strong>把” 硬件能力够用” 和” 模型规模必须用” 之间的耦合拆开</strong> —— 一个 70B 模型不再需要一整张 H100，也不再需要退到 3-bit 量化丢精度，它只需要一张 4GB 卡和一份被工程化好的” 分层调度”。</p>
+<p>更深一层看，AirLLM 的方向呼应了一个正在被反复验证的判断：</p>
+<blockquote>
+<p><strong>大模型的瓶颈，正在从” 算力” 转向” 调度与内存”</strong>。</p>
+</blockquote>
+<p>当模型规模每几个月翻一倍，单卡显存却按年缓慢增长，谁能把” 算 vs 换” 的调度做漂亮，谁就能把更多模型拖进普通玩家的桌面。这一波从 AirLLM、到 vLLM 的 PagedAttention、再到 FlexGen，本质都是同一条主线上的工程回答。</p>
+<p>如果你今天手头只有一张老旧显卡，又想做点严肃的本地推理，建议直接 <code>pip install airllm</code> 跑一下 —— 大概率会被那种” 它居然真的跑起来了” 的体验震到。</p>
+<hr>
+<p>📌 项目主页：<a target="_blank" rel="noopener" href="https://github.com/lyogavin/airllm">github.com/lyogavin/airllm</a><br>📖 作者博客：<a target="_blank" rel="noopener" href="https://huggingface.co/blog/lyogavin/airllm">HuggingFace Blog: AirLLM</a><br>📚 关键论文：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2212.09720">Block-wise Quantization (arXiv 2212.09720)</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/04/airllm-70b-llm-inference-on-single-4gb-gpu/" title="AirLLM：让 70B 大模型塞进 4GB 显存，Kimi K3 2.8T 也只要 3.72GB">https://www.daishengli.top/2026/08/04/airllm-70b-llm-inference-on-single-4gb-gpu/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/" rel="tag"># 开源工具</a>
+              <a href="/tags/AirLLM/" rel="tag"># AirLLM</a>
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/" rel="tag"># 大模型推理</a>
+              <a href="/tags/%E6%98%BE%E5%AD%98%E4%BC%98%E5%8C%96/" rel="tag"># 显存优化</a>
+              <a href="/tags/%E5%88%86%E5%B1%82%E6%8E%A8%E7%90%86/" rel="tag"># 分层推理</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/03/reverse-skill-ai-driven-cybersecurity-skill-router/" rel="prev" title="reverse-skill：让 AI Coding Agent 真正能干逆向工程的技能路由包">
+                  <i class="fa fa-angle-left"></i> reverse-skill：让 AI Coding Agent 真正能干逆向工程的技能路由包
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/05/livekit-agents-realtime-voice-ai-framework/" rel="next" title="LiveKit Agents：让任何 LLM 都能跑成实时语音 AI 的开源框架">
+                  LiveKit Agents：让任何 LLM 都能跑成实时语音 AI 的开源框架 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

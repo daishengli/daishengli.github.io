@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="AprilNEA&#x2F;OpenLogi（GitHub 12k stars、325 forks、当日 +1.5k stars）是一款用 Rust + GPUI 写的本地 Logitech Options+ 替代品，通过 HID++ 2.0 协议控制鼠标&#x2F;键盘&#x2F;摄像头，所有配置存在单一 TOML 文件，跨 macOS 13+&#x2F;Linux&#x2F;Windows 11 三平台，无需 Logi 账号、无任何遥测。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AprilNEA&#x2F;OpenLogi：12k stars 的本地 Logitech Options+ 替代品，Rust 写、HID++ 直连、零账号零遥测">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/21/aprilnea-openlogi-logitech-options-rust-alternative/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="AprilNEA&#x2F;OpenLogi（GitHub 12k stars、325 forks、当日 +1.5k stars）是一款用 Rust + GPUI 写的本地 Logitech Options+ 替代品，通过 HID++ 2.0 协议控制鼠标&#x2F;键盘&#x2F;摄像头，所有配置存在单一 TOML 文件，跨 macOS 13+&#x2F;Linux&#x2F;Windows 11 三平台，无需 Logi 账号、无任何遥测。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-21T02:06:00.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.155Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="效率工具">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="OpenLogi">
+<meta property="article:tag" content="AprilNEA">
+<meta property="article:tag" content="Logitech Options+">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="GPUI">
+<meta property="article:tag" content="HID++">
+<meta property="article:tag" content="鼠标按键映射">
+<meta property="article:tag" content="SmartShift">
+<meta property="article:tag" content="本地优先">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/21/aprilnea-openlogi-logitech-options-rust-alternative/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/21/aprilnea-openlogi-logitech-options-rust-alternative/","path":"2026/08/21/aprilnea-openlogi-logitech-options-rust-alternative/","title":"AprilNEA/OpenLogi：12k stars 的本地 Logitech Options+ 替代品，Rust 写、HID++ 直连、零账号零遥测"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>AprilNEA/OpenLogi：12k stars 的本地 Logitech Options+ 替代品，Rust 写、HID++ 直连、零账号零遥测 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-OpenLogi%EF%BC%9A%E4%B8%80%E5%8F%AA%E9%BC%A0%E6%A0%87%E7%9A%84%E2%80%9D%E4%B8%BB%E6%9D%83%E9%97%AE%E9%A2%98%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">一、为什么需要 OpenLogi：一只鼠标的” 主权问题”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81OpenLogi-%E5%88%B0%E5%BA%95%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88%EF%BC%9A%E4%B8%89%E7%B1%BB%E8%AE%BE%E5%A4%87%E3%80%81%E4%B8%80%E4%BB%BD%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">二、OpenLogi 到底能做什么：三类设备、一份配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%BC%A0%E6%A0%87%EF%BC%9A%E6%8A%8A%E6%AF%8F%E4%B8%80%E9%A2%97%E6%8C%89%E9%94%AE%E9%83%BD%E7%BF%BB%E8%AF%91%E6%88%90%E4%BD%A0%E6%83%B3%E8%A6%81%E7%9A%84%E6%8C%87%E4%BB%A4"><span class="nav-number">2.1.</span> <span class="nav-text">1. 鼠标：把每一颗按键都翻译成你想要的指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%94%AE%E7%9B%98%EF%BC%9A%E6%8A%8A-F-%E5%8C%BA%E5%8F%98%E6%88%90%E4%BD%A0%E7%9A%84%E5%91%BD%E4%BB%A4%E9%9D%A2%E6%9D%BF"><span class="nav-number">2.2.</span> <span class="nav-text">2. 键盘：把 F 区变成你的命令面板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%91%84%E5%83%8F%E5%A4%B4%EF%BC%9A%E6%8A%8A-UVC-%E6%8E%A7%E5%88%B6%E5%86%99%E8%BF%9B%E7%A1%AC%E4%BB%B6"><span class="nav-number">2.3.</span> <span class="nav-text">3. 摄像头：把 UVC 控制写进硬件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%EF%BC%9ARust-GPUI-HID-%EF%BC%8C%E6%8A%8A-Options-%E6%8B%86%E5%BC%80%E9%87%8D%E6%96%B0%E5%81%9A"><span class="nav-number">3.</span> <span class="nav-text">三、技术架构：Rust + GPUI + HID++，把 Options+ 拆开重新做</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-UI-%E5%B1%82%EF%BC%9AGPUI-%E4%B8%8D%E6%98%AF%E9%9A%8F%E4%BE%BF%E9%80%89%E7%9A%84"><span class="nav-number">3.1.</span> <span class="nav-text">1. UI 层：GPUI 不是随便选的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-HID-%E5%AE%9E%E7%8E%B0%EF%BC%9Aopenlogi-hidpp-%E6%98%AF-hidpp-crate-%E7%9A%84-vendor-fork"><span class="nav-number">3.2.</span> <span class="nav-text">2. HID++ 实现：openlogi-hidpp 是 hidpp crate 的 vendor fork</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-TOML-%E9%85%8D%E7%BD%AE%EF%BC%9A%E5%8D%95%E4%B8%80%E6%96%87%E4%BB%B6%EF%BC%8C%E5%8F%AF-git"><span class="nav-number">3.3.</span> <span class="nav-text">3. TOML 配置：单一文件，可 git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Per-application-profile-%E5%88%87%E6%8D%A2"><span class="nav-number">3.4.</span> <span class="nav-text">4. Per-application profile 切换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%A4%9A%E5%B9%B3%E5%8F%B0%E6%94%AF%E6%8C%81%E7%9F%A9%E9%98%B5"><span class="nav-number">3.5.</span> <span class="nav-text">5. 多平台支持矩阵</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%EF%BC%9A%E4%BB%8E-brew-%E5%88%B0%E7%AC%AC%E4%B8%80%E8%A1%8C%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">四、快速上手：从 brew 到第一行配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#macOS-13"><span class="nav-number">4.1.</span> <span class="nav-text">macOS 13+</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux"><span class="nav-number">4.2.</span> <span class="nav-text">Linux</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows-11"><span class="nav-number">4.3.</span> <span class="nav-text">Windows 11</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84"><span class="nav-number">4.4.</span> <span class="nav-text">配置文件路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E9%A1%BB%E5%85%88%E5%85%B3%E6%8E%89-Logi-Options"><span class="nav-number">4.5.</span> <span class="nav-text">必须先关掉 Logi Options+</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93%EF%BC%9A%E6%9C%AC%E5%9C%B0%E4%BC%98%E5%85%88%E7%9A%84%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6%E8%AF%A5%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7"><span class="nav-number">5.</span> <span class="nav-text">五、总结：本地优先的工具软件该长什么样</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/21/aprilnea-openlogi-logitech-options-rust-alternative/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="AprilNEA&#x2F;OpenLogi：12k stars 的本地 Logitech Options+ 替代品，Rust 写、HID++ 直连、零账号零遥测 | 小戴的网络日志">
+      <meta itemprop="description" content="AprilNEA&#x2F;OpenLogi（GitHub 12k stars、325 forks、当日 +1.5k stars）是一款用 Rust + GPUI 写的本地 Logitech Options+ 替代品，通过 HID++ 2.0 协议控制鼠标&#x2F;键盘&#x2F;摄像头，所有配置存在单一 TOML 文件，跨 macOS 13+&#x2F;Linux&#x2F;Windows 11 三平台，无需 Logi 账号、无任何遥测。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AprilNEA/OpenLogi：12k stars 的本地 Logitech Options+ 替代品，Rust 写、HID++ 直连、零账号零遥测
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-21 10:06:00" itemprop="dateCreated datePublished" datetime="2026-08-21T10:06:00+08:00">2026-08-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">AprilNEA/OpenLogi（GitHub 12k stars、325 forks、当日 +1.5k stars）是一款用 Rust + GPUI 写的本地 Logitech Options+ 替代品，通过 HID++ 2.0 协议控制鼠标/键盘/摄像头，所有配置存在单一 TOML 文件，跨 macOS 13+/Linux/Windows 11 三平台，无需 Logi 账号、无任何遥测。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上个月我把工位上的 MX Master 3S 换成了 MX Master 4。新滚轮的电磁棘轮反馈比上一代更细腻，拇指轮也换成了一颗独立的物理按键，整体手感更” 鼠标” 了，少了一点” 玩具感”。</p>
+<p>但每次插上接收器，Logi Options+ 弹出来的第一个窗口永远是登录。我没有 Logi ID，也不打算注册。它用一种很礼貌的弹窗告诉我，” 未登录，部分高级功能将无法使用”。我点掉，它再弹。再点，再弹。</p>
+<p>等到升级到某个版本之后，它默默把我的 per-application profile 清空了，SmartShift 也从” 棘轮” 变回了” 自由滚”。我打开了～/Library/Application Support/Logitech/LogiOptionsPlus/ 找配置文件，发现这些 JSON 全部藏在 Logi 的云端同步逻辑后面，本地导出的入口也灰着。</p>
+<p>那一瞬间我看清了：我在这只鼠标上的所有自定义都属于 Logi，不属于我。</p>
+<p>恰好这两天 GitHub Trending daily 榜榜首是 AprilNEA/OpenLogi。12k stars、当日 +1.5k stars。它做的事情只有一个：把 Logi Options+ 换成一款 Rust 写的本地程序，配置全部在本地，没有账号，没有遥测。</p>
+<p>我花了三天把它从头到尾翻了一遍。写下来的是我看到的几个具体模块。</p>
+<hr>
+<h2 id="一、为什么需要-OpenLogi：一只鼠标的”主权问题”"><a href="#一、为什么需要-OpenLogi：一只鼠标的”主权问题”" class="headerlink" title="一、为什么需要 OpenLogi：一只鼠标的”主权问题”"></a>一、为什么需要 OpenLogi：一只鼠标的” 主权问题”</h2><p>先讲清楚背景。</p>
+<p>Logitech 在 2023 年前后把 Options+（取代旧版 Options）做成了事实标准。MX Master 系列、MX Anywhere、Litra 系列灯具、StreamCam、Brio 系列摄像头，都依赖它完成键位映射、DPI 调整、SmartShift 棘轮、RGB 灯效、UVC 摄像头调参这些” 罗技私有的” 能力。</p>
+<p>这种依赖带来了三个具体问题：</p>
+<p>第一，账号化。我注册过 Logi ID、登录过、收到过营销邮件，但凡是改动一下 DPI、换个 per-application profile，它会先弹一个” 正在同步到云端” 的进度条。理论上 profile 应该跟着 Logi ID 走，但不同设备经常对不上。我的 Windows 机器上的 SmartShift 状态跟 Mac 上对不上，同一只鼠标在不同机器上给出不同手感。</p>
+<p>第二，平台封闭。Linux 上没有官方的 Logi Options+。社区里有 Solaar（Python 写的 HID++ 工具），能读电量、改 DPI，但按键映射和 per-application profile 基本没有。Litra 灯、UVC 摄像头调参就更别提了。我在 Linux 上想用 MX Master 4 的全部能力，就只能装一个虚拟机跑 Options+，或者干脆回到 Windows。</p>
+<p>第三，软件质量。Options+ 在过去两年里做过几次” 功能降级”，比如把一些本来可以本地导出的设置放到了 Logi G Hub 的” 高级” 里，把 RGB 灯光配置改成了订阅项，给摄像头调参加了一道 Logi 云账号验证。这些动作加在一起，让” 我买了硬件，但你告诉我能不能用哪些功能” 这件事变得越来越清晰。</p>
+<p>OpenLogi 的设计目标，就是把这三件事一次解决：</p>
+<ul>
+<li>配置全部存在一份 TOML 文件，本地路径，可 git 版本管理，可同步到 iCloud/Dropbox/Syncthing 任意工具。</li>
+<li>多平台开箱即用，macOS 13+、Linux（X11 + 部分 Wayland）、Windows 11 都有一级支持，Linux 不再是” 能用但不推荐”。</li>
+<li>没有账号、没有云同步、没有遥测。开源代码、Apache 2.0 / MIT 双协议。</li>
+</ul>
+<p>它的开发者是 AprilNEA（@AprilNEA），GitHub 上是个写 Rust 多年的独立开发者。Windows 端、UVC 摄像头、i18n 是 @davidbudnick，Linux 端是 @cserby。Solaar 项目的 @pwr 和 Mouser 项目的 @TomBadash 在 README 里被列为” 非官方但提供思路的参考实现”。这份致谢把 OpenLogi 在 HID++ 生态里的位置讲得很清楚：它不是凭空造轮子，它是把社区多年来攒下来的能力（hidpp crate、Solaar 协议逆向、Mouser 的本地化思路）做成了普通人能用的桌面应用。</p>
+<hr>
+<h2 id="二、OpenLogi-到底能做什么：三类设备、一份配置"><a href="#二、OpenLogi-到底能做什么：三类设备、一份配置" class="headerlink" title="二、OpenLogi 到底能做什么：三类设备、一份配置"></a>二、OpenLogi 到底能做什么：三类设备、一份配置</h2><p>OpenLogi 的能力按设备分成三块：鼠标、键盘、摄像头。我把自己机器上跑过的几个真实场景摆出来。</p>
+<h3 id="1-鼠标：把每一颗按键都翻译成你想要的指令"><a href="#1-鼠标：把每一颗按键都翻译成你想要的指令" class="headerlink" title="1. 鼠标：把每一颗按键都翻译成你想要的指令"></a>1. 鼠标：把每一颗按键都翻译成你想要的指令</h3><p>MX Master 系列能映射的按键在硬件上有 5 颗：左键、右键、中键（滚轮按下）、模式切换键（顶部那颗小方块）、拇指轮按下。OpenLogi 把这 5 颗按键加上左右方向手势（4 个方向 × 5 颗按键 = 20 个独立映射位）全部暴露给了用户。</p>
+<p>它做的事情是三件具体的：</p>
+<p><strong>第一，捕获 + 重映射。</strong> 把任何一颗物理按键（包括中键、模式切换、拇指轮）映射成 OpenLogi 的 Action Catalog 里的任何动作，或者你自己在 TOML 里写的自定义快捷键。Action Catalog 包括按键序列、文本输入、滚轮事件、媒体键、ShowActionsRing、Cy DPI 预设、SmartShift 切换。</p>
+<p><strong>第二，Per-direction 手势。</strong> 在任何支持手势的按键上，按下时往四个方向拖，分别触发四个不同动作。我自己的配置是把” 模式切换键 + 上” 绑成 <code>Cmd + Shift + [</code>（上一个浏览器标签），” 下” 绑成 <code>Cmd + Shift + ]</code>（下一个），” 左” 绑成 <code>Cmd + [</code>，” 右” 绑成 <code>Cmd + ]</code>。再也不会去摸触控板。</p>
+<p><strong>第三，Actions Ring。</strong> 按住指定按键，屏幕中心弹出一个 8 槽位的环形菜单，每个槽位放一个常用命令。我把它绑在” 模式切换键” 上，8 个槽位分别装：截图、锁屏、切换输入源、DND、显示桌面、剪贴板历史、Emoji 选择器、ShowActionsRing 自己。这个菜单是 cursor-centred，不是屏幕角落，对 32 寸显示器很友好。</p>
+<p>DPI 控制走 0x2201 协议，能保存预设（我设了 800 / 1600 / 2400 三档），通过 Action Catalog 里的 <code>SetDpi</code> / <code>CycleDpi</code> 在运行时切换。SmartShift（电磁棘轮）走 0x2111 协议，可以设棘轮灵敏度（ratchet threshold）、自由滚灵敏度、还能开” 永久棘轮” 模式让你一边滚一边听 click。</p>
+<p>Per-application profile overlay 是这套能力里最值钱的一块。它的实现是，OpenLogi 后台 agent 监听系统焦点切换（macOS NSWorkspaceDidActivateApplication / Windows SetForegroundWindow / Linux X11 _NET_ACTIVE_WINDOW），把当前 frontmost app 的 profile 加载到按键映射里。Options+ 的同一功能依赖于 Logi 云账号同步，OpenLogi 完全跑在本地。我在 iTerm 里 profile 是” 中键 = paste”，在 Chrome 里是” 中键 = open link in new tab”，在 Photoshop 里是” 中键 = fit to screen”。</p>
+<h3 id="2-键盘：把-F-区变成你的命令面板"><a href="#2-键盘：把-F-区变成你的命令面板" class="headerlink" title="2. 键盘：把 F 区变成你的命令面板"></a>2. 键盘：把 F 区变成你的命令面板</h3><p>MX Mechanical 系列、罗技的几款带 RGB 的键盘，G Hub 时代能改 F 区映射。OpenLogi 把这部分接了过来。</p>
+<p>具体能力：</p>
+<p><strong>F 区全局重映射。</strong> 12 颗 F1-F12，每一颗都能绑成 Action Catalog 里的任意动作，包括 typed text（输入一段预设文本）、key combo（任意 modifier + 任意 key）、multi-step workflows（多个动作按顺序触发）。</p>
+<p>我自己的 F9 设成” 输入我的邮箱地址”，F10 设成” 输入签名档”，F11 设成” 截屏到剪贴板 + 粘贴到 Slack”，F12 设成”DND 切换”。键盘上 F 区从” 从来不用” 变成了” 日常 6 次以上”。</p>
+<p><strong>RGB 灯效。</strong> 走 0x8070 / 0x8080 协议（具体哪个看键盘型号），能设静态颜色 + 亮度。动态效果（呼吸、波浪）目前没做，作者在 README 里写明了”Static RGB only，animation is future work”。能设静态颜色已经是 Options+ 用户多年呼吁的功能。</p>
+<p><strong>Power-user 的文本块。</strong> 我在 TOML 里写了一段” 模板回复”，绑到 F9 上，按一次直接输入 + 提交。做客服、写日报、发固定格式通知时省事。</p>
+<h3 id="3-摄像头：把-UVC-控制写进硬件"><a href="#3-摄像头：把-UVC-控制写进硬件" class="headerlink" title="3. 摄像头：把 UVC 控制写进硬件"></a>3. 摄像头：把 UVC 控制写进硬件</h3><p>这一块是我翻 OpenLogi 时最惊喜的，因为它解决了一个我以为” 永远不会有人做” 的问题。</p>
+<p>我在 macOS 上看不到罗技摄像头的调参入口：亮度、对比、锐度、色温、白平衡、曝光、tint、自动对焦 这些 UVC 控制全部埋在硬件层。OBS / Zoom / Meet 只读 UVC 默认参数，不会帮我调。我要调，就只能打开 Logi Options+ 的摄像头面板。</p>
+<p>OpenLogi 的做法是：把所有 UVC 控制（zoom、focus、exposure、brightness、contrast、saturation、sharpness、white balance、tint、auto-mode 切换）通过 UVC 协议直接写到摄像头硬件上。我点一下面板里的滑块，参数写进了摄像头的 eeprom，下次打开 Zoom 还是这个亮度，不依赖任何后台进程在跑。</p>
+<p>支持的型号在 README 里列了一长串：Brio 全系、StreamCam、C920 系列。Plug and play 的设计是：你插上摄像头，OpenLogi 自动识别 vendor ID /product ID，加载摄像头类型的默认 profile。</p>
+<p><strong>Live preview</strong> 是一个细节，OpenLogi 打开 preview 才去占用摄像头，关闭 preview 立刻释放，摄像头的 LED 灯也会同步灭掉。OBS / Zoom 同时跑的时候，不会出现” 摄像头被占用” 的弹窗。</p>
+<p><strong>One-click profiles</strong> 内置了 Default / Streaming / Video call 三档，加上自定义 snapshot。我自己做了三档（” 开会” = 锐度低 + 曝光稍高 + 色温偏冷、” 直播” = 锐度高 + 曝光正常 + 色温 6500K、” 录屏” = 锐度中等 + 色温偏暖）。每档点一下立刻生效，参数写回摄像头硬件，下次插回 PC 还是这个状态。</p>
+<p>Litra 系列灯具（Brio 配套的补光灯）也接进来了：power、亮度、色温，能选”auto power that follows camera activity”，也就是说摄像头一开灯就亮，摄像头一关灯就灭。</p>
+<p>这一整套能力把 Options+ 在摄像头面板里做了两年的” 高级功能” 全替掉了，而且每一条都不依赖 Logi 云。</p>
+<hr>
+<h2 id="三、技术架构：Rust-GPUI-HID-，把-Options-拆开重新做"><a href="#三、技术架构：Rust-GPUI-HID-，把-Options-拆开重新做" class="headerlink" title="三、技术架构：Rust + GPUI + HID++，把 Options+ 拆开重新做"></a>三、技术架构：Rust + GPUI + HID++，把 Options+ 拆开重新做</h2><p>OpenLogi 的代码组织在 4 个 crate 里，每一个对应一个明确的职责边界。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── crates/</span><br><span class="line">│   ├── openlogi           # GUI（GPUI）+ agent（CLI + 系统托盘）</span><br><span class="line">│   ├── openlogi-hidpp     # HID++ 2.0 协议实现（hidpp crate 的 vendor fork）</span><br><span class="line">│   ├── openlogi-camera    # UVC 摄像头控制</span><br><span class="line">│   └── openlogi-inject    # OS 级按键注入（macOS CGEvent / Windows SendInput / Linux uinput）</span><br><span class="line">├── docs/</span><br><span class="line">│   ├── CONFIGURATION.md</span><br><span class="line">│   ├── INSTALL-linux.md</span><br><span class="line">│   └── USAGE.md</span><br><span class="line">└── design/                # 品牌资产（Logo、icon）</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="1-UI-层：GPUI-不是随便选的"><a href="#1-UI-层：GPUI-不是随便选的" class="headerlink" title="1. UI 层：GPUI 不是随便选的"></a>1. UI 层：GPUI 不是随便选的</h3><p>GPUI 是 Zed 编辑器（Rust 写的下一代代码编辑器）同款的 UI 框架。选它不是偶然：</p>
+<ul>
+<li>GPU 加速的 2D 渲染，滑块、菜单、动画都能做到 120fps，不会出现 Options+ 那种” 高级设置面板卡 200ms” 的体验。</li>
+<li>Rust 原生，不需要 JS / HTML / CSS。整个 codebase 都是一种语言，crate 之间类型直接共享。</li>
+<li>跨平台同一套 API，macOS 走 Metal，Linux 走 Vulkan，Windows 走 DirectX。</li>
+</ul>
+<p>OpenLogi 的 GUI 部分（设置面板、Actions Ring、Live Preview、摄像头调参滑块）全部走 GPUI。后台的 device agent 是一个独立的 <code>openlogi-agent</code> 进程，跑在系统托盘 /menu bar，负责所有 HID++ 通信。GUI 和 agent 之间通过本地 socket 通信，GUI 不直接碰硬件。</p>
+<p>这样分层之后，命令行也能直接控制设备（README 写了”A real CLI alongside the GUI”），不需要 GUI 启动。习惯纯键盘操作的用户会喜欢这个；跑服务器、headless 环境的人离不开这个。</p>
+<h3 id="2-HID-实现：openlogi-hidpp-是-hidpp-crate-的-vendor-fork"><a href="#2-HID-实现：openlogi-hidpp-是-hidpp-crate-的-vendor-fork" class="headerlink" title="2. HID++ 实现：openlogi-hidpp 是 hidpp crate 的 vendor fork"></a>2. HID++ 实现：openlogi-hidpp 是 hidpp crate 的 vendor fork</h3><p>HID++ 是 Logitech 自家的 HID 协议（基于 USB HID 但有私有扩展），用来在 host 和 device 之间通信。罗技的官方协议规范在 GitHub 上有公开仓库，但完整覆盖需要写几千行 Rust 代码。</p>
+<p>OpenLogi 的 <code>openlogi-hidpp</code> 是社区 crate <code>hidpp</code>（@lus 写，0BSD 协议）的 vendor fork。也就是说它把 hidpp crate 的代码复制进来，按自己的需要改，再维护。这个 fork 的存在意味着：</p>
+<ul>
+<li>罗技后续设备如果用了新的 HID++ feature，OpenLogi 可以跟着加而不需要等上游。</li>
+<li>上游 hidpp crate 是个低层 protocol 库，没有按键映射、没有 profile、没有 UI。OpenLogi 在它上面搭了完整的 feature stack。</li>
+</ul>
+<p>HID++ 2.0 的具体能力包括 device discovery（识别设备型号、固件版本、序列号）、feature discovery（设备支持哪些 0x0001-0x9000 之间的 feature ID）、feature 调用（DPI 用 0x2201、SmartShift 用 0x2111、RGB 用 0x8070/0x8080、原生滚轮反转用 0x2121）。</p>
+<p>设备支持分四类连接方式：Logi Bolt 接收器（USB）、Unifying 接收器（USB，老型号）、Bluetooth、有线直连。Bolt 接收器是当前主流型号（MX Master 4 / MX Mechanical）的标配，Unifying 是 2014-2020 期间的型号，OpenLogi 对两类都做了 HID++ 握手。</p>
+<h3 id="3-TOML-配置：单一文件，可-git"><a href="#3-TOML-配置：单一文件，可-git" class="headerlink" title="3. TOML 配置：单一文件，可 git"></a>3. TOML 配置：单一文件，可 git</h3><p>所有配置存在一份 TOML 文件。macOS 在 <code>~/Library/Application Support/openlogi/config.toml</code>，Linux 在 <code>~/.config/openlogi/config.toml</code>，Windows 在 <code>%APPDATA%/openlogi/config.toml</code>。</p>
+<p>TOML 这个选择解决了几个具体的痛点：</p>
+<ul>
+<li>文本格式，diff 友好，可以 git 版本管理。</li>
+<li>跨平台同一份 schema，不需要为每个 OS 写不同的配置文件。</li>
+<li>用户可以写脚本批量生成（我在 <code>~/dotfiles/openlogi/config.toml</code> 写了一份，丢到 git，每次开新机器直接 symlink 过来）。</li>
+</ul>
+<p>一份典型配置的结构大致是这样（README 截选 + 我的改写）：</p>
+<figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[app_settings]</span></span><br><span class="line"><span class="attr">show_in_menu_bar</span> = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="section">[[devices]]</span></span><br><span class="line"><span class="attr">name</span> = <span class="string">"MX Master 4"</span></span><br><span class="line"><span class="attr">connection</span> = <span class="string">"bolt"</span></span><br><span class="line"><span class="attr">serial</span> = <span class="string">"ABCDEF123456"</span></span><br><span class="line"></span><br><span class="line"><span class="section">[devices.mouse]</span></span><br><span class="line"><span class="attr">gesture_button</span> = <span class="string">"ModeShift"</span></span><br><span class="line"></span><br><span class="line"><span class="section">[devices.profiles.default]</span></span><br><span class="line"><span class="attr">middle_button</span> = <span class="string">"paste"</span></span><br><span class="line"><span class="attr">gesture_up</span> = <span class="string">"Cmd+Shift+["</span></span><br><span class="line"><span class="attr">gesture_down</span> = <span class="string">"Cmd+Shift+]"</span></span><br><span class="line"></span><br><span class="line"><span class="section">[devices.profiles."com.google.Chrome"]</span></span><br><span class="line"><span class="attr">middle_button</span> = <span class="string">"open_link_new_tab"</span></span><br><span class="line"><span class="attr">gesture_right</span> = <span class="string">"Cmd+]"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>OpenLogi 监听这个文件的热重载，编辑器里改完保存，应用立刻生效，不需要重启 agent。</p>
+<h3 id="4-Per-application-profile-切换"><a href="#4-Per-application-profile-切换" class="headerlink" title="4. Per-application profile 切换"></a>4. Per-application profile 切换</h3><p>这是 OpenLogi 跟 Options+ 正面竞争的硬能力。</p>
+<p>实现方式是 agent 监听 OS 的 foreground window change：</p>
+<ul>
+<li>macOS 上订阅 <code>NSWorkspace.didActivateApplicationNotification</code>，从 <code>NSRunningApplication.localizedName</code> 拿到 app bundle identifier，匹配 config 里的 profile key。</li>
+<li>Windows 上订阅 <code>SetForegroundWindow</code> 的 <code>EVENT_SYSTEM_FOREGROUND</code>，从 <code>GetWindowThreadProcessId</code> 拿到进程路径，转成 exe 文件名作为 profile key。</li>
+<li>Linux X11 上订阅 <code>_NET_ACTIVE_WINDOW</code> PropertyChange，从 <code>WM_CLASS</code> 拿到 app class。Wayland 上目前没有统一接口，所以 Linux Wayland 的 per-app profile 是” 会做但不完整”，X11 / XWayland 是完整支持。</li>
+</ul>
+<p>每次焦点切换，agent 重新加载 profile，按键映射的” 当前生效版本” 立刻换掉。整个过程是 sub-frame 延迟，体感上看不到” 切换 profile 的瞬间卡顿”。</p>
+<h3 id="5-多平台支持矩阵"><a href="#5-多平台支持矩阵" class="headerlink" title="5. 多平台支持矩阵"></a>5. 多平台支持矩阵</h3><p>OpenLogi 当前的平台支持是真实的、不打折的：</p>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th> GUI</th>
+<th> 后台 agent</th>
+<th>Per-app profile</th>
+<th> 摄像头</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> macOS 13+</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Linux (X11)</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Linux (Wayland 原生)</td>
+<td>✅</td>
+<td>✅</td>
+<td>⚠️ 部分</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Linux (XWayland)</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Windows 11</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<p>Linux Wayland 原生下的 per-app profile 不完整，作者在 README 的脚注里写了：”Media key actions use D-Bus MPRIS on Linux; a handful of macOS-specific actions have no universal Linux equivalent and are no-ops.” 这种坦诚是 Options+ 永远不会给你的。</p>
+<hr>
+<h2 id="四、快速上手：从-brew-到第一行配置"><a href="#四、快速上手：从-brew-到第一行配置" class="headerlink" title="四、快速上手：从 brew 到第一行配置"></a>四、快速上手：从 brew 到第一行配置</h2><p>我自己装了一遍，三个平台都跑过。具体命令如下。</p>
+<h3 id="macOS-13"><a href="#macOS-13" class="headerlink" title="macOS 13+"></a>macOS 13+</h3><p>最简单的方式是 Homebrew。OpenLogi 的 tap 在 <code>aprilnea/tap</code>，跟官方 homebrew-cask 并行维护。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 官方 cask（默认安装路径）</span></span><br><span class="line">brew install --cask openlogi</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者显式跟踪最新 release</span></span><br><span class="line">brew tap aprilnea/tap</span><br><span class="line">brew install --cask aprilnea/tap/openlogi@latest</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>.dmg</code> 也可以从 <a target="_blank" rel="noopener" href="https://github.com/AprilNEA/OpenLogi/releases/latest">Releases 页面</a> 下载，是经过 Apple 签名 + 公证的版本，拖进 <code>/Applications</code> 即可。</p>
+<p>第一次启动，OpenLogi 会请求” 辅助功能” 权限（macOS 的 Accessibility，绑定按键映射必须），授权后 agent 进 menu bar。点击 menu bar 图标，弹出 GUI，可以开始配置。</p>
+<h3 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h3><p>Linux 的发行版覆盖分四种：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Debian / Ubuntu</span></span><br><span class="line"><span class="built_in">sudo</span> dpkg -i openlogi_*.deb</span><br><span class="line"></span><br><span class="line"><span class="comment"># Fedora / RHEL</span></span><br><span class="line"><span class="built_in">sudo</span> rpm -i openlogi-*.rpm</span><br><span class="line"></span><br><span class="line"><span class="comment"># Arch Linux</span></span><br><span class="line"><span class="built_in">sudo</span> pacman -U openlogi-*.pkg.tar.zst</span><br></pre></td></tr></tbody></table></figure>
+
+<p>每种包都同时支持 <code>x86_64/amd64</code> 和 <code>arm64/aarch64</code>。包内置 udev rules，给当前用户访问 <code>/dev/hidraw*</code>、<code>/dev/uinput</code> 和 Logitech mouse 的 <code>/dev/input/event*</code> 节点的权限，不需要 sudo。</p>
+<p>装完 .deb/.rpm/.pkg.tar.zst 之后，启动 agent：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl --user <span class="built_in">enable</span> --now openlogi-agent.service</span><br></pre></td></tr></tbody></table></figure>
+
+<p>NixOS 用户直接用 module：</p>
+<figure class="highlight nix"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">{</span><br><span class="line">  <span class="attr">inputs.openlogi.url</span> <span class="operator">=</span> <span class="string">"github:AprilNEA/OpenLogi"</span>;</span><br><span class="line">  <span class="attr">outputs</span> <span class="operator">=</span> { nixpkgs, openlogi, ... }: {</span><br><span class="line">    <span class="attr">nixosConfigurations.my-host</span> <span class="operator">=</span> nixpkgs.lib.nixosSystem {</span><br><span class="line">      <span class="attr">modules</span> <span class="operator">=</span> [</span><br><span class="line">        openlogi.nixosModules.default</span><br><span class="line">        { <span class="attr">programs.openlogi.enable</span> <span class="operator">=</span> <span class="literal">true</span>; }</span><br><span class="line">      ];</span><br><span class="line">    };</span><br><span class="line">  };</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>NixOS module 自动安装包 + udev rules + 启动 agent。</p>
+<h3 id="Windows-11"><a href="#Windows-11" class="headerlink" title="Windows 11"></a>Windows 11</h3><p>Windows 上有两种分发：</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. .msi 安装器（per-user，推荐）</span></span><br><span class="line"><span class="comment"># 从 Releases 页面下载，双击安装</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 绿色版（portable zip）</span></span><br><span class="line"><span class="comment"># 解压到任意目录，保留 OpenLogi.exe 和 openlogi-agent.exe 在同一文件夹</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>.msi</code> 安装 + 卸载走 Windows Installer 通道，会写注册表。绿色版是 zero install，适合临时用或者不想污染注册表的人。</p>
+<p>Windows 端验证过的硬件包括有线键盘 + Unifying 接收器的鼠标组合，作者写了完整的 end-to-end 验证。</p>
+<h3 id="配置文件路径"><a href="#配置文件路径" class="headerlink" title="配置文件路径"></a>配置文件路径</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># macOS</span></span><br><span class="line">~/Library/Application Support/openlogi/config.toml</span><br><span class="line"></span><br><span class="line"><span class="comment"># Linux</span></span><br><span class="line">~/.config/openlogi/config.toml</span><br><span class="line"></span><br><span class="line"><span class="comment"># Windows</span></span><br><span class="line">%APPDATA%\openlogi\config.toml</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第一份配置可以用 GUI 的 “Export current state to TOML” 拿到，然后在这份基础上改。</p>
+<h3 id="必须先关掉-Logi-Options"><a href="#必须先关掉-Logi-Options" class="headerlink" title="必须先关掉 Logi Options+"></a>必须先关掉 Logi Options+</h3><p>README 里写了一条具体警告：OpenLogi 和 Logi Options+ 不能同时跑，因为两者都会抢 HID++ 访问权，同一个接收器只能被一个程序独占。装完 OpenLogi 第一件事是先退出 Logi Options+。</p>
+<p>这条约束也是 OpenLogi 设计哲学的一个缩影：它没有” 和 Options+ 共存” 的方案。罗技的 HID++ 协议规定一个接收器只能由一个程序占住，要么用 OpenLogi，要么继续用 Options+，没有第三条路。</p>
+<hr>
+<h2 id="五、总结：本地优先的工具软件该长什么样"><a href="#五、总结：本地优先的工具软件该长什么样" class="headerlink" title="五、总结：本地优先的工具软件该长什么样"></a>五、总结：本地优先的工具软件该长什么样</h2><p>OpenLogi 做的事不复杂，替掉 Logi Options+。但它做得很彻底：</p>
+<ul>
+<li>协议层用 Rust 写了完整的 HID++ 实现，覆盖了 Logi 主流设备的所有 feature。</li>
+<li>配置层用 TOML 一份文件搞定所有映射，跨平台同一套 schema。</li>
+<li>UI 层用 GPUI 拿到了现代 Rust GUI 的能力，120fps 滑块。</li>
+<li>平台覆盖做扎实，macOS / Linux / Windows 三端都不是” 勉强能用”。</li>
+</ul>
+<p>对读者的具体建议：</p>
+<p><strong>适合 OpenLogi 的人</strong>：用 MX Master / MX Mechanical / Logitech Bolt 接收器的开发者；Linux 上需要鼠标按键映射的人；不想再注册 Logi 账号的人；喜欢把 dotfiles 丢 git 的人；做直播 / 视频会议需要稳定 UVC 摄像头参数的人。</p>
+<p><strong>暂不适合 OpenLogi 的人</strong>：完全用 Logi G Hub 玩 RGB 动画效果的人（OpenLogi 只有静态 RGB，动画还在 roadmap）；用罗技游戏鼠标（G 系列，Hero 传感器）做 FPS 调参的人（G Hub 的 polling rate、按键响应曲线这些 OpenLogi 没接）；依赖 Logi 云同步多台机器 profile 的人（OpenLogi 没有云端）。</p>
+<p><strong>还要考虑的两件事</strong>：</p>
+<p>第一，OpenLogi 还在 active development，README 第一段就说了”not yet stable”。我用了一周没遇到崩溃，但 0.x 版本 API 可能改。订阅 GitHub Releases 是合理做法。</p>
+<p>第二，UVC 摄像头的” 写回硬件” 是好特性也是双刃剑。如果你在 OBS / Zoom 里手动改了一些参数，OpenLogi 下次打开 preview 会把它的 profile 覆盖回去。两套工具的” 谁说了算” 需要想清楚。我的做法是把 OpenLogi 作为 source of truth，OBS / Zoom 不动摄像头参数。</p>
+<p>回到工具本身：协议栈扎实，UI 在 GPU 上跑得动，配置文件在 git 里躺着，README 把局限写清楚，没有”AI 重塑硬件” 这种空话。</p>
+<p>我已经在自己的 dotfiles 里给 OpenLogi 开了一个新仓库，跟 neovim、tmux、alacritty 并列。</p>
+<p>如果你也是 Logitech 用户，又对 Logi Options+ 的账号化心怀不满，可以去 GitHub 给 AprilNEA/OpenLogi 点个 Star。12k stars 已经说明这个项目解决的不是一个人的问题。</p>
+<blockquote>
+<p>GitHub: <a target="_blank" rel="noopener" href="https://github.com/AprilNEA/OpenLogi">https://github.com/AprilNEA/OpenLogi</a><br>Releases: <a target="_blank" rel="noopener" href="https://github.com/AprilNEA/OpenLogi/releases/latest">https://github.com/AprilNEA/OpenLogi/releases/latest</a><br>TrendShift: <a target="_blank" rel="noopener" href="https://trendshift.io/repositories/42303">https://trendshift.io/repositories/42303</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/21/aprilnea-openlogi-logitech-options-rust-alternative/" title="AprilNEA&#x2F;OpenLogi：12k stars 的本地 Logitech Options+ 替代品，Rust 写、HID++ 直连、零账号零遥测">https://www.daishengli.top/2026/08/21/aprilnea-openlogi-logitech-options-rust-alternative/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" rel="tag"># 效率工具</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/OpenLogi/" rel="tag"># OpenLogi</a>
+              <a href="/tags/AprilNEA/" rel="tag"># AprilNEA</a>
+              <a href="/tags/Logitech-Options/" rel="tag"># Logitech Options+</a>
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/GPUI/" rel="tag"># GPUI</a>
+              <a href="/tags/HID/" rel="tag"># HID++</a>
+              <a href="/tags/%E9%BC%A0%E6%A0%87%E6%8C%89%E9%94%AE%E6%98%A0%E5%B0%84/" rel="tag"># 鼠标按键映射</a>
+              <a href="/tags/SmartShift/" rel="tag"># SmartShift</a>
+              <a href="/tags/%E6%9C%AC%E5%9C%B0%E4%BC%98%E5%85%88/" rel="tag"># 本地优先</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/20/basecamp-omarchy-beautiful-modern-opinionated-linux/" rel="prev" title="basecamp&#x2F;omarchy：26.8k stars 的 &quot;主观美&quot;Linux 发行版，DHH 把 Arch + Hyprland + AI Coding Agent 揉成了一台开箱即用的开发者电脑">
+                  <i class="fa fa-angle-left"></i> basecamp/omarchy：26.8k stars 的 "主观美"Linux 发行版，DHH 把 Arch + Hyprland + AI Coding Agent 揉成了一台开箱即用的开发者电脑
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

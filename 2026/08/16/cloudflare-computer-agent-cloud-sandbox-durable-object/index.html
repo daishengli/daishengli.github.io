@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="cloudflare&#x2F;computer 是 GitHub 8.3k stars 的 Cloudflare 官方边缘沙箱项目，把 SQLite-backed 虚拟文件系统塞进 Durable Object，提供 Container &#x2F; Worker Shell &#x2F; Worker JavaScript 三个可插拔 backend，统一通过 workspace.runtime.exec 入口调用，让 A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cloudflare&#x2F;computer：8.3k stars 的「给 agent 一台云端电脑」，把 Durable Object + FUSE 容器、Worker Shell、JS 三个 backend 串成一个 API">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/16/cloudflare-computer-agent-cloud-sandbox-durable-object/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="cloudflare&#x2F;computer 是 GitHub 8.3k stars 的 Cloudflare 官方边缘沙箱项目，把 SQLite-backed 虚拟文件系统塞进 Durable Object，提供 Container &#x2F; Worker Shell &#x2F; Worker JavaScript 三个可插拔 backend，统一通过 workspace.runtime.exec 入口调用，让 A">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-16T03:30:00.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.156Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="cloudflare">
+<meta property="article:tag" content="Durable Object">
+<meta property="article:tag" content="沙箱">
+<meta property="article:tag" content="FUSE">
+<meta property="article:tag" content="Cloudflare Workers">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/16/cloudflare-computer-agent-cloud-sandbox-durable-object/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/16/cloudflare-computer-agent-cloud-sandbox-durable-object/","path":"2026/08/16/cloudflare-computer-agent-cloud-sandbox-durable-object/","title":"cloudflare/computer：8.3k stars 的「给 agent 一台云端电脑」，把 Durable Object + FUSE 容器、Worker Shell、JS 三个 backend 串成一个 API"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>cloudflare/computer：8.3k stars 的「给 agent 一台云端电脑」，把 Durable Object + FUSE 容器、Worker Shell、JS 三个 backend 串成一个 API | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88-AI-Agent-%E9%9C%80%E8%A6%81%E4%B8%80%E5%8F%B0%E2%80%9D%E4%BA%91%E7%AB%AF%E7%94%B5%E8%84%91%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">一、为什么 AI Agent 需要一台” 云端电脑”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81cloudflare-computer-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">二、cloudflare&#x2F;computer 到底是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9D%83%E5%A8%81%E7%8A%B6%E6%80%81%EF%BC%9ADurable-Object-SQLite"><span class="nav-number">2.1.</span> <span class="nav-text">1. 权威状态：Durable Object + SQLite</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-FUSE-%E6%8C%82%E8%BD%BD%EF%BC%9A%E8%AE%A9%E5%AE%B9%E5%99%A8%E2%80%9D%E7%9C%9F%E7%9C%8B%E8%A7%81%E2%80%9D%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.2.</span> <span class="nav-text">2. FUSE 挂载：让容器” 真看见” 数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-capnweb-RPC%EF%BC%9ADO-%E4%B8%8E-computerd-%E7%9A%84%E2%80%9D%E7%A5%9E%E7%BB%8F%E7%B3%BB%E7%BB%9F%E2%80%9D"><span class="nav-number">2.3.</span> <span class="nav-text">3. capnweb RPC：DO 与 computerd 的” 神经系统”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%B8%89%E4%B8%AA-backend%EF%BC%8C%E4%B8%89%E7%A7%8D%E6%88%90%E6%9C%AC"><span class="nav-number">2.4.</span> <span class="nav-text">4. 三个 backend，三种成本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E4%BB%93%E5%BA%93%E7%BB%93%E6%9E%84%EF%BC%9A5-%E4%B8%AA-npm-%E5%8C%85-9-%E4%B8%AA-example"><span class="nav-number">3.</span> <span class="nav-text">三、仓库结构：5 个 npm 包 + 9 个 example</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%85%E7%BB%93%E6%9E%84"><span class="nav-number">3.1.</span> <span class="nav-text">包结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E4%B8%AA-example%EF%BC%8C%E8%A6%86%E7%9B%96-90-%E7%94%A8%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">9 个 example，覆盖 90% 用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#agents-skills-%EF%BC%9A%E7%BB%99-agent-%E5%86%99%E7%9A%84%E2%80%9D%E5%AF%B9%E5%86%85%E6%96%87%E6%A1%A3%E2%80%9D"><span class="nav-number">3.3.</span> <span class="nav-text">.agents&#x2F;skills&#x2F;：给 agent 写的” 对内文档”</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E6%88%98%EF%BC%9A10-%E5%88%86%E9%92%9F%E6%90%AD%E4%B8%80%E4%B8%AA%E8%83%BD%E8%B0%83-Claude-%E7%9A%84-computer"><span class="nav-number">4.</span> <span class="nav-text">四、实战：10 分钟搭一个能调 Claude 的 computer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%85%8B%E9%9A%86-%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="nav-number">4.1.</span> <span class="nav-text">1. 克隆 &amp; 装依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%B7%91-worker-shell-example"><span class="nav-number">4.2.</span> <span class="nav-text">2. 跑 worker-shell example</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%88%87%E5%88%B0-container-backend"><span class="nav-number">4.3.</span> <span class="nav-text">3. 切到 container backend</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%8A%8A%E5%AE%83%E5%81%9A%E6%88%90-MCP-server"><span class="nav-number">4.4.</span> <span class="nav-text">4. 把它做成 MCP server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%85%8D-egress"><span class="nav-number">4.5.</span> <span class="nav-text">5. 配 egress</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%92%8C-sandbox-sdk-e2b-daytona-%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">5.</span> <span class="nav-text">五、和 sandbox-sdk &#x2F;e2b &#x2F;daytona 的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%85%B3%E9%94%AE%E8%AE%BE%E8%AE%A1%E9%80%89%E6%8B%A9%EF%BC%9Acapnweb-FUSE-SQLite"><span class="nav-number">6.</span> <span class="nav-text">六、关键设计选择：capnweb + FUSE + SQLite</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF-SQLite-%E8%80%8C%E4%B8%8D%E6%98%AF-KV-R2-S3"><span class="nav-number">6.1.</span> <span class="nav-text">为什么是 SQLite 而不是 KV &#x2F; R2 &#x2F; S3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF-FUSE-%E8%80%8C%E4%B8%8D%E6%98%AF-mount-bind-overlayfs"><span class="nav-number">6.2.</span> <span class="nav-text">为什么是 FUSE 而不是 mount-bind &#x2F;overlayfs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF-capnweb-%E8%80%8C%E4%B8%8D%E6%98%AF-WebSocket-fetch"><span class="nav-number">6.3.</span> <span class="nav-text">为什么是 capnweb 而不是 WebSocket &#x2F;fetch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-backend-%E6%98%AF-runtime-level-%E8%80%8C%E4%B8%8D%E6%98%AF-compile-time"><span class="nav-number">6.4.</span> <span class="nav-text">为什么 backend 是 runtime-level 而不是 compile-time</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E9%80%82%E7%94%A8%E4%BA%BA%E7%BE%A4-%E5%B1%80%E9%99%90%E6%80%A7"><span class="nav-number">7.</span> <span class="nav-text">七、适用人群 &amp; 局限性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%AE%83%E5%AF%B9%E6%88%91%E6%84%8F%E5%91%B3%E7%9D%80%E4%BB%80%E4%B9%88"><span class="nav-number">8.</span> <span class="nav-text">八、它对我意味着什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-number">9.</span> <span class="nav-text">写在最后</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/16/cloudflare-computer-agent-cloud-sandbox-durable-object/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="cloudflare&#x2F;computer：8.3k stars 的「给 agent 一台云端电脑」，把 Durable Object + FUSE 容器、Worker Shell、JS 三个 backend 串成一个 API | 小戴的网络日志">
+      <meta itemprop="description" content="cloudflare&#x2F;computer 是 GitHub 8.3k stars 的 Cloudflare 官方边缘沙箱项目，把 SQLite-backed 虚拟文件系统塞进 Durable Object，提供 Container &#x2F; Worker Shell &#x2F; Worker JavaScript 三个可插拔 backend，统一通过 workspace.runtime.exec 入口调用，让 AI Agent 可以直接在 Cloudflare 边缘上跑真 Linux、跑 bash、跑 JS，并把状态用 FUSE 挂载成真实文件系统。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          cloudflare/computer：8.3k stars 的「给 agent 一台云端电脑」，把 Durable Object + FUSE 容器、Worker Shell、JS 三个 backend 串成一个 API
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-16 11:30:00" itemprop="dateCreated datePublished" datetime="2026-08-16T11:30:00+08:00">2026-08-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">cloudflare/computer 是 GitHub 8.3k stars 的 Cloudflare 官方边缘沙箱项目，把 SQLite-backed 虚拟文件系统塞进 Durable Object，提供 Container / Worker Shell / Worker JavaScript 三个可插拔 backend，统一通过 workspace.runtime.exec 入口调用，让 AI Agent 可以直接在 Cloudflare 边缘上跑真 Linux、跑 bash、跑 JS，并把状态用 FUSE 挂载成真实文件系统。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>凌晨两点，我让 Cursor 帮我写一段 MongoDB 聚合查询。它写得很漂亮，一键应用、改了 <code>.env</code> 又 <code>npm test</code> 跑过去 —— 就在我要存盘睡觉的时候，Cursor 突然弹出一句：” 需要我帮你 push 到 GitHub 吗？” 我心头一紧：它跑的是我笔记本里的 node，能 ssh 到我的服务器，能扫到我整个 home 目录。</p>
+<p>这不是假设的恐惧。这是过去一年每一个重度 Claude Code / Codex / Cursor 用户的真实阴影。</p>
+<p>我们想要 AI Agent 替我们写代码、跑命令、装包、起服务，但<strong>我们不希望这件事发生在我们上班用的那台 MacBook 上</strong>。于是过去两年里，”AI 沙箱” 这个赛道彻底炸开了：e2b、daytona、modal、codesandbox、gitpod、namedev/morphcloud、cloudflare/sandbox-sdk、阿里 pages-agent…… 全都想做同一件事 —— <strong>给 agent 一台干净、隔离、按需启停、可以随时销毁的云端电脑</strong>。</p>
+<p>今天 GitHub Trending 上冒出来的是 Cloudflare 官方自己下场做的版本：<a target="_blank" rel="noopener" href="https://github.com/cloudflare/computer">cloudflare/computer</a>。<strong>8.3k stars、1.9k 本周新增</strong>，仓库的 README 第一句话就是 ——</p>
+<blockquote>
+<p>“Give your agent a computer 👾”</p>
+</blockquote>
+<p>这四个字，对一个长期关注 AI Agent 基础设施的人来说，几乎是直击命门。</p>
+<p>我花了半个晚上读它的源码、AGENTS.md、设计文档、跟 sandbox-sdk 做对比，决定把它拆开讲讲：一个 Cloudflare 工程师为什么觉得” 把 computer 塞进 Durable Object” 是值得认真做的方向；它跟现有 sandbox 生态的差异在哪；以及，<strong>我们作为 agent 的开发者，到底为什么应该关心这个项目</strong>。</p>
+<hr>
+<h2 id="一、为什么-AI-Agent-需要一台”云端电脑”"><a href="#一、为什么-AI-Agent-需要一台”云端电脑”" class="headerlink" title="一、为什么 AI Agent 需要一台”云端电脑”"></a>一、为什么 AI Agent 需要一台” 云端电脑”</h2><p>把场景往前推一推。</p>
+<p>你让 Claude Code 帮你做一个新功能，处理流程大概是这样：</p>
+<ol>
+<li>它要 <code>git status</code> 看仓库状态；</li>
+<li>它要 <code>npm install</code> 装新包；</li>
+<li>它要写文件、跑测试、再 <code>git commit</code>；</li>
+<li>有时候它要起一个 dev server 验一下页面跑得对不对；</li>
+<li>万一你让它” 顺手把那个 issue 也修了”，它可能要去 clone 另一个仓库下来。</li>
+</ol>
+<p>这些动作在 Claude Code 自己的环境里跑确实方便，但代价是 —— <strong>它能干任何事</strong>。删文件、改 <code>.env</code>、rm -rf / 写过的惨案 Github 一搜一大把。所以从 2024 年开始，所有想做” 严肃 agent” 的厂商都在解决同一件事：<strong>怎么让 agent 跑在一个独立的、隔离的、按需启停的执行环境里，不直接碰用户的本机</strong>。</p>
+<p>市面上已有的方案大致分三类：</p>
+<p><strong>第一类：传统 VM / 容器平台</strong>。Firecracker、Fly machines、AWS Lambda。优点是隔离性好、技术成熟；缺点是冷启动慢（几百毫秒到几秒）、部署流程复杂、面向开发者友好但面向 agent 不友好。</p>
+<p><strong>第二类：专门给 AI 的 sandbox SDK</strong>。e2b、daytona、Modal、morphcloud。一行 <code>e2b.Sandbox.create()</code> 拿到一个隔离的 Linux 容器，里面 Python/Node 装好、文件系统可挂载、命令可远程执行。<strong>冷启动已经做到 200ms~1s</strong>，是为 agent 量身定做的。</p>
+<p><strong>第三类：Cloudflare 自己的 sandbox-sdk</strong>。基于 Durable Object + Container，去年 Cloudflare 推 Workers Containers 时就内置了类似的 API。优点是<strong>全球化边缘 + 边缘低延迟 + Cloudflare 生态一行代码部署</strong>；缺点是 Container 冷启动相对更慢，而且早期 sandbox-sdk 暴露给开发者的接口比较” 裸”，要写不少胶水代码。</p>
+<p>cloudflare/computer 想要做的，是<strong>第三类的” 上半身”</strong>—— 建筑在 sandbox-sdk 之上，提供一个更高层的抽象：<strong>把” 一台 computer” 这个概念本身，做成一类 first-class 对象，让 agent 开发者用同一个 API 同时调度 Container、Worker Shell、Worker JavaScript 三种不同的执行后端</strong>。</p>
+<p>这件事听起来小，但意义大。</p>
+<hr>
+<h2 id="二、cloudflare-computer-到底是什么"><a href="#二、cloudflare-computer-到底是什么" class="headerlink" title="二、cloudflare/computer 到底是什么"></a>二、cloudflare/computer 到底是什么</h2><p>直接说结论：<strong>cloudflare/computer 是 Cloudflare 官方开源的一个” 虚拟电脑” 抽象层</strong>，它把一个 SQLite-backed 的虚拟文件系统塞进 Durable Object，向上提供三套可插拔的执行 backend：</p>
+<ol>
+<li><strong>Container backend</strong>—— 真 Linux 容器、FUSE 挂载、原生二进制、原生网络。</li>
+<li><strong>Isolate Shell backend</strong>—— 在 Dynamic Worker 里跑 Vercel 的 <a target="_blank" rel="noopener" href="https://github.com/vercel-labs/just-bash">just-bash</a>，无容器、毫秒级冷启动。</li>
+<li><strong>Isolate JavaScript backend</strong>—— 在 Dynamic Worker 里跑原生 ECMAScript module，结构化输入 / 输出、可访问 workspace 文件系统、可挂 <code>ws:git</code> / <code>ws:artifacts</code> 等受信任模块。</li>
+</ol>
+<p><strong>三种 backend 共享同一个 API：<code>workspace.runtime.exec(source, { backend })</code></strong>。<code>source</code> 在 container 里是 shell 命令，在 Isolate backend 里是 ECMAScript module 或 bash 脚本 ——<strong>backend 决定了 source 该怎么解释</strong>，调用方完全不用 care。</p>
+<p>这是我读完 README 之后最震动的一点：<strong>它不是一个 sandbox 选项，而是把” 沙箱” 这件事本身做成了一个模式</strong>。</p>
+<p>让我再拆细一点。</p>
+<h3 id="1-权威状态：Durable-Object-SQLite"><a href="#1-权威状态：Durable-Object-SQLite" class="headerlink" title="1. 权威状态：Durable Object + SQLite"></a>1. 权威状态：Durable Object + SQLite</h3><p>cloudflare/computer 的整个故事，建立在一个看似平淡但其实非常聪明的设计选择上：<strong>把” 这台电脑的硬盘” 做成一个 Durable Object 里的 SQLite 表</strong>。</p>
+<p>为什么是 SQLite？因为：</p>
+<ul>
+<li>Durable Object 本身就是 Cloudflare 边缘计算里少数几个能持有” 长生命周期单实例状态” 的对象；</li>
+<li>SQLite 在 Cloudflare 内部已经作为 DO 的存储后端，访问延迟极低；</li>
+<li>SQLite 天然支持事务、文件粒度锁、二进制大对象 —— 刚好对应一个虚拟文件系统的需要。</li>
+</ul>
+<p>这意味着<strong>这台 computer 的文件系统不是某个易失的容器磁盘，而是 Cloudflare 边缘上一个强一致、能跨请求保留、可以随时 persist 的数据库</strong>。container 死了，文件还在；shell session 退了，文件还在；agent 第二天回来，文件还在。</p>
+<p><code>packages/dofs</code>（@cloudflare/dofs）就是这套东西的实现 ——Durable Object SQLite-backed 虚拟文件系统，外加同步协议的构建块，以及一个给 Node.js 用的 <code>@platformatic/vfs</code> provider。</p>
+<h3 id="2-FUSE-挂载：让容器”真看见”数据库"><a href="#2-FUSE-挂载：让容器”真看见”数据库" class="headerlink" title="2. FUSE 挂载：让容器”真看见”数据库"></a>2. FUSE 挂载：让容器” 真看见” 数据库</h3><p>光把文件存进 SQLite 不够。<strong>Container backend 真正的杀手锏，是把 SQLite 状态通过 FUSE 挂载为容器内的真实文件系统</strong>。</p>
+<p>具体怎么做的：</p>
+<ul>
+<li>容器里跑一个叫 <code>computerd</code> 的 daemon（<code>packages/computerd</code>）；</li>
+<li>这个 daemon 用 libfuse 把 DO 里的 SQLite 表挂载成一个 FUSE 目录；</li>
+<li>容器内的所有命令（<code>ls</code>、<code>cat</code>、<code>npm install</code>、<code>git clone</code>）看到的都是一个<strong>带真实 inode、真实文件层级、真实权限的 POSIX 文件系统</strong>；</li>
+<li>任何文件写入会通过 capnweb RPC 通道同步回 DO 的 SQLite；任何文件读取反过来从 DO 拉。</li>
+</ul>
+<p>这条路径的效果是 —— <strong>容器内不需要任何 SDK、不需要任何 wrapper，bash /git/npm /node 这些原生二进制可以直接运行，根本” 不知道” 自己其实在操作一个挂在 SQLite 表上的虚拟磁盘</strong>。</p>
+<p>性能上，README 自己提到：<strong>FUSE 挂在元数据密集的工作上比真实磁盘快，在大块顺序 I/O 上比真实磁盘慢</strong>。具体数据在他们 <code>docs/19_performance.md</code> 里有 <code>fs-bench</code> 完整数字，包括和 <code>cloudflare/sandbox-sdk</code> 的 npm install 对比。</p>
+<h3 id="3-capnweb-RPC：DO-与-computerd-的”神经系统”"><a href="#3-capnweb-RPC：DO-与-computerd-的”神经系统”" class="headerlink" title="3. capnweb RPC：DO 与 computerd 的”神经系统”"></a>3. capnweb RPC：DO 与 computerd 的” 神经系统”</h3><p>FUSE 解决了” 容器内文件系统感知” 的问题，但还有另一个问题：<strong>容器进程和控制平面（DO）之间怎么通信</strong>？</p>
+<p>cloudflare/computer 用的是 Cloudflare 自家的 <a target="_blank" rel="noopener" href="https://github.com/cloudflare/capnweb">capnweb</a>：</p>
+<ul>
+<li>一个面向 capability 的 RPC 系统；</li>
+<li>双向、对象能力（object-capability）的 stub；</li>
+<li>Durable Object 是 server，computerd 是 client；</li>
+<li>同步、文件操作、git 操作、artifacts 操作，都通过 capnweb 走。</li>
+</ul>
+<p><code>packages/rpc</code>（@cloudflare/computer-rpc）就是这套 RPC 的 wire types 和服务端 / 客户端 helpers。<strong>任何” 跨 DO ↔ computerd 边界” 的修改，都必须先读 <code>docs/08_capnweb_interface.md</code> 和 <code>capnweb</code> skill</strong>—— 这是 README 自己强调的”hard rule”。</p>
+<h3 id="4-三个-backend，三种成本"><a href="#4-三个-backend，三种成本" class="headerlink" title="4. 三个 backend，三种成本"></a>4. 三个 backend，三种成本</h3><table>
+<thead>
+<tr>
+<th>Backend</th>
+<th> 真实 Linux</th>
+<th> 冷启动</th>
+<th>网络</th>
+<th>适合场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Container</td>
+<td>✅</td>
+<td>数百 ms~ 秒级</td>
+<td>真实网络</td>
+<td>装包、跑 binary、clone 仓库、安装系统工具</td>
+</tr>
+<tr>
+<td> Isolate Shell</td>
+<td>❌（just-bash）</td>
+<td>毫秒级</td>
+<td>受限</td>
+<td>跑纯 bash 脚本、文件操作、轻量命令</td>
+</tr>
+<tr>
+<td> Isolate JavaScript</td>
+<td>❌（Workers V8）</td>
+<td>毫秒级</td>
+<td>受限</td>
+<td>跑 ECMAScript module、调用受信任模块</td>
+</tr>
+</tbody></table>
+<p><strong>关键 trick：开发者不用提前选 backend</strong>。<code>workspace.runtime.exec(source, { backend })</code> 里那个 <code>backend</code> 参数是运行时的，<strong>你可以根据任务复杂度动态切换</strong>：</p>
+<ul>
+<li>让 agent 跑 <code>ls -la</code>？走 Isolate Shell，毫秒级回。</li>
+<li>让 agent 跑 <code>npm install</code>？切到 Container，真实 npm 真的装。</li>
+<li>让 agent 跑一段数据处理 JS？走 Isolate JavaScript，毫秒级回。</li>
+</ul>
+<p>这种” 同一个 workspace 跨 backend 共享状态” 是 cloudflare/computer 区别于一般 sandbox SDK 的核心差异。</p>
+<hr>
+<h2 id="三、仓库结构：5-个-npm-包-9-个-example"><a href="#三、仓库结构：5-个-npm-包-9-个-example" class="headerlink" title="三、仓库结构：5 个 npm 包 + 9 个 example"></a>三、仓库结构：5 个 npm 包 + 9 个 example</h2><p>clouflare/computer 是个典型的小 monorepo，每个 package 各自有自己的 README。</p>
+<h3 id="包结构"><a href="#包结构" class="headerlink" title="包结构"></a>包结构</h3><table>
+<thead>
+<tr>
+<th>包</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@cloudflare/dofs</code></td>
+<td>Durable Object SQLite-backed 虚拟文件系统、同步协议构建块、Node 侧 <code>@platformatic/vfs</code> provider</td>
+</tr>
+<tr>
+<td><code>@cloudflare/computer-rpc</code></td>
+<td>capnweb wire types + server/client helpers</td>
+</tr>
+<tr>
+<td><code>@cloudflare/computerd</code></td>
+<td>computerd daemon：FUSE 挂载 + HTTP/WebSocket RPC server，跑在容器里</td>
+</tr>
+<tr>
+<td><code>@cloudflare/computer</code></td>
+<td>顶层 Computer 包，DO 侧消费</td>
+</tr>
+<tr>
+<td><code>@cloudflare/computer-computerd-linux-x64</code></td>
+<td>私有 Docker image context，预编译的 computerd linux-x64 二进制；<strong>真正交付的是 Docker image，不是 npm 包</strong></td>
+</tr>
+</tbody></table>
+<p>stack 看起来有点反直觉 —— 为什么 computerd 是 Docker image 而不是 npm 包？因为它的本体是运行在容器里的 FUSE daemon，需要 <code>libfuse2</code>、native binary、容器能力，这些都不适合作为 npm 包分发。所以要做的事情是：<strong>build → publish Docker image → computer 启动时拉 image → 跑 computerd</strong>。</p>
+<h3 id="9-个-example，覆盖-90-用法"><a href="#9-个-example，覆盖-90-用法" class="headerlink" title="9 个 example，覆盖 90% 用法"></a>9 个 example，覆盖 90% 用法</h3><p>这是我觉得这个项目最值得抄作业的地方。<strong><code>examples/</code> 下面 9 个跑得动的 example，每个单独一个 Worker + 独立 README</strong>，相当于 Cloudflare 官方给你写了 9 篇应用教程：</p>
+<table>
+<thead>
+<tr>
+<th>Example</th>
+<th> 作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>examples/container</code></td>
+<td>在容器里跑 computerd、挂载 workspace、透过 capnweb 跟 DO 通信，暴露 write /read/exec HTTP 接口</td>
+</tr>
+<tr>
+<td><code>examples/worker-shell</code></td>
+<td>同样的 HTTP 接口，但 shell 跑在 Dynamic Worker 里的 <code>just-bash</code>，无容器</td>
+</tr>
+<tr>
+<td><code>examples/worker-javascript</code></td>
+<td>跟 worker-shell 类似，但 exec 跑的是 ECMAScript module</td>
+</tr>
+<tr>
+<td><code>examples/egress</code></td>
+<td>同一个 URL 走三种 backend，配置 none /all/ 自定义 egress 策略</td>
+</tr>
+<tr>
+<td><code>examples/mcp</code></td>
+<td><strong>一个 Computer MCP 例子</strong>：同一个 Code Mode code tool，背后挂着 durable workspace + Worker shell + 完整 Linux 容器</td>
+</tr>
+<tr>
+<td><code>examples/think</code></td>
+<td>一个 <code>@cloudflare/think</code> chat agent，把 workspace 当工作目录，CLI 终端可达</td>
+</tr>
+<tr>
+<td><code>examples/think-compare-runtimes</code></td>
+<td>一个 web UI，<strong>同一个 agent 任务同时跑在 container 和 worker runtime 上做对比</strong></td>
+</tr>
+<tr>
+<td><code>examples/tutorial</code></td>
+<td>端到端教程：一个 endpoint，一个 agent 在 host 上写 markdown recipe，跑到容器里用 pandoc 转 PDF</td>
+</tr>
+<tr>
+<td><code>examples/artifacts</code></td>
+<td>在 workspace 里生成一个 Worker 项目，发布到 Cloudflare Artifacts 作为可 clone 的 repo</td>
+</tr>
+<tr>
+<td><code>examples/assets</code></td>
+<td>提示词生成图（Workers AI），写入 workspace，通过 <code>@cloudflare/computer/assets</code> 返回可分享链接</td>
+</tr>
+</tbody></table>
+<p>每一个 example 单独都是一个能跑的小产品。<strong>挑你需要的 example 抄一份，10 分钟就能搭起一个能调 Claude Code 的沙箱</strong>。</p>
+<h3 id="agents-skills-：给-agent-写的”对内文档”"><a href="#agents-skills-：给-agent-写的”对内文档”" class="headerlink" title=".agents/skills/：给 agent 写的”对内文档”"></a>.agents/skills/：给 agent 写的” 对内文档”</h3><p>最有意思的一个细节 —— <strong>这个仓库的 <code>.agents/skills/</code> 下面已经放好了给 agent 写的” 操作手册”</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th> 触发场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>prose</code></td>
+<td>写代码注释、commit message、README、文档</td>
+</tr>
+<tr>
+<td><code>pull-requests</code></td>
+<td>写或编辑 PR 描述</td>
+</tr>
+<tr>
+<td><code>test-driven-development</code></td>
+<td>实现逻辑、修 bug、改行为</td>
+</tr>
+<tr>
+<td><code>capnweb</code></td>
+<td>任何跨 RPC 边界的修改（packages/rpc、computer、computerd 客户端、DO 服务端）</td>
+</tr>
+<tr>
+<td><code>cloudflare</code></td>
+<td>Workers、Durable Objects、wrangler、sandbox SDK、agents SDK 的 host-side skill 索引</td>
+</tr>
+<tr>
+<td><code>debugging-computerd-fuse</code></td>
+<td>在特权 Docker 里 debug FUSE mount</td>
+</tr>
+</tbody></table>
+<p>这基本上是 Cloudflare 工程师在示范一件事：<strong>当你的项目复杂到一定程度，怎么把”agent 怎么参与贡献” 这件事本身做成结构化资产</strong>。我估计这个项目本身的开发流程里，agent 已经是常规 contributor。</p>
+<hr>
+<h2 id="四、实战：10-分钟搭一个能调-Claude-的-computer"><a href="#四、实战：10-分钟搭一个能调-Claude-的-computer" class="headerlink" title="四、实战：10 分钟搭一个能调 Claude 的 computer"></a>四、实战：10 分钟搭一个能调 Claude 的 computer</h2><p>既然仓库已经给了 9 个 example，最快的上手路径其实就是<strong>挑一个 example 抄</strong>。</p>
+<p>下面我把 <code>examples/think</code> + <code>examples/mcp</code> 这两个拼起来，演示一个最小可用的”agent 沙箱”：</p>
+<h3 id="1-克隆-装依赖"><a href="#1-克隆-装依赖" class="headerlink" title="1. 克隆 &amp; 装依赖"></a>1. 克隆 &amp; 装依赖</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/cloudflare/computer.git</span><br><span class="line"><span class="built_in">cd</span> computer</span><br><span class="line">npm install</span><br></pre></td></tr></tbody></table></figure>
+
+<p>⚠️ <strong>这里有个新手坑</strong> ——<code>packages/computerd</code> 依赖 <code>fuse-native</code>，一个 native addon，需要 C toolchain 和 libfuse2 头文件。在 Debian/Ubuntu 上：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install build-essential libfuse-dev</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果只想看代码不想跑 FUSE，可以用 <code>npm install --ignore-scripts</code> 跳过 native build。</p>
+<p>⚠️ <strong>arm64 主机还有第二个坑</strong> ——<code>fuse-native</code> 预编译的 libfuse 只有 x64 版本，跑在 Linux arm64 容器（含 Apple Silicon 上的 Linux 容器）会链接失败，得手动替换成本地 libfuse 再 rebuild。AGENTS.md 里给了完整 workaround。</p>
+<h3 id="2-跑-worker-shell-example"><a href="#2-跑-worker-shell-example" class="headerlink" title="2. 跑 worker-shell example"></a>2. 跑 worker-shell example</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> examples/worker-shell</span><br><span class="line">npm run dev</span><br></pre></td></tr></tbody></table></figure>
+
+<p>worker-shell 这个 example 直接在你的 machine 上跑<strong>一个 Worker SDK dev 环境</strong>，背后挂的 shell executor 是 Isolate Shell（<code>just-bash</code>）。</p>
+<p>往 <code>localhost:8787/exec</code> POST 一个命令：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST http://localhost:8787/exec \</span><br><span class="line">  -H <span class="string">"Content-Type: application/json"</span> \</span><br><span class="line">  -d <span class="string">'{"source": "ls -la /workspace &amp;&amp; echo hello"}'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>你会看到返回的是 JSON 化的 <code>stdout</code> / <code>stderr</code> / <code>exit code</code>。<strong>整个 backend 已经在跑 just-bash，没起任何容器</strong>。</p>
+<h3 id="3-切到-container-backend"><a href="#3-切到-container-backend" class="headerlink" title="3. 切到 container backend"></a>3. 切到 container backend</h3><p>把 <code>examples/worker-shell</code> 的 payload 改成 <code>{ "source": "npm install -g pnpm", "backend": "container" }</code>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST http://localhost:8787/exec \</span><br><span class="line">  -H <span class="string">"Content-Type: application/json"</span> \</span><br><span class="line">  -d <span class="string">'{"source": "npm install -g pnpm &amp;&amp; pnpm --version", "backend": "container"}'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>Cold start 会慢几百毫秒到几秒（要拉 computerd 的 Docker image 起 container），之后 <code>pnpm --version</code> 返回正版版本号。</p>
+<p><strong>关键点：两次 <code>exec</code> 之间，<code>workspace</code> 状态是连续的</strong> —— 第一次你在 <code>container</code> 里写下的文件，第二次在 <code>worker-shell</code> 里能看到。这是为什么”DOFs + capnweb” 这个底座值钱。</p>
+<h3 id="4-把它做成-MCP-server"><a href="#4-把它做成-MCP-server" class="headerlink" title="4. 把它做成 MCP server"></a>4. 把它做成 MCP server</h3><p>把 <code>examples/mcp</code> 拷过去当模板。这个 example 已经替你写好了一个”Code Mode code tool”—— <strong>一个 tool，背后同时挂三种 backend</strong>，agent 拿到这个 tool 之后能通过在 source string 里指定 backend 自由切换。</p>
+<p>跟 Claude Code 集成：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">claude mcp add --transport http \</span><br><span class="line">  --name <span class="string">"computer"</span> \</span><br><span class="line">  http://localhost:8787/mcp</span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来你在 Claude Code 里直接说：</p>
+<blockquote>
+<p>“在 /workspace 下面建一个 vite 项目，然后用 pnpm 装依赖，最后跑 <code>pnpm build</code> 看有没有错。”</p>
+</blockquote>
+<p>Claude 会主动用 <code>computer</code> 这个 MCP tool。它的所有写文件、装包、跑命令，<strong>全部跑在 Cloudflare 边缘容器里</strong> —— 你 MacBook 上的 <code>~/</code> 保持干净。</p>
+<h3 id="5-配-egress"><a href="#5-配-egress" class="headerlink" title="5. 配 egress"></a>5. 配 egress</h3><p><code>examples/egress</code> 给了一份” 网络出口白名单” 的范例：</p>
+<figure class="highlight js"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// worker-shell 的 wrangler.toml 里</span></span><br><span class="line">[vars]</span><br><span class="line"><span class="variable constant_">EGRESS_POLICY</span> = <span class="string">"allowlist"</span></span><br><span class="line"><span class="variable constant_">EGRESS_ALLOWLIST</span> = [<span class="string">"github.com"</span>, <span class="string">"registry.npmjs.org"</span>, <span class="string">"api.anthropic.com"</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>默认情况下 Isolate backend 走 Cloudflare 的 egress 出口，container backend 走自己配置的 egress</strong>。生产部署时强烈建议配 allowlist，否则 agent 能访问整个公网。</p>
+<hr>
+<h2 id="五、和-sandbox-sdk-e2b-daytona-的对比"><a href="#五、和-sandbox-sdk-e2b-daytona-的对比" class="headerlink" title="五、和 sandbox-sdk / e2b / daytona 的对比"></a>五、和 sandbox-sdk /e2b /daytona 的对比</h2><p>这一节是我自己写之前最想搞清楚的 —— <strong>到底有了 cloudflare/sandbox-sdk 还要 cloudflare/computer 干嘛</strong>？</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th> sandbox-sdk</th>
+<th>cloudflare/computer</th>
+<th>e2b / daytona</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 部署位置</td>
+<td> Cloudflare 边缘</td>
+<td> Cloudflare 边缘</td>
+<td>第三方云</td>
+</tr>
+<tr>
+<td> Cold start</td>
+<td> 容器拉起</td>
+<td>容器拉起（容 backend）<br>毫秒级（Isolate）</td>
+<td>200ms~1s</td>
+</tr>
+<tr>
+<td> 执行后端</td>
+<td>单一 Container</td>
+<td>Container + Isolate Shell + Isolate JS</td>
+<td> 单一 Firecracker/Container</td>
+</tr>
+<tr>
+<td> 持久化</td>
+<td> Container 卷</td>
+<td><strong> SQLite-backed DO，强一致</strong></td>
+<td>临时 sandbox，重启丢</td>
+</tr>
+<tr>
+<td>跨 backend 共享</td>
+<td>❌</td>
+<td>✅ 同一 workspace 共享</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>MCP 原生</td>
+<td>❌</td>
+<td>✅ <code>examples/mcp</code></td>
+<td>各自提供</td>
+</tr>
+<tr>
+<td>自建 Computer-Use Agent</td>
+<td> 较裸</td>
+<td>抽象更完整</td>
+<td>较裸</td>
+</tr>
+<tr>
+<td>主语言</td>
+<td> TS</td>
+<td>TS</td>
+<td> 多语言</td>
+</tr>
+<tr>
+<td>协议</td>
+<td> Cloudflare Services</td>
+<td>Cloudflare Services</td>
+<td>REST / gRPC</td>
+</tr>
+</tbody></table>
+<p>几个关键观察：</p>
+<ol>
+<li><p><strong>cloudflare/computer 和 sandbox-sdk 不冲突</strong>。官方文档里有一段对比 <code>docs/19_performance.md</code> 里的 <code>fs-bench</code>，<strong>结论是 FUSE 挂在元数据密集场景反而比真实磁盘快</strong> —— 这个结论我看完有点意外，但也合理：access pattern 变了，瓶颈从 IO 变成了 SQLite 索引查询。</p>
+</li>
+<li><p><strong>持久化是核心差异</strong>。e2b /daytona 的 sandbox 大多按” 会话” 算，agent 退出会话状态就丢了。cloudflare/computer 把 workspace 直接做成 DO 的 SQLite，<strong>这是”agent 的工作目录” 应该有的样子</strong> ——agent 第二天回来，文件还在，<code>session-resume</code> 是免费的。</p>
+</li>
+<li><p><strong>跨 backend 共享是 second-order 的杀手锏</strong>。想象一个场景：agent 跑了一晚上 <code>npm install</code> 装好依赖，sleep 醒来要跑测试。如果中间某个 backend 升级、或者用户切到另一个 backend，<strong>状态不能丢</strong>。cloudflare/computer 用 SQLite + FUSE 把这件事做成了基础设施级别。</p>
+</li>
+<li><p><strong>MCP example 体现 Cloudflare 的判断</strong>。他们认为 2026 年 agent 互操作的事实标准是 MCP，所以 <code>examples/mcp</code> 不是后补的 demo，而是<strong>仓库的第一公民</strong> —— 一个 Code Mode 工具，背后挂三种 backend。</p>
+</li>
+</ol>
+<hr>
+<h2 id="六、关键设计选择：capnweb-FUSE-SQLite"><a href="#六、关键设计选择：capnweb-FUSE-SQLite" class="headerlink" title="六、关键设计选择：capnweb + FUSE + SQLite"></a>六、关键设计选择：capnweb + FUSE + SQLite</h2><p>我觉得值得单独开一节讲 cloudflare/computer 的架构选择，因为这些选择直接决定它能不能 work。</p>
+<h3 id="为什么是-SQLite-而不是-KV-R2-S3"><a href="#为什么是-SQLite-而不是-KV-R2-S3" class="headerlink" title="为什么是 SQLite 而不是 KV / R2 / S3"></a>为什么是 SQLite 而不是 KV / R2 / S3</h3><p>Cloudflare 自己的存储选项有 KV、R2、D1、DO 内置 SQLite。<strong>这里用 DO 内置 SQLite 而不是 KV / R2 / D1</strong>，原因有三：</p>
+<ol>
+<li><strong>延迟</strong>：DO 内部 SQLite 是 in-process，访问延迟在微秒级；KV/D1 都要走 RPC。FUSE 这种” 每读一个文件就要查询一次” 的工作模式，延迟会被放大成倍。</li>
+<li><strong>事务粒度</strong>：SQLite 提供自然的文件级别事务，KV 没事务，D1 事务延迟太高。</li>
+<li><strong>可控性</strong>：FUSE 路径上需要锁定、写前镜像、增量同步 —— 这些都需要” 够底层” 的数据库。</li>
+</ol>
+<h3 id="为什么是-FUSE-而不是-mount-bind-overlayfs"><a href="#为什么是-FUSE-而不是-mount-bind-overlayfs" class="headerlink" title="为什么是 FUSE 而不是 mount-bind / overlayfs"></a>为什么是 FUSE 而不是 mount-bind /overlayfs</h3><p>FUSE 不是 Linux 标准容器里挂文件系统的唯一方式。<strong>FUSE vs mount-bind vs overlayfs</strong>：</p>
+<ul>
+<li><strong>mount-bind</strong>：直接挂目录进去，简单但状态不可控。</li>
+<li><strong>overlayfs</strong>：经典的容器文件系统分层，但需要特权和协调 mount 命名空间。</li>
+<li><strong>FUSE</strong>：用户态文件系统，<strong>完全受控的” 虚拟磁盘” 语义</strong> —— 这是 cloudflare/computer 想要的，因为 DO 侧的 SQLite 是唯一权威。</li>
+</ul>
+<p>所以 FUSE 不是” 凑合用”，而是 ** 为了” 把数据库当成磁盘来用”** 这个语义表达。</p>
+<h3 id="为什么是-capnweb-而不是-WebSocket-fetch"><a href="#为什么是-capnweb-而不是-WebSocket-fetch" class="headerlink" title="为什么是 capnweb 而不是 WebSocket / fetch"></a>为什么是 capnweb 而不是 WebSocket /fetch</h3><p>capnweb 是 Cloudflare 自家的 RPC 协议，关键特性是 <strong>object-capability</strong>，每个 stub 都是一次性的、可被远端 dispose 的。<strong>这意味着 leak 会被 record 和 report</strong>——AGENTS.md 里专门提到：”Stubs are object-capabilities; dispose them. Leaks are tracked by the harness in packages/rpc.”</p>
+<p>对 FUSE 同步这种” 双向、长期、断线重连敏感” 的场景，capnweb 比裸 WebSocket 友好得多。</p>
+<h3 id="为什么-backend-是-runtime-level-而不是-compile-time"><a href="#为什么-backend-是-runtime-level-而不是-compile-time" class="headerlink" title="为什么 backend 是 runtime-level 而不是 compile-time"></a>为什么 backend 是 runtime-level 而不是 compile-time</h3><p><code>workspace.runtime.exec(source, { backend: "container" | "shell" | "javascript" })</code> 这种 <strong>runtime 切换</strong>，而不是在 wrangler.toml 里 <code>[[unsafe.bindings]]</code> 静态绑定，本质上是为了让”agent 选择 backend” 成为可能。</p>
+<p>agent 看到命令的复杂度，自己决定哪个 backend。<strong>这是把” 调度决策” 留给上层 agent</strong>，而不是让 sandbox SDK 替你做。</p>
+<hr>
+<h2 id="七、适用人群-局限性"><a href="#七、适用人群-局限性" class="headerlink" title="七、适用人群 &amp; 局限性"></a>七、适用人群 &amp; 局限性</h2><p>cloudflare/computer 适合哪些人？</p>
+<ul>
+<li><strong>想给自己的 Claude Code / Cursor / Codex 配一个云端沙箱</strong> ——<code>examples/think</code> + <code>examples/mcp</code> 改一改就能用。</li>
+<li><strong>在做 Computer-Use Agent</strong>（类似 Claude Computer Use 或 OpenAI Operator）的开发者 ——FUSE + 三个 backend 给了你” 远程 Linux 的所有可能性”。</li>
+<li><strong>在做 AI Agent 平台</strong>（内部 AI 工具、企业 agent 平台）——MCP 原生支持 + 边缘部署 + 跨 backend 共享状态，是过去一直被各种 hack 解决的核心痛点。</li>
+<li><strong>在做 AI 编程工具</strong> ——<code>examples/artifacts</code> 直接演示了”agent 在 workspace 里写一个 Worker 项目，发布到 Cloudflare Artifacts”，这是 AI 写代码 + 部署的最小闭环。</li>
+</ul>
+<p>不适用：</p>
+<ul>
+<li><strong>生产环境</strong>。README 第一页就写了 <strong>“PREVIEW ONLY – This package is provided as a preview for feedback only. APIs are unstable and the design is subject to change”</strong>。要看清楚再上生产。</li>
+<li><strong>需要 GPU 跑大模型推理</strong>。Container backend 是普通 Linux 容器，没有 GPU 绑定；要跑本地 LLM 依然得用别的方式（modal、runpod、或者云上 GPU VM）。</li>
+<li><strong>需要 Windows 兼容性</strong>。FUSE 是 Linux 特性，container 跑在 Linux 镜像里；要 Windows agent 体验得绕。</li>
+<li><strong>需要强一致的多 agent 协作</strong>。DO 本身是单实例 SQLite，<strong>多 agent 共享同一个 workspace 需要在应用层加锁</strong>。</li>
+</ul>
+<hr>
+<h2 id="八、它对我意味着什么"><a href="#八、它对我意味着什么" class="headerlink" title="八、它对我意味着什么"></a>八、它对我意味着什么</h2><p>最后讲一讲我自己看完这个仓库的两个感受。</p>
+<p>第一，<strong>“computer” 这个词在 AI Agent 时代被重新定义了</strong>。三年的 ChatGPT 时代我们说”AI 是 copilot”；这两年我们说”AI 是 agent”；接下来这个项目让我看到的下一阶段是 ——<strong>“AI 是一台 computer”</strong>。CPU、内存、文件系统、进程、网络出口、生命周期 —— 这些本来就是一台 computer 的全部属性。Cloudflare 这次不只是做 sandbox，<strong>它是在 sandbox 之上定义一个 first-class 的”AI computer” 类型</strong>。</p>
+<p>第二，<strong>它把” 沙箱” 这件事的门槛打成地板了</strong>。过去的 sandbox SDK 至少要你懂 Firecracker、懂容器编排、懂 VPC 配 egress。cloudflare/computer 用 9 个 example + 一份清晰的设计文档，把” 做一个能调 Claude 的 computer” 这件事做到了 10 分钟级别。<strong>这是我过去一年看到的最” 准备好被大规模复制” 的基础设施项目之一</strong>。</p>
+<hr>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>如果说 OpenAI Operator / Anthropic Computer Use 还在演示”agent 在你屏幕上点按钮”，cloudflare/computer 在讲的是 **”agent 应该跑在你看不到的电脑里”**。</p>
+<p>把 SQLite 塞进 Durable Object，把 FUSE 变成” 数据库挂载器”，把 capnweb 变成”computer 和 DO 之间的神经”，把 Container / Shell / JS 三个 runtime 串成同一个 API——Cloudflare 工程师用他们过去几年积累的边缘基础设施，做了一个<strong>让 AI Agent 真正落地时最缺的那一块拼图</strong>。</p>
+<p>8.3k stars 还在涨，仓库目前还算早期，API 还会变，但<strong>方向我觉得是确定的</strong>。</p>
+<p>如果你是 agent 开发者、如果你在挑 sandbox、如果你关心 MCP 未来的生态位 ——<a target="_blank" rel="noopener" href="https://github.com/cloudflare/computer">cloudflare/computer</a> 这个仓库值得花一个周末跑一遍 9 个 example。</p>
+<blockquote>
+<p><strong>GitHub 仓库</strong>：<a target="_blank" rel="noopener" href="https://github.com/cloudflare/computer">https://github.com/cloudflare/computer</a><br><strong>MIT 协议</strong>，Cloudflare 官方开源。<br><strong>重要提示</strong>：当前是 Preview 状态，API 不稳定，<strong>不建议直接用于生产</strong>。</p>
+</blockquote>
+<hr>
+<p><em>作者：小戴 | 数字游民、Java 全栈 / 大模型 / AI Agent 长期关注者。如果你也在做 agent 基础设施，欢迎在博客评论区或 X 上找我聊。</em></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/16/cloudflare-computer-agent-cloud-sandbox-durable-object/" title="cloudflare&#x2F;computer：8.3k stars 的「给 agent 一台云端电脑」，把 Durable Object + FUSE 容器、Worker Shell、JS 三个 backend 串成一个 API">https://www.daishengli.top/2026/08/16/cloudflare-computer-agent-cloud-sandbox-durable-object/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/cloudflare/" rel="tag"># cloudflare</a>
+              <a href="/tags/Durable-Object/" rel="tag"># Durable Object</a>
+              <a href="/tags/%E6%B2%99%E7%AE%B1/" rel="tag"># 沙箱</a>
+              <a href="/tags/FUSE/" rel="tag"># FUSE</a>
+              <a href="/tags/Cloudflare-Workers/" rel="tag"># Cloudflare Workers</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/16/fluidvoice-local-macos-dictation-fluid-intelligence/" rel="prev" title="FluidVoice：10k stars 的 macOS 原生听写神器，让本地 AI 把 Wispr Flow 拉下神坛">
+                  <i class="fa fa-angle-left"></i> FluidVoice：10k stars 的 macOS 原生听写神器，让本地 AI 把 Wispr Flow 拉下神坛
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/17/cactus-needle-14mb-device-foundation-model-tool-calling/" rel="next" title="Needle 2：6.6k stars 的 14MB 设备端 LLM，把 Tool Calling 塞进 28MB 内存，让手机 &#x2F; 智能家居 &#x2F; 机器人真正能本地对话">
+                  Needle 2：6.6k stars 的 14MB 设备端 LLM，把 Tool Calling 塞进 28MB 内存，让手机 / 智能家居 / 机器人真正能本地对话 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

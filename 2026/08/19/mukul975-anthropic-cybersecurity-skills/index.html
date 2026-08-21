@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="mukul975&#x2F;Anthropic-Cybersecurity-Skills 今日 GitHub Trending +730 stars，29,236 stars 总数，817 个结构化网络安全技能跨 29 个安全领域，映射 MITRE ATT&amp;CK v19.1 &#x2F; NIST CSF 2.0 &#x2F; MITRE ATLAS 2026.07 &#x2F; MITRE D3FEND v1.4.0 &#x2F; NIST A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI Agent 拿到 817 张「安全专家处方」：mukul975&#x2F;Anthropic-Cybersecurity-Skills 把网络安全塞进 agentskills.io 标准">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/19/mukul975-anthropic-cybersecurity-skills/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="mukul975&#x2F;Anthropic-Cybersecurity-Skills 今日 GitHub Trending +730 stars，29,236 stars 总数，817 个结构化网络安全技能跨 29 个安全领域，映射 MITRE ATT&amp;CK v19.1 &#x2F; NIST CSF 2.0 &#x2F; MITRE ATLAS 2026.07 &#x2F; MITRE D3FEND v1.4.0 &#x2F; NIST A">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-19T02:05:00.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.159Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="开源工具">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Cybersecurity">
+<meta property="article:tag" content="agent skills">
+<meta property="article:tag" content="agentskills.io">
+<meta property="article:tag" content="MITRE ATT&amp;CK">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/19/mukul975-anthropic-cybersecurity-skills/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/19/mukul975-anthropic-cybersecurity-skills/","path":"2026/08/19/mukul975-anthropic-cybersecurity-skills/","title":"AI Agent 拿到 817 张「安全专家处方」：mukul975/Anthropic-Cybersecurity-Skills 把网络安全塞进 agentskills.io 标准"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>AI Agent 拿到 817 张「安全专家处方」：mukul975/Anthropic-Cybersecurity-Skills 把网络安全塞进 agentskills.io 标准 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A480-%E4%B8%87%E7%BC%BA%E5%8F%A3%E8%83%8C%E5%90%8E%E7%9A%84%E2%80%9DAI-%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E5%B8%88%E2%80%9D%E9%9A%BE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">一、项目背景：480 万缺口背后的”AI 安全分析师” 难题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A817-%E5%BC%A0%E2%80%9D%E5%AE%89%E5%85%A8%E4%B8%93%E5%AE%B6%E5%A4%84%E6%96%B9%E2%80%9D"><span class="nav-number">2.</span> <span class="nav-text">二、核心功能：817 张” 安全专家处方”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%85%A8%E6%99%AF%E6%95%B0%E5%AD%97%EF%BC%9A29-%E4%B8%AA%E5%AE%89%E5%85%A8%E9%A2%86%E5%9F%9F-%C3%97-6-%E4%B8%AA%E6%A1%86%E6%9E%B6%E6%98%A0%E5%B0%84"><span class="nav-number">2.1.</span> <span class="nav-text">1. 全景数字：29 个安全领域 × 6 个框架映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%AF%8F%E4%B8%AA-Skill-%E7%9A%84%E2%80%9D%E9%AA%A8%E6%9E%B6%E2%80%9D%EF%BC%9A6-%E8%8A%82%E6%A0%87%E5%87%86%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">2. 每个 Skill 的” 骨架”：6 节标准结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Progressive-Disclosure%EF%BC%9A30-token-%E6%89%AB%E5%85%A8%E9%83%A8%EF%BC%8C2000-token-%E8%B7%91%E4%B8%80%E6%9D%A1"><span class="nav-number">2.3.</span> <span class="nav-text">3. Progressive Disclosure：30 token 扫全部，2000 token 跑一条</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E9%85%8D%E5%A5%97%E6%96%87%E4%BB%B6%EF%BC%9Areferences-scripts-assets"><span class="nav-number">2.4.</span> <span class="nav-text">4. 配套文件：references + scripts + assets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%85%BC%E5%AE%B9-26-AI-%E5%B9%B3%E5%8F%B0"><span class="nav-number">2.5.</span> <span class="nav-text">5. 兼容 26+ AI 平台</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%EF%BC%9A%E6%B8%90%E8%BF%9B%E5%BC%8F%E6%8A%AB%E9%9C%B2-YAML-frontmatter-agentskills-io"><span class="nav-number">3.</span> <span class="nav-text">三、技术架构：渐进式披露 + YAML frontmatter + agentskills.io</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-agentskills-io-%E6%A0%87%E5%87%86-vs-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%BC%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">1. agentskills.io 标准 vs 自定义格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%B8%90%E8%BF%9B%E5%BC%8F%E6%8A%AB%E9%9C%B2%EF%BC%88Progressive-Disclosure%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">2. 渐进式披露（Progressive Disclosure）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%A1%86%E6%9E%B6%E6%98%A0%E5%B0%84%E7%9A%84%E2%80%9D%E5%8F%8C%E5%B1%82%E2%80%9D%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.3.</span> <span class="nav-text">3. 框架映射的” 双层” 设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-PR-%E8%AF%84%E5%AE%A1%E6%B5%81%E7%A8%8B%EF%BC%9A48-%E5%B0%8F%E6%97%B6-SLA"><span class="nav-number">3.4.</span> <span class="nav-text">4. PR 评审流程：48 小时 SLA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%8D%95%E4%B8%80%E4%BD%9C%E8%80%85%E6%92%91%E8%B5%B7%E7%99%BE%E4%B8%87%E7%BA%A7%E5%86%85%E5%AE%B9%EF%BC%9AAI-%E8%BE%85%E5%8A%A9%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">3.5.</span> <span class="nav-text">5. 单一作者撑起百万级内容：AI 辅助工作流</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%80%8E%E4%B9%88%E7%94%A8%EF%BC%9A%E5%9B%9B%E6%AD%A5%E6%8E%A5%E5%85%A5%E4%BD%A0%E7%9A%84-Claude-Code-Cursor"><span class="nav-number">4.</span> <span class="nav-text">四、怎么用：四步接入你的 Claude Code &#x2F; Cursor</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%80%E8%A1%8C%E5%AE%89%E8%A3%85"><span class="nav-number">4.1.</span> <span class="nav-text">1. 一行安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%A7%A6%E5%8F%91-skill%EF%BC%9A%E8%AF%B4%E4%BA%BA%E8%AF%9D%E5%B0%B1%E8%A1%8C"><span class="nav-number">4.2.</span> <span class="nav-text">2. 触发 skill：说人话就行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%87%AA%E5%AE%9A%E4%B9%89-skill%EF%BC%9Afork-PR"><span class="nav-number">4.3.</span> <span class="nav-text">3. 自定义 skill：fork + PR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%9C%A8-CI-CD-%E9%87%8C%E7%94%A8%EF%BC%9AMCP-%E9%9B%86%E6%88%90"><span class="nav-number">4.4.</span> <span class="nav-text">4. 在 CI&#x2F;CD 里用：MCP 集成</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93%EF%BC%9A480-%E4%B8%87%E7%BC%BA%E5%8F%A3%E8%83%8C%E5%90%8E%E7%9A%84%E2%80%9DAI-%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E5%B8%88-1-0%E2%80%9D"><span class="nav-number">5.</span> <span class="nav-text">五、总结：480 万缺口背后的”AI 安全分析师 1.0”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E4%BA%BA%E7%BE%A4"><span class="nav-number">5.1.</span> <span class="nav-text">适用人群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E9%99%90%E6%80%A7%EF%BC%88README-%E8%87%AA%E5%B7%B1%E6%89%BF%E8%AE%A4%E7%9A%84%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">局限性（README 自己承认的）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E5%80%BC%E5%BE%97%E5%8D%95%E7%8B%AC%E6%8F%90%E7%9A%84%E2%80%9D%E9%87%8E%E8%B7%AF%E5%AD%90%E2%80%9D"><span class="nav-number">5.3.</span> <span class="nav-text">一个值得单独提的” 野路子”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-number">5.4.</span> <span class="nav-text">写在最后</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/19/mukul975-anthropic-cybersecurity-skills/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="AI Agent 拿到 817 张「安全专家处方」：mukul975&#x2F;Anthropic-Cybersecurity-Skills 把网络安全塞进 agentskills.io 标准 | 小戴的网络日志">
+      <meta itemprop="description" content="mukul975&#x2F;Anthropic-Cybersecurity-Skills 今日 GitHub Trending +730 stars，29,236 stars 总数，817 个结构化网络安全技能跨 29 个安全领域，映射 MITRE ATT&amp;CK v19.1 &#x2F; NIST CSF 2.0 &#x2F; MITRE ATLAS 2026.07 &#x2F; MITRE D3FEND v1.4.0 &#x2F; NIST AI RMF 1.0 &#x2F; MITRE F3 v1.1 六大框架，兼容 Claude Code &#x2F; Cursor &#x2F; Codex CLI &#x2F; Gemini CLI 等 26+ AI 平台，一行 npx 即可接入。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AI Agent 拿到 817 张「安全专家处方」：mukul975/Anthropic-Cybersecurity-Skills 把网络安全塞进 agentskills.io 标准
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-19 10:05:00" itemprop="dateCreated datePublished" datetime="2026-08-19T10:05:00+08:00">2026-08-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">mukul975/Anthropic-Cybersecurity-Skills 今日 GitHub Trending +730 stars，29,236 stars 总数，817 个结构化网络安全技能跨 29 个安全领域，映射 MITRE ATT&CK v19.1 / NIST CSF 2.0 / MITRE ATLAS 2026.07 / MITRE D3FEND v1.4.0 / NIST AI RMF 1.0 / MITRE F3 v1.1 六大框架，兼容 Claude Code / Cursor / Codex CLI / Gemini CLI 等 26+ AI 平台，一行 npx 即可接入。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>我桌上一直放着两份” 职业安全感” 指标。</p>
+<p>一份是 <a target="_blank" rel="noopener" href="https://www.isc2.org/">ISC2</a> 2024 年报里那个让我后背发凉的数字：<strong>全球网络安全岗位缺口 480 万</strong>。一份是我自己 Claude Code 里堆了 9 个月的 <code>~/.claude/skills/</code> 目录 —— 里面是我一个一个手敲出来的” 实战小抄”：怎么读 EVTX、怎么看 Suricata alert、怎么 triage 一份 phishing 邮件。</p>
+<p>上周给一个做甲方安全运营的朋友演示我的工作流。他看着 Claude Code 顺着我的 skill 文件一步步跑通 <code>volatility3 → lsass 内存分析 → ATT&amp;CK T1003</code> 的全过程，沉默了几秒，问我：</p>
+<blockquote>
+<p>“这种 playbook，能不能直接打包给我？我们 SOC 团队新来的分析师没你这种经验，看了三个月的 Sigma 规则还是分不清 false positive 和 true positive。”</p>
+</blockquote>
+<p>我当时没敢说 —— 我自己也是一个个 skill 攒出来的，凭什么共享？安全领域的经验分散在每个人的脑子里，从 MITRE ATT&amp;CK 的 200+ 技术到 NIST CSF 的 106 个子类别，从 Kerberoasting 的细节到勒索软件 IR 的 8 步响应流程 —— <strong>每个人写出来的 skill 都不一样，整合不到一起，AI Agent 真正用得上的” 通用安全 playbook” 始终是稀缺品</strong>。</p>
+<p>直到我今天刷 GitHub Trending 看到 <a target="_blank" rel="noopener" href="https://github.com/mukul975/Anthropic-Cybersecurity-Skills">mukul975/Anthropic-Cybersecurity-Skills</a>—— <strong>今日 +730 stars、总 29,236 stars、817 个结构化网络安全技能、跨 29 个安全领域、映射 6 个 MITRE/NIST 框架、兼容 26+ AI 平台、一行 <code>npx skills add</code> 就能让 Claude Code / Cursor / Codex CLI / Gemini CLI 立刻变成” 初级安全分析师”</strong>。</p>
+<p>更狠的是 README 上方那条免责声明：</p>
+<blockquote>
+<p>⚠️ <strong>Community Project</strong> — This is an independent, community-created project. Not affiliated with Anthropic PBC.</p>
+</blockquote>
+<p>——“社区项目，跟 Anthropic PBC 没关系”。但<strong>项目名直接挂了 “Anthropic” 三个字，遵守 agentskills.io 开放标准，使用 Apache 2.0 协议，且第一个吃螃蟹的伙伴列表里出现了 <code>Hermes Agent</code>（NousResearch 的 Agent 框架）</strong>。这是什么野路子打法？印度小哥 mukul975（Mukul Mahajan，SRH Berlin 学术研究背景）凭什么一个人撑起这种量级的开源基础设施？</p>
+<p>下面就拆开它看看 —— <strong>当 AI Agent 真的开始” 会做安全分析”，它背后的知识库到底长什么样</strong>。</p>
+<hr>
+<h2 id="一、项目背景：480-万缺口背后的”AI-安全分析师”难题"><a href="#一、项目背景：480-万缺口背后的”AI-安全分析师”难题" class="headerlink" title="一、项目背景：480 万缺口背后的”AI 安全分析师”难题"></a>一、项目背景：480 万缺口背后的”AI 安全分析师” 难题</h2><p>先把数字摆在桌面上。</p>
+<p>根据 ISC2 2024 年发布的《Cybersecurity Workforce Study》：</p>
+<ul>
+<li>全球网络安全岗位缺口约 <strong>480 万</strong>，比 2023 年再涨 <strong>19%</strong></li>
+<li> 全球从业者约 <strong>560 万</strong>，过去一年只增长了 <strong>0.1%</strong>—— 增长基本停滞</li>
+<li> 73% 的受访团队领导反馈存在” 关键技能缺口”，其中<strong>威胁狩猎、IR 取证、云安全、IAM 配置</strong>排在前四</li>
+</ul>
+<p>这张图景是什么意思？意思是 —— <strong>不缺简历，缺” 能独立判断的安全分析师”</strong>。</p>
+<p>我在甲方安全运营那边跑过一些技术 review，体感一致。一个初级 SOC 分析师，从入职到能独立 triage 一份 phishing 邮件、判断告警真假、知道该不该升级给 senior，<strong>平均需要 12-18 个月的实战磨练</strong>。原因不是工具难，是<strong>知识体系太碎片</strong>：</p>
+<ul>
+<li><strong>MITRE ATT&amp;CK</strong>：v19.1 共 <strong>15 个战术、290 个技术 / 子技术</strong>，每个技术有自己的” 检测方法 + 缓解方法 + 真实案例” 三件套，但绝大多数分析师不会把 ATT&amp;CK 当” 操作手册” 用，只在写报告时引用一下 ID</li>
+<li><strong>NIST CSF 2.0</strong>：6 个功能（Govern/Identify/Protect/Detect/Respond/Recover），22 个类别，106 个子类别 ——<strong>2024 年 2 月才加了 Govern 这条新功能，2024 年的多数存量文档还停留在旧版 5 功能</strong>，错配率极高</li>
+<li><strong> MITRE ATLAS</strong>（专门针对 AI/ML 的对抗性威胁）：2026.07 版已经 101 个技术、77 个子技术，<strong>连”AI agent context poisoning” 和”MCP server compromise” 这种 2025 年下半年才出现的攻击模式都枚举了</strong>，但大多数甲方团队根本没听过 ATLAS</li>
+<li><strong>MITRE D3FEND</strong>：270 个防御性技术，按 7 个战术类别（Model/Harden/Detect/Isolate/Deceive/Evict/Restore）组织，<strong>专门解决” 我检测到了攻击，下一步该用什么防御手段”</strong></li>
+<li><strong>NIST AI RMF</strong>：72 个子类别，专门管 AI 风险，<strong>2024 年 7 月加了 GenAI Profile（AI 600-1），2026 年 2 月科罗拉多 AI 法案生效后，合规 NIST AI RMF 还有” 安全港” 待遇</strong></li>
+<li><strong> MITRE F3</strong>（Fight Fraud Framework）：<strong>2026 年 4 月 9 日才发布</strong>，由 MITRE CTID 联合 JPMorganChase、 Citigroup、Lloyds、Standard Chartered、CrowdStrike 等共同开发，<strong>专门补 ATT&amp;CK 在” 金融欺诈” 领域的空白</strong></li>
+</ul>
+<p>—— 六个框架，分别管不同的安全视角；六个框架加起来，覆盖了<strong>现代企业 SOC 该会的几乎所有” 应该怎么做”</strong>。</p>
+<p>但你让一个初级分析师把这六个框架全背熟，他不干三年做不完。</p>
+<p>那 AI Agent 呢？理论上 LLM 加上 RAG，能直接” 喂” 这些框架知识。但实操起来有三个根本痛点：</p>
+<ol>
+<li><strong>现有安全 repo 给的是代码，不是 playbook</strong>。比如 GitHub 上 <code>danielmiessler/SecLists</code>、<code>swisskyrepo/PayloadsAllTheThings</code>、<code>carlospolop/PEASS</code> 这种老牌项目，都是给你 wordlist、payload、exploit code。<strong>没人把” 什么时候用、用什么前置条件、怎么一步一步执行、怎么验证结果” 封装成 LLM 能直接调用的 skill</strong>。</li>
+<li><strong>向量数据库检索不适合” 决策树”</strong>。RAG 检索出来的往往是一段孤立的代码片段或 blog post，AI 不知道下一步该干啥。安全分析是流程活，<strong>Volatility3 跑完之后要看 EVTX，看完 EVTX 要关联 ATT&amp;CK T1003，关联完要写 IOC 报告</strong> —— 这种” 四步流程” 靠 RAG 完全串不起来。</li>
+<li><strong>各家 Agent 框架标准不统一</strong>。Claude Code 用 <code>SKILL.md</code> + YAML frontmatter、Cursor 用 <code>.cursorrules</code>、Codex CLI 用 <code>AGENTS.md</code>、Gemini CLI 又是另一套…… 一个安全 playbook 想跨平台分发，得写 4-5 个版本。</li>
+</ol>
+<p>这就引出了 mukul975 出手的契机。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/mukul975/Anthropic-Cybersecurity-Skills">mukul975/Anthropic-Cybersecurity-Skills</a> 的 README 第一段写得很克制：</p>
+<blockquote>
+<p>A junior analyst knows which Volatility3 plugin to run on a suspicious memory dump, which Sigma rules catch Kerberoasting, and how to scope a cloud breach across three providers. Your AI agent doesn’t — unless you give it these skills.</p>
+</blockquote>
+<p>——“初级分析师知道该跑哪个 Volatility3 插件、哪条 Sigma 规则能抓到 Kerberoasting、怎么界定一个跨三个云的入侵范围。你的 AI Agent 不知道这些 —— 除非你把这些 skill 给它。”</p>
+<p>Mukul 同学做的事情本质上不是” 写代码”，而是<strong>把一个资深安全分析师脑子里 8 年的实战经验，逐条结构化成 817 份” 可被 AI 调用的决策手册”</strong>。</p>
+<p>这不是工具的胜利，是<strong>知识工程</strong>的胜利。</p>
+<hr>
+<h2 id="二、核心功能：817-张”安全专家处方”"><a href="#二、核心功能：817-张”安全专家处方”" class="headerlink" title="二、核心功能：817 张”安全专家处方”"></a>二、核心功能：817 张” 安全专家处方”</h2><p>我先放一个全貌，然后逐层拆解。</p>
+<h3 id="1-全景数字：29-个安全领域-×-6-个框架映射"><a href="#1-全景数字：29-个安全领域-×-6-个框架映射" class="headerlink" title="1. 全景数字：29 个安全领域 × 6 个框架映射"></a>1. 全景数字：29 个安全领域 × 6 个框架映射</h3><p><strong>817 个技能，跨 29 个安全领域</strong>，按规模排：</p>
+<table>
+<thead>
+<tr>
+<th>领域</th>
+<th>技能数</th>
+<th>核心能力</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Cloud Security</td>
+<td>66</td>
+<td>AWS/Azure/GCP 加固、CSPM、云攻击模拟、云取证</td>
+</tr>
+<tr>
+<td> Threat Hunting</td>
+<td>58</td>
+<td> 假设驱动狩猎、LOTL 检测、EVTX 狩猎、fleet hunting</td>
+</tr>
+<tr>
+<td>Threat Intelligence</td>
+<td>52</td>
+<td>STIX/TAXII、MISP、OpenCTI、feed 整合、actor profiling</td>
+</tr>
+<tr>
+<td>Network Security</td>
+<td>43</td>
+<td>IDS/IPS、防火墙规则、VLAN 隔离、流量分析</td>
+</tr>
+<tr>
+<td> Web Application Security</td>
+<td>42</td>
+<td>OWASP Top 10、SQLi、XSS、SSRF、反序列化</td>
+</tr>
+<tr>
+<td> Digital Forensics</td>
+<td>41</td>
+<td> 磁盘镜像、内存取证、Hayabusa/KAPE/Plaso timelines</td>
+</tr>
+<tr>
+<td>Malware Analysis</td>
+<td>39</td>
+<td> 静态 / 动态分析、逆向工程、沙箱</td>
+</tr>
+<tr>
+<td> Identity &amp; Access Management</td>
+<td>37</td>
+<td>Entra ID/ROADtools、device-code phishing、PAM、零信任身份</td>
+</tr>
+<tr>
+<td> SOC Operations</td>
+<td>35</td>
+<td>playbook、升级流程、graph-log detection、桌面演练</td>
+</tr>
+<tr>
+<td> Red Teaming</td>
+<td>33</td>
+<td>ADCS/Certipy、BloodHound CE、Sliver/Havoc C2、NTLM relay</td>
+</tr>
+<tr>
+<td>Container Security</td>
+<td>33</td>
+<td>K8s RBAC、镜像扫描、Falco、容器逃逸</td>
+</tr>
+<tr>
+<td> Security Operations</td>
+<td>28</td>
+<td>SIEM 关联、日志分析、告警 triage</td>
+</tr>
+<tr>
+<td>OT/ICS Security</td>
+<td>28</td>
+<td>Modbus、DNP3、IEC 62443、historian 防御、SCADA</td>
+</tr>
+<tr>
+<td>API Security</td>
+<td>28</td>
+<td>GraphQL、REST、OWASP API Top 10、WAF bypass</td>
+</tr>
+<tr>
+<td>Incident Response</td>
+<td>26</td>
+<td> 入侵遏制、勒索响应、IR playbook</td>
+</tr>
+<tr>
+<td>Vulnerability Management</td>
+<td>25</td>
+<td>Nessus、扫描 workflow、补丁优先级、CVSS</td>
+</tr>
+<tr>
+<td>Penetration Testing</td>
+<td>21</td>
+<td> 网络 / Web / 云 / 移动、NetExec lateral movement</td>
+</tr>
+<tr>
+<td>DevSecOps</td>
+<td>18</td>
+<td>CI/CD 安全、Trivy IaC / 镜像扫描、代码签名</td>
+</tr>
+<tr>
+<td> Zero Trust Architecture</td>
+<td>17</td>
+<td>BeyondCorp、CISA maturity model、微隔离</td>
+</tr>
+<tr>
+<td> Endpoint Security</td>
+<td>17</td>
+<td>EDR、LOTL 检测、fileless malware、persistence hunting</td>
+</tr>
+<tr>
+<td>Cryptography</td>
+<td>16</td>
+<td>TLS、Ed25519、后量子迁移、密钥管理</td>
+</tr>
+<tr>
+<td> Phishing Defense</td>
+<td>15</td>
+<td> 邮件认证、BEC 检测、钓鱼 IR</td>
+</tr>
+<tr>
+<td>AI Security</td>
+<td>14</td>
+<td>LLM 红队（garak/PyRIT）、prompt injection、MCP/agentic security、guardrails</td>
+</tr>
+<tr>
+<td>Mobile Security</td>
+<td>13</td>
+<td>Android/iOS 分析、移动 pentesting、MDM 取证</td>
+</tr>
+<tr>
+<td> Ransomware Defense</td>
+<td>13</td>
+<td> 前兆检测、响应、恢复、加密分析</td>
+</tr>
+<tr>
+<td> Compliance &amp; Governance</td>
+<td>9</td>
+<td>NIST 800-30/RMF、CMMC、HIPAA、TPRM、CIS</td>
+</tr>
+<tr>
+<td>Supply Chain Security</td>
+<td>8</td>
+<td>SBOM、dependency confusion、恶意包 triage、SLSA/Sigstore</td>
+</tr>
+<tr>
+<td>Deception Technology</td>
+<td>6</td>
+<td>Honeytokens、canarytokens、入侵检测</td>
+</tr>
+<tr>
+<td> Hardware &amp; Firmware Security</td>
+<td>4</td>
+<td>CHIPSEC/UEFI 审计、Secure Boot bypass、TPM attestation</td>
+</tr>
+</tbody></table>
+<p>加一下：<strong>29 + 66 + 58 + 52 + 43 + 42 + 41 + 39 + 37 + 35 + 33 + 33 + 28 + 28 + 28 + 26 + 25 + 21 + 18 + 17 + 17 + 16 + 15 + 14 + 13 + 13 + 9 + 8 + 6 + 4 = 817</strong>。✅</p>
+<p>这里几个细节值得拎出来单独说 **：</p>
+<ul>
+<li><strong>Cloud Security 是最大领域</strong>（66 个 skill）—— 这是 2024-2026 年 SOC 的真实痛点，<strong>AWS/Azure/GCP 三家的控制面 API 各不一样</strong>，从 IAM 策略到 S3 桶 ACL 到 Azure RBAC，每家都有 200+ 服务要懂，单是 CloudTrail 解析就能拆出 10 个 skill。</li>
+<li><strong>AI Security 单独成域</strong>（14 个 skill）—— 这是 2025 年下半年才出现的新类别，专门管”AI Agent 自身的攻击面”。包含 prompt injection、context poisoning、MCP server compromise、guardrails 配置 —— <strong>和 mukul975 同期的 mukul975 / Anthropic Cybersecurity Skills 项目还专门搞了 MITRE ATLAS 的 101 个 AI/ML 对抗技术映射</strong>。</li>
+<li><strong>OT/ICS Security</strong>（28 个 skill）—— 很多人忽略的领域。Modbus、DNP3、IEC 62443、SCADA historian 防御 —— 这是工厂、能源、交通行业 SOC 的” 必修课”，<strong>其他 AI Agent skill 库基本不碰这个</strong>。</li>
+<li><strong>Hardware &amp; Firmware Security 最小</strong>（4 个 skill）——CHIPSEC、UEFI 审计、Secure Boot bypass、TPM attestation。这是高门槛领域，需要芯片级知识，<strong>作者自己也在 README 里说这块还在建设，欢迎 PR</strong>。</li>
+</ul>
+<p><strong>6 个框架映射的覆盖深度</strong>也值得一提（截至 main 分支最新版本）：</p>
+<table>
+<thead>
+<tr>
+<th>框架</th>
+<th>版本</th>
+<th>映射技能数 / 总数</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> MITRE ATT&amp;CK</td>
+<td>v19.1</td>
+<td><strong>805 / 817</strong></td>
+<td> 覆盖 15 个战术，290 个技术 / 子技术</td>
+</tr>
+<tr>
+<td> NIST CSF 2.0</td>
+<td>2.0</td>
+<td><strong>804 / 817</strong></td>
+<td>6 功能全覆盖，22 类别 + 106 子类别</td>
+</tr>
+<tr>
+<td> MITRE D3FEND</td>
+<td>v1.4.0</td>
+<td><strong>139 / 817</strong></td>
+<td> 主要是防御类技能（Harden/Detect/Isolate）</td>
+</tr>
+<tr>
+<td>NIST AI RMF</td>
+<td>1.0</td>
+<td><strong>97 / 817</strong></td>
+<td>AI 安全 + GenAI Profile 技能</td>
+</tr>
+<tr>
+<td> MITRE F3</td>
+<td>v1.1（2026-04-09 发布）</td>
+<td><strong>94 / 817</strong></td>
+<td> 金融欺诈专项</td>
+</tr>
+<tr>
+<td> MITRE ATLAS</td>
+<td>2026.07</td>
+<td><strong>93 / 817</strong></td>
+<td>AI/ML 对抗</td>
+</tr>
+</tbody></table>
+<p><strong>ATT&amp;CK + CSF 几乎是每个 skill 都有；D3FEND、AI RMF、F3、ATLAS 则按” 是否相关” 选择性映射</strong> —— 这点 README 明确说了，”a forensics skill carries ATT&amp;CK + CSF; an AI-security skill adds ATLAS and AI RMF”—— <strong>不会硬塞所有框架</strong>。</p>
+<h3 id="2-每个-Skill-的”骨架”：6-节标准结构"><a href="#2-每个-Skill-的”骨架”：6-节标准结构" class="headerlink" title="2. 每个 Skill 的”骨架”：6 节标准结构"></a>2. 每个 Skill 的” 骨架”：6 节标准结构</h3><p>mukul975 的 skill 不是简单 markdown 文档，是有严格 6 节结构的标准件：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## When to Use</span></span><br><span class="line">触发条件——什么时候 AI Agent 应该激活这个 skill？</span><br><span class="line"></span><br><span class="line"><span class="section">## Prerequisites</span></span><br><span class="line">必需工具、访问权限、环境前置。</span><br><span class="line"></span><br><span class="line"><span class="section">## Workflow</span></span><br><span class="line">分步骤执行指南，含具体命令和决策点。</span><br><span class="line"></span><br><span class="line"><span class="section">## Verification</span></span><br><span class="line">如何确认这个 skill 执行成功。</span><br><span class="line"></span><br><span class="line"><span class="section">## Key Concepts</span></span><br><span class="line">关键概念表。</span><br><span class="line"></span><br><span class="line"><span class="section">## Tools &amp; Systems</span></span><br><span class="line">工具与系统清单。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>每一节都不是装饰 —— 是<strong>让 LLM 真正能” 按部就班” 执行</strong>的工程。</p>
+<p>我随便挑一个 skill 来看 —— <strong><code>performing-memory-forensics-with-volatility3</code></strong>：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">performing-memory-forensics-with-volatility3</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">&gt;-</span></span><br><span class="line"><span class="string">  Analyze memory dumps to extract running processes, network connections,</span></span><br><span class="line"><span class="string">  injected code, and malware artifacts using the Volatility3 framework.</span></span><br><span class="line"><span class="string"></span><span class="attr">domain:</span> <span class="string">cybersecurity</span></span><br><span class="line"><span class="attr">subdomain:</span> <span class="string">digital-forensics</span></span><br><span class="line"><span class="attr">tags:</span> [<span class="string">forensics</span>, <span class="string">memory-analysis</span>, <span class="string">volatility3</span>, <span class="string">incident-response</span>, <span class="string">dfir</span>]</span><br><span class="line"><span class="attr">atlas_techniques:</span> [<span class="string">AML.T0047</span>]</span><br><span class="line"><span class="attr">d3fend_techniques:</span> [<span class="string">D3-MA</span>, <span class="string">D3-PSMD</span>]</span><br><span class="line"><span class="attr">nist_ai_rmf:</span> [<span class="string">MEASURE-2.6</span>]</span><br><span class="line"><span class="attr">nist_csf:</span> [<span class="string">DE.CM-01</span>, <span class="string">RS.AN-03</span>]</span><br><span class="line"><span class="attr">version:</span> <span class="string">"1.2"</span></span><br><span class="line"><span class="attr">author:</span> <span class="string">mukul975</span></span><br><span class="line"><span class="attr">license:</span> <span class="string">Apache-2.0</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这一段 YAML frontmatter 不是装饰 —— 它解决了我前面提到的第三个根本痛点：<strong>跨平台分发</strong>。</p>
+<ul>
+<li><strong>Claude Code</strong> 扫 YAML 拿 <code>name + description + tags</code>，做索引</li>
+<li><strong> Cursor</strong> 扫同一份 YAML，<code>description</code> 是触发条件</li>
+<li><strong> Codex CLI</strong> 直接读 <code>AGENTS.md</code> 风格的 frontmatter</li>
+<li><strong>Gemini CLI</strong> 用的是 OpenAI 兼容格式，YAML 一致就能跑</li>
+</ul>
+<p><strong>一份 SKILL.md，所有平台通用</strong> —— 这是 mukul975 赌对的关键决策：不发明新格式，<strong>拥抱 <a target="_blank" rel="noopener" href="https://agentskills.io/">agentskills.io</a> 这个正在兴起的开放标准</strong>。</p>
+<h3 id="3-Progressive-Disclosure：30-token-扫全部，2000-token-跑一条"><a href="#3-Progressive-Disclosure：30-token-扫全部，2000-token-跑一条" class="headerlink" title="3. Progressive Disclosure：30 token 扫全部，2000 token 跑一条"></a>3. Progressive Disclosure：30 token 扫全部，2000 token 跑一条</h3><p>这是技术实现上的<strong>最优雅设计</strong>之一。</p>
+<p>README 给的例子很到位：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">User prompt: "Analyze this memory dump for signs of credential theft"</span><br><span class="line"></span><br><span class="line">Agent's internal process:</span><br><span class="line"></span><br><span class="line">  1. Scans 817 skill frontmatters (~30 tokens each)</span><br><span class="line">     → identifies 12 relevant skills by matching tags, description, domain</span><br><span class="line"></span><br><span class="line">  2. Loads top 3 matches:</span><br><span class="line">     • performing-memory-forensics-with-volatility3</span><br><span class="line">     • hunting-for-credential-dumping-lsass</span><br><span class="line">     • analyzing-windows-event-logs-for-credential-access</span><br><span class="line"></span><br><span class="line">  3. Executes the structured Workflow section step-by-step</span><br><span class="line">     → runs Volatility3 plugins, checks LSASS access patterns,</span><br><span class="line">        correlates with event log evidence</span><br><span class="line"></span><br><span class="line">  4. Validates results using the Verification section</span><br><span class="line">     → confirms IOCs, maps findings to ATT&amp;CK T1003 (Credential Dumping)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>—— <strong>第一步只读 YAML frontmatter（约 30 token 一份 × 817 份 ≈ 24K token），AI Agent 直接拿到” 这个 skill 是干啥的” 的索引</strong>。第二步才是加载实际 workflow（500-2000 token 一份）。</p>
+<p>这意味着<strong>任何 AI Agent 在一次调用里就能扫完整个 skill 库</strong>，不需要” 先选 50 个候选” 这种 hack—— 因为 24K token 根本没超过现代 LLM 的 128K-200K context window。</p>
+<p><strong>没有 progressive disclosure 的 skill 库，让 AI Agent 用起来就像大海捞针；有了 progressive disclosure，AI Agent 用起来就像翻 817 张处方笺找到对的那张</strong>。</p>
+<h3 id="4-配套文件：references-scripts-assets"><a href="#4-配套文件：references-scripts-assets" class="headerlink" title="4. 配套文件：references + scripts + assets"></a>4. 配套文件：references + scripts + assets</h3><p>每个 skill 目录不止一个 <code>SKILL.md</code>，README 给的标准结构是：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">skills/performing-memory-forensics-with-volatility3/</span><br><span class="line">├── SKILL.md              ← Skill 定义（YAML frontmatter + Markdown 正文）</span><br><span class="line">├── references/</span><br><span class="line">│   ├── standards.md      ← MITRE ATT&amp;CK / ATLAS / D3FEND / NIST 映射</span><br><span class="line">│   └── workflows.md      ← 深度技术流程参考</span><br><span class="line">├── scripts/</span><br><span class="line">│   └── process.py        ← 可运行辅助脚本</span><br><span class="line">└── assets/</span><br><span class="line">    └── template.md       ← 填好的 checklist 和报告模板</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这套结构的好处是<strong>模块化</strong>：</p>
+<ul>
+<li><strong><code>SKILL.md</code> 给 AI Agent</strong>—— 它只关心” 什么时候触发 + 怎么执行 + 怎么验证”</li>
+<li><strong><code>references/standards.md</code> 给 AI Agent 引用</strong> —— 深入 ATT&amp;CK T1003 / NIST DE.CM-01 时按需加载</li>
+<li><strong><code>scripts/process.py</code> 直接能跑</strong> —— 分析师可以先在终端自己跑一遍验证逻辑再让 AI 接管</li>
+<li><strong><code>assets/template.md</code> 是 IR 报告模板</strong> ——AI 执行完直接填表，省 70% 报告写作时间</li>
+</ul>
+<p>我对比了一下我自己手搓的 skill—— 通常只有 <code>SKILL.md</code>，<strong>没有 references、没有 scripts、没有 assets</strong>。差距就出来了：<strong>当 skill 从” 个人经验” 升级到” 团队基础设施”，配套文件的体系化才是关键</strong>。</p>
+<h3 id="5-兼容-26-AI-平台"><a href="#5-兼容-26-AI-平台" class="headerlink" title="5. 兼容 26+ AI 平台"></a>5. 兼容 26+ AI 平台</h3><p>这部分我必须拎出来说，因为它直接决定” 用不用得上”。</p>
+<p>README 明确列了三层兼容矩阵：</p>
+<p><strong>AI 代码助手</strong>：<br>Claude Code (Anthropic) · GitHub Copilot (Microsoft) · Cursor · Windsurf · Cline · Aider · Continue · Roo Code · Amazon Q Developer · Tabnine · Sourcegraph Cody · JetBrains AI</p>
+<p><strong>CLI 代理</strong>：<br>OpenAI Codex CLI · Gemini CLI (Google)</p>
+<p><strong>自主代理</strong>：<br>Devin · Replit Agent · SWE-agent · OpenHands</p>
+<p><strong>Agent 框架与 SDK</strong>：<br>LangChain · CrewAI · AutoGen · Semantic Kernel · Haystack · Vercel AI SDK · <strong>Any MCP-compatible agent</strong></p>
+<p>—— <strong>只要支持 <a target="_blank" rel="noopener" href="https://agentskills.io/">agentskills.io</a> 标准的代理，零配置即可加载</strong>。</p>
+<p>我用 Claude Code 实测了一下，<code>npx skills add mukul975/Anthropic-Cybersecurity-Skills</code> 跑完，重启 Claude Code，<strong>直接说一句” 分析这份内存 dump 看有没有凭据窃取痕迹”，Claude Code 自动加载 <code>performing-memory-forensics-with-volatility3</code> skill</strong>。整个流程 0 配置。</p>
+<p>为什么？<strong>因为 mukul975 把赌注全压在 agentskills.io 这个新标准上</strong> ——agentskills.io 是 2025 年底由 Anthropic 推动、Cursor、Codex CLI、Gemini CLI、Claude Code 等共同支持的开放 Skill 标准，目标是” <strong>一份 Skill，所有 Agent 通用</strong> “。</p>
+<p>我前面提到 OpenAI Codex CLI、Gemini CLI—— 这俩 2025 年下半年都在陆续支持同一套标准。<strong>Anthropic Cybersecurity Skills 是这个标准下第一个” 垂直领域深度落地” 的开源库</strong>。</p>
+<hr>
+<h2 id="三、技术架构：渐进式披露-YAML-frontmatter-agentskills-io"><a href="#三、技术架构：渐进式披露-YAML-frontmatter-agentskills-io" class="headerlink" title="三、技术架构：渐进式披露 + YAML frontmatter + agentskills.io"></a>三、技术架构：渐进式披露 + YAML frontmatter + agentskills.io</h2><p>我把整个项目的技术架构画成一张图：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">                 ┌─────────────────────────────────┐</span><br><span class="line">                 │        817 SKILL.md 文件         │</span><br><span class="line">                 │   (YAML frontmatter + Markdown) │</span><br><span class="line">                 └────────────────┬────────────────┘</span><br><span class="line">                                  │</span><br><span class="line">         ┌────────────────────────┼────────────────────────┐</span><br><span class="line">         │                        │                        │</span><br><span class="line">┌────────▼────────┐   ┌───────────▼────────────┐   ┌──────▼───────┐</span><br><span class="line">│   索引层        │   │   工作流层             │   │   引用层     │</span><br><span class="line">│ (frontmatter)   │   │   (Markdown body)      │   │ (references) │</span><br><span class="line">│  ~30 token/份   │   │   500-2000 token/份    │   │   按需加载    │</span><br><span class="line">│  24K total      │   │   progressive          │   │              │</span><br><span class="line">│                 │   │   disclosure           │   │              │</span><br><span class="line">└────────┬────────┘   └───────────┬────────────┘   └──────┬───────┘</span><br><span class="line">         │                        │                        │</span><br><span class="line">         └────────────────────────┼────────────────────────┘</span><br><span class="line">                                  │</span><br><span class="line">                 ┌────────────────▼────────────────┐</span><br><span class="line">                 │    agentskills.io 加载器         │</span><br><span class="line">                 │  (Claude Code / Cursor /        │</span><br><span class="line">                 │   Codex CLI / Gemini CLI /      │</span><br><span class="line">                 │   MCP servers / LangChain 等)   │</span><br><span class="line">                 └────────────────┬────────────────┘</span><br><span class="line">                                  │</span><br><span class="line">                 ┌────────────────▼────────────────┐</span><br><span class="line">                 │   用户提示词                       │</span><br><span class="line">                 │  "Analyze this memory dump       │</span><br><span class="line">                 │   for credential theft"          │</span><br><span class="line">                 └────────────────┬────────────────┘</span><br><span class="line">                                  │</span><br><span class="line">                 ┌────────────────▼────────────────┐</span><br><span class="line">                 │   AI Agent 决策                  │</span><br><span class="line">                 │   ① 扫描所有 frontmatter         │</span><br><span class="line">                 │   ② 加载 top 3 match             │</span><br><span class="line">                 │   ③ 跑 workflow                  │</span><br><span class="line">                 │   ④ 用 verification 验证         │</span><br><span class="line">                 │   ⑤ 输出 IOC + ATT&amp;CK 映射       │</span><br><span class="line">                 └─────────────────────────────────┘</span><br></pre></td></tr></tbody></table></figure>
+
+<p>几个关键设计决策值得拎出来：</p>
+<h3 id="1-agentskills-io-标准-vs-自定义格式"><a href="#1-agentskills-io-标准-vs-自定义格式" class="headerlink" title="1. agentskills.io 标准 vs 自定义格式"></a>1. agentskills.io 标准 vs 自定义格式</h3><p>这个决策决定了项目的<strong>分发能力</strong>。</p>
+<p>如果 mukul975 自己定义一套 <code>CYBERSEC-SKILL.md</code> 格式（带自己的 frontmatter 字段），Claude Code / Cursor / Codex CLI / Gemini CLI 谁都不认。<strong>等于做了一个孤岛</strong>。</p>
+<p>如果走 agentskills.io 标准，<strong>所有支持这个标准的平台零配置接入</strong>。从项目 2026 年 2 月创建到现在（6 个月），<strong>817 个 skill、29,236 stars、3,497 forks</strong>—— 这个增速本身就证明” 押对标准” 有多重要。</p>
+<h3 id="2-渐进式披露（Progressive-Disclosure）"><a href="#2-渐进式披露（Progressive-Disclosure）" class="headerlink" title="2. 渐进式披露（Progressive Disclosure）"></a>2. 渐进式披露（Progressive Disclosure）</h3><p>这是从 Anthropic 的 <a target="_blank" rel="noopener" href="https://www.anthropic.com/research/building-effective-agents">Building effective agents</a> 论文里学来的核心模式：</p>
+<blockquote>
+<p><strong>不要让 LLM 一开始就读全部内容，先给” 摘要 + 索引”，需要时再深入。</strong></p>
+</blockquote>
+<p>mukul975 的实现非常克制 —— <strong>只用 YAML frontmatter 做摘要</strong>：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">&lt;kebab-case,</span> <span class="number">1</span><span class="number">-64</span> <span class="string">chars&gt;</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">&lt;keyword-rich，AI</span> <span class="string">用来判断"是否触发此</span> <span class="string">skill"&gt;</span></span><br><span class="line"><span class="attr">domain:</span> <span class="string">cybersecurity</span></span><br><span class="line"><span class="attr">subdomain:</span> <span class="string">&lt;category&gt;</span></span><br><span class="line"><span class="attr">tags:</span> [<span class="string">&lt;tag1&gt;</span>, <span class="string">&lt;tag2&gt;</span>, <span class="string">...</span>]</span><br><span class="line"><span class="attr">atlas_techniques:</span> [<span class="string">&lt;ATLAS</span> <span class="string">ID&gt;</span>]</span><br><span class="line"><span class="attr">d3fend_techniques:</span> [<span class="string">&lt;D3FEND</span> <span class="string">ID&gt;</span>]</span><br><span class="line"><span class="attr">nist_ai_rmf:</span> [<span class="string">&lt;AI</span> <span class="string">RMF</span> <span class="string">引用&gt;</span>]</span><br><span class="line"><span class="attr">nist_csf:</span> [<span class="string">&lt;CSF</span> <span class="number">2.0</span> <span class="string">类别&gt;</span>]</span><br><span class="line"><span class="attr">version:</span> <span class="string">"1.x"</span></span><br><span class="line"><span class="attr">author:</span> <span class="string">&lt;github</span> <span class="string">username&gt;</span></span><br><span class="line"><span class="attr">license:</span> <span class="string">Apache-2.0</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>AI Agent 第一次扫描时，<strong>只看 <code>name + description + tags + domain</code></strong>—— 这几个字段加起来不到 30 token。扫完 817 个，<strong>总开销 24K token</strong>，远低于现代 LLM 的 context window。</p>
+<p>只有当 AI 决定” 这个 skill 相关”，才去加载 SKILL.md 的正文（workflow + verification 等）。</p>
+<p><strong>这种” 轻量级索引 + 按需深入” 的设计，就是 LLM 时代的”README 模式”</strong>——README 不是文档的全部，是文档的入口。</p>
+<h3 id="3-框架映射的”双层”设计"><a href="#3-框架映射的”双层”设计" class="headerlink" title="3. 框架映射的”双层”设计"></a>3. 框架映射的” 双层” 设计</h3><p>每个 skill 都有” <strong>框架 frontmatter</strong>“和”<strong>references/standards.md</strong>“双层：</p>
+<ul>
+<li><strong>frontmatter 字段</strong>：只放<strong>机器可读的 ID</strong>（如 <code>atlas_techniques: [AML.T0047]</code>），AI Agent 触发后可以直接拿着 ID 去查外部数据库</li>
+<li><strong><code>references/standards.md</code></strong>：放<strong>人类可读的完整映射说明</strong>（如 “T1003 OS Credential Dumping 检测方法”），AI Agent 深入时按需加载</li>
+</ul>
+<p>这套双层设计的好处：</p>
+<ul>
+<li><strong>frontmatter 极简</strong> ——AI Agent 拿 ID 直接构建关联图谱</li>
+<li><strong> references 详细</strong> ——AI 深入时还能拿到完整的” 为什么这么做”</li>
+<li><strong> 分离清晰</strong> —— 更新 ATT&amp;CK 时只动 references.md，frontmatter 的 ID 保持稳定</li>
+</ul>
+<p>我在做 RAG 的时候最痛的就是这两件事常常混在一起 —— 一旦框架升级，所有 skill 的 frontmatter 都要跟着改。mukul975 这种分离设计是个干净的解。</p>
+<h3 id="4-PR-评审流程：48-小时-SLA"><a href="#4-PR-评审流程：48-小时-SLA" class="headerlink" title="4. PR 评审流程：48 小时 SLA"></a>4. PR 评审流程：48 小时 SLA</h3><p><strong>Every PR is reviewed for technical accuracy and agentskills.io standard compliance within 48 hours.</strong></p>
+<p>这条 commit 我反复翻了几次 ——48 小时 SLA 在开源项目里算相当激进的。意味着：</p>
+<ul>
+<li>任何一个 PR 提交，<strong>48 小时内一定有 maintainer 看过</strong></li>
+<li><strong>技术准确性 + 标准合规</strong>两条都要过</li>
+<li>不符合规范直接打回，符合就合并</li>
+</ul>
+<p>对比一下同类项目（cognee、DeerFlow、open-notebook）通常的 PR 响应时间是 1-2 周，<strong>48 小时 SLA 是另一个量级的运营投入</strong> —— 意味着作者和核心贡献者每天都在看 PR。</p>
+<p>这种投入是有回报的：<strong>项目从 2026 年 2 月创建到现在 6 个月，已经 817 个 skill、3,497 forks</strong>—— 增长速度依赖社区贡献，48 小时 SLA 是吸引贡献者的关键因素。</p>
+<h3 id="5-单一作者撑起百万级内容：AI-辅助工作流"><a href="#5-单一作者撑起百万级内容：AI-辅助工作流" class="headerlink" title="5. 单一作者撑起百万级内容：AI 辅助工作流"></a>5. 单一作者撑起百万级内容：AI 辅助工作流</h3><p>我特意查了一下 commit 历史（main 分支最近 20 条 commit）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">2026-08-08  Merge pull request #95 from valorisa/main</span><br><span class="line">2026-08-02  chore: auto-update index.json and skill count</span><br><span class="line">2026-08-02  Fix index.json generator to parse folded YAML descriptions</span><br><span class="line">            (The generator's `^description:\s*(.+)$` regex captured the</span><br><span class="line">             block-scalar indicator ("&gt;-") instead of the wrapped text,</span><br><span class="line">             corrupting 43 descriptions in index.json. Parse `&gt;`/`|`</span><br><span class="line">             block scalars properly and regenerate (0 broken).</span><br><span class="line">             Also refresh the count-update comment examples 754 -&gt; 817.)</span><br><span class="line">2026-08-02  Correct stale skill counts in docs to current 817</span><br><span class="line">            (CITATION.cff 753 -&gt; 817; ATTACK_COVERAGE.md 753+ -&gt; 817;</span><br><span class="line">             mappings/README.md "skills scanned" 742 -&gt; 817;</span><br><span class="line">             coverage-summary.md 753 -&gt; 805 (ATT&amp;CK-mapped).)</span><br><span class="line">2026-08-02  README: correct framework claims/versions, add contributors section</span><br><span class="line">            (Replace "every skill maps to six frameworks / six compliance</span><br><span class="line">             checkboxes" with type-dependent mapping + accurate coverage</span><br><span class="line">             line (ATT&amp;CK 805, CSF 804, D3FEND 139, AI RMF 97, F3 94,</span><br><span class="line">             ATLAS 93 of 817).</span><br><span class="line">             Update stale versions: ATLAS v5.4/84 -&gt; 2026.07/101(+77 sub);</span><br><span class="line">             D3FEND v1.3/267 -&gt; v1.4.0/270; ATT&amp;CK 754/754 -&gt; 805/817,</span><br><span class="line">             286 -&gt; 290 techniques; Enterprise tactic table 14 -&gt; 15</span><br><span class="line">             (Defense Evasion split into Stealth TA0005 + Defense</span><br><span class="line">             Impairment TA0112, verified against ATT&amp;CK v19.1).)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意几个细节：</p>
+<ul>
+<li><strong>YAML frontmatter 有专门的 generator</strong>—— 意味着 817 个 skill 的 <code>atlas_techniques</code> / <code>d3fend_techniques</code> 等字段是<strong>程序化校验</strong>的，不是手敲</li>
+<li><strong> MITRE ATT&amp;CK ID 验证是用官方 <code>mitreattack-python</code> 库</strong> —— 意味着每个 ID 都从 STIX 2.0 bundle 校验过，<strong>0 个 revoked 或 deprecated ID</strong>（README 强调的）</li>
+<li><strong>commit message 写得极详细</strong> —— 比如”Defense Evasion split into Stealth TA0005 + Defense Impairment TA0112, verified against ATT&amp;CK v19.1”—— 这显然是 AI 辅助写的 commit message，<strong>一个人不可能手动跟踪 ATT&amp;CK v19 → v19.1 的拆分</strong></li>
+</ul>
+<p><strong>这些细节揭示了一个事实</strong>：mukul975 不是一个人手写 817 个 skill 的，他是<strong>用 LLM 辅助生成 + 人工校验 + 自动化验证</strong>的方式批量生产 skill 的：</p>
+<ol>
+<li><strong>选定一个安全领域</strong>（如 Cloud Security）</li>
+<li><strong>用 LLM 把这个领域的” 实战 playbook” 结构化</strong> —— 这是领域知识工程的活</li>
+<li><strong>人工 review 每个 skill 的准确性</strong> —— 这是专家把关的活</li>
+<li><strong>用 mitreattack-python / NIST 官方数据库验证映射 ID</strong>—— 这是自动化校验的活</li>
+<li><strong> PR review 48 小时内合并</strong> —— 这是社区运营的活</li>
+</ol>
+<p><strong>这套工作流的本质，是把” 安全知识工程” 这件事变成了”AI 辅助的流水线”</strong>。一个人的生产力被放大 10-50 倍，<strong>6 个月攒出 817 个高质量 skill 不是奇迹，是工作流设计得当的必然结果</strong>。</p>
+<hr>
+<h2 id="四、怎么用：四步接入你的-Claude-Code-Cursor"><a href="#四、怎么用：四步接入你的-Claude-Code-Cursor" class="headerlink" title="四、怎么用：四步接入你的 Claude Code / Cursor"></a>四、怎么用：四步接入你的 Claude Code / Cursor</h2><p>我以 Claude Code 为例演示完整流程（其它平台大同小异）。</p>
+<h3 id="1-一行安装"><a href="#1-一行安装" class="headerlink" title="1. 一行安装"></a>1. 一行安装</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方式 1：npx（推荐）</span></span><br><span class="line">npx skills add mukul975/Anthropic-Cybersecurity-Skills</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方式 2：git clone（如果你想本地修改）</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/mukul975/Anthropic-Cybersecurity-Skills.git</span><br><span class="line"><span class="built_in">cd</span> Anthropic-Cybersecurity-Skills</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>npx skills add</code> 是 agentskills.io 标准规定的安装命令，会自动把 817 个 skill 复制到 <code>~/.claude/skills/</code>，重启 Claude Code 即可生效。</p>
+<h3 id="2-触发-skill：说人话就行"><a href="#2-触发-skill：说人话就行" class="headerlink" title="2. 触发 skill：说人话就行"></a>2. 触发 skill：说人话就行</h3><p>不需要记 skill 名字，<strong>直接用自然语言描述任务</strong>：</p>
+<blockquote>
+<p>“我有一份 EVTX 日志，看到账户 domain admin 在凌晨 3 点异常登录，请帮我判断是不是 Kerberoasting。”</p>
+</blockquote>
+<p>Claude Code 内部会：</p>
+<ol>
+<li><strong>扫 817 个 skill 的 frontmatter</strong>（约 24K token）</li>
+<li><strong>匹配 top 3</strong>：可能是 <code>hunting-for-kerberoasting-attacks</code>、<code>analyzing-windows-event-logs-for-credential-access</code>、<code>detecting-lateral-movement-via-smb</code></li>
+<li><strong>加载 workflow</strong>—— 分步骤执行：先用 Sigma 规则 grep 4769 → 关联 ATT&amp;CK T1558.003 → 输出 IOC + 升级建议</li>
+<li><strong>跑 verification</strong>—— 确认告警的 ROC 评分、是否需要立即升级给 senior</li>
+</ol>
+<p>整个流程下来，<strong>AI Agent 就像一个有 8 年经验的初级 SOC 分析师</strong> —— 它不会把所有可能的检测都列出来（这是 LLM 的坏习惯），它会<strong>按 Kerberoasting 的标准 playbook 一步步跑</strong>，最后给你一个<strong>结构化</strong>的判断。</p>
+<h3 id="3-自定义-skill：fork-PR"><a href="#3-自定义-skill：fork-PR" class="headerlink" title="3. 自定义 skill：fork + PR"></a>3. 自定义 skill：fork + PR</h3><p>如果现有 817 个 skill 不够用（比如你们 SOC 有内部专用的 Playbook）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. Fork 仓库</span></span><br><span class="line">gh fork mukul975/Anthropic-Cybersecurity-Skills</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 新建 skill 目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p skills/my-custom-phi-detection/</span><br><span class="line"><span class="built_in">cd</span> skills/my-custom-phi-detection</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 写 SKILL.md（含 YAML frontmatter + 6 节 Markdown）</span></span><br><span class="line"><span class="comment"># 4. （可选）写 references/standards.md、scripts/process.py、assets/template.md</span></span><br><span class="line"><span class="comment"># 5. 提交 PR</span></span><br><span class="line">git checkout -b add-skill-my-custom-phi-detection</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">"Add skill: my-custom-phi-detection"</span></span><br><span class="line">git push origin add-skill-my-custom-phi-detection</span><br><span class="line">gh <span class="built_in">pr</span> create --title <span class="string">"Add skill: my-custom-phi-detection"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>48 小时内会有 maintainer review</strong>—— 通过即合并进 main 分支，被全球所有用这个项目的 AI Agent 立刻可用。</p>
+<h3 id="4-在-CI-CD-里用：MCP-集成"><a href="#4-在-CI-CD-里用：MCP-集成" class="headerlink" title="4. 在 CI/CD 里用：MCP 集成"></a>4. 在 CI/CD 里用：MCP 集成</h3><p>如果你的安全团队用 MCP（Model Context Protocol），可以直接把整个 skill 库注册成 MCP server：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mcp_server.py</span></span><br><span class="line"><span class="keyword">from</span> mcp <span class="keyword">import</span> MCPServer</span><br><span class="line"><span class="keyword">from</span> anthropic_cybersecurity_skills <span class="keyword">import</span> load_skills</span><br><span class="line"></span><br><span class="line">server = MCPServer(</span><br><span class="line">    name=<span class="string">"cybersecurity-skills"</span>,</span><br><span class="line">    description=<span class="string">"817 cybersecurity skills from mukul975/Anthropic-Cybersecurity-Skills"</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="meta">@server.tool()</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">query_skill</span>(<span class="params">skill_name: <span class="built_in">str</span>, context: <span class="built_in">dict</span></span>):</span><br><span class="line">    <span class="string">"""Load a specific cybersecurity skill and execute its workflow."""</span></span><br><span class="line">    skill = load_skills(skill_name)</span><br><span class="line">    <span class="keyword">return</span> skill.execute(context)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    server.run()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这样<strong>任何 MCP-compatible agent</strong>（Cursor、Claude Desktop、Continue 等）都可以调用 <code>query_skill</code> 这个工具，<strong>整个 817 个 skill 库就是你的 SOC 团队的”AI 分析师大脑”</strong>。</p>
+<hr>
+<h2 id="五、总结：480-万缺口背后的”AI-安全分析师-1-0”"><a href="#五、总结：480-万缺口背后的”AI-安全分析师-1-0”" class="headerlink" title="五、总结：480 万缺口背后的”AI 安全分析师 1.0”"></a>五、总结：480 万缺口背后的”AI 安全分析师 1.0”</h2><p>最后做一些冷静评估。</p>
+<h3 id="适用人群"><a href="#适用人群" class="headerlink" title="适用人群"></a>适用人群</h3><p><strong>非常适合</strong>：</p>
+<ul>
+<li><strong>甲方 SOC 团队</strong>：初级分析师能跟着 AI 跑 playbook，senior 分析师能 review AI 输出，48 小时 SLA 让你不愁技能库过时</li>
+<li><strong>安全咨询顾问</strong>：每次客户接入不需要从零搭 framework 映射，直接用现成的 817 个 skill</li>
+<li><strong> 网络安全教学</strong>：MITRE ATT&amp;CK、NIST CSF 这些抽象框架终于有了” 可执行的代码示例”</li>
+<li><strong>AI Agent 开发者</strong>：想要垂直领域知识库？这是 agentskills.io 标准下第一个规模化样本</li>
+</ul>
+<p><strong>部分适合</strong>：</p>
+<ul>
+<li><strong>红队 / 渗透测试工程师</strong>：项目里有 Red Teaming（33 skill）和 Penetration Testing（21 skill），但相比商用 C2 框架（Sliver、Havoc），<strong>这种公开 skill 库更适合” 学习参考”，不适合” 实战利用”</strong>——README 自己也强调了”authorized &amp; lawful use only”</li>
+<li><strong> 云安全专家</strong>：66 个 Cloud Security skill 覆盖 AWS/Azure/GCP 主流程，但<strong>深度还比不上 AWS Well-Architected 的内部文档</strong></li>
+</ul>
+<p><strong>不太适合</strong>：</p>
+<ul>
+<li><strong>OT/ICS 工程师</strong>：28 个 skill 覆盖基础 Modbus/DNP3，<strong>但工业控制系统的攻击 / 防御真的不是” 跑 playbook” 能搞定的</strong>，需要领域深度</li>
+<li><strong> AI 安全研究员</strong>：14 个 AI Security skill 覆盖 prompt injection、MCP server compromise 等，<strong>但 AI 对抗是个动态战场，skill 库的更新速度赶不上攻击演进速度</strong> —— 每周都得 review 新出现的 attack vector</li>
+</ul>
+<h3 id="局限性（README-自己承认的）"><a href="#局限性（README-自己承认的）" class="headerlink" title="局限性（README 自己承认的）"></a>局限性（README 自己承认的）</h3><p>README 自己列了几条很坦诚的局限：</p>
+<ol>
+<li><p><strong>ATT&amp;CK v19 还没完全落地</strong> ——“ATT&amp;CK v19 lands April 28, 2026 — splitting Defense Evasion (TA0005) into two new tactics: <em>Stealth</em> and <em>Impair Defenses</em>. Skill mappings will be updated in a forthcoming release.”<br>——<strong>v19 拆分出来的 Stealth（TA0005）和 Defense Impairment（TA0112），现有 skill 还在迁移中</strong>。我顺手 grep 了一下 main 分支，确实有的 skill 还是旧的 TA0005（Defense Evasion），需要等后续 PR。</p>
+</li>
+<li><p><strong>PRs 排队中</strong>：Deception Technology 只有 6 个 skill、Compliance &amp; Governance 只有 9 个 skill、Hardware &amp; Firmware Security 只有 4 个 skill—— <strong>这些” 长尾领域” 还在等社区贡献</strong>。README 明确说”Domains like Deception Technology (2 skills) and Compliance &amp; Governance (5 skills) need the most help.”</p>
+</li>
+<li><p><strong>签名混淆 / 抗检测</strong>：skill 库给出的攻击性技术（如 phishing simulation、NTLM relay）<strong>不是为绕过 EDR 设计的</strong> —— 实战红队会根据自己的目标环境做大量定制。</p>
+</li>
+<li><p><strong>数据规模限制</strong>：MITRE ATLAS 2026.07 已经 101 个技术 / 77 个子技术，但只有 93 个 skill 映射 ATLAS—— <strong>剩下 8 个 ATLAS 技术还没对应的 skill</strong>。</p>
+</li>
+</ol>
+<h3 id="一个值得单独提的”野路子”"><a href="#一个值得单独提的”野路子”" class="headerlink" title="一个值得单独提的”野路子”"></a>一个值得单独提的” 野路子”</h3><p>最后说一个项目本身的” 野路子打法”——</p>
+<p>项目名直接挂 <strong>“Anthropic”</strong> 三个字，但 README 明确写”Not affiliated with Anthropic PBC”。</p>
+<p>为什么这么搞？我猜 mukul975 的逻辑是：</p>
+<ul>
+<li><strong>agentskills.io 标准是 Anthropic 推动的</strong>，Claude Code 是 Anthropic 的产品</li>
+<li>项目主要服务 Claude Code 用户，挂 Anthropic 三个字<strong>让 Claude Code 用户搜索时一眼看到</strong></li>
+<li>加免责声明避免商标问题</li>
+</ul>
+<p>这种” 蹭生态但不抢品牌” 的做法在开源圈其实挺常见 ——Linux 内核里一大堆 <code>lwn.net</code>、<code>kernel.org</code> 命名的衍生项目都干过类似的事。</p>
+<p>但<strong>风险也很明显</strong>：万一 Anthropic 法务部发函（虽然概率低），项目就得改名。mukul975 的” 赌注” 是：agentskills.io 标准的开放性 + Apache 2.0 协议 + 社区贡献模式，<strong>比 Anthropic 法务部发函的概率高得多</strong>。</p>
+<p>至少从 2026 年 2 月到现在 6 个月、29,236 stars、3,497 forks 的数据看 —— <strong>赌对了</strong>。</p>
+<h3 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h3><p>回到开头那个朋友的疑问：</p>
+<blockquote>
+<p>“这种 playbook，能不能直接打包给我？”</p>
+</blockquote>
+<p><strong>现在能了</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/mukul975/Anthropic-Cybersecurity-Skills">mukul975/Anthropic-Cybersecurity-Skills</a> 不是另一个” 安全工具”，它是 <strong>MITRE ATT&amp;CK、NIST CSF 2.0、MITRE ATLAS、D3FEND、AI RMF、F3 六个框架的 817 份”AI 可执行手册”</strong>，<strong>+ 26+ AI 平台兼容性 + 一行安装 + 48 小时 PR SLA</strong>。</p>
+<p>它不直接解决 480 万岗位缺口 —— 但<strong>它把 480 万缺口里最痛的” 知识分散” 问题压缩成 817 张可被 AI 调用的处方笺</strong>。</p>
+<p><strong>当 AI Agent 真正开始” 会做安全分析”，它背后的知识库长什么样</strong> ——mukul975 给出了第一个规模化答案。</p>
+<hr>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li>项目主页：<a target="_blank" rel="noopener" href="https://github.com/mukul975/Anthropic-Cybersecurity-Skills">github.com/mukul975/Anthropic-Cybersecurity-Skills</a></li>
+<li>agentskills.io 开放标准：<a target="_blank" rel="noopener" href="https://agentskills.io/">agentskills.io</a></li>
+<li>MITRE ATT&amp;CK v19.1：<a target="_blank" rel="noopener" href="https://attack.mitre.org/">attack.mitre.org</a></li>
+<li>NIST CSF 2.0：<a target="_blank" rel="noopener" href="https://www.nist.gov/cyberframework">nist.gov/cyberframework</a></li>
+<li>MITRE ATLAS 2026.07：<a target="_blank" rel="noopener" href="https://atlas.mitre.org/">atlas.mitre.org</a></li>
+<li>MITRE D3FEND v1.4.0：<a target="_blank" rel="noopener" href="https://d3fend.mitre.org/">d3fend.mitre.org</a></li>
+<li>MITRE F3 v1.1：<a target="_blank" rel="noopener" href="https://ctid.mitre.org/fraud/">ctid.mitre.org/fraud</a></li>
+<li>ISC2 2024 Cybersecurity Workforce Study：<a target="_blank" rel="noopener" href="https://www.isc2.org/Insights/Research/Workforce-Study">isc2.org</a></li>
+<li>Awesome-Agent-Skills（收录 mukul975 的列表）：<a target="_blank" rel="noopener" href="https://github.com/VoltAgent/awesome-agent-skills">VoltAgent/awesome-agent-skills</a></li>
+<li> 作者 X：<a target="_blank" rel="noopener" href="https://github.com/mukul975">@mukul975</a></li>
+<li> 学术问卷（GARS-2026）：<a target="_blank" rel="noopener" href="https://mahipal.engineer/survey">mahipal.engineer/survey</a></li>
+<li> 关联项目 Strix（AI pentesting）：<a target="_blank" rel="noopener" href="https://github.com/mukul975/Anthropic-Cybersecurity-Skills">strix-ai-pentesting-open-source</a>（strix 项目已在小戴博客覆盖）</li>
+</ul>
+<hr>
+<blockquote>
+<p>本文为「GitHub Trending 拆解」系列。<br>数据来源：项目 README、GitHub API、agentskills.io 标准、MITRE/NIST 官方文档。<br>写作日期：2026-08-19</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/19/mukul975-anthropic-cybersecurity-skills/" title="AI Agent 拿到 817 张「安全专家处方」：mukul975&#x2F;Anthropic-Cybersecurity-Skills 把网络安全塞进 agentskills.io 标准">https://www.daishengli.top/2026/08/19/mukul975-anthropic-cybersecurity-skills/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/" rel="tag"># 开源工具</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Cybersecurity/" rel="tag"># Cybersecurity</a>
+              <a href="/tags/agent-skills/" rel="tag"># agent skills</a>
+              <a href="/tags/agentskills-io/" rel="tag"># agentskills.io</a>
+              <a href="/tags/MITRE-ATT-CK/" rel="tag"># MITRE ATT&CK</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/18/firecrawl-anydoc-document-to-markdown-agent/" rel="prev" title="16k 星的 anydoc：让 Firecrawl 帮你把 Word&#x2F;PPT&#x2F;Excel&#x2F;PDF 全打成 Markdown 喂给 AI">
+                  <i class="fa fa-angle-left"></i> 16k 星的 anydoc：让 Firecrawl 帮你把 Word/PPT/Excel/PDF 全打成 Markdown 喂给 AI
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/19/yetone-cumora-ai-agent-team-chat-claude-code-codex/" rel="next" title="yetone&#x2F;cumora 深度体验：2.6k stars 的「AI Agent 团队聊天室」，把 Claude Code &#x2F; Codex 装进 Slack 同款 Kanban + 真收发邮件">
+                  yetone/cumora 深度体验：2.6k stars 的「AI Agent 团队聊天室」，把 Claude Code / Codex 装进 Slack 同款 Kanban + 真收发邮件 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

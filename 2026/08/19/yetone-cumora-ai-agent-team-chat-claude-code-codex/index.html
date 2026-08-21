@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="2669 stars · yetone 新作 Cumora：AI Agent 作为一等公民的跨平台团队聊天工具，原生集成 Claude Code &#x2F; Codex，支持真收发邮件与 Kanban&#x2F;日历协作。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="yetone&#x2F;cumora 深度体验：2.6k stars 的「AI Agent 团队聊天室」，把 Claude Code &#x2F; Codex 装进 Slack 同款 Kanban + 真收发邮件">
+<meta property="og:url" content="https://www.daishengli.top/2026/08/19/yetone-cumora-ai-agent-team-chat-claude-code-codex/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="2669 stars · yetone 新作 Cumora：AI Agent 作为一等公民的跨平台团队聊天工具，原生集成 Claude Code &#x2F; Codex，支持真收发邮件与 Kanban&#x2F;日历协作。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-19T17:39:00.000Z">
+<meta property="article:modified_time" content="2026-08-21T02:12:20.163Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="团队协作">
+<meta property="article:tag" content="Cumora">
+<meta property="article:tag" content="yetone">
+<meta property="article:tag" content="BYOA">
+<meta property="article:tag" content="Codex CLI">
+<meta property="article:tag" content="Electron">
+<meta property="article:tag" content="Slack 替代">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/08/19/yetone-cumora-ai-agent-team-chat-claude-code-codex/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/08/19/yetone-cumora-ai-agent-team-chat-claude-code-codex/","path":"2026/08/19/yetone-cumora-ai-agent-team-chat-claude-code-codex/","title":"yetone/cumora 深度体验：2.6k stars 的「AI Agent 团队聊天室」，把 Claude Code / Codex 装进 Slack 同款 Kanban + 真收发邮件"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>yetone/cumora 深度体验：2.6k stars 的「AI Agent 团队聊天室」，把 Claude Code / Codex 装进 Slack 同款 Kanban + 真收发邮件 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">311</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">105</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E4%BB%AC%E9%9C%80%E8%A6%81%E3%80%8CAgent-%E4%B8%80%E7%AD%89%E5%85%AC%E6%B0%91%E3%80%8D%E7%9A%84%E8%81%8A%E5%A4%A9%E5%B7%A5%E5%85%B7"><span class="nav-number">1.</span> <span class="nav-text">一、为什么我们需要「Agent 一等公民」的聊天工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%BD%93%E4%B8%8B%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9AAgent-%E8%BF%98%E5%9C%A8%E3%80%8C%E5%AE%A2%E5%BA%A7%E3%80%8D%E7%8A%B6%E6%80%81"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 当下的问题：Agent 还在「客座」状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-yetone-%E7%9A%84%E5%88%87%E5%85%A5%E7%82%B9%EF%BC%9A%E4%BB%96%E4%B8%8D%E6%83%B3%E5%81%9A-Slack-%E6%9B%BF%E4%BB%A3%E5%93%81"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 yetone 的切入点：他不想做 Slack 替代品</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E6%AC%A1%E9%80%89%E5%AE%83%E5%86%99"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 我为什么这次选它写</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E5%85%AD%E5%9D%97%E7%A7%AF%E6%9C%A8%E6%90%AD%E8%B5%B7%E4%B8%80%E4%B8%AA%E3%80%8CAgent-%E4%BA%BA%E7%B1%BB%E3%80%8D%E7%9A%84%E6%B7%B7%E5%90%88%E5%9B%A2%E9%98%9F"><span class="nav-number">2.</span> <span class="nav-text">二、核心功能：六块积木搭起一个「Agent + 人类」的混合团队</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%AC%AC%E4%B8%80%E5%9D%97%EF%BC%9AComputer%E2%80%94%E2%80%94%E3%80%8CAgent-%E6%B0%B8%E8%BF%9C%E8%B7%91%E5%9C%A8%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%E3%80%8D"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 第一块：Computer——「Agent 永远跑在一台机器上」</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E7%AC%AC%E4%BA%8C%E5%9D%97%EF%BC%9ABYOA%E2%80%94%E2%80%94%E6%8A%8A-Claude-Code-Codex-%E6%8E%A5%E8%BF%9B-daemon"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 第二块：BYOA—— 把 Claude Code &#x2F; Codex 接进 daemon</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E7%AC%AC%E4%B8%89%E5%9D%97%EF%BC%9A%E5%8F%8C%E9%87%8D%E3%80%8C%E8%84%91%E3%80%8D%E8%B7%AF%E5%BE%84%EF%BC%9ACloud-%E5%92%8C-BYOA"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 第三块：双重「脑」路径：Cloud 和 BYOA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E7%AC%AC%E5%9B%9B%E5%9D%97%EF%BC%9A%E7%9C%9F%E6%94%B6%E5%8F%91%E9%82%AE%E4%BB%B6%E2%80%94%E2%80%94Agent-%E4%B8%8D%E5%8F%AA%E6%98%AF%E3%80%8C%E8%81%8A%E5%A4%A9%E6%A1%86%E9%87%8C%E7%9A%84%E8%A7%92%E8%89%B2%E3%80%8D"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 第四块：真收发邮件 ——Agent 不只是「聊天框里的角色」</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E7%AC%AC%E4%BA%94%E5%9D%97%EF%BC%9AKanban-Calendar-DM-%E7%BE%A4%E8%81%8A%E2%80%94%E2%80%94%E6%97%A5%E5%B8%B8%E5%8D%8F%E4%BD%9C%E7%9A%84%E5%9B%9B%E4%BB%B6%E5%A5%97"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 第五块：Kanban &#x2F; Calendar &#x2F; DM &#x2F; 群聊 —— 日常协作的四件套</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E7%AC%AC%E5%85%AD%E5%9D%97%EF%BC%9A%E8%B7%A8%E5%B9%B3%E5%8F%B0%E2%80%94%E2%80%94%E5%90%8C%E4%B8%80%E4%BB%BD-React-%E7%BB%84%E4%BB%B6%EF%BC%8C5-%E4%B8%AA%E5%A3%B3"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 第六块：跨平台 —— 同一份 React 组件，5 个壳</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%EF%BC%9A%E6%8A%8A-7-%E5%B1%82%E9%98%B2%E5%BE%A1%E8%AE%B2%E6%B8%85%E6%A5%9A"><span class="nav-number">3.</span> <span class="nav-text">三、技术架构：把 7 层防御讲清楚</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%A4%9A-agent-%E5%8D%8F%E4%BD%9C%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%A4%B1%E8%B4%A5%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 多 agent 协作的两个失败模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%8D%81%E4%B8%80%E5%B1%82%E9%98%B2%E5%BE%A1%EF%BC%88%E6%9D%A5%E8%87%AA-COORDINATION-md%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 十一层防御（来自 COORDINATION.md）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AC%E7%BA%A6%E6%9D%9F%EF%BC%88%E4%BB%A3%E7%A0%81%E5%B1%82%EF%BC%89"><span class="nav-number">3.2.1.</span> <span class="nav-text">硬约束（代码层）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AF%E7%BA%A6%E6%9D%9F%EF%BC%88prompt-UI-%E5%B1%82%EF%BC%89"><span class="nav-number">3.2.2.</span> <span class="nav-text">软约束（prompt &#x2F; UI 层）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E7%9C%9F%E5%AE%9E%E9%97%AE%E9%A2%98%EF%BC%9A%E6%9C%AC%E5%9C%B0-Claude-CLI-%E6%B1%A0%E5%85%B1%E4%BA%AB-account-%E7%9A%84-burst-%E9%99%90%E5%88%B6"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 真实问题：本地 Claude CLI 池共享 account 的 burst 限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E6%88%90%E6%9C%AC%E8%B4%A6%E6%9C%AC%EF%BC%9A%E6%AF%8F%E4%B8%80%E6%AC%A1-LLM-%E8%B0%83%E7%94%A8%E9%83%BD%E8%A2%AB%E8%AE%B0%E8%B4%A6"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 成本账本：每一次 LLM 调用都被记账</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%80%8E%E4%B9%88%E7%94%A8-%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">4.</span> <span class="nav-text">四、怎么用 &#x2F; 快速上手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Cumora-Cloud-%E8%AF%95%E7%94%A8%EF%BC%885-%E5%88%86%E9%92%9F%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 Cumora Cloud 试用（5 分钟）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-BYOA-%E6%9C%AC%E5%9C%B0%E5%90%AF%E5%8A%A8%EF%BC%8830-%E5%88%86%E9%92%9F%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 BYOA 本地启动（30 分钟）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E8%B7%91-benchmark%EF%BC%88%E7%9C%8B-cumora-%E6%80%8E%E4%B9%88%E6%B5%8B%E8%87%AA%E5%B7%B1%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 跑 benchmark（看 cumora 怎么测自己）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93%EF%BC%9Acumora-%E9%80%82%E5%90%88%E8%B0%81%EF%BC%9F%E5%B1%80%E9%99%90%E5%9C%A8%E5%93%AA%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">五、总结：cumora 适合谁？局限在哪？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 适合谁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E5%B1%80%E9%99%90%E5%9C%A8%E5%93%AA"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 局限在哪</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E6%88%91%E7%9A%84%E5%88%A4%E6%96%AD"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 我的判断</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AB%E5%B0%BE%EF%BC%9A%E9%A1%B9%E7%9B%AE%E9%93%BE%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">末尾：项目链接</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">105</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">311</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/08/19/yetone-cumora-ai-agent-team-chat-claude-code-codex/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="yetone&#x2F;cumora 深度体验：2.6k stars 的「AI Agent 团队聊天室」，把 Claude Code &#x2F; Codex 装进 Slack 同款 Kanban + 真收发邮件 | 小戴的网络日志">
+      <meta itemprop="description" content="2669 stars · yetone 新作 Cumora：AI Agent 作为一等公民的跨平台团队聊天工具，原生集成 Claude Code &#x2F; Codex，支持真收发邮件与 Kanban&#x2F;日历协作。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          yetone/cumora 深度体验：2.6k stars 的「AI Agent 团队聊天室」，把 Claude Code / Codex 装进 Slack 同款 Kanban + 真收发邮件
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-20 01:39:00" itemprop="dateCreated datePublished" datetime="2026-08-20T01:39:00+08:00">2026-08-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">2669 stars · yetone 新作 Cumora：AI Agent 作为一等公民的跨平台团队聊天工具，原生集成 Claude Code / Codex，支持真收发邮件与 Kanban/日历协作。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>前两天刷 GitHub Trending 的时候，我看到一个名字特别眼熟 ——<strong>yetone/cumora</strong>。点进去一看，2,669 stars，整个 repo 创建于 2026 年 8 月 17 日，距离现在也就三天，commit 却已经滚了 30 多条，issue 列表里 32 个 fix 全是同一个礼拜内开的。</p>
+<p>「这不就是 yetone 又开新坑了吗？」我心里咯噔一下。</p>
+<p>熟悉中文开源圈的朋友大概都知道 yetone：openai-translator、avante、bailian-cli，哪个不是他一个人扛出来的。openai-translator 最早把 ChatGPT 翻译塞进 macOS 菜单栏，avante 在 Neovim 里复刻 Cursor 体验，bailian-cli 是阿里云百炼的命令行封装 —— 他的项目永远带着「让 AI 真正进入我的工作流」这股劲。</p>
+<p>cumora 的副标题是 <strong>Where agent teams gather</strong>——「Agent 团队的聚集地」。打开 README 第一眼，它写着：</p>
+<blockquote>
+<p>Cumora is cross-platform team chat where AI agents are first-class participants alongside humans — same roster, same DMs, same group conversations, same Kanban board and calendar.</p>
+</blockquote>
+<p>说人话：<strong>它是一个跨平台团队聊天工具，AI Agent 在这里和人类有完全一样的身份、一样的 DM、一样的群聊、一样的 Kanban 看板和日历。</strong></p>
+<p>换句话说，它不是「给 AI 接一个 IM」的 wrapper，它是把 Agent 当成和老板同事一样的「同事」来设计的产品。</p>
+<p>这篇文章，我就想认真拆一下它到底做了什么、怎么做到的、适合谁用、又有哪些坑。</p>
+<hr>
+<h2 id="一、为什么我们需要「Agent-一等公民」的聊天工具"><a href="#一、为什么我们需要「Agent-一等公民」的聊天工具" class="headerlink" title="一、为什么我们需要「Agent 一等公民」的聊天工具"></a>一、为什么我们需要「Agent 一等公民」的聊天工具</h2><h3 id="1-1-当下的问题：Agent-还在「客座」状态"><a href="#1-1-当下的问题：Agent-还在「客座」状态" class="headerlink" title="1.1 当下的问题：Agent 还在「客座」状态"></a>1.1 当下的问题：Agent 还在「客座」状态</h3><p>过去两年我把 Claude Code、Codex、各种 Coding Agent 当成工具用。它们很猛，但本质上还是「一个进程」，你 @ 它，它回，你不动它，它就在后台睡。</p>
+<p>问题是：团队协作不是这种单点行为。</p>
+<p>假设我现在的博客写作工作流是这样的：</p>
+<ul>
+<li><strong>上午 9 点</strong>：和小伙伴对一遍今天的选题</li>
+<li><strong>上午 10 点</strong>：调研 GitHub Trending，挑一个项目</li>
+<li><strong>上午 10:30</strong>：和设计同学过一遍排版</li>
+<li><strong>下午</strong>：写正文、贴图、配链接</li>
+<li><strong>晚上</strong>：commit、push、回复评论</li>
+</ul>
+<p>如果我想让一个 Agent 接管其中某些环节 —— 比如「调研 Trending」，我其实希望这个 Agent 是<strong>常驻的、有记忆的、能在我开会的时候把结论推进 Kanban、能在群里主动 ping 我</strong>的。</p>
+<p>但现实是：</p>
+<ul>
+<li>Claude Code 是一个 CLI 工具，你启动它就醒，不启动就睡；</li>
+<li>它没有「同事身份」，我在 Slack 里 @ 它，Slack 不认识它；</li>
+<li>它没有「真人协作的边界感」—— 它不知道我现在是不是在开会，是不是在 review 代码，是不是在想别的事。</li>
+</ul>
+<p>cumora 想解决的就是这件事。它不是「又一个聊天工具」，而是<strong>把 Agent 提升到和人类同事完全对等的座位</strong>。</p>
+<h3 id="1-2-yetone-的切入点：他不想做-Slack-替代品"><a href="#1-2-yetone-的切入点：他不想做-Slack-替代品" class="headerlink" title="1.2 yetone 的切入点：他不想做 Slack 替代品"></a>1.2 yetone 的切入点：他不想做 Slack 替代品</h3><p>如果你只看 README 表面，「cross-platform team chat」很容易让人误读成又一个 Slack/Discord 替代品。</p>
+<p>但 cumora 不是。它的差异点写得很清楚：</p>
+<blockquote>
+<p>Agents don’t just answer when poked: they hold personas and memory, claim work, coordinate with each other without colliding, send and receive real email, and run on either Cumora’s cloud or your own machine.</p>
+</blockquote>
+<p>四个关键词：<strong>personas（人设）、memory（记忆）、claim work（认领工作）、coordinate with each other（互相协作）</strong>。这些都是 Slack 不会主动做的。</p>
+<p>而且项目仓库名 <code>cumora</code> 也暗示了它的定位 ——Cumora 是太平洋上的一座火山岛（库莫拉岛），既是团队「聚集地」，又有「沉静 + 爆发」的气质。</p>
+<h3 id="1-3-我为什么这次选它写"><a href="#1-3-我为什么这次选它写" class="headerlink" title="1.3 我为什么这次选它写"></a>1.3 我为什么这次选它写</h3><p>近一个月博客我已经写过：</p>
+<ul>
+<li>cloudflare/computer（Cloudflare 给 agent 提供云端 sandbox）</li>
+<li>omniroute（AI 网关，统一 237 家 provider）</li>
+<li>cordiverse/paper（agent 元框架）</li>
+<li>multica（Claude Code 团队管理平台）</li>
+</ul>
+<p>它们都在做「Agent 基础设施」：沙箱、网关、框架、调度。<strong>但「Agent 在团队里到底以什么身份存在」这件事，没有人认真做过产品级设计。</strong></p>
+<p>cumora 是我看到的第一个敢把 Agent 摆到「团队成员」位置上的开源项目。再加上 yetone 的品控、对 CLI 的执念、对 AI 工作流的直觉 —— 我觉得它值得一篇长文。</p>
+<hr>
+<h2 id="二、核心功能：六块积木搭起一个「Agent-人类」的混合团队"><a href="#二、核心功能：六块积木搭起一个「Agent-人类」的混合团队" class="headerlink" title="二、核心功能：六块积木搭起一个「Agent + 人类」的混合团队"></a>二、核心功能：六块积木搭起一个「Agent + 人类」的混合团队</h2><p>cumora 的产品形态我读完文档后画成六个层次：</p>
+<h3 id="2-1-第一块：Computer——「Agent-永远跑在一台机器上」"><a href="#2-1-第一块：Computer——「Agent-永远跑在一台机器上」" class="headerlink" title="2.1 第一块：Computer——「Agent 永远跑在一台机器上」"></a>2.1 第一块：Computer——「Agent 永远跑在一台机器上」</h3><p>这是 cumora 最反直觉的设计。它引入了一个概念叫 <strong>Computer</strong>：</p>
+<blockquote>
+<p>Rather than bolt BYOA on as a special case, Computer is a first-class product concept that every agent shares: an agent always runs on some Computer.</p>
+</blockquote>
+<p>也就是说，任何 agent 都属于某个 Computer。Cumora 内置两种：</p>
+<ul>
+<li>☁ <strong>Cumora Cloud</strong>：官方托管的 Computer，每个企业租户自带一个，agent 跑在 K8s pod 里</li>
+<li>💻 <strong>Your Computers</strong>：你自己 pair 的机器（Mac、VPS），跑 daemon 接管 agent</li>
+</ul>
+<p>示意图（来自 BYOA.md）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Computers</span><br><span class="line">──────────────────────────────</span><br><span class="line">☁  Cumora Cloud      ● online</span><br><span class="line">   engine: managed · 4 agents</span><br><span class="line"></span><br><span class="line">💻 MacBook Pro        ● online</span><br><span class="line">   Claude Code · 3 agents</span><br><span class="line">   "Iris is thinking…"</span><br><span class="line"></span><br><span class="line">🖥  prod-vps-01        ○ offline</span><br><span class="line">   Codex · 2 agents</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这种抽象有个隐藏好处：<strong>把「云 agent」和「本地 agent」统一成一个心智模型</strong>。你不用关心一个 agent 是云端跑还是本地跑 —— 它就在那个 Computer 上，Computer 在线它就醒，Computer 离线它就睡。</p>
+<h3 id="2-2-第二块：BYOA——把-Claude-Code-Codex-接进-daemon"><a href="#2-2-第二块：BYOA——把-Claude-Code-Codex-接进-daemon" class="headerlink" title="2.2 第二块：BYOA——把 Claude Code / Codex 接进 daemon"></a>2.2 第二块：BYOA—— 把 Claude Code / Codex 接进 daemon</h3><p>BYOA（Bring Your Own Agent）是 cumora 最实用的入口。它的逻辑是：</p>
+<blockquote>
+<p>你的 Claude Code 订阅是自己的，你不想把 API key 交给任何平台。Cumora 在你的机器上跑一个 daemon，daemon 把你的本地 Claude Code / Codex CLI 当成「大脑」，Cumora 服务端永远见不到你的 key。</p>
+</blockquote>
+<p>在 BYOA 模式下，整个协作链路是这样的（精简版）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">msg.new → scheduler.wakeOne → (BYOA host: SKIP pod) → publish wake</span><br><span class="line">                                                            │</span><br><span class="line">        cumora agent computer (daemon, laptop/VPS) ◄────────┘ SSE</span><br><span class="line">        debounce → small-brain triage → persistent engine session turn</span><br><span class="line">        the engine IS the loop (its own context, tools, compaction)</span><br><span class="line">        bash → `cumora` shim → /runtime/cli → DB   (unchanged)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意一个细节：<strong>daemon 不是用每条消息去 spawn 一个新的 claude CLI 进程</strong>。它跑的是「persistent engine session」—— 一个常驻的 claude/codex CLI 子进程，daemon 通过 <code>--input-format stream-json --output-format stream-json</code> 跟它对话。</p>
+<p>这个设计带来三个直接好处：</p>
+<ol>
+<li><strong>延迟</strong>：常驻 session 不需要每次冷启动，几百毫秒就能开始推理；</li>
+<li><strong>上下文</strong>：engine 自己的上下文管理（compaction、memory）能 work；</li>
+<li><strong>成本</strong>：每次只有「真正需要发言」时才让大模型跑一轮，平时 daemon 自己的 small-brain（triage 模型）做门卫。</li>
+</ol>
+<h3 id="2-3-第三块：双重「脑」路径：Cloud-和-BYOA"><a href="#2-3-第三块：双重「脑」路径：Cloud-和-BYOA" class="headerlink" title="2.3 第三块：双重「脑」路径：Cloud 和 BYOA"></a>2.3 第三块：双重「脑」路径：Cloud 和 BYOA</h3><p>我前面提到 Cumora 有两种 brain 模式，这里详细对比：</p>
+<p><strong>Cumora Cloud（managed loop）：</strong></p>
+<ul>
+<li>服务端跑 <code>turn.ts</code>，一个多 hop 的 tool-calling loop</li>
+<li> 每个 agent 住在一个 K8s pod 里（<code>agent-computer</code> 镜像）</li>
+<li>引擎是 OpenAI Responses API，工具包括 bash、files、browser、email、memory、skills</li>
+<li> 一句话：服务端全包</li>
+</ul>
+<p><strong>BYOA（user loop）：</strong></p>
+<ul>
+<li>服务端<strong>绕过</strong> <code>turn.ts</code>，只负责把 wake 事件推送到 daemon</li>
+<li>daemon 自己的 persistent engine session 跑 turn</li>
+<li> 大脑就是用户本地的 Claude Code 或 Codex CLI</li>
+<li> 用户订阅、用户 key、用户配额</li>
+<li>一句话：服务端只做「事件投递 + 仲裁 + UI」</li>
+</ul>
+<p>两种模式的 agent 在 Cumora UI 里看起来<strong>完全一样</strong>：都是 <code>kind='agent'</code> 的 participant，都出现在 roster、DM、群聊、Kanban 里。你只看到一个「Iris」，看不到她住哪个 Computer。</p>
+<h3 id="2-4-第四块：真收发邮件——Agent-不只是「聊天框里的角色」"><a href="#2-4-第四块：真收发邮件——Agent-不只是「聊天框里的角色」" class="headerlink" title="2.4 第四块：真收发邮件——Agent 不只是「聊天框里的角色」"></a>2.4 第四块：真收发邮件 ——Agent 不只是「聊天框里的角色」</h3><p>这是我看到 cumora 时最惊艳的功能之一。Agent 不是只在 Cumora App 里发言，<strong>它能真发、真收邮件</strong>。</p>
+<p>技术栈是这样搭的（来自 README + email.md）：</p>
+<ul>
+<li><strong>发出</strong>：服务端通过 Resend API 发邮件，每个 agent 有独立 mailbox</li>
+<li><strong> 收信</strong>：Cloudflare Email Routing 把 <code>*@your-team.cumora.ai</code> 全部转发到一个 Cloudflare Worker</li>
+<li><strong>Worker（email-gate）</strong>：解析邮件、识别是哪个 agent、推 SSE 到 daemon、写入 Postgres</li>
+</ul>
+<p>这意味着一个真实的客户写邮件给 <code>iris@your-team.cumora.ai</code>，Iris 真的能收到并回复 —— 而这件事完全不需要 Claude Code 在前端暴露 IM 接口。</p>
+<p>文档里有一句很冷静：</p>
+<blockquote>
+<p>per-agent real email (Resend out, Cloudflare Email Worker in)</p>
+</blockquote>
+<p>它把这件事当作 first-class 功能，而不是 demo。</p>
+<h3 id="2-5-第五块：Kanban-Calendar-DM-群聊——日常协作的四件套"><a href="#2-5-第五块：Kanban-Calendar-DM-群聊——日常协作的四件套" class="headerlink" title="2.5 第五块：Kanban / Calendar / DM / 群聊——日常协作的四件套"></a>2.5 第五块：Kanban / Calendar / DM / 群聊 —— 日常协作的四件套</h3><p>README 上说得很朴实：</p>
+<blockquote>
+<p>same roster, same DMs, same group conversations, same Kanban board and calendar</p>
+</blockquote>
+<p>翻译过来就是：Slack 的核心组件它都有，但多了两件事：</p>
+<ul>
+<li><strong>Agent 也能 claim Kanban card</strong>：agent 不是被动「被 @ 才动」，它能主动 claim 一张 ticket、自己推进、最后 comment</li>
+<li><strong>Agenda 唤醒</strong>：agent 不只是被动响应消息，它能从 Kanban due date /calendar slot 主动被唤醒（<code>maybeAgendaTurn</code> 走 <code>/runtime/agenda</code>，stall-nudge 节流）</li>
+</ul>
+<p><code>benchmarks/</code> 目录下还有真实的 LLM 多智能体协作 benchmark——chain /counting/werewolf /kanban。这说明 cumora 团队真的在做可复现的 agent 行为测试。</p>
+<h3 id="2-6-第六块：跨平台——同一份-React-组件，5-个壳"><a href="#2-6-第六块：跨平台——同一份-React-组件，5-个壳" class="headerlink" title="2.6 第六块：跨平台——同一份 React 组件，5 个壳"></a>2.6 第六块：跨平台 —— 同一份 React 组件，5 个壳</h3><p>技术栈选型上 cumora 很工程化：</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>是什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>src/</code></td>
+<td>React 渲染层，desktop/mobile/web/admin 复用同一套组件</td>
+</tr>
+<tr>
+<td><code>server/</code></td>
+<td>API + WebSocket + agent runtime（Express + ws + Postgres + Redis）</td>
+</tr>
+<tr>
+<td><code>electron/</code></td>
+<td>桌面壳，自动更新走 yetone/cumora-releases</td>
+</tr>
+<tr>
+<td><code>ios/</code>, <code>android/</code></td>
+<td>Capacitor 原生壳，包名 <code>io.cumora.app</code></td>
+</tr>
+<tr>
+<td><code>agent-cli/</code></td>
+<td>发布的 npm 包 <code>cumora</code>，BYOA daemon 用户本地跑的就是它</td>
+</tr>
+<tr>
+<td><code>agent-fuse/</code></td>
+<td>Go FUSE driver，把 agent 的工作目录挂载进 cloud pod</td>
+</tr>
+<tr>
+<td><code>workers/</code></td>
+<td>Cloudflare Workers：<code>email-gate</code>（入站邮件）、<code>r2-gate</code>（签名 CDN）</td>
+</tr>
+<tr>
+<td><code>benchmarks/</code></td>
+<td>真实 LLM 多智能体协作 benchmark</td>
+</tr>
+</tbody></table>
+<p>GitHub 语言统计也很说明问题（按字节数）：</p>
+<ul>
+<li>TypeScript: 4,697,689 字节（主体）</li>
+<li>JavaScript: 155,190</li>
+<li>CSS: 68,217</li>
+<li>Swift: 19,493（iOS）</li>
+<li>Shell: 15,002</li>
+<li>Go: 13,524（FUSE driver）</li>
+<li>Dockerfile: 12,741</li>
+</ul>
+<p><strong>这是一个「正经工程」而不是「demo 拼凑」的项目</strong>。既有 Web 全栈，又有原生壳，又有 system-level Go 驱动，又有边缘 Workers。</p>
+<hr>
+<h2 id="三、技术架构：把-7-层防御讲清楚"><a href="#三、技术架构：把-7-层防御讲清楚" class="headerlink" title="三、技术架构：把 7 层防御讲清楚"></a>三、技术架构：把 7 层防御讲清楚</h2><p>cumora 最让我佩服的部分是它处理「多 agent 在同一房间里不撞车」的方式。README 上一句话轻飘飘带过，但 BYOA.md + COORDINATION.md 一共加起来 6 万多字节，几乎全是工程细节。</p>
+<h3 id="3-1-多-agent-协作的两个失败模式"><a href="#3-1-多-agent-协作的两个失败模式" class="headerlink" title="3.1 多 agent 协作的两个失败模式"></a>3.1 多 agent 协作的两个失败模式</h3><p>COORDINATION.md 一上来就定义了多 agent 协作的两类失败：</p>
+<ol>
+<li><strong>Race collisions</strong>—— 两个 agent 同时醒来，决策一模一样，都 INSERT 进 messages。经典案例：Iris 和 Marcus 在 counting game 里同时发 <code>"3"</code>。服务端能做的是 INSERT 前的「我上次看到的」新鲜度检查。</li>
+<li><strong>Brain misjudgment</strong>——agent 看到的状态是对的，但大脑做了错误决策（重复发、跳号、倒退）。这种只能靠 prompt 软约束，服务端抓不到。</li>
+</ol>
+<p><strong>关键洞见</strong>：</p>
+<blockquote>
+<p>Distinguishing these matters: never add a prompt rule when a code mechanism is the right fix, and never add a code mechanism when the brain’s making a clear decision in front of correct state.</p>
+</blockquote>
+<p>这句话翻译过来：<strong>能用代码解决的，不要加 prompt 约束；大脑在正确状态前做错决策的，不要加代码机制</strong>。这条原则贯穿整个 cumora 的防御体系。</p>
+<h3 id="3-2-十一层防御（来自-COORDINATION-md）"><a href="#3-2-十一层防御（来自-COORDINATION-md）" class="headerlink" title="3.2 十一层防御（来自 COORDINATION.md）"></a>3.2 十一层防御（来自 COORDINATION.md）</h3><p>我把 cumora 的「防御层」按硬 / 软列出来，按从硬到软排：</p>
+<h4 id="硬约束（代码层）"><a href="#硬约束（代码层）" class="headerlink" title="硬约束（代码层）"></a>硬约束（代码层）</h4><ol>
+<li><strong>Per-agent model pin</strong>（部署层）：服务端用 <code>CUMORA_DEFAULT_CLAUDE_MODEL=claude-opus-4-7</code> 固定模型，避免本地 claude CLI 默认模型在 2026-05-31 那次悄悄从 opus-4-7 切到 opus-4-8 导致行为漂移。</li>
+<li><strong>Per-computer big-brain concurrency cap</strong>（daemon 层）：<code>CUMORA_BYOA_MAX_CONCURRENT_BIG_BRAIN</code>，默认 6；之前是 2，7-agent 群聊排队 215-359s。BigBrainSemaphore 在 spawn 前 acquire，finally release。</li>
+<li><strong>Deterministic spawn spacing</strong>：500ms 的最小 spawn 间隔，<strong>替代了原来的 random (0..1500ms) jitter</strong>。原因：随机 jitter 在 4 个同时醒来时可能都落在低值上，仍然 burst 到 provider；间隔是构造上 1/interval 的硬上限。</li>
+<li><strong>Per-computer small-brain triage concurrency cap</strong>：triage 模型也有 cap，避免大模型和小模型互相挤占。</li>
+<li><strong>Seen-cursor freshness gate</strong>：服务端在 agent 真正 INSERT 之前做「你上次看到的更新 vs 现在」的对比，过期的回复被 HOLD 并喂回新消息让 agent 重新决策。</li>
+<li><strong>Atomic claims</strong>：agent 对 Kanban card / 工作单元用 <code>SELECT ... FOR UPDATE</code> 拿锁，atomic claim 后才能修改。</li>
+</ol>
+<h4 id="软约束（prompt-UI-层）"><a href="#软约束（prompt-UI-层）" class="headerlink" title="软约束（prompt / UI 层）"></a>软约束（prompt / UI 层）</h4><ol start="7">
+<li><strong>Small-brain triage</strong>：daemon GET <code>/runtime/inbox-triage/payload</code>，先让 haiku /gpt-5.4-mini 跑 triage 决定是不是真要唤醒大模型。rate limit 时 fail-closed 指数退避。</li>
+<li><strong>GLANCE_YIELD_RULES</strong>：每次大模型 turn 都被要求「glance before posting」—— 发消息前先看一遍最新 unread digest。</li>
+<li><strong>memory/ MEMORY.md digest</strong>：每轮把 agent 自己的 memory 摘要喂进去，避免「我忘了我叫什么」。</li>
+<li><strong>Same-turn steering</strong>：DM / @mention / 人类消息在 turn 中到达时，在下一个安全 stream 边界注入；群聊普通活动只发 content-free nudge。</li>
+<li><strong>invariant scaffold</strong>（一次性）：CLI 用法、共享的 GLANCE_YIELD_RULES、memory 规则、隐私边界通过 <code>--append-system-system-prompt-file</code>（Claude）或 <code>developerInstructions</code>（Codex）一次性塞进 session，不占每轮 token。</li>
+</ol>
+<p>这一套防御体系不是营销话术，是真的在 COORDINATION.md 里有「chain-with-absent-member」基准测试的数据支撑：</p>
+<blockquote>
+<p>T10 of the “千里之行始于足下” chain test (8-char relay, 6 active agents, 1 deliberately absent) landed <strong>8/8 in-order, 0 dups, complete=true</strong>, with nova covering the absent member by contributing three times.</p>
+</blockquote>
+<p>8 字符接力，6 个 active agent 加 1 个故意缺席 ——8/8 正确顺序、零重复、complete=true。这种 benchmark 不是 toy，是真的在压测 Cumora 的协作能力。</p>
+<h3 id="3-3-真实问题：本地-Claude-CLI-池共享-account-的-burst-限制"><a href="#3-3-真实问题：本地-Claude-CLI-池共享-account-的-burst-限制" class="headerlink" title="3.3 真实问题：本地 Claude CLI 池共享 account 的 burst 限制"></a>3.3 真实问题：本地 Claude CLI 池共享 account 的 burst 限制</h3><p>cumora 文档里有一个非常具体的失败复盘：</p>
+<blockquote>
+<p>when N agents on the same computer wake on the same SSE fanout, without this they all hit Anthropic’s short-window burst limit and get “Server is temporarily limiting requests · Rate limited” in lockstep (observed: 130 rate-limit hits in 17 minutes during a 7-agent counting game).</p>
+</blockquote>
+<p>这段描述直接告诉读者：<strong>「在 17 分钟内，130 次 rate limit 命中，发生在 7-agent counting game 里」。</strong></p>
+<p>它没有藏着掖着，而是把真问题暴露出来，再一步步告诉你怎么解决。</p>
+<p>这就是 yetone 一贯的工程态度：<strong>先承认你的失败模式，再讲怎么修</strong>。</p>
+<h3 id="3-4-成本账本：每一次-LLM-调用都被记账"><a href="#3-4-成本账本：每一次-LLM-调用都被记账" class="headerlink" title="3.4 成本账本：每一次 LLM 调用都被记账"></a>3.4 成本账本：每一次 LLM 调用都被记账</h3><p>README 里有一个看似不起眼的细节：</p>
+<blockquote>
+<p>every LLM call — cloud or BYOA — lands in one <code>llm_calls</code> cost ledger</p>
+</blockquote>
+<p><strong>所有 LLM 调用（云端和 BYOA）都进同一本账。</strong></p>
+<p>这条在企业级 AI 落地里非常关键。我自己用 Claude Code 一直苦于「agent 在我的机器上跑了多少 token、花了多少钱」看不到 —— 除非你本地自己起 Prometheus。Cumora 把这件事做成了「基础设施」：</p>
+<ul>
+<li><code>/runtime/llm-calls</code> 接收每次 hop 的 token usage</li>
+<li> 统一写入 <code>llm_calls</code> 表</li>
+<li>跟 cloud turn 的数据放在一个视图里查询</li>
+</ul>
+<p>这意味着运营一个 AI 团队，<strong>财务透明度是 by-design 的</strong>。这一点对于要把 Agent 团队引入公司的人，太重要了。</p>
+<hr>
+<h2 id="四、怎么用-快速上手"><a href="#四、怎么用-快速上手" class="headerlink" title="四、怎么用 / 快速上手"></a>四、怎么用 / 快速上手</h2><p>cumora 的快速启动分两条路：Cumora Cloud（最快）和 BYOA（最实用）。</p>
+<h3 id="4-1-Cumora-Cloud-试用（5-分钟）"><a href="#4-1-Cumora-Cloud-试用（5-分钟）" class="headerlink" title="4.1 Cumora Cloud 试用（5 分钟）"></a>4.1 Cumora Cloud 试用（5 分钟）</h3><p>如果只是想看 demo，最快是直接到 <a target="_blank" rel="noopener" href="https://cumora.ai/">cumora.ai</a> 注册。文档提到：</p>
+<ul>
+<li>注册后会自动 seed 一个 starter team：6 agents、3 humans、9 conversations</li>
+<li> 空数据库 seed，<strong>所有 chat 里看到的消息都是实时产生的</strong> —— 不是回放</li>
+<li>这是一个「让产品自己说服你」的设计：上来就看到一个真实运转中的多 agent 团队</li>
+</ul>
+<h3 id="4-2-BYOA-本地启动（30-分钟）"><a href="#4-2-BYOA-本地启动（30-分钟）" class="headerlink" title="4.2 BYOA 本地启动（30 分钟）"></a>4.2 BYOA 本地启动（30 分钟）</h3><p>如果你有自己的 Claude Code / Codex 订阅，想让 daemon 接管你本地的 agent：</p>
+<p><strong>前置依赖</strong>（macOS）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew install postgresql redis node</span><br><span class="line">brew services start postgresql</span><br><span class="line">brew services start redis</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>创建数据库：</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">createdb -h localhost cumora</span><br><span class="line"><span class="built_in">export</span> OPENAI_API_KEY=sk-...</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>克隆 cumora 仓库：</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/yetone/cumora.git</span><br><span class="line"><span class="built_in">cd</span> cumora</span><br><span class="line">npm run setup          <span class="comment"># install root + Email Worker dependencies</span></span><br><span class="line">npm run dev:all       <span class="comment"># Vite renderer on :5180 + API server on :5181</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>打开浏览器 </strong> <a target="_blank" rel="noopener" href="http://localhost:5180/">http://localhost:5180</a> 就能看到 PWA 模式。要桌面端就：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run electron:dev</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>环境变量</strong>（只有 <code>OPENAI_API_KEY</code> 是 hard-required）：</p>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>默认</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>DATABASE_URL</code></td>
+<td><code>postgres://$USER@localhost:5432/cumora</code></td>
+</tr>
+<tr>
+<td><code>REDIS_URL</code></td>
+<td><code>redis://localhost:6379</code></td>
+</tr>
+<tr>
+<td><code>OPENAI_MODEL</code> / <code>OPENAI_MODEL_SUPPORT</code></td>
+<td>big-brain /support-brain 模型</td>
+</tr>
+<tr>
+<td><code>PORT</code></td>
+<td><code>5181</code></td>
+</tr>
+</tbody></table>
+<p>可选功能（OAuth 登录、Resend + Cloudflare Email Routing、R2 storage、APNs/FCM push、sub2api per-user LLM gateway、waitlist、metrics）都在 <code>.env.example</code> 和 <code>server/src/env.ts</code> 里。</p>
+<p><strong>装 BYOA daemon 到你的机器：</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install -g cumora</span><br><span class="line">cumora agent computer</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Daemon 启动后会生成一个 pairing code，你在 Cumora web app 里输入就能把你的 Mac 加为「Your Computer」。之后你在 Cumora UI 上创建的 agent 可以选住在 cloud 还是你的 Mac 上。</p>
+<h3 id="4-3-跑-benchmark（看-cumora-怎么测自己）"><a href="#4-3-跑-benchmark（看-cumora-怎么测自己）" class="headerlink" title="4.3 跑 benchmark（看 cumora 怎么测自己）"></a>4.3 跑 benchmark（看 cumora 怎么测自己）</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="built_in">test</span>                  <span class="comment"># unit tests (node:test) for server + workers</span></span><br><span class="line">npm run <span class="built_in">test</span>:integration  <span class="comment"># integration suite (needs local Postgres/Redis)</span></span><br><span class="line">npm run typecheck &amp;&amp; npm run server:typecheck</span><br><span class="line">npm run guard:big-brain   <span class="comment"># CI guard: only agent turns may use the big model</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后一条 <code>guard:big-brain</code> 非常有趣：CI 守卫，确保只有「agent turn」能调用大模型 —— 这是 cumora 在控制成本上的硬约束。</p>
+<hr>
+<h2 id="五、总结：cumora-适合谁？局限在哪？"><a href="#五、总结：cumora-适合谁？局限在哪？" class="headerlink" title="五、总结：cumora 适合谁？局限在哪？"></a>五、总结：cumora 适合谁？局限在哪？</h2><h3 id="5-1-适合谁"><a href="#5-1-适合谁" class="headerlink" title="5.1 适合谁"></a>5.1 适合谁</h3><p>我把 cumora 的目标用户分成几层：</p>
+<p><strong>第一层：AI 重度玩家 / 独立开发者</strong></p>
+<p>你已经在用 Claude Code / Codex，但苦于它们没有「协作感」。cumora 让你把多个 agent 装进一个 IM 视图，看它们互相 ping、claim Kanban、推进工作流。这件事在 2026 年的工具链里仍然非常罕见 —— 因为大多数 agent 工具还停留在「一个 agent 对一个用户」的模型。</p>
+<p><strong>第二层：内容创作者 / 数字游民</strong></p>
+<p>如果你像我一样同时在做：写博客、运营社交、做调研、维护项目，cumora 的 Kanban + Calendar + 真收发邮件组合，是最贴近「一个人 + 多个 agent」工作流的工具。它不像 Slack 那么重，也不像 Obsidian 那么散。</p>
+<p><strong>第三层：AI 团队建设者</strong></p>
+<p>如果你要给公司搭一支「AI Agent 同事」团队，cumora 的：</p>
+<ul>
+<li>统一身份（Computer 概念）</li>
+<li>真实邮件链路</li>
+<li>统一 cost ledger</li>
+<li> 完整 benchmark 工具集</li>
+<li>跨平台壳（Web + iOS + Android + Electron）</li>
+</ul>
+<p>—— 是少见的「能直接落地」的开源方案。不是 demo，不是白皮书，是<strong>一个真的能跑的产品</strong>。</p>
+<p><strong>第四层：AI 工程研究者</strong></p>
+<p>cumora 的 <code>benchmarks/</code> 目录、<code>docs/COORDINATION.md</code> 的十一层防御、<code>docs/SHIPPING.md</code> 的「evidence-backed feature lifecycle」—— 这些都是公开的研究素材。如果你做 agent 协作研究，cumora 是一个开源的真实系统可以拿来切片。</p>
+<h3 id="5-2-局限在哪"><a href="#5-2-局限在哪" class="headerlink" title="5.2 局限在哪"></a>5.2 局限在哪</h3><p>老实说，我也得指出 cumora 的几个边界：</p>
+<p><strong>1. 还是 early stage</strong></p>
+<p>仓库 2026-08-17 才创建，三天时间 commit 滚了 30+、issue 开到 32—— 这既是优点（活跃），也是缺点（早期）。生产环境用要谨慎。我建议先在 BYOA + 本地 daemon 的路径上玩通，再考虑 Cloud 方案。</p>
+<p><strong>2. 强依赖 OpenAI Responses API</strong></p>
+<p>Cumora Cloud 的 managed loop 跑在 OpenAI Responses API 上，BYOA 虽然支持 Claude Code 和 Codex，但 triage 模型仍可能用 OpenAI 小模型（haiku /gpt-5.4-mini）。如果你想全栈自托管 + 全栈非 OpenAI，目前还要等。</p>
+<p><strong>3. 真收发邮件的运维成本</strong></p>
+<p>Cloudflare Email Routing + Resend + Cloudflare Worker 这一套链路需要你有一个域名、能配 Email Routing、能部署 Worker。个人开发者上手可以，但「我就要一个能开箱即用的 IM」的用户会觉得重。</p>
+<p><strong>4. 没有「非 English first」的本地化</strong></p>
+<p>README、文档、CLI 输出目前都是英文（除了 BYOA.md 里举的「千里之行始于足下」chain test 是中文 case study）。如果你的 agent 主要处理中文任务，工作流没障碍，但 UI 层面暂时没有中文界面。</p>
+<p><strong>5. Agent 互撞的「prompt 软约束」天花板</strong></p>
+<p>COORDINATION.md 自己承认了：</p>
+<blockquote>
+<p>prompts are a soft mechanism with a ceiling</p>
+</blockquote>
+<p>再完美的十一层防御，prompt 层仍然不是 100% 的。cumora 用 benchmark 测试 8/8 正确，但更复杂的场景（比如 12 个 agent 同时 debating）我没看到公开数据。</p>
+<h3 id="5-3-我的判断"><a href="#5-3-我的判断" class="headerlink" title="5.3 我的判断"></a>5.3 我的判断</h3><p>如果要我给一个 TL;DR：</p>
+<blockquote>
+<p><strong>cumora 是 yetone 把「AI Agent 当同事」这件事严肃做了产品级落地的尝试。2,669 stars 是个开始，但它的设计深度（十一层防御、统一 Computer 抽象、cost ledger、benchmark 集）远超同期 90% 的「AI 协作工具」。</strong></p>
+</blockquote>
+<p>我会继续观察：</p>
+<ol>
+<li>v0.2 是否引入非 OpenAI provider 的 managed loop；</li>
+<li>iOS / Android 端的 Capacitor shell 稳定性；</li>
+<li><code>benchmarks/</code> 是否会公开更多真实多 agent 协作数据；</li>
+<li>是否有第三方贡献者开始写 plugin（类似 Botkit / Zapier）。</li>
+</ol>
+<hr>
+<h2 id="末尾：项目链接"><a href="#末尾：项目链接" class="headerlink" title="末尾：项目链接"></a>末尾：项目链接</h2><ul>
+<li>GitHub 仓库：<a target="_blank" rel="noopener" href="https://github.com/yetone/cumora">https://github.com/yetone/cumora</a></li>
+<li> 官网 / 营销站：<a target="_blank" rel="noopener" href="https://cumora.ai/">https://cumora.ai</a></li>
+<li>Web App：<a target="_blank" rel="noopener" href="https://app.cumora.ai/">https://app.cumora.ai</a></li>
+<li> 最新发布：<a target="_blank" rel="noopener" href="https://github.com/yetone/cumora-releases/releases/latest">https://github.com/yetone/cumora-releases/releases/latest</a></li>
+<li> 作者：yetone（<a target="_blank" rel="noopener" href="https://github.com/yetone">https://github.com/yetone</a>）</li>
+</ul>
+<p>如果你已经玩上了 Claude Code 但总觉得「还差点什么」，先在 cumora.ai 注册看一眼 starter team，再决定要不要本地跑 BYOA。你大概率会被那个「6 个 agent 自己开会、自己认领 Kanban、自己发邮件」的 starter team 打动 —— 因为它让你第一次看到 AI Agent 不是你的工具，是你的同事。</p>
+<hr>
+<p><strong>一句话总结</strong>：Cumora 把 AI Agent 从「进程」提升到「同事」，yetone 用 11 层防御体系解决了多 agent 协作的撞车问题，是当下最值得认真看的 Agent 协作平台之一。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/08/19/yetone-cumora-ai-agent-team-chat-claude-code-codex/" title="yetone&#x2F;cumora 深度体验：2.6k stars 的「AI Agent 团队聊天室」，把 Claude Code &#x2F; Codex 装进 Slack 同款 Kanban + 真收发邮件">https://www.daishengli.top/2026/08/19/yetone-cumora-ai-agent-team-chat-claude-code-codex/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C/" rel="tag"># 团队协作</a>
+              <a href="/tags/Cumora/" rel="tag"># Cumora</a>
+              <a href="/tags/yetone/" rel="tag"># yetone</a>
+              <a href="/tags/BYOA/" rel="tag"># BYOA</a>
+              <a href="/tags/Codex-CLI/" rel="tag"># Codex CLI</a>
+              <a href="/tags/Electron/" rel="tag"># Electron</a>
+              <a href="/tags/Slack-%E6%9B%BF%E4%BB%A3/" rel="tag"># Slack 替代</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/19/mukul975-anthropic-cybersecurity-skills/" rel="prev" title="AI Agent 拿到 817 张「安全专家处方」：mukul975&#x2F;Anthropic-Cybersecurity-Skills 把网络安全塞进 agentskills.io 标准">
+                  <i class="fa fa-angle-left"></i> AI Agent 拿到 817 张「安全专家处方」：mukul975/Anthropic-Cybersecurity-Skills 把网络安全塞进 agentskills.io 标准
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/19/volcengine-openviking-context-database-ai-agent/" rel="next" title="volcengine&#x2F;OpenViking：30k stars 的「AI Agent 上下文数据库」，把 viking:&#x2F;&#x2F; 虚拟文件系统 + L0&#x2F;L1&#x2F;L2 三层加载塞给 Agent，token 砍掉 91%">
+                  volcengine/OpenViking：30k stars 的「AI Agent 上下文数据库」，把 viking:// 虚拟文件系统 + L0/L1/L2 三层加载塞给 Agent，token 砍掉 91% <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
