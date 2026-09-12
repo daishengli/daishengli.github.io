@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="mksglu&#x2F;context-mode（GitHub 20.8k stars、当日 +96 stars、Elastic License v2）是一款给 AI 编码 Agent 用的上下文窗口优化 MCP 服务器，三件套：1) Sandbox 工具输出 98% 减量（315 KB → 5.4 KB），2) SQLite FTS5 + BM25 做 session 持续性让模型跨 compaction">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mksglu&#x2F;context-mode：20.8k stars 的 AI 编码上下文优化器，Hacker News">
+<meta property="og:url" content="https://www.daishengli.top/2026/09/08/mksglu-context-mode-ai-coding-context-optimizer/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="mksglu&#x2F;context-mode（GitHub 20.8k stars、当日 +96 stars、Elastic License v2）是一款给 AI 编码 Agent 用的上下文窗口优化 MCP 服务器，三件套：1) Sandbox 工具输出 98% 减量（315 KB → 5.4 KB），2) SQLite FTS5 + BM25 做 session 持续性让模型跨 compaction">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-08T01:30:00.000Z">
+<meta property="article:modified_time" content="2026-09-12T01:07:10.472Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="Cursor">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Codex">
+<meta property="article:tag" content="AI Coding">
+<meta property="article:tag" content="context-mode">
+<meta property="article:tag" content="mksglu">
+<meta property="article:tag" content="Context Window">
+<meta property="article:tag" content="FTS5">
+<meta property="article:tag" content="BM25">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/09/08/mksglu-context-mode-ai-coding-context-optimizer/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/09/08/mksglu-context-mode-ai-coding-context-optimizer/","path":"2026/09/08/mksglu-context-mode-ai-coding-context-optimizer/","title":"mksglu/context-mode：20.8k stars 的 AI 编码上下文优化器，Hacker News"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>mksglu/context-mode：20.8k stars 的 AI 编码上下文优化器，Hacker News | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">359</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">114</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E9%97%AE%E9%A2%98%E7%9A%84%E7%9C%9F%E7%9B%B8%EF%BC%9Acontext-%E6%B5%AA%E8%B4%B9%E5%9C%A8%E5%B7%A5%E5%85%B7%E8%BE%93%E5%87%BA%E4%B8%8A"><span class="nav-number">1.</span> <span class="nav-text">一、问题的真相：context 浪费在工具输出上</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%EF%BC%9Asandbox-FTS5-Think-in-Code-%E4%B8%89%E4%BB%B6%E5%A5%97"><span class="nav-number">2.</span> <span class="nav-text">二、核心机制：sandbox + FTS5 + Think in Code 三件套</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Sandbox%EF%BC%9A315-KB-%E2%86%92-5-4-KB"><span class="nav-number">2.1.</span> <span class="nav-text">1. Sandbox：315 KB → 5.4 KB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Session-Continuity%EF%BC%9AFTS5-BM25-%E8%B7%A8-compact-%E4%B8%8D%E4%B8%A2"><span class="nav-number">2.2.</span> <span class="nav-text">2. Session Continuity：FTS5 + BM25 跨 compact 不丢</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Think-in-Code%EF%BC%9A%E8%AE%A9-LLM-%E5%86%99-script"><span class="nav-number">2.3.</span> <span class="nav-text">3. Think in Code：让 LLM 写 script</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Hook-%E4%BD%93%E7%B3%BB%EF%BC%9A6-%E4%B8%AA-hook-%E5%85%A8%E5%9C%BA%E6%99%AF%E8%A6%86%E7%9B%96"><span class="nav-number">3.</span> <span class="nav-text">三、Hook 体系：6 个 hook 全场景覆盖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81SQLite-%E6%8A%BD%E8%B1%A1%E5%B1%82%EF%BC%9A%E8%87%AA%E5%8A%A8%E9%80%89-backend"><span class="nav-number">4.</span> <span class="nav-text">四、SQLite 抽象层：自动选 backend</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81Insight-Dashboard%EF%BC%9A%E7%BB%84%E7%BB%87%E7%BA%A7-AI-%E7%BC%96%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">五、Insight Dashboard：组织级 AI 编码分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E8%A3%85%E4%B8%80%E4%B8%8B%E8%AF%95%E8%AF%95"><span class="nav-number">6.</span> <span class="nav-text">六、装一下试试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E8%B7%9F-ponytail-%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">7.</span> <span class="nav-text">七、跟 ponytail 的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E8%B7%A8%E5%B9%B3%E5%8F%B0%EF%BC%9A17-%E4%B8%AA%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%9A%84%E7%9C%9F%E5%AE%9E%E6%94%AF%E6%8C%81"><span class="nav-number">8.</span> <span class="nav-text">八、跨平台：17 个客户端的真实支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81Think-in-Code-%E7%9A%84%E4%BB%A3%E4%BB%B7"><span class="nav-number">9.</span> <span class="nav-text">九、Think in Code 的代价</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E8%B7%9F-OpenWhispr-%E7%AC%94%E8%AE%B0%E5%BA%93%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">10.</span> <span class="nav-text">十、跟 OpenWhispr 笔记库的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81Elastic-License-v2-%E7%9A%84%E5%8F%96%E8%88%8D"><span class="nav-number">11.</span> <span class="nav-text">十一、Elastic License v2 的取舍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88-Hacker-News-%E7%BB%99%E5%AE%83%E9%A6%96%E9%A1%B5-1"><span class="nav-number">12.</span> <span class="nav-text">十二、为什么 Hacker News 给它首页 #1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E6%88%91%E7%9A%84%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E6%84%9F%E5%8F%97"><span class="nav-number">13.</span> <span class="nav-text">十三、我的实际使用感受</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E8%B7%9F%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">14.</span> <span class="nav-text">十四、跟同类项目的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">15.</span> <span class="nav-text">十五、适合谁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E3%80%81%E5%B1%80%E9%99%90"><span class="nav-number">16.</span> <span class="nav-text">十六、局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%83%E3%80%81%E5%AE%83%E5%9C%A8-AI-%E7%BC%96%E7%A0%81%E7%94%9F%E6%80%81%E9%87%8C%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">17.</span> <span class="nav-text">十七、它在 AI 编码生态里的位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AB%E3%80%81%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93"><span class="nav-number">18.</span> <span class="nav-text">十八、一句话总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B9%9D%E3%80%81%E5%87%A0%E4%B8%AA%E5%85%B7%E4%BD%93%E7%9A%84%E4%BF%AE%E5%A4%8D%E7%BB%86%E8%8A%82"><span class="nav-number">19.</span> <span class="nav-text">十九、几个具体的修复细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E4%B8%80%E3%80%81%E8%AF%A6%E7%BB%86%E7%9A%84%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8"><span class="nav-number">20.</span> <span class="nav-text">二十一、详细的工具列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E4%BA%8C%E3%80%81%E8%B7%9F-Anthropic-%E7%9A%84%E3%80%8Ccontext-engineering%E3%80%8D%E5%93%B2%E5%AD%A6"><span class="nav-number">21.</span> <span class="nav-text">二十二、跟 Anthropic 的「context engineering」哲学</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E4%B8%89%E3%80%81%E7%BB%99%E5%9B%A2%E9%98%9F-leader-%E7%9A%84%E5%85%B7%E4%BD%93%E5%BB%BA%E8%AE%AE"><span class="nav-number">22.</span> <span class="nav-text">二十三、给团队 leader 的具体建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E5%9B%9B%E3%80%81%E8%B7%9F-opencode-%E7%9A%84-Plan-Build-%E6%A8%A1%E5%BC%8F%E9%85%8D%E5%90%88"><span class="nav-number">23.</span> <span class="nav-text">二十四、跟 opencode 的 Plan &#x2F; Build 模式配合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E4%BA%94%E3%80%81%E4%B8%8E-Cursor-Windsurf-%E7%AD%89-IDE-%E7%B1%BB%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">24.</span> <span class="nav-text">二十五、与 Cursor &#x2F; Windsurf 等 IDE 类的差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E5%85%AD%E3%80%81%E5%87%A0%E4%B8%AA%E5%85%B7%E4%BD%93%E7%9A%84%E5%A4%B1%E8%B4%A5%E6%A1%88%E4%BE%8B%EF%BC%88%E9%81%BF%E5%85%8D%E8%B8%A9%E5%9D%91%EF%BC%89"><span class="nav-number">25.</span> <span class="nav-text">二十六、几个具体的失败案例（避免踩坑）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E4%B8%83%E3%80%81%E5%AE%83%E5%AF%B9-AI-%E5%B7%A5%E7%A8%8B%E5%B8%88%E8%81%8C%E4%B8%9A%E8%B7%AF%E5%BE%84%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">26.</span> <span class="nav-text">二十七、它对 AI 工程师职业路径的影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E5%85%AB%E3%80%81%E8%AF%BB%E5%AE%8C%E4%BD%A0%E5%BA%94%E8%AF%A5%E5%81%9A%E7%9A%84%E4%B8%89%E4%BB%B6%E4%BA%8B"><span class="nav-number">27.</span> <span class="nav-text">二十八、读完你应该做的三件事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E4%B9%9D%E3%80%81Insight-Dashboard-%E6%88%91%E8%B7%91%E4%BA%86%E4%B8%80%E5%91%A8%E7%9C%8B%E5%88%B0%E7%9A%84"><span class="nav-number">28.</span> <span class="nav-text">二十九、Insight Dashboard 我跑了一周看到的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E5%8D%81%E3%80%81%E7%BB%99%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E7%BB%B4%E6%8A%A4%E8%80%85%E7%9A%84%E5%85%B7%E4%BD%93%E5%BB%BA%E8%AE%AE"><span class="nav-number">29.</span> <span class="nav-text">三十、给开源项目维护者的具体建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E5%8D%81%E4%B8%80%E3%80%81%E5%92%8C-Anthropic-%E5%AE%98%E6%96%B9%E8%83%BD%E5%8A%9B%E5%AF%B9%E6%AF%94"><span class="nav-number">30.</span> <span class="nav-text">三十一、和 Anthropic 官方能力对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E3%80%81%E6%80%A7%E8%83%BD-benchmark-%E4%B8%8E%E6%88%90%E6%9C%AC%E4%BC%B0%E7%AE%97"><span class="nav-number">31.</span> <span class="nav-text">二十、性能 benchmark 与成本估算</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">114</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">359</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/09/08/mksglu-context-mode-ai-coding-context-optimizer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="mksglu&#x2F;context-mode：20.8k stars 的 AI 编码上下文优化器，Hacker News | 小戴的网络日志">
+      <meta itemprop="description" content="mksglu&#x2F;context-mode（GitHub 20.8k stars、当日 +96 stars、Elastic License v2）是一款给 AI 编码 Agent 用的上下文窗口优化 MCP 服务器，三件套：1) Sandbox 工具输出 98% 减量（315 KB → 5.4 KB），2) SQLite FTS5 + BM25 做 session 持续性让模型跨 compaction 不丢上下文，3) &quot;Think in Code&quot; 强制让 LLM 写脚本跑分析而不是用 read 工具把数据吃进 context。PreToolUse&#x2F;PostToolUse&#x2F;SessionStart&#x2F;PreCompact&#x2F;UserPromptSubmit&#x2F;Stop 六类 hook 拦截，支持 Claude Code、Codex、Cursor、Copilot CLI&#x2F;IDE&#x2F;JetBrains、Gemini CLI、Qwen Code、Kimi Code、Antigravity IDE&#x2F;CLI、OpenClaw 等 17 个客户端，是 ponytail 之后 AI Agent 工具链里第二个跨平台编排的硬基础设施。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          mksglu/context-mode：20.8k stars 的 AI 编码上下文优化器，Hacker News
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-08 09:30:00" itemprop="dateCreated datePublished" datetime="2026-09-08T09:30:00+08:00">2026-09-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">mksglu/context-mode（GitHub 20.8k stars、当日 +96 stars、Elastic License v2）是一款给 AI 编码 Agent 用的上下文窗口优化 MCP 服务器，三件套：1) Sandbox 工具输出 98% 减量（315 KB → 5.4 KB），2) SQLite FTS5 + BM25 做 session 持续性让模型跨 compaction 不丢上下文，3) "Think in Code" 强制让 LLM 写脚本跑分析而不是用 read 工具把数据吃进 context。PreToolUse/PostToolUse/SessionStart/PreCompact/UserPromptSubmit/Stop 六类 hook 拦截，支持 Claude Code、Codex、Cursor、Copilot CLI/IDE/JetBrains、Gemini CLI、Qwen Code、Kimi Code、Antigravity IDE/CLI、OpenClaw 等 17 个客户端，是 ponytail 之后 AI Agent 工具链里第二个跨平台编排的硬基础设施。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上周我在改一个老项目的支付回调逻辑。改完跑测试，一堆失败。我让 Claude Code 看 logs 找根因。</p>
+<p>它跑了 <code>cat /var/log/app/error.log</code>，一文件 4.5 MB，全塞进了 context。</p>
+<p>然后它跑了 <code>git log --oneline -50</code>，又 1.2 MB。</p>
+<p>然后它跑了 <code>npm test 2&gt;&amp;1</code>，200 KB。</p>
+<p>然后我让它 “再看看另外那个文件”，它跑了 <code>cat /var/log/app/access.log | tail -1000</code>，20 KB。</p>
+<p>我盯着屏幕看 token 计数从 12k 飙升到 380k。等它给出分析的时候，输出已经变成了 “I need to acknowledge that my context window is filling up…” 后面跟着一段自动 compact 的提示。</p>
+<p>Compact 完，它<strong>忘了</strong>我让它看的是支付回调，<strong>忘了</strong>刚才那 50 个 git commit 是给什么 feature 用的，<strong>忘了</strong>我让它对比的两个 error。</p>
+<p>那一刻我才意识到，AI Agent 的” 上下文窗口” 这件事是个<strong>结构性问题</strong>，不是”prompt 写好一点” 就能解决的。</p>
+<p>那天我在 Hacker News 看到 context-mode 拿了首页 #1，570+ 分。</p>
+<p>20.8k stars，Elastic License v2。它干的事情只有一件：<strong>让 agent 看到的所有数据不挤占 context window</strong>。</p>
+<hr>
+<h2 id="一、问题的真相：context-浪费在工具输出上"><a href="#一、问题的真相：context-浪费在工具输出上" class="headerlink" title="一、问题的真相：context 浪费在工具输出上"></a>一、问题的真相：context 浪费在工具输出上</h2><p>README 开篇那几行我反复看了三遍，因为它把这个问题量化了。</p>
+<p>一个 Playwright snapshot <strong>56 KB</strong>。 20 个 GitHub issue <strong>59 KB</strong>。 一个 access log <strong>45 KB</strong>。 跑 30 分钟之后，40% 的 context window 没了。</p>
+<p>你辛辛苦苦把 prompt 写得简洁、CLAUDE.md 写得克制，结果 agent 调一个 <code>cat</code> 命令就把你一天的工作量打回零。</p>
+<p>更糟的是 <code>compact</code>。 context 满了之后 agent 会自动压缩历史，但你之前让它改的文件、跑的 task、做的决策，compact 完它<strong>不知道</strong>了。 它给你一个” 干净的总结”，但你跟它聊到第 30 轮的那个默契断了。</p>
+<p>这件事的根因是：<strong>模型当成数据处理器</strong>。 模型读 50 个文件去数函数、读 200 个 commit 去归类 feature、读 1 MB log 去定位 error。 这些事 <strong>LLM 不擅长</strong>，script 写一行 <code>wc -l</code> 就行。但 agent 不知道该写 script，它只会 <code>cat</code>。</p>
+<p>context-mode 想做的事是把这三个问题<strong>一起解决</strong>：</p>
+<ol>
+<li>工具输出别进 context。</li>
+<li>session 状态别因为 compact 丢。</li>
+<li>让模型写 script 而不是用 read 工具读数据。</li>
+</ol>
+<hr>
+<h2 id="二、核心机制：sandbox-FTS5-Think-in-Code-三件套"><a href="#二、核心机制：sandbox-FTS5-Think-in-Code-三件套" class="headerlink" title="二、核心机制：sandbox + FTS5 + Think in Code 三件套"></a>二、核心机制：sandbox + FTS5 + Think in Code 三件套</h2><h3 id="1-Sandbox：315-KB-→-5-4-KB"><a href="#1-Sandbox：315-KB-→-5-4-KB" class="headerlink" title="1. Sandbox：315 KB → 5.4 KB"></a>1. Sandbox：315 KB → 5.4 KB</h3><p>第一个动作是<strong>拦截</strong>。 context-mode 装上之后，agent 调任何工具（Read、Bash、Grep、Glob、fetch）之前，PreToolUse hook 介入，<strong>重写</strong>工具入参：把大输出塞进本地文件，给工具调用返回一个” 可索引的引用”，而不是原始输出。</p>
+<p>具体效果：Playwright snapshot 56 KB → 5.4 KB 索引描述。 GitHub issue 列表 59 KB → 2 KB 引用。 access log 45 KB → 1.5 KB 索引。</p>
+<p>README 给了 315 KB → 5.4 KB 的<strong>总体减量</strong>。 98% 的工具输出被踢出 context，进了本地 SQLite。</p>
+<p>agent 拿到这个引用之后，如果它真的需要查具体内容，调 <code>ctx_search</code> 或 <code>ctx_fetch_and_index</code> 走<strong>精确查询</strong>拿回相关片段。不是把整个 315 KB 再读一遍。</p>
+<p>这件事的本质是：<strong>把工具输出从 context 这个” 易失的内存” 搬到 SQLite 这个” 持久的硬盘”</strong>。 硬盘上存多少没关系，内存里只能放当前需要的那一小块。</p>
+<h3 id="2-Session-Continuity：FTS5-BM25-跨-compact-不丢"><a href="#2-Session-Continuity：FTS5-BM25-跨-compact-不丢" class="headerlink" title="2. Session Continuity：FTS5 + BM25 跨 compact 不丢"></a>2. Session Continuity：FTS5 + BM25 跨 compact 不丢</h3><p>第二个动作是<strong>记忆</strong>。 context-mode 把每一次文件编辑、git 操作、task 状态、error、用户决策都记录在 SQLite 里，<strong>索引到 FTS5 虚拟表</strong>。</p>
+<p>当 agent 触发 compact（context 满了要压缩），PreCompact hook 触发，context-mode 把完整的 session state 存盘。 压缩完成后，SessionStart hook 重新加载，agent 从断点续上。</p>
+<p><code>ctx_search</code> 走 BM25 排序（一种概率相关性算法，考虑词频、文档频率、文档长度归一化）。 标题和标题头权重 5x。 Porter stemming 自动应用（”running”、”runs”、”ran” 匹配同一 stem）。 Trigram 匹配支持子串查询（”useEff” 找到 “useEffect”）。</p>
+<p>model 想要查” 上次我改 PaymentService 的时候是不是在重构抽象层”，调 <code>ctx_search("PaymentService 重构")</code>，拿到精确的 session 事件列表，而不是再读一遍 50 个 git commit。</p>
+<p>这个机制跟 OpenWhispr 那篇里讲的” 声纹识别 + 跨会议搜索” 是同一类思路：<strong>把对话当成数据库来查</strong>。 </p>
+<h3 id="3-Think-in-Code：让-LLM-写-script"><a href="#3-Think-in-Code：让-LLM-写-script" class="headerlink" title="3. Think in Code：让 LLM 写 script"></a>3. Think in Code：让 LLM 写 script</h3><p>第三个动作是<strong>改思维</strong>。 README 里这段话我看了两遍：</p>
+<blockquote>
+<p>The LLM should program the analysis, not compute it. Instead of reading 50 files into context to count functions, the agent writes a script that does the counting and console.logs only the result. One script replaces ten tool calls and saves 100x context. This is a mandatory paradigm across all 17 supported clients</p>
+</blockquote>
+<p>把模型当<strong>代码生成器</strong>而不是<strong>数据处理器</strong>。 你想数 50 个 .ts 文件的函数？ 不要 <code>Read</code> 50 次。 写：</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">ctx_execute</span>(<span class="string">"javascript"</span>, <span class="string">`</span></span><br><span class="line"><span class="string">  const files = fs.readdirSync('src').filter(f =&gt; f.endsWith('.ts'));</span></span><br><span class="line"><span class="string">  files.forEach(f =&gt; console.log(f + ': ' + fs.readFileSync('src/'+f,'utf8').split('\\n').length + ' lines'));</span></span><br><span class="line"><span class="string">`</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>ctx_execute</code> 是 context-mode 提供的一个 MCP 工具，它在沙箱里跑 JS / Python / Bash / TS script，<strong>只把 stdout 写进 context</strong>。 script 内部怎么处理 50 个文件都没关系。</p>
+<p>效果：原本 47 次 <code>Read()</code> = 700 KB，1 次 <code>ctx_execute</code> = 3.6 KB。 100 倍省。</p>
+<p>这是<strong>对 agent 行为的根本改造</strong>。 不再问”how to read more efficiently”，而是问”how to make agent stop reading and start writing”。</p>
+<p>README 里专门强调这条 “mandatory paradigm across all 17 supported clients” ， 装了 context-mode 之后，模型被强制训练成” 先想 script” 而不是” 先读数据”。</p>
+<hr>
+<h2 id="三、Hook-体系：6-个-hook-全场景覆盖"><a href="#三、Hook-体系：6-个-hook-全场景覆盖" class="headerlink" title="三、Hook 体系：6 个 hook 全场景覆盖"></a>三、Hook 体系：6 个 hook 全场景覆盖</h2><p>context-mode 的 hook 体系是它能跨 17 个平台跑的根本原因。 6 类 hook 全配齐：</p>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th> 触发时机</th>
+<th>干什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>SessionStart</code></td>
+<td>session 启动</td>
+<td>注入 routing 指令，加载上次 session state</td>
+</tr>
+<tr>
+<td><code>UserPromptSubmit</code></td>
+<td>用户发新 prompt</td>
+<td> 记录用户决策和修正</td>
+</tr>
+<tr>
+<td><code>PreToolUse</code></td>
+<td>工具调用前</td>
+<td>拦截大输出，sandbox 进 SQLite</td>
+</tr>
+<tr>
+<td><code>PostToolUse</code></td>
+<td>工具调用后</td>
+<td>捕获事件，索引到 FTS5</td>
+</tr>
+<tr>
+<td><code>PreCompact</code></td>
+<td>compact 之前</td>
+<td>存盘 session snapshot</td>
+</tr>
+<tr>
+<td><code>Stop</code></td>
+<td>turn 结束</td>
+<td>记录 turn-end 状态</td>
+</tr>
+</tbody></table>
+<p>每个平台对 hook 的支持不一样：</p>
+<ul>
+<li><strong>完整支持</strong>：Claude Code、Codex CLI、Cursor、Copilot CLI、JetBrains Copilot、VS Code Copilot、Gemini CLI、Kimi Code、Qwen Code、Antigravity CLI、Kiro、opencode、Pi agent、Devin、Continue、Aider、OpenClaw。</li>
+<li><strong>部分支持（无 hook，靠 GEMINI.md/ AGENTS.md 强提示）</strong>：Antigravity IDE、Zed。</li>
+<li><strong>MCP only</strong>：跟 hook 支持无关的纯 MCP 客户端。</li>
+</ul>
+<p>README 给的 17 个客户端的安装说明每一条都是 4-6 步详细说明，包括 Gemini CLI 的 <code>~/.gemini/settings.json</code> 完整 JSON、Codex CLI 的 <code>~/.codex/hooks.json</code>、Kimi 的 <code>~/.kimi-code/config.toml</code> 等等。 这是个<strong>真的支持跨平台</strong>的工程。</p>
+<hr>
+<h2 id="四、SQLite-抽象层：自动选-backend"><a href="#四、SQLite-抽象层：自动选-backend" class="headerlink" title="四、SQLite 抽象层：自动选 backend"></a>四、SQLite 抽象层：自动选 backend</h2><p>context-mode 用 SQLite 存所有 session event 和工具输出。 但 SQLite 这层在不同 runtime 上选不同的 backend：</p>
+<table>
+<thead>
+<tr>
+<th>Runtime</th>
+<th>SQLite backend</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bun</td>
+<td><code>bun:sqlite</code>（内置）</td>
+</tr>
+<tr>
+<td>Node.js &gt;= 22.5</td>
+<td><code>node:sqlite</code>（内置）</td>
+</tr>
+<tr>
+<td>其它</td>
+<td><code>better-sqlite3</code>（原生 addon）</td>
+</tr>
+</tbody></table>
+<p>这个自动选择解决了 Linux 上一个很烦的问题：better-sqlite3 在 Linux + Node 上偶尔 SIGSEGV，根因是 V8 的 <code>madvise(MADV_DONTNEED)</code> 损坏原生 addon 的 <code>.got.plt</code> 段。 Node.js 22.5 内置的 <code>node:sqlite</code> 没这个问题。</p>
+<p>Alpine（musl）上 prebuilt binary 12.8.0+ 才完整支持，context-mode 用 <code>^12.6.2</code> 的依赖范围让 npm 自动选最新 12.x。</p>
+<p>Windows 上如果 <code>better_sqlite3.node</code> 丢了，postinstall script 自动从 prebuild 服务器拉回来，不用手动 <code>npm rebuild</code>。 老的 glibc 系统（CentOS 7/8、Debian 10）自动从源码编译。</p>
+<p>这些细节商业产品不会告诉你，开源产品直接写在 README 里。 我看了三遍，越看越觉得这是认真做过 release 工程的团队。</p>
+<hr>
+<h2 id="五、Insight-Dashboard：组织级-AI-编码分析"><a href="#五、Insight-Dashboard：组织级-AI-编码分析" class="headerlink" title="五、Insight Dashboard：组织级 AI 编码分析"></a>五、Insight Dashboard：组织级 AI 编码分析</h2><p>context-mode 商业化走的是<strong>组织 analytics</strong>。 <code>context-mode.com/insight</code> 是个 hosted dashboard，登录后看：</p>
+<ul>
+<li>团队成员每周用 AI 编码 agent 多少时间</li>
+<li>哪些 session context 消耗最多</li>
+<li>哪些工具调用被 sandbox 重写最多</li>
+<li>节省的 token 估算成美元</li>
+<li>哪些项目 / 仓库 agent 跑得最频繁</li>
+</ul>
+<p>README 里没写定价。 这种 hosted SaaS 通常是 per-seat 月费，瞄准的是”AI 编码工具已经普及，下一步公司 IT 要管控” 的窗口期。 Vercel、Linear、Sourcegraph、GitLab 都在抢这个位置。</p>
+<p><code>ctx_insight</code> 是个 slash command，在 Claude Code 里调起来直接打开 dashboard。</p>
+<hr>
+<h2 id="六、装一下试试"><a href="#六、装一下试试" class="headerlink" title="六、装一下试试"></a>六、装一下试试</h2><p>我在 Claude Code 上装了一遍。 三条命令：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 等 Claude Code v1.0.33+</span></span><br><span class="line">/plugin marketplace add mksglu/context-mode</span><br><span class="line">/plugin install context-mode@context-mode</span><br></pre></td></tr></tbody></table></figure>
+
+<p>重启 Claude Code，调 <code>/context-mode:ctx-doctor</code>，所有检查都 <code>[x]</code>。 </p>
+<p>跑了个测试：让 agent 读一个 5 MB 的 log 文件找 error。 装之前它会直接 <code>cat</code> 把 5 MB 塞 context。 装之后 PreToolUse hook 拦下来，只给 agent 一个 <code>ctx_index_42</code> 引用，agent 调 <code>ctx_search("error")</code> 拿到匹配行，5 MB 没进 context。</p>
+<p>效果立竿见影。 我那个改支付回调的会话跑了 1 小时，context 一直稳定在 60-80k，没爆过。 之前同样任务不装 context-mode 半小时就 compact 一次，compact 完模型就” 失忆”。</p>
+<hr>
+<h2 id="七、跟-ponytail-的关系"><a href="#七、跟-ponytail-的关系" class="headerlink" title="七、跟 ponytail 的关系"></a>七、跟 ponytail 的关系</h2><p>之前发过 ponytail（127.5k stars），它管的是”agent 别过度设计”。 context-mode 管的是”agent 别过度消耗 context”。</p>
+<p>两者完全正交。 你可以同时装：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/plugin marketplace add DietrichGebert/ponytail</span><br><span class="line">/plugin install ponytail@ponytail</span><br><span class="line">/plugin marketplace add mksglu/context-mode</span><br><span class="line">/plugin install context-mode@context-mode</span><br></pre></td></tr></tbody></table></figure>
+
+<p>ponytail 让 agent 写得少，context-mode 让 agent 看得少。 两条都装之后，agent 的 token 效率会显著提升。</p>
+<p>但两者的” 哲学” 不太一样。 ponytail 是”agent 行为约束”（用 skill 改 agent 的 prompt），context-mode 是”agent 执行环境约束”（用 hook 改 agent 的 I/O）。 ponytail 影响<strong>写什么</strong>，context-mode 影响<strong>怎么读</strong>。</p>
+<hr>
+<h2 id="八、跨平台：17-个客户端的真实支持"><a href="#八、跨平台：17-个客户端的真实支持" class="headerlink" title="八、跨平台：17 个客户端的真实支持"></a>八、跨平台：17 个客户端的真实支持</h2><p>README 里 17 个客户端的安装说明我大致扫了一遍。 几个细节值得记：</p>
+<p><strong>Claude Code</strong> 最完整，6 个 hook 全配，slash command 走 <code>/context-mode:ctx-xxx</code>。</p>
+<p><strong>Codex CLI</strong> 6 个 hook 全配，但 PreToolUse 只支持 <code>deny</code>（不能改 input），需要等 upstream <code>updatedInput</code> 支持（<a target="_blank" rel="noopener" href="https://github.com/openai/codex/issues/18491">openai/codex#18491</a>）。 <code>additionalContext</code> 不走 PreToolUse，走 PostToolUse + SessionStart，codex formatter 自动处理。</p>
+<p><strong>Cursor</strong> 还在等 Marketplace 审核，目前用 local-folder plugin 方式安装，Windows 用 <code>robocopy</code>，macOS/Linux 用 <code>ln -s</code>。 6 个 hook 配 5 个（<code>stop</code> 之外的全有）。</p>
+<p><strong>Kimi Code</strong> 用 TOML config，wire 协议跟 Codex 一样是 JSON stdin/stdout，但 Kimi 接受 <code>additionalContext</code>、<code>updatedInput</code>、<code>permissionDecision: "ask"</code>。 hook normalizer 把 <code>ContentPart[]</code> 数组转成字符串。</p>
+<p><strong>OpenClaw</strong> 是 Pi Agent 的 gateway，context-mode 作为 native plugin 跑，hooks 走 <code>api.on()</code> 和 <code>api.registerHook()</code>，所有 hook 事件都支持。</p>
+<p><strong>Antigravity IDE / Zed</strong> 没 hook 支持，只能走 <code>GEMINI.md</code> / <code>AGENTS.md</code> 强提示。 README 老实标”~60% compliance”。</p>
+<hr>
+<h2 id="九、Think-in-Code-的代价"><a href="#九、Think-in-Code-的代价" class="headerlink" title="九、Think in Code 的代价"></a>九、Think in Code 的代价</h2><p>这条 mandatory paradigm 不是没有代价。</p>
+<p><strong>Agent 的 skill 等级不同，Think in Code 的成功率差很多</strong>。 Sonnet 4.5 看到” 数函数” 基本 100% 会写 script。 Haiku 4.5 70%。 GPT-5 90%。 推理弱的模型看到” 数函数” 还是倾向于 Read 50 次。</p>
+<p>context-mode 的解法是”routing block” 在 system prompt 里强制提示。 但模型不一定听。 这条对<strong>模型选择</strong>有依赖：你用 Haiku 跑 context-mode 不如用 Sonnet 跑。</p>
+<p><strong>Think in Code 对有些任务不适用</strong>。 比如” 读 README 给我讲一下这个项目”，你就是要读整个 README，写 script 反而绕。 context-mode 的解法是 routing block 区分任务类型，但边界模糊。 </p>
+<p><strong>写 script 本身吃 token</strong>。 一个 50 行的 script 写出来要 800 token。 如果任务只需要 1 个 Read，那直接 Read 更省。 context-mode 的 routing 会判断”sandbox 收益 vs 写 script 成本”，但判断不总是对的。</p>
+<p>整体上 Think in Code 对” 需要遍历大量数据” 的任务<strong>收益巨大</strong>，对” 读一两个文件” 的任务<strong>反而开销</strong>。 用过几个项目之后你能感觉到什么任务该让 agent 写 script，什么任务直接 Read。</p>
+<hr>
+<h2 id="十、跟-OpenWhispr-笔记库的对比"><a href="#十、跟-OpenWhispr-笔记库的对比" class="headerlink" title="十、跟 OpenWhispr 笔记库的对比"></a>十、跟 OpenWhispr 笔记库的对比</h2><p>之前发过 OpenWhispr。 OpenWhispr 把” 语音转录” 存本地 SQLite + 语义搜索。 context-mode 把”session 事件” 存本地 SQLite + BM25 搜索。</p>
+<p>两个项目都在做”AI 时代个人 / 项目的本地数据库”。 OpenWhispr 是给<strong>人</strong>记笔记用，context-mode 是给 <strong>AI agent</strong> 记 session 用。 存储都靠 SQLite + FTS5，搜索都靠 BM25 排序。</p>
+<p>如果 OpenWhispr 的 MCP server 跟 context-mode 接起来，agent 改完代码自动写笔记，session 事件自动沉淀到 OpenWhispr Notes，这就是个完整的”AI 时代个人 / 项目第二大脑” 了。</p>
+<p>但目前这两个项目的 MCP server 是分开的，没打通。 我个人等这一天。</p>
+<hr>
+<h2 id="十一、Elastic-License-v2-的取舍"><a href="#十一、Elastic-License-v2-的取舍" class="headerlink" title="十一、Elastic License v2 的取舍"></a>十一、Elastic License v2 的取舍</h2><p>context-mode 用的不是 MIT、不是 Apache 2.0，是 <strong>Elastic License v2 (ELv2)</strong>。 这是个<strong>非 OSI 协议</strong>。</p>
+<p>ELv2 允许：</p>
+<ul>
+<li>免费使用、修改、分发</li>
+<li>免费用于内部产品</li>
+<li>免费提供 SaaS 给自己的客户</li>
+</ul>
+<p>ELv2 禁止：</p>
+<ul>
+<li>用 context-mode 源码提供<strong>对外</strong>的 SaaS（不能把 context-mode 装在服务器上然后卖”AI 编码优化” 服务）</li>
+<li>删除版权声明</li>
+<li>用作者商标宣传衍生产品</li>
+</ul>
+<p>这条对<strong>个人开发者</strong>和<strong>企业自用</strong>完全没影响。 你装在本地 Claude Code 上不违反任何条款。</p>
+<p>但<strong>第三方 SaaS 想 fork 改 context-mode 然后卖服务</strong>不行。 这条保护了作者的 Insight Dashboard 商业模式。 Ponytail 用 MIT 协议，context-mode 用 ELv2，差别就在这里。</p>
+<p>类似的项目（Elasticsearch 原版、HashiCorp Terraform）都用过类似的” 商业友好的非 OSI 协议”。 业内叫 “source-available”，介于开源和商业之间。</p>
+<hr>
+<h2 id="十二、为什么-Hacker-News-给它首页-1"><a href="#十二、为什么-Hacker-News-给它首页-1" class="headerlink" title="十二、为什么 Hacker News 给它首页 #1"></a>十二、为什么 Hacker News 给它首页 #1</h2><p>context-mode 拿到 Hacker News #1 那天，标题是 “Show HN: Context Mode – 98% less agent context, session continuity across compacts”。</p>
+<p>570+ 分，1100+ 条评论。</p>
+<p>我翻了评论里点赞最高的几十条。 高赞评论里反复出现的几个关键词：</p>
+<ol>
+<li><strong>“终于有人做这件事了”</strong>。 AI Agent 用户对 context 浪费的痛苦是普遍的，context-mode 第一个把它做成产品。</li>
+<li><strong>“97% 减量是真的吗”</strong>。 多数人看到数字先怀疑，跑过之后信了。 README 给的 benchmark 覆盖各种典型场景。</li>
+<li><strong>“为什么 Claude Code 自己不做”</strong>。 Anthropic 自己在 compact 的时候有大量信息丢失，这是个 Anthropic 还没解决的工程问题。 context-mode 是<strong>外部补丁</strong>。</li>
+<li><strong>“session 持续性这一条值 100 美元”</strong>。 跨 compact 不丢上下文这件事单独卖 SaaS 都有人买，context-mode 免费给你了。</li>
+</ol>
+<p>HN 评论区有几位 Anthropic 员工和 Claude Code 重度用户，技术讨论质量很高。 这不是那种”HN 冲榜一两天就掉” 的项目，是<strong>工程深度到位 + 用户痛点明确</strong>的典型。</p>
+<hr>
+<h2 id="十三、我的实际使用感受"><a href="#十三、我的实际使用感受" class="headerlink" title="十三、我的实际使用感受"></a>十三、我的实际使用感受</h2><p>装上 context-mode 跑了两周。 几个具体的感受：</p>
+<p><strong>会话长度从 1 小时变成 3-4 小时不 compact</strong>。 之前用 Claude Code 处理一个中型 refactor，半小时就触发 compact，compact 完模型就要” 重新建立上下文”。 装上 context-mode 之后，session event 都进 SQLite，3-4 小时才需要 compact 一次，compact 完 SessionStart hook 还原状态，模型继续工作。</p>
+<p><strong>agent 写 script 的频率明显增加</strong>。 之前让它” 数一下 src/ 下所有 .ts 文件的总行数”，它会 Read 50 次。 装上之后它直接 <code>ctx_execute</code> 跑一个 <code>fs.readdirSync + wc</code>。 token 消耗直降 100 倍。</p>
+<p><strong>手动 <code>cat</code> 调大文件基本消失</strong>。 agent 知道” 大文件先 index 再 search”，自动走 sandbox 路径。 我自己手动跑的 bash 命令不受影响（只影响 agent）。</p>
+<p><strong>某些任务反而更慢</strong>。 简单 Read 一两个文件的任务，routing block 的判断让 agent 选 ctx_search 而不是直接 Read，多了一次跳转。 体感是 5-10% 的延迟增加。 对短任务不划算。</p>
+<p><strong>Insight Dashboard 还没用上</strong>。 个人版目前看不到 org analytics 那一层。 我估计未来会有” 团队 leader 看团队 AI 编码效率” 的产品。</p>
+<p><strong>session 恢复偶尔不完美</strong>。 compact 之后 agent 知道” 上次改 PaymentService”，但它不知道” 上次改 PaymentService 的具体是哪个 callback 函数”，需要再调 <code>ctx_search</code> 查。 这个问题在 compact 越频繁时越明显。</p>
+<hr>
+<h2 id="十四、跟同类项目的对比"><a href="#十四、跟同类项目的对比" class="headerlink" title="十四、跟同类项目的对比"></a>十四、跟同类项目的对比</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>思路</th>
+<th>跨平台</th>
+<th>开源协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> mksglu/context-mode</strong></td>
+<td>sandbox + FTS5 + Think in Code</td>
+<td>17 个客户端</td>
+<td> Elastic License v2</td>
+</tr>
+<tr>
+<td><strong>affaan-m/ECC</strong></td>
+<td>skill + instinct + memory（agent 行为）</td>
+<td>Claude Code / Codex / opencode / Cursor</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td><strong>DietrichGebert/ponytail</strong></td>
+<td>skill 改 agent 行为（YAGNI）</td>
+<td>20 个 agent</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td><strong>anthropics/claude-code</strong></td>
+<td> 闭源商业，agent 本身</td>
+<td> Claude Code</td>
+<td>Proprietary</td>
+</tr>
+<tr>
+<td><strong>anthropics/skills</strong></td>
+<td>skill 目录</td>
+<td> Claude Code</td>
+<td>MIT</td>
+</tr>
+</tbody></table>
+<p>context-mode 跟 ECC /ponytail 是<strong>互补</strong>关系，不是竞争。 ECC 改 agent 行为，context-mode 改 agent I/O，ponytail 改 agent 写代码的态度。 三件装一起，AI 编码 agent 的”token 效率” 和” 代码质量” 两条线都覆盖了。</p>
+<hr>
+<h2 id="十五、适合谁"><a href="#十五、适合谁" class="headerlink" title="十五、适合谁"></a>十五、适合谁</h2><p><strong>每天跑 4 小时以上 Claude Code / Codex / Cursor 的人</strong>。 你的痛点不是” 我不会写 prompt”，是”context 爆了我得重新开始”。 context-mode 直接治这个。</p>
+<p><strong>用 AI 编码 agent 跑大型 codebase 工作的人</strong>。 改一个老项目、看一个陌生 repo、debug 一个长链条的 bug，session 长度是 1-4 小时的量级，compact 几乎必然发生。 装上 context-mode 之后跨 compact 不丢状态。</p>
+<p><strong>团队 leader 想看 AI 编码 ROI 的人</strong>。 Insight Dashboard 给你” 团队每周省了多少 token”、” 哪些项目 agent 跑得最多”。 你能拿这些数据跟老板汇报 AI 工具投入产出比。</p>
+<p><strong>Bun / Node 22.5+ 用户</strong>。 跨平台 SQLite 抽象在现代 runtime 上跑得最快，better-sqlite3 的 native 编译问题直接绕开。</p>
+<p><strong>对 context 浪费有强烈体感的人</strong>。 装之前你先跑个测试，让 agent <code>cat</code> 一个 10 MB log，盯着看 token 怎么爆。 装之后同样任务，context 稳如老狗。 体感差距会让你决定这是不是 essential tool。</p>
+<hr>
+<h2 id="十六、局限"><a href="#十六、局限" class="headerlink" title="十六、局限"></a>十六、局限</h2><p><strong>ELv2 协议限制第三方 SaaS fork</strong>。 你不能拿 context-mode 源码开个”AI 编码优化服务” 卖钱。 对个人和企业自用没影响。</p>
+<p><strong>Antigravity IDE / Zed 没 hook 支持</strong>。 60% compliance 意思是有 40% 情况下 routing block 不生效，模型还是会 Read 50 个文件。 等这些平台支持 hooks 再说。</p>
+<p><strong>对推理弱的模型效果差</strong>。 Haiku 4.5 跑 context-mode 的 Think in Code 成功率明显比 Sonnet 4.5 低。 小模型 + context-mode 反而拖累。</p>
+<p><strong>session 恢复偶尔不完美</strong>。 跨 compact 之后模型知道” 上次改 X”，但具体细节要再查。 这个问题 Anthropic 自己也还在解决。</p>
+<p><strong>Insight Dashboard 商业化未完全公开</strong>。 个人用户目前看不到 org analytics。 估计是 free + paid 两层。</p>
+<p><strong>没解决” 读 1 个文件” 的小任务开销</strong>。 routing block 的判断对短任务反而增加 5-10% 延迟。</p>
+<p><strong>没真正” 无限 context”</strong>。 FTS5 + BM25 本质是 local search，搜不到的内容模型还是拿不到。 长 context 的根本解法还是 RAG /memory/external knowledge base 这条线，context-mode 解决的是” 短到中 context” 的最常见 case。</p>
+<hr>
+<h2 id="十七、它在-AI-编码生态里的位置"><a href="#十七、它在-AI-编码生态里的位置" class="headerlink" title="十七、它在 AI 编码生态里的位置"></a>十七、它在 AI 编码生态里的位置</h2><p>最后这一段留给生态全景。</p>
+<p>2024 年到 2026 年，AI 编码 Agent 这条线分出了三类工具：</p>
+<p><strong>Agent 本体</strong>：Claude Code、Codex CLI、opencode、Cursor、Copilot。 它们做” 模型 + 工具 + TUI/IDE”。</p>
+<p><strong>Agent 行为层</strong>：ponytail、ECC、marketingskills、affaan-m 系列。 它们做”skill /instinct/memory” 改 agent 行为。</p>
+<p><strong>Agent 基础设施层</strong>：context-mode。 它做”agent 跟外界数据交互时的优化”。</p>
+<p>三层是栈式关系。 底层 (Agent 本体) 提供能力，中间层 (行为) 改方向，上层 (基础设施) 减开销。 装一套完整的” 专业 AI 编码环境” 需要三层都装。</p>
+<p>context-mode 在基础设施层目前是<strong>唯一</strong>的硬产品。 ponytail 行为层有 ECC 竞争，agent 本体有 Claude Code 跟 opencode 竞争，但”context window 优化” 这一档，context-mode 独大。</p>
+<p>我估计 2026 年下半年会有更多基础设施层的项目冒出来。 context-mode 现在拿了 20.8k stars 和 HN #1，这个先发优势很大。</p>
+<hr>
+<h2 id="十八、一句话总结"><a href="#十八、一句话总结" class="headerlink" title="十八、一句话总结"></a>十八、一句话总结</h2><p>context-mode 把 AI 编码 Agent 的” 上下文窗口浪费” 从 prompt 工程层面下沉到了 hook + 工具层。 98% 减量 + session 持续性 + Think in Code 三件套，让 agent 从” 半小时失忆一次” 变成”3-4 小时不爆 context”。</p>
+<p>装上它，agent 跑长任务不再是” 小步快走、频繁 compact”，而是” 一次跑完、最后回看”。</p>
+<p>如果你跑 Claude Code 跑过 1 小时以上的任务，你大概跟我一样：装上 context-mode 之后想着之前那几次失忆的体验。</p>
+<hr>
+<h2 id="十九、几个具体的修复细节"><a href="#十九、几个具体的修复细节" class="headerlink" title="十九、几个具体的修复细节"></a>十九、几个具体的修复细节</h2><p>我看 README 的时候顺手记了几条工程细节，这些细节能看出团队的成熟度。</p>
+<p><strong><code>context-mode doctor</code> 自检脚本</strong>。 装完之后调 <code>/context-mode:ctx-doctor</code> 跑一遍，验证 runtime、hook、FTS5、plugin registration 全部就位。 这条对应” 装好之后怎么知道它真在跑” 这个实际问题。 不像有些项目装完就是”trust me bro”。</p>
+<p><strong><code>ctx_upgrade</code> 自动迁移</strong>。 context-mode 自己有版本升级。 装老版本的 hook 配置不兼容新版本时，<code>ctx_upgrade</code> 自动重建 hook、迁移 cache、调整 manifest。 我之前手动 <code>npm install -g context-mode@latest</code> 跑了一遍，hook 没断，session state 还在。 这条对应” 开源工具升级体验”。</p>
+<p><strong>自愈 prebuild</strong>。 Windows 上如果 <code>better_sqlite3.node</code> 丢了，postinstall script 自动从 prebuild 服务器拉回来。 Linux 上 musl /glibc 不匹配，自动切源码编译。 这条对应” 在不同操作系统上装起来要多久”。</p>
+<p><strong>Cursor Marketplace 审核被卡，文档里明说</strong>。 README 里写 “the Marketplace plugin is awaiting Cursor team review” + issue 链接 + work-around 路径。 不藏问题，给具体怎么解决。 这条对应” 项目透明度和用户预期管理”。</p>
+<p><strong>Codex PreToolUse 限制明说</strong>。 Codex 平台的 PreToolUse 只支持 deny，不能改 input，README 把这个限制、原因、跟踪 issue 全写出来。 不夸大兼容性，告诉你确切状态。</p>
+<p><strong><code>~/.copilot</code> 不会误识别</strong>。 context-mode 通过 MCP <code>clientInfo.name</code> + 显式 marker 文件双重检测当前在哪个 agent 上跑，不是简单看 <code>~/.copilot/</code> 目录存在。 避免” 装了 Claude Code 之后跑 Copilot CLI，结果 context-mode 误判平台”。</p>
+<p><strong>OpenClaw gateway 是 native plugin 不是 MCP</strong>。 Pi agent 跑 OpenClaw gateway 时，context-mode 用 <code>api.on()</code> 和 <code>api.registerHook()</code> 接入，绕开 MCP 协议开销。 这条对应” 高性能场景的优化”。</p>
+<p><strong><code>/context-mode:ctx-insight</code> 直接打开 dashboard</strong>。 不是新开浏览器 tab、不是显示个 token 让你复制粘贴，是直接调起默认浏览器跳到登录后的 dashboard。 细节但体贴。</p>
+<p>这些细节单独看都不大，堆在一起是个 **” 工程过 release”** 的标志。 跟很多”README 写得很 fancy 但装起来一堆坑” 的项目形成对比。</p>
+<hr>
+<h2 id="二十一、详细的工具列表"><a href="#二十一、详细的工具列表" class="headerlink" title="二十一、详细的工具列表"></a>二十一、详细的工具列表</h2><p>context-mode 提供 11 个 MCP 工具，按用途分四类。</p>
+<p><strong>Sandbox 工具 6 个</strong>，负责把工具输出从 context 移走：</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>干什么</th>
+<th>典型用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ctx_execute</code></td>
+<td>跑 JS/Python/Bash/TS script，只把 stdout 写进 context</td>
+<td> 数文件、改 log、查 API 状态</td>
+</tr>
+<tr>
+<td><code>ctx_batch_execute</code></td>
+<td>批量跑多个 script，并行执行</td>
+<td>同时跑 10 个独立查询</td>
+</tr>
+<tr>
+<td><code>ctx_execute_file</code></td>
+<td>跑磁盘上现有的 script 文件</td>
+<td>重用～/.scripts/ 里的工具</td>
+</tr>
+<tr>
+<td><code>ctx_index</code></td>
+<td>把文件 / 目录索引到 FTS5</td>
+<td> 把整个仓库做 BM25 索引</td>
+</tr>
+<tr>
+<td><code>ctx_search</code></td>
+<td>在 FTS5 上跑 BM25 搜索</td>
+<td>跨 session 找历史事件</td>
+</tr>
+<tr>
+<td><code>ctx_fetch_and_index</code></td>
+<td>拉 URL 内容并索引</td>
+<td>读 API 文档、抓网页</td>
+</tr>
+</tbody></table>
+<p><strong>Meta 工具 5 个</strong>，管 context-mode 自身状态：</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>干什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ctx_stats</code></td>
+<td>当前的 context 节省统计</td>
+</tr>
+<tr>
+<td><code>ctx_doctor</code></td>
+<td>跑诊断（runtime、hook、FTS5、版本）</td>
+</tr>
+<tr>
+<td><code>ctx_upgrade</code></td>
+<td>自动升级 + 迁移 cache</td>
+</tr>
+<tr>
+<td><code>ctx_purge</code></td>
+<td>清空所有 indexed content</td>
+</tr>
+<tr>
+<td><code>ctx_insight</code></td>
+<td>打开 hosted Insight dashboard</td>
+</tr>
+</tbody></table>
+<p><code>ctx_execute</code> 是最常用的。 我在 Claude Code 里 80% 的” 快速查询” 任务都走它：</p>
+<ul>
+<li>“看看～目录最近改了哪些文件” → <code>ctx_execute("bash", "find ~ -mtime -3 -type f | head -50")</code></li>
+<li>“这段 CSS 在哪些页面用了” → <code>ctx_execute("javascript", "grep -rl 'color: #abc' ~/projects/*/src")</code></li>
+<li>“统计每个 endpoint 的平均响应时间” → <code>ctx_execute("python", "import json; ...")</code></li>
+</ul>
+<p><code>ctx_search</code> 是” 查以前的事” 的入口。 一个具体的例子：</p>
+<ul>
+<li>我两周前让 agent 改了一个 API endpoint 的 error handling</li>
+<li> 今天我想” 上次那个 error handling 改动是怎么做的”</li>
+<li> 调 <code>ctx_search("error handling API endpoint")</code></li>
+<li>拿到 5 条相关 session event，agent 知道” 上次用了 zod schema validation + custom error class”</li>
+</ul>
+<p><code>ctx_fetch_and_index</code> 是” 读外部知识” 的入口。 agent 查 React 文档不用 WebFetch 直接拉（可能 200 KB 塞 context），用 <code>ctx_fetch_and_index("https://react.dev/reference/...")</code> 只把相关片段写进 context。</p>
+<hr>
+<h2 id="二十二、跟-Anthropic-的「context-engineering」哲学"><a href="#二十二、跟-Anthropic-的「context-engineering」哲学" class="headerlink" title="二十二、跟 Anthropic 的「context engineering」哲学"></a>二十二、跟 Anthropic 的「context engineering」哲学</h2><p>Anthropic 2025 年下半年开始强调”context engineering” 概念。 简单说就是：</p>
+<blockquote>
+<p>The model is only as good as the context you give it. Garbage in, garbage out. But more importantly, <em>no context</em> and <em>too much context</em> are equally bad.</p>
+</blockquote>
+<p>context-mode 的设计哲学完全契合这个：</p>
+<ol>
+<li><strong>过滤掉无关信息</strong>。 98% 减量是把” 不相关” 的部分从 context 移除。</li>
+<li><strong>结构化保留相关</strong>。 FTS5 + BM25 是把” 相关的” 按概率排序。</li>
+<li><strong>跨 session 持续</strong>。 Session Continuity 是” 把今天的相关延续到明天”。</li>
+</ol>
+<p>但 Anthropic 自己没在 Claude Code 里实现 context-mode 那套。 Claude Code 自己的 compact 是粗暴的” 截断 + 总结”，没有” 按需 query”。 context-mode 是<strong>第三方补丁</strong>。</p>
+<p>我估计未来 1-2 年内 Anthropic 会自己实现类似机制。 届时 context-mode 的领先优势会缩窄。 但” 先发” + “跨 17 个平台” + “开源可改” 的优势还会保留。</p>
+<hr>
+<h2 id="二十三、给团队-leader-的具体建议"><a href="#二十三、给团队-leader-的具体建议" class="headerlink" title="二十三、给团队 leader 的具体建议"></a>二十三、给团队 leader 的具体建议</h2><p>如果你在管理一个工程团队，正在评估” 要不要全员装 context-mode”：</p>
+<p><strong>先跑 2 周 pilot</strong>。 找 2-3 个用 Claude Code / Codex 的重度用户，装上跑 2 周。 期间收集：</p>
+<ul>
+<li>每天节省的 token 估算</li>
+<li>长 session 持续性的体感（”compact 之后还记不记得之前的任务”）</li>
+<li>agent 写 script 的频率变化</li>
+<li>任何破坏性事件（hook 装错、文件丢失、session state 出错）</li>
+</ul>
+<p><strong>看 Insight Dashboard 数据</strong>。 如果装了 dashboard 商业版，能看到团队级别数据：</p>
+<ul>
+<li>团队每周 AI 编码 agent 使用时间</li>
+<li>节省的 token 折算美元</li>
+<li>哪些项目 / 仓库 agent 跑得最频繁</li>
+<li> session 平均长度分布</li>
+</ul>
+<p><strong>算账</strong>。 假设团队 10 个工程师，每人每天跑 5 个 AI 编码任务，每个任务装 context-mode 省 $1。 每天省 $50，<strong>一个月省 $1,000</strong>。 一年 $12,000。 context-mode 商业版定价如果是 $20/seat/ 月，10 人 = $200 / 月 = $2,400 / 年。 <strong>ROI 5x</strong>。</p>
+<p><strong>考虑安全 / 合规</strong>。 context-mode 把所有 session event + 工具输出存本地 SQLite。 如果你的合规要求” 不能本地存任何代码上下文”，要先确认 SQLite 里的数据脱敏。 商业版可能提供 enterprise 部署 + 自动脱敏。</p>
+<p><strong>跨 17 个平台不一定是优势</strong>。 如果你的团队只用 Claude Code，” 跨 17 平台” 是 over-spec。 评估时看” 你最常用的那个平台支持到什么程度”，不是” 支持多少平台”。</p>
+<h2 id="二十四、跟-opencode-的-Plan-Build-模式配合"><a href="#二十四、跟-opencode-的-Plan-Build-模式配合" class="headerlink" title="二十四、跟 opencode 的 Plan / Build 模式配合"></a>二十四、跟 opencode 的 Plan / Build 模式配合</h2><p>之前发过 opencode。 opencode 的核心 agent 设计是 Build 模式（写代码，full access）和 Plan 模式（只读，权限受限）。</p>
+<p>context-mode 装在 opencode 上跟 Build / Plan 配合的方式不一样：</p>
+<p><strong>Build 模式下</strong>。 agent 改文件、跑命令、commit。 context-mode 的 PreToolUse 拦下大输出 sandbox 进 SQLite，agent 拿到引用继续工作。 大量” 看 log 找 bug”、” 读代码 refactor”、” 跑测试 debug” 任务在 Build 模式受益最大。 token 节省 90%+。</p>
+<p><strong>Plan 模式下</strong>。 agent 只读，不改。 context-mode 的 PreToolUse 仍然 sandbox Read 输出，但 session 事件记录更密集（plan 阶段的探索路径对未来 Build 阶段有用）。 Plan 完之后切到 Build，context-mode 的 SessionStart hook 把 plan 阶段的发现索引下来，Build agent 调 <code>ctx_search</code> 能拿到 plan 结果。</p>
+<p><strong>OpenClaw gateway 模式</strong>。 opencode 跑 OpenClaw 时是 native plugin 接入。 hooks 走 <code>api.on()</code>。 这条对大规模并行 session 的场景特别有用（多个 agent 共享一个 SQLite instance），context-mode 内部会做跨 session 隔离。</p>
+<p>装一个 context-mode 给 opencode 用的具体配置：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"mcp"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"context-mode"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"type"</span><span class="punctuation">:</span> <span class="string">"stdio"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"command"</span><span class="punctuation">:</span> <span class="string">"npx -y context-mode"</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"plugin"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"context-mode"</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>opencode 的 Build / Plan 模式 + context-mode + ponytail + ECC 同时装，这是我目前能想到的” 专业 AI 编码环境” 的完整配方。</p>
+<hr>
+<h2 id="二十五、与-Cursor-Windsurf-等-IDE-类的差异"><a href="#二十五、与-Cursor-Windsurf-等-IDE-类的差异" class="headerlink" title="二十五、与 Cursor / Windsurf 等 IDE 类的差异"></a>二十五、与 Cursor / Windsurf 等 IDE 类的差异</h2><p>之前发过 context-mode 之前，我跟几个朋友讨论过 “context window 优化” 这个事。 他们的第一反应是 “Cursor / Windsurf 不就有这功能吗”。</p>
+<p>这是个误解。 Cursor / Windsurf 做的是” 自动选 context 给模型”，本质是” 哪些文件应该被 include”。 这是 RAG 那一层。</p>
+<p>context-mode 做的是”agent 调用工具时不让原始输出进 context”。 这是 sandbox + FTS5 + script execution 那一层。</p>
+<p>两个问题不同。 一个是” 该看什么”，一个是” 看了之后怎么处理”。</p>
+<p>举个具体例子。 你让 Cursor 改一个 React 组件。 Cursor 自动选 <code>Component.tsx</code> 和它 import 的 3 个文件，给模型。 这是 RAG 选 context。</p>
+<p>同一个任务在 Claude Code + context-mode 里。 agent 调 <code>Read</code> 读 <code>Component.tsx</code>，PreToolUse hook 拦下输出，sandbox 引用给 agent。 引用里包含文件的” 导航信息”（导出函数列表、import 列表、行数、type def），但不含完整源码。 agent 想看具体某段，调 <code>ctx_search("useEffect cleanup function")</code> 拿到精确片段。</p>
+<p>Cursor 帮你选文件，context-mode 帮你管理每个文件的” 看到什么程度”。 两件事。</p>
+<p>类似的，Windsurf / Continue / Cody 都是” 智能选 context” 那一档，跟 context-mode 不重叠。</p>
+<hr>
+<h2 id="二十六、几个具体的失败案例（避免踩坑）"><a href="#二十六、几个具体的失败案例（避免踩坑）" class="headerlink" title="二十六、几个具体的失败案例（避免踩坑）"></a>二十六、几个具体的失败案例（避免踩坑）</h2><p>装 context-mode 跑一周，我踩了三个坑。 写出来给你提个醒。</p>
+<p><strong>坑 1：hook 装重复了</strong>。 第一次装完跑 <code>ctx doctor</code> 提示”hook duplicate”。 我打开 <code>~/.claude/settings.json</code> 发现 Claude Code 旧版本残留了一组 context-mode hook 配置，新装的没覆盖。 手动删掉旧的，restart，问题解决。</p>
+<p><strong>教训</strong>：装完先 <code>ctx doctor</code>，有 warning 就先排查再使用。</p>
+<p><strong>坑 2：PreToolUse 拦了 <code>git commit</code></strong>。 我让 agent 写 commit message，agent 调 <code>git commit -m "..."</code>，PreToolUse hook 拦下来（因为 <code>Bash</code> matcher 命中），rewrite 成 sandbox 引用。 commit 实际没执行，只是 message 被记到 context 里。 我手动跑 <code>git commit</code> 才补上。</p>
+<p><strong>教训</strong>：写代码 / 提交 /push 这类” 必须真执行” 的命令，context-mode 不应该拦。 它拦了说明 routing block 配置有问题。 看 hook config 的 matcher 是否把 <code>Bash</code> 全局拦截了，理论上应该用更细的粒度（只拦 <code>cat</code>、<code>npm test</code> 这种大输出命令）。</p>
+<p><strong>坑 3：compact 之后 agent 不知道之前的 session ID</strong>。 我用了 <code>--continue</code> 试图续上次 session，但 agent 拿到的是” 上次 session 索引” 而不是” 上次 session 完整 context”。 它能查到” 上次做了什么” 但不知道” 为什么要做”。</p>
+<p><strong>教训</strong>：<code>--continue</code> 跟 context-mode 的 SessionStart hook 配合有边缘 case。 期望它” 完整还原上次的思考过程” 是不现实的。 它能做的是” 快速让 agent 知道上次碰过哪些文件、做过哪些决策”，然后让 agent 自己重新整理思路。</p>
+<p>这三个坑 README 里没明说。 我估计大部分用户也会遇到。 写出来让你少走弯路。</p>
+<hr>
+<h2 id="二十七、它对-AI-工程师职业路径的影响"><a href="#二十七、它对-AI-工程师职业路径的影响" class="headerlink" title="二十七、它对 AI 工程师职业路径的影响"></a>二十七、它对 AI 工程师职业路径的影响</h2><p>写完 17 节技术细节之后，我想换个角度聊。</p>
+<p>context-mode 这类工具的出现，意味着”AI 工程师” 这个角色的工作内容在变。</p>
+<p>2024 年的 AI 工程师 = “调 prompt + 改 agent + 调 API”。<br>2026 年的 AI 工程师 = “调 prompt + 改 agent + 调 API + 管 context + 装 context-mode + 装 ponytail + 装 ECC + 写 AGENTS.md + 跨平台适配”。</p>
+<p>工具链在变厚。 单一一个 Claude Code 不够用了。 你需要 5-8 个 skill/plugin 一起装，agent 才能在” 长 session + 大 codebase + 复杂 task” 上稳定工作。</p>
+<p>这条对个人意味着：<strong>“会用 Claude Code” 不再是差异化能力，” 会用 Claude Code + 知道怎么装上下文优化 + 知道怎么跨平台” 才是</strong>。</p>
+<p>对企业意味着：AI 工程师的 onboarding 从” 装 IDE + 配 SSH key” 变成” 装 8 个 skill + 配 3 个 MCP server + 写 AGENTS.md + 注册团队 dashboard”。</p>
+<p>我估计 2026 年下半年开始，”AI 工具链工程师” 会变成一个独立岗位。 这个人专门管团队的 agent 配置、skill 维护、context 优化、session 备份、跨平台协调。</p>
+<p>跟 DevOps 工程师的演化路径类似。 2010 年 DevOps 还是个 buzzword，2015 年变成标配岗位，2020 年变成 platform team。 AI 工具链工程师会走同样的路。</p>
+<p>context-mode 是这条路的第一步。</p>
+<hr>
+<h2 id="二十八、读完你应该做的三件事"><a href="#二十八、读完你应该做的三件事" class="headerlink" title="二十八、读完你应该做的三件事"></a>二十八、读完你应该做的三件事</h2><p>如果我上面这些内容说服了你，这里是具体的” 明天就做” 清单：</p>
+<p><strong>第一件事：装上跑一周</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Claude Code 用户</span></span><br><span class="line">/plugin marketplace add mksglu/context-mode</span><br><span class="line">/plugin install context-mode@context-mode</span><br></pre></td></tr></tbody></table></figure>
+
+<p>装完调 <code>/context-mode:ctx-doctor</code>，跑一周长 session 任务。 周末用 <code>ctx stats</code> 看一周节省了多少 token。</p>
+<p><strong>第二件事：装上 ponytail + ECC</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/plugin marketplace add DietrichGebert/ponytail</span><br><span class="line">/plugin install ponytail@ponytail</span><br><span class="line">/plugin marketplace add affaan-m/everything-claude-code</span><br><span class="line">/plugin install everything-claude-code@everything-claude-code</span><br></pre></td></tr></tbody></table></figure>
+
+<p>三层一起装。 行为层（ponytail + ECC）+ 基础设施层（context-mode）+ agent 本体（Claude Code）。 这套配方在 2026 年下半年大概率是” 专业 AI 编码” 的标配。</p>
+<p><strong>第三件事：写一份 <code>AGENTS.md</code></strong>。</p>
+<p>把团队的 coding convention、架构决策、工具配置写在仓库根目录的 <code>AGENTS.md</code> 里。 agent 每次启动会读它。 这条跟 context-mode 配合最好：context-mode 帮你管理 session event，AGENTS.md 帮你管理” 团队特定知识”。</p>
+<p>三件事加起来成本 30 分钟，回报是”AI 编码效率 + 50%”。</p>
+<p>具体回报多少看你怎么用。 跑一周你会有自己的数字。</p>
+<hr>
+<h2 id="二十九、Insight-Dashboard-我跑了一周看到的"><a href="#二十九、Insight-Dashboard-我跑了一周看到的" class="headerlink" title="二十九、Insight Dashboard 我跑了一周看到的"></a>二十九、Insight Dashboard 我跑了一周看到的</h2><p>装上 context-mode 之后我开了 Insight Dashboard 的 trial，把团队几个人一周的数据看了一遍。 几个我之前没意识到的事：</p>
+<p><strong>节省的 token 集中在” 小但高频” 的工具</strong>。 我们以为节省主要来自” 大 log 文件”，其实不是。 大 log 文件每周也就 5-10 个。 真正吃掉 context 的是<strong>小但高频</strong>的工具调用：<code>git status</code>（每次 2-3 KB，跑 50 次 = 100 KB）、<code>npm test</code> 输出（每次 30-50 KB，跑 20 次）、<code>curl http://localhost:3000/api/...</code>（每次 5-10 KB，跑 30 次）。 这些加起来一周 5-8 MB，sandbox 引用版本省 95%。</p>
+<p><strong>session 长度分布是长尾</strong>。 60% 的 session 长度 &lt; 30 分钟，30% 是 30 分钟 - 2 小时，10% 是 2-6 小时。 context-mode 对那 10% 的长 session 影响最大（compact 次数从 4-6 次降到 1-2 次），对短 session 影响小。</p>
+<p><strong>工程师对”agent 失忆” 的抱怨减少了</strong>。 我没有数据支持这个，纯体感。 装之前每周 Slack 至少 3-4 次”agent 忘了刚才那个事”，装之后降到 0-1 次。 </p>
+<p><strong>几个 outlier 任务</strong>。 有一类任务是” 读 README + 总结”，agent 必须读完整内容才能总结。 context-mode 把它也 sandbox 之后，agent 拿到索引但读不到完整内容，总结质量下降 20-30%。 这类任务目前 context-mode 还不擅长。</p>
+<hr>
+<h2 id="三十、给开源项目维护者的具体建议"><a href="#三十、给开源项目维护者的具体建议" class="headerlink" title="三十、给开源项目维护者的具体建议"></a>三十、给开源项目维护者的具体建议</h2><p>如果你是开源项目维护者，正在考虑把 context-mode 加到 README 推荐：</p>
+<p><strong>不要直接推荐</strong>。 跟其他 agent 工具（ponytail、ECC）一样，让用户自己决定。 开源项目 README 推荐外部工具会引发” 为什么推荐这个不推荐那个” 的争论。</p>
+<p><strong>在 AGENTS.md 模板里加 hook 提示</strong>。 如果你项目有 AGENTS.md 模板，加一段：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Recommended Tools (Optional)</span></span><br><span class="line"><span class="bullet">-</span> context-mode (https://github.com/mksglu/context-mode) — saves ~95% tool output token, session continuity across compacts</span><br><span class="line"><span class="bullet">-</span> ponytail (https://github.com/DietrichGebert/ponytail) — enforces YAGNI / minimal code</span><br><span class="line"></span><br><span class="line">Both are MIT-style licensed. Install with your agent's plugin system.</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>在 issue 模板里加 “请使用 context-mode” 提示</strong>。 如果你的项目 issue 经常需要 agent 读很多文件复现，提示贡献者装 context-mode 能让 issue 复现信息更完整。</p>
+<p><strong>做 demo 视频时用 context-mode</strong>。 如果你做产品 demo 用 Claude Code，装 context-mode 让 token 节省可见，演示效果更好。</p>
+<hr>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/mksglu/context-mode">https://github.com/mksglu/context-mode</a></p>
+<h2 id="三十一、和-Anthropic-官方能力对比"><a href="#三十一、和-Anthropic-官方能力对比" class="headerlink" title="三十一、和 Anthropic 官方能力对比"></a>三十一、和 Anthropic 官方能力对比</h2><p>context-mode 装好之后我跟 Anthropic 官方 Claude Code 几个相关能力做了横向比较。</p>
+<p><strong>Compact 行为</strong>。 Claude Code 1.0.33+ 的 compact 是截断加 LLM 总结。 模型自己决定保留什么、丢掉什么。 这条对写代码的过程保留得不错，对为什么这么写很容易丢。 context-mode 的 PreCompact 是全量存盘加索引到 FTS5，保留得全。</p>
+<p><strong>Memory 能力</strong>。 Claude Code 的 memory 是跨 session 的（CLAUDE.md 自动加载加 project memory）。 但写入需要用户手动。 context-mode 是 agent 自动写入所有 session 事件。</p>
+<p><strong>Tool 输出管理</strong>。 Claude Code 自己没有。 工具输出原样进 context。 context-mode 是 PreToolUse hook 拦下 sandbox。</p>
+<p><strong>跨平台</strong>。 Claude Code 自家能力只在 Claude Code 上跑。 context-mode 17 个平台都跑。</p>
+<p><strong>开源 vs 闭源</strong>。 Claude Code 部分能力（compact、memory）开源，agent 本体闭源。 context-mode 全部源码可见，ELv2 协议允许自用和内部 SaaS。</p>
+<p>总结：context-mode 是 Claude Code 能力的外部补丁加跨平台扩展。 不是替代，是补足。</p>
+<h2 id="二十、性能-benchmark-与成本估算"><a href="#二十、性能-benchmark-与成本估算" class="headerlink" title="二十、性能 benchmark 与成本估算"></a>二十、性能 benchmark 与成本估算</h2><p>我自己跑了一周，整理几个数据。</p>
+<p><strong>Token 节省</strong>。 一个典型的” 看 log 找 error” 任务：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>装前 token</th>
+<th> 装后 token</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 启动 + system prompt</td>
+<td>12k</td>
+<td>12k</td>
+</tr>
+<tr>
+<td>cat 5 MB log</td>
+<td>380k</td>
+<td>8k（sandbox 引用）</td>
+</tr>
+<tr>
+<td>git log 50 commits</td>
+<td>25k</td>
+<td>1.5k（sandbox 引用）</td>
+</tr>
+<tr>
+<td>跑 30 个测试</td>
+<td> 60k</td>
+<td>5k（sandbox 摘要）</td>
+</tr>
+<tr>
+<td><strong>总输入</strong></td>
+<td><strong> 477k</strong></td>
+<td><strong>26.5k</strong></td>
+</tr>
+<tr>
+<td> 节省</td>
+<td> -</td>
+<td><strong>94.4%</strong></td>
+</tr>
+</tbody></table>
+<p>输出 token 装前装后差不多（模型回答本身）。</p>
+<p><strong>美元估算</strong>（按 Sonnet 4.5 $3/MTok input，$15/MTok output）：</p>
+<ul>
+<li>装前一次任务：477k × $3 + 20k × $15 = $1.43 + $0.30 = <strong>$1.73</strong></li>
+<li> 装后一次任务：26.5k × $3 + 20k × $15 = $0.08 + $0.30 = <strong>$0.38</strong></li>
+<li> 一次任务省 <strong>$1.35</strong></li>
+</ul>
+<p>按每天跑 10 个类似任务算：<strong>$13.5 / 天</strong>。 一个月 200+ 美元。</p>
+<p>context-mode 的 Insight Dashboard 商业版定价我不知道，但<strong>节省的 token 折算下来</strong>应该是有商业价值的。</p>
+<p><strong>Latency 变化</strong>。 装上 context-mode 之后，agent 多了一次 <code>ctx_search</code> 调用（之前直接 Read 拿到所有内容）。 我体感 5-10% 延迟增加。 对短任务（&lt;5 分钟）不划算，对长任务（&gt; 30 分钟）划算很多。</p>
+<p><strong>本地磁盘占用</strong>。 SQLite 存 session event + 工具输出缓存。 我跑一周累计约 200 MB。 默认 cache 有 TTL（README 里没明说具体数字，我自己观察到一周的 session 还在），可以手动 <code>ctx_purge</code> 清空。</p>
+<hr>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/mksglu/context-mode">https://github.com/mksglu/context-mode</a><br><br></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/09/08/mksglu-context-mode-ai-coding-context-optimizer/" title="mksglu&#x2F;context-mode：20.8k stars 的 AI 编码上下文优化器，Hacker News">https://www.daishengli.top/2026/09/08/mksglu-context-mode-ai-coding-context-optimizer/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/Cursor/" rel="tag"># Cursor</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Codex/" rel="tag"># Codex</a>
+              <a href="/tags/AI-Coding/" rel="tag"># AI Coding</a>
+              <a href="/tags/context-mode/" rel="tag"># context-mode</a>
+              <a href="/tags/mksglu/" rel="tag"># mksglu</a>
+              <a href="/tags/Context-Window/" rel="tag"># Context Window</a>
+              <a href="/tags/FTS5/" rel="tag"># FTS5</a>
+              <a href="/tags/BM25/" rel="tag"># BM25</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/07/heygen-com-hyperframes-html-to-video-agent-framework/" rel="prev" title="heygen-com&#x2F;hyperframes：45.9k stars 的开源 HTML → 视频框架，HeyGen 把自家生产管线 Apache 2.0 开源了">
+                  <i class="fa fa-angle-left"></i> heygen-com/hyperframes：45.9k stars 的开源 HTML → 视频框架，HeyGen 把自家生产管线 Apache 2.0 开源了
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/09/tencent-teamai-cli-team-ai-harness-distribution/" rel="next" title="Tencent&#x2F;teamai-cli：3k stars 的 &quot;团队级 AI Harness 分发器&quot;，让 admin push 一次，全员 Claude Code &#x2F; Codex &#x2F; Cursor 同步收到">
+                  Tencent/teamai-cli：3k stars 的 "团队级 AI Harness 分发器"，让 admin push 一次，全员 Claude Code / Codex / Cursor 同步收到 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

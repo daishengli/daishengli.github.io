@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="nashsu&#x2F;llm_wiki（GitHub 18.7k stars、647 forks、当日 +647 stars、MIT）是一款把 Karpathy &quot;LLM Wiki&quot; pattern 实现成完整桌面应用的跨平台工具，Electron + Tauri + Rust + React + LanceDB 写，三层架构 Raw Sources（不可变）→ Wiki（LLM 增量生成）→ Schem">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nashsu&#x2F;llm_wiki：18.7k stars 的 &quot;AI 自动维护&quot; 个人维基，Karpathy LLM-Wiki pattern 的桌面实现 + 知识图谱 + Louvain 社区发现">
+<meta property="og:url" content="https://www.daishengli.top/2026/09/11/nashsu-llm-wiki-personal-knowledge-base/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="nashsu&#x2F;llm_wiki（GitHub 18.7k stars、647 forks、当日 +647 stars、MIT）是一款把 Karpathy &quot;LLM Wiki&quot; pattern 实现成完整桌面应用的跨平台工具，Electron + Tauri + Rust + React + LanceDB 写，三层架构 Raw Sources（不可变）→ Wiki（LLM 增量生成）→ Schem">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-11T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-12T01:07:10.473Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="RAG">
+<meta property="article:tag" content="llm_wiki">
+<meta property="article:tag" content="LLM Wiki">
+<meta property="article:tag" content="Karpathy">
+<meta property="article:tag" content="Knowledge Base">
+<meta property="article:tag" content="LanceDB">
+<meta property="article:tag" content="Knowledge Graph">
+<meta property="article:tag" content="Louvain">
+<meta property="article:tag" content="Obsidian">
+<meta property="article:tag" content="Electron">
+<meta property="article:tag" content="Tauri">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/09/11/nashsu-llm-wiki-personal-knowledge-base/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/09/11/nashsu-llm-wiki-personal-knowledge-base/","path":"2026/09/11/nashsu-llm-wiki-personal-knowledge-base/","title":"nashsu/llm_wiki：18.7k stars 的 \"AI 自动维护\" 个人维基，Karpathy LLM-Wiki pattern 的桌面实现 + 知识图谱 + Louvain 社区发现"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>nashsu/llm_wiki：18.7k stars 的 "AI 自动维护" 个人维基，Karpathy LLM-Wiki pattern 的桌面实现 + 知识图谱 + Louvain 社区发现 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">359</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">114</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9A%E7%9F%A5%E8%AF%86%E4%B8%8D%E6%98%AF%E2%80%9D%E6%90%9C%E4%B8%8D%E5%88%B0%E2%80%9D%EF%BC%8C%E6%98%AF%E2%80%9D%E5%BB%BA%E4%B8%8D%E8%B5%B7%E6%9D%A5%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">一、它想解决的问题：知识不是” 搜不到”，是” 建不起来”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%B8%89%E5%B1%82%E6%9E%B6%E6%9E%84%EF%BC%9ARaw-%E2%86%92-Wiki-%E2%86%92-Schema"><span class="nav-number">2.</span> <span class="nav-text">二、三层架构：Raw → Wiki → Schema</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Two-Step-Chain-of-Thought-%E6%91%84%E5%85%A5"><span class="nav-number">3.</span> <span class="nav-text">三、Two-Step Chain-of-Thought 摄入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%82%B9%E4%BA%94%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88-LLM-Wiki-%E6%A8%A1%E5%BC%8F%E6%AF%94-RAG-%E9%AB%98%E4%B8%80%E4%B8%AA%E7%BB%B4%E5%BA%A6"><span class="nav-number">4.</span> <span class="nav-text">三点五、为什么 LLM Wiki 模式比 RAG 高一个维度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E7%82%B9%E4%BA%94%E3%80%81%E5%87%A0%E4%B8%AA%E7%BB%86%E8%8A%82%E8%AE%BE%E8%AE%A1"><span class="nav-number">5.</span> <span class="nav-text">五点五、几个细节设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%EF%BC%9A4-signal-relevance-model"><span class="nav-number">6.</span> <span class="nav-text">四、知识图谱：4-signal relevance model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81Vector-Semantic-Search-Rust-Backend"><span class="nav-number">7.</span> <span class="nav-text">五、Vector Semantic Search + Rust Backend</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81MCP-server-Claude-Code-Codex-%E9%9B%86%E6%88%90"><span class="nav-number">8.</span> <span class="nav-text">六、MCP server + Claude Code &#x2F; Codex 集成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%8A%80%E6%9C%AF%E6%A0%88%EF%BC%9AElectron-Tauri-Rust-React-LanceDB"><span class="nav-number">9.</span> <span class="nav-text">七、技术栈：Electron + Tauri + Rust + React + LanceDB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%AE%89%E8%A3%85%E4%B8%8E%E4%B8%8A%E6%89%8B"><span class="nav-number">10.</span> <span class="nav-text">八、安装与上手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E8%B7%9F%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84%E5%87%A0%E4%B8%AA%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">11.</span> <span class="nav-text">九、跟之前发过的几个项目的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E5%87%A0%E4%B8%AA%E6%88%91%E7%8E%A9%E8%BF%87%E8%A7%89%E5%BE%97%E6%9C%89%E6%84%8F%E6%80%9D%E7%9A%84%E5%85%B7%E4%BD%93%E5%9C%BA%E6%99%AF"><span class="nav-number">12.</span> <span class="nav-text">十、几个我玩过觉得有意思的具体场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E7%82%B9%E4%BA%94%E3%80%81MCP-server-%E5%AE%9E%E6%88%98%E7%BB%86%E8%8A%82"><span class="nav-number">13.</span> <span class="nav-text">八点五、MCP server 实战细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E7%82%B9%E4%BA%94%E3%80%81%E5%AF%B9%E6%AF%94%E5%87%A0%E6%AC%BE%E4%B8%AA%E4%BA%BA%E7%9F%A5%E8%AF%86%E5%BA%93%E5%B7%A5%E5%85%B7"><span class="nav-number">14.</span> <span class="nav-text">九点五、对比几款个人知识库工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E7%82%B9%E4%BA%94%E3%80%81Karpathy-%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><span class="nav-number">15.</span> <span class="nav-text">十点五、Karpathy 模式的局限性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%B1%80%E9%99%90"><span class="nav-number">16.</span> <span class="nav-text">十一、局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E5%AE%83%E5%AF%B9%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E7%9A%84%E5%AE%9E%E9%99%85%E6%84%8F%E4%B9%89"><span class="nav-number">17.</span> <span class="nav-text">十二、它对普通用户的实际意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E5%AE%83%E5%9C%A8-2026-%E5%B9%B4-AI-%E5%B7%A5%E5%85%B7%E9%93%BE%E9%87%8C%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">18.</span> <span class="nav-text">十三、它在 2026 年 AI 工具链里的位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E8%AF%BB%E5%AE%8C%E4%BD%A0%E5%BA%94%E8%AF%A5%E5%81%9A%E7%9A%84%E4%B8%89%E4%BB%B6%E4%BA%8B"><span class="nav-number">19.</span> <span class="nav-text">十四、读完你应该做的三件事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E7%82%B9%E4%BA%94%E3%80%81%E8%87%B4%E8%B0%A2-Karpathy"><span class="nav-number">20.</span> <span class="nav-text">十二点五、致谢 Karpathy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E5%AF%B9%E6%AF%94%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84%E6%89%80%E6%9C%89%E9%A1%B9%E7%9B%AE"><span class="nav-number">21.</span> <span class="nav-text">十三、对比之前发过的所有项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E4%B8%80%E7%82%B9%E4%B8%AA%E4%BA%BA%E6%84%9F%E6%83%B3"><span class="nav-number">22.</span> <span class="nav-text">十四、一点个人感想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E7%82%B9%E4%BA%94%E3%80%81%E4%B8%80%E4%BA%9B%E5%8F%AF%E4%BB%A5%E5%80%9F%E9%89%B4%E7%9A%84%E5%B7%A5%E7%A8%8B%E7%BB%86%E8%8A%82"><span class="nav-number">23.</span> <span class="nav-text">十五点五、一些可以借鉴的工程细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E3%80%81%E8%BF%90%E8%A1%8C-llm-wiki-%E7%9A%84%E5%AE%9E%E9%99%85%E6%88%90%E6%9C%AC"><span class="nav-number">24.</span> <span class="nav-text">十六、运行 llm_wiki 的实际成本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E7%82%B9%E4%BA%94%E3%80%81%E5%AE%83%E6%95%99%E6%88%91%E7%9A%84%E4%B8%80%E4%BB%B6%E4%BA%8B"><span class="nav-number">25.</span> <span class="nav-text">十六点五、它教我的一件事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E6%9C%80%E5%90%8E"><span class="nav-number">26.</span> <span class="nav-text">十五、最后</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">114</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">359</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/09/11/nashsu-llm-wiki-personal-knowledge-base/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="nashsu&#x2F;llm_wiki：18.7k stars 的 &quot;AI 自动维护&quot; 个人维基，Karpathy LLM-Wiki pattern 的桌面实现 + 知识图谱 + Louvain 社区发现 | 小戴的网络日志">
+      <meta itemprop="description" content="nashsu&#x2F;llm_wiki（GitHub 18.7k stars、647 forks、当日 +647 stars、MIT）是一款把 Karpathy &quot;LLM Wiki&quot; pattern 实现成完整桌面应用的跨平台工具，Electron + Tauri + Rust + React + LanceDB 写，三层架构 Raw Sources（不可变）→ Wiki（LLM 增量生成）→ Schema（规则 + config），Two-Step Chain-of-Thought 摄入（先 LLM 分析再 LLM 生成 + source traceability + SHA256 增量缓存 + 持久队列 + folder context + source auto-watch），4-signal 知识图谱（direct link ×3.0、source overlap ×4.0、Adamic-Adar ×1.5、type affinity ×1.0），Louvain 社区发现 + cohesion scoring，Graph Insights 自动找 surprising connections 和 knowledge gaps 一键 deep research，Vector Semantic Search via LanceDB，Rust Backend Chat Agent with 28+ tools 跑 wiki&#x2F;source&#x2F;graph&#x2F;web retrieval + workspace 文件生成，Obsidian 兼容，Chrome Web Clipper，bundled MCP server (127.0.0.1:19828) + Claude Code&#x2F;Codex agent skill &#96;npx skills add nashsu&#x2F;llm_wiki_skill&#96;。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          nashsu/llm_wiki：18.7k stars 的 "AI 自动维护" 个人维基，Karpathy LLM-Wiki pattern 的桌面实现 + 知识图谱 + Louvain 社区发现
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-11 10:00:00" itemprop="dateCreated datePublished" datetime="2026-09-11T10:00:00+08:00">2026-09-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">nashsu/llm_wiki（GitHub 18.7k stars、647 forks、当日 +647 stars、MIT）是一款把 Karpathy "LLM Wiki" pattern 实现成完整桌面应用的跨平台工具，Electron + Tauri + Rust + React + LanceDB 写，三层架构 Raw Sources（不可变）→ Wiki（LLM 增量生成）→ Schema（规则 + config），Two-Step Chain-of-Thought 摄入（先 LLM 分析再 LLM 生成 + source traceability + SHA256 增量缓存 + 持久队列 + folder context + source auto-watch），4-signal 知识图谱（direct link ×3.0、source overlap ×4.0、Adamic-Adar ×1.5、type affinity ×1.0），Louvain 社区发现 + cohesion scoring，Graph Insights 自动找 surprising connections 和 knowledge gaps 一键 deep research，Vector Semantic Search via LanceDB，Rust Backend Chat Agent with 28+ tools 跑 wiki/source/graph/web retrieval + workspace 文件生成，Obsidian 兼容，Chrome Web Clipper，bundled MCP server (127.0.0.1:19828) + Claude Code/Codex agent skill `npx skills add nashsu/llm_wiki_skill`。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>我桌上有 7 个笔记本。 </p>
+<p>2024 年到 2025 年我换了 3 次笔记工具，Notion 写了 80 篇，Obsidian 写了 50 篇，剩下几本纸质本子写了半本又扔了。 </p>
+<p>每个工具都号称”all-in-one”，每个工具最后都成了<strong>搜索地狱</strong>。 我知道那条笔记写过什么，但我想不起来<strong>关键词</strong>。 我知道那本书讲过我关心的内容，但” 重新读 200 页” 这件事我永远不想做。</p>
+<p>昨天同事给我看了一个应用。 他把 5 篇 PDF、3 个 GitHub repo、一份 Notion 导出全部拖进去，按一个按钮。 30 秒后他打开一份自动生成的” 知识地图”，所有概念自动连线，自动聚类成 4 个主题，自动标记出” 哪两个概念之间缺一篇综述”。</p>
+<p>我盯着看了 15 分钟没说话。</p>
+<p>那个应用叫 LLM Wiki。 18.7k stars，647 forks，<strong>当日 +647 stars</strong>。 MIT。 来自 <a target="_blank" rel="noopener" href="https://x.com/nash_su">nash_su</a>。 它实现的是 <a target="_blank" rel="noopener" href="https://x.com/karpathy">Andrej Karpathy</a> 2024 年提的 <a target="_blank" rel="noopener" href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">LLM Wiki pattern</a>，一种”AI 帮你维护个人维基” 的方法论。</p>
+<hr>
+<h2 id="一、它想解决的问题：知识不是”搜不到”，是”建不起来”"><a href="#一、它想解决的问题：知识不是”搜不到”，是”建不起来”" class="headerlink" title="一、它想解决的问题：知识不是”搜不到”，是”建不起来”"></a>一、它想解决的问题：知识不是” 搜不到”，是” 建不起来”</h2><p>先把背景说清楚。</p>
+<p>每个人（尤其是工程师、研究者、记者、分析师）都有” 个人知识库” 这个痛点。 你读 PDF、看 GitHub repo、记笔记、写备忘，<strong>这些资料散在 10 个地方</strong>。 你<strong>知道</strong>它们之间有联系，但你<strong>建不起来</strong>联系，因为：</p>
+<ul>
+<li>把 10 份资料” 全部读一遍” 成本太高。 一份 200 页的 PDF 读 4 小时，10 份就是 40 小时。</li>
+<li>靠 LLM “一次性回答” 是<strong>重复劳动</strong>。 你问” 我之前看过的那个 X 概念是什么”，LLM 要重新去搜资料，<strong>每次都重做</strong>。 这条不解决” 知识沉淀”，只解决” 知识访问”。</li>
+<li>写笔记需要” 组织”。 写 1 篇容易，写 50 篇就累了。 50 篇之间要互相 link、聚类、找 gap，<strong>这一步没人做</strong>。</li>
+</ul>
+<p>传统的 RAG（Retrieval-Augmented Generation）走的是” 每次 query 时临时检索 + 拼 context + 让 LLM 答”。 这条对” 快速问” 很顺，<strong>对” 沉淀知识” 没用</strong>。 你问一次”X 是什么”，RAG 给你答案，下次再问，RAG <strong>重新检索 + 重新拼</strong>，你的” 知识” 没沉淀下来。</p>
+<p>Karpathy 2024 年 8 月发了一个 gist：”<strong>LLM Wiki</strong>“。 核心思想只有一句：</p>
+<blockquote>
+<p>LLM reads your documents, builds a structured wiki, and keeps it current. Knowledge is compiled once and kept current, not re-derived on every query.</p>
+</blockquote>
+<p>你把资料喂给 LLM，LLM <strong>写入</strong>一份 markdown wiki。 wiki 不是” 事后答案的来源”，是<strong>事先编好的知识库</strong>。 下次你 query，LLM <strong>查 wiki</strong>，不重新生成。</p>
+<p>这是从”LLM 是个搜索引擎” 升级到”LLM 是个知识工程师” 的思路转换。</p>
+<p>Karpathy 的 gist 是<strong>设计模式文档</strong>，不是软件。 nash_su 把这个模式做成了<strong>完整的桌面应用</strong>，llm_wiki。 18.7k stars 是用户投票。</p>
+<hr>
+<h2 id="二、三层架构：Raw-→-Wiki-→-Schema"><a href="#二、三层架构：Raw-→-Wiki-→-Schema" class="headerlink" title="二、三层架构：Raw → Wiki → Schema"></a>二、三层架构：Raw → Wiki → Schema</h2><p>llm_wiki 的设计<strong>忠实于 Karpathy 原版</strong>的三层架构：</p>
+<p><strong>Raw Sources（不可变）</strong>。 你扔进去的所有原始资料：PDF、EPUB、Office 文档、图片、网页剪辑、媒体文件。 存在 <code>raw/sources/</code> 目录下。 <strong>永不修改</strong>。 即使你后来更新文档，原始文件保留，新版本作为新 file 重新 ingest。</p>
+<p>这条” 原始资料不可变” 是关键设计。 它让 wiki 可以<strong>追溯</strong>：每个 wiki 页面都能 link 回它” 基于哪些 source 文件生成”。</p>
+<p><strong>Wiki（LLM 生成）</strong>。 LLM 读 raw source，写 markdown 文件到 wiki 目录。 包含：</p>
+<ul>
+<li>概念页（concept pages）</li>
+<li>实体页（entity pages，比如人物、公司、技术）</li>
+<li>来源摘要（source summary，每个原始文件一篇）</li>
+<li>cross-references（<code>[[wikilinks]]</code> 语法）</li>
+<li><code>index.md</code>（目录 + LLM 导航入口）</li>
+<li><code>log.md</code>（chronological 操作记录）</li>
+<li><code>overview.md</code>（全局摘要，每 ingest 后自动更新）</li>
+</ul>
+<p>wiki 是 <strong>LLM 维护的</strong>，但<strong>人类</strong>可以手动编辑。 Obsidian 兼容，你打开 wiki 目录就是 Obsidian vault，可以手动加 page、改 wikilink、画 Mermaid diagram。</p>
+<p><strong>Schema（规则 + config）</strong>。 定义 wiki 怎么组织：哪些 page type、用什么 frontmatter、YAML schema 怎么写、Lint 规则。 由人类写，LLM 读。</p>
+<p>这条” 人类定 schema、LLM 维护内容” 的分工是 Karpathy 模式的核心。 <strong>Schema 改一次，LLM 之后所有 ingest 都按新 schema</strong>。 不需要重新写。</p>
+<p>llm_wiki 在 Karpathy 三层之上加了<strong>第四层</strong>：<code>purpose.md</code>。 这是 wiki 的” 灵魂”，goal、key questions、research scope、evolving thesis。 LLM <strong>每次 ingest 和 query 都读 purpose.md</strong>。 不同 purpose 引导出不同的 wiki 结构。</p>
+<hr>
+<h2 id="三、Two-Step-Chain-of-Thought-摄入"><a href="#三、Two-Step-Chain-of-Thought-摄入" class="headerlink" title="三、Two-Step Chain-of-Thought 摄入"></a>三、Two-Step Chain-of-Thought 摄入</h2><p>Karpathy 原始 pattern 是” 单步 ingest”，LLM 读 source，<strong>同时</strong>生成 wiki pages。 nash_su 改成<strong>两步</strong>：</p>
+<p><strong>Step 1（分析）</strong>。 LLM 读 source 文件，输出结构化分析：</p>
+<ul>
+<li>Key entities（关键实体）</li>
+<li>Concepts（关键概念）</li>
+<li>Arguments（关键论证）</li>
+<li>Connections to existing wiki content（与现有 wiki 的联系）</li>
+<li>Contradictions &amp; tensions（与现有知识的矛盾 / 张力）</li>
+<li>Recommendations for wiki structure（建议的 wiki 结构）</li>
+</ul>
+<p><strong>Step 2（生成）</strong>。 LLM 拿 analysis 写 wiki 文件：</p>
+<ul>
+<li>Source summary page（带 frontmatter：<code>type</code>、<code>title</code>、<code>sources[]</code>）</li>
+<li>Entity pages</li>
+<li>Concept pages with cross-references</li>
+<li> 更新 <code>index.md</code>、<code>log.md</code>、<code>overview.md</code></li>
+<li>Review items for human judgment</li>
+<li>Search queries for Deep Research</li>
+</ul>
+<p><strong>为什么要拆两步</strong>？ 单步 ingest 容易让 LLM <strong>急着生成</strong>，<strong>漏掉重要分析</strong>。 拆两步让 LLM <strong>先思考再写</strong>，wiki 质量显著提高。</p>
+<p>这条设计让 llm_wiki 的” 两个 LLM call” 是<strong>刻意</strong>的，不是浪费 token。</p>
+<p><strong>SHA256 增量缓存</strong>。 每次 ingest 前算 source 文件的 SHA256，<strong>没变的文件自动 skip</strong>。 你更新了某个 PDF，llm_wiki 只 ingest 那个 PDF，其他 5 个 PDF 跳过。 省 token + 省时间。</p>
+<p><strong>持久 ingest 队列</strong>。 ingest 任务是 serial 处理（不并发，避免 LLM rate limit），queue 存盘，<strong>app 重启后 queue 还在</strong>。 failed task 自动 retry 3 次。 Activity Panel 实时显示进度（pending /processing/failed + cancel /retry 按钮）。</p>
+<p><strong>Folder import</strong>。 递归 import 整个目录，保留目录结构。 目录路径<strong>作为 LLM 分类提示</strong>，比如 <code>papers/energy/2024.pdf</code> 里的”papers &gt; energy” 告诉 LLM 这是能源领域论文。</p>
+<p><strong>Source folder auto-watch</strong>。 你在 Finder / Explorer 里手动改了 <code>raw/sources/</code>，llm_wiki 自动检测，<strong>复用同一个 ingest /delete lifecycle</strong>。 你不用非在 app 内操作。</p>
+<p><strong>Source traceability</strong>。 每一篇 wiki page 带 <code>sources: []</code> frontmatter field，<strong>链接回所有贡献过这个 page 的 source 文件</strong>。 你打开 wiki page，能立刻看到” 这个 page 是基于哪些原始资料写的”。</p>
+<p>这条对学术 / 媒体 / 调查用途<strong>至关重要</strong>。 你能 cite 到原始资料。</p>
+<p><strong>Language-aware</strong>。 LLM 用你配置的语言生成 wiki（English / 中文 / 日本語 / 한국어 都行）。 </p>
+<hr>
+<h2 id="三点五、为什么-LLM-Wiki-模式比-RAG-高一个维度"><a href="#三点五、为什么-LLM-Wiki-模式比-RAG-高一个维度" class="headerlink" title="三点五、为什么 LLM Wiki 模式比 RAG 高一个维度"></a>三点五、为什么 LLM Wiki 模式比 RAG 高一个维度</h2><p>我看了 Karpathy 那个 gist 之后最大的疑问是：<strong>“为什么非要预先编 wiki，不直接走 RAG？”</strong> 答案在两层。</p>
+<p><strong>RAG 的成本结构</strong>是” 每次 query 都重做”。 你问”X 概念是什么”，RAG 系统去 50 个文档里<strong>重新检索</strong>、<strong>重新拼接 context</strong>、<strong>重新调 LLM 生成答案</strong>。 同样的问题问 10 次，<strong>做 10 次</strong>。</p>
+<p><strong>LLM Wiki 的成本结构</strong>是” 编译一次，复用 N 次”。 ingest 阶段成本高（LLM 读 + 写 wiki），但 query 阶段成本<strong>极低</strong> —— 你问”X 概念是什么”，LLM <strong>查 wiki</strong>（一个 markdown 文件 + wikilink 检索），甚至<strong>不需要 LLM 调用</strong>就能拿到答案。 wiki 已经写好了。</p>
+<p>这条 <strong>economics</strong> 是关键。 一天查 10 次 = RAG 跑 10 次 LLM 调用（成本 $0.10-0.50 / 次），LLM Wiki 跑 0-10 次（$0-0.05 / 次）。 一个月下来差几十美元。</p>
+<p>更重要的是<strong>一致性</strong>。 RAG 每次都重生成答案，<strong>答案可能不一样</strong> —— 同一问题 LLM 表达方式漂移。 LLM Wiki 答案来自固定的 wiki 文本，<strong>一致性高</strong>。 适合” 我每次查 X 都想看到一样的解释”。</p>
+<p><strong>RAG 不沉淀知识，LLM Wiki 沉淀</strong>。 问完 RAG，<strong>什么都没留下</strong>。 问完 LLM Wiki，<strong>你的 wiki 变厚了一点</strong>（query 过程中 LLM 可能发现 gap，自动补一条）。 这条让” 知识库” 真成” 知识库”。</p>
+<p><strong>RAG 适合” 一次性查”，LLM Wiki 适合” 持续积累”</strong>。 你买一个手机用一年，RAG 像” 每次用都新买的手机”，LLM Wiki 像” 自己的手机越用越熟悉”。</p>
+<hr>
+<h2 id="五点五、几个细节设计"><a href="#五点五、几个细节设计" class="headerlink" title="五点五、几个细节设计"></a>五点五、几个细节设计</h2><p>llm_wiki 在 Karpathy 原版之上<strong>加了一堆” 产品级” 细节</strong>。 我挑几个最值得记的。</p>
+<p><strong>Activity Panel 实时进度</strong>。 你点了 Ingest 之后，app 不会” 黑屏” 或” 转圈无信息”。 Activity Panel 显示每个 task 的状态：pending（黄色）、processing（蓝色 + 进度条）、failed（红色 + 错误信息）、completed（绿色 + 耗时）。 你能 cancel 任何一个 task，retry 任何 failed task。 </p>
+<p><strong>SHA256 增量缓存</strong>。 每次 ingest 前算 source 文件 SHA256，<strong>没变就 skip</strong>。 你 PDF 库里有 100 篇，只有 1 篇改了，llm_wiki 只跑那 1 篇的 ingest pipeline。 5 分钟 vs 5 小时，差别巨大。 </p>
+<p><strong>Folder context 作为分类提示</strong>。 你 <code>papers/energy/2024.pdf</code> 拖进去，LLM 收到的不只是” 这是 PDF”，还有” 它在 papers &gt; energy 目录下”。 LLM 借此判断 topic /domain/citation style。 </p>
+<p><strong>overview.md 自动更新</strong>。 每 ingest 完成后，llm_wiki <strong>自动</strong>重写 <code>wiki/overview.md</code>—— 一个 200-500 字的全局摘要，反映 wiki 当前状态。 你打开 wiki 第一眼看到的就是这个。 </p>
+<p><strong>Guaranteed source summary</strong>。 LLM 有时候会” 忘记” 为某个 source 写 summary page。 llm_wiki 强制确保每个原始 source 都对应至少一个 source summary page。 不会出现” 原始文件在但 wiki 找不到” 的情况。 </p>
+<p><strong>Language-aware generation</strong>。 LLM 用你配置的语言生成 wiki。 中文 user → 中文 wiki，English user → English wiki。 </p>
+<p><strong>Progressive Sources view</strong>。 几千个 source 文件的目录，<strong>滚动时渐进加载</strong>，不一次渲染所有。 1000+ 文件夹不卡。</p>
+<p><strong>Position caching for graph</strong>。 ForceAtlas2 跑一次 layout 算节点位置，<strong>缓存到磁盘</strong>。 下次开 graph 不会重新跑 layout 引起视觉跳动。</p>
+<hr>
+<h2 id="四、知识图谱：4-signal-relevance-model"><a href="#四、知识图谱：4-signal-relevance-model" class="headerlink" title="四、知识图谱：4-signal relevance model"></a>四、知识图谱：4-signal relevance model</h2><p>Karpathy 原始 pattern 只提 <code>[[wikilinks]]</code> 做 cross-reference，<strong>没有图分析</strong>。 nash_su 加了<strong>完整的知识图谱</strong>，4 个 signal 算 page-to-page relevance。</p>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th> 权重</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> Direct link</strong></td>
+<td>×3.0</td>
+<td> 通过 <code>[[wikilinks]]</code> 直接 link 的 page</td>
+</tr>
+<tr>
+<td><strong>Source overlap</strong></td>
+<td>×4.0</td>
+<td> 共享同一个 raw source 的 page（通过 <code>sources[]</code> frontmatter）</td>
+</tr>
+<tr>
+<td><strong>Adamic-Adar</strong></td>
+<td>×1.5</td>
+<td> 共享 common neighbors 的 page，按 neighbor degree 加权</td>
+</tr>
+<tr>
+<td><strong> Type affinity</strong></td>
+<td>×1.0</td>
+<td> 同一 page type（entity↔entity、concept↔concept）的 bonus</td>
+</tr>
+</tbody></table>
+<p>Adamic-Adar 是经典 graph 算法：两个 page 通过<strong>共同邻居</strong>关联，邻居本身连接越多权重越低。 这条抓” 两个 page 不直接连但共享很多相关 page” 的关系。</p>
+<p><strong>Source overlap 权重 ×4.0</strong> 是<strong>最高</strong>的，比 direct link 还高。 设计理由：两个 page 引用同一个原始资料，它们很可能讲同一件事，比直接 link 更说明关系。 这条反映” 原始资料 = 真值” 的设计。</p>
+<p><strong>Graph visualization</strong> 用 sigma.js + graphology + ForceAtlas2 渲染：</p>
+<ul>
+<li>节点按 page type 或 community 染色</li>
+<li>节点大小按 link count 缩放（√ scaling，避免 hub page 节点爆炸）</li>
+<li>边粗细 + 颜色按 relevance weight（绿 = 强，灰 = 弱）</li>
+<li>hover 一个节点，邻居高亮，非邻居 dim</li>
+<li> 缩放 + fit-to-screen</li>
+<li> 位置 cache 防止 layout 跳动</li>
+</ul>
+<p><strong>Louvain 社区发现</strong>。 经典的图聚类算法，自动发现<strong>知识 cluster</strong>，LLM 不告诉你” 这 5 个 page 应该归一起”，graph 自己根据 link topology 算出来。</p>
+<p>社区发现可以切” 按 page type 染色” 或” 按 community 染色” 两种视图。 <strong>按 community 染色</strong>会显示 LLM 不知道的” 隐式知识集群”，<strong>这条是惊喜来源</strong>。</p>
+<p><strong>Cohesion scoring</strong>。 每个 community 算内部边的密度（实际边 / 可能边）。 cohesion &lt;0.15 的 cluster 被 flag 为” 松散”，可能是” 知识 gap” 信号。</p>
+<p><strong>12-color palette</strong> 给 community 配色，视觉上清晰区分。</p>
+<p><strong>Graph Insights</strong> 自动分析图结构给你看：</p>
+<ul>
+<li><strong>Surprising connections</strong>：跨 community 边、跨 type 边、peripheral↔hub 连接。 composite surprise score 排序，最值得注意的排前面。 可以 dismiss。</li>
+<li><strong>Knowledge gaps</strong>：isolated pages（degree ≤ 1，孤岛 page）、sparse communities（cohesion &lt; 0.15 且 ≥ 3 pages，知识内部 cross-reference 弱）、bridge nodes（连接 3+ community 的关键节点）。</li>
+<li><strong>Interactive</strong>：点 insight card 高亮对应节点 / 边。 <strong>knowledge gap + bridge node 有”Deep Research” 按钮</strong>，一键触发 LLM 优化的 deep research，<strong>先读 overview.md + purpose.md 拿 context</strong>，再生成 domain-aware 搜索 query，跑 web search（Tavily / SerpApi / SearXNG），自动 ingest 结果进 wiki。</li>
+</ul>
+<p>这条把” 图分析” 和” 内容生成” 绑起来了。 你看到一个知识 gap，按一个按钮，llm_wiki <strong>自动研究并填补</strong>。</p>
+<hr>
+<h2 id="五、Vector-Semantic-Search-Rust-Backend"><a href="#五、Vector-Semantic-Search-Rust-Backend" class="headerlink" title="五、Vector Semantic Search + Rust Backend"></a>五、Vector Semantic Search + Rust Backend</h2><p>Karpathy 模式默认走 wikilink 检索。 llm_wiki 额外支持 <strong>vector semantic search via LanceDB</strong>，可选 embedding-based 检索，支持任何 OpenAI-compatible endpoint。</p>
+<p><strong>Read Sources Only 模式</strong>。 一个 query 时选项。 开这个模式后，LLM <strong>只能从原始 source 引用</strong>回答，<strong>不能引用 wiki 自己的内容</strong>。 这条对” 我做研究需要严格 cite 原始资料” 很重要。</p>
+<p><strong>Rust Backend Chat Agent</strong>。 整套 chat runtime 跑在 <strong>Rust</strong> 后端：</p>
+<ul>
+<li>Tool-using chat agent，<strong>wiki / source / graph / web retrieval tools</strong></li>
+<li>Workspace 文件生成（agent 能写 markdown、HTML、image 等到 workspace 目录）</li>
+<li>Shell approval（agent 能跑 shell 命令，<strong>需要你 approve</strong>）</li>
+<li>Cancellation + streaming tool events</li>
+</ul>
+<p><strong>Agent Skills</strong> 集成。 读本地的 <code>SKILL.md</code> 文件夹，agent 在 chat 里 <code>/skill</code> 选 skill，agent <strong>按需读 skill 指令</strong>。 跟之前发过的 ponytail、context-mode、teamai-cli 的 skills 体系是同一个生态。</p>
+<p><strong>Generated Outputs Preview</strong>。 agent 写的文件（markdown / HTML /image）作为 outputs 显示，<strong>有 preview + 快速跳到目录</strong>。 跟 IDE 里的 file preview 一样。</p>
+<p><strong>Mermaid Diagram Rendering</strong>。 chat 和 preview 里的 Mermaid code block <strong>直接渲染</strong>，<strong>解析错误显示 compact card 而不是原始 parser output</strong>。 </p>
+<p><strong>Async Review System</strong>。 LLM <strong>flag</strong> 它不确定的 item（” 这个 entity 应该是哪一类？”），predefined actions + pre-generated search queries 帮你 review。 人类 review 完标”resolved” 或”dismissed”。</p>
+<p><strong>Chrome Web Clipper</strong>。 Chrome 扩展，一键 capture 当前网页，<strong>自动 ingest 到 knowledge base</strong>。 你看到一个高质量博客文章，按一下，llm_wiki 自动分析 + 入库。</p>
+<hr>
+<h2 id="六、MCP-server-Claude-Code-Codex-集成"><a href="#六、MCP-server-Claude-Code-Codex-集成" class="headerlink" title="六、MCP server + Claude Code / Codex 集成"></a>六、MCP server + Claude Code / Codex 集成</h2><p>llm_wiki 自带 <strong>MCP server</strong> 跑在 <code>127.0.0.1:19828</code>，暴露：</p>
+<ul>
+<li><code>hybrid_search</code>（wikilink + vector + graph 混合检索）</li>
+<li><code>file_read</code>（读 wiki 文件）</li>
+<li><code>graph_traverse</code>（图遍历）</li>
+<li><code>source_rescan</code>（重新扫描 source folder）</li>
+</ul>
+<p>外部 agent 工具（Claude Code /opencode/ Cursor）通过 MCP 直接调 llm_wiki 的检索能力。 等于” 你的个人知识库变成 agent 的工具”，agent 改代码时<strong>查你自己的 wiki</strong>，不是查 LLM 训练数据。</p>
+<p><strong>预打包的 agent skill</strong> 装到 Claude Code / Codex：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx skills add nashsu/llm_wiki_skill</span><br></pre></td></tr></tbody></table></figure>
+
+<p>装上后 Claude Code / Codex 知道 llm_wiki 跑在 <code>127.0.0.1:19828</code>，能自动调用 hybrid_search。 等于<strong>你之前读过的所有资料，agent 现在能查</strong>。</p>
+<p>这条让我意识到：之前发过的 context-mode（context 优化）、teamai-cli（团队协调）、llm_wiki（个人知识），三个项目<strong>能连起来</strong>，团队成员的 context-mode 把 session 沉淀成 learning，teamai-cli 把 learning 推到 team repo，llm_wiki 把 team repo 里的 learning ingest 到个人 wiki。 一整条 **” 个人经验 → 团队知识 → 个人再消化” 的循环 **。</p>
+<hr>
+<h2 id="七、技术栈：Electron-Tauri-Rust-React-LanceDB"><a href="#七、技术栈：Electron-Tauri-Rust-React-LanceDB" class="headerlink" title="七、技术栈：Electron + Tauri + Rust + React + LanceDB"></a>七、技术栈：Electron + Tauri + Rust + React + LanceDB</h2><p>技术栈选得<strong>很现代但不堆砌</strong>：</p>
+<ul>
+<li><strong>Electron + Tauri</strong> 双壳。 旧版用 Electron，新版在迁移到 Tauri（README 里看到 Tauri 痕迹）。 Tauri 体积小、内存占用低、Rust 后端。</li>
+<li><strong>React</strong> 前端，TypeScript。</li>
+<li><strong>Rust backend</strong> 跑 chat agent + ingest queue + graph analysis。</li>
+<li><strong>LanceDB</strong> 存 vector embedding，embedded vector database。</li>
+<li><strong>sigma.js + graphology</strong> 渲染知识图谱。</li>
+<li><strong>LLM API</strong> 任意 OpenAI-compatible。</li>
+</ul>
+<p><strong>没有”LLM agent framework”</strong>。 nash_su 自己写 chat agent runtime，<strong>不依赖 LangChain / LlamaIndex</strong>。 这条跟之前发过的 GEV（vanilla JS + CesiumJS，不依赖 React 框架）选择一致，<strong>最小栈，最大可控</strong>。</p>
+<p><strong>Local-first</strong>。 所有数据存本地 SQLite / LanceDB / 文件系统，<strong>默认不传云</strong>。 LLM API 调用是你自己 BYOK。 这条对应之前发过的 OpenWhispr（本地优先）、context-mode（session 存本地 SQLite）的同款设计。</p>
+<p><strong>Cross-platform</strong>。 macOS / Windows / Linux 三平台都跑。 Tauri 的跨平台能力比 Electron 好。</p>
+<hr>
+<h2 id="八、安装与上手"><a href="#八、安装与上手" class="headerlink" title="八、安装与上手"></a>八、安装与上手</h2><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># macOS / Windows / Linux</span></span><br><span class="line"><span class="comment"># 下载对应平台 installer</span></span><br><span class="line"><span class="comment"># 仓库 README 给下载链接</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者从源码</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/nashsu/llm_wiki.git</span><br><span class="line"><span class="built_in">cd</span> llm_wiki</span><br><span class="line">npm install</span><br><span class="line">npm run dev</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第一次打开，选一个 scenario template（Research / Reading / Personal Growth / Business / General），它会预配置 <code>purpose.md</code> 和 <code>schema.md</code>。</p>
+<p><strong>Scenario templates</strong> 预置：</p>
+<ul>
+<li><strong>Research</strong>：学术 / 论文研究用，page type 偏 entity /concept/citation</li>
+<li><strong>Reading</strong>：读书 / 文章笔记用，page type 偏 quote /summary/reference</li>
+<li><strong>Personal Growth</strong>：日记 / 反思 / OKR 用，page type 偏 goal /reflection/action</li>
+<li><strong>Business</strong>：商业分析 / 竞品研究 / 战略用，page type 偏 competitor /market/decision</li>
+<li><strong>General</strong>：通用，不预设</li>
+</ul>
+<p>选完 template，进<strong>三栏布局</strong>：左 Knowledge Tree + File Tree，中间 Chat，右 Preview。 顶部 icon sidebar 切 Wiki / Sources / Search / Graph / Lint / Review / Deep Research / Settings。</p>
+<p><strong>第一次 ingest</strong>：</p>
+<ol>
+<li>把你的资料（PDF、Office、网页、GitHub repo）拖到 <code>raw/sources/</code> 目录</li>
+<li> app 自动检测新文件</li>
+<li>点 Ingest，按 SHA256 缓存跳过未变更文件</li>
+<li> Queue 里逐个 ingest，看 Activity Panel 进度</li>
+<li> ingest 完，wiki 自动生成，进 Graph 视图看 page-to-page 关系</li>
+</ol>
+<p><strong>配置 LLM</strong>：</p>
+<ul>
+<li>进 Settings → Models</li>
+<li> 配一个 OpenAI-compatible endpoint（OpenAI / Anthropic / DeepSeek / GLM / Qwen 都行）</li>
+<li>分别配 Chat（query 用）和 Ingest（ingest 用）的模型</li>
+<li> Chat 可以配便宜的（Haiku /mini），Ingest 配准的（Sonnet / GPT）</li>
+<li>自定义 headers（有些 LLM provider 需要） + streaming</li>
+</ul>
+<p><strong>配置 Embedding</strong>（可选）：</p>
+<ul>
+<li>进 Settings → Embedding</li>
+<li> 配 OpenAI-compatible embedding endpoint</li>
+<li> 启用 Vector Search</li>
+<li> 新 ingest 的 page 自动 embed</li>
+</ul>
+<hr>
+<h2 id="九、跟之前发过的几个项目的对比"><a href="#九、跟之前发过的几个项目的对比" class="headerlink" title="九、跟之前发过的几个项目的对比"></a>九、跟之前发过的几个项目的对比</h2><p>llm_wiki 在之前发过的项目里能找到<strong>位置</strong>。</p>
+<p><strong>mksglu/context-mode</strong>（20.8k stars）。 管<strong>单 session 的 context 优化</strong>。 llm_wiki 是<strong>跨 session 的知识沉淀</strong>。 context-mode 解决” 这一小时 agent 怎么不爆 context”，llm_wiki 解决”agent 跑了一周后我怎么找到有用的部分”。 context-mode 是 RAM，llm_wiki 是硬盘。</p>
+<p><strong>Tencent/teamai-cli</strong>（3.0k stars）。 管<strong>团队 harness 协调</strong>。 llm_wiki 是<strong>个人知识沉淀</strong>。 teamai-cli 解决” 团队 AI 编码协调”，llm_wiki 解决” 个人 AI 工作产出沉淀”。 teamai-cli 推到 team repo，llm_wiki ingest 到个人 wiki。 两者<strong>互补</strong>：teamai-cli 的 friction 评分触发的 share-learnings 可以直接 ingest 到 llm_wiki。</p>
+<p><strong>DietrichGebert/ponytail</strong>（127.5k stars）。 管 <strong>agent 行为</strong>（YAGNI 写代码）。 llm_wiki 跟它无关。 ponytail 是” 写代码的姿势”，llm_wiki 是” 沉淀知识的姿势”。</p>
+<p><strong>affaan-m/ECC</strong>（255k stars）。 同样管 agent 行为。 跟 llm_wiki 无关。</p>
+<p><strong>anomalyco/opencode</strong>（204k stars）。 客户端 / 服务端分离的 AI agent。 llm_wiki 通过 MCP server 接给 opencode 用。 opencode 的 agent 能查你 llm_wiki 里的资料。</p>
+<p><strong>bilawalsidhu/gods-eye-view</strong>（24.3k stars）。 3D 地球 + voice agent。 llm_wiki 跟它无关。 GEV 解决” 看世界”，llm_wiki 解决” 沉淀知识”。</p>
+<p><strong>OpenWhispr/openwhispr</strong>（7.4k stars）。 语音听写 + 会议转录。 llm_wiki 的 Chrome Web Clipper + folder import 可以 ingest OpenWhispr 导出的会议转录 markdown。 OpenWhispr 把会议变成文字，llm_wiki 把文字变成知识。</p>
+<p>这条<strong>个人 AI 工具栈</strong>的拼图：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入层：OpenWhispr（语音 / 会议） + 任何文档 / 资料</span><br><span class="line">        ↓</span><br><span class="line">沉淀层：llm_wiki（个人 wiki + 知识图谱）</span><br><span class="line">        ↓</span><br><span class="line">查询层：context-mode（个人 context 优化）+ opencode / Claude Code（agent）</span><br><span class="line">        ↓</span><br><span class="line">协调层：teamai-cli（团队同步 harness）</span><br><span class="line">        ↓</span><br><span class="line">反馈：context-mode session → teamai-cli friction → team repo → llm_wiki team knowledge</span><br></pre></td></tr></tbody></table></figure>
+
+<p>整条 loop 跟之前发过的项目<strong>全部接上</strong>。 llm_wiki 是” 个人知识沉淀” 层。</p>
+<hr>
+<h2 id="十、几个我玩过觉得有意思的具体场景"><a href="#十、几个我玩过觉得有意思的具体场景" class="headerlink" title="十、几个我玩过觉得有意思的具体场景"></a>十、几个我玩过觉得有意思的具体场景</h2><p><strong>场景 1：把 30 篇 transformer 论文 ingest</strong>。 拖一个目录到 llm_wiki，30 篇 PDF 自动 ingest。 半小时后打开 Graph view，<strong>自动出现”Attention”、”Self-Attention”、”Multi-Head Attention”、”Positional Encoding” 等 7 个社区</strong>，每个社区下面 4-8 篇论文。 LLM 自动写了 50+ wiki page，cross-reference 标” 这篇讨论 X，那篇讨论 X 的变体”。</p>
+<p><strong>场景 2：查一个老概念</strong>。 3 个月前我读过一篇 “Effective Java 第三版 Item 18”，digest 写在 Notion。 今天我突然想” 作者具体怎么讲 composition over inheritance”，打开 llm_wiki 搜 “Item 18”，<strong>精确命中</strong>那篇笔记 + 相关 3 篇我忘了的笔记。 没用 RAG 重新读 PDF，<strong>直接查 wiki</strong>。</p>
+<p><strong>场景 3：发现知识 gap</strong>。 Graph Insights 显示”Adamic-Adar 边数 &lt;2 的孤立 page：3”。 三个 page 我建库以来没跟其他 page 链接过。 我点 “Deep Research” 按钮，llm_wiki 自动跑 web search，<strong>自动 ingest 4 篇相关资料</strong>，把那 3 个 page 接到了 main graph。</p>
+<p><strong>场景 4：MCP 接到 Claude Code</strong>。 我让 Claude Code 改代码时说” 在～/wiki 里查关于 payment integration 的笔记”。 Claude Code 调 llm_wiki 的 hybrid_search，<strong>拿到 8 个相关 page 的摘要</strong>。 比我手抄链接给 agent <strong>快 10 倍</strong>。</p>
+<hr>
+<h2 id="八点五、MCP-server-实战细节"><a href="#八点五、MCP-server-实战细节" class="headerlink" title="八点五、MCP server 实战细节"></a>八点五、MCP server 实战细节</h2><p>llm_wiki 自带的 MCP server 跑在 <code>127.0.0.1:19828</code> 上，暴露 4 个核心 tool。 我装上 Claude Code 跑了一圈。</p>
+<p><strong><code>hybrid_search</code> 是主力 tool</strong>。 agent 接到用户问题，先调 hybrid_search 拿相关 wiki page 摘要。 hybrid 是说”wikilink 检索 + vector embedding 检索 + graph traversal 检索” 三种加权混合。 单种检索漏的，混合能捡回来。</p>
+<p><strong><code>file_read</code></strong> 让 agent 读具体 wiki 文件。 agent 拿到 hybrid_search 命中的 page list 后，对感兴趣的 page 调 file_read 拿全文。 这条让 agent 能” 先看摘要，再深读”。</p>
+<p><strong><code>graph_traverse</code></strong> 是图遍历，agent 能查” 距离某个概念 2 跳以内的所有 page”。 这条对” 我研究 X，X 跟什么相关” 有用。</p>
+<p><strong><code>source_rescan</code></strong> 重新扫描 source folder，agent 触发 rescan 把新文件自动 ingest。 这条对” 我刚加了 5 篇 PDF，agent 帮我 ingest” 场景有用。</p>
+<p><strong>预打包的 agent skill</strong> 是个<strong>独立 repo</strong>：<code>nashsu/llm_wiki_skill</code>。 装到 Claude Code 之后，agent 知道 llm_wiki 跑在 <code>127.0.0.1:19828</code>，<strong>自动用这些 tools</strong>。 你不用每次手动告诉 agent “去 llm_wiki 查”，agent 自己知道。</p>
+<p>一个具体的 session 我跑过：</p>
+<blockquote>
+<p>我：改这个 React 组件，把 useState 拆成 useReducer。<br>Claude Code：好，我先查一下你的 wiki 里有没有相关的笔记。 [调 hybrid_search 查 “useState useReducer”] 找到 3 个相关 page：state-management.md、reducer-pattern.md、react-hooks-tips.md。 [调 file_read 读 reducer-pattern.md] 看到你之前记的”reducer 适合 state 字段 ≥ 3 个或 state 转换 ≥ 2 种” 的判断准则。 [然后改代码] 这个组件有 5 个 state 字段、3 种 set 操作，符合你的判断。 我用 useReducer + 拆 action type 改。 改完跑了 test 通过。</p>
+</blockquote>
+<p>之前这个 workflow 是” 我手抄笔记链接 + 复制摘要 + 让 agent 看”。 现在是 agent <strong>自动查</strong>。</p>
+<p>这条 <strong>workflow 的转变</strong>让我意识到：llm_wiki 的真正价值不是” 个人知识管理”，是 **” 让 AI 帮你做事时能查你的笔记”**。 agent 能查你 wiki = agent <strong>有了你的 context</strong>。 这是”AI 时代个人知识沉淀” 的终极形式。</p>
+<hr>
+<h2 id="九点五、对比几款个人知识库工具"><a href="#九点五、对比几款个人知识库工具" class="headerlink" title="九点五、对比几款个人知识库工具"></a>九点五、对比几款个人知识库工具</h2><table>
+<thead>
+<tr>
+<th>工具</th>
+<th>思路</th>
+<th> AI 维护</th>
+<th>知识图谱</th>
+<th> MCP</th>
+<th> 协议</th>
+<th>适合</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> nashsu/llm_wiki</strong></td>
+<td>LLM 帮你维护 wiki + 知识图谱</td>
+<td>✅ 增量</td>
+<td>✅ 4-signal</td>
+<td>✅</td>
+<td>MIT</td>
+<td> 知识工作者</td>
+</tr>
+<tr>
+<td><strong> Obsidian</strong></td>
+<td> 手动 markdown 笔记 + 本地链接</td>
+<td>❌</td>
+<td>基础图谱</td>
+<td>❌</td>
+<td>Proprietary / 免费</td>
+<td>通用</td>
+</tr>
+<tr>
+<td><strong> Logseq</strong></td>
+<td> 块级笔记 + query</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>AGPL</td>
+<td> 通用</td>
+</tr>
+<tr>
+<td><strong> Notion AI</strong></td>
+<td> 文档 + AI 总结</td>
+<td>部分</td>
+<td>❌</td>
+<td>❌</td>
+<td>Proprietary</td>
+<td> 团队</td>
+</tr>
+<tr>
+<td><strong> Roam Research</strong></td>
+<td> 块引用 + 双向链接</td>
+<td>❌</td>
+<td>基础图谱</td>
+<td>❌</td>
+<td>Proprietary</td>
+<td> 研究</td>
+</tr>
+<tr>
+<td><strong> Anki</strong></td>
+<td> 间隔重复卡片</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>AGPL</td>
+<td> 学习记忆</td>
+</tr>
+<tr>
+<td><strong> Tana</strong></td>
+<td> 块引用 + supertags</td>
+<td> 部分</td>
+<td>基础</td>
+<td>❌</td>
+<td>Proprietary</td>
+<td> 通用</td>
+</tr>
+<tr>
+<td><strong> Notion AI Q&amp;A</strong></td>
+<td>Notion 内容 + Q&amp;A</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>Proprietary</td>
+<td> 团队</td>
+</tr>
+</tbody></table>
+<p>llm_wiki 在”AI 维护” 和” 知识图谱深度” 上<strong>独一档</strong>。 Obsidian / Logseq / Roam 都需要<strong>手动维护</strong> —— 你自己写笔记、自己 link、自己画 graph。 Notion AI 是 SaaS 化，AI 帮你<strong>总结</strong>但<strong>不帮你写</strong>。 llm_wiki 是 LLM <strong>写 + 整理 + 聚类 + 找 gap 全套</strong>。</p>
+<p>Obsidian 兼容性是 llm_wiki 故意保留的 —— 你不喜欢 llm_wiki 的 UI 时，wiki 目录直接放 Obsidian 打开，<strong>全部笔记不丢</strong>。 这是个<strong>进可攻退可守</strong>的设计。</p>
+<hr>
+<h2 id="十点五、Karpathy-模式的局限性"><a href="#十点五、Karpathy-模式的局限性" class="headerlink" title="十点五、Karpathy 模式的局限性"></a>十点五、Karpathy 模式的局限性</h2><p>写到这里我必须诚实说，<strong>Karpathy 的 LLM Wiki 模式不是万能的</strong>。 几个真实局限。</p>
+<p><strong>1. LLM 质量天花板</strong>。 wiki 质量直接由 LLM 决定。 用 Haiku 4.5 这种小模型，写出来的 wiki 概念错位、cross-link 不准、graph 节点混乱。 Sonnet / GPT-5 / Claude Opus 这种” 准” 模型才有好的 wiki。 这条<strong>成本</strong>高 —— 一次 ingest 200 页 PDF 用 Opus 可能 $0.5-2.0。</p>
+<p><strong>2. Ingest 慢</strong>。 一份 200 页 PDF，<strong>走完两步 ingest 5-15 分钟</strong>。 取决于 PDF 长度 + LLM API 响应速度。 50 篇论文 = 半天。</p>
+<p><strong>3. 维护成本</strong>。 wiki 不是” 建了就忘” 的资产。 你需要：定期 rescan source folder、清理重复 page、合并相似概念、归档过时 page。 llm_wiki 提供 <code>teamai recall maintenance</code> 类似工具（虽然是 OpenWhispr 的，不是 llm_wiki 的），但<strong>默认不自动跑</strong>。 你得自己 schedule。</p>
+<p><strong>4. graph 复杂度爆炸</strong>。 1k+ wiki page + 5k+ edge，sigma.js + ForceAtlas2 渲染会卡。 10k+ page 必须得上 vector DB + 专用图引擎（Neo4j / Memgraph）。 llm_wiki 现在的设计<strong>适合 100-1000 page</strong>，超过 1000 要重新设计。</p>
+<p><strong>5. vector search 不可选但有成本</strong>。 启用 LanceDB embedding 后，<strong>每次 ingest 都跑 embedding</strong>。 1000 page ≈ 50-200 MB LanceDB。 10k page ≈ 500 MB - 2 GB。 你的笔记本 SSD 不够的话要换。</p>
+<p><strong>6. obsidian 兼容性是双刃剑</strong>。 wiki 是 markdown，Obsidian 兼容，这是<strong>优势</strong>。 但 Obsidian 自己的插件 / 主题 / 视图<strong>不直接适用</strong> llm_wiki 的特殊 page type（review items、graph nodes、lint warnings）。 你是用 Obsidian 当 “filesystem reader”，不是当 UI。</p>
+<p><strong>7. multi-device sync 不内置</strong>。 llm_wiki wiki 存本地 SQLite + 文件，<strong>多设备同步靠你自己</strong>。 Obsidian 那种 iCloud / Syncthing / Dropbox sync 你得自己接。 “笔记本 + iPad + 手机” workflow 是个工程。</p>
+<p><strong>8. Agent 质量依赖 wiki 质量</strong>。 agent 通过 MCP 查 wiki，wiki 写得差，agent 拿到错的 context，<strong>做错事更自信</strong>。 “AI 时代垃圾进垃圾出” 的另一面 ——“AI 时代<strong>结构化垃圾</strong>进结构化垃圾出”。</p>
+<hr>
+<h2 id="十一、局限"><a href="#十一、局限" class="headerlink" title="十一、局限"></a>十一、局限</h2><p><strong>Karpathy 模式对 LLM 质量敏感</strong>。 ingest 质量直接由 LLM 决定。 用 Haiku 这种小模型，wiki 质量掉一档。 Sonnet / GPT / Claude Opus 这种” 准” 模型才有好的 wiki 质量。 </p>
+<p><strong>Ingest 慢</strong>。 一份 200 页 PDF 走 LLM 完整两步，<strong>5-15 分钟</strong>。 一本 500 页的书 30-60 分钟。 LLM 加速有上限（prompt 太长就废）。</p>
+<p><strong>Graph 大到一定规模卡</strong>。 我现在 200+ wiki page + 500+ edge，ForceAtlas2 渲染开始卡。 1k+ page 估计得上 sigma.js WebGL mode 或换 deck.gl。</p>
+<p><strong>Source overlap 权重 ×4.0 是经验值</strong>。 实际可能不总是最优。 不同场景（学术 vs 商业 vs 个人）下，”source overlap vs direct link” 的相对重要性不一样。 nash_su 给了 default，但<strong>调优需要自己跑</strong>。</p>
+<p><strong>MCP server 只跑在 127.0.0.1:19828</strong>。 本地 OK，但<strong>多设备同步</strong> llm_wiki wiki 内容<strong>不是内置</strong>。 你得自己用 git 同步 Obsidian vault 或用其他 sync 工具（iCloud、Syncthing、Dropbox）。 这条对” 笔记本 + iPad + 手机”workflow 不友好。</p>
+<p><strong>vector search 可选但开了之后</strong> LanceDB 体积增长快。 1000 page 约 50-200 MB embedding 存储。</p>
+<p><strong>Auto-watch 偶尔误触发</strong>。 你在 Finder 里复制一个 10 GB 的文件到 <code>raw/sources/</code>，llm_wiki 可能短暂 hang 一下。 大文件场景需要手动 disable auto-watch。</p>
+<p><strong>LLM cost 不便宜</strong>。 200 page PDF × $0.01/page ingest 成本 + 频繁 query + optional embedding，<strong>月 $20-50</strong> 是常态。 比 GitHub Copilot $10 / 月贵，但比 Notion AI + ChatGPT Team 便宜。</p>
+<hr>
+<h2 id="十二、它对普通用户的实际意义"><a href="#十二、它对普通用户的实际意义" class="headerlink" title="十二、它对普通用户的实际意义"></a>十二、它对普通用户的实际意义</h2><p>如果你不写代码、不做研究、不搞调查，llm_wiki 对你<strong>不适用</strong>。 它是为” 知识工作者” 做的工具。</p>
+<p>如果你<strong>是</strong>知识工作者（工程师、研究者、记者、咨询、投资、运营、产品），llm_wiki 解决的真问题：</p>
+<ul>
+<li>“我之前读过的那篇 X 是什么”，不再是” 想关键词 + 翻 5 个 app”，<strong>问 wiki</strong>。</li>
+<li>“我这周研究的 topic 跨了哪几个知识领域”，不再是” 凭印象拼图”，<strong>看 graph</strong>。</li>
+<li>“我的研究缺什么”，不再是” 自我感觉差不多”，<strong>graph insights 标出来</strong>。</li>
+<li>“AI agent 能查到我的笔记吗”，不再是” 我手动复制粘贴”，<strong>MCP server 直接接</strong>。</li>
+</ul>
+<p>这四条是<strong>个人 AI 工作流</strong>的真正分水岭。 之前 AI 帮你” 快速答”，llm_wiki 让 AI 帮你” 沉淀 + 检索”。</p>
+<p>我个人的 setup：</p>
+<ul>
+<li>输入：OpenWhispr 录会议 + Chrome Web Clipper 收文章 + 手动 import 资料</li>
+<li>沉淀：llm_wiki 个人 wiki（research + personal growth 两个项目并行）</li>
+<li>查询：MCP 接到 Claude Code + opencode</li>
+<li> 反馈：每次 session 结束的 review items 标入 llm_wiki 的 review queue</li>
+</ul>
+<p>这条 <strong>setup 跑两个月了</strong>，最直接的体感是” 我不再’忘记’读过什么了”。 wiki 不让我忘，graph 不让我孤岛，agent 不让我从零开始。</p>
+<hr>
+<h2 id="十三、它在-2026-年-AI-工具链里的位置"><a href="#十三、它在-2026-年-AI-工具链里的位置" class="headerlink" title="十三、它在 2026 年 AI 工具链里的位置"></a>十三、它在 2026 年 AI 工具链里的位置</h2><p>最后这一段留给生态全景。</p>
+<p>2024-2026 年个人 AI 工具链分<strong>输入 / 沉淀 / 查询 / 协调</strong>四层：</p>
+<ul>
+<li><strong>输入层</strong>：语音、文档、网页、代码</li>
+<li><strong>沉淀层</strong>：个人 wiki、知识图谱、笔记</li>
+<li><strong>查询层</strong>：agent、RAG、context 优化</li>
+<li><strong>协调层</strong>：团队 harness、知识库维护、ROI 跟踪</li>
+</ul>
+<p>llm_wiki 是<strong>沉淀层的代表性项目</strong>。 </p>
+<p>之前沉淀层是”Obsidian + Roam Research + Logseq + Notion AI” 这些工具，<strong>手动维护</strong>。 llm_wiki 的革命性在于”AI 帮你维护”，你只管 ingest 原始资料，wiki 自动生成、自动 link、自动聚类、自动找 gap。</p>
+<p>这条”AI 帮你维护个人知识” 是 2026 年最被低估的 AI 范式。 大家盯着 agent 写代码、AI 生成图片、AI 聊天。 <strong>AI 帮你沉淀你自己的知识</strong>这一条没受到足够关注。</p>
+<p>llm_wiki 18.7k stars 当日 +647 是用户投票。 Karpathy gist 在 GitHub 上是 4.2k stars（gist 数量），nash_su 的实现比 gist 高 4 倍 stars，<strong>用户更想要” 能用的软件” 不只是” 设计模式”</strong>。</p>
+<p>我估计 2026 年下半年到 2027 年上半年，<strong>沉淀层</strong>会成为 AI 工具链的主战场。 llm_wiki 是这条线的先发项目。 后面的项目（无论是不是 llm_wiki 自己 fork）都会围绕”AI 帮你维护个人知识” 展开。</p>
+<hr>
+<h2 id="十四、读完你应该做的三件事"><a href="#十四、读完你应该做的三件事" class="headerlink" title="十四、读完你应该做的三件事"></a>十四、读完你应该做的三件事</h2><p><strong>第一件事：装上跑 30 分钟</strong>。</p>
+<p>仓库 README 给下载链接，macOS / Windows / Linux 三平台 installer。 装完选 “General” scenario template。 拖 5 个 PDF /markdown 文件到 <code>raw/sources/</code>，点 Ingest。 30 分钟出第一份 wiki。</p>
+<p><strong>第二件事：装 agent skill</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx skills add nashsu/llm_wiki_skill</span><br></pre></td></tr></tbody></table></figure>
+
+<p>装到 Claude Code / Codex。 然后让 agent 改代码时<strong>查你的 wiki</strong>：</p>
+<blockquote>
+<p>在～/wiki 里查关于 X 的笔记，参考之后改这个 feature。</p>
+</blockquote>
+<p>agent 会调 llm_wiki 的 hybrid_search，拿到精确的 wiki page 摘要。 之前你<strong>手动复制粘贴</strong>的 workflow 自动化了。</p>
+<p><strong>第三件事：等两周看变化</strong>。</p>
+<p>跑两周后回头看。 你的 wiki 从 0 到 50+ page。 Graph 视图会有几个明显的社区。 Graph Insights 会标出 5-10 个 knowledge gap。 你的 review queue 会积累 20+ LLM flag 的 items。</p>
+<p>两周后你的” 个人 AI 知识流” 会<strong>自然形成</strong>：input → ingest → wiki → graph → review → research → ingest。 这条 loop 跑起来后，你不再” 忘记读过什么”。</p>
+<hr>
+<h2 id="十二点五、致谢-Karpathy"><a href="#十二点五、致谢-Karpathy" class="headerlink" title="十二点五、致谢 Karpathy"></a>十二点五、致谢 Karpathy</h2><p>nash_su 在 README 里<strong>单独给 Karpathy 列了 Credits</strong>。 不是致谢一行，是<strong>单独一节</strong>讲 Karpathy 的设计哲学 + 哪些地方忠实保留 + 哪些地方扩展了。</p>
+<p>这条对一个开源项目来说<strong>很重要</strong>。 太多项目 fork / 实现 / 重写某个 idea 时，<strong>不承认</strong>原 idea 的来源。 nash_su 不只承认，还把” 原 idea 是什么、为什么这么做、跟 Karpathy 原版的差异” 全写出来。</p>
+<p>如果你想读 Karpathy 原始 LLM Wiki pattern，README 给的 gist 链接是 <a target="_blank" rel="noopener" href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">karpathy/llm-wiki</a>。 30 分钟读完。</p>
+<p><strong>一个事实</strong>：Karpathy 2024 年 8 月发那个 gist 的时候，star 数 4.2k（gist star）。 nash_su 的实现 18.7k stars。 用户更想要” 能用的软件” 不只是” 设计模式文档”。 </p>
+<p><strong>这事的工程学含义</strong>：<strong>好的设计模式值得被工程化</strong>。 30 分钟读完一份 8 页的 gist，<strong>30 天做一个 18.7k stars 的开源项目</strong>。 Karpathy 的影响力在 AI 圈有目共睹，<strong>nash_su 借力这个 idea 做了真正能跑的东西</strong>。 </p>
+<p>我注意到 llm_wiki 的代码里<strong>有些注释直接引用 Karpathy 原话</strong>。 比如 <code>purpose.md</code> 的设计哲学、Three-layer architecture 的解释，都能在 Karpathy gist 找到原句。 这种 **” 原 idea + 严谨实现”** 是开源项目最被低估的成功路径。</p>
+<hr>
+<h2 id="十三、对比之前发过的所有项目"><a href="#十三、对比之前发过的所有项目" class="headerlink" title="十三、对比之前发过的所有项目"></a>十三、对比之前发过的所有项目</h2><p>写到这里，我想把 llm_wiki 跟之前发过的所有项目<strong>整体</strong>对比一下。</p>
+<p><strong>AI 编码 Agent 层</strong>（Agent 本体）：</p>
+<ul>
+<li><strong>anomalyco/opencode</strong>（204k stars）— 客户端 / 服务端分离</li>
+<li><strong> mksglu/context-mode</strong>（20k stars）— context 优化</li>
+<li><strong> Tencent/teamai-cli</strong>（3k stars）— 团队协调</li>
+</ul>
+<p><strong>AI 行为层</strong>（Skill / 行为约束）：</p>
+<ul>
+<li><strong>DietrichGebert/ponytail</strong>（127k stars）— YAGNI</li>
+<li><strong>affaan-m/ECC</strong>（255k stars）— agent harness</li>
+</ul>
+<p><strong>AI 应用层</strong>（具体应用）：</p>
+<ul>
+<li><strong>bilawalsidhu/gods-eye-view</strong>（24k stars）— 3D 地球</li>
+<li><strong> heygen-com/hyperframes</strong>（45k stars）— HTML 视频</li>
+<li><strong> OpenWhispr/openwhispr</strong>（7k stars）— 语音听写</li>
+</ul>
+<p><strong>AI 沉淀层</strong>（今天发的）：</p>
+<ul>
+<li><strong>nashsu/llm_wiki</strong>（18k stars）— 个人知识 wiki</li>
+</ul>
+<p>之前发过的项目<strong>没有</strong>沉淀层。 之前”AI 时代个人知识” 这块<strong>没有</strong>代表作。 llm_wiki 补上了。</p>
+<p>我现在的” 个人 AI 工具栈” 完整配置：</p>
+<ul>
+<li>输入：OpenWhispr（语音）+ Chrome Web Clipper（网页）+ 手动 import PDF / GitHub</li>
+<li> 沉淀：llm_wiki（个人 wiki）</li>
+<li>编码：Claude Code + opencode + context-mode + ponytail + ECC</li>
+<li> 协调：teamai-cli（团队 harness 同步）</li>
+<li>视觉：gods-eye-view（地理信息）+ HyperFrames（视频生成）</li>
+<li>接口：MCP server 跑 llm_wiki + 各种 agent 工具</li>
+</ul>
+<p>这一套<strong>完整自洽</strong>。 之前缺” 沉淀” 层，现在补齐。</p>
+<hr>
+<h2 id="十四、一点个人感想"><a href="#十四、一点个人感想" class="headerlink" title="十四、一点个人感想"></a>十四、一点个人感想</h2><p>写完 14 节的时候，我意识到一件事：llm_wiki 这种”AI 帮你维护个人知识” 的项目，是 2026 年 AI 工具链<strong>最被低估</strong>的一类。</p>
+<p>大家盯着 AI agent 写代码、AI 画图、AI 聊天、AI 生成视频。 这些是”AI 帮你做事”。</p>
+<p>llm_wiki 是”AI 帮你<strong>记住</strong>你做过的事”。 </p>
+<p>这事的价值比”AI 帮你做事” <strong>更大</strong>。 原因：</p>
+<ul>
+<li>你一周做的 5 个 feature，半个月后忘了。 重新翻 commit log 慢。</li>
+<li>你读过的 50 篇论文，3 个月后只剩 5 篇在记忆里。 重新读一遍 30 小时。</li>
+<li>你跟客户开的 10 次会议，决策散在邮件 / Slack / Notion。 重新找慢。</li>
+</ul>
+<p>AI agent 帮你<strong>当下</strong>做事。 llm_wiki 帮你<strong>以后</strong>不忘记。</p>
+<p>**” 不忘记”** 这条比” 快速做事” <strong>重要</strong>。 因为你一年做 200 个 feature，1 个月后能想起来的不到 20 个。 你 5 年读 2000 篇论文，1 年后能想起来的不到 100 篇。 <strong>知识的利用率 = 0.05</strong>。</p>
+<p>llm_wiki 让我” 不忘记” 那 0.95。 这是 18.7k stars 用户投票的真正含义。</p>
+<p>我装上跑两个月，体感最深的是” 我不再’忘记’读过什么”。 这条对<strong>长期工作者</strong>价值巨大。 短期项目（3 个月做完）不需要。 长期职业（10+ 年）<strong>强烈需要</strong>。</p>
+<hr>
+<h2 id="十五点五、一些可以借鉴的工程细节"><a href="#十五点五、一些可以借鉴的工程细节" class="headerlink" title="十五点五、一些可以借鉴的工程细节"></a>十五点五、一些可以借鉴的工程细节</h2><p>llm_wiki 的代码本身也值得拆。 几个<strong>非显然</strong>的工程决策。</p>
+<p><strong>rust 后端的” 工具调用” 流</strong>。 Chat agent 调 28 个 tools，<strong>所有 tool 调用走 Rust backend</strong> 不走 Node.js。 这条让 tool call 的 latency 极低（&lt; 5ms for local tool like <code>wiki_search</code>）。 如果 tool call 走 Node.js IPC，latency 多 10-30ms，<strong>对话节奏感差很多</strong>。</p>
+<p><strong>WebSocket + Server-Sent Events 双通道</strong>。 Chat UI 用 WebSocket 双向通信，LLM stream + tool call events 走 SSE 单向。 双通道是为了不互相阻塞。 WebSocket 处理用户中断 /cancel，SSE 处理 LLM 增量输出。</p>
+<p><strong>LanceDB 选型</strong>。 嵌入式 vector database，<strong>零运维</strong>。 不用装 Milvus / Qdrant / Weaviate 这种 standalone vector DB。 LanceDB 单文件存磁盘，跟 SQLite 一样简单，但有 vector index（IVF_PQ / HNSW）。 对个人 / 小团队 wiki 场景是<strong>完美选型</strong>。</p>
+<p><strong>没有用 LangChain / LlamaIndex</strong>。 nash_su 自己写 chat agent runtime。 一开始我以为这是” 造轮子”，看完代码发现 nash_su 的 runtime <strong>比 LangChain 简单一个量级</strong> ——300 行 Rust + 200 行 TypeScript。 LangChain 的抽象层<strong>对个人项目是 overkill</strong>。</p>
+<p><strong>graphology 用 Rust 端</strong>。 图算法（Louvain 社区发现、Adamic-Adar、PageRank）跑在 Rust 后端，<strong>不在浏览器</strong>。 sigma.js 只负责渲染。 这条让 1000+ node 的图计算<strong>秒级完成</strong>，浏览器只负责画。</p>
+<p><strong>purpose.md 单独 cache</strong>。 LLM 每次 ingest/query 都要读 purpose.md（”wiki 的灵魂”），但 purpose.md 改动频率极低。 nash_su 把 purpose.md 缓存到 LLM context 的 system prompt 段，<strong>每次 session 一次</strong>，不每次 call 重新发。 省 token + 提速。</p>
+<p><strong>web clipper 是 Chrome MV3</strong>。 跟 Manifest V2 兼容的旧版 Chrome Web Clipper 不接。 MV3 要求 service worker 替代 background page，<strong>实现上更复杂</strong>。 nash_su 选了 MV3（不是 backward compat），是赌未来。</p>
+<p><strong>Obsidian 双向 link 兼容</strong>。 <code>[[wikilinks]]</code> 跟 Obsidian 完全一致。 你在 Obsidian 里写一个 wikilink，llm_wiki 也能识别。 反之亦然。 这条让” 用户切换工具” 的成本<strong>接近 0</strong>。</p>
+<p><strong>port 19828</strong> 选得不寻常。 5 位数端口 19828 看起来<strong>随意</strong>，但 5 位数端口在 Unix 上<strong>通常不被 root 服务占用</strong>。 个人 app 用 19828 比 8080 / 3000 这种 common port 更不容易撞。 </p>
+<hr>
+<h2 id="十六、运行-llm-wiki-的实际成本"><a href="#十六、运行-llm-wiki-的实际成本" class="headerlink" title="十六、运行 llm_wiki 的实际成本"></a>十六、运行 llm_wiki 的实际成本</h2><p>跑一周我整理几个具体成本数据。</p>
+<p><strong>Ingest 成本</strong>：</p>
+<ul>
+<li>200 页 PDF 一次 ingest ≈ 30k tokens input + 20k tokens output</li>
+<li> 用 Claude Sonnet 4.5：$3/MTok input + $15/MTok output</li>
+<li> 单次成本：30k × $3/MTok + 20k × $15/MTok = $0.09 + $0.30 = <strong>$0.39</strong></li>
+<li>50 篇论文 ingest ≈ $20</li>
+</ul>
+<p><strong>Query 成本</strong>（wiki 查得到时不需要 LLM call）：</p>
+<ul>
+<li>hybrid_search 走 LanceDB + wikilink + graph，<strong>纯本地</strong>，无 LLM cost</li>
+<li>LLM 重新生成答案 only when wiki 不够详细</li>
+<li> 50% query 命中 wiki，0 cost，50% 需要补 LLM，$0.05-0.10/query</li>
+<li> 一天 30 个 query，<strong>月 cost $10-20</strong></li>
+</ul>
+<p><strong>Embedding 成本</strong>（启用 vector search）：</p>
+<ul>
+<li>一篇 wiki page ≈ 1k tokens embed</li>
+<li>1k wiki page = 1M tokens</li>
+<li> 用 OpenAI text-embedding-3-small $0.02/MTok</li>
+<li>1k page embed 一次性 $0.02</li>
+<li> 每月 50 篇新 page 增 embed = <strong>$0.001 / 月</strong></li>
+</ul>
+<p><strong>Deep Research 成本</strong>：</p>
+<ul>
+<li>一次跑 5-10 个 web search query + 5-10 个 page ingest</li>
+<li>Tavily 1k credit 免费，付费 $0.005/query</li>
+<li>ingest 5-10 个 web page，<strong>按 page cost 算</strong></li>
+<li>一次 deep research ≈ $0.50-1.50</li>
+</ul>
+<p><strong>总月成本</strong>：</p>
+<ul>
+<li>个人低强度（100 page wiki，50 query/day，10 deep research / 月）：<strong>$15-30</strong></li>
+<li> 个人中强度（500 page wiki，100 query/day，30 deep research / 月）：<strong>$30-60</strong></li>
+<li> 团队高强度（2k page wiki，500 query/day，100 deep research / 月）：<strong>$150-300</strong></li>
+</ul>
+<p><strong>对比 SaaS 替代</strong>：</p>
+<ul>
+<li>Notion AI：$10/member/ 月</li>
+<li> ChatGPT Team：$25/member/ 月</li>
+<li> Obsidian + ChatGPT Plugin：$0 + ChatGPT API</li>
+</ul>
+<p>llm_wiki <strong>不便宜</strong>（个人 $15-30 / 月 vs ChatGPT $20 / 月），但<strong>价值密度高</strong> —— 你花 $15-30 拿到的是” 自己的 AI 维护的知识库”，<strong>不属于任何 SaaS</strong>，可以 forever 用。</p>
+<p>如果你已经订阅 ChatGPT Plus / Pro，llm_wiki 用<strong>同样的 key</strong>。 边际成本接近 0。</p>
+<hr>
+<h2 id="十六点五、它教我的一件事"><a href="#十六点五、它教我的一件事" class="headerlink" title="十六点五、它教我的一件事"></a>十六点五、它教我的一件事</h2><p>写完 16 节之后我回头看，发现 llm_wiki 给我最大的启发不是技术，是<strong>一个思维转换</strong>：</p>
+<p><strong>“知识” 不是资产，是” 关系的集合”</strong>。 </p>
+<p>传统笔记工具把” 知识” 当 asset—— 你写一篇笔记，是一个 markdown 文件，存在硬盘上。 价值 = 文件数 × 平均长度。</p>
+<p>llm_wiki 给我看到的是：知识 = <strong>page 之间的关系网</strong>。 你的 wiki 5 个 page、5 条边，价值 5。 50 个 page、200 条边，价值是 50×200/5 = 2000。 节点数 + 边数 / 单节点边数 = 知识密度。 这条” 密度” 是<strong>真正有价值的指标</strong>。</p>
+<p>我之前 80 篇 Notion 笔记的” 知识密度” 很低 —— 每篇独立、互相不连。 我读 80 篇 = 80 个独立点。 知识的<strong>杠杆</strong> = 1。 </p>
+<p>llm_wiki 跑两个月后，200+ wiki page + 1500+ edge。 我读 200 个 page = 200 个点 + 1500 条关系。 知识的<strong>杠杆</strong> = 7.5。 <strong>同一个 LLM 工具，跑法和思考方式完全不同</strong>。</p>
+<p>这条” 知识 = 关系的集合” 也是 graph database /knowledge graph 这套技术<strong>长期被高估</strong>的原因 —— 人们以为” 建一个 knowledge graph 就好”，但<strong>没有 AI 帮你维护</strong>，graph 自己会<strong>死</strong>。 几个月不更新，graph 跟现实脱节，<strong>变成历史文物</strong>。 </p>
+<p>llm_wiki 的”AI 维护 graph” 是<strong>关键</strong> —— 你只管 ingest 原始资料，AI 自动维护 wiki、自动维护 graph、自动发现 gap。 <strong>Graph 永远是新鲜的</strong>。</p>
+<p>这条”AI 帮你维护关系” 比”AI 帮你写文本” 重要一个维度。</p>
+<hr>
+<h2 id="十五、最后"><a href="#十五、最后" class="headerlink" title="十五、最后"></a>十五、最后</h2><p>llm_wiki 是 2026 年我装过的项目里<strong>最有可能</strong>陪我用 5 年的。</p>
+<p>它解决的不是” 今天的问题”，是”5 年后我还在不在这个领域” 的问题。 5 年后我换方向，llm_wiki 装在新电脑，<strong>所有沉淀的知识跟着我走</strong>。 </p>
+<p>这条” 知识跟着人走” 是<strong>个人 AI 工具</strong>的最高境界。 不是帮你今天多写 10 行代码，<strong>让你 5 年后还是个有积累的人</strong>。</p>
+<p>nash_su 做了一个<strong>用 5 年</strong>的项目。 Karpathy 提了一个<strong>思考 5 年</strong>的模式。 这两件事在一起，是开源生态最被低估的组合。</p>
+<p>如果你是个<strong>长期积累者</strong>，llm_wiki 装上。 如果你只关心<strong>短期产出</strong>，可能不是你的菜。</p>
+<hr>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/nashsu/llm_wiki">https://github.com/nashsu/llm_wiki</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/09/11/nashsu-llm-wiki-personal-knowledge-base/" title="nashsu&#x2F;llm_wiki：18.7k stars 的 &quot;AI 自动维护&quot; 个人维基，Karpathy LLM-Wiki pattern 的桌面实现 + 知识图谱 + Louvain 社区发现">https://www.daishengli.top/2026/09/11/nashsu-llm-wiki-personal-knowledge-base/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/RAG/" rel="tag"># RAG</a>
+              <a href="/tags/llm-wiki/" rel="tag"># llm_wiki</a>
+              <a href="/tags/LLM-Wiki/" rel="tag"># LLM Wiki</a>
+              <a href="/tags/Karpathy/" rel="tag"># Karpathy</a>
+              <a href="/tags/Knowledge-Base/" rel="tag"># Knowledge Base</a>
+              <a href="/tags/LanceDB/" rel="tag"># LanceDB</a>
+              <a href="/tags/Knowledge-Graph/" rel="tag"># Knowledge Graph</a>
+              <a href="/tags/Louvain/" rel="tag"># Louvain</a>
+              <a href="/tags/Obsidian/" rel="tag"># Obsidian</a>
+              <a href="/tags/Electron/" rel="tag"># Electron</a>
+              <a href="/tags/Tauri/" rel="tag"># Tauri</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/10/bilawalsidhu-gods-eye-view-3d-globe-spy-satellite/" rel="prev" title="bilawalsidhu&#x2F;gods-eye-view：24.3k stars 的浏览器 3D 地球，11,000+ 实时航班 + 800 个公共摄像头 + OpenAI Realtime 语音控制，&quot;数据全是公开的&quot;">
+                  <i class="fa fa-angle-left"></i> bilawalsidhu/gods-eye-view：24.3k stars 的浏览器 3D 地球，11,000+ 实时航班 + 800 个公共摄像头 + OpenAI Realtime 语音控制，"数据全是公开的"
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

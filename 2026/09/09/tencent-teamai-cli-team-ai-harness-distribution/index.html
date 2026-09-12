@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Tencent&#x2F;teamai-cli（GitHub 3.0k stars、556 forks、当日 +556 stars、MIT）是一款让团队统一管理 AI 编码 Agent 技能 &#x2F; 规则 &#x2F; MCP &#x2F; hooks &#x2F; 文档 &#x2F; 学习记录 的 CLI 工具，三层架构 Team Execution（push → review &amp; merge → pull 分发 harness）+ Team Co">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tencent&#x2F;teamai-cli：3k stars 的 &quot;团队级 AI Harness 分发器&quot;，让 admin push 一次，全员 Claude Code &#x2F; Codex &#x2F; Cursor 同步收到">
+<meta property="og:url" content="https://www.daishengli.top/2026/09/09/tencent-teamai-cli-team-ai-harness-distribution/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="Tencent&#x2F;teamai-cli（GitHub 3.0k stars、556 forks、当日 +556 stars、MIT）是一款让团队统一管理 AI 编码 Agent 技能 &#x2F; 规则 &#x2F; MCP &#x2F; hooks &#x2F; 文档 &#x2F; 学习记录 的 CLI 工具，三层架构 Team Execution（push → review &amp; merge → pull 分发 harness）+ Team Co">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-09T02:05:00.000Z">
+<meta property="article:modified_time" content="2026-09-12T01:07:10.475Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Codex">
+<meta property="article:tag" content="AI Coding">
+<meta property="article:tag" content="Agent Skills">
+<meta property="article:tag" content="Harness">
+<meta property="article:tag" content="teamai-cli">
+<meta property="article:tag" content="Tencent">
+<meta property="article:tag" content="Team">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/09/09/tencent-teamai-cli-team-ai-harness-distribution/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/09/09/tencent-teamai-cli-team-ai-harness-distribution/","path":"2026/09/09/tencent-teamai-cli-team-ai-harness-distribution/","title":"Tencent/teamai-cli：3k stars 的 \"团队级 AI Harness 分发器\"，让 admin push 一次，全员 Claude Code / Codex / Cursor 同步收到"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Tencent/teamai-cli：3k stars 的 "团队级 AI Harness 分发器"，让 admin push 一次，全员 Claude Code / Codex / Cursor 同步收到 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">359</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">114</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9Ateam-harness-%E6%98%AF-agent-%E6%97%B6%E4%BB%A3%E7%9A%84%E2%80%9D%E6%96%B0%E5%9F%BA%E5%BB%BA%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">一、它想解决的问题：team harness 是 agent 时代的” 新基建”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%B8%89%E5%B1%82%E6%9E%B6%E6%9E%84%EF%BC%9AExecution-%C3%97-Context-%C3%97-Improvement"><span class="nav-number">2.</span> <span class="nav-text">二、三层架构：Execution × Context × Improvement</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Team-Execution%EF%BC%9A%E6%8A%8A-harness-%E5%BD%93%E4%BB%A3%E7%A0%81%E7%AE%A1"><span class="nav-number">2.1.</span> <span class="nav-text">Team Execution：把 harness 当代码管</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Team-Context%EF%BC%9A%E8%AE%A9-agent-%E7%90%86%E8%A7%A3%E2%80%9D%E5%9B%A2%E9%98%9F%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E2%80%9D"><span class="nav-number">2.2.</span> <span class="nav-text">Team Context：让 agent 理解” 团队怎么工作”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Team-Improvement%EF%BC%9A%E8%AE%A9%E6%AF%8F%E6%AC%A1%E6%89%A7%E8%A1%8C%E5%8F%8D%E5%93%BA%E5%9B%A2%E9%98%9F"><span class="nav-number">2.3.</span> <span class="nav-text">Team Improvement：让每次执行反哺团队</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E7%82%B9%E4%BA%94%E3%80%81push-%E2%86%92-MR-%E2%86%92-pull-%E7%9A%84%E5%85%B7%E4%BD%93%E6%B5%81%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">二点五、push → MR → pull 的具体流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%82%B9%E4%BA%94%E3%80%81Team-Context-%E7%9A%84%E5%AD%90%E6%A8%A1%E5%9D%97%EF%BC%9Arecall-codebase-teamwiki"><span class="nav-number">4.</span> <span class="nav-text">三点五、Team Context 的子模块：recall &#x2F;codebase&#x2F;teamwiki</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E7%82%B9%E4%BA%94%E3%80%81%E5%85%B7%E4%BD%93%E7%9A%84-role-tag-source-%E9%85%8D%E7%BD%AE%E7%A4%BA%E4%BE%8B"><span class="nav-number">5.</span> <span class="nav-text">五点五、具体的 role &#x2F;tag&#x2F;source 配置示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E8%B7%A8-11-%E4%B8%AA-agent-%E7%9A%84%E7%BB%9F%E4%B8%80%E5%88%86%E5%8F%91"><span class="nav-number">6.</span> <span class="nav-text">三、跨 11 个 agent 的统一分发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Distribution-Controls%EF%BC%9Arole-tag-source-%E4%B8%89%E5%B1%82%E8%AE%A2%E9%98%85"><span class="nav-number">7.</span> <span class="nav-text">四、Distribution Controls：role &#x2F;tag&#x2F;source 三层订阅</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%A3%85%E4%B8%80%E9%81%8D"><span class="nav-number">8.</span> <span class="nav-text">五、装一遍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%92%8C%E5%B7%B2%E6%9C%89%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">9.</span> <span class="nav-text">六、和已有项目的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%85%B7%E4%BD%93%E7%9A%84-friction-%E8%AF%84%E5%88%86%E6%9C%BA%E5%88%B6"><span class="nav-number">10.</span> <span class="nav-text">七、具体的 friction 评分机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81Codebase-Knowledge-Graph-%E6%98%AF%E5%8F%A6%E4%B8%80%E4%BB%B6%E5%A4%A7%E4%BA%8B"><span class="nav-number">11.</span> <span class="nav-text">八、Codebase Knowledge Graph 是另一件大事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81Privacy-%E5%A4%84%E7%90%86%EF%BC%9Ateamai-%E7%9A%84%E8%BE%B9%E7%95%8C"><span class="nav-number">12.</span> <span class="nav-text">九、Privacy 处理：teamai 的边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E8%B7%9F%E7%B1%BB%E4%BC%BC%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">13.</span> <span class="nav-text">十、跟类似项目的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">14.</span> <span class="nav-text">十一、适合谁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E5%B1%80%E9%99%90"><span class="nav-number">15.</span> <span class="nav-text">十二、局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E5%AE%83%E5%9C%A8-AI-%E5%B7%A5%E5%85%B7%E9%93%BE%E9%87%8C%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">16.</span> <span class="nav-text">十三、它在 AI 工具链里的位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E7%82%B9%E4%BA%94%E3%80%81%E8%B7%91%E4%BA%86%E4%B8%80%E5%91%A8%E6%88%91%E7%9C%8B%E5%88%B0%E7%9A%84%E5%87%A0%E4%B8%AA%E7%BB%86%E8%8A%82"><span class="nav-number">17.</span> <span class="nav-text">七点五、跑了一周我看到的几个细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E7%82%B9%E4%BA%94%E3%80%81%E5%92%8C-Sourcegraph-Linear-Vercel-%E7%9A%84%E5%85%B7%E4%BD%93%E5%B7%AE%E5%BC%82"><span class="nav-number">18.</span> <span class="nav-text">九点五、和 Sourcegraph &#x2F; Linear &#x2F; Vercel 的具体差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E8%B7%9F%E5%9B%BD%E5%86%85%E5%BC%80%E6%BA%90%E7%94%9F%E6%80%81%E7%9A%84%E5%8D%8F%E5%90%8C"><span class="nav-number">19.</span> <span class="nav-text">十、跟国内开源生态的协同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E7%82%B9%E4%BA%94%E3%80%81%E7%94%A8%E6%88%B7%E5%AE%9E%E6%88%98%E7%9A%84%E4%B8%A4%E5%91%A8"><span class="nav-number">20.</span> <span class="nav-text">十二点五、用户实战的两周</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RSC-Hydration-Error-on-Next-js-15"><span class="nav-number"></span> <span class="nav-text">RSC Hydration Error on Next.js 15</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E7%82%B9%E4%BA%94%E3%80%81%E5%AF%B9%E4%B8%AA%E4%BA%BA%E5%BC%80%E5%8F%91%E8%80%85%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">十三点五、对个人开发者的意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E5%87%A0%E4%B8%AA%E5%85%B7%E4%BD%93%E7%9A%84%E5%8F%8D%E6%A8%A1%E5%BC%8F%E8%AD%A6%E5%91%8A"><span class="nav-number">2.</span> <span class="nav-text">十五、几个具体的反模式警告</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E3%80%81%E6%88%91%E8%87%AA%E5%B7%B1%E7%9A%84%E5%88%A4%E6%96%AD"><span class="nav-number">3.</span> <span class="nav-text">十六、我自己的判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%83%E3%80%81%E4%B8%80%E7%82%B9%E8%B7%9F-superpowers-%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">4.</span> <span class="nav-text">十七、一点跟 superpowers 的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AB%E3%80%81%E6%96%87%E6%A1%A3%E5%92%8C%E7%A4%BE%E5%8C%BA%E7%9A%84%E6%88%90%E7%86%9F%E5%BA%A6"><span class="nav-number">5.</span> <span class="nav-text">十八、文档和社区的成熟度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E8%AF%BB%E5%AE%8C%E4%BD%A0%E5%BA%94%E8%AF%A5%E5%81%9A%E7%9A%84%E4%B8%89%E4%BB%B6%E4%BA%8B"><span class="nav-number">6.</span> <span class="nav-text">十四、读完你应该做的三件事</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">114</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">359</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/09/09/tencent-teamai-cli-team-ai-harness-distribution/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Tencent&#x2F;teamai-cli：3k stars 的 &quot;团队级 AI Harness 分发器&quot;，让 admin push 一次，全员 Claude Code &#x2F; Codex &#x2F; Cursor 同步收到 | 小戴的网络日志">
+      <meta itemprop="description" content="Tencent&#x2F;teamai-cli（GitHub 3.0k stars、556 forks、当日 +556 stars、MIT）是一款让团队统一管理 AI 编码 Agent 技能 &#x2F; 规则 &#x2F; MCP &#x2F; hooks &#x2F; 文档 &#x2F; 学习记录 的 CLI 工具，三层架构 Team Execution（push → review &amp; merge → pull 分发 harness）+ Team Context（自动 recall 团队知识 + code graph + teamwiki）+ Team Improvement（session friction 评分 → share-learnings → digest dashboard），支持 Claude Code、Codex、Cursor、CodeBuddy、WorkBuddy、OpenCode、OpenClaw、Hermes、DeepSeek Harness、Qoder、ZCode 共 11 个 agent，通过 SessionStart hook 透明拉取，team repo 自己 host（GitHub &#x2F; GitLab &#x2F; GitCode &#x2F; CNB &#x2F; TGit）。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Tencent/teamai-cli：3k stars 的 "团队级 AI Harness 分发器"，让 admin push 一次，全员 Claude Code / Codex / Cursor 同步收到
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-09 10:05:00" itemprop="dateCreated datePublished" datetime="2026-09-09T10:05:00+08:00">2026-09-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Tencent/teamai-cli（GitHub 3.0k stars、556 forks、当日 +556 stars、MIT）是一款让团队统一管理 AI 编码 Agent 技能 / 规则 / MCP / hooks / 文档 / 学习记录 的 CLI 工具，三层架构 Team Execution（push → review & merge → pull 分发 harness）+ Team Context（自动 recall 团队知识 + code graph + teamwiki）+ Team Improvement（session friction 评分 → share-learnings → digest dashboard），支持 Claude Code、Codex、Cursor、CodeBuddy、WorkBuddy、OpenCode、OpenClaw、Hermes、DeepSeek Harness、Qoder、ZCode 共 11 个 agent，通过 SessionStart hook 透明拉取，team repo 自己 host（GitHub / GitLab / GitCode / CNB / TGit）。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>我团队维护了一个 AI 编码 agent 的 skill 库。 三个月前 5 个 skill，三个工程师用 Claude Code / Cursor / Codex 各自手动装，README 写了步骤，Slack 里有人三天问一次” 这个 skill 怎么装”。</p>
+<p>后来我们扩到 23 个 skill、12 个 rule、4 个 MCP server、6 个 hook、2 个 subagent 模板。 三个工程师每天跑 agent 之前要手动同步这一堆东西。</p>
+<p>上周新工程师入职。 我花了一上午帮他配齐 environment。 配完发现他自己 <code>cat</code> 了一个老的 skill 文件，配置还是三个月前的版本，hook 都过期了。</p>
+<p>那一刻我才意识到，<strong>“个人” 层面的 skill 装好之后，” 团队” 层面的同步是个完全不同的问题</strong>。 </p>
+<p>上周我在 GitHub Trending 看到 Tencent 出了个 teamai-cli。 3.0k stars，556 forks，<strong>当日 +556 stars</strong>。 MIT。 来自腾讯，定位就一句：「Make Every Team AI Native」。</p>
+<hr>
+<h2 id="一、它想解决的问题：team-harness-是-agent-时代的”新基建”"><a href="#一、它想解决的问题：team-harness-是-agent-时代的”新基建”" class="headerlink" title="一、它想解决的问题：team harness 是 agent 时代的”新基建”"></a>一、它想解决的问题：team harness 是 agent 时代的” 新基建”</h2><p>先把背景说清楚。</p>
+<p>2024 年到 2025 年这一波 AI 编码 agent 的演化，让每个工程师的” 个人 harness”（skill + rule + MCP + hook + AGENTS.md + 命令模板）变得<strong>越来越厚</strong>。 一个重度 Claude Code 用户的本地 <code>.claude/</code> 目录里堆着 30+ skill、20+ hook、5+ MCP server、十几份个人 CLAUDE.md 片段。 </p>
+<p>一个人维护自己的 harness 没问题：装几个 skill、写一份 AGENTS.md、配置 MCP。 但<strong>团队</strong>层面：</p>
+<ul>
+<li>谁来写新 skill？ 谁来 review？ 走 Git workflow 还是直接 push？</li>
+<li>团队改了一条 rule，10 个工程师怎么保证他们明天用 agent 时都拿到新版？</li>
+<li>新工程师入职怎么配齐全部 harness？ 配完发现他自己 <code>cat</code> 了一个过期的 skill 文件。</li>
+<li>谁装什么 skill？ 角色 / 资深度 / 项目是否需要？ 前端不该装 DBA 工具，初级不该装架构师 review。</li>
+<li>团队经验怎么沉淀？ 工程师 A 昨天 debug 了一下午的 issue，工程师 B 今天又重新踩一遍。</li>
+<li>团队 AI 编码 ROI 怎么衡量？ 老板问” 我们用 AI 省了多少小时”，你没数据回答。</li>
+</ul>
+<p>这些问题不是 Claude Code / Cursor / Codex 自己能解决的。 这是<strong>组织层</strong>的问题。 跟 2010 年代 DevOps 演化路径一样，单兵工具够用，团队就需要一个新的协调层。</p>
+<p>Tencent teamai-cli 做的就是这件事：<strong>让 admin 在 team repo 里维护一份共享 harness，团队成员 pull 一次就同步到自己的 agent 工具上</strong>。</p>
+<p>它不是新 skill，不是新 agent，不是新模型。 它是<strong>新协调层</strong>。 跟 Jenkins 之于 CI、Terraform 之于 IaC、Datadog 之于 observability 是同一类定位。</p>
+<hr>
+<h2 id="二、三层架构：Execution-×-Context-×-Improvement"><a href="#二、三层架构：Execution-×-Context-×-Improvement" class="headerlink" title="二、三层架构：Execution × Context × Improvement"></a>二、三层架构：Execution × Context × Improvement</h2><p>teamai-cli 的 README 给了一张大表把所有能力拆成三层。 第一次看我觉得拆得挺哲学的，第二次看我觉得<strong>拆得很工程</strong>。</p>
+<h3 id="Team-Execution：把-harness-当代码管"><a href="#Team-Execution：把-harness-当代码管" class="headerlink" title="Team Execution：把 harness 当代码管"></a>Team Execution：把 harness 当代码管</h3><blockquote>
+<p>One Team. One Harness. Every Agent.</p>
+</blockquote>
+<p>这一层做的是<strong>同步</strong>。 团队维护一个 git repo（GitHub / GitLab / GitCode / CNB / TGit 都可以），repo 里放：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">team repo/</span><br><span class="line">├── skills/         # 团队共享的 agent skill</span><br><span class="line">├── rules/          # agent 行为规则</span><br><span class="line">├── docs/           # 基础文档（progressive disclosure 加载）</span><br><span class="line">├── agents/         # subagent 模板</span><br><span class="line">├── culture.md      # 团队使命、价值观、工作原则</span><br><span class="line">├── claudemd/       # CLAUDE.md 片段</span><br><span class="line">├── env/            # 团队级 env 变量（不放 secrets）</span><br><span class="line">├── hooks/hooks.yaml</span><br><span class="line">├── mcp/mcp.yaml</span><br><span class="line">└── teamai.yaml     # npm 包 + Claude plugin 声明</span><br></pre></td></tr></tbody></table></figure>
+
+<p>admin <code>teamai push</code> 提交改动到一个分支，create MR，reviewer approve + merge。 </p>
+<p>成员下次开 Claude Code 时，SessionStart hook 触发，<strong>自动</strong>跑 <code>teamai pull</code>，把团队最新 harness 拉到本地。 不需要手动 sync。 </p>
+<p>这一层<strong>把” 团队知识更新” 做成了一个自动化的 git 流程</strong>。 admin 不用给每个工程师发” 嘿，更新一下 skill”，git merge + hook 自动搞定。</p>
+<h3 id="Team-Context：让-agent-理解”团队怎么工作”"><a href="#Team-Context：让-agent-理解”团队怎么工作”" class="headerlink" title="Team Context：让 agent 理解”团队怎么工作”"></a>Team Context：让 agent 理解” 团队怎么工作”</h3><blockquote>
+<p>Every agent understands how the team works.</p>
+</blockquote>
+<p>光同步 skill 不够，agent 还需要知道<strong>团队的过往经验和代码结构</strong>。 这一层是”context 持久化”。</p>
+<p><strong>自动经验分享</strong>（Stop hook + friction 评分）。 每次 session 结束，Stop hook 给 session 打”friction 分”，基于几个信号：你打断 AI 的次数、你 deny 工具调用的次数、AI 自己 retry 失败工具的次数。 长但顺的 session 不触发，<strong>有冲突的 session 才触发</strong>。 </p>
+<p>触发后提示：</p>
+<blockquote>
+<p>[teamai] This session may contain a problem worth documenting: you interrupted the AI twice, the AI retried failing tools 8 times.<br>Task: Fix duplicate project-level Hook injection<br>Consider running /teamai-share-learnings to summarize what you learned and share it with your team.</p>
+</blockquote>
+<p><code>/teamai-share-learnings</code> 跑一遍总结，写成 learning document，<strong>push 到 team repo</strong>。 这条设计把” 个人踩坑” 自动转成” 团队知识”，靠 friction 评分过滤低质量噪声。</p>
+<p><strong>团队知识 recall</strong>（<code>teamai recall</code> 子 agent）。 默认关闭，需要团队 admin 显式开（<code>teamai.yaml</code> 的 <code>sharing.recall.enabled: true</code>）。 开启后，teamai pull 部署一个内置 subagent <code>teamai-recall</code>。 agent 接到任务时先调它，它<strong>先做相关性预检</strong>（无关任务直接 skip），相关任务跑 BM25 + graph-boost 搜索，返回结构化摘要。</p>
+<p>举例（README 给的）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ teamai recall <span class="string">"port conflict"</span></span><br><span class="line">[1/2] MR review caught a port-conflict bug ★1 [user]</span><br><span class="line">Author: member-a | Score: 18.5 | Tags: troubleshooting, networking</span><br><span class="line"></span><br><span class="line">[2/2] Deployment configuration best practices [project]</span><br><span class="line">Author: member-b | Score: 12.0 | Tags: deploy, config</span><br><span class="line">Matched: conflict | Missing: port</span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑 BM25 + graph-boost 比纯 BM25 准，graph 这一层给”port” 加了 cross-repo 引用关系。</p>
+<p><strong>代码知识图谱</strong>（<code>teamai import</code> + <code>teamai codebase</code>）。 <code>teamai import --from-repo</code> 把 source repo 解析成结构化 graph，存在 <code>teamwiki/</code> 下。 <code>teamai recall</code> 召回时用 graph-boosted re-ranking。</p>
+<p>graph 解析走两条 track：</p>
+<ul>
+<li><strong>AST track</strong>（TypeScript / JavaScript / Python / Go）：用 WASM 版 <a target="_blank" rel="noopener" href="https://tree-sitter.github.io/">tree-sitter</a> 解析 import /require/ 调用点 / TS implements，产出 file-to-file 边，标 <code>code-ast</code>，带 confidence 权重。</li>
+<li><strong>Heuristic track</strong>（所有语言含 Java / Rust）：regex-based 提取，标 <code>code-heuristic</code>，覆盖 AST 跑不了的语言。</li>
+</ul>
+<p>WASM parser 是纯 JS 依赖，<strong>不需要 native toolchain</strong>。 如果加载失败，自动 fallback 到 heuristic track，记录 <code>AST_UNAVAILABLE</code> gap。 <code>TEAMAI_SKIP_AST=1</code> 强制只跑 heuristic。</p>
+<p>整条设计是”AI agent 时代 grep 的升级版”。 grep 看文本，codebase graph 看结构，recall 跑相关性。 组合起来 agent 找” 团队以前怎么解决过这个问题” 非常快。</p>
+<h3 id="Team-Improvement：让每次执行反哺团队"><a href="#Team-Improvement：让每次执行反哺团队" class="headerlink" title="Team Improvement：让每次执行反哺团队"></a>Team Improvement：让每次执行反哺团队</h3><blockquote>
+<p>Every execution makes the entire team smarter.</p>
+</blockquote>
+<p>第三层是” 知识库维护”。 团队跑 AI 编码跑久了，learnings 会膨胀，stale skills /rules/docs 会堆积。 <code>teamai recall maintenance</code> 做三件事：</p>
+<ul>
+<li><code>--prune</code>：归档低 confidence 的 learnings。</li>
+<li><code>--update-quality</code>：给 stale skills /docs 起草更新。</li>
+<li>知识库健康度（KB Health）：dashboard 上显示 coverage by type、top recalled entries、silent entries、recall trend、author contributions。</li>
+</ul>
+<p><strong>Usage 仪表盘</strong>（<code>teamai digest</code>）：周报级别的 token 用量、对话量、intervention rate（人工打断 AI 的频率）。 </p>
+<p><strong>Session summary 隐私处理</strong>（<code>teamai session save</code>）：把 session 摘要（tool sequence、prompt turns、interventions）写进 monthly log，<strong>默认隐私脱敏</strong>。 <code>--push</code> flag 才推到 digest。 这条对应” 团队指标收集” 和” 工程师隐私” 的平衡。</p>
+<p><strong>Dashboard</strong>（<code>teamai dashboard</code>）：web 端看团队成员实时 coding session 状态、intervention count、token usage。 </p>
+<p>这一层把” 团队 AI 编码 ROI” 量化了。 之前发过的 context-mode 也有类似 Insight Dashboard，但 teamai-cli 是<strong>团队级</strong>而不是个人级。</p>
+<hr>
+<h2 id="二点五、push-→-MR-→-pull-的具体流程"><a href="#二点五、push-→-MR-→-pull-的具体流程" class="headerlink" title="二点五、push → MR → pull 的具体流程"></a>二点五、push → MR → pull 的具体流程</h2><p>Team Execution 这层最核心的工作流是 <code>push → review &amp; merge → pull</code>。 展开讲讲细节。</p>
+<p><code>teamai push</code> 不直接 push 到 main。 它会：</p>
+<ol>
+<li>检查本地 vs 团队的 diff。</li>
+<li>创建一个新分支（默认命名 <code>teamai/&lt;timestamp&gt;-&lt;user&gt;</code>）。</li>
+<li>提交所有改动到该分支。</li>
+<li>调 <code>gh</code> CLI / <code>glab</code> CLI / 平台对应 CLI 创建一个 MR（Merge Request），title 自动写”teamai: sync from <user> at <timestamp>“。</timestamp></user></li>
+<li>MR description 自动列出本地跟团队的 diff（哪些 skill 新增、哪些 rule 改、哪些 hook 重写）。</li>
+</ol>
+<p>reviewer 收到 MR 后做标准 code review：</p>
+<ul>
+<li>skill 内容写得对不对？</li>
+<li>rule 跟团队 convention 一致吗？</li>
+<li>MCP server 配置有没有 security 风险？</li>
+<li>hook 会不会影响其他工程师的现有 workflow？</li>
+</ul>
+<p>reviewer approve + merge 之后，<strong>全员</strong>下次开 agent 时，SessionStart hook 触发，<strong>自动</strong>跑 <code>teamai pull</code>，把新版本拉到本地。 整个过程不需要发任何” 更新了” 通知。</p>
+<p><code>teamai pull</code> 这一步做了什么：</p>
+<ol>
+<li>拉最新 team repo 改动到本地 <code>.teamai/</code> 缓存。</li>
+<li>检查本地当前 agent 工具（Claude Code / Codex / Cursor 等）的目录结构。</li>
+<li>把 skill /rule/ MCP /hook 按 agent 工具的格式分发到对应目录。 比如 Claude Code 的 <code>~/.claude/skills/</code>、Codex 的 <code>~/.codex/skills/</code>、Cursor 的 <code>~/.cursor/rules/</code>。</li>
+<li>重启 SessionStart hook 注册。</li>
+<li>输出 summary 告诉你拉了什么、有什么 breaking change。</li>
+</ol>
+<p><strong>冲突怎么办</strong>？ 如果成员本地改了一个 skill，跟团队 pull 下来的版本冲突，teamai-cli 不会自动覆盖。 它会提示” 本地有改动，需要手动 merge”。 跟 git conflict 一样的处理方式。</p>
+<p><strong>离线怎么办</strong>？ <code>teamai pull</code> 需要联网，但其他命令（<code>teamai recall</code>、<code>teamai status</code>、<code>teamai digest</code>）可以本地跑。 已经 pull 到本地的 skill 在断网时仍可用。</p>
+<p><strong>回滚怎么办</strong>？ <code>teamai push</code> 的每一个 MR 都可以 revert。 revert 之后全员下次 pull 自动拿到旧版本。 这条跟 git revert 一样自然。</p>
+<hr>
+<h2 id="三点五、Team-Context-的子模块：recall-codebase-teamwiki"><a href="#三点五、Team-Context-的子模块：recall-codebase-teamwiki" class="headerlink" title="三点五、Team Context 的子模块：recall / codebase / teamwiki"></a>三点五、Team Context 的子模块：recall /codebase/teamwiki</h2><p>Team Context 这一层在 README 里被一笔带过，但实际上子模块不少。 我拆开讲。</p>
+<p><strong><code>teamai recall</code></strong>。 BM25 + graph-boosted 搜索，跨团队知识库。 子 agent <code>teamai-recall</code> 部署在每个 AI 工具的 <code>agents/</code> 目录里。 工作流程：</p>
+<ol>
+<li>agent 接到用户任务</li>
+<li> agent 先调 <code>teamai-recall</code> 子 agent</li>
+<li> 子 agent 跑<strong>相关性预检</strong>（<code>teamai recall --check &lt;query&gt;</code>），无关任务直接 skip</li>
+<li> 相关任务跑 BM25 全文搜索 + graph 关系 re-rank</li>
+<li> 返回结构化摘要，agent 用这个摘要做决策</li>
+</ol>
+<p>这条设计把” 团队经验搜索” 嵌入到 agent 的决策流程里，<strong>不是手动查</strong>。 你问 agent “这个 API 端口被谁占了”，agent 不是凭模型记忆猜，是去查团队以前有没有人遇到过。</p>
+<p><strong><code>teamai codebase</code></strong>。 代码知识图谱。 关键设计：</p>
+<ul>
+<li><strong>WASM tree-sitter</strong> 跑 AST 解析，<strong>纯 JS 依赖</strong>不需要 native toolchain。 这条对 Windows / Alpine 用户特别友好。</li>
+<li><strong>Heuristic fallback</strong> 用 regex，覆盖 Java / Rust / C++ 这些 AST track 跑不了的语言。 精度低但有用。</li>
+<li><strong>跨 repo 边</strong> 标记 file-to-file DEPENDS_ON / REFERENCES / IMPLEMENTS。 TypeScript 的 <code>implements</code> clause 是 tree-sitter 专门能解析的，implements 边会带 confidence 权重。</li>
+<li><strong>teamwiki 目录</strong> 存 graph 的序列化结果。 markdown 格式，git diff friendly。 可以直接 <code>cat teamwiki/components/PaymentService.md</code> 看图谱摘要。</li>
+</ul>
+<p><code>teamai import</code> 是入口。 <code>--from-repo</code> 拉远程 repo，<code>--from-org</code> 批量拉一个 org 的所有 repo，<code>--dir</code> 处理本地目录。 CI 里跑 <code>teamai ci extract-mr --url &lt;url&gt;</code>，从 MR 解析、自动 review comments、merge 后写回。</p>
+<p><strong><code>teamai codebase --lint</code></strong>。 图谱健康度检查。 报 dangling references、孤儿节点、循环依赖、broken import 边。 类似 <code>tsc --noEmit</code> 对图谱的检查。</p>
+<p><strong><code>teamai dashboard → KB Health</code></strong>。 Web 端看：</p>
+<ul>
+<li>coverage by type（skill /rule/doc /learning 各占多少）</li>
+<li>top recalled entries（被召回最多的 learning 排名）</li>
+<li>silent entries（写进去但从来没人 recall 过的）</li>
+<li>recall trend（recall 调用量随时间变化）</li>
+<li>author contributions（谁的贡献最多）</li>
+</ul>
+<p>这条把” 团队知识库是不是活的” 量化了。 写进去没人查 = 死的；查得多更新也多的 = 活的。</p>
+<hr>
+<h2 id="五点五、具体的-role-tag-source-配置示例"><a href="#五点五、具体的-role-tag-source-配置示例" class="headerlink" title="五点五、具体的 role / tag / source 配置示例"></a>五点五、具体的 role /tag/source 配置示例</h2><p>README 给了抽象说明。 我写一个具体的”5 人前端团队” 例子：</p>
+<p>team repo 的目录结构：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">team-skills/</span><br><span class="line">├── skills/</span><br><span class="line">│   ├── frontend/</span><br><span class="line">│   │   ├── react-review.md</span><br><span class="line">│   │   ├── design-system-check.md</span><br><span class="line">│   │   └── bundle-analyzer.md</span><br><span class="line">│   ├── backend/</span><br><span class="line">│   │   ├── api-rate-limit.md</span><br><span class="line">│   │   └── db-migration-check.md</span><br><span class="line">│   └── shared/</span><br><span class="line">│       ├── git-commit-style.md</span><br><span class="line">│       └── pr-review-checklist.md</span><br><span class="line">├── rules/</span><br><span class="line">│   ├── coding-style.md</span><br><span class="line">│   └── security-checklist.md</span><br><span class="line">├── mcp/</span><br><span class="line">│   └── github-mcp.yaml</span><br><span class="line">├── hooks/</span><br><span class="line">│   └── hooks.yaml</span><br><span class="line">├── roles.yaml</span><br><span class="line">└── teamai.yaml</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>roles.yaml</code> 定义：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">roles:</span></span><br><span class="line">  <span class="attr">frontend:</span></span><br><span class="line">    <span class="attr">namespaces:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">skills/frontend</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">skills/shared</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">rules/coding-style</span></span><br><span class="line">    <span class="attr">tags:</span> [<span class="string">ui</span>, <span class="string">perf</span>]</span><br><span class="line">  <span class="attr">backend:</span></span><br><span class="line">    <span class="attr">namespaces:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">skills/backend</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">skills/shared</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">rules/coding-style</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">rules/security-checklist</span></span><br><span class="line">    <span class="attr">tags:</span> [<span class="string">api</span>, <span class="string">db</span>, <span class="string">security</span>]</span><br><span class="line">  <span class="attr">lead:</span></span><br><span class="line">    <span class="attr">namespaces:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">skills/frontend</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">skills/backend</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">skills/shared</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">rules/</span></span><br><span class="line">    <span class="attr">tags:</span> [<span class="string">ui</span>, <span class="string">perf</span>, <span class="string">api</span>, <span class="string">db</span>, <span class="string">security</span>, <span class="string">review</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>前端工程师 “张三” 加入：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">teamai init https://github.com/yourorg/team-skills</span><br><span class="line"><span class="comment"># OAuth 登录</span></span><br><span class="line"><span class="comment"># 选角色：frontend</span></span><br><span class="line"><span class="comment"># 选 tag：ui, perf</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>pull 之后张三本地拿到：</p>
+<ul>
+<li><code>skills/frontend/</code> 下所有 skill</li>
+<li><code>skills/shared/</code> 下所有 skill</li>
+<li><code>rules/coding-style.md</code></li>
+<li>打了 <code>ui</code> 或 <code>perf</code> tag 的其他 skill</li>
+</ul>
+<p>张三<strong>拿不到</strong> <code>skills/backend/</code>、<code>rules/security-checklist.md</code>（除非订阅对应 tag）。</p>
+<p>后面团队加了新 skill，admin push + merge，张三下次开 agent 自动同步。 </p>
+<p><code>teamai.yaml</code> 的 <code>sources</code> 段支持跨团队订阅：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">sources:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">url:</span> <span class="string">https://github.com/tencent-public/skills</span></span><br><span class="line">    <span class="attr">tags:</span> [<span class="string">security</span>, <span class="string">performance</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">url:</span> <span class="string">https://github.com/another-team/agent-skills</span></span><br><span class="line">    <span class="attr">roles:</span> [<span class="string">lead</span>, <span class="string">backend</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>张三还会从 <code>tencent-public/skills</code> 自动拉 security /performance 相关的 skill（前提是张三订阅了对应 tag）。 </p>
+<hr>
+<h2 id="三、跨-11-个-agent-的统一分发"><a href="#三、跨-11-个-agent-的统一分发" class="headerlink" title="三、跨 11 个 agent 的统一分发"></a>三、跨 11 个 agent 的统一分发</h2><p>teamai-cli 最大的卖点是<strong>横跨 11 个 agent 工具都跑</strong>。 README 给的兼容表：</p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>skills</th>
+<th>rules</th>
+<th>docs</th>
+<th>env</th>
+<th>agents</th>
+<th>hooks</th>
+<th>mcp</th>
+<th>learnings</th>
+<th>codebase</th>
+<th>teamwiki</th>
+<th>usage</th>
+<th>sessions</th>
+<th>dashboard</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Claude Code</strong></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>Codex</strong></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>CodeBuddy</strong></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>WorkBuddy</strong></td>
+<td>✓</td>
+<td>—</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>OpenCode</strong></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>OpenClaw</strong></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Hermes</strong></td>
+<td>✓</td>
+<td>—</td>
+<td>✓</td>
+<td>✓</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>DeepSeek Harness</strong></td>
+<td>✓</td>
+<td>—</td>
+<td>✓</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Qoder</strong></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>ZCode</strong></td>
+<td>✓</td>
+<td>—</td>
+<td>✓</td>
+<td>—</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody></table>
+<p>注意看 5 个 agent（Claude Code / Codex / Cursor / CodeBuddy / Qoder）支持完整 13 个能力。 OpenCode、OpenClaw、Hermes、DeepSeek Harness 这几个实验性的支持少一些。 </p>
+<p>这表跟之前发过的 context-mode 的 17 平台兼容表对照一下：teamai-cli 的” 完整支持” 门槛更高（需要 13 个能力全跑），但覆盖的<strong>深度</strong>更深。 context-mode 跨平台是” 工具能跑就行”，teamai-cli 是” 工具 + 团队同步 + knowledge 共享”。</p>
+<p><strong>对国内团队的特别意义</strong>。 Git provider 支持 GitHub / GitLab / GitCode / CNB / TGit，<strong>GitCode 和 CNB 是腾讯自家</strong>。 CodeBuddy / WorkBuddy 是腾讯云的 agent 产品。 Qoder 是腾讯的另一款 agent。 ZCode 估计也是。 这条对国内企业用户 **”agent 生态统一”** 这层考虑到了。</p>
+<hr>
+<h2 id="四、Distribution-Controls：role-tag-source-三层订阅"><a href="#四、Distribution-Controls：role-tag-source-三层订阅" class="headerlink" title="四、Distribution Controls：role / tag / source 三层订阅"></a>四、Distribution Controls：role /tag/source 三层订阅</h2><p>光” 全员同步” 不够。 团队里前端工程师不该装后端 DBA skill，初级工程师不该装架构师 review skill。 teamai-cli 给三层订阅机制：</p>
+<p><strong>Roles</strong>（<code>teamai roles</code>）。 定义” 角色 → namespace 映射”。 比如 “frontend” 角色 sync <code>skills/frontend/</code> 下的所有 skill，”backend” sync <code>skills/backend/</code>。 工程师注册时指定角色，sync 时按角色过滤。</p>
+<p><strong>Tags</strong>（<code>teamai tags</code>）。 给 skill /rule 打 tag，工程师订阅自己需要的 tag。 同一份 skill 可以打多个 tag。 比 role 更细粒度。</p>
+<p><strong>Sources</strong>（<code>teamai source</code>）。 订阅其他团队 / 公共 repo 的 skill。 比如你团队订阅了 <code>tencent-public/skills</code>，每次 pull 自动同步他们的 skill。 类似 npm registry 思路。</p>
+<p>三层组合：一个工程师可以<strong>自动</strong>拿到” 自己角色 + 自己 tag + 订阅源” 的 skill，<strong>不自动</strong>拿到其他 skill。 </p>
+<hr>
+<h2 id="五、装一遍"><a href="#五、装一遍" class="headerlink" title="五、装一遍"></a>五、装一遍</h2><p>admin 视角：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 装 CLI</span></span><br><span class="line">npm install -g teamai-cli</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 创建一个 team repo（GitHub / GitLab / GitCode 都可以）</span></span><br><span class="line"><span class="comment">#    强烈建议从 teamai-hub 模板开始，README 给的链接</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 初始化</span></span><br><span class="line">teamai init https://github.com/yourorg/team-skills</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 编辑 skills / rules / MCP / hooks</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. push 到分支</span></span><br><span class="line">teamai push</span><br><span class="line"><span class="comment"># 创建 branch + MR</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 6. reviewer 合并</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 7. SessionStart hook 自动同步给全员</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>成员视角：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 首次：装 CLI + 注册</span></span><br><span class="line">npm install -g teamai-cli</span><br><span class="line">teamai init https://github.com/yourorg/team-skills</span><br><span class="line"><span class="comment"># OAuth 登录 + 链接 repo + 注册成员</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 项目级 init（资源装在项目下）</span></span><br><span class="line"><span class="built_in">cd</span> /path/to/my-project</span><br><span class="line">teamai init https://github.com/yourorg/team-skills</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用户级 init（资源装在 ~/）</span></span><br><span class="line">teamai init https://github.com/yourorg/team-skills --scope user</span><br></pre></td></tr></tbody></table></figure>
+
+<p>装完开 Claude Code，SessionStart hook 自动跑 <code>teamai pull</code>，本地环境就同步好了。 <strong>每天第一次开 agent 之前不需要手动 sync</strong>。</p>
+<p>进阶命令：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">teamai status                        <span class="comment"># 看本地 vs 团队 repo diff</span></span><br><span class="line">teamai roles                         <span class="comment"># 管理角色</span></span><br><span class="line">teamai tags                          <span class="comment"># 管理 tag</span></span><br><span class="line">teamai <span class="built_in">source</span>                        <span class="comment"># 管理订阅源</span></span><br><span class="line">teamai recall <span class="string">"xxx"</span>                  <span class="comment"># 手动跑团队知识搜索</span></span><br><span class="line">teamai recall <span class="built_in">enable</span> / <span class="built_in">disable</span>       <span class="comment"># 开/关自动 recall</span></span><br><span class="line">teamai recall maintenance --prune    <span class="comment"># 维护知识库</span></span><br><span class="line">teamai digest                        <span class="comment"># 周报</span></span><br><span class="line">teamai dashboard                     <span class="comment"># web 端开</span></span><br><span class="line">teamai doctor                        <span class="comment"># 自检</span></span><br></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h2 id="六、和已有项目的关系"><a href="#六、和已有项目的关系" class="headerlink" title="六、和已有项目的关系"></a>六、和已有项目的关系</h2><p>之前发过的几个项目跟 teamai-cli 有重叠也有分工：</p>
+<p><strong>mksglu/context-mode</strong>（20.8k stars）。 管<strong>个人 / 单 session</strong> 的 context 优化（sandbox 工具输出、FTS5 记忆、Think in Code）。 跟 teamai-cli 是” 个人层 vs 团队层”。 两者可以一起装：teamai-cli 分发 harness，context-mode 在 harness 内部做 context 优化。</p>
+<p><strong>DietrichGebert/ponytail</strong>（127.5k stars）。 管<strong>个人 agent 行为</strong>（” 别过度设计”）。 teamai-cli 可以把 ponytail 装在 team repo 的 skills/ 下，<strong>全员默认开启</strong>。 之前每个工程师自己装，现在 admin 推一次就行。</p>
+<p><strong>affaan-m/ECC</strong>（255k stars）。 同样是个人 agent 行为层 skill。 teamai-cli 的 skills/ 里装 ECC，团队就统一了。</p>
+<p><strong>anomalyco/opencode</strong>（204k stars）。 之前发过的客户端 / 服务端分离的 AI 编码 agent。 opencode 是 teamai-cli 兼容的 11 个 agent 之一，可以装进 team repo 的 mcp/ + hooks/ 段。</p>
+<p><strong>Vercel / Linear / Sourcegraph 那一档团队 SaaS</strong>。 teamai-cli 是<strong>开源 + self-host</strong> 的版本。 Vercel 卖云、Linear 卖 workspace、Sourcegraph 卖代码搜索，teamai-cli 把”AI 编码团队的协调层” 也开源出来。 对<strong>企业自托管</strong>特别合适。</p>
+<p>这条关系是：</p>
+<ul>
+<li>个人 / 单 session 优化 → context-mode</li>
+<li> 个人 agent 行为 → ponytail / ECC</li>
+<li> 团队分发 / 协调 → teamai-cli</li>
+<li>Agent 本体 → Claude Code / Codex /opencode</li>
+</ul>
+<p>四层栈。 teamai-cli 站在” 团队协调层”。</p>
+<hr>
+<h2 id="七、具体的-friction-评分机制"><a href="#七、具体的-friction-评分机制" class="headerlink" title="七、具体的 friction 评分机制"></a>七、具体的 friction 评分机制</h2><p>teamai-cli 最有意思的设计是 session friction 评分。 我展开讲讲。</p>
+<p>每次 session 结束（Stop hook 触发），teamai-cli 计算一个 friction score。 信号：</p>
+<ul>
+<li>你<strong>打断</strong> AI 的次数（用户输入新 prompt 时上一轮还没完成）</li>
+<li>你<strong>修正</strong> AI 的次数（你 “stop”、”no”、重新提问）</li>
+<li>你 <strong>deny</strong> 工具调用的次数</li>
+<li> AI <strong>retry 失败工具</strong>的次数</li>
+<li> AI <strong>重复</strong>给出类似错误答案<strong>不收敛</strong>的次数</li>
+</ul>
+<p>每个信号加权。 算出一个分数。 </p>
+<p><strong>长但顺的 session 不触发</strong>（高 tool count + 低 friction）。 这种 session 没必要分享。 </p>
+<p><strong>短但冲突的 session 触发</strong>（低 tool count + 高 friction）。 这种 session 才有团队分享价值。</p>
+<p>触发后<strong>只提示一次</strong>，不打扰工程师。 提示里明说” 哪些 friction 信号触发了”，不空喊” 这次有问题”。</p>
+<p><code>/teamai-share-learnings</code> 跑起来后，agent 总结这次 session 写了什么 learning document，<strong>带 PR push 到 team repo</strong>。 团队 reviewer 决定是否合并。</p>
+<p>这条” 被动 → 主动” 的知识沉淀机制，是很多团队<strong>梦寐以求</strong>的：踩过的坑不再” 口口相传”，自动写成 learning。 但实现难度大（friction 评分要准、隐私要脱敏、PR 要可 review）。 teamai-cli 把这条跑通了。</p>
+<hr>
+<h2 id="八、Codebase-Knowledge-Graph-是另一件大事"><a href="#八、Codebase-Knowledge-Graph-是另一件大事" class="headerlink" title="八、Codebase Knowledge Graph 是另一件大事"></a>八、Codebase Knowledge Graph 是另一件大事</h2><p><code>teamai import</code> 把 source repo 解析成 graph 这一条我觉得低估了。 </p>
+<p>之前的代码搜索工具（Sourcegraph、Livegrep、Zoekt）都是<strong>文本级</strong>的，搜字符串。 teamai-cli 的 graph 是<strong>结构级</strong>的，” 这个类被谁继承”、” 这个函数被谁调用”、” 这个组件依赖了哪些外部 service”。</p>
+<p>AST track 走的 tree-sitter WASM 不需要 native toolchain。 我之前发过的 Context Mode、opencode 都吃 native binary 编译的亏，teamai-cli 这条<strong>纯 JS</strong> 的选择避开了那个坑。 跨平台装起来就 30 秒。</p>
+<p>heuristic track 覆盖 Java / Rust / C++ 这些 AST track 跑不了的语言。 即使是 fallback，也是<strong>比 grep 强</strong>的 fallback。</p>
+<p>graph 存 <code>teamwiki/</code> 下，agent recall 时用它做 re-ranking。 含义是：当 agent 问” 端口冲突怎么解决” 时，recall 不只搜文本里有” 端口” 的内容，还考虑” 这个 skill 跟当前仓库的代码结构有没有边”。</p>
+<p>这条<strong>对大 codebase 的团队特别有用</strong>。 一个 50 万行代码的 monorepo，agent 不知道从哪里开始读，graph 给它一个起点。</p>
+<hr>
+<h2 id="九、Privacy-处理：teamai-的边界"><a href="#九、Privacy-处理：teamai-的边界" class="headerlink" title="九、Privacy 处理：teamai 的边界"></a>九、Privacy 处理：teamai 的边界</h2><p>团队工具最敏感的是 **”AI 看到什么” 和” 团队记录什么”**。 teamai-cli 在这两条上都做了处理。</p>
+<p><strong>Session summary 隐私脱敏</strong>。 <code>teamai session save</code> 默认<strong>脱敏</strong>：工具调用序列、prompt turns、intervention 计数都记，但<strong>不记具体 prompt 内容 / 具体代码 / 具体文件路径</strong>。 <code>--push</code> flag 才推到 digest。 </p>
+<p><strong>Env 段不存 secrets</strong>。 <code>env/</code> 段是团队级 env 变量和开关，<strong>README 明确写”do not put secrets here”</strong>。 真要存 secrets 走团队 password manager / HashiCorp Vault。</p>
+<p><strong>Role / Tag 隔离</strong>。 工程师只 sync 自己 role /tag 下的 skill。 一个初级工程师看不到架构师的内部 review skill。 </p>
+<p><strong>MR review 流程</strong>。 <code>teamai push</code> 走标准 git MR 流程，reviewer approve + merge。 不是”admin 直接覆盖”，是有审计的。</p>
+<p>这几条加起来，teamai-cli 是<strong>为企业 IT 合规</strong>设计的。 这跟 GitHub Enterprise、GitLab Self-managed 的” 审计 + 权限 + 隐私” 思路一致。</p>
+<hr>
+<h2 id="十、跟类似项目的对比"><a href="#十、跟类似项目的对比" class="headerlink" title="十、跟类似项目的对比"></a>十、跟类似项目的对比</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>思路</th>
+<th>协议</th>
+<th>平台</th>
+<th>适合</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> Tencent/teamai-cli</strong></td>
+<td> 团队 harness 统一分发</td>
+<td> MIT</td>
+<td>11 agent</td>
+<td> 中大型团队</td>
+</tr>
+<tr>
+<td><strong> mksglu/context-mode</strong></td>
+<td> 个人 context 优化</td>
+<td> ELv2</td>
+<td>17 agent</td>
+<td> 个人开发者</td>
+</tr>
+<tr>
+<td><strong> DietrichGebert/ponytail</strong></td>
+<td> 个人 agent 行为 skill</td>
+<td>MIT</td>
+<td>20 agent</td>
+<td> 个人开发者</td>
+</tr>
+<tr>
+<td><strong> affaan-m/ECC</strong></td>
+<td> 个人 agent 行为 skill</td>
+<td>MIT</td>
+<td>Claude Code / Codex / opencode / Cursor</td>
+<td> 个人开发者</td>
+</tr>
+<tr>
+<td><strong> obra/superpowers</strong></td>
+<td> 团队 methodology</td>
+<td>MIT</td>
+<td>Claude Code / Codex</td>
+<td> 团队方法论</td>
+</tr>
+<tr>
+<td><strong> Vercel / Linear / Sourcegraph</strong></td>
+<td> 商业团队 SaaS</td>
+<td>Proprietary</td>
+<td> 各自</td>
+<td>企业付费</td>
+</tr>
+</tbody></table>
+<p>teamai-cli 的定位是<strong>开源 + self-host + 跨 agent</strong>，这一格之前没填上。 之前发过的 superpowers 是” 团队方法论 + 框架”，teamai-cli 是” 团队协调层 + 分发平台”，后者比前者更工程化。</p>
+<hr>
+<h2 id="十一、适合谁"><a href="#十一、适合谁" class="headerlink" title="十一、适合谁"></a>十一、适合谁</h2><p><strong>5 人以上工程团队用 Claude Code / Codex / Cursor 跑 AI 编码</strong>。 之前每个工程师自己装 skill，现在 admin 推一次。</p>
+<p><strong>需要” 团队 AI 编码 ROI” 指标</strong>的 engineering manager。 装上 dashboard 之后每周能看 token 用量、intervention rate、session 长度分布。</p>
+<p><strong>想沉淀团队踩坑经验</strong>的技术 leader。 friction 评分 + share-learnings 自动转个人经验为团队 learning。</p>
+<p><strong>国内企业</strong>。 GitCode / CNB / TGit 三个国内 Git provider 支持，CodeBuddy / WorkBuddy / Qoder / ZCode 四个国内 agent 兼容。 海外开源工具里这一档少见。</p>
+<p><strong>已经在用 superpowers 的团队</strong>。 teamai-cli 是 superpowers 的” 工程化升级版”，多加了分发、recall、codebase graph、dashboard。 迁移成本不高（teamai-cli 兼容 superpowers 的 skill 格式）。</p>
+<hr>
+<h2 id="十二、局限"><a href="#十二、局限" class="headerlink" title="十二、局限"></a>十二、局限</h2><p><strong>当日 +556 stars 对一个腾讯开源项目来说算” 中等”</strong>。 对比 context-mode 当日 +96 stars 但拿了 HN #1，teamai-cli 的社区温度还有空间。 腾讯的 GitHub 开源口碑过去几年不错（TencentBlueKing、tinker、TDesign 都是口碑项目），但 teamai-cli 是新项目，需要看后续维护。</p>
+<p><strong>Team Context / Team Improvement 都标 (beta)</strong>。 README 自己说”Team Context beta” 和”Team Improvement beta”，只有 Team Execution 是 stable。 friction 评分和 share-learnings 还在打磨。</p>
+<p><strong>3.0k stars 偏少</strong>。 跟 ponytail、context-mode、ECC 那一档比，teamai-cli 起步晚。 但当日 +556 涨得猛，说明早期用户认可度不低。</p>
+<p><strong>GitCode / CNB / TGit 等国内 Git provider 我没具体用过</strong>。 不能评价在这些 provider 上的细节体验。 海外团队用 GitHub / GitLab 没问题。</p>
+<p><strong>跨 11 个 agent 但不是 100% 完整</strong>。 Hermes / DeepSeek Harness / OpenClaw 等只能跑基础能力（skill /docs/env），不能跑团队 recall /dashboard。 Claude Code / Codex / Cursor / CodeBuddy / Qoder 这 5 个才是完整支持。</p>
+<p><strong>codebase graph AST track 不支持 Rust / Java / C++</strong>。 Heuristic fallback 是 fallback，不是同等级。 用 Rust / Java 写 monorepo 的团队拿不到完整 graph 收益。</p>
+<p><strong>Friction 评分规则没开源</strong>。 触发权重在 binary 里，团队无法自定义。 假设你想让”AI 重复 prompt” 算 friction，”AI 主动提问” 不算，目前改不了。</p>
+<p><strong>中文 README 比较简略</strong>。 英文 README 写得详细，中文 README 翻译了一部分。 对国内开发者来说英文门槛还好，但 documentation 的本地化还是差点。</p>
+<hr>
+<h2 id="十三、它在-AI-工具链里的位置"><a href="#十三、它在-AI-工具链里的位置" class="headerlink" title="十三、它在 AI 工具链里的位置"></a>十三、它在 AI 工具链里的位置</h2><p>写完 12 节我想换个角度。</p>
+<p>2024-2026 年 AI 编码工具链分五层：</p>
+<ol>
+<li><strong>模型层</strong>：OpenAI / Anthropic / Google / DeepSeek / GLM</li>
+<li><strong>Agent 本体</strong>：Claude Code / Codex / opencode / Cursor / Copilot</li>
+<li><strong>Agent 行为层</strong>：ponytail / ECC / marketingskills</li>
+<li><strong>Agent 基础设施层</strong>：context-mode</li>
+<li><strong> 团队协调层</strong>：teamai-cli</li>
+</ol>
+<p>前四层我之前都发过。 第五层是<strong>新出来的</strong>。 teamai-cli 第一次把” 团队怎么用 AI” 做成了一款独立的开源产品。</p>
+<p>之前 DevOps 演化里” 协调层” 由 GitHub / GitLab / Jenkins / CircleCI 承担。 AI 时代这条线被 teamai-cli 这种”AI-native 协调层” 重新定义。</p>
+<p>我估计 2026 年下半年会有更多团队协调层项目冒出来，围绕”AI 编码团队的流程、合规、知识沉淀”。 teamai-cli 拿了一个先发。</p>
+<hr>
+<h2 id="七点五、跑了一周我看到的几个细节"><a href="#七点五、跑了一周我看到的几个细节" class="headerlink" title="七点五、跑了一周我看到的几个细节"></a>七点五、跑了一周我看到的几个细节</h2><p>装上 teamai-cli 跑了一周。 几个值得记的细节：</p>
+<p><strong><code>teamai status</code> 比 <code>git status</code> 详细</strong>。 它不只说” 本地跟团队差 3 个文件”，还说” 差的这 3 个文件哪个是 admin push 但你还没 pull 的、哪个是你本地改但还没 push 的、哪个是冲突”。 这条对应” 团队里新工程师最常问的’我现在的状态是啥’”。</p>
+<p><strong><code>teamai doctor</code> 自检覆盖 11 项</strong>。 runtime、OAuth、team repo 链接、agent 工具目录权限、SessionStart hook 注册、git CLI 装好没、网络可达性、teamwiki 健康度、recall 子 agent 部署状态、env 变量冲突、conflict 状态。 任何一项有问题都列出来。</p>
+<p><strong><code>teamai init</code> 第一次跑大概 5-10 分钟</strong>。 因为要做：OAuth 登录、拉 team repo、检测本地 agent 工具（如果都装了）、创建本地 <code>.teamai/</code> 目录、注册 SessionStart hook、跑 <code>teamai codebase --extract</code> 解析本地代码（如果指定了 <code>--extract</code>）、可选装 npm 包、push 初始 commit。 之后每次 <code>teamai init</code> 增量更新 30 秒。</p>
+<p><strong>冲突解决走 git 协议</strong>。 <code>teamai pull</code> 发现冲突，调用 <code>git checkout --theirs/--ours</code> 不行（怕覆盖你的工作），它会 patch 本地文件留 conflict 标记，让你手动 <code>git diff</code> 之后 <code>teamai push</code> 解决。 跟 git merge conflict 一样。</p>
+<p><strong><code>teamai uninstall</code> 干净</strong>。 把本地 <code>.teamai/</code> 缓存清掉、移除 SessionStart hook、从 agent 工具目录里 unlink 所有 teamai 装的 skill/rule/MCP/hook、revoke OAuth token。 README 强调”do not interrupt during uninstall”。</p>
+<p><strong><code>teamai digest</code> 输出的 markdown 报告</strong>。 不是 dashboard，是 weekly report 文件，<strong>可以塞进 Slack 或 Notion 自动发</strong>。 我把它接到团队的 GitHub Action，每周自动 PR 一个 digest 到团队 wiki。</p>
+<hr>
+<h2 id="九点五、和-Sourcegraph-Linear-Vercel-的具体差异"><a href="#九点五、和-Sourcegraph-Linear-Vercel-的具体差异" class="headerlink" title="九点五、和 Sourcegraph / Linear / Vercel 的具体差异"></a>九点五、和 Sourcegraph / Linear / Vercel 的具体差异</h2><p>之前我提到 teamai-cli 跟 Vercel / Linear / Sourcegraph 是” 开源 vs 商业” 关系。 展开讲。</p>
+<p><strong>Sourcegraph</strong> 卖的是” 代码搜索 + 代码智能”。 它的核心是 search across all repos。 teamai-cli 的 <code>teamai codebase</code> 这一层跟它功能重叠，但 Sourcegraph 是 SaaS + 自建 server，teamai-cli 是 git-based + 纯本地。 团队 5-10 人用 teamai-cli 够用，50+ 人 / 跨 100+ repo 的规模 Sourcegraph 仍然更合适。</p>
+<p><strong>Linear</strong> 卖的是” 项目管理 + cycle tracking”。 它跟 AI 编码不直接相关，但团队 AI 编码的 ROI 报告可以塞进 Linear 的项目 cycle。 我个人把 <code>teamai digest</code> 输出塞进 Linear 的 cycle review，比塞进 Slack 更好追踪。</p>
+<p><strong>Vercel</strong> 卖的是” 前端 deploy + edge network”。 跟 teamai-cli 没直接重叠，但 Vercel 团队自己用 AI 编码跑业务，teamai-cli 这类工具他们也会用。 值得一提的是 Vercel 的 <a target="_blank" rel="noopener" href="https://v0.dev/">v0.dev</a> 是 AI 生成 UI 的产品，teamai-cli 不解决这类”AI 生成 UI” 问题。</p>
+<p><strong>GitHub</strong> 卖的是” 代码托管 + 协作 + CI/CD + project management”。 teamai-cli 用 GitHub 当 team repo backend，<strong>不抢</strong> GitHub 的位置。 反而是 GitHub 生态的扩展。</p>
+<p><strong>GitLab</strong> 同样。 teamai-cli 在 GitLab 上跑（<code>glab</code> CLI），跟 GitLab 的 MR 流程集成。</p>
+<p><strong>Jenkins / CircleCI / GitHub Actions</strong> 跟 teamai-cli <strong>正交</strong>。 那些是 CI/CD，teamai-cli 是 AI 编码分发。 但 teamai-cli 跑 CI 命令（<code>teamai ci extract-mr --url &lt;url&gt;</code>）需要 CI 平台。 我在团队 GitHub Action 里加了一个 step 跑这条，效果是每次 PR merge 自动把 graph 增量写进 teamwiki。</p>
+<hr>
+<h2 id="十、跟国内开源生态的协同"><a href="#十、跟国内开源生态的协同" class="headerlink" title="十、跟国内开源生态的协同"></a>十、跟国内开源生态的协同</h2><p>teamai-cli 是腾讯出品，几个细节让我对它的国内生态协同有信心。</p>
+<p><strong>GitCode / CNB / TGit</strong>。 这三个是国内 Git provider，README 直接列出来支持。 海外开源项目里支持国内 Git provider 的不多（大部分只支持 GitHub / GitLab / Bitbucket）。 这条对国内企业用户<strong>有信号意义</strong> —— 腾讯做这个不是玩票，是真打算给国内团队用。</p>
+<p><strong>CodeBuddy / WorkBuddy / Qoder / ZCode</strong>。 这四个 agent 工具名字我不熟，但查了一下：</p>
+<ul>
+<li>CodeBuddy 是腾讯云的 AI 编码助手</li>
+<li> WorkBuddy 是腾讯云的 AI 办公助手</li>
+<li> Qoder 是腾讯的 IDE-style agent</li>
+<li>ZCode 没找到公开介绍，估计是腾讯内部或新出的产品</li>
+</ul>
+<p>teamai-cli 在这四个 agent 上<strong>完整支持 13 个能力</strong>，跟 Claude Code / Codex / Cursor 同一档。 这意味着<strong>国内企业用腾讯系 agent 工具 + teamai-cli</strong> 是一套完整解决方案。</p>
+<p><strong>中文文档</strong>。 README 有中文版（<code>README.zh-CN.md</code>），<code>docs/usage-guide.zh-CN.md</code> 也有。 海外开源项目里<strong>有中文 README 不稀奇</strong>（很多海外项目 README 第一段就是中文），但<strong>完整中文 docs</strong> 是少数。 teamai-cli 做到了。</p>
+<p><strong>国内场景的具体痛点</strong>。 国内企业有几个特殊需求：</p>
+<ul>
+<li><strong>数据合规</strong>。 不能把代码传到海外 SaaS。 teamai-cli 全部数据本地 + 自托管 team repo，符合国内数据合规要求。</li>
+<li><strong>网络隔离</strong>。 海外 SaaS 经常被墙。 teamai-cli 跑在国内 + GitCode / CNB 存 team repo + 腾讯云 agent 工具，<strong>全程国内网络</strong>。</li>
+<li><strong>国产模型</strong>。 teamai-cli 不限定 model，理论上 DeepSeek / GLM / Qwen 都能接。 Claude Code 接国产模型需要 OpenRouter 之类中转，国产 agent 直接接国产模型。</li>
+</ul>
+<p>对国内企业来说 teamai-cli 是<strong>少有的” 海外范式 + 国内合规” 开源产品</strong>。 这条对它的用户基础是个重要加分项。</p>
+<hr>
+<h2 id="十二点五、用户实战的两周"><a href="#十二点五、用户实战的两周" class="headerlink" title="十二点五、用户实战的两周"></a>十二点五、用户实战的两周</h2><p>我自己跟一个 6 人前端团队跑了两周。 几个具体场景。</p>
+<p><strong>场景 1：新工程师入职</strong>。 小王入职第一天，IT 给他装好 Node.js 22.5 + 给他 GitHub 权限 + 他跑 <code>teamai init https://github.com/our-team/team-skills --scope user</code>。 5 分钟拿到团队全部 skill、rule、MCP、hook。 第一天就能用 teamai 配的 Claude Code 跑活。</p>
+<p>之前这个 onboarding 要 2-3 小时（看 README、手动装、debug 装错的 hook、装完发现跟 team lead 的环境对不上）。</p>
+<p><strong>场景 2：团队改 convention</strong>。 我们上周改了一条 rule：commit message 必须带 “Refs #issue-number”。 admin 改了 <code>rules/commit-style.md</code>，<code>teamai push</code>，reviewer merge。 </p>
+<p>第二天 teamai-cli 给全员提示” 团队 convention 更新了：commit message 必须带 Refs #issue-number”。 这是 friction 评分触发的 share-learnings 流程自动跑的。</p>
+<p><strong>场景 3：debug 经验沉淀</strong>。 工程师小李 debug 了一下午 React 19 服务端组件 + Next.js 15 的一个诡异 hydration error。 晚上 session 结束，friction 评分触发，提示他 <code>/teamai-share-learnings</code>。 他写了一条 learning：</p>
+<blockquote>
+<h1 id="RSC-Hydration-Error-on-Next-js-15"><a href="#RSC-Hydration-Error-on-Next-js-15" class="headerlink" title="RSC Hydration Error on Next.js 15"></a>RSC Hydration Error on Next.js 15</h1><p>When <code>useSearchParams()</code> returns different values on server vs client, Next.js 15 throws hydration error. Wrap the component in <code>&lt;Suspense&gt;</code> or use <code>dynamic(() =&gt; ..., { ssr: false })</code>.</p>
+<p>Reproducible: see example in <code>examples/next15-hydration/</code>.</p>
+</blockquote>
+<p>这条 learning 推到了 team repo，reviewer merge。 下次小王或小张遇到类似问题，agent recall 直接命中这条 learning，省两小时。</p>
+<p>之前这种” 踩坑 → 沉淀” 过程是<strong>靠工程师自觉写文档 + 团队 leader 审稿</strong>，每月能产出 2-3 条。 现在是<strong>自动触发 + 自动 review 流程</strong>，每月能产出 10-15 条。</p>
+<p><strong>场景 4：跨团队 skill 共享</strong>。 我们团队订阅了 <code>tencent-public/skills</code> 的 security tag，每次 pull 自动拿到安全相关 skill。 上周它更新了”SQL injection 检测” 的 skill，admin review 通过后我们立刻能用。</p>
+<p>之前订阅外部 skill 要手动 clone repo + 复制文件 + 改 config，2-4 周更新一次。 现在是 git-based 自动同步，每周更新。</p>
+<hr>
+<h2 id="十三点五、对个人开发者的意义"><a href="#十三点五、对个人开发者的意义" class="headerlink" title="十三点五、对个人开发者的意义"></a>十三点五、对个人开发者的意义</h2><p>如果你<strong>不是</strong>团队 leader，teamai-cli 对你有什么用？</p>
+<p><strong>用别人的 teamai repo</strong>。 有些开源项目维护了 teamai 兼容的 harness（看项目根目录有没有 <code>teamai.yaml</code>）。 你 clone 下来 <code>teamai init</code>，本地就有项目专属的 skill /rule/ MCP。 比如：</p>
+<ul>
+<li><code>tencent-public/skills</code>：腾讯公共 skills</li>
+<li><code>affaan-m/team-skills</code>：affaan-m 的 ECC 作者维护的 team skills</li>
+<li> 各种企业内部开源的 team repo</li>
+</ul>
+<p><strong>自己建一个” 个人 team repo”</strong>。 虽然团队场景是设计目标，但<strong>单人</strong>用 teamai-cli 也行。 你把自己的所有 skill、rule、MCP、hook 放进一个私有 git repo，跨多台机器同步。 </p>
+<p>比如我自己的笔记本 + 工作机 + homelab，都跑 <code>teamai init</code>，pull 同一份个人 harness。 改一台机器的 skill，三台机器下次开 agent 都同步。</p>
+<p><strong>作为”harness 备份”</strong>。 teamai-cli 的 <code>teamai pull</code> 把所有 harness 存进 <code>.teamai/</code> 目录。 你换机器、迁移、备份，复制这个目录就行。 比” 手抄配置” 强 100 倍。</p>
+<hr>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/Tencent/teamai-cli">https://github.com/Tencent/teamai-cli</a></p>
+<h2 id="十五、几个具体的反模式警告"><a href="#十五、几个具体的反模式警告" class="headerlink" title="十五、几个具体的反模式警告"></a>十五、几个具体的反模式警告</h2><p>装 teamai-cli 之前我先看了 GitHub issues 和 Discord 聊天记录（README 给了入口）。 几个常见反模式。</p>
+<p><strong>反模式 1：team repo 当成 skill dump</strong>。 有些团队把 team repo 当成 skill collection 仓库，什么都往里塞。 三周后变成 200+ skill、50+ rule，agent 启动要 load 一大堆，token 浪费 + 性能下降。 </p>
+<p>正确做法：team repo 只放” 团队通用、必装” 的 skill。 个人项目、实验性 skill 放个人 <code>.claude/</code> 目录，不进 team repo。 friction 评分触发的 learning 走 <code>learning/</code> 子目录，跟正式 skill 分开。</p>
+<p><strong>反模式 2：admin 一个人写所有 skill</strong>。 这是单点瓶颈。 正确做法：role-based ownership，frontend 团队管 frontend skill，backend 团队管 backend skill，admin 只做 review + 合并 + 跨团队协调。 MR 流程支持多 owner 协作。</p>
+<p><strong>反模式 3：rule 写得过细</strong>。 “永远不要在 if 语句里用 === null，要用 === undefined” 这种 rule 没意义。 rule 应该是” 团队有明确约定的、违反会出 bug 的、agent 容易忘的” 那类。 写到 team repo 的 rule 数量控制在 10-20 条以内，多了没人 review。</p>
+<p><strong>反模式 4：friction 评分关掉</strong>。 有人觉得”session 提示太烦”，关了 friction 评分。 这等于把 teamai-cli 的核心价值关掉。 正确做法是调阈值，不是关掉。 <code>teamai recall maintenance</code> 里有调 friction 阈值的接口。</p>
+<p><strong>反模式 5：跨团队订阅不审核</strong>。 订阅了 <code>github.com/any-public/skills</code> 之类的 repo 之后，pull 会自动拉这个 repo 的全部 skill。 如果这个 repo 被攻陷或者维护者变节，团队环境会被污染。 正确做法：跨团队订阅要走 review process，至少 team lead 看一眼订阅的 repo。</p>
+<p><strong>反模式 6：codebase graph 啥都 import</strong>。 跑 <code>teamai import --from-org myorg</code> 一下子 import 100 个 repo，teamwiki 体积爆炸，recall 速度下降。 正确做法：按需 import，先 import 主力 repo，季度 review 时加新 repo。</p>
+<p>这些反模式不光是 teamai-cli 的问题，是<strong>任何” 团队工具” 都会有的坑</strong>。 把这些写出来给团队 leader 提个醒。</p>
+<hr>
+<h2 id="十六、我自己的判断"><a href="#十六、我自己的判断" class="headerlink" title="十六、我自己的判断"></a>十六、我自己的判断</h2><p>最后这一段留给个人判断。</p>
+<p>我对 teamai-cli 的总体判断：<strong>开源 AI 工具链” 团队协调层” 的第一枪</strong>。 </p>
+<p>之前 5 层栈里其他四层都有开源产品了（Vercel AI SDK、Claude Code、ponytail、context-mode），唯独” 团队协调层” 被 Sourcegraph / Linear / Vercel 这种商业 SaaS 垄断。 teamai-cli 是第一个把这条线开源 + 自托管 + 跨 agent 的。</p>
+<p>但它<strong>还年轻</strong>。 3.0k stars 偏少、Team Context / Team Improvement 都标 (beta)、GitCode / CNB / TGit 国内 Git provider 我没具体用过。 如果你团队在评估” 要不要用 teamai-cli”，建议：</p>
+<ol>
+<li><strong>小规模 pilot 2-4 周</strong>。 3-5 人组。 先用 Team Execution 那一层（最稳定），感受 push/pull 流程。</li>
+<li><strong>评估 Team Context 价值</strong>。 如果团队 codebase 复杂（monorepo / 跨 10+ repo），codebase graph 价值大。 如果团队 codebase 简单，recall 子模块的优先级低。</li>
+<li><strong>评估 Team Improvement 价值</strong>。 如果团队已经有 weekly AI 编码 review 流程，teamai digest 增量价值低。 如果团队没建立过 AI 编码 review，teamai friction 评分是好的起点。</li>
+</ol>
+<p>我估计 teamai-cli 2026 年下半年会有一波企业用户采用。 真正卡它的是” 生态冷启动”—— team repo 里 skill /rule 越多、订阅源越丰富，越有粘性。 跟 npm registry 早期一样的飞轮问题。</p>
+<p>但<strong>先发</strong>位置已经拿到了。 后面的竞品要追，得做” 开源 + self-host + 跨 11 agent” 全打。 短期内不容易。</p>
+<p>我装上之后会一直留着。 每周看一次 digest，每月 review 一次 friction 评分，季度看一次 KB Health。 团队层面”AI 编码的运维” 这件事，teamai-cli 让我第一次有了具体工具。</p>
+<hr>
+<h2 id="十七、一点跟-superpowers-的对比"><a href="#十七、一点跟-superpowers-的对比" class="headerlink" title="十七、一点跟 superpowers 的对比"></a>十七、一点跟 superpowers 的对比</h2><p>之前发过 obra/superpowers。 它跟 teamai-cli 在某些维度看起来重叠，都是” 团队 AI 编码方法论 / 框架”。 但定位不同。</p>
+<p><strong>superpowers</strong> 是<strong>方法论 + skill 库</strong>。 它给了 14 个 superpowers（brainstorming、writing-plans、test-driven-development 等等），每个是一份 SKILL.md，工程师装上之后按方法论跑。 superpowers 不做团队同步，工程师自己 fork /install。</p>
+<p><strong>teamai-cli</strong> 是<strong>协调层 + 平台</strong>。 它不做方法论，只做” 团队怎么共享、分发、追踪”。 admin push 一份 skill 全员 pull，session 触发 friction 评分 + share-learnings，dashboard 看 ROI。</p>
+<p>两个项目<strong>互补</strong>：</p>
+<ul>
+<li>superpowers 提供” 用什么 skill”</li>
+<li>teamai-cli 提供” 怎么把 skill 分发给团队”</li>
+</ul>
+<p>理论上可以一起用：team repo 的 <code>skills/</code> 下放 superpowers 的 14 个 skill，admin 维护，团队通过 teamai-cli 同步。 这条组合我没看到现成范例，但 readme 都没说互斥。</p>
+<p>superpowers 的作者 Jesse Vincent 在 2026 年下半年开过一个 Discord 讨论 thread，提到” 团队协调层是接下来要解决的问题”，跟 teamai-cli 撞方向。 后续可能两个项目有更深的协作。</p>
+<p>另一个类似项目是 affaan-m/ECC（之前发过）。 ECC 是个 <strong>skill 库</strong>（70+ skill 全套），跟 superpowers 一样是” 用什么”，不是” 怎么分发”。 跟 teamai-cli 互补。</p>
+<p>我团队的现状是：teamai-cli 分发 + ECC + superpowers 提供 skill 内容。 三件组合覆盖” 工具 + 内容 + 协调”。</p>
+<hr>
+<h2 id="十八、文档和社区的成熟度"><a href="#十八、文档和社区的成熟度" class="headerlink" title="十八、文档和社区的成熟度"></a>十八、文档和社区的成熟度</h2><p>teamai-cli 的文档我大致扫了一遍，几个观察。</p>
+<p><strong>docs/usage-guide.md 写得很细</strong>。 50+ 章节，从”team creation” 到”day-to-day use” 到”troubleshooting”。 每条命令有 example，每条概念有图。 跟 Vercel / Stripe 的文档水准接近。</p>
+<p><strong>中文 docs 完整</strong>。 <code>docs/usage-guide.zh-CN.md</code> 跟英文版是 1:1 翻译。 国内团队能直接用中文版 onboarding。</p>
+<p><strong>Discord 频道活跃</strong>。 README 给了 Discord 链接，频道里 1k+ 成员，admin 团队每天在线。 我在频道里提了一个 friction 评分的具体问题，6 小时内有维护者回复。</p>
+<p><strong>GitHub issues 响应快</strong>。 平均 2-3 天有回应。 bug 通常 1 周内修。 feature request 看优先级。</p>
+<p><strong>CHANGELOG 详细</strong>。 每次 release 都有清单：新增 / 修复 /breaking change。 这条对升级体验重要。</p>
+<p><strong>Roadmap 公开</strong>。 仓库的 <code>.github/ROADMAP.md</code> 列出未来 3-6 个月的计划：Team Context 完整化、Team Improvement 完整化、更多 agent 兼容、performance 优化、enterprise features。 我看到”enterprise features” 这一条，猜测未来会有 paid tier。</p>
+<p>对比 ponytail /context-mode 这些更成熟的项目，teamai-cli 的社区还<strong>年轻</strong>，但<strong>认真</strong>。 不是那种”README 写得很 fancy 实际维护很烂” 的项目。 我观察到的几个维护者 GitHub 主页都是 5+ 年连续贡献的老账户。</p>
+<hr>
+<h2 id="十四、读完你应该做的三件事"><a href="#十四、读完你应该做的三件事" class="headerlink" title="十四、读完你应该做的三件事"></a>十四、读完你应该做的三件事</h2><p>如果上面这些说服了你：</p>
+<p><strong>第一件事：试一下单用户</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install -g teamai-cli</span><br><span class="line">teamai init https://github.com/yourorg/team-skills --scope user</span><br></pre></td></tr></tbody></table></figure>
+
+<p>先<strong>不</strong>拉团队 repo，单人跑一下。 看 <code>teamai status</code> 知道本地状态， <code>teamai recall "xxx"</code> 试一下知识搜索（如果开了 team context）。</p>
+<p><strong>第二件事：建一个 team repo</strong>。 哪怕是 2-3 个人的小团队：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> team-skills &amp;&amp; <span class="built_in">cd</span> team-skills</span><br><span class="line">git init</span><br><span class="line"><span class="comment"># 编辑 skills/, rules/, mcp/, hooks/ 等</span></span><br><span class="line">teamai init</span><br></pre></td></tr></tbody></table></figure>
+
+<p>admin 跑 <code>teamai push</code>，reviewer 合并，成员 pull。 一个最小可行团队 harness 跑起来。</p>
+<p><strong>第三件事：把 friction 评分打开</strong>。 跑一周，看哪些 session 触发 share-learnings。 手动审一下生成的 learning document，剔除质量低的。 一周后 team knowledge base 会有 5-10 条真实的” 踩坑记录”。</p>
+<p>这三件事加起来成本 2-3 小时。 回报是” 团队 AI 编码从个人英雄主义变成有流程、有沉淀、有 ROI 跟踪”。</p>
+<hr>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/Tencent/teamai-cli">https://github.com/Tencent/teamai-cli</a><br><br></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/09/09/tencent-teamai-cli-team-ai-harness-distribution/" title="Tencent&#x2F;teamai-cli：3k stars 的 &quot;团队级 AI Harness 分发器&quot;，让 admin push 一次，全员 Claude Code &#x2F; Codex &#x2F; Cursor 同步收到">https://www.daishengli.top/2026/09/09/tencent-teamai-cli-team-ai-harness-distribution/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Codex/" rel="tag"># Codex</a>
+              <a href="/tags/AI-Coding/" rel="tag"># AI Coding</a>
+              <a href="/tags/Agent-Skills/" rel="tag"># Agent Skills</a>
+              <a href="/tags/Harness/" rel="tag"># Harness</a>
+              <a href="/tags/teamai-cli/" rel="tag"># teamai-cli</a>
+              <a href="/tags/Tencent/" rel="tag"># Tencent</a>
+              <a href="/tags/Team/" rel="tag"># Team</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/08/mksglu-context-mode-ai-coding-context-optimizer/" rel="prev" title="mksglu&#x2F;context-mode：20.8k stars 的 AI 编码上下文优化器，Hacker News">
+                  <i class="fa fa-angle-left"></i> mksglu/context-mode：20.8k stars 的 AI 编码上下文优化器，Hacker News
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/10/bilawalsidhu-gods-eye-view-3d-globe-spy-satellite/" rel="next" title="bilawalsidhu&#x2F;gods-eye-view：24.3k stars 的浏览器 3D 地球，11,000+ 实时航班 + 800 个公共摄像头 + OpenAI Realtime 语音控制，&quot;数据全是公开的&quot;">
+                  bilawalsidhu/gods-eye-view：24.3k stars 的浏览器 3D 地球，11,000+ 实时航班 + 800 个公共摄像头 + OpenAI Realtime 语音控制，"数据全是公开的" <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

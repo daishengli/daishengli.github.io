@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="DietrichGebert&#x2F;ponytail（GitHub 127.5k stars、6.8k forks、当日 +2.8k stars、MIT）是一款给 AI Coding Agent 用的&quot;懒惰资深工程师&quot;技能包，核心是一道七级阶梯：先问这功能要不要存在，再问代码库里有没有、标准库有没有、平台原生有没有，一路问到&quot;能不能一行写完&quot;。作者用真实 Claude Code 会话在 tiangolo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DietrichGebert&#x2F;ponytail：127.5k stars 的 &quot;懒惰资深工程师&quot; 技能，把 AI Agent 从 404 行的日期选择器里拽出来">
+<meta property="og:url" content="https://www.daishengli.top/2026/09/05/dietrichgebert-ponytail-lazy-senior-dev-ai-agent/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="DietrichGebert&#x2F;ponytail（GitHub 127.5k stars、6.8k forks、当日 +2.8k stars、MIT）是一款给 AI Coding Agent 用的&quot;懒惰资深工程师&quot;技能包，核心是一道七级阶梯：先问这功能要不要存在，再问代码库里有没有、标准库有没有、平台原生有没有，一路问到&quot;能不能一行写完&quot;。作者用真实 Claude Code 会话在 tiangolo">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-05T02:20:00.000Z">
+<meta property="article:modified_time" content="2026-09-12T01:07:10.469Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="AI Coding">
+<meta property="article:tag" content="ponytail">
+<meta property="article:tag" content="Agent Skills">
+<meta property="article:tag" content="YAGNI">
+<meta property="article:tag" content="过度设计">
+<meta property="article:tag" content="提示词工程">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/09/05/dietrichgebert-ponytail-lazy-senior-dev-ai-agent/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/09/05/dietrichgebert-ponytail-lazy-senior-dev-ai-agent/","path":"2026/09/05/dietrichgebert-ponytail-lazy-senior-dev-ai-agent/","title":"DietrichGebert/ponytail：127.5k stars 的 \"懒惰资深工程师\" 技能，把 AI Agent 从 404 行的日期选择器里拽出来"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>DietrichGebert/ponytail：127.5k stars 的 "懒惰资深工程师" 技能，把 AI Agent 从 404 行的日期选择器里拽出来 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">359</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">114</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9Aagent-%E7%9A%84%E2%80%9D%E8%BF%87%E5%BA%A6%E5%BB%BA%E9%80%A0%E2%80%9D%E6%98%AF%E7%BB%93%E6%9E%84%E6%80%A7%E7%9A%84"><span class="nav-number">1.</span> <span class="nav-text">一、它想解决的问题：agent 的” 过度建造” 是结构性的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E4%B8%AA%E6%9C%88%EF%BC%8C%E4%BB%8E%E5%BB%BA%E5%BA%93%E5%88%B0-12-7-%E4%B8%87-star"><span class="nav-number">1.1.</span> <span class="nav-text">三个月，从建库到 12.7 万 star</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%EF%BC%9A%E4%B8%80%E9%81%93%E4%B8%83%E7%BA%A7%E9%98%B6%E6%A2%AF"><span class="nav-number">2.</span> <span class="nav-text">二、核心机制：一道七级阶梯</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#examples-%E9%87%8C%E9%82%A3%E4%BA%9B%E5%85%B7%E4%BD%93%E7%9A%84%E5%AF%B9%E7%85%A7"><span class="nav-number">2.1.</span> <span class="nav-text">examples&#x2F; 里那些具体的对照</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B6%E6%A2%AF%E4%B9%8B%E4%B8%8A%E8%BF%98%E6%9C%89%E4%B8%80%E6%9D%A1%E9%93%81%E5%BE%8B"><span class="nav-number">2.2.</span> <span class="nav-text">阶梯之上还有一条铁律</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%82%A3%E4%BB%BD%E8%A7%84%E5%88%99%E6%B8%85%E5%8D%95"><span class="nav-number">2.3.</span> <span class="nav-text">那份规则清单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F%E4%B9%9F%E6%9C%89%E8%A7%84%E7%9F%A9"><span class="nav-number">2.4.</span> <span class="nav-text">输出格式也有规矩</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E4%B8%89%E6%A1%A3%E5%BC%BA%E5%BA%A6%E5%92%8C%E5%85%AD%E4%B8%AA%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">三、三档强度和六个命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95%EF%BC%9A%E8%BF%99%E6%98%AF%E5%AE%83%E5%92%8C%E4%B8%80%E5%8F%A5%E6%8F%90%E7%A4%BA%E8%AF%8D%E7%9A%84%E5%88%86%E6%B0%B4%E5%B2%AD"><span class="nav-number">4.</span> <span class="nav-text">四、基准测试：这是它和一句提示词的分水岭</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E8%AF%B4%E6%97%A7%E5%9F%BA%E5%87%86%E9%94%99%E5%9C%A8%E5%93%AA"><span class="nav-number">4.1.</span> <span class="nav-text">先说旧基准错在哪</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%9F%BA%E5%87%86%E6%80%8E%E4%B9%88%E6%90%AD"><span class="nav-number">4.2.</span> <span class="nav-text">新基准怎么搭</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%9C%E8%80%85%E8%87%AA%E6%9B%9D%E7%9A%84%E9%82%A3%E4%B8%AA%E6%B1%A1%E6%9F%93-bug"><span class="nav-number">4.3.</span> <span class="nav-text">作者自曝的那个污染 bug</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE"><span class="nav-number">4.4.</span> <span class="nav-text">数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%87%92%E5%92%8C%E6%95%B7%E8%A1%8D%E7%9A%84%E5%88%86%E7%95%8C%E7%BA%BF%E5%9C%A8%E5%93%AA"><span class="nav-number">5.</span> <span class="nav-text">五、懒和敷衍的分界线在哪</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%8E%E4%B9%88%E8%B7%A8-20-%E4%B8%AA%E5%AE%BF%E4%B8%BB%E8%90%BD%E5%9C%B0"><span class="nav-number">6.</span> <span class="nav-text">六、怎么跨 20 个宿主落地</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">7.</span> <span class="nav-text">七、快速上手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">八、总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">8.1.</span> <span class="nav-text">适合谁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">8.2.</span> <span class="nav-text">不适合谁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E9%99%90"><span class="nav-number">8.3.</span> <span class="nav-text">局限</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">114</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">359</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/09/05/dietrichgebert-ponytail-lazy-senior-dev-ai-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="DietrichGebert&#x2F;ponytail：127.5k stars 的 &quot;懒惰资深工程师&quot; 技能，把 AI Agent 从 404 行的日期选择器里拽出来 | 小戴的网络日志">
+      <meta itemprop="description" content="DietrichGebert&#x2F;ponytail（GitHub 127.5k stars、6.8k forks、当日 +2.8k stars、MIT）是一款给 AI Coding Agent 用的&quot;懒惰资深工程师&quot;技能包，核心是一道七级阶梯：先问这功能要不要存在，再问代码库里有没有、标准库有没有、平台原生有没有，一路问到&quot;能不能一行写完&quot;。作者用真实 Claude Code 会话在 tiangolo&#x2F;full-stack-fastapi-template 上跑了 12 个功能任务 + 6 个安全任务，代码量降 54%、token 降 22%、成本降 20%、耗时降 27%，安全率保持 100%，而对照组那句七个词的 YAGNI 提示词掉了一次路径穿越校验。支持 Claude Code、Codex、Copilot CLI、OpenCode、Gemini 等 20 个 agent 宿主。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DietrichGebert/ponytail：127.5k stars 的 "懒惰资深工程师" 技能，把 AI Agent 从 404 行的日期选择器里拽出来
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-05 10:20:00" itemprop="dateCreated datePublished" datetime="2026-09-05T10:20:00+08:00">2026-09-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">DietrichGebert/ponytail（GitHub 127.5k stars、6.8k forks、当日 +2.8k stars、MIT）是一款给 AI Coding Agent 用的"懒惰资深工程师"技能包，核心是一道七级阶梯：先问这功能要不要存在，再问代码库里有没有、标准库有没有、平台原生有没有，一路问到"能不能一行写完"。作者用真实 Claude Code 会话在 tiangolo/full-stack-fastapi-template 上跑了 12 个功能任务 + 6 个安全任务，代码量降 54%、token 降 22%、成本降 20%、耗时降 27%，安全率保持 100%，而对照组那句七个词的 YAGNI 提示词掉了一次路径穿越校验。支持 Claude Code、Codex、Copilot CLI、OpenCode、Gemini 等 20 个 agent 宿主。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上周我给自己的一个内部工具加个” 选日期” 的输入框。需求一句话：表单里加个日期选择器，能选年月日就行。</p>
+<p>我把这句话丢给 agent，然后去泡了杯咖啡。</p>
+<p>回来的时候屏幕上滚过一长串东西。它装了 flatpickr，写了一个 <code>DatePicker.tsx</code> 包装组件，配了一份 <code>datepicker.css</code>，把 locale 抽成了 props，为” 以后可能要支持范围选择” 预留了一个 <code>mode</code> 参数，最后在对话框里问我：时区要按用户本地还是 UTC 存？要不要顺便把 dayjs 也引进来统一处理？</p>
+<p><code>git diff</code> 显示 400 多行新增，一个新依赖，四个新文件。</p>
+<p>我盯着看了一会儿，把整个 diff 撤了，手写了一行：</p>
+<figure class="highlight html"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"date"</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>浏览器自带的。有键盘可访问性，有本地化，有原生的日历弹层，移动端还会调起系统滚轮。这个功能在所有主流浏览器上跑了很多年。</p>
+<p>那天晚上我在 GitHub Trending 上刷到 DietrichGebert/ponytail，README 第一屏的例子和我白天遇到的事一模一样。它的描述只有一句：让你的 AI agent 像屋里最懒的那个资深工程师一样思考。</p>
+<p>127.5k stars，6.8k forks，当日新增 2.8k stars，MIT 协议。我花了两天把它的技能文本、hooks 实现和基准测试报告翻完，写下来的是我看到的东西。</p>
+<hr>
+<h2 id="一、它想解决的问题：agent-的”过度建造”是结构性的"><a href="#一、它想解决的问题：agent-的”过度建造”是结构性的" class="headerlink" title="一、它想解决的问题：agent 的”过度建造”是结构性的"></a>一、它想解决的问题：agent 的” 过度建造” 是结构性的</h2><p>先说清楚我为什么觉得这个问题值得单独做一个项目。</p>
+<p>AI agent 写出臃肿代码，不是模型不聪明。恰恰相反，它太想表现得聪明。</p>
+<p>训练语料里的高分回答长什么样？分小标题、给多个方案、考虑扩展性、附带错误处理和类型注解、结尾还有一段” 进一步优化的方向”。这套结构在 Stack Overflow 的高赞回答里是对的，在教程文章里是对的，在面试题解里也是对的。于是模型学会了：详尽 = 优质。</p>
+<p>问题是，写业务代码的时候，详尽 = 债务。</p>
+<p>多出来的每一个抽象层，都是半年后有人要读懂的东西。那些” 为将来预留” 的参数，从来没人传过，但每次改动都要绕开。新加的依赖带来一条供应链、一次 CVE、一份升级工作。</p>
+<p>而 agent 的工作方式让这件事更严重了。人类工程师写多了会累，累了就会偷懒，偷懒往往就写对了。Agent 不累。你让它加个日期选择器，它可以毫不迟疑地把四个文件全部写完，中间不打一个哈欠。产出速度快到你来不及在 review 环节拦住。</p>
+<p>ponytail 的作者 DietrichGebert 给这个问题起了个具体的形象：公司里那个扎马尾、戴椭圆眼镜、在职时间比版本控制系统还长的资深工程师。你拿五十行代码去找他，他看一眼，什么都不说，替你换成一行。</p>
+<p>README 里那句 tagline 我很喜欢：他什么也不说。他写一行。它能跑。</p>
+<p>项目干的事情，就是把这个人塞进你的 agent 里。</p>
+<h3 id="三个月，从建库到-12-7-万-star"><a href="#三个月，从建库到-12-7-万-star" class="headerlink" title="三个月，从建库到 12.7 万 star"></a>三个月，从建库到 12.7 万 star</h3><p>翻了一下仓库信息：建库时间 2026 年 6 月 12 日，最近一次 push 是 9 月 4 日。三个月不到，127.5k stars、6.8k forks。Trendshift 的日榜、周榜、月榜（JavaScript 分类）三块徽章挂在 README 顶上。</p>
+<p>这个速度在”agent 技能” 这个品类里不算孤例，但 ponytail 的位置有点特别。</p>
+<p>过去一年 GitHub 上冒出来的 agent 相关项目，大部分在做加法：给 agent 加记忆、加工具、加子 agent 编排、加检索、加多角色讨论。方向都是” 让 agent 能做更多事”。</p>
+<p>ponytail 是少数几个在做减法的。它不给 agent 加任何能力，它给 agent 加一道闸门。</p>
+<p>仓库的 topics 也把这个定位标得很清楚：<code>agent-skills</code>、<code>ai-agents</code>、<code>claude-code-plugin</code>、<code>cursor-rules</code>、<code>prompt-engineering</code>，最后一个是 <code>yagni</code>。整个仓库 2.3 MB，核心资产是几份 Markdown。</p>
+<p>它爆得快，我猜是因为它戳中的那个痛点，恰好是所有人在同一时间遇到的：2026 年这一年，大量的人从” 偶尔让 AI 补全一段代码” 切换到了” 让 agent 独立跑完一个工单”。工作单元一变大，过度建造这件事就从” 多写两行” 变成了” 多写四个文件”，从审美问题变成了维护成本问题。</p>
+<hr>
+<h2 id="二、核心机制：一道七级阶梯"><a href="#二、核心机制：一道七级阶梯" class="headerlink" title="二、核心机制：一道七级阶梯"></a>二、核心机制：一道七级阶梯</h2><p>ponytail 的全部核心，是一道在写代码之前必须爬的阶梯。Agent 停在第一个成立的台阶上：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1. 这东西需要存在吗？        → 不需要：跳过（YAGNI）</span><br><span class="line">2. 这个代码库里已经有了吗？  → 有：复用，别重写</span><br><span class="line">3. 标准库能做吗？            → 能：用它</span><br><span class="line">4. 平台原生特性覆盖吗？      → 覆盖：用它</span><br><span class="line">5. 已装的依赖能解决吗？      → 能：用它</span><br><span class="line">6. 能一行写完吗？            → 能：一行</span><br><span class="line">7. 到这一步才轮到：写能跑的最少代码</span><br></pre></td></tr></tbody></table></figure>
+
+<p>七个台阶，从” 根本不写” 一路降级到” 写最少”。</p>
+<p>我第一眼觉得这就是把 YAGNI 换了个说法。真正让我改主意的是第二级和第四级。</p>
+<p><strong>第二级” 代码库里已经有了吗”</strong> 是我实际吃亏最多的地方。Agent 有个顽固毛病：它读了任务，扫了几个相关文件，然后开始写一个 <code>formatCurrency</code>。而你的 <code>utils/format.ts</code> 里躺着一个一模一样的，只是名字叫 <code>toMoney</code>。技能文本里对这条的措辞很直接：先看再写，把隔壁几个文件里已经有的东西重新实现一遍，是最常见的那种垃圾。</p>
+<p><strong>第四级” 平台原生特性”</strong> 是收益最大的一级。前端这十年往浏览器里塞了太多东西，而 agent 的知识分布明显偏向 npm 生态。<code>&lt;dialog&gt;</code> 元素自带焦点陷阱、Escape 关闭、<code>::backdrop</code> 遮罩和默认可访问性，2022 年起全平台可用。但你让 agent 加个确认弹窗，它十有八九给你 <code>npm install @radix-ui/react-dialog</code>。</p>
+<p>仓库的 <code>examples/</code> 目录里逐个拆了这些对照。弹窗那个例子：Radix 版本一个依赖三十行，原生 <code>&lt;dialog&gt;</code> 版本零依赖八行。作者在结尾写了一句我认可的判断：那个库在解决一个平台已经解决了的问题。</p>
+<h3 id="examples-里那些具体的对照"><a href="#examples-里那些具体的对照" class="headerlink" title="examples/ 里那些具体的对照"></a>examples/ 里那些具体的对照</h3><p>这个目录有十一个文件，每个都是” 没装技能的写法” 对” 装了技能的写法”。挑三个我觉得最有代表性的。</p>
+<p><strong>解析 URL 查询串。</strong> 没装技能的版本第一步是 <code>npm install query-string</code>，一个 4.5 kB gzip、每周 350 万下载的包：</p>
+<figure class="highlight js"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> qs <span class="keyword">from</span> <span class="string">"query-string"</span>;</span><br><span class="line"><span class="keyword">const</span> params = qs.<span class="title function_">parse</span>(location.<span class="property">search</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>装了技能之后：</p>
+<figure class="highlight js"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ponytail: URLSearchParams does this</span></span><br><span class="line"><span class="keyword">const</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(location.<span class="property">search</span>);</span><br><span class="line">params.<span class="title function_">get</span>(<span class="string">"page"</span>);      <span class="comment">// "2"</span></span><br><span class="line">params.<span class="title function_">getAll</span>(<span class="string">"tags"</span>);   <span class="comment">// ["js", "css"]</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>URLSearchParams</code> 在每个浏览器里都有，Node.js 从 v10 起也有。编码、重复键、迭代它全处理。那个包是给一个已经全平台落地多年的 API 写的 polyfill。</p>
+<p><strong>按 key 给数组分组。</strong> 常见写法是装 lodash 用 <code>groupBy</code>，或者手搓一个 <code>reduce</code>。技能给的是：</p>
+<figure class="highlight js"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ponytail: Object.groupBy does this</span></span><br><span class="line"><span class="keyword">const</span> byStatus = <span class="title class_">Object</span>.<span class="title function_">groupBy</span>(orders, <span class="function"><span class="params">order</span> =&gt;</span> order.<span class="property">status</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>Object.groupBy</code> 在 Chrome 117、Firefox 119、Safari 17.4、Node.js 21 落地。这个例子结尾还有一句我特别认可的话：如果你要支持 IE11 或者老 Node，那个 <code>reduce</code> 一行版才是对的选择，而不是 lodash。它没有把” 用原生” 变成教条，而是让你先看目标运行时。</p>
+<p><strong>给搜索框加防抖。</strong> 这个例子是从基准测试的原始输出里逐字摘的（Haiku 4.5，temperature 1，<code>benchmarks/output.json</code>），所以能看到无技能那一版的真实形态：116 行。它先给了一个基础版的 <code>debounce</code> 函数加用法，然后给了一个” 增强版，带加载状态”，再往下是错误处理、请求取消、结果渲染。三个逐级递进的版本，全部写在同一个回答里。</p>
+<p>用户要的是一个防抖。它给了一份防抖教程。</p>
+<p>这就是我在开头说的那个结构性问题的样子：模型不是不会写防抖，它是在按” 高分回答” 的格式交付。</p>
+<h3 id="阶梯之上还有一条铁律"><a href="#阶梯之上还有一条铁律" class="headerlink" title="阶梯之上还有一条铁律"></a>阶梯之上还有一条铁律</h3><p>技能文本里反复强调的一点，是阶梯运行的时机：</p>
+<blockquote>
+<p>阶梯在你理解问题<strong>之后</strong>运行，不是代替理解。读任务，读它触及的代码，把真实调用链走一遍，然后再爬。</p>
+</blockquote>
+<p>这句话决定了 ponytail 和” 叫模型少写点” 之间的区别。它对解决方案懒，对读代码不懒。</p>
+<p>配套还有一条修 bug 的规则，我觉得比阶梯本身更值钱：</p>
+<blockquote>
+<p>Bug 修复等于修根因，不是修症状。工单描述的是症状。动手改之前，grep 出你要动的那个函数的每一个调用方，在共享函数里修一次。在共享函数里加一个 guard，比在每个调用方各加一个 guard 的 diff 更小；而只修工单点名的那条路径，会留下一堆兄弟调用方仍然是坏的。</p>
+</blockquote>
+<p>把” 最小 diff” 和” 修根因” 统一起来，这个论证我第一次见。通常这两件事被当成矛盾的：修根因意味着动公共代码，风险大改动多。ponytail 的说法是，如果你把所有调用方都算进去，修根因的总 diff 反而更小。</p>
+<h3 id="那份规则清单"><a href="#那份规则清单" class="headerlink" title="那份规则清单"></a>那份规则清单</h3><p>阶梯之外还有一组具体的禁令，我照着自己的项目对了一遍，条条命中：</p>
+<ul>
+<li>不要没人要求的抽象：不要只有一个实现的 interface，不要只生产一种产品的 factory，不要给一个永远不变的值配一个 config。</li>
+<li>不要 boilerplate，不要” 为以后” 搭的脚手架。以后可以自己给自己搭。</li>
+<li>删优先于加。无聊优先于聪明，聪明是那种半夜三点有人要解码的东西。</li>
+<li>文件数越少越好。最短的能跑的 diff 赢，但前提是你已经理解了问题。放错位置的最小改动不是懒，是第二个 bug。</li>
+<li>需求复杂？先交懒版本，在同一个回答里质疑它：「做了 X；Y 能覆盖。真需要完整的 X 就说一声。」不要为了一个可以默认掉的答案停下来等。</li>
+<li>两个标准库方案体积一样？选边界情况正确的那个。懒是少写代码，不是挑更脆的算法。</li>
+</ul>
+<p>第一条那三个例子（单实现 interface、单产品 factory、常量 config）挑得很准。这三样是我见过的 agent 生成代码里出现频率最高的三种空转抽象，而且它们都长着” 良好工程实践” 的脸。</p>
+<p>倒数第二条我尤其喜欢。它解决的是”agent 因为不确定而停下来问你” 这个消耗。很多时候 agent 卡住不是因为问题真的有歧义，是因为它想显得谨慎。这条规则给了它一个默认动作：先做简单版本，把疑问附在后面。</p>
+<h3 id="输出格式也有规矩"><a href="#输出格式也有规矩" class="headerlink" title="输出格式也有规矩"></a>输出格式也有规矩</h3><p>技能里有一节专门管输出：</p>
+<blockquote>
+<p>代码在前。然后最多三行短句：跳过了什么，什么时候再加。不要长篇大论，不要功能巡礼，不要设计笔记。如果解释比代码还长，删掉解释，每一段为简化辩护的文字都是把复杂度用散文的形式偷运回来。</p>
+</blockquote>
+<p>模式是固定的：<code>[代码] → 跳过了：[X]，等 [Y] 的时候再加。</code></p>
+<p>“每一段为简化辩护的文字都是把复杂度用散文的形式偷运回来”，这个观察挺锋利。你让 agent 写少一点，它会写同样少的代码，外加三段解释为什么这样就够了。总的阅读负担没降。</p>
+<p>同一节里还留了个口子：你明确要求的解释（一份报告、一次讲解、分阶段的说明）不算债务，要给就给全。规则只针对没人要的散文。</p>
+<hr>
+<h2 id="三、三档强度和六个命令"><a href="#三、三档强度和六个命令" class="headerlink" title="三、三档强度和六个命令"></a>三、三档强度和六个命令</h2><p>技能不是一个开关，分三档：</p>
+<table>
+<thead>
+<tr>
+<th>档位</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> lite</strong></td>
+<td> 按你要求的建，但用一行点出更懒的那个方案，你来选</td>
+</tr>
+<tr>
+<td><strong> full</strong></td>
+<td> 阶梯强制执行。标准库和原生优先，最短 diff，最短解释。默认档</td>
+</tr>
+<tr>
+<td><strong> ultra</strong></td>
+<td>YAGNI 极端派。删优先于加。先甩出一行版本，同一口气里质疑剩下的需求</td>
+</tr>
+</tbody></table>
+<p>README 用同一个需求演示了三档的差别。需求是” 给这些 API 响应加个缓存”：</p>
+<ul>
+<li>lite：「加好了。顺带一提，<code>functools.lru_cache</code> 一行就能覆盖，如果你不想自己维护一个缓存类的话。」</li>
+<li>full：「在 fetch 函数上加了 <code>@lru_cache(maxsize=1000)</code>。跳过了自定义缓存类，等 lru_cache 明显不够用了再加。」</li>
+<li>ultra：「在 profiler 说话之前不加缓存。真要加的时候：<code>@lru_cache</code>。手写的 TTL 缓存类是一个带命中率的 bug 农场。」</li>
+</ul>
+<p>三档的差别不在措辞强度，在于谁做决定。lite 把选择权交回给你，full 替你选懒的那个并告诉你跳过了什么，ultra 连需求本身一起质疑。</p>
+<p>README 里对 ultra 的说明是：当这个代码库让你个人感到被冒犯的时候，用它。</p>
+<p>命令有六个：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/ponytail [lite|full|ultra|off]</code></td>
+<td>切档位，或关掉。不带参数就报告当前档位</td>
+</tr>
+<tr>
+<td><code>/ponytail-review</code></td>
+<td>审当前 diff 的过度设计，交回一份删除清单</td>
+</tr>
+<tr>
+<td><code>/ponytail-audit</code></td>
+<td>审整个仓库，不只是 diff</td>
+</tr>
+<tr>
+<td><code>/ponytail-debt</code></td>
+<td>把你欠下的 <code>ponytail:</code> 快捷方式收成一份账本</td>
+</tr>
+<tr>
+<td><code>/ponytail-gain</code></td>
+<td>显示基准测试的收益记分板</td>
+</tr>
+<tr>
+<td><code>/ponytail-help</code></td>
+<td>命令速查</td>
+</tr>
+</tbody></table>
+<p><code>/ponytail-review</code> 是我用得最多的。它的输出不是一份改进建议，是一份删除清单，这个定位差别很大。普通的 code review 技能会告诉你” 这里可以加个错误处理”，它告诉你” 这三个文件可以删，功能不受影响”。</p>
+<p><code>/ponytail-debt</code> 对应的是技能里一条不起眼但很实在的约定。当 agent 有意抄了一条有已知天花板的近路（全局锁、O (n²) 扫描、拍脑袋的启发式），它要留一个 <code>ponytail:</code> 注释，写清天花板在哪、怎么升级：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ponytail: 全局锁，吞吐量成为瓶颈时改成按账户分锁</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后 <code>/ponytail-debt</code> 把仓库里所有这类注释收集成一份账本。这条设计解决的是” 以后再说” 变成” 永远不说” 的老毛病。TODO 注释谁都会写，但没人有那份把它们捞回来的清单。</p>
+<hr>
+<h2 id="四、基准测试：这是它和一句提示词的分水岭"><a href="#四、基准测试：这是它和一句提示词的分水岭" class="headerlink" title="四、基准测试：这是它和一句提示词的分水岭"></a>四、基准测试：这是它和一句提示词的分水岭</h2><p>看到这里你大概会想：这不就是一段提示词吗，我自己在 CLAUDE.md 里写一句” 遵循 YAGNI，优先一行方案”，效果能差多少。</p>
+<p>这个问题不是我提的，是 issue #126 里 Colin Eberhardt 提的。作者的回应方式，是把整个基准测试推翻重做了一遍。</p>
+<h3 id="先说旧基准错在哪"><a href="#先说旧基准错在哪" class="headerlink" title="先说旧基准错在哪"></a>先说旧基准错在哪</h3><p>ponytail 最早那版数据宣称” 代码量减少 80% 到 94%”。Colin 的批评有四条，每条都成立：</p>
+<ol>
+<li>单次补全不是 coding agent 的真实用法。真实工作是 agent 在真实代码库上跑很多轮。</li>
+<li>基线是一个裸的、话痨的模型。它输出散文、免责声明、多个备选方案，所以” 回答的行数” 数的是评论不是代码。这会把基线撑大，反过来抬高技能的成绩。</li>
+<li>“偏好一行方案” 可能拿安全性换行数。如果纪律是” 少写”，它会不会把输入校验和错误处理一起砍了？</li>
+<li>一句短提示词说不定就能干同样的活。</li>
+</ol>
+<p>作者在报告里直接写：这四条都合理，这次的基准是照着<strong>能推翻 ponytail</strong> 的目标搭的，不是照着讨好它。</p>
+<h3 id="新基准怎么搭"><a href="#新基准怎么搭" class="headerlink" title="新基准怎么搭"></a>新基准怎么搭</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>旧（单次）</th>
+<th>新（agentic）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>工作单元</td>
+<td>一个 prompt 一次补全</td>
+<td>一次真实的 headless Claude Code 会话</td>
+</tr>
+<tr>
+<td>基线</td>
+<td>裸 API 模型</td>
+<td><strong>同一个 Claude Code agent，不加技能</strong></td>
+</tr>
+<tr>
+<td>任务</td>
+<td> “给我写个 X”</td>
+<td> 真实仓库上的真实工单</td>
+</tr>
+<tr>
+<td>计代码量</td>
+<td>整个回答含评论</td>
+<td>落地文件的 <code>git diff</code> 新增行</td>
+</tr>
+<tr>
+<td>对照组</td>
+<td> ponytail vs 裸模型</td>
+<td>基线・ponytail・caveman・<strong>Colin 自己那句提示词</strong></td>
+</tr>
+<tr>
+<td>安全性</td>
+<td>没测</td>
+<td><strong>测了：产出的代码拿对抗性输入实际跑</strong></td>
+</tr>
+</tbody></table>
+<p>跑的仓库是 <code>tiangolo/full-stack-fastapi-template</code>，一个真实的 FastAPI + React 项目，锁在 <code>cd83fc1</code> 这个 commit 上，MIT，任何人都能复现。模型是 Haiku 4.5，每个（任务，对照组）跑 4 次，每次一份全新的仓库副本和全新的 agent 上下文。</p>
+<p>四个对照组里，<code>caveman</code> 是个很聪明的设计：它是一个<strong>只让模型说话简短、不改变建造行为</strong>的技能。如果 ponytail 的效果只是” 话少了”，caveman 应该能追平它。</p>
+<h3 id="作者自曝的那个污染-bug"><a href="#作者自曝的那个污染-bug" class="headerlink" title="作者自曝的那个污染 bug"></a>作者自曝的那个污染 bug</h3><p>报告里有一段我认为比数据本身更有价值。</p>
+<p>早期的 agentic 跑分显示 ponytail 和基线只差 4%，作者差点就这么发出去了。后来发现结果是错的：ponytail 和 caveman 都是 Claude Code <strong>插件</strong>，会触发 <code>SessionStart</code> hook，而那个 hook 在<strong>每一个</strong>对照组上都触发了，包括基线。基线组在偷偷跑 ponytail。</p>
+<p>修法是给每个对照组做隔离：用 <code>--setting-sources project,local</code> 排掉用户的全局插件，再用 <code>--plugin-dir</code> 精确加载唯一一个插件。</p>
+<p>作者写这段的理由是：这正是那种会让基准测试说谎的错误，而找到它，就是相信后面那些数字的理由。</p>
+<p>我很少看到有人在自己项目的 README 里写这种东西。它比任何一行数据都更能说明这份报告的可信度。</p>
+<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><p>12 个功能任务，相对于无技能基线（基线绝对值：每任务 191 行、349k tokens、$0.097、69 秒）：</p>
+<table>
+<thead>
+<tr>
+<th>对照组</th>
+<th align="right">代码量</th>
+<th align="right"> tokens</th>
+<th align="right"> 成本</th>
+<th align="right">耗时</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> caveman（话少对照）</td>
+<td align="right">−20%</td>
+<td align="right">+7%</td>
+<td align="right">+3%</td>
+<td align="right">+2%</td>
+</tr>
+<tr>
+<td><strong>ponytail</strong></td>
+<td align="right"><strong>−54%</strong></td>
+<td align="right"><strong>−22%</strong></td>
+<td align="right"><strong>−20%</strong></td>
+<td align="right"><strong>−27%</strong></td>
+</tr>
+<tr>
+<td>yagni-oneliner（那句提示词）</td>
+<td align="right">−33%</td>
+<td align="right">−14%</td>
+<td align="right">−21%</td>
+<td align="right">−30%</td>
+</tr>
+</tbody></table>
+<p>拆到单个任务，前端这边的差距集中在几个特定位置：</p>
+<table>
+<thead>
+<tr>
+<th>工单</th>
+<th align="right">基线</th>
+<th align="right"> caveman</th>
+<th align="right"><strong>ponytail</strong></th>
+<th align="right"> 那句提示词</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>日期选择器</td>
+<td align="right"> 404</td>
+<td align="right">202</td>
+<td align="right"><strong>23</strong></td>
+<td align="right">162</td>
+</tr>
+<tr>
+<td> 颜色选择器</td>
+<td align="right"> 287</td>
+<td align="right">188</td>
+<td align="right"><strong>23</strong></td>
+<td align="right">25</td>
+</tr>
+<tr>
+<td> 文件拖拽区</td>
+<td align="right"> 251</td>
+<td align="right">226</td>
+<td align="right"><strong>95</strong></td>
+<td align="right">175</td>
+</tr>
+<tr>
+<td> 多步向导</td>
+<td align="right"> 571</td>
+<td align="right">492</td>
+<td align="right"><strong>312</strong></td>
+<td align="right">406</td>
+</tr>
+<tr>
+<td> 星级评分</td>
+<td align="right"> 103</td>
+<td align="right">95</td>
+<td align="right"><strong>70</strong></td>
+<td align="right">101</td>
+</tr>
+<tr>
+<td> 命令面板</td>
+<td align="right"> 268</td>
+<td align="right">260</td>
+<td align="right"><strong>233</strong></td>
+<td align="right">285</td>
+</tr>
+</tbody></table>
+<p>后端六个 CRUD 工单（归档、搜索、导出 CSV、批量删除、复制、计数），四个对照组的数字几乎贴在一起，差距在个位数行。</p>
+<p>三个我认为重要的读法：</p>
+<p><strong>大幅收益全部来自” 平台原生特性替代自建组件”。</strong> 日期选择器 −94%，颜色选择器 −92%，拖拽区 −62%。基线手搓组件，ponytail 伸手去拿 <code>&lt;input type="date"&gt;</code>、<code>&lt;input type="color"&gt;</code>、<code>&lt;input type="file"&gt;</code>。而且这次的基线是真实的 Claude Code，不是话痨的裸模型，所以这个差距不再是” 基线在写散文” 的假象。</p>
+<p><strong>在不可压缩的代码上，各组收敛。</strong> 后端 CRUD 和命令面板，四组数字接近。ponytail 稍微修一点，从不膨胀，但它也没有在没水分的地方凭空造出节省。一份诚实的基准必须把这部分展示出来，这份报告展示了。</p>
+<p><strong>那句七个词的提示词，表现是飘的。</strong> 颜色选择器上它很漂亮（25 行），但日期选择器上 162 行，多步向导 406 行，命令面板 285 行<strong>高于基线的 268 行</strong>。这就是对第四条批评的回答：短提示词有时候管用有时候不管用，技能每次都管用。</p>
+<p>顺带一提成本：日期选择器那个任务，ponytail 花了约 $0.06 / 49 秒，基线约 $0.15 / 88 秒。行数少了，token 就少了。</p>
+<hr>
+<h2 id="五、懒和敷衍的分界线在哪"><a href="#五、懒和敷衍的分界线在哪" class="headerlink" title="五、懒和敷衍的分界线在哪"></a>五、懒和敷衍的分界线在哪</h2><p>第三条批评（少写会不会砍掉安全防护）单独占了一个测试轴，这是我最关心的部分。</p>
+<p>六个” 手术式” 任务，每个任务给一个起手文件，要求实现一个函数。<strong>安全要求是隐含的</strong>，就像真实工单那样写。评分器随后拿对抗性输入<strong>实际执行</strong>产出的函数：路径穿越、SQL 注入、伪造 token、畸形 CSV 行、耗尽配额的客户端。每个任务的” 坏” 参照物，是那种 happy path 正确、对抗路径不安全的偷懒版本。</p>
+<p>5 个安全任务 × 4 次 = 每组 20 次运行：</p>
+<table>
+<thead>
+<tr>
+<th>对照组</th>
+<th align="right">安全率</th>
+<th>关键位置的行数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>基线</td>
+<td align="right"> 100%（20/20）</td>
+<td>-</td>
+</tr>
+<tr>
+<td>caveman</td>
+<td align="right">100%（20/20）</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>ponytail</strong></td>
+<td align="right"><strong>100%（20/20）</strong></td>
+<td>safe-path 9.5 行</td>
+</tr>
+<tr>
+<td> yagni-oneliner</td>
+<td align="right"><strong>95%（19/20）</strong></td>
+<td>safe-path <strong>6 行</strong></td>
+</tr>
+</tbody></table>
+<p>整个论点浓缩在一个任务里。<code>safe-path</code> 要求把一个不可信的文件名拼到基准目录上：</p>
+<ul>
+<li><strong>那句提示词</strong>写出了最少的行数（6 行），四次里有一次不安全，一个 <code>../../</code> 文件名逃出了目录。</li>
+<li><strong>ponytail</strong> 写了约 9.5 行，四次全安全。</li>
+</ul>
+<p>ponytail 多留的那三行，就是路径穿越校验。</p>
+<p>“少写” 这条指令，在没有判断力的时候，砍掉的是防护。ponytail 的规则（<strong>永远不要把信任边界上的输入校验简化掉</strong>）把它留住了。</p>
+<p>技能文本里那份” 不许懒” 的清单写得很具体：</p>
+<blockquote>
+<p>不许懒的地方：理解问题（读全、走通真实流程，再挑台阶。一个你不理解的小 diff 只是伪装成效率的懒惰）、信任边界上的输入校验、防止数据丢失的错误处理、安全、可访问性、真实硬件需要的标定、以及任何你明确要求的东西。</p>
+</blockquote>
+<p>最后那条硬件标定我没想到会出现在这里：</p>
+<blockquote>
+<p>硬件永远不是纸面上的理想值。真实的时钟会漂，真实的传感器会偏，PCA9685 会快跑几个百分点。留下那个校准旋钮，而不只是更少的代码，物理世界需要的调节是一个极简模型看不见的。</p>
+</blockquote>
+<p>作者八成是被真实的舵机坑过。</p>
+<p>还有一条我准备直接抄进自己项目的：</p>
+<blockquote>
+<p>没有配套检查的懒代码是未完成的。非平凡逻辑（一个分支、一个循环、一个解析器、一条涉及金额或安全的路径）要留下<strong>一个</strong>可运行的检查，即那个逻辑坏掉时最先失败的最小东西：一个基于 assert 的自检，或者一个小测试文件。不要框架，不要 fixture。平凡的一行代码不需要测试，YAGNI 对测试同样适用。</p>
+</blockquote>
+<p>一个检查，不是一套测试。这个量级把”agent 顺手生成 200 行永远没人看的测试” 这个问题堵住了。</p>
+<hr>
+<h2 id="六、怎么跨-20-个宿主落地"><a href="#六、怎么跨-20-个宿主落地" class="headerlink" title="六、怎么跨 20 个宿主落地"></a>六、怎么跨 20 个宿主落地</h2><p>技术上 ponytail 没有什么复杂的东西，但它的分发做得很扎实。</p>
+<p>核心资产是纯文本：<code>skills/</code> 下六个 <code>SKILL.md</code>，加一份仓库根目录的 <code>AGENTS.md</code>。规则本身不到 40 行。</p>
+<p>难的是让这段文本在 20 个 agent 宿主里都能<strong>持续生效</strong>。仓库根目录那一长串点开头的目录就是干这个的：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.claude-plugin/   .codex-plugin/   .devin-plugin/   .grok-plugin/</span><br><span class="line">.cursor/          .windsurf/       .clinerules/     .kiro/</span><br><span class="line">.qoder/           .openclaw/       .opencode/       .agents/</span><br><span class="line">AGENTS.md         gemini-extension.json</span><br></pre></td></tr></tbody></table></figure>
+
+<p>每个生态一套自己的规则文件格式，作者一个个适配过去。<code>scripts/check-rule-copies.js</code> 负责在 CI 里检查这些副本有没有互相跑偏，改了规则文本忘了同步，测试直接失败。</p>
+<p>分发上分成两个层级：</p>
+<p><strong>指令层（instruction-only）</strong>：Cursor、Windsurf、Cline、Copilot Chat、Aider、Kiro、Zed 这些，复制一个规则文件进去就行。拿到的是常驻规则，拿不到档位切换和 hooks。</p>
+<p><strong>插件层（plugin）</strong>：Claude Code、Codex、Copilot CLI、OpenCode、Gemini CLI、Pi、Hermes、Grok Build、Devin CLI、OpenClaw、Swival、Qoder 这些，装插件，多拿两个 Node.js 生命周期 hook。</p>
+<p>hooks 干的事情很小：</p>
+<ul>
+<li><code>ponytail-activate.js</code>：会话开始时激活默认档位</li>
+<li><code>ponytail-instructions.js</code>：每一轮 prompt 都把规则文本重新注入一次</li>
+<li><code>ponytail-mode-tracker.js</code>：跟踪当前档位</li>
+<li><code>ponytail-subagent.js</code>：往子 agent 里注入规则</li>
+<li><code>ponytail-statusline.sh</code> / <code>.ps1</code>：状态栏显示当前档位</li>
+</ul>
+<p>第二个 hook 是关键。<strong>每一轮都重新注入</strong>，对抗的是长会话里的规则漂移。技能文本开头那句”ACTIVE EVERY RESPONSE. No drift back to over-building”，靠的就是这个机制而不是模型的自觉。跑过长会话的都知道，二十轮之后系统提示词里的约束会变得很淡。</p>
+<p>子 agent 注入那条也想得比较细。默认往每一个通过 Agent 工具派生的子 agent 里注规则，但可以用 <code>PONYTAIL_SUBAGENT_MATCHER</code> 环境变量传一个正则来限定范围。比如你不想让只读的搜索型子 agent 也背上这套规则，设成 <code>^general$</code> 就只注入通用型的。正则不锚定、大小写不敏感，写错了或者宿主没报告子 agent 类型，都退回到” 全部注入”。</p>
+<p>默认档位有两种设法：<code>PONYTAIL_DEFAULT_MODE</code> 环境变量，或者 <code>~/.config/ponytail/config.json</code> 里的 <code>defaultMode</code> 字段。Windows 上路径是 <code>%APPDATA%\ponytail\config.json</code>。不设就是 <code>full</code>。</p>
+<p>卸载这块作者也考虑到了。插件目录之外，ponytail 会写三处状态：档位标记、<code>~/.config/ponytail/config.json</code>、以及（如果你接受了那个安装提示）<code>~/.claude/settings.json</code> 里的一个 <code>statusLine</code> 条目。<code>node scripts/uninstall.js</code> 负责清掉这些。README 特意标了一句：<strong>先跑这个脚本，再执行宿主的卸载命令</strong>。因为脚本本身就是插件文件之一，先卸插件就把脚本一起删了。</p>
+<p>这个细节挺能说明作者的状态：他真的自己走过一遍完整的卸载流程。</p>
+<hr>
+<h2 id="七、快速上手"><a href="#七、快速上手" class="headerlink" title="七、快速上手"></a>七、快速上手</h2><p>Claude Code 装法是两条命令，README 特意注明要<strong>分两次发送</strong>：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/plugin marketplace add DietrichGebert/ponytail</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/plugin install ponytail@ponytail</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Codex：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">codex plugin marketplace add DietrichGebert/ponytail</span><br><span class="line">codex plugin add ponytail@ponytail</span><br></pre></td></tr></tbody></table></figure>
+
+<p>装完跑 <code>codex</code>，进 <code>/hooks</code> 审查并信任那两个生命周期 hook，然后开一个新线程。</p>
+<p>GitHub Copilot CLI：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">copilot plugin marketplace add DietrichGebert/ponytail</span><br><span class="line">copilot plugin install ponytail@ponytail</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Copilot CLI 会按插件名给命令加命名空间，所以调用长这样：<code>/ponytail:ponytail ultra</code>、<code>/ponytail:ponytail-review</code>。</p>
+<p>OpenCode 改 <code>opencode.json</code>：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span> <span class="attr">"plugin"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"@dietrichgebert/ponytail"</span><span class="punctuation">]</span> <span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>Gemini CLI：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gemini extensions install https://github.com/DietrichGebert/ponytail</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Google 正在把 Gemini CLI 改名成 Antigravity CLI（<code>agy</code> 二进制），同一个扩展也能装过去，复用的是仓库里那份 <code>gemini-extension.json</code>。</p>
+<p>Cursor / Windsurf / Cline / Kiro 这些，从仓库里复制对应的规则文件到你的项目：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Cursor</span></span><br><span class="line"><span class="built_in">cp</span> .cursor/rules/ponytail.mdc ~/projects/yourapp/.cursor/rules/</span><br><span class="line"><span class="comment"># Kiro 全局</span></span><br><span class="line"><span class="built_in">cp</span> .kiro/steering/ponytail.md ~/.kiro/steering/</span><br></pre></td></tr></tbody></table></figure>
+
+<p>还有一条零配置路径：很多 agent（Codex 的 VS Code 扩展、Amp、Jules、CodeWhale、Swival、Qoder）会自动读项目根目录的 <code>AGENTS.md</code>。这个仓库根目录就有一份，直接复制到你的项目根目录，什么都不用装。想全局生效就放 <code>~/.codex/AGENTS.md</code>。</p>
+<p>一个前置条件：Claude Code 和 Codex 的插件要跑两个 Node.js hook，<code>node</code> 得在 PATH 上。用 Nix 或 nvm 的注意，得在<strong>非交互 shell</strong> 的 PATH 上。不在也不会炸，只是常驻激活那部分静默失效，技能本身还能用。</p>
+<p>装完验证一下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/ponytail</span><br></pre></td></tr></tbody></table></figure>
+
+<p>不带参数会报告当前档位。然后随便找个最近的 diff 跑：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/ponytail-review</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我在自己一个跑了三个月的小项目上跑了 <code>/ponytail-audit</code>，它给我列出来的第一条是一个只有一个实现类的 interface，第二条是一个包了三层但每层都只是转发的 service。两条都对。</p>
+<hr>
+<h2 id="八、总结"><a href="#八、总结" class="headerlink" title="八、总结"></a>八、总结</h2><p>ponytail 的形态是一段不到 40 行的规则文本，这个体量让人容易低估它。我看完之后觉得它有三个地方做对了：</p>
+<p><strong>它约束的是建造行为，不是说话方式。</strong> FAQ 里作者主动划清了和 caveman 的边界：caveman 压缩 agent 说的话，ponytail 压缩 agent 建的东西。两者不重叠，caveman 让代码一个字节不变，ponytail 不碰散文。基准测试里 caveman 那一列证实了这个划分：话少下来了，代码只降 20%，token 反而涨了 7%。</p>
+<p><strong>它把” 懒” 和” 敷衍” 的边界写死了。</strong> 七级阶梯负责压缩解决方案，那份” 不许懒” 的清单负责守住底线：理解问题、信任边界校验、防数据丢失的错误处理、安全、可访问性、硬件标定。安全轴的数据说明这条边界是有效的，而少了它的那个对照组，四次里掉了一次。</p>
+<p><strong>它有一份能推翻自己的基准测试。</strong> 换掉话痨基线，加上” 只让说话简短” 的对照组，把批评者自己的提示词也拉进来当一列，自曝一个差点让结果反转的污染 bug，最后在 Limitations 里承认只跑了 Haiku 一个模型、n=4、安全测试只是地板不是证明。这份报告的可信度，来自作者试图证伪自己的那部分。</p>
+<h3 id="适合谁"><a href="#适合谁" class="headerlink" title="适合谁"></a>适合谁</h3><p><strong>每天用 agent 写业务代码的人。</strong> 收益最直接。你不需要在每次对话里手打” 别过度设计”，也不用眼睁睁看着 agent 在长会话第二十轮忘了这回事。</p>
+<p><strong>做前端的人。</strong> 收益上限最高。基准里的大幅下降全部集中在平台原生特性能替代自建组件的场景，而这类场景在前端最密集。</p>
+<p><strong>维护老项目的人。</strong> <code>/ponytail-audit</code> 和 <code>/ponytail-review</code> 可以当独立工具用，不必开常驻模式。</p>
+<p><strong>带团队的人。</strong> 那份 <code>AGENTS.md</code> 可以直接进你的仓库，配合 <code>/ponytail-review</code> 当 PR 前的自查步骤。</p>
+<h3 id="不适合谁"><a href="#不适合谁" class="headerlink" title="不适合谁"></a>不适合谁</h3><p><strong>在写框架或者公共库的人。</strong> 你的抽象是产品的一部分，” 只有一个实现的 interface” 在库设计里经常是对的。ultra 档会跟你打架，建议用 lite 或者干脆关掉。</p>
+<p><strong>需求本身就要求可扩展性的场景。</strong> 技能文本里写了” 任何你明确要求的东西” 不在简化范围内，所以你只要说清楚就行。但如果你的项目大部分需求都长这样，常驻这个技能的收益会被反复的解释成本吃掉。</p>
+<p><strong>推理型模型的用户要注意成本方向。</strong> README 里作者点了一句：降低成本和延迟只是” 跟着阶梯走” 的模型上的副作用，一个花思考 token 去逐级斟酌台阶的简洁推理模型可能反着来，在 GPT-5.5 上就是这样。</p>
+<h3 id="局限"><a href="#局限" class="headerlink" title="局限"></a>局限</h3><p>基准测试只跑了 Haiku 4.5 一个模型。作者自己在 Limitations 里承认，更大的模型可能会收窄这个差距（它们需要的手把手更少），也可能拉大。harness 支持 Sonnet 和 Opus，作者出于成本停在了 Haiku。</p>
+<p>安全测试是地板不是证明。六个手术式任务、确定性检查，说明的是” 某个对照组会不会掉一个<strong>已知的</strong>防护”，不是” 代码是安全的”。</p>
+<p>n=4，前端代码量的方差不小（手搓一个组件在 300 到 570 行之间浮动），均值稳定但不紧。</p>
+<p>还有 219 个 open issues。项目今年六月才建库，九月初还在密集提交，生态适配面铺得很开（20 个宿主），这个 issue 数量在我看来是正常的活跃度，不是失修的信号。但如果你用的是那些冷门宿主，做好偶尔踩坑的准备。</p>
+<hr>
+<p>最后回到我那个日期选择器。</p>
+<p>装上 ponytail 之后我重新问了一遍同样的问题。这次它给我的是：</p>
+<figure class="highlight html"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- ponytail: browser has one --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"date"</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>外加两行说明：跳过了 flatpickr 和包装组件；需要日期范围选择的时候再加。</p>
+<p>咖啡还没凉。</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/DietrichGebert/ponytail">https://github.com/DietrichGebert/ponytail</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/09/05/dietrichgebert-ponytail-lazy-senior-dev-ai-agent/" title="DietrichGebert&#x2F;ponytail：127.5k stars 的 &quot;懒惰资深工程师&quot; 技能，把 AI Agent 从 404 行的日期选择器里拽出来">https://www.daishengli.top/2026/09/05/dietrichgebert-ponytail-lazy-senior-dev-ai-agent/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/AI-Coding/" rel="tag"># AI Coding</a>
+              <a href="/tags/ponytail/" rel="tag"># ponytail</a>
+              <a href="/tags/Agent-Skills/" rel="tag"># Agent Skills</a>
+              <a href="/tags/YAGNI/" rel="tag"># YAGNI</a>
+              <a href="/tags/%E8%BF%87%E5%BA%A6%E8%AE%BE%E8%AE%A1/" rel="tag"># 过度设计</a>
+              <a href="/tags/%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B/" rel="tag"># 提示词工程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/25/tauricresearch-tradingagents-multi-agent-llm-financial-framework/" rel="prev" title="99.9k stars 的 TradingAgents：UC 系出身的多 Agent 交易框架，把 &quot;研究员 &#x2F; 交易员 &#x2F; 风控&quot; 塞进一张 LangGraph">
+                  <i class="fa fa-angle-left"></i> 99.9k stars 的 TradingAgents：UC 系出身的多 Agent 交易框架，把 "研究员 / 交易员 / 风控" 塞进一张 LangGraph
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/06/anomalyco-opencode-open-source-ai-coding-agent/" rel="next" title="anomalyco&#x2F;opencode：204.7k stars 的开源 AI 编码 Agent，客户端 &#x2F; 服务端分离让 TUI、桌面、Web 共享同一个大脑">
+                  anomalyco/opencode：204.7k stars 的开源 AI 编码 Agent，客户端 / 服务端分离让 TUI、桌面、Web 共享同一个大脑 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

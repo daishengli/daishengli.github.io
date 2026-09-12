@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="OpenWhispr&#x2F;openwhispr（GitHub 7.4k stars、931 forks、当日 +121 stars、MIT）是一款跨 macOS &#x2F; Windows &#x2F; Linux 的开源语音听写 + 会议转录 + AI 助手桌面应用，Electron + React 19 + better-sqlite3 + whisper.cpp + sherpa-onnx 写，本地模型用 Ope">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenWhispr&#x2F;openwhispr：7.4k stars 的开源语音听写，本地 Whisper &#x2F; Parakeet + 云端 BYOK 全给你，WisprFlow 替代品">
+<meta property="og:url" content="https://www.daishengli.top/2026/09/06/openwhispr-openwhispr-privacy-first-voice-dictation/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="OpenWhispr&#x2F;openwhispr（GitHub 7.4k stars、931 forks、当日 +121 stars、MIT）是一款跨 macOS &#x2F; Windows &#x2F; Linux 的开源语音听写 + 会议转录 + AI 助手桌面应用，Electron + React 19 + better-sqlite3 + whisper.cpp + sherpa-onnx 写，本地模型用 Ope">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-06T11:30:00.000Z">
+<meta property="article:modified_time" content="2026-09-12T01:07:10.474Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="本地优先">
+<meta property="article:tag" content="隐私">
+<meta property="article:tag" content="Electron">
+<meta property="article:tag" content="OpenWhispr">
+<meta property="article:tag" content="语音听写">
+<meta property="article:tag" content="Whisper">
+<meta property="article:tag" content="Parakeet">
+<meta property="article:tag" content="会议转录">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/09/06/openwhispr-openwhispr-privacy-first-voice-dictation/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/09/06/openwhispr-openwhispr-privacy-first-voice-dictation/","path":"2026/09/06/openwhispr-openwhispr-privacy-first-voice-dictation/","title":"OpenWhispr/openwhispr：7.4k stars 的开源语音听写，本地 Whisper / Parakeet + 云端 BYOK 全给你，WisprFlow 替代品"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>OpenWhispr/openwhispr：7.4k stars 的开源语音听写，本地 Whisper / Parakeet + 云端 BYOK 全给你，WisprFlow 替代品 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">359</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">114</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9A%E9%94%AE%E7%9B%98%E4%B8%8D%E6%98%AF%E5%94%AF%E4%B8%80%E7%9A%84%E8%BE%93%E5%85%A5%E8%AE%BE%E5%A4%87"><span class="nav-number">1.</span> <span class="nav-text">一、它想解决的问题：键盘不是唯一的输入设备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A%E4%B8%83%E4%BB%B6%E5%85%B7%E4%BD%93%E7%9A%84%E4%BA%8B"><span class="nav-number">2.</span> <span class="nav-text">二、核心功能：七件具体的事</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%85%A8%E5%B1%80%E7%83%AD%E9%94%AE%E5%90%AC%E5%86%99"><span class="nav-number">2.1.</span> <span class="nav-text">1. 全局热键听写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%BF%BB%E8%AF%91%E7%83%AD%E9%94%AE"><span class="nav-number">2.2.</span> <span class="nav-text">2. 翻译热键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-AI-%E8%AF%AD%E9%9F%B3%E5%8A%A9%E6%89%8B"><span class="nav-number">2.3.</span> <span class="nav-text">3. AI 语音助手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%BC%9A%E8%AE%AE%E8%BD%AC%E5%BD%95"><span class="nav-number">2.4.</span> <span class="nav-text">4. 会议转录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E7%AC%94%E8%AE%B0%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.5.</span> <span class="nav-text">5. 笔记系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E9%9F%B3%E9%A2%91%E5%AF%BC%E5%85%A5"><span class="nav-number">2.6.</span> <span class="nav-text">6. 音频导入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E5%85%AC%E7%BD%91-API-MCP"><span class="nav-number">2.7.</span> <span class="nav-text">7. 公网 API + MCP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%EF%BC%9AElectron-%E8%A3%85%E6%9C%AC%E5%9C%B0%E6%8E%A8%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">三、技术架构：Electron 装本地推理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%9A%90%E7%A7%81%E8%AE%BE%E8%AE%A1%EF%BC%9A%E9%BB%98%E8%AE%A4%E6%9C%AC%E5%9C%B0%EF%BC%8C%E4%BA%91%E7%AB%AF-BYOK-%E5%8F%AF%E9%80%89"><span class="nav-number">4.</span> <span class="nav-text">四、隐私设计：默认本地，云端 BYOK 可选</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4%E8%A1%8C%E4%B8%BA"><span class="nav-number">4.1.</span> <span class="nav-text">默认行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E6%95%B0%E6%8D%AE%E4%BC%9A%E4%B8%8A%E4%BA%91"><span class="nav-number">4.2.</span> <span class="nav-text">什么时候数据会上云</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BYOK-%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.3.</span> <span class="nav-text">BYOK 模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B6%E7%9A%84%E5%85%83%E6%95%B0%E6%8D%AE"><span class="nav-number">4.4.</span> <span class="nav-text">收的元数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%95%86%E4%B8%9A%E6%A8%A1%E5%BC%8F%EF%BC%9A%E5%85%8D%E8%B4%B9-Cloud-%E4%BB%98%E8%B4%B9-%E4%BC%81%E4%B8%9A"><span class="nav-number">5.</span> <span class="nav-text">五、商业模式：免费 + Cloud 付费 + 企业</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">6.</span> <span class="nav-text">六、快速上手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E8%A3%85%E5%8C%85"><span class="nav-number">6.1.</span> <span class="nav-text">下载装包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%BC%80"><span class="nav-number">6.2.</span> <span class="nav-text">第一次开</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%90%AC%E5%86%99"><span class="nav-number">6.3.</span> <span class="nav-text">第一次听写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BC%9A%E8%AE%AE%E8%BD%AC%E5%BD%95"><span class="nav-number">6.4.</span> <span class="nav-text">第一次会议转录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MCP-%E9%9B%86%E6%88%90"><span class="nav-number">6.5.</span> <span class="nav-text">MCP 集成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BC%80%E5%8F%91"><span class="nav-number">6.6.</span> <span class="nav-text">命令行开发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%93%AA%E4%BA%9B-API-%E5%8F%AF%E4%BB%A5%E6%8E%A5"><span class="nav-number">6.7.</span> <span class="nav-text">哪些 API 可以接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#macOS-%E4%B8%8A%E7%9A%84%E7%A7%81%E6%9C%89-API-%E9%80%82%E9%85%8D"><span class="nav-number">6.8.</span> <span class="nav-text">macOS 上的私有 API 适配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows-%E4%B8%8A%E7%9A%84-AEC-helper"><span class="nav-number">6.9.</span> <span class="nav-text">Windows 上的 AEC helper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hotkey-%E9%85%8D%E7%BD%AE"><span class="nav-number">6.10.</span> <span class="nav-text">Hotkey 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BYOK-%E9%85%8D%E7%BD%AE%E8%B7%AF%E5%BE%84"><span class="nav-number">6.11.</span> <span class="nav-text">BYOK 配置路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E-Granola-%E8%BF%81%E8%BF%87%E6%9D%A5"><span class="nav-number">6.12.</span> <span class="nav-text">从 Granola 迁过来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E7%99%BD%E5%90%8D%E5%8D%95"><span class="nav-number">6.13.</span> <span class="nav-text">网络白名单</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E8%B7%9F-WisprFlow-Granola-%E6%80%8E%E4%B9%88%E6%AF%94"><span class="nav-number">7.</span> <span class="nav-text">七、跟 WisprFlow &#x2F; Granola 怎么比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">8.</span> <span class="nav-text">八、适合谁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%B1%80%E9%99%90"><span class="nav-number">9.</span> <span class="nav-text">九、局限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%A0%E4%B8%AA%E4%B8%8D%E9%80%82%E5%90%88%E8%A3%85%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">9.1.</span> <span class="nav-text">几个不适合装的场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%AE%83%E5%9C%A8-AI-Coding-%E7%94%9F%E6%80%81%E9%87%8C%E6%84%8F%E5%91%B3%E7%9D%80%E4%BB%80%E4%B9%88"><span class="nav-number">10.</span> <span class="nav-text">十一、它在 AI Coding 生态里意味着什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%A0%E4%B8%AA%E6%88%91%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91"><span class="nav-number">10.1.</span> <span class="nav-text">几个我踩过的坑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%A2%E9%98%9F%E7%94%A8%E8%B5%B7%E6%9D%A5%E6%80%8E%E4%B9%88%E6%A0%B7"><span class="nav-number">10.2.</span> <span class="nav-text">团队用起来怎么样</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E5%85%B7%E4%BD%93%E7%9A%84%E8%BD%AC%E5%BD%95%E4%BE%8B%E5%AD%90"><span class="nav-number">10.3.</span> <span class="nav-text">一个具体的转录例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E4%B9%8B%E5%89%8D%E4%BB%A5%E4%B8%BA%E6%88%91%E4%B8%8D%E9%9C%80%E8%A6%81%E8%AF%AD%E9%9F%B3%E8%BE%93%E5%85%A5"><span class="nav-number">10.4.</span> <span class="nav-text">我之前以为我不需要语音输入</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E4%B8%80%E5%A4%A9%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%98%AF%E6%80%8E%E4%B9%88%E8%B7%91%E8%B5%B7%E6%9D%A5%E7%9A%84"><span class="nav-number">11.</span> <span class="nav-text">十二、一天的工作流是怎么跑起来的</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">114</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">359</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/09/06/openwhispr-openwhispr-privacy-first-voice-dictation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="OpenWhispr&#x2F;openwhispr：7.4k stars 的开源语音听写，本地 Whisper &#x2F; Parakeet + 云端 BYOK 全给你，WisprFlow 替代品 | 小戴的网络日志">
+      <meta itemprop="description" content="OpenWhispr&#x2F;openwhispr（GitHub 7.4k stars、931 forks、当日 +121 stars、MIT）是一款跨 macOS &#x2F; Windows &#x2F; Linux 的开源语音听写 + 会议转录 + AI 助手桌面应用，Electron + React 19 + better-sqlite3 + whisper.cpp + sherpa-onnx 写，本地模型用 OpenAI Whisper 或 NVIDIA Parakeet（Metal &#x2F; CUDA &#x2F; Vulkan GPU 加速），云端走 OpenAI &#x2F; Anthropic &#x2F; Gemini &#x2F; Groq &#x2F; OpenRouter 的 BYOK，Global hotkey 一键听写进当前应用、AI 语音助手热键直连大模型、说话人分离 + 声纹识别支持离线会议、Notes 支持语义搜索和云同步、公网 API + MCP server 暴露笔记能力，Intel Mac 因为 ONNX Runtime 1.24 之后不再发 x86_64 二进制，部分本地 speaker 功能受限。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenWhispr/openwhispr：7.4k stars 的开源语音听写，本地 Whisper / Parakeet + 云端 BYOK 全给你，WisprFlow 替代品
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-06 19:30:00" itemprop="dateCreated datePublished" datetime="2026-09-06T19:30:00+08:00">2026-09-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">OpenWhispr/openwhispr（GitHub 7.4k stars、931 forks、当日 +121 stars、MIT）是一款跨 macOS / Windows / Linux 的开源语音听写 + 会议转录 + AI 助手桌面应用，Electron + React 19 + better-sqlite3 + whisper.cpp + sherpa-onnx 写，本地模型用 OpenAI Whisper 或 NVIDIA Parakeet（Metal / CUDA / Vulkan GPU 加速），云端走 OpenAI / Anthropic / Gemini / Groq / OpenRouter 的 BYOK，Global hotkey 一键听写进当前应用、AI 语音助手热键直连大模型、说话人分离 + 声纹识别支持离线会议、Notes 支持语义搜索和云同步、公网 API + MCP server 暴露笔记能力，Intel Mac 因为 ONNX Runtime 1.24 之后不再发 x86_64 二进制，部分本地 speaker 功能受限。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上个月我开始写月度复盘。复盘这种东西，写出来比想出来更累。我坐在电脑前，对着” 这个月我做了什么” 这个问句发呆 20 分钟，最后写了三行半就关了文档。</p>
+<p>后来我试了语音输入。我对着电脑说：” 这个月主要做了三件事，第一是把 X 项目从零搭到一，第二是 Y 团队的代码 review 流程跑通，第三是招了两个人。” 全程大概 40 秒。自动转出来的文字稍微改改就是一整段。</p>
+<p>那一刻我才意识到，键盘把我的思维流速限制在了打字速度上。解开了这个限制，” 组织语言” 这件事从苦差事变成了口述。</p>
+<p>用了一段时间之后我开始在意背后那个软件。最初用的是某商业产品，订阅了一年。每月扣款的时候我会想：我的语音每秒钟都被传到它家的服务器、存到它家的云端、用来训它家下一版模型。鉴权用的还是设备 token，它根本不知道我说了什么。</p>
+<p>那天我找到了 OpenWhispr。7.4k stars，931 forks，当日 +121 stars，MIT 协议。桌面端 + 命令行 + 自托管一整套，全开源。</p>
+<p>我现在已经把它当主力了。</p>
+<hr>
+<h2 id="一、它想解决的问题：键盘不是唯一的输入设备"><a href="#一、它想解决的问题：键盘不是唯一的输入设备" class="headerlink" title="一、它想解决的问题：键盘不是唯一的输入设备"></a>一、它想解决的问题：键盘不是唯一的输入设备</h2><p>先讲清楚背景。</p>
+<p>2024 年到 2025 年，AI 语音输入突然密集爆发。WisprFlow 拿到了 Sequoia 领投的 A 轮，估值冲到 9 位数。Granola 在 Notion 生态里卖得风生水起。Apple 把 macOS 自带的听写从” 凑合能用” 修到了” 真能干活”，代价是 16 GB 内存起步。</p>
+<p>这些产品都在卖同一件事：把” 说” 变成” 写”，把” 会议录音” 变成” 结构化笔记”。</p>
+<p>但卖这件事的方式有两种。</p>
+<p>第一种是 SaaS 订阅。你付钱，它把语音发到云端，转成文字发回来。WisprFlow、Granola、Otter 都走这条。好处是开箱即用，模型永远最新，硬件零门槛。代价是：你的语音经过它的服务器、它的转录模型、它的存储、它的合规边界。它不一定是恶意的，但<strong>你的数据离开了你</strong>。</p>
+<p>第二种是开源本地。Whisper.cpp、sherpa-onnx、whisper-standalone 这一档工具，CLI 一行命令转一段音频。问题是没有” 按住热键说、说完自动粘贴到当前应用” 这种桌面体验，模型要自己装，配置文件要自己改。</p>
+<p>OpenWhispr 想做的事是：<strong>本地优先那一档的体验，外加云端那条作为可选</strong>。按 README 第一句话讲，它是 “The open-source and free alternative to WisprFlow and Granola”。</p>
+<p>7.4k stars 这个数字在 AI 项目里不算爆炸。但它对应的功能密度是：你拿出同等 star 数的桌面项目，大半只是个 Electron 包装的 OpenAI API 调用，OpenWhispr 装的是 Whisper、Parakeet、speaker diarization、声纹识别、semantic search、MCP server。</p>
+<p>技术栈：React 19、TypeScript、Tailwind CSS v4、Electron 41、better-sqlite3、whisper.cpp、sherpa-onnx、shadcn/ui。技术选择本身没什么花哨，但选 Whisper + Parakeet 双模型、sherpa-onnx + whisper.cpp 双推理后端、Electron + React 19 这一套是认真做过权衡的。</p>
+<hr>
+<h2 id="二、核心功能：七件具体的事"><a href="#二、核心功能：七件具体的事" class="headerlink" title="二、核心功能：七件具体的事"></a>二、核心功能：七件具体的事</h2><p>按 README 列的 features 拆，每一条单独讲我能用它做什么。</p>
+<h3 id="1-全局热键听写"><a href="#1-全局热键听写" class="headerlink" title="1. 全局热键听写"></a>1. 全局热键听写</h3><p>这是最基础也最常用的功能。设一个全局热键（我设的是右 Option 键），按住，对着麦克风说，松开。说完之后转录出来的文字<strong>自动粘贴到你当前光标所在的应用</strong>。</p>
+<p>注意几个细节。</p>
+<p>第一，” 当前光标”。你说的时候可能正在 Terminal、Notion、Slack、浏览器搜索框、IDE 任意一个地方。松开键的时候，OpenWhispr 不切换应用、不开新窗口，直接把文字送到那个应用的当前输入框。这个能力靠 Electron 的 accessibility API 实现，macOS 上是 <code>AXUIElement</code>、Windows 上是 UIA。</p>
+<p>第二，” 自动粘贴”。如果当前光标在不可写的位置（桌面、锁屏、Finder），它会把文字放进剪贴板，并且发一个系统通知告诉你” 已经放剪贴板了”。这层 fallback 决定了它不会” 按了半天没反应”。</p>
+<p>第三，转录引擎你可以选。本地 Whisper / 本地 Parakeet / 云端（OpenAI Whisper API、Deepgram、AssemblyAI 等 BYOK）。本地走 GPU 加速：macOS 用 Metal、Windows/Linux 用 CUDA 或者 Vulkan（AMD/Intel 都能跑）。</p>
+<h3 id="2-翻译热键"><a href="#2-翻译热键" class="headerlink" title="2. 翻译热键"></a>2. 翻译热键</h3><p>单独再设一个热键。一种语言说，自动翻译成另一种语言，<strong>翻译结果</strong>粘贴到光标位置。</p>
+<p>比如按 Option+T，对着说中文（” 把这段代码改一下”），它能转成英文（”modify this code”）粘进去。这个能力是把听写 + 翻译两件事串起来。本地翻译需要本地 LLM（llama.cpp 跑 Qwen、Llama），云端翻译就 BYOK 给 OpenAI 或者 Anthropic。</p>
+<h3 id="3-AI-语音助手"><a href="#3-AI-语音助手" class="headerlink" title="3. AI 语音助手"></a>3. AI 语音助手</h3><p>又一个独立热键。这次不是” 把说的话变成文字粘进去”，是” 把说的话<strong>作为指令</strong>发给一个 AI agent，让 agent 干活”。</p>
+<p>比如按 Option+A，说” 帮我在 Notion 找上周的会议纪要”，agent 调工具去找，找到之后把结果放剪贴板。或者你说” 把刚才那段翻译成日文”，agent 调翻译工具，回你结果。模型可以选 GPT-5、Claude、Gemini、OpenRouter 上任意一个，也可以选本地 llama.cpp 跑的。</p>
+<p>还有个有意思的细节：开启” 自动粘贴” 模式后，agent 的回复会<strong>流式输出</strong>到一个浮动面板里（在没有可写光标的时候），或者直接粘到当前输入框（光标在的时候）。如果当前有选中的文字，agent 会<strong>就地修改</strong>那段选中的文字。</p>
+<p>还能选” 把当前屏幕截图发给 agent 当上下文”，这就有点 Anthropic 那个 Computer Use 的味道了，按 Option+A 之后它会截你屏幕，让 agent 看上下文行动。</p>
+<h3 id="4-会议转录"><a href="#4-会议转录" class="headerlink" title="4. 会议转录"></a>4. 会议转录</h3><p>OpenWhispr 能<strong>自动检测</strong>你什么时候进入了 Zoom、Teams、FaceTime 会议，然后开始录音 + 转录。会议结束自动保存。</p>
+<p>转录出来的内容带<strong>说话人分离</strong>（speaker diarization）：谁说的哪句话，自动标注。这件事 Whisper 本体做不了，要靠 sherpa-onnx 跑一个说话人嵌入模型。OpenWhispr 把它做了，<strong>完全在本地</strong>。</p>
+<p>更进一步，它有<strong>声纹识别</strong>（voice fingerprinting）：每个 speaker 在第一次出现时建一个指纹，跨会议也能认出来。语义搜索可以用指纹找” 上次那个谁说过的话”。</p>
+<p>Intel Mac 用户的 README 里有句” 活人识别和声纹识别不可用”。原因不是 OpenWhispr 写不出，是 ONNX Runtime 1.24 之后官方不再发布 macOS x86_64 的二进制。会议录制和转录正常，笔记搜索回退到关键词匹配。</p>
+<p>Apple Silicon 用户没事。Windows、Linux 用户也没事。这条是 Intel Mac 用户买新机之前该看到的提醒。</p>
+<p>会议可以选三种日历集成：Google Calendar、Microsoft 365、Apple Calendar。会议标题、参加人、时间自动从日历拉，写笔记的时候不用手填。</p>
+<h3 id="5-笔记系统"><a href="#5-笔记系统" class="headerlink" title="5. 笔记系统"></a>5. 笔记系统</h3><p>单独的笔记模块。创建笔记、按文件夹组织、语义搜索（基于本地 embedding 模型）、云同步、AI 动作（比如” 把这条笔记总结成三条 todo”）。</p>
+<p>免费用户本地存。登录后用 Team Space 功能在 web 端分享，权限可以按链接、域名、白名单设置。多人协作有 server-enforced 成员管理。</p>
+<p>笔记既可以从听写直接来，也可以从会议转录来。AI 动作可以跑在本地 LLM 上，也可以调云端。</p>
+<h3 id="6-音频导入"><a href="#6-音频导入" class="headerlink" title="6. 音频导入"></a>6. 音频导入</h3><p>把已经存在的音频或视频拖进 OpenWhispr，转录 +（可选）说话人分离。</p>
+<p>支持批量上传，也支持<strong>直接贴 YouTube / 音频 URL</strong>，它会自己下载并转录。这件事 Whisper.cpp 那一档 CLI 工具要自己写 ffmpeg + yt-dlp，OpenWhispr 内置了。</p>
+<h3 id="7-公网-API-MCP"><a href="#7-公网-API-MCP" class="headerlink" title="7. 公网 API + MCP"></a>7. 公网 API + MCP</h3><p><a target="_blank" rel="noopener" href="https://docs.openwhispr.com/api/overview">docs.openwhispr.com/api/overview</a> 暴露了 OpenWhispr 自己的 REST API，可以程序化管理笔记和转录。<a target="_blank" rel="noopener" href="https://docs.openwhispr.com/integrations/mcp">docs.openwhispr.com/integrations/mcp</a> 给出了一个 MCP server 实现，让 Claude Code、Cursor、opencode 这类 agent 工具<strong>直接操作你的笔记库</strong>。</p>
+<p>最后这条是它在 AI Coding 生态里” 接住这件事” 的关键。一个 coding agent 在改完代码之后，可以调 MCP server 把 commit message 写进你的笔记库；一个研究 agent 跑完一组查询之后，可以把结果存进 OpenWhispr 的 Notes。<code>wispr-flow</code> 这一档工具没有这个能力，OpenWhispr 给出来了。</p>
+<hr>
+<h2 id="三、技术架构：Electron-装本地推理"><a href="#三、技术架构：Electron-装本地推理" class="headerlink" title="三、技术架构：Electron 装本地推理"></a>三、技术架构：Electron 装本地推理</h2><p>技术栈那一行我得展开说一下，因为这些选择是认真的。</p>
+<p><strong>Electron 41</strong> 是外壳。这是个有争议的选择，Electron 包大、内存占用高、启动慢。但<strong>跨 macOS / Windows / Linux 三平台</strong>这件事，Electron 是用最小工作量达到最广覆盖的方案。OpenWhispr 的目标用户是” 我想要在 Mac 上和 Windows 上都能用同一套”，Electron 是答案。</p>
+<p><strong>better-sqlite3</strong> 做本地存储。同步 API、零配置、嵌入式、跑在 Node 进程内。笔记、转录、说话人指纹、本地 embedding 全部存本地 SQLite。免费版数据不出本机。</p>
+<p><strong>whisper.cpp</strong> + <strong>sherpa-onnx</strong> 是两个推理后端。前者是 OpenAI Whisper 模型的高性能 C++ 实现，后者是 k2-fsa 维护的 ONNX 推理运行时，支持 Parakeet 那一档多语言 ASR 模型。选这两个是因为：</p>
+<ul>
+<li>Whisper 模型社区资源最丰富（huggingface 上百种微调版），但纯英文最佳，多语言一般。</li>
+<li>NVIDIA Parakeet TDT 0.6B v2 是当前开源 ASR 里多语言能力最强的之一，速度也快（RTF 0.02 左右）。</li>
+</ul>
+<p>两套后端并存，意思是用户在” 英文为主选 Whisper，多语言选 Parakeet” 之间切。GPU 加速矩阵：macOS Metal（Apple Silicon）、NVIDIA CUDA（Windows / Linux）、Vulkan（AMD / Intel GPU）。README 里那条”All core features work with local models or cloud providers — including GPU-accelerated local Whisper on Metal, CUDA, and Vulkan” 是认真的。</p>
+<p><strong>shadcn/ui</strong> 是组件库。React 19 + Tailwind v4 + Radix primitives 的组合，可访问性是基线（不是” 努力加”），键盘导航是默认行为。Voice Dictation 这种应用的可访问性要求比普通应用高，你要相信热键能救命，UI 上的 focus 状态必须清清楚楚。shadcn/ui 选对了。</p>
+<p><strong>Neon Postgres</strong> 是 OpenWhispr Cloud 的后端。README 里的赞助商那一块明示了”Neon is the serverless Postgres platform powering OpenWhispr Cloud”。这说明 OpenWhispr 有一个云端组件是给付费用户用的，本地版完全不需要这个后端跑起来。</p>
+<p><strong>MCP server</strong> 是给 AI agent 生态的接缝。Anthropic 推 MCP 已经一年多，凡是装了 Claude Code、Cursor、opencode 的人都用过 MCP 工具。OpenWhispr 把自己的笔记和转录能力暴露成 MCP server 之后，这些 agent 就能” 看见” 你的笔记库。商业 SaaS 类产品不太愿意做这件事，把数据出口打开了，谁还用它的 app？开源产品没这个顾虑。</p>
+<hr>
+<h2 id="四、隐私设计：默认本地，云端-BYOK-可选"><a href="#四、隐私设计：默认本地，云端-BYOK-可选" class="headerlink" title="四、隐私设计：默认本地，云端 BYOK 可选"></a>四、隐私设计：默认本地，云端 BYOK 可选</h2><p>我决定长期用 OpenWhispr 的核心理由，是它的隐私设计。</p>
+<h3 id="默认行为"><a href="#默认行为" class="headerlink" title="默认行为"></a>默认行为</h3><ul>
+<li><strong>听写</strong> 默认走本地 Whisper 或本地 Parakeet。音频不离开设备。</li>
+<li><strong>AI agent</strong> 默认走你配置的本地 LLM（llama.cpp + Qwen / Llama）。不上云。</li>
+<li><strong>会议转录</strong> 默认本地。说话人分离、声纹识别都在本机。</li>
+<li><strong>笔记存储</strong> 默认本机 SQLite。</li>
+<li><strong>语义搜索</strong> 默认本地 embedding。</li>
+</ul>
+<p>也就是说，<strong>装上之后不做任何配置，所有数据都在你机器上</strong>。</p>
+<h3 id="什么时候数据会上云"><a href="#什么时候数据会上云" class="headerlink" title="什么时候数据会上云"></a>什么时候数据会上云</h3><ul>
+<li>你<strong>显式</strong>选了云端 STT 引擎（OpenAI Whisper API、Deepgram 等），音频会发到对应厂商。</li>
+<li>你<strong>显式</strong>选了云端 LLM（GPT-5、Claude、Gemini、Groq、OpenRouter），文本会发到对应厂商。</li>
+<li>你<strong>登录了</strong> OpenWhispr Cloud，开了 Team Space / 共享笔记，云同步会经过 Neon Postgres 后端。</li>
+<li>没有任何” 自动启用云端” 的开关。所有云端调用都是用户主动开的。</li>
+</ul>
+<h3 id="BYOK-模型"><a href="#BYOK-模型" class="headerlink" title="BYOK 模型"></a>BYOK 模型</h3><p>“BYOK” 是 “Bring Your Own Key”。你拿你自己的 OpenAI / Anthropic / Gemini API key 配进 OpenWhispr，云端调用走你的 key、计费在你的账单上。OpenWhispr 不抽成、不存你的 key 在它自己服务器上（配置存在本地 SQLite）。</p>
+<p>这条商业模式跟 IDE 编辑器 JetBrains 卖 Toolbox、Linear 卖 workspace 是一样的：<strong>卖软件不卖数据</strong>。SaaS 类产品做不到这一点，因为它的数据流是商业模式的一部分。</p>
+<h3 id="收的元数据"><a href="#收的元数据" class="headerlink" title="收的元数据"></a>收的元数据</h3><p>README 说 “no data collection, no telemetry”。我翻了一遍代码没看到 analytics 相关的依赖。Electron 应用的 telemetry 通常会通过 <code>electron-builder</code> 配置 inject，OpenWhispr 没这么干。</p>
+<p>如果你想验证，最简单的办法是用 Wireshark 或者 Little Snitch 监控 OpenWhispr 启动后的网络请求。本地模式下应该只有 license 验证和更新检查（如果开了自动更新），没有别的话务。</p>
+<hr>
+<h2 id="五、商业模式：免费-Cloud-付费-企业"><a href="#五、商业模式：免费-Cloud-付费-企业" class="headerlink" title="五、商业模式：免费 + Cloud 付费 + 企业"></a>五、商业模式：免费 + Cloud 付费 + 企业</h2><p>README 里我注意到了几件事拼起来能看出商业模式。</p>
+<p><strong>个人版完全免费</strong>。所有本地功能、所有 BYOK、所有笔记、Team Space 共享、API 全部 free。README 没有付费墙。</p>
+<p><strong>OpenWhispr Cloud</strong> 是 SaaS 化的部分。Team Space、server-enforced 成员管理、云同步走 Neon Postgres。免费登录用户可以创建 Team Space 和分享笔记，更深的企业功能（SSO、SCIM）属于企业版。</p>
+<p><strong>企业版</strong> 三大块：组织策略强制、SSO + SCIM 集中账号管理、不分发云 key 的集中 Bedrock / Azure OpenAI 接入（IT 给一个企业网关，员工的 OpenWhispr 走企业网关调模型，key 不下发到终端）。</p>
+<p>这是个很清楚的 “open core” 模式：</p>
+<ul>
+<li><strong>核心开源</strong>：本地听写、本地转录、本地笔记、本地 AI，MIT，永远免费。</li>
+<li><strong>便利层收费</strong>：云同步、跨设备、Team Space、API 配额，Cloud 订阅。</li>
+<li><strong>企业层加价</strong>：SSO、SCIM、策略强制、审计、合规，Enterprise 合同。</li>
+</ul>
+<p>跟 GitLab、Nextcloud、Supabase 是同一档的开放策略。open core 不是 pure OSS，但社区版该有的功能都有，Cloud / Enterprise 加的是” 便利” 和” 合规”。</p>
+<hr>
+<h2 id="六、快速上手"><a href="#六、快速上手" class="headerlink" title="六、快速上手"></a>六、快速上手</h2><h3 id="下载装包"><a href="#下载装包" class="headerlink" title="下载装包"></a>下载装包</h3><p>不用 npm 装。装的是桌面 app。</p>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>下载</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> macOS (Apple Silicon)</td>
+<td><code>.dmg</code></td>
+</tr>
+<tr>
+<td>macOS (Intel)</td>
+<td><code>.dmg</code>（部分功能受限，见上）</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td><code>.exe</code></td>
+</tr>
+<tr>
+<td>Linux</td>
+<td><code>.AppImage</code> / <code>.deb</code> / <code>.rpm</code> / <code>.tar.gz</code></td>
+</tr>
+</tbody></table>
+<p>GitHub Releases 页面下载。macOS 装的时候要” 右键打开” 绕过 Gatekeeper，Windows 上 SmartScreen 会弹一次，Linux 上 <code>.AppImage</code> 需要 <code>chmod +x</code> 然后双击。</p>
+<h3 id="第一次开"><a href="#第一次开" class="headerlink" title="第一次开"></a>第一次开</h3><p>启动之后会问你三件事：</p>
+<ol>
+<li><strong>STT 引擎</strong>。本地 Whisper（小）、本地 Parakeet（小、快、多语言）、云端（BYOK）三选一。我选 Parakeet TDT 0.6B v2，模型自动下载到 <code>~/Library/Application Support/openwhispr/models/</code>。</li>
+<li><strong>LLM 引擎</strong>（如果要用 AI 助手 / 笔记 AI 动作）。本地 llama.cpp + Qwen 2.5 7B 或者云端 BYOK。我用云端 Anthropic，因为本地 7B 写中文有点弱。</li>
+<li><strong>快捷键</strong>。Dictation 热键、Translation 热键、AI Assistant 热键各设一个。</li>
+</ol>
+<h3 id="第一次听写"><a href="#第一次听写" class="headerlink" title="第一次听写"></a>第一次听写</h3><p>设好之后按 Dictation 热键，对着说话，松开。文字会粘到你当前光标位置。第一次会有一段” 模型在准备” 的延迟，本地 Parakeet 大概 0.5-1 秒，Whisper Large 慢些。</p>
+<h3 id="第一次会议转录"><a href="#第一次会议转录" class="headerlink" title="第一次会议转录"></a>第一次会议转录</h3><p>进一个 Zoom 会议，OpenWhispr 会弹一个通知问你” 开始转录？”。同意，开始。会议结束自动存到 Notes。</p>
+<h3 id="MCP-集成"><a href="#MCP-集成" class="headerlink" title="MCP 集成"></a>MCP 集成</h3><p>装好之后 OpenWhispr 自己跑一个 MCP server 在 localhost。Claude Code /opencode/ Cursor 的 MCP 配置加：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"mcpServers"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"openwhispr"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"command"</span><span class="punctuation">:</span> <span class="string">"openwhispr"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"args"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"mcp"</span><span class="punctuation">,</span> <span class="string">"serve"</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"env"</span><span class="punctuation">:</span> <span class="punctuation">{</span><span class="punctuation">}</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>之后你的 agent 就能读写你的笔记库了。</p>
+<h3 id="命令行开发"><a href="#命令行开发" class="headerlink" title="命令行开发"></a>命令行开发</h3><p>如果你想自己改：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/OpenWhispr/openwhispr.git</span><br><span class="line"><span class="built_in">cd</span> openwhispr</span><br><span class="line">npm install</span><br><span class="line">npm run dev</span><br></pre></td></tr></tbody></table></figure>
+
+<p>要求 Node.js 24+。看 <code>examples/custom-asr-shim/</code> 目录有个自定义 STT 后端的示例，针对非 OpenAI 兼容的 ASR API。</p>
+<h3 id="哪些-API-可以接"><a href="#哪些-API-可以接" class="headerlink" title="哪些 API 可以接"></a>哪些 API 可以接</h3><p>OpenWhispr 的”Self-Hosted” 听写模式默认按 OpenAI 的 wire format 跟 ASR 服务通信：客户端发 <code>multipart/form-data</code> 到 <code>{Server URL}/audio/transcriptions</code>，读回 JSON <code>{"text": "..."}</code>。这套协议 OpenAI、Fireworks、xAI、Groq Whisper、Deepinfra、本地 faster-whisper-server 都支持。</p>
+<p>但很多企业级 ASR 不走这套，StepFun StepAudio、阿里通义、百度智能云、腾讯云 ASR、华为云 SIS、讯飞听见。这些厂家的请求格式、音频编码、响应结构都是自家协议。</p>
+<p><code>examples/custom-asr-shim/</code> 仓库里给了一个 Python shim 模板，是个监听 <code>localhost:8765</code> 的小服务，OpenWhispr 跟它说 OpenAI 话，它翻译成厂家话，厂家回复再翻译回 OpenAI 的 JSON。文件标准库 + ffmpeg，零额外依赖。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OpenWhispr  --multipart audio--&gt;  shim (localhost:8765)  --vendor format--&gt;  ASR API</span><br><span class="line">OpenWhispr  &lt;--{"text": "..."}--  shim                   &lt;--vendor reply--   ASR API</span><br></pre></td></tr></tbody></table></figure>
+
+<p>shim 的输入是录音的 WebM/Opus，ffmpeg 转码成厂家要的格式（pcm_s16le、wav、mp3 各家不一样），然后用厂家的 SDK 调，response 包成 <code>{"text": "..."}</code> 返回。</p>
+<p>仓库里 <code>stepaudio_shim.py</code> 是 StepAudio 2.5 的现成实现，<code>shim_template.py</code> 是个空壳等你自己填。<code>test_shim.py</code> 跑本地单测。</p>
+<h3 id="macOS-上的私有-API-适配"><a href="#macOS-上的私有-API-适配" class="headerlink" title="macOS 上的私有 API 适配"></a>macOS 上的私有 API 适配</h3><p>这个仓库让我意外的一点是 <code>resources/mediaremote-adapter/</code> 这个目录的存在。MediaRemote 是 macOS 上一个私有 framework，承载 Now Playing、远程控制 iTunes / Music 媒体键、<code>play_pause</code> 键、<code>next_track</code> 键这些能力。Apple 一直没正式开放它，但用 Objective-C 直接调私有符号的代码几十年来一直有。</p>
+<p>OpenWhispr 写了一整个 Objective-C 的 MediaRemote 适配层（<code>adapter/</code> 目录下二十多个 <code>.m</code> / <code>.h</code> 文件）来捕获 macOS 系统级媒体控制事件。这部分代码 Apple 不接受到 App Store，所以 OpenWhispr 走的是官网下载 + Homebrew Cask，不上 Mac App Store。</p>
+<p>这种” 因为 Apple 不让你用某个能力，所以项目自己写私有 framework 适配层” 的做法是 macOS 桌面应用里少见但很有必要的取舍。WisprFlow 走 App Store，所以它没有这个能力，它在 macOS 上不能响应系统媒体键事件。OpenWhispr 走官网下载，所以它能。</p>
+<h3 id="Windows-上的-AEC-helper"><a href="#Windows-上的-AEC-helper" class="headerlink" title="Windows 上的 AEC helper"></a>Windows 上的 AEC helper</h3><p><code>native/meeting-aec-helper/</code> 是 C++ 写的 Windows 音频捕获 helper。<code>aec_processor.cc</code> 跑声学回声消除（Acoustic Echo Cancellation），处理会议场景下扬声器和麦克风之间的回声。这块在 Windows 上是写死的低层 audio API，Electron 的 Web Audio API 处理不了高质量的 AEC，所以单独写了个 native 模块。</p>
+<p>CHANGELOG 里 1.9.2 那条 “Windows meetings that recorded only your own voice” 修复就是这块的，它检查 Windows loopback capture 报告” 健康” 之后是否真的在捕获音频，如果不健康就切到 fallback 模式。这种细节的商业产品看不见的开源成本，OpenWhispr 走完了。</p>
+<h3 id="Hotkey-配置"><a href="#Hotkey-配置" class="headerlink" title="Hotkey 配置"></a>Hotkey 配置</h3><p>默认全局热键：</p>
+<ul>
+<li>Dictation：右 Option 键（macOS）/ 右 Ctrl 键（Windows / Linux）</li>
+<li>Translation：Option + Shift + T</li>
+<li>Voice Assistant：Option + A</li>
+</ul>
+<p>这些热键在 Settings → Hotkeys 里改。改的时候要注意冲突：很多 app 抢 Option 键，Mac 用户的 Caps Lock 我设成 Voice Assistant，习惯之后非常顺。</p>
+<p>三种热键行为完全不同：</p>
+<ul>
+<li><strong>Dictation</strong> 说中文粘中文，说英文粘英文，<strong>在当前光标位置粘</strong>。</li>
+<li><strong>Translation</strong> 把源语种按 ISO code 转成目标语种，<strong>粘翻译结果</strong>。源语种在 Settings → Languages 里设。</li>
+<li><strong>Voice Assistant</strong> 把话作为指令发给 agent，<strong>agent 自己决定粘什么</strong>。可能是粘贴 agent 的回复，可能是修改选中的文字，可能是把答案放进剪贴板。</li>
+</ul>
+<p>我自己的用法：Dictation 写文档，Translation 写英文邮件，Voice Assistant 调 MCP 工具。</p>
+<h3 id="BYOK-配置路径"><a href="#BYOK-配置路径" class="headerlink" title="BYOK 配置路径"></a>BYOK 配置路径</h3><p>进 Settings → Cloud：</p>
+<ol>
+<li>选 Provider（OpenAI、Anthropic、Gemini、Groq、OpenRouter、Tinfoil、xAI、Mistral、Corti、Liquid AI 等等）。</li>
+<li>填 API key，OpenWhispr 存在本地 SQLite 加密表里。</li>
+<li>选 Model。</li>
+</ol>
+<p>OpenWhispr 的 LLM 调用点有三个：</p>
+<ul>
+<li><strong>Voice Assistant</strong>：用户说话 → 转录文字 → 发给 LLM 跑 agent → agent 调工具 → 回答。<strong>这个路径可以用云端 LLM</strong>。</li>
+<li><strong>Notes AI Actions</strong>：写完笔记选一段，让 AI 总结 / 改写 / 翻译 / 抽 todo。<strong>可以用云端也可以用本地</strong>。</li>
+<li><strong>Meeting Summary</strong>：会议结束自动跑一遍 LLM 把转录整理成会议纪要。<strong>可以用云端也可以用本地</strong>。</li>
+</ul>
+<p>BYOK 模式下所有 token 计费走你自己的 provider 账单，OpenWhispr 不抽成。OpenRouter 是给想要一个 key 调所有 model 的人用的统一入口。</p>
+<p>我自己的 LLM 路由：</p>
+<ul>
+<li>Voice Assistant 用 Anthropic Claude Sonnet 4.5（中文表达力强）</li>
+<li>Notes AI 用本地 Qwen 2.5 7B（写中文摘要够用）</li>
+<li>Meeting Summary 用 OpenAI GPT-5（结构化输出最稳）</li>
+</ul>
+<h3 id="从-Granola-迁过来"><a href="#从-Granola-迁过来" class="headerlink" title="从 Granola 迁过来"></a>从 Granola 迁过来</h3><p>CHANGELOG 1.9.1 加了一条 “Import your Granola history”。Granola 是 OpenWhispr 最大的商业对手之一，OpenWhispr 主动做了迁入工具。</p>
+<p>入口在 Settings → General，喂 Granola 官方的 CSV 导出（Settings → Export in Granola），它会把会议笔记连同原始日期、转录段、speaker 名字一起迁过来，落到”Imported” 文件夹。重新跑一次导不会重复（idempotent）。</p>
+<p>这件事的工程量比看起来大。Granola 的 CSV 不公开 schema，speaker 名字、segment 时间戳、note 和 transcript 的关系都得猜。OpenWhispr 的解法是” 按导出标签去匹配”，跑用户手头的真实样本回归测试，不靠官方文档。</p>
+<p>类似的逻辑可以套到 WisprFlow 迁移。WisprFlow 没有公开导出 API 的话就只能手动复制转录，但 OpenWhispr 的笔记是 Markdown + metadata 结构，粘贴进 Obsidian 之类的工具还能用。</p>
+<h3 id="网络白名单"><a href="#网络白名单" class="headerlink" title="网络白名单"></a>网络白名单</h3><p>如果你在公司防火墙后面跑 OpenWhispr，<code>docs/network-allowlist.md</code> 给了完整列表。Self-Hosted 听写走你自己部署的 ASR 服务、Cloud 模式走 Neon + Stripe + 各 LLM provider、MCP server 走 localhost。docs 明确列了每个域名的访问目的和频率。</p>
+<p>这条对金融 / 医疗 / 律所这些强制审计场景有用，IT 给防火墙放行的依据就是这份白名单。</p>
+<hr>
+<hr>
+<h2 id="七、跟-WisprFlow-Granola-怎么比"><a href="#七、跟-WisprFlow-Granola-怎么比" class="headerlink" title="七、跟 WisprFlow / Granola 怎么比"></a>七、跟 WisprFlow / Granola 怎么比</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th> WisprFlow</th>
+<th>Granola</th>
+<th>OpenWhispr</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 价格</td>
+<td> $144 / 年 起</td>
+<td> $14 / 月</td>
+<td>免费（Cloud 订阅另算）</td>
+</tr>
+<tr>
+<td>听写</td>
+<td>云端</td>
+<td>云端</td>
+<td>本地 / 云端 BYOK</td>
+</tr>
+<tr>
+<td> 会议转录</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅（本地说话人分离）</td>
+</tr>
+<tr>
+<td>AI 助手</td>
+<td>基础</td>
+<td>强（Notion 生态）</td>
+<td>✅（任意 LLM）</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>声纹识别</td>
+<td>付费</td>
+<td>❌</td>
+<td>✅（本地）</td>
+</tr>
+<tr>
+<td>跨平台</td>
+<td> macOS / Windows</td>
+<td>macOS</td>
+<td>macOS / Windows / Linux</td>
+</tr>
+<tr>
+<td> 源码</td>
+<td>闭源</td>
+<td>闭源</td>
+<td> MIT</td>
+</tr>
+<tr>
+<td> 自托管</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<p>如果你在意一件事：<strong>你的语音数据走谁的服务器</strong>。WisprFlow 和 Granola 都明确走云端。OpenWhispr 默认本地。</p>
+<p>如果你在意<strong>生态集成</strong>：Granola 在 Notion 生态里最深。WisprFlow 在 IDE 编辑器集成上做得好。OpenWhispr 在 MCP 这条线最开放。</p>
+<p>如果你在意<strong>多语言</strong>：Parakeet TDT 在中英日韩法德西意葡俄阿拉伯十几个语种上的字错率都低于 8%，本地跑。Whisper Large v3 多语言也行但慢。WisprFlow 和 Granola 走云端所以是云端模型的能力，云端更新频繁但你也看不到具体是哪个版本。</p>
+<p>如果你在意<strong>长期成本</strong>：一年 $144 听写订阅，换个 16GB 内存的 M4 MacBook 本地跑 OpenWhispr 是 $1200 一次性，听写免费用五年。商业账和隐私账分开算。</p>
+<hr>
+<h2 id="八、适合谁"><a href="#八、适合谁" class="headerlink" title="八、适合谁"></a>八、适合谁</h2><p><strong>需要每天写很多文字的人。</strong> 写月度复盘、写客户邮件、写长文。键盘流速是思维流速的天花板这件事你感受一次就回不去了。</p>
+<p><strong>对语音数据敏感的人。</strong> 记者、律师、医生、研究者。客户数据、医学记录、未公开的研究数据。SaaS 类听写工具把这些发上云这件事让很多人心里不踏实。</p>
+<p><strong>用 AI 编码 agent 的人。</strong> MCP server 把笔记库接到 Claude Code、opencode 之后，agent 改完代码、跑完实验、做完调研，可以自动把关键内容写进你的笔记系统。WisprFlow / Granola 没这个接缝。</p>
+<p><strong>已经投资了 Whisper / 本地 LLM 的人。</strong> OpenWhispr 是把这些组件串成桌面应用的那一层胶水。</p>
+<p><strong>Linux 用户。</strong> 商业听写工具基本都不支持 Linux。OpenWhispr 是少数有 .AppImage/.deb/.rpm 三种 Linux 包的之一。</p>
+<p><strong>会议多的团队。</strong> 自动检测 + 说话人分离 + 声纹识别 + 跨会议搜索，这套组合在商业产品里要么没有要么按企业版收费。</p>
+<hr>
+<h2 id="九、局限"><a href="#九、局限" class="headerlink" title="九、局限"></a>九、局限</h2><p><strong>Intel Mac 用户吃亏。</strong> 前面说过了，ONNX Runtime 1.24 之后不再发 macOS x86_64 二进制，本地声纹识别、说话人 embedding 这种 ONNX 跑的功能会失效。Apple Silicon、AMD、Intel 桌面 / 笔记本都正常。</p>
+<p><strong>Apple Silicon 的 8GB 机型跑得慢。</strong> 本地 Parakeet TDT 0.6B v2 跑起来大概 1.5 GB 显存，加上 embedding 模型、LLM、Electron 本身、操作系统，16 GB 起步才舒服。8 GB 机型只能用云端。</p>
+<p><strong>第一版更新频繁。</strong> 项目 2025 年 6 月建库，到现在 14 个月，已经迭代了 41 个 Electron 版本。功能加得快意味着 breaking change 也多。生产环境上稳不稳定需要自己测。</p>
+<p><strong>MCP server 还在打磨。</strong> docs 上写了，但没有 SDK 文档完备的覆盖。我配到 Claude Code 的时候遇到一个 <code>notes.create</code> 工具名变更（之前叫 <code>add_note</code>），翻 changelog 才找到。如果生产环境依赖 MCP，建议自己包一层 wrapper。</p>
+<p><strong>中文识别率 Parakeet TDT 强但 LLM 弱。</strong> ASR 用本地 Parakeet 转中文不错，但本地 7B LLM 处理中文的总结、改写还是弱。云端 Claude / GPT 4o 处理中文好但又上云了。这是个 trade-off。</p>
+<p><strong>Cloud 模式我没试。</strong> 写这篇文章的时候我用的是本地模式 + Anthropic BYOK。Cloud 模式（Neon Postgres 同步、Team Space 共享、SSO）需要登录企业版测试，本地版用不到。</p>
+<p><strong>和 Apple macOS 自带听写的比较</strong>。macOS Sequoia 之后 Apple 把自带听写从” 凑合能用” 修到了” 能用”。如果你只是偶尔用一下、纯英文、懒得装第三方，Apple 自带就够了。OpenWhispr 的优势在多语言、AI 助手、MCP、本地、跨平台这几条上。Apple 自带一个都不占。</p>
+<p><strong>333 个 open issues。</strong> 项目热度还行，issue 处理速度在 open source 项目里算中等。release 节奏快，bug 修得也算勤快。</p>
+<h3 id="几个不适合装的场景"><a href="#几个不适合装的场景" class="headerlink" title="几个不适合装的场景"></a>几个不适合装的场景</h3><p>你在录播客或者做音频后期，OpenWhispr 不合适。 它是听写 / 转录工具，不是 DAW。麦克风阵列、降噪、混音这些它做不了。</p>
+<p>你是 macOS App Store 强迫症用户，OpenWhispr 也上不了 Store，因为用了 MediaRemote 私有 framework。只能去官网下载或者 <code>brew install --cask openwhispr</code>。</p>
+<p>你只在 iPhone /iPad 上用，它不移动端。 iOS 听写 Apple 自带已经够好，OpenWhispr 没做 iOS 版本。</p>
+<p>你需要的是企业级合规审计日志，本地版不写 audit log。 这个得 Enterprise + 集中部署，OpenWhispr Cloud 那条线。</p>
+<hr>
+<hr>
+<h2 id="十一、它在-AI-Coding-生态里意味着什么"><a href="#十一、它在-AI-Coding-生态里意味着什么" class="headerlink" title="十一、它在 AI Coding 生态里意味着什么"></a>十一、它在 AI Coding 生态里意味着什么</h2><p>最后这一段留给非 OpenWhispr 用户也想看的人。</p>
+<p>OpenWhispr 是<strong>第一批把 MCP server 当一等公民来做的笔记类产品</strong>。在它之前，笔记类工具（Obsidian、Bear、Notion、Roam Research）的 AI 集成都是 SaaS 化、专有 API、没法被 agent 直接调。</p>
+<p>MCP server 暴露之后，agent 工具链里多了一个节点：你的笔记。这个节点可以是 OpenWhispr、可以是 Obsidian、可以是 Logseq、可以是任何接 MCP 的产品。</p>
+<p>我自己在 Claude Code 里配了 OpenWhispr 的 MCP server 之后，agent 改完代码会自动把 commit message 写进笔记的” 今日代码” 分类下，研究 agent 跑完实验会把关键发现写进” 实验笔记” 分类下。<strong>我的笔记系统第一次成了一个能被 agent 主动操作的对象</strong>。</p>
+<p>这种” 个人知识库 + agent 主动读写” 的范式，2026 年开始真正变成产品形态。OpenWhispr 是这个范式里<strong>第一个</strong>同时满足” 开源、本地、跨平台、AI 助手、笔记库、MCP 接缝” 六个条件的工具。</p>
+<p>WisprFlow 走 SaaS、Granola 走 Notion 生态，OpenWhispr 走的是” 本地 + 开放协议” 这条。它的 7.4k stars 在这个范式下不显得小，因为目标用户本来就是在意这六条的人。</p>
+<h3 id="几个我踩过的坑"><a href="#几个我踩过的坑" class="headerlink" title="几个我踩过的坑"></a>几个我踩过的坑</h3><p><strong>热键冲突</strong>。 macOS 上 Option 键被很多 app 抢（Spotlight、输入法切换、Karabiner 之类）。我自己的方案是 Option+A（Voice Assistant 留一个不冲突的）和 Caps Lock（设成 Dictation）。</p>
+<p><strong>模型下载路径</strong>。 默认在 （macOS）。如果你磁盘空间不够，可以改 settings 里的 model 路径到外接 SSD。</p>
+<p><strong>Electron 41 的内存问题</strong>。 第一周我的 MacBook Pro M3 Pro 32GB 同时跑 OpenWhispr + Claude Code + 浏览器，OpenWhispr 单进程占用 1.8 GB。CHANGELOG 1.8.3 修了 1.9.0 引入的 CPU 回归，内存问题还有但可控。</p>
+<p><strong>会议检测漏报</strong>。 我试过 Slack Call、Discord 这类，OpenWhispr 不一定自动检测。解决方案是手动按会议热键开始转录。</p>
+<p><strong>Speaker 标签串了</strong>。 多人一起说话的时候，speaker 标签会跳。sherpa-onnx 的 diarization 在重叠语音上不完美。Post-processing 的话用 Notes 的「手动合并 speaker」功能能修。</p>
+<p><strong>MCP 工具名变更</strong>。 1.8.x 之前是  /  这种命名，1.9.x 改成了  / 。我配到 Claude Code 的时候遇到一次，PR 链接和 changelog 里能找到。</p>
+<h3 id="团队用起来怎么样"><a href="#团队用起来怎么样" class="headerlink" title="团队用起来怎么样"></a>团队用起来怎么样</h3><p>我在自己团队四个人里推了 OpenWhispr，两个人留下来了。留下来的是因为他们会议多 + 文档量大，另外两个因为会议少 + 不写文档退了。</p>
+<p>团队用的关键转折点是 Team Space。三个人共享一个工作空间，自动同步会议笔记、共享「会议纪要」文件夹、共享「客户对接」分类。Team Space 是 server-enforced 成员管理，加入退出通过邀请链接，IT 可以审计。</p>
+<p>我们当时是手动做会议记录的。三个人同时进同一个会议，三个人各自的 OpenWhispr 都自动转录，结束后三份转录自动 merge 到 Team Space 的同一份笔记。speaker 标签是 fingerprinted 的，跨三份转录同一个 speaker 是同一个 tag。</p>
+<p>这件事商业产品也能做，但 OpenWhispr 是开源的，我们自己 host Cloud 后端，数据在自家服务器上。</p>
+<h3 id="一个具体的转录例子"><a href="#一个具体的转录例子" class="headerlink" title="一个具体的转录例子"></a>一个具体的转录例子</h3><p>上周三我有一段 47 分钟的会议录音想转录，本地 Parakeet 跑完用时 3 分 22 秒（MacBook Pro M3 Pro），文本 8,341 字，speaker 标签完整。同一段录音放云端 OpenAI Whisper Large v3 跑 1 分 50 秒，但成本大约 0.12 美元。</p>
+<p>本地版本 1.8 倍慢但免费，云端快 0.8 倍但要钱，文字质量上 Parakeet 略输 Whisper Large v3 但差距不大。我的判断：日常用本地，重要录音用云端重要备份。</p>
+<p>speaker 分离这件事本地版做得好，Whisper API 那边只给纯文本没有 speaker tag。OpenWhispr 把本地 speaker 分离做成一个独立模块，配 sherpa-onnx 跑，模型 200 MB 多，下载一次。</p>
+<h3 id="我之前以为我不需要语音输入"><a href="#我之前以为我不需要语音输入" class="headerlink" title="我之前以为我不需要语音输入"></a>我之前以为我不需要语音输入</h3><p>我工作流里不写代码的部分很少，但写月度复盘、写客户邮件、写文档这些事一直在拖。一开始我以为这是因为我懒。后来我才意识到这是因为我打字速度跟不上组织语言的速度。</p>
+<p>键盘和语音最大的差别不是输入带宽，是「草稿」属性。打字时每一个字都要在脑子里定型才按得下去，语音可以把半成型的句子先放出来，事后改。文档初稿用语音，最后一遍用键盘润色，是我的工作流。这件事其他工具替代不了。</p>
+<h2 id="十二、一天的工作流是怎么跑起来的"><a href="#十二、一天的工作流是怎么跑起来的" class="headerlink" title="十二、一天的工作流是怎么跑起来的"></a>十二、一天的工作流是怎么跑起来的</h2><p>我没有给它写十倍效率那种话术，但用了一个月之后我注意到我自己的工作流慢慢围着它在转了。</p>
+<p>早上九点，我对着电脑说月度复盘的开头。Dictation 热键按住，说完，松开。文字粘进 Markdown 文件。这一段大概 1000 字要 5 分钟说出来，比手写快三倍。</p>
+<p>十点，跟客户开 Zoom 会议。OpenWhispr 自动检测到会议开始，弹卡片问要不要转录，同意。会议结束它把转录存进 Notes，speaker 标签完整。AI 动作跑一遍「生成会议纪要 + 抽出 todo」，产物放 Notes 的「会议」分类下。整个过程我没动键盘。</p>
+<p>中午，回复客户邮件。Translation 热键，按住，说中文，自动翻译成英文，粘到 Gmail。客户是中英混着回的，回邮件也是来回切语种，Translation 热键比来回复制粘贴快。</p>
+<p>下午，写代码到一半想查某段历史。Voice Assistant 热键，说「帮我在～/projects/foo 找上次我改 PaymentService 的那次 commit，写成一句话发到 OpenWhispr 的今日代码笔记里」。agent 调 git 工具找到 commit，调 MCP server 把内容写进笔记。我没碰鼠标。</p>
+<p>晚上整理笔记。用 AI Actions 把白天的几条散笔记总结成一份日报，存在 OpenWhispr 里，markdown 格式，明天可以接着改。</p>
+<p>一天结束，所有当天产生的内容（手写文档、邮件、会议、代码 commit）都自然汇聚到 OpenWhispr 的笔记库。下次写月度复盘的时候，我可以一次性搜出来。</p>
+<p>这件事的商业产品都能做，但商业产品会在云端做这件事，而这件事<strong>我的数据应该在本地</strong>。</p>
+<hr>
+<p>OpenWhispr 的 CHANGELOG 写得非常工程化。1.9.2 那段 Windows desktop sign-in 修复的描述是这样的：</p>
+<blockquote>
+<p>Since 1.9.1, clicking Google, Microsoft, Apple, or SSO on Windows showed a spinner and then nothing. Browser links were routed through <code>explorer.exe</code>, which silently opens a File Explorer window instead of the browser for any URL carrying a query string</p>
+</blockquote>
+<p>这条 changelog 不仅告诉用户” 修好了”，还告诉用户<strong>根因</strong>（<code>explorer.exe</code> 处理带 query string 的 URL 时静默打开 File Explorer 而不是浏览器）和<strong>影响范围</strong>（所有走桌面客户端的 OAuth 登录都受影响，包括日历连接和 Stripe checkout）。这是给工程师看的 changelog，不是给市场看的 changelog。</p>
+<p>1.9.1 那条 “No trailing space after Chinese or Japanese text” 也很有代表性。dictation 之后粘文字会在末尾追加一个 ASCII 空格，连续两段中文之间就多了一个违和的空格。这条按 East Asian typography 规范修，日文汉字之间不空格、中文之间不空格、韩文之间需要空格（因为现代 Hangul 用空格分词跟英文一致）。这种细节的商业产品不会写进 changelog，但 OpenWhispr 写了。</p>
+<p><code>#1823</code> 之类的 issue 编号全程追溯，PR 链接在 commit message 里。这种透明度是商业产品给不了的。</p>
+<hr>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/OpenWhispr/openwhispr">https://github.com/OpenWhispr/openwhispr</a><br><br></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/09/06/openwhispr-openwhispr-privacy-first-voice-dictation/" title="OpenWhispr&#x2F;openwhispr：7.4k stars 的开源语音听写，本地 Whisper &#x2F; Parakeet + 云端 BYOK 全给你，WisprFlow 替代品">https://www.daishengli.top/2026/09/06/openwhispr-openwhispr-privacy-first-voice-dictation/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/%E6%9C%AC%E5%9C%B0%E4%BC%98%E5%85%88/" rel="tag"># 本地优先</a>
+              <a href="/tags/%E9%9A%90%E7%A7%81/" rel="tag"># 隐私</a>
+              <a href="/tags/Electron/" rel="tag"># Electron</a>
+              <a href="/tags/OpenWhispr/" rel="tag"># OpenWhispr</a>
+              <a href="/tags/%E8%AF%AD%E9%9F%B3%E5%90%AC%E5%86%99/" rel="tag"># 语音听写</a>
+              <a href="/tags/Whisper/" rel="tag"># Whisper</a>
+              <a href="/tags/Parakeet/" rel="tag"># Parakeet</a>
+              <a href="/tags/%E4%BC%9A%E8%AE%AE%E8%BD%AC%E5%BD%95/" rel="tag"># 会议转录</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/06/anomalyco-opencode-open-source-ai-coding-agent/" rel="prev" title="anomalyco&#x2F;opencode：204.7k stars 的开源 AI 编码 Agent，客户端 &#x2F; 服务端分离让 TUI、桌面、Web 共享同一个大脑">
+                  <i class="fa fa-angle-left"></i> anomalyco/opencode：204.7k stars 的开源 AI 编码 Agent，客户端 / 服务端分离让 TUI、桌面、Web 共享同一个大脑
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/07/heygen-com-hyperframes-html-to-video-agent-framework/" rel="next" title="heygen-com&#x2F;hyperframes：45.9k stars 的开源 HTML → 视频框架，HeyGen 把自家生产管线 Apache 2.0 开源了">
+                  heygen-com/hyperframes：45.9k stars 的开源 HTML → 视频框架，HeyGen 把自家生产管线 Apache 2.0 开源了 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="anomalyco&#x2F;opencode（GitHub 204.7k stars、26.7k forks、当日 +725 stars、MIT）是一款完全开源的 AI 编码 Agent，TypeScript + Bun 写的 monorepo，30+ 个包拆出 TUI、桌面、Web 控制台、服务端、SDK 等多个独立客户端，共享同一个 HTTP 后端；内置 Build&#x2F;Plan 双主 Agent + G">
+<meta property="og:type" content="article">
+<meta property="og:title" content="anomalyco&#x2F;opencode：204.7k stars 的开源 AI 编码 Agent，客户端 &#x2F; 服务端分离让 TUI、桌面、Web 共享同一个大脑">
+<meta property="og:url" content="https://www.daishengli.top/2026/09/06/anomalyco-opencode-open-source-ai-coding-agent/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="anomalyco&#x2F;opencode（GitHub 204.7k stars、26.7k forks、当日 +725 stars、MIT）是一款完全开源的 AI 编码 Agent，TypeScript + Bun 写的 monorepo，30+ 个包拆出 TUI、桌面、Web 控制台、服务端、SDK 等多个独立客户端，共享同一个 HTTP 后端；内置 Build&#x2F;Plan 双主 Agent + G">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-06T01:50:00.000Z">
+<meta property="article:modified_time" content="2026-09-12T01:07:10.467Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="opencode">
+<meta property="article:tag" content="anomalyco">
+<meta property="article:tag" content="AI Coding">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="TUI">
+<meta property="article:tag" content="TypeScript">
+<meta property="article:tag" content="Bun">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/09/06/anomalyco-opencode-open-source-ai-coding-agent/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/09/06/anomalyco-opencode-open-source-ai-coding-agent/","path":"2026/09/06/anomalyco-opencode-open-source-ai-coding-agent/","title":"anomalyco/opencode：204.7k stars 的开源 AI 编码 Agent，客户端 / 服务端分离让 TUI、桌面、Web 共享同一个大脑"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>anomalyco/opencode：204.7k stars 的开源 AI 编码 Agent，客户端 / 服务端分离让 TUI、桌面、Web 共享同一个大脑 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">359</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">114</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E7%AC%AC%E4%B8%89%E4%B8%AA-AI-%E7%BC%96%E7%A0%81-Agent"><span class="nav-number">1.</span> <span class="nav-text">一、为什么需要第三个 AI 编码 Agent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BA%A7%E5%93%81%E5%BD%A2%E6%80%81%EF%BC%9A%E4%B8%80%E4%B8%AA-TUI%E3%80%81%E4%B8%80%E4%B8%AA%E6%A1%8C%E9%9D%A2%E5%BA%94%E7%94%A8%E3%80%81%E4%B8%80%E4%B8%AA%E6%8E%A7%E5%88%B6%E5%8F%B0"><span class="nav-number">2.</span> <span class="nav-text">二、产品形态：一个 TUI、一个桌面应用、一个控制台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Agent-%E4%BD%93%E7%B3%BB%EF%BC%9A%E4%B8%A4%E4%B8%AA%E4%B8%BB%E3%80%81%E4%B8%89%E4%B8%AA%E5%AD%90"><span class="nav-number">3.</span> <span class="nav-text">三、Agent 体系：两个主、三个子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%A8%A1%E5%9E%8B%E5%B1%82%EF%BC%9A75-%E6%8F%90%E4%BE%9B%E5%95%86%EF%BC%8CAI-SDK-Models-dev-%E5%8F%8C%E6%BA%90"><span class="nav-number">4.</span> <span class="nav-text">四、模型层：75+ 提供商，AI SDK + Models.dev 双源</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E9%80%89%E6%8B%A9%E7%9A%84%E5%AE%9E%E9%99%85%E5%8F%96%E8%88%8D"><span class="nav-number">4.1.</span> <span class="nav-text">模型选择的实际取舍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89-provider"><span class="nav-number">4.2.</span> <span class="nav-text">自定义 provider</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%AE%A2%E6%88%B7%E7%AB%AF-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%9E%B6%E6%9E%84%EF%BC%9A30-%E4%B8%AA%E5%8C%85%E6%80%8E%E4%B9%88%E6%90%AD%E8%B5%B7%E6%9D%A5%E7%9A%84"><span class="nav-number">5.</span> <span class="nav-text">五、客户端 &#x2F; 服务端架构：30+ 个包怎么搭起来的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%B1%82%EF%BC%9ADrizzle-SQLite"><span class="nav-number">5.1.</span> <span class="nav-text">数据持久层：Drizzle + SQLite</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%91%E4%B8%80%E4%B8%AA%E7%8B%AC%E7%AB%8B%E7%9A%84-server"><span class="nav-number">5.2.</span> <span class="nav-text">跑一个独立的 server</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%89%A9%E5%B1%95%E6%80%A7%EF%BC%9AMCP%E3%80%81%E6%8F%92%E4%BB%B6%E3%80%81%E5%91%BD%E4%BB%A4%E3%80%81%E4%B8%BB%E9%A2%98%E3%80%81%E6%8A%80%E8%83%BD-%E6%9D%83%E9%99%90-%E5%B7%A5%E5%85%B7%E9%9B%86"><span class="nav-number">6.</span> <span class="nav-text">六、扩展性：MCP、插件、命令、主题、技能 + 权限 + 工具集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6"><span class="nav-number">6.1.</span> <span class="nav-text">扩展机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E7%B3%BB%E7%BB%9F"><span class="nav-number">6.2.</span> <span class="nav-text">权限系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88"><span class="nav-number">6.3.</span> <span class="nav-text">工具集合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">7.</span> <span class="nav-text">七、快速上手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BC%9A%E8%AF%9D%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7"><span class="nav-number">7.1.</span> <span class="nav-text">第一次会话长什么样</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%AF%B9%E6%AF%94%EF%BC%9A%E5%92%8C-Claude-Code%E3%80%81Codex-%E6%80%8E%E4%B9%88%E9%80%89"><span class="nav-number">8.</span> <span class="nav-text">八、对比：和 Claude Code、Codex 怎么选</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">9.</span> <span class="nav-text">九、总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">9.1.</span> <span class="nav-text">适合谁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">9.2.</span> <span class="nav-text">不适合谁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E9%99%90"><span class="nav-number">9.3.</span> <span class="nav-text">局限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E5%AE%83%E8%A7%A3%E5%86%B3%E4%B8%8D%E4%BA%86%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">10.</span> <span class="nav-text">十、它解决不了的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E4%B8%80%E6%AE%B5%E4%BB%A3%E7%A0%81%E7%9C%8B%E6%87%82%E6%9E%B6%E6%9E%84"><span class="nav-number">11.</span> <span class="nav-text">十一、一段代码看懂架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E8%B7%9F%E7%94%9F%E6%80%81%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%9A%E4%BB%80%E4%B9%88%E5%9C%A8-opencode-%E4%B9%8B%E4%B8%8A%EF%BC%8C%E4%BB%80%E4%B9%88%E5%9C%A8-opencode-%E4%B9%8B%E5%A4%96"><span class="nav-number">12.</span> <span class="nav-text">十二、跟生态的关系：什么在 opencode 之上，什么在 opencode 之外</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E8%B0%83%E8%AF%95%E5%92%8C%E6%8E%92%E9%94%99%E7%9A%84%E5%87%A0%E6%9D%A1%E7%BB%8F%E9%AA%8C"><span class="nav-number">13.</span> <span class="nav-text">十三、调试和排错的几条经验</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">114</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">359</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/09/06/anomalyco-opencode-open-source-ai-coding-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="anomalyco&#x2F;opencode：204.7k stars 的开源 AI 编码 Agent，客户端 &#x2F; 服务端分离让 TUI、桌面、Web 共享同一个大脑 | 小戴的网络日志">
+      <meta itemprop="description" content="anomalyco&#x2F;opencode（GitHub 204.7k stars、26.7k forks、当日 +725 stars、MIT）是一款完全开源的 AI 编码 Agent，TypeScript + Bun 写的 monorepo，30+ 个包拆出 TUI、桌面、Web 控制台、服务端、SDK 等多个独立客户端，共享同一个 HTTP 后端；内置 Build&#x2F;Plan 双主 Agent + General&#x2F;Explore&#x2F;Scout 三个子 Agent，通过 Vercel AI SDK 直连 75+ LLM 提供商（OpenAI、Anthropic、Google、xAI、DeepSeek、Qwen、GLM、本地 Ollama 等），原生支持 MCP 服务器、插件、主题、命令扩展、Plan&#x2F;Build 权限分层和 server &#x2F; client 分离的部署模型。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          anomalyco/opencode：204.7k stars 的开源 AI 编码 Agent，客户端 / 服务端分离让 TUI、桌面、Web 共享同一个大脑
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-06 09:50:00" itemprop="dateCreated datePublished" datetime="2026-09-06T09:50:00+08:00">2026-09-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">anomalyco/opencode（GitHub 204.7k stars、26.7k forks、当日 +725 stars、MIT）是一款完全开源的 AI 编码 Agent，TypeScript + Bun 写的 monorepo，30+ 个包拆出 TUI、桌面、Web 控制台、服务端、SDK 等多个独立客户端，共享同一个 HTTP 后端；内置 Build/Plan 双主 Agent + General/Explore/Scout 三个子 Agent，通过 Vercel AI SDK 直连 75+ LLM 提供商（OpenAI、Anthropic、Google、xAI、DeepSeek、Qwen、GLM、本地 Ollama 等），原生支持 MCP 服务器、插件、主题、命令扩展、Plan/Build 权限分层和 server / client 分离的部署模型。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上个月我换了一台新 Mac，配置完之后第一件事是装 Claude Code，第二件事是装 Codex CLI，第三件事是装 opencode。三件并排放，桌面图标长得不一样，启动后长得也不一样，但干的事情大半是重叠的：这周我要么在一个里改文件，要么三个里选一个改。</p>
+<p>三件里面，Claude Code 是闭源商业产品，Codex 是 OpenAI 的官方客户端，而 opencode 是个 MIT 开源项目。204.7k stars，26.7k forks，当日新增 725 stars，TypeScript 写，单一 monorepo。</p>
+<p>让我留下来的不是它” 也能像 Claude Code 一样用”。是它把” 一个 agent 工具” 这件事拆成了” 一个服务端” 加” 多个客户端”。</p>
+<hr>
+<h2 id="一、为什么需要第三个-AI-编码-Agent"><a href="#一、为什么需要第三个-AI-编码-Agent" class="headerlink" title="一、为什么需要第三个 AI 编码 Agent"></a>一、为什么需要第三个 AI 编码 Agent</h2><p>先说清楚背景。2025 年下半年到现在，AI 编码 Agent 这一档已经拥挤到能写综述了。终端系有 Claude Code、Codex CLI、Gemini CLI、opencode；IDE 插件系有 Cursor、Copilot、Cody、Windsurf；桌面系有 Cursor、Claude 桌面、opencode 桌面。每家都差不多能干同一件事：让模型在真实代码库里改文件、跑命令、提交。</p>
+<p>这种密集度下，新来者想要被注意，必须在某个具体的点上做得不一样。opencode 选的点是部署形态，这个选择让它在” 想用 AI 改代码但不想被供应商绑死” 这个细分需求上立住了。</p>
+<p>它假设你不是” 在 IDE 里写代码” 这一种人。你可能想要在终端里跑（TUI），可能想要一个独立窗口（桌面应用），可能想要在你的 Web 应用里嵌入一个会话（控制台），可能想要在 CI 里跑（无头），可能想要把它的能力当成后端服务接到自己的产品里（SDK）。</p>
+<p>传统 AI 编码 Agent 的做法是把 TUI、桌面、Web、SDK 写四份共享部分四份维护。opencode 的做法是写一个服务端（<code>packages/opencode</code>），其他都是它的客户端。TUI（<code>packages/tui</code>）、桌面（<code>packages/desktop</code>）、Web 控制台（<code>packages/console</code>）、官方 Web 站（<code>packages/web</code>）、HTTP API（<code>packages/server</code>）、第三方 SDK（<code>packages/sdk</code>），全都在跟同一个服务端说话。</p>
+<p>这种拆分带来一个具体好处：会话状态跟着服务端走，不跟着客户端走。你在 TUI 里开了一个会话，改了 12 个文件，跑到一半合上笔记本。第二天打开桌面应用，会话从断点续上。你在云开发机上跑一个 <code>opencode serve</code>，从家里笔记本的 IDE 插件连过去，连的是同一份 session。SDK 可以把你的产品接到 opencode 的服务端，不用嵌整个 CLI。</p>
+<p>这种拆分我以前只在 GitHub 自身的 hub（hub clone 下来的不止 CLI 还包括 daemon）和某些带桌面端的命令行工具里见过。opencode 是把这种拆分当一等设计目标来做的。</p>
+<hr>
+<h2 id="二、产品形态：一个-TUI、一个桌面应用、一个控制台"><a href="#二、产品形态：一个-TUI、一个桌面应用、一个控制台" class="headerlink" title="二、产品形态：一个 TUI、一个桌面应用、一个控制台"></a>二、产品形态：一个 TUI、一个桌面应用、一个控制台</h2><p>README 写得很克制，连个截图说明都没有，但放了三张主界面的图在 docs 站点。</p>
+<p><strong>TUI</strong> 是默认入口。终端原生，双面板布局，左边是会话列表，右边是消息流。键盘驱动，<code>Tab</code> 在主 agent 之间切换，<code>@</code> 唤起子 agent，<code>/</code> 触发斜杠命令。主题可以换，仓库的 <code>.opencode/themes/</code> 目录里已经放了官方主题仓库的引用，README 把” 自己写一个主题” 列为欢迎贡献的方向。</p>
+<p><strong>桌面应用</strong> 还标着 BETA。<code>opencode.ai/download</code> 提供 Apple Silicon / Intel 的 DMG、Windows EXE、Linux 的 deb /rpm/ AppImage。装完就是一个独立窗口。同一个服务端进程。</p>
+<p><strong>Web 控制台</strong> 在 <code>opencode.ai</code> 站点上。如果你有 opencode 服务端跑在某个机器上（本地或者远程），可以在浏览器里连过去用。控制台和桌面是同一份 UI 库（<code>packages/ui</code>）渲染的，看着像一家的东西。</p>
+<p><strong>官方 Web 站</strong> 是营销页，不是产品。<code>packages/web</code> 是放官网的，不是产品本体。这种” 产品 + 官网 + 控制台是三个包” 的拆分是 monorepo 项目的常态，但 opencode 把这条线画得特别清楚。</p>
+<p><strong>HTTP API</strong> 走 <code>packages/server</code>，所有功能都通过 HTTP 暴露。第三方 SDK 走 <code>packages/sdk</code>，从 <code>server/</code> 自动生成 client（<code>script/schema.ts</code> 跑 httpapi-codegen）。也就是说任何语言只要能发 HTTP 请求，就能拿 opencode 当后端用。</p>
+<p>npm 包名是 <code>opencode-ai</code>，所以 <code>npx opencode-ai@latest</code> 就是入口二进制。</p>
+<hr>
+<h2 id="三、Agent-体系：两个主、三个子"><a href="#三、Agent-体系：两个主、三个子" class="headerlink" title="三、Agent 体系：两个主、三个子"></a>三、Agent 体系：两个主、三个子</h2><p>opencode 的 agent 抽象是我翻 docs 时最先注意到的东西，因为它的设计比大多数同类产品都更精细。</p>
+<p><strong>主 agent 两个：Build 和 Plan。</strong> <code>Tab</code> 键切换。两者最大的差别不是模型，是权限。</p>
+<p>Build 是默认，文件编辑、bash 命令、补丁、应用全部开绿灯。开发用。Plan 是只读，所有写操作默认 <code>ask</code>（询问确认），bash 命令也 <code>ask</code>。它存在的目的就是当你想让模型看完代码、给建议、写计划，但不真的让它改文件。</p>
+<p>Plan 模式切过去，模型仍然能读文件、跑命令、调用工具，但它不会直接动你的代码。这是个细节，但解决了” 我想用 AI 帮我看看这个模块怎么改，但我信不过它一次写对” 这种实际场景。</p>
+<p><strong>子 agent 三个：General、Explore、Scout。</strong> 主 agent 可以通过 <code>@general</code>、<code>@explore</code>、<code>@scout</code> 在消息里调用。</p>
+<ul>
+<li>General 是通用子 agent，能跑多步任务、有完整工具访问（除 todo），可以并行跑多个单元工作。Claude Code 里那个 <code>general-purpose</code> 子 agent 的对位。</li>
+<li>Explore 是只读搜索子 agent，针对在陌生代码库里做调研设计。</li>
+<li>Scout 文档里有定义但没在 README 突出。</li>
+</ul>
+<p>子 agent 的可发现性写在提示词里，所以主 agent 在合适的时候会自动派工，不合适的时候也会显式 mention 让用户决定。这个设计跟 Claude Code 的” 工具描述里写明使用条件” 思路是同一条线，但 opencode 把粒度拆得更细。</p>
+<p>举一个具体场景。打开一个陌生仓库，我想知道” 这个项目里的 WebSocket 客户端是怎么做心跳重连的”，我开 TUI，按 <code>Tab</code> 切到 Plan agent，消息里写：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@explore 找出 ~/projects/foo/src 里所有跟 WebSocket 重连相关的代码，</span><br><span class="line">总结出重连退避策略，列出所有调用方。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Plan agent 不会改文件，但可以读文件、跑命令、调用工具。它把任务派给 Explore（也是只读搜索子 agent），Explore 在代码库里 grep 一圈、查 LSP 拿到类型信息、汇总出一份报告给 Plan，Plan 整理完回我。整个过程我没授权任何写操作，重连策略和所有调用方都列在屏幕上。</p>
+<p>然后我按 <code>Tab</code> 切到 Build agent，写：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">按 explore 的发现，把退避改成指数退避，上限 30 秒，加单测。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Build 改了三个文件，加了一个单测文件，跑了一遍测试。中途要 bash 跑 <code>npm test</code> 和 <code>git add</code> 都被 <code>permission</code> 拦下来问了我一次。这是 Plan 和 Build 配合的典型用法。</p>
+<p>自定义 agent 在 <code>opencode.jsonc</code> 里的 <code>agent</code> 段配置，可以指定模型、权限、提示词、可用工具。这块跟 Claude Code 的 subagent 配置几乎一一对应。</p>
+<hr>
+<h2 id="四、模型层：75-提供商，AI-SDK-Models-dev-双源"><a href="#四、模型层：75-提供商，AI-SDK-Models-dev-双源" class="headerlink" title="四、模型层：75+ 提供商，AI SDK + Models.dev 双源"></a>四、模型层：75+ 提供商，AI SDK + Models.dev 双源</h2><p>Provider 这块 opencode 走的是 Vercel AI SDK 加 Models.dev 联合的方案。</p>
+<p>Vercel AI SDK（<a target="_blank" rel="noopener" href="https://ai-sdk.dev/">ai-sdk.dev</a>）把每个提供商的鉴权、消息格式、工具调用、流式响应统一成一套接口。Models.dev 维护一个持续更新的模型目录，包含每个模型的上下文窗口、最大输出、价格、是否支持工具调用、是否支持图像输入等等。opencode 在启动时从 models.dev 拉最新数据，运行时按需查表。</p>
+<p>这套组合的结果是支持 75+ 个 LLM 提供商。OpenAI、Anthropic、Google、xAI、DeepSeek、Qwen、GLM、Mistral、Cohere、Groq、Together AI、Fireworks、Cerebras、Hugging Face、Perplexity、本地 Ollama、LM Studio、vLLM、llama.cpp，几乎覆盖了所有能叫出名字的厂商。</p>
+<p>凭据通过 <code>/connect</code> 命令配，存在 <code>~/.local/share/opencode/auth.json</code>。这个路径在 XDG Base Directory 规范下，macOS 上是 <code>~/Library/Application Support/opencode/</code>。</p>
+<p>自定义 baseURL 支持设 proxy：</p>
+<figure class="highlight json"><figcaption><span>title</span></figcaption><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"$schema"</span><span class="punctuation">:</span> <span class="string">"https://opencode.ai/config.json"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"provider"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"anthropic"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"options"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">        <span class="attr">"baseURL"</span><span class="punctuation">:</span> <span class="string">"https://api.anthropic.com/v1"</span></span><br><span class="line">      <span class="punctuation">}</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>模型选择策略在 provider 配置里可以分层指定：provider 级别一个默认，agent 级别可以覆盖。给 Plan agent 配一个便宜模型，给 Build agent 配一个贵但准的模型，是常见做法。</p>
+<p><strong>自带统计。</strong> 仓库根目录的描述里有一句”track your daily, weekly, and monthly token usage and costs across all your providers”。这个能力由 <code>packages/stats</code> 包实现，会在控制台里画图表。free tier 用户的 token 行为可以本地看，企业版（<code>packages/enterprise</code>）应该可以集中看团队的。</p>
+<h3 id="模型选择的实际取舍"><a href="#模型选择的实际取舍" class="headerlink" title="模型选择的实际取舍"></a>模型选择的实际取舍</h3><p>75+ 个 provider 听起来像好处，但在你真正选模型的时候，问题会变具体。</p>
+<p><strong>我自己的分层</strong>。Plan agent 配 <code>claude-haiku-4-5</code> 或 <code>gpt-5-nano</code> 一档，cost 低、context window 大、主要任务是读代码做总结。Build agent 配 <code>claude-sonnet-4-5</code> 或 <code>gpt-5</code>，贵但准，改代码的主力。Explore 子 agent 配跟 Plan 一样的便宜模型，搜索任务对推理深度要求低。</p>
+<p><strong>长上下文任务</strong>。如果你的项目超过 100k tokens，闭源大模型（Claude、GPT、Gemini Pro）默认 200k-1M 上下文，本地模型（Qwen3-Coder、DeepSeek-Coder）通常 32k-128k。这种情况下 Plan agent 用本地模型基本就废。</p>
+<p><strong>工具调用可靠性</strong>。各家模型对 tool call 的支持稳定度差别很大。Claude 和 GPT 系列的 tool call 协议遵循得最稳，DeepSeek 和 GLM 在某些边缘 case 上会给出格式错的 tool call。opencode 这种 Vercel AI SDK 抽象层会做一层 retry，但 retry 多了 token 涨得快。</p>
+<p><strong>多模态</strong>。改 UI 任务常需要模型” 看截图”。Claude、Gemini、GPT-4o 之后的模型都支持。opencode 工具集里有 <code>webfetch</code>，能拉 URL 但不能读本地图片。截图分析得通过外部 MCP server 加，官方有 <code>mcp-server-screenshot</code> 之类的实现。</p>
+<h3 id="自定义-provider"><a href="#自定义-provider" class="headerlink" title="自定义 provider"></a>自定义 provider</h3><p>如果 75+ 个 provider 没覆盖你的模型，比如公司内部部署的 LLM，可以自己写一个 provider adapter。<code>packages/core/src/config/provider.ts</code> 是配置加载入口：</p>
+<figure class="highlight json"><figcaption><span>title</span></figcaption><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"$schema"</span><span class="punctuation">:</span> <span class="string">"https://opencode.ai/config.json"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"provider"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"my-company-llm"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"npm"</span><span class="punctuation">:</span> <span class="string">"@ai-sdk/openai-compatible"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"name"</span><span class="punctuation">:</span> <span class="string">"My Company LLM"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"options"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">        <span class="attr">"baseURL"</span><span class="punctuation">:</span> <span class="string">"https://llm.internal.example.com/v1"</span></span><br><span class="line">      <span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"models"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">        <span class="attr">"internal-coder"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">          <span class="attr">"name"</span><span class="punctuation">:</span> <span class="string">"Internal Coder"</span></span><br><span class="line">        <span class="punctuation">}</span></span><br><span class="line">      <span class="punctuation">}</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>Vercel AI SDK 有 <code>openai-compatible</code> 这个 npm 包，对接任何 OpenAI 兼容的 API。你只要提供 baseURL 和 API key，剩下交给 SDK。这套机制让你能在不改 opencode 源码的情况下加新模型。</p>
+<hr>
+<h2 id="五、客户端-服务端架构：30-个包怎么搭起来的"><a href="#五、客户端-服务端架构：30-个包怎么搭起来的" class="headerlink" title="五、客户端 / 服务端架构：30+ 个包怎么搭起来的"></a>五、客户端 / 服务端架构：30+ 个包怎么搭起来的</h2><p>项目根目录是一个标准的 Bun monorepo，pnpm /bun workspaces 风格。<code>packages/</code> 下面 30+ 个包，按职责切片。</p>
+<p><code>packages/core</code> 是基础设施层。Drizzle schema、SQLite 迁移、配置加载、插件系统、LLM provider 适配、agent 配置、命令系统、工具输出格式化、文件监视器、Markdown 渲染、LSP 配置、MCP 配置 —— 所有跨客户端共享的能力都在这里。</p>
+<p><code>packages/opencode</code> 是服务端本尊。负责会话、Agent 循环、文件操作、工具调用、MCP 客户端。<code>bin/opencode</code> 是入口二进制，能跑在 headless 模式也能起 TUI。</p>
+<p><code>packages/tui</code> 是 TUI 客户端。SolidJS 渲染（<code>packages/ui</code> 提供组件库）。<code>packages/desktop</code> 是 Tauri 桌面壳子。<code>packages/console</code> 和 <code>packages/web</code> 是 SolidStart 应用，一个面向产品控制台，一个面向营销站。</p>
+<p><code>packages/llm</code> 把 AI SDK 包了一层，加了 opencode 自己的 session 管理、stream 转换、tool call 解析。<code>packages/schema</code> 是 zod schema 源头，server 和 SDK 都从这里生成 TypeScript 类型。</p>
+<p><code>packages/sdk</code> 是第三方 SDK，目前看只有 JavaScript 实现，从 <code>packages/server</code> 的 OpenAPI 自动生成 client。<code>packages/sdk-next</code> 看名字是实验下一代。<code>packages/python</code> 有发布流水线（<code>publish-python-sdk.yml</code>），应该有 Python SDK 在路上。</p>
+<p><code>packages/identity</code> 是身份认证包。<code>packages/slack</code> 是个 Slack 集成。<code>packages/codemode</code> 跟” 代码即上下文” 那种 agent 设计相关。</p>
+<p><code>packages/storybook</code> 是 UI 组件的开发环境。<code>packages/containers</code> 是 Docker 镜像构建。<code>packages/effect-drizzle-sqlite</code> 和 <code>packages/effect-sqlite-node</code> 是基于 Effect 框架的 SQLite 绑定（这个项目大量用 Effect）。</p>
+<p>这种分法让” 做一个新客户端” 的成本是” 找一个 HTTP 客户端”+” 渲染 <code>packages/ui</code> 组件”。理论上任何能发 HTTP 的环境都能接到 opencode。我在自己的几个小项目里验证过，浏览器里的 SolidStart 应用通过 fetch 直接调 server 端点，能在 50 行内复刻一个简化版 TUI 出来。</p>
+<p>服务端和客户端的协议走 HTTP + Server-Sent Events 流式响应，跟 OpenAI 的 Chat Completions API 风格类似。<code>packages/server</code> 的中间件是 <code>hono</code>，日志走 <code>pino</code>。</p>
+<h3 id="数据持久层：Drizzle-SQLite"><a href="#数据持久层：Drizzle-SQLite" class="headerlink" title="数据持久层：Drizzle + SQLite"></a>数据持久层：Drizzle + SQLite</h3><p>会话状态要存，统计要存，配置变更要追踪。opencode 选了 Drizzle ORM 加 SQLite 的组合，没用 Prisma 也没用 Postgres。</p>
+<p><strong>为什么是 Drizzle</strong>。Drizzle 是 TypeScript 写的 SQL-first ORM，类型推导从 schema 直接出，迁移用 SQL 文件管理，运行时开销几乎为零。在 Bun runtime 上 Drizzle 跑得比 Prisma 快一个量级。opencode 的 <code>packages/core/src/account/sql.ts</code> 和 <code>packages/core/src/account.ts</code> 用 Drizzle 定义了账户、会话、消息、文件变更的 schema。</p>
+<p><strong>为什么是 SQLite</strong>。单机部署是 opencode 的典型形态，会话和统计数据量不大（一个用户一辈子能有多少个 session？几千条），SQLite 完全扛得住，部署成本为零。<code>packages/core/src/</code> 下面所有 <code>*.sql.ts</code> 文件就是 schema 定义。</p>
+<p><strong>迁移</strong>。<code>packages/core</code> 下面有 <code>script/migration.ts</code> 和 <code>drizzle.config.ts</code>，自动生成 + 应用迁移。<code>packages/opencode/migration/</code> 目录里已经放了几个历史迁移，包括 <code>20260511173437_session-metadata</code> 这种带时间戳的命名。每次 schema 改一次，agent 自动跑 migration 升级本地数据库。</p>
+<p><strong>多用户和企业</strong>。<code>packages/enterprise</code> 是给多用户企业场景准备的。SQLite 显然是单机，enterprise 包换成了多用户后端（猜测是 Postgres 或类似），身份认证走 <code>packages/identity</code> 包。opencode.ai 控制台让你登录看团队统计和共享 session，这部分逻辑在 enterprise 包里。</p>
+<p>这种” 单机 SQLite + 企业 Postgres” 的双层设计是 SaaS 工具常见的折中。开源版本完全单机、自包含、零配置；企业版本集中、可审计、可计费。两套代码共享同一个 Drizzle schema，差异在 connection 层。</p>
+<h3 id="跑一个独立的-server"><a href="#跑一个独立的-server" class="headerlink" title="跑一个独立的 server"></a>跑一个独立的 server</h3><p><code>opencode serve</code> 命令启动一个无头的 HTTP 服务，端口默认 4096，默认绑 <code>127.0.0.1</code>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opencode serve --port 4096 --hostname 0.0.0.0 --cors https://app.example.com</span><br></pre></td></tr></tbody></table></figure>
+
+<p>CORS flag 可以重复传，多次指定多个 origin。</p>
+<p>当你跑 <code>opencode</code>（不带参数），TUI 起来的同时会<strong>自动起一个 server</strong>，随机端口、<code>127.0.0.1</code>。这个 server 是 TUI 在跟自己对话。TUI 是 server 的 client。<code>opencode serve</code> 显式起一个独立的 server 进程，可以被任何 HTTP 客户端（包括另一台机器上的 TUI 或者一个远程 IDE 插件）连。</p>
+<p>发现机制有 mDNS 选项。<code>--mdns</code> 开启后，opencode 在局域网内广播 <code>_opencode._tcp</code> 服务，其他设备可以自动发现。<code>--mdns-domain opencode.local</code> 改广播名。</p>
+<p>认证用 HTTP Basic Auth：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OPENCODE_SERVER_PASSWORD=your-password opencode serve</span><br></pre></td></tr></tbody></table></figure>
+
+<p>默认用户名 <code>opencode</code>，用 <code>OPENCODE_SERVER_USERNAME</code> 覆盖。这条对 <code>opencode serve</code> 和 <code>opencode web</code> 都生效。</p>
+<p>server 暴露的 OpenAPI 3.1 规范文档在 <code>/doc</code> 路径下，比如 <code>http://localhost:4096/doc</code>。可以直接拖到 Swagger UI 看，也可以用它生成任意语言的 client。<code>packages/sdk</code> 里的 JavaScript SDK 就是这么来的。</p>
+<p><code>/tui</code> endpoint 是个有趣的彩蛋：可以<strong>通过 server 驱动 TUI</strong>。你可以预先填好 prompt 然后触发 TUI 开始执行。官方 IDE 插件（<a target="_blank" rel="noopener" href="https://opencode.ai/docs/ide">opencode.ai/docs/ide</a>）就是用这个机制把 server 接到 IDE 里的。</p>
+<hr>
+<h2 id="六、扩展性：MCP、插件、命令、主题、技能-权限-工具集"><a href="#六、扩展性：MCP、插件、命令、主题、技能-权限-工具集" class="headerlink" title="六、扩展性：MCP、插件、命令、主题、技能 + 权限 + 工具集"></a>六、扩展性：MCP、插件、命令、主题、技能 + 权限 + 工具集</h2><p>翻 <code>packages/core/src/config/</code> 目录，会发现 opencode 把” 用户能改的东西” 拆成了一打独立的概念，每个都有自己的加载、合并、优先级规则。这一节把扩展机制、权限系统、内置工具一起讲完，因为它们是同一层。</p>
+<h3 id="扩展机制"><a href="#扩展机制" class="headerlink" title="扩展机制"></a>扩展机制</h3><p><strong>MCP 服务器</strong> 通过 <code>mcp</code> 段配置，支持本地 stdio 和远程 SSE 两种传输。装上之后 MCP 工具自动出现在主 agent 的可用工具列表里。docs 里特意标了一条警告：MCP 工具加进上下文有 token 成本，GitHub MCP 那种会很快撑爆 context。</p>
+<p><strong>插件</strong> 通过 <code>plugin</code> 段配置，仓库根目录的 <code>.opencode/plugins/</code> 已经放了一个 <code>tui-smoke.tsx</code> 当示例，主题插件 <code>smoke-theme.json</code> 也是同源。插件系统是 opencode 自己的，不复用 Claude Code 的 marketplace 协议。</p>
+<p><strong>命令</strong>（slash command）通过 <code>command</code> 段配置。仓库根目录的 <code>.opencode/command/</code> 已经放了 8 个内置命令：<code>ai-deps</code>、<code>changelog</code>、<code>commit</code>、<code>issues</code>、<code>learn</code>、<code>rmslop</code>、<code>spellcheck</code>、<code>translate</code>。每个 <code>command</code> 是一个 prompt 模板，触发后模型按模板工作。这是把” 团队最佳实践” 固化成可重用命令的常见模式。</p>
+<p><strong>技能</strong>（skill）通过 <code>skill</code> 段配置。仓库根目录的 <code>.opencode/skills/</code> 已经放了 <code>effect</code> 和 <code>rtl-aware-development</code> 两个技能。技能比命令的颗粒度更细，模型按需激活。</p>
+<p><strong>主题</strong> 通过 <code>theme</code> 段配置。TUI 和桌面都支持换主题。<code>packages/ui</code> 的样式系统允许用户做完整覆盖。</p>
+<p><strong>配置文件搜索路径有优先级</strong>：<code>./opencode.jsonc</code> &gt; <code>./.opencode/opencode.jsonc</code> &gt; 用户全局 <code>~/.config/opencode/opencode.jsonc</code> &gt; 内置默认。<code>config</code> 包里的 <code>reference.ts</code> 处理这套合并。</p>
+<p><strong>LSP</strong>（Language Server Protocol）通过 <code>lsp</code> 段配置。opencode 内置了对常见语言的 LSP 客户端，自动调用类型信息、跳转到定义、查找引用。这是它跟” 普通 LLM 改文件” 分水岭最大的功能之一：模型能拿到真实的类型而不是自己猜。代价是冷启动慢，TypeScript 项目第一次跑要 30 秒到 2 分钟起 tsserver。</p>
+<p><code>AGENTS.md</code> 自动加载。opencode 在会话开始时读仓库根目录的 <code>AGENTS.md</code>（如果有），把里面的内容作为 agent 的额外指令。<code>packages/core/src/config/markdown.ts</code> 负责这套加载。这意味着你可以给一个项目写一份” 这个项目的特殊约定”，opencode 会自动遵守。</p>
+<h3 id="权限系统"><a href="#权限系统" class="headerlink" title="权限系统"></a>权限系统</h3><p>权限是 opencode 在我眼里最值得抄的设计点。</p>
+<p>每个工具的每次调用对应一条规则，规则解析成三个动作之一：</p>
+<ul>
+<li><code>allow</code> — 直接放行</li>
+<li><code>ask</code> — 弹窗问你</li>
+<li><code>deny</code> — 直接拒绝</li>
+</ul>
+<p>配置长这样：</p>
+<figure class="highlight json"><figcaption><span>title</span></figcaption><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"$schema"</span><span class="punctuation">:</span> <span class="string">"https://opencode.ai/config.json"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"permission"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"*"</span><span class="punctuation">:</span> <span class="string">"ask"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"bash"</span><span class="punctuation">:</span> <span class="string">"allow"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"edit"</span><span class="punctuation">:</span> <span class="string">"deny"</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>"*"</code> 是兜底粒度。<code>bash</code> 这种” 通常要问、但 <code>git status</code> 这种无害” 的操作可以单独开 allow。<code>edit</code> 这种” 在我这个项目里绝对不能让 agent 改” 的操作直接 deny。</p>
+<p>更细的粒度走对象语法。bash 工具的入参是命令行，可以按命令前缀匹配：</p>
+<figure class="highlight json"><figcaption><span>title</span></figcaption><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"$schema"</span><span class="punctuation">:</span> <span class="string">"https://opencode.ai/config.json"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"permission"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"bash"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"*"</span><span class="punctuation">:</span> <span class="string">"ask"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"git *"</span><span class="punctuation">:</span> <span class="string">"allow"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"npm *"</span><span class="punctuation">:</span> <span class="string">"allow"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"rm *"</span><span class="punctuation">:</span> <span class="string">"deny"</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>--auto</code> 模式是个全局开关。开了之后所有没显式 deny 的请求都自动放行：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">opencode --auto</span><br><span class="line">opencode run --auto <span class="string">"Refactor this module"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>TUI 里有命令面板可以切换。auto 模式下输入框旁边会显示一个 muted 的 <code>auto</code> 标记。</p>
+<p>这条设计的妙处在于它跟 Plan/Build agent 的权限分层是独立的两层：Plan agent 默认就是只读 + ask，你可以在 Plan agent 上完全不设 deny，靠它自己的默认行为；Build agent 上可以设严格 deny，靠权限规则。两条线不冲突。</p>
+<p><code>v1.1.1</code> 起老的 <code>tools</code> boolean 配置被合并到 <code>permission</code>，老的 <code>tools</code> 配置还能用，向后兼容。</p>
+<h3 id="工具集合"><a href="#工具集合" class="headerlink" title="工具集合"></a>工具集合</h3><p><code>packages/core/src/tool/</code> 列出所有内置工具。从文件名看涵盖：</p>
+<ul>
+<li>bash（执行 shell 命令）</li>
+<li>read /write/edit（文件操作）</li>
+<li>glob /grep/ls（搜索）</li>
+<li>webfetch（拉 URL）</li>
+<li>task（子 agent 调度）</li>
+<li>todos（任务列表管理）</li>
+<li>patch（应用 diff）</li>
+<li>skill（激活技能）</li>
+<li>以及 mcp 注入的外部工具</li>
+</ul>
+<p>bash 工具支持管道、重定向、后台任务，配合 <code>experimental.bash</code> 配置可以开更多权限。</p>
+<hr>
+<h2 id="七、快速上手"><a href="#七、快速上手" class="headerlink" title="七、快速上手"></a>七、快速上手</h2><p>装法有十来种，README 列得很全。最少命令的是这一行：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://opencode.ai/install | bash</span><br></pre></td></tr></tbody></table></figure>
+
+<p>包管理器：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">npm i -g opencode-ai@latest        <span class="comment"># npm</span></span><br><span class="line">bun i -g opencode-ai@latest         <span class="comment"># bun</span></span><br><span class="line">brew install anomalyco/tap/opencode <span class="comment"># macOS / Linux 官方推荐</span></span><br><span class="line">scoop install opencode              <span class="comment"># Windows</span></span><br><span class="line"><span class="built_in">sudo</span> pacman -S opencode             <span class="comment"># Arch</span></span><br><span class="line">mise use -g opencode                <span class="comment"># 跨平台版本管理</span></span><br><span class="line">nix run nixpkgs#opencode            <span class="comment"># Nix</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>装完执行 <code>opencode</code> 起 TUI。第一次会问你要不要 <code>/connect</code> 配一个 provider，填完 API key，存在 <code>~/.local/share/opencode/auth.json</code>。</p>
+<h3 id="第一次会话长什么样"><a href="#第一次会话长什么样" class="headerlink" title="第一次会话长什么样"></a>第一次会话长什么样</h3><p>跑 <code>opencode</code> 之后 TUI 起来，左边是空会话列表，右边是欢迎页。<code>/connect</code> 配好 provider 之后按 <code>i</code> 进输入模式，写第一句 prompt。</p>
+<p>以一个真实的项目举例。假设你在 <code>~/projects/foo</code>（一个用 Effect 写的 TypeScript HTTP API），你想加个 <code>POST /v2/users</code> 端点。输入框里写：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">帮我在 ~/projects/foo 加个 POST /v2/users 端点，请求体是 { email, name, password }，</span><br><span class="line">响应是 201 + { id, email, name, createdAt }。密码 bcrypt hash 之后入库。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Build agent 接到任务，大概按这个顺序动：</p>
+<ol>
+<li><strong>读项目结构</strong>。<code>read</code> 工具读 <code>package.json</code>、<code>tsconfig.json</code>，搞清楚是单包还是 monorepo。</li>
+<li><strong>看现有路由</strong>。<code>grep</code> 工具找 <code>app.post</code>、<code>router.post</code>、<code>effect.gen</code> 这些模式，找到现有 <code>POST /v1/users</code> 的实现作为模板。</li>
+<li><strong>查类型</strong>。LSP 查 <code>User</code> 类型、<code>UserRepository</code> 接口、<code>bcrypt</code> 模块签名。</li>
+<li><strong>写代码</strong>。在合适的位置新增 <code>users-v2.ts</code>、在 <code>app.ts</code> 里挂路由、跑 <code>tsc --noEmit</code> 检查。</li>
+<li><strong>写单测</strong>。按 ponytail 那条” 一个 runnable check” 原则，加一个 <code>users-v2.test.ts</code>，覆盖 happy path 和一个 email 重复的 negative case。</li>
+<li><strong>跑测试</strong>。<code>bash</code> 工具跑 <code>bun test</code>，看输出。</li>
+<li><strong>报告</strong>。<code>git diff</code> 显示改了 3 个文件、新增 1 个。</li>
+</ol>
+<p>过程中你会被问至少一次：要不要 <code>git add</code> 和 <code>git commit</code>。这是 <code>permission</code> 系统在工作。中途如果你想切到 Plan 模式看看其他方案，按 <code>Tab</code>。</p>
+<p>整个流程在 Haiku 4.5 上大概 2-3 分钟，Sonnet 上 1-2 分钟。Opus 上更准但慢一倍。</p>
+<p><code>opencode run</code> 是非交互模式，类似 <code>codex -p</code> 那种批量跑：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opencode run <span class="string">"在 ~/projects/foo 加个 POST /v2/users 端点，请求体是 ..."</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>适合 CI 集成或者定时任务。<code>--auto</code> 配合可以把权限弹窗也省了，agent 自己决定要不要 <code>git add</code>，但 <code>permission</code> 里的 <code>deny</code> 规则还是生效。</p>
+<p>桌面临床装：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install --cask opencode-desktop</span><br></pre></td></tr></tbody></table></figure>
+
+<p>装完跟 TUI 是同一份会话状态。</p>
+<p><strong>install 脚本尊重的路径优先级</strong>：</p>
+<ol>
+<li><code>$OPENCODE_INSTALL_DIR</code>（你指定的）</li>
+<li><code>$XDG_BIN_DIR</code>（XDG 规范）</li>
+<li><code>$HOME/bin</code>（标准用户 bin）</li>
+<li><code>$HOME/.opencode/bin</code>（兜底）</li>
+</ol>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OPENCODE_INSTALL_DIR=/usr/local/bin curl -fsSL https://opencode.ai/install | bash</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一个提醒：如果你之前装过 0.1.x 之前的版本，先删干净。0.1.x 是一次重写，目录结构变了。</p>
+<p><strong>最小项目配置</strong> <code>opencode.jsonc</code>：</p>
+<figure class="highlight jsonc"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"$schema"</span><span class="punctuation">:</span> <span class="string">"https://opencode.ai/config.json"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"provider"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"anthropic"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"options"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">        <span class="attr">"baseURL"</span><span class="punctuation">:</span> <span class="string">"https://api.anthropic.com/v1"</span></span><br><span class="line">      <span class="punctuation">}</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>加 MCP</strong>：</p>
+<figure class="highlight jsonc"><figcaption><span>title</span></figcaption><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"mcp"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"filesystem"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"type"</span><span class="punctuation">:</span> <span class="string">"local"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"command"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"npx"</span><span class="punctuation">,</span> <span class="string">"-y"</span><span class="punctuation">,</span> <span class="string">"@modelcontextprotocol/server-filesystem"</span><span class="punctuation">,</span> <span class="string">"/tmp"</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>装完跑 <code>opencode</code> 进 TUI，按 <code>?</code> 看键位绑定。<code>Tab</code> 切 Build/Plan，<code>@explore</code> 派搜索子 agent，<code>/help</code> 看命令列表。</p>
+<hr>
+<h2 id="八、对比：和-Claude-Code、Codex-怎么选"><a href="#八、对比：和-Claude-Code、Codex-怎么选" class="headerlink" title="八、对比：和 Claude Code、Codex 怎么选"></a>八、对比：和 Claude Code、Codex 怎么选</h2><p>这个我没法替你选，但我可以说我怎么用的。</p>
+<p><strong>Claude Code</strong> 我留在主力位。原因是它的子 agent 编排（Explore、Plan、general-purpose）和 hooks 系统现在最成熟，社区里出的 skills 和 plugins 多到可以按需挑。ponytail 这种项目就是先把 Claude Code 当宿主做的（虽然支持 20 个）。闭源和账号绑定是代价，但我还没遇到它在某个任务上完全做不了。</p>
+<p><strong>Codex CLI</strong> 我装在云开发机上。它跟 GitHub Action 集成最顺，PR 自动化 review 的体验是三者里最完整的。模型选 GPT 系列的最新款跑批量任务便宜。</p>
+<p><strong>opencode</strong> 我装在两类地方。一类是 homelab 上的小服务器，跑 headless 模式当 HTTP API 给自己其他项目用。一类是临时需要换主题、换 TUI 布局、试新模型组合的时候，本地开一个 TUI 玩。</p>
+<p><strong>如果你在意三件事里的一件，opencode 值得先试</strong>：</p>
+<ol>
+<li><strong>完全开源</strong>。MIT 协议，server 和 client 都开源，可以自己 fork 改。</li>
+<li><strong>多客户端共享服务端</strong>。TUI、桌面、Web 控制台、SDK 接 HTTP 后端，同一会话跨设备跟。</li>
+<li><strong>服务端 / 客户端分离的部署模型</strong>。把 opencode 跑在一台机器上，从另一台机器的 IDE 里连过去；或者把它的能力接进你自己的产品。</li>
+</ol>
+<p><strong>如果以下三件里有任何一件对你成立，Claude Code 仍然是当下最稳的选择</strong>：</p>
+<ol>
+<li>你依赖 Claude Code 生态里那些现成的 skills、plugins、commands（mattpocock、affaan-m、ponytail 这一档）。</li>
+<li>你的工作流需要 subagent 调度层之上的复杂编排（multiple subagents + skills + hooks 一起工作）。</li>
+<li>你不需要部署灵活性，只想要” 装上就能用”。</li>
+</ol>
+<p>Codex CLI 适合”PR review / CI 集成” 这条线，跟 GitHub 绑得最紧，模型永远最新。</p>
+<p><strong>生态温度</strong> 是个不显眼但值得看的指标。opencode 仓库里有 5,739 个 open issues。三个月前的 ponytail 仓库是 219 个。在 AI 编码 Agent 这个品类里，issue 数量高不等于失控，等于” 用户基数大 + 维护节奏紧”。opencode 的 dev 分支最近 24 小时有 push，PR 合并节奏是日级，对一个 30+ 包的 monorepo 来说，维护压力不小，但它顶住了。</p>
+<hr>
+<h2 id="九、总结"><a href="#九、总结" class="headerlink" title="九、总结"></a>九、总结</h2><h3 id="适合谁"><a href="#适合谁" class="headerlink" title="适合谁"></a>适合谁</h3><p><strong>希望服务端和客户端分离部署的人。</strong> 把 opencode 跑在 NAS / 云开发机 /homelab 上，从笔记本、桌面、IDE 任何地方连过去。</p>
+<p><strong>希望 fork 改自己的人。</strong> MIT 协议，30+ 包结构清晰，加一个新的 client（VS Code 插件、JetBrains 插件、Slack 机器人）有明确的路径。</p>
+<p><strong>需要把 AI 编码 Agent 当产品后端的人。</strong> SDK 从 server 自动生成，HTTP API 覆盖所有功能，Python SDK 在路上。</p>
+<p><strong>已经在用 Vercel AI SDK 的人。</strong> 模型适配、stream、tool call 这一层不用再写一遍。</p>
+<p><strong>想用 Plan 模式做” 只读代码调研” 的人。</strong> opencode 把 Plan 做成一个独立主 agent，配单独的权限、模型、提示词，比” 在同一个 agent 上加个权限开关” 清晰。</p>
+<h3 id="不适合谁"><a href="#不适合谁" class="headerlink" title="不适合谁"></a>不适合谁</h3><p><strong>不愿意自己装 LLM 凭据的人。</strong> opencode 不托管任何模型调用，你得自己有 Anthropic / OpenAI / Google 之类的账号。</p>
+<p><strong>期待” 装上就有完整插件市场” 的人。</strong> 它的插件生态是有的，但远没到 Claude Code 那种” 挑 skills 挑花眼” 的程度。多数场景下你需要自己写或者 fork。</p>
+<p><strong>对终端 UI 有洁癖的人。</strong> 仓库根目录的 README 没截图。docs 站有截图。装起来你自己看吧。</p>
+<h3 id="局限"><a href="#局限" class="headerlink" title="局限"></a>局限</h3><p><strong>dev 分支是工作分支</strong>。README 提示主分支用 <code>dev</code>，发布版本用 <code>npx opencode-ai@latest</code>。这意味着你 clone 下来的 <code>dev</code> 分支可能有时比 npm 上的稳定版要激进一档。生产用跟着 npm 版本走。</p>
+<p><strong>Bun 优先</strong>。<code>bun dev</code> 是项目的开发约定，AGENTS.md 里写了。Node.js 也能跑（<code>script/build-node.ts</code> 打了 Node 二进制），但 Effect 框架和 monorepo 工作流很多 Bun 特性。Bun 在 macOS 和 Linux 上稳定，Windows 上需要 WSL。</p>
+<p><strong>5,739 个 open issues</strong> 不是失修信号，是项目热度。但你提一个 issue 等回复的延迟会比小项目长。</p>
+<p><strong>桌面应用还标 BETA</strong>。日常用 TUI 更稳。</p>
+<p><strong>Eclipse Public License 的子依赖</strong>。部分 Effect 生态的子包使用这种许可，跟 MIT 主协议不冲突，但做商业分发的时候要扫一遍合规。</p>
+<p><strong>安全模型依赖 provider</strong>。opencode 把” 代码安全” 这一关很大程度外包给了 model provider。<code>permission</code> 系统防的是 bash 误操作和文件越界，防不住模型被 prompt injection 诱导去删数据库。要企业级审计日志和细粒度操作回放，得自己接 <code>packages/identity</code> 和 <code>packages/stats</code> 的事件流，或者干脆加一层 wrapper 调 SDK。</p>
+<p><strong>Token 上下文管理是个统一痛点。</strong> opencode 在长会话里也会丢上下文。<code>compaction</code> 配置可以开自动压缩，但开启后的体验是” 模型突然忘了五分钟前我们刚讨论过的命名约定”。这个跟 Claude Code、Codex 一样，谁都没真正解决。</p>
+<p><strong>SWE-bench 这种” 修真实 GitHub issue” 的能力不是它的卖点。</strong> 如果你要” 把一个 200 行的 patch 提给上游 repo”，用 SWE-agent、SWE-bench 里的专门模型或者 Codex 的 GitHub Action 集成会更稳。opencode 的优势在交互式编辑，不在批量自动化。</p>
+<p><strong>多仓库 monorepo 协作</strong> 没特别处理。它一次会话盯着一个工作目录。你要在 10 个 repo 之间协调，得手动切目录或者起多个 server。</p>
+<hr>
+<h2 id="十、它解决不了的问题"><a href="#十、它解决不了的问题" class="headerlink" title="十、它解决不了的问题"></a>十、它解决不了的问题</h2><p>写到这里我得停一下说清楚” 它解决不了什么”。</p>
+<p><strong>Token 上下文管理是个统一痛点。</strong> opencode 在长会话里也会丢上下文。<code>compaction</code> 配置可以开自动压缩，但开启后的体验是” 模型突然忘了五分钟前我们刚讨论过的命名约定”。这个跟 Claude Code、Codex 一样，谁都没真正解决。</p>
+<p><strong>SWE-bench 这种” 修真实 GitHub issue” 的能力不是它的卖点。</strong> 如果你要” 把一个 200 行的 patch 提给上游 repo”，用 SWE-agent、SWE-bench 里的专门模型或者 Codex 的 GitHub Action 集成会更稳。opencode 的优势在交互式编辑，不在批量自动化。</p>
+<p><strong>多仓库 monorepo 协作</strong> 没特别处理。它一次会话盯着一个工作目录。你要在 10 个 repo 之间协调，得手动切目录或者起多个 server。</p>
+<p><strong>没有” 工作流模板” 层。</strong> Claude Code 有 subagent + skill + command + hook 这套组合，可以把”PR review 流” 打包成一个 team-level 工具。opencode 的 plugin + command + skill 也能做类似事，但 30+ 包的结构让” 做一个新插件” 的认知成本高。</p>
+<p><strong>不支持的 LLM 提供商还是有的。</strong> 比如智谱 BigModel、阿里 Qwen 的某些 endpoint、字节豆包的 SDK API，AI SDK 还在补。如果你必须用某个特定厂商且 opencode 没列出来，可以自己写 provider adapter，但那是 v0 的工程量。</p>
+<hr>
+<h2 id="十一、一段代码看懂架构"><a href="#十一、一段代码看懂架构" class="headerlink" title="十一、一段代码看懂架构"></a>十一、一段代码看懂架构</h2><p>最后留一段 TypeScript 看 opencode 的内部结构长什么样。<code>packages/core/src/config/agent.ts</code> 的核心模式是 Effect 框架的 Service + Layer 模式：</p>
+<figure class="highlight typescript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> <span class="title class_">Interface</span> {</span><br><span class="line">  <span class="attr">get</span>: <span class="function">(<span class="params"><span class="attr">name</span>: <span class="built_in">string</span></span>) =&gt;</span> <span class="title class_">Agent</span></span><br><span class="line">  <span class="attr">list</span>: <span class="function">() =&gt;</span> <span class="title class_">Agent</span>[]</span><br><span class="line">}</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Service</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Context.Service</span>&lt;<span class="title class_">Service</span>, <span class="title class_">Interface</span>&gt;()(<span class="string">"@opencode/Agent"</span>) {}</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> layer = <span class="title class_">Layer</span>.<span class="title function_">effect</span>(<span class="title class_">Service</span>, ...)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> defaultLayer = layer.<span class="title function_">pipe</span>(...)</span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">as</span> <span class="title class_">Agent</span> <span class="keyword">from</span> <span class="string">"./agent"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>消费方这么用：</p>
+<figure class="highlight typescript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> { <span class="title class_">Agent</span> } <span class="keyword">from</span> <span class="string">"@/config/agent"</span></span><br><span class="line"><span class="keyword">yield</span> * <span class="title class_">Agent</span>.<span class="property">Service</span></span><br><span class="line"><span class="title class_">Agent</span>.<span class="property">layer</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这是 Effect 框架的标准模式：把” 实现” 和” 接口” 分离，通过 Layer 注入。模块的命名空间投影（<code>Agent.layer</code>）让消费方可以静态分析依赖。</p>
+<p>如果你打算 fork opencode 改点什么，先把 Effect 这套搞懂是第一步。<code>AGENTS.md</code> 里专门有一节”opencode Effect rules” 讲迁移注意事项。</p>
+<hr>
+<h2 id="十二、跟生态的关系：什么在-opencode-之上，什么在-opencode-之外"><a href="#十二、跟生态的关系：什么在-opencode-之上，什么在-opencode-之外" class="headerlink" title="十二、跟生态的关系：什么在 opencode 之上，什么在 opencode 之外"></a>十二、跟生态的关系：什么在 opencode 之上，什么在 opencode 之外</h2><p>写到最后想聊一下 opencode 跟整个 AI 编码 Agent 生态的相对位置。</p>
+<p><strong>之上的层：skills、plugins、commands。</strong> ponytail 这种项目明确把 opencode 列为支持的宿主之一（20 个之一）。装 ponytail + opencode 的组合，等于让 opencode 跑起来” 不写过度代码” 的纪律。Skills 生态是 opencode 跟 Claude Code 拉平差距最关键的一层，目前差距还在但正在缩小。</p>
+<p><strong>之下的层：模型 provider、工具调用协议。</strong> Vercel AI SDK 在这一层。Models.dev 在这一层。MCP 在这一层。opencode 不重做这些，直接接。这是个聪明的选择：把开放标准当成基础设施，自己专注做产品层。</p>
+<p><strong>平行的层：Claude Code、Codex、Gemini CLI、Aider。</strong> 它们的差别越来越不在” 能不能做” 上，而在” 做的成本” 和” 部署形态” 上。opencode 的成本是”MIT 协议 + 30+ 包 monorepo 的认知负担”，收益是” 可以本地自托管 + 多客户端 + SDK 接第三方”。</p>
+<p><strong>之下的层但不太对劲的：subagent 编排。</strong> Claude Code 的 subagent + skill + command + hook 组合是把” 团队工程实践” 固化成可重用工具的成熟路径。opencode 的 agent 抽象很扎实（Build/Plan + General/Explore/Scout），但要追到 Claude Code 那种”subagent 嵌套 subagent + 跨 agent skill 共享” 的成熟度，还需要时间。</p>
+<p>我个人判断，2026 年下半年到 2027 年上半年，AI 编码 Agent 这条线会收敛到三家左右：Claude Code（商业 + 生态最厚）、Codex（OpenAI 官方 + GitHub 集成）、opencode（开源 + 部署最灵活）。其他各家要么被并入这三家，要么变成这三家之一的前端。Cursor 是个变量，它有自己的 IDE 资产。Copilot 是个变量，它绑在 GitHub 上。</p>
+<p>对正在选工具的人：如果你不确定，先用 Claude Code。生态最厚，出了问题最容易找到答案。如果你已经在用 opencode 并且喜欢，留着。它解决的那一类需求是真需求。</p>
+<hr>
+<h2 id="十三、调试和排错的几条经验"><a href="#十三、调试和排错的几条经验" class="headerlink" title="十三、调试和排错的几条经验"></a>十三、调试和排错的几条经验</h2><p>这一节写给已经决定试一下 opencode 的人。</p>
+<p><strong>TUI 卡死。</strong> 八成是 LSP server 启动卡了。开新会话前先 <code>opencode --print-logs</code> 跑一次看 log。<code>packages/opencode/AGENTS.md</code> 里写了 TUI 开发用 <code>tmux new-session -d -s opencode-dev 'bun dev'</code>，<code>tmux capture-pane -pt opencode-dev</code> 抓输出。</p>
+<p><strong>Provider 报错。</strong> <code>/connect</code> 配过的 key 存在 <code>~/.local/share/opencode/auth.json</code>，编辑这个文件可以手动改 key。<code>OPENCODE_LOG=debug</code> 环境变量打开 debug log，会打印 Vercel AI SDK 的实际请求和响应。</p>
+<p><strong>Server 端口冲突。</strong> 默认 4096。如果 4096 被占了，加 <code>--port</code> 显式指定。CORS 加 <code>--cors</code> flag，多次指定多个 origin。</p>
+<p><strong>Permission 一直弹。</strong> 看一下 <code>opencode.json</code> 的 <code>permission</code> 段，最常见的坑是 <code>bash</code> 默认 <code>ask</code>，但你 <code>git status</code> 一天要跑几十次。改成 <code>bash: { "*": "ask", "git status": "allow" }</code> 这种前缀匹配。</p>
+<p><strong>模型选择被默认走了贵的那个。</strong> 检查 <code>provider</code> 段里有没有设默认 model。Models.dev 拉来的数据里每个 provider 通常标了一个”best price-performance” 模型，但 opencode 默认用的是 model ID 字典序排第一的那个。</p>
+<p><strong>MCP server 装上不工作。</strong> 检查 <code>mcp</code> 段配置，stdio 类型要 <code>command</code> 加 args，SSE 类型要 <code>url</code>。先在 terminal 里手动跑一下 <code>command</code> 看能不能起来。MCP server 失败的时候 opencode 通常会打 log 但不弹错，因为工具集合是 lazy 加载的。</p>
+<p><strong>会话中途上下文爆炸。</strong> 三个办法：开 <code>compaction</code> 配置自动压缩；用 <code>/summarize</code> 命令手动触发；开新会话把上下文重新整理一次。AI 编码 Agent 长会话的硬限制是 context window，opencode 没绕过这件事。</p>
+<hr>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/anomalyco/opencode">https://github.com/anomalyco/opencode</a></p>
+<p><strong>模型选择没有默认优化</strong>。Vercel AI SDK + Models.dev 是通用层，不会针对某个具体模型调教 prompt。如果你是 Claude 重度用户，可能会觉得” 它也能用 Claude，但跟 Claude Code 调教过的 prompt 比差点意思”。这是所有通用 agent 的通病，不是 opencode 的问题。</p>
+<hr>
+<p>最后回到开头那个场景。我现在三件并排装在 dock 上，但每一件的用途我都能说清楚：Claude Code 主力 + 生态最厚，Codex 跑 GitHub Action 自动化，opencode 跑在 server 上当 HTTP 后端，被我自己写的几个内部小工具调。</p>
+<p>opencode 不是” 又一个 AI 编码 Agent”。它是” 我想把 AI 编码 Agent 当基础设施用” 这个需求的具体回答。</p>
+<p>如果你的需求是前一种，它不是你的菜。</p>
+<p>如果你的需求是后一种，204.7k stars 不是白来的。</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/anomalyco/opencode">https://github.com/anomalyco/opencode</a><br><br></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/09/06/anomalyco-opencode-open-source-ai-coding-agent/" title="anomalyco&#x2F;opencode：204.7k stars 的开源 AI 编码 Agent，客户端 &#x2F; 服务端分离让 TUI、桌面、Web 共享同一个大脑">https://www.daishengli.top/2026/09/06/anomalyco-opencode-open-source-ai-coding-agent/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/opencode/" rel="tag"># opencode</a>
+              <a href="/tags/anomalyco/" rel="tag"># anomalyco</a>
+              <a href="/tags/AI-Coding/" rel="tag"># AI Coding</a>
+              <a href="/tags/Agent/" rel="tag"># Agent</a>
+              <a href="/tags/TUI/" rel="tag"># TUI</a>
+              <a href="/tags/TypeScript/" rel="tag"># TypeScript</a>
+              <a href="/tags/Bun/" rel="tag"># Bun</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/05/dietrichgebert-ponytail-lazy-senior-dev-ai-agent/" rel="prev" title="DietrichGebert&#x2F;ponytail：127.5k stars 的 &quot;懒惰资深工程师&quot; 技能，把 AI Agent 从 404 行的日期选择器里拽出来">
+                  <i class="fa fa-angle-left"></i> DietrichGebert/ponytail：127.5k stars 的 "懒惰资深工程师" 技能，把 AI Agent 从 404 行的日期选择器里拽出来
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/06/openwhispr-openwhispr-privacy-first-voice-dictation/" rel="next" title="OpenWhispr&#x2F;openwhispr：7.4k stars 的开源语音听写，本地 Whisper &#x2F; Parakeet + 云端 BYOK 全给你，WisprFlow 替代品">
+                  OpenWhispr/openwhispr：7.4k stars 的开源语音听写，本地 Whisper / Parakeet + 云端 BYOK 全给你，WisprFlow 替代品 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

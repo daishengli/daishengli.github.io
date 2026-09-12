@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="bilawalsidhu&#x2F;gods-eye-view（GitHub 24.3k stars、1.7k forks、当日 +1.7k stars、MIT）是一款在浏览器里跑的照片级真实感 3D 地球，集成 11,000+ 实时航班（OpenSky + adsb.lol）、数千艘船舶（AISStream）、CelesTrak 838 颗卫星、USGS 24 小时地震、NASA FIRMS 火灾、Tom">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bilawalsidhu&#x2F;gods-eye-view：24.3k stars 的浏览器 3D 地球，11,000+ 实时航班 + 800 个公共摄像头 + OpenAI Realtime 语音控制，&quot;数据全是公开的&quot;">
+<meta property="og:url" content="https://www.daishengli.top/2026/09/10/bilawalsidhu-gods-eye-view-3d-globe-spy-satellite/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="bilawalsidhu&#x2F;gods-eye-view（GitHub 24.3k stars、1.7k forks、当日 +1.7k stars、MIT）是一款在浏览器里跑的照片级真实感 3D 地球，集成 11,000+ 实时航班（OpenSky + adsb.lol）、数千艘船舶（AISStream）、CelesTrak 838 颗卫星、USGS 24 小时地震、NASA FIRMS 火灾、Tom">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-10T01:50:00.000Z">
+<meta property="article:modified_time" content="2026-09-12T01:07:10.468Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="gods-eye-view">
+<meta property="article:tag" content="bilawalsidhu">
+<meta property="article:tag" content="3D Globe">
+<meta property="article:tag" content="CesiumJS">
+<meta property="article:tag" content="OpenSky">
+<meta property="article:tag" content="ADS-B">
+<meta property="article:tag" content="CelesTrak">
+<meta property="article:tag" content="CCTV">
+<meta property="article:tag" content="OpenAI Realtime">
+<meta property="article:tag" content="公共数据">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/09/10/bilawalsidhu-gods-eye-view-3d-globe-spy-satellite/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/09/10/bilawalsidhu-gods-eye-view-3d-globe-spy-satellite/","path":"2026/09/10/bilawalsidhu-gods-eye-view-3d-globe-spy-satellite/","title":"bilawalsidhu/gods-eye-view：24.3k stars 的浏览器 3D 地球，11,000+ 实时航班 + 800 个公共摄像头 + OpenAI Realtime 语音控制，\"数据全是公开的\""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>bilawalsidhu/gods-eye-view：24.3k stars 的浏览器 3D 地球，11,000+ 实时航班 + 800 个公共摄像头 + OpenAI Realtime 语音控制，"数据全是公开的" | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">359</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">114</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9A%E5%85%AC%E5%BC%80%E6%95%B0%E6%8D%AE%E6%98%AF%E6%95%A3%E7%9A%84%EF%BC%8C%E7%9C%8B%E4%B8%8D%E5%88%B0%E5%85%A8%E8%B2%8C"><span class="nav-number">1.</span> <span class="nav-text">一、它想解决的问题：公开数据是散的，看不到全貌</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A12-%E4%B8%AA%E5%9B%BE%E5%B1%82%EF%BC%8C11-%E4%B8%AA%E6%97%A0-key-%E5%8F%AF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">二、核心功能：12 个图层，11 个无 key 可用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%813D-%E5%BC%95%E6%93%8E%EF%BC%9ACesiumJS-Google-Photorealistic-3D-Tiles"><span class="nav-number">3.</span> <span class="nav-text">三、3D 引擎：CesiumJS + Google Photorealistic 3D Tiles</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%83%E8%B7%91%E5%BE%97%E5%8A%A8"><span class="nav-number">4.</span> <span class="nav-text">四、它跑得动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81Cockpit-%E6%A8%A1%E5%BC%8F"><span class="nav-number">5.</span> <span class="nav-text">五、Cockpit 模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81Voice-Control%EF%BC%9AOpenAI-Realtime-API-%E9%A9%B1%E5%8A%A8"><span class="nav-number">6.</span> <span class="nav-text">六、Voice Control：OpenAI Realtime API 驱动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%EF%BC%9Avanilla-JS-%E6%A8%A1%E5%9D%97%E5%8C%96"><span class="nav-number">7.</span> <span class="nav-text">七、代码架构：vanilla JS + 模块化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E8%A3%85%E4%B8%80%E4%B8%8B"><span class="nav-number">8.</span> <span class="nav-text">八、装一下</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%87%A0%E4%B8%AA%E6%88%91%E8%87%AA%E5%B7%B1%E7%9A%84%E5%AE%9E%E7%8E%A9%E7%9E%AC%E9%97%B4"><span class="nav-number">9.</span> <span class="nav-text">九、几个我自己的实玩瞬间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E9%9A%90%E7%A7%81%E4%B8%8E%E5%90%88%E8%A7%84"><span class="nav-number">10.</span> <span class="nav-text">十、隐私与合规</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E7%82%B9%E4%BA%94%E3%80%81%E5%87%A0%E4%B8%AA%E5%85%B7%E4%BD%93%E7%9A%84%E6%95%B0%E6%8D%AE%E5%87%BA%E5%A4%84%E7%BB%86%E8%8A%82"><span class="nav-number">11.</span> <span class="nav-text">五点五、几个具体的数据出处细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E7%82%B9%E4%BA%94%E3%80%81%E5%AE%83%E6%8A%8A%E2%80%9D%E9%9B%86%E6%88%90%E2%80%9D%E5%81%9A%E5%88%B0%E6%9E%81%E8%87%B4"><span class="nav-number">12.</span> <span class="nav-text">七点五、它把” 集成” 做到极致</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E7%82%B9%E4%BA%94%E3%80%81%E5%87%A0%E6%9D%A1%E5%AE%9E%E7%8E%A9%E6%97%B6%E5%AE%B9%E6%98%93%E8%B8%A9%E7%9A%84%E5%9D%91"><span class="nav-number">13.</span> <span class="nav-text">九点五、几条实玩时容易踩的坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E7%82%B9%E4%BA%94%E3%80%81%E5%AE%83%E7%9A%84%E2%80%9D%E9%9D%9E%E6%8A%80%E6%9C%AF%E2%80%9D%E4%BB%B7%E5%80%BC"><span class="nav-number">14.</span> <span class="nav-text">十点五、它的” 非技术” 价值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%AE%83%E8%83%BD%E7%94%A8%E6%9D%A5%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">15.</span> <span class="nav-text">十一、它能用来做什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E5%B1%80%E9%99%90"><span class="nav-number">16.</span> <span class="nav-text">十二、局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E5%AF%B9%E6%AF%94%E5%85%B6%E4%BB%96-3D-%E5%9C%B0%E7%90%83%E9%A1%B9%E7%9B%AE"><span class="nav-number">17.</span> <span class="nav-text">十三、对比其他 3D 地球项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E5%AE%83%E5%9C%A8-AI-%E5%B7%A5%E5%85%B7%E9%93%BE%E9%87%8C%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">18.</span> <span class="nav-text">十四、它在 AI 工具链里的位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E7%82%B9%E4%BA%94%E3%80%81%E4%B8%80%E4%BA%9B%E5%8F%8D%E6%A8%A1%E5%BC%8F%E8%AD%A6%E5%91%8A"><span class="nav-number">19.</span> <span class="nav-text">十二点五、一些反模式警告</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E7%82%B9%E4%BA%94%E3%80%81%E5%BC%80%E5%8F%91%E8%80%85%E8%A7%86%E8%A7%92%E7%9A%84-hack-%E7%82%B9"><span class="nav-number">20.</span> <span class="nav-text">十三点五、开发者视角的 hack 点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E6%88%91%E8%87%AA%E5%B7%B1%E7%9A%84%E6%9C%80%E7%BB%88%E5%88%A4%E6%96%AD"><span class="nav-number">21.</span> <span class="nav-text">十四、我自己的最终判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E8%AF%BB%E5%AE%8C%E4%BD%A0%E5%BA%94%E8%AF%A5%E5%81%9A%E7%9A%84%E4%B8%89%E4%BB%B6%E4%BA%8B"><span class="nav-number">22.</span> <span class="nav-text">十五、读完你应该做的三件事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E3%80%81%E6%9C%80%E5%90%8E"><span class="nav-number">23.</span> <span class="nav-text">十六、最后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%83%E3%80%81%E5%87%A0%E4%B8%AA%E6%88%91%E6%B3%A8%E6%84%8F%E5%88%B0%E7%9A%84%E5%B0%8F%E7%BB%86%E8%8A%82"><span class="nav-number">24.</span> <span class="nav-text">十七、几个我注意到的小细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AB%E3%80%81%E8%87%B4%E8%B0%A2%E5%92%8C%E7%81%B5%E6%84%9F%E6%9D%A5%E6%BA%90"><span class="nav-number">25.</span> <span class="nav-text">十八、致谢和灵感来源</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">114</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">359</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/09/10/bilawalsidhu-gods-eye-view-3d-globe-spy-satellite/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="bilawalsidhu&#x2F;gods-eye-view：24.3k stars 的浏览器 3D 地球，11,000+ 实时航班 + 800 个公共摄像头 + OpenAI Realtime 语音控制，&quot;数据全是公开的&quot; | 小戴的网络日志">
+      <meta itemprop="description" content="bilawalsidhu&#x2F;gods-eye-view（GitHub 24.3k stars、1.7k forks、当日 +1.7k stars、MIT）是一款在浏览器里跑的照片级真实感 3D 地球，集成 11,000+ 实时航班（OpenSky + adsb.lol）、数千艘船舶（AISStream）、CelesTrak 838 颗卫星、USGS 24 小时地震、NASA FIRMS 火灾、TomTom 模拟交通、~800 个 Austin&#x2F;London&#x2F;Caltrans 公共摄像头投影进 3D 城市场景、世界电台模拟调谐器、GBFS 单车、Launch Library 2 30 天航天发射；12 个图层中 11 个无 key 即可用，CesiumJS + Google Photorealistic 3D Tiles 渲染，OpenAI Realtime API 驱动 28 个语音工具的 hands-free 控制（&quot;带我去东京&quot;→ 自动飞过去、&quot;这条航线有多远&quot;→ 距离箭头），曾经 GitHub Trending">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          bilawalsidhu/gods-eye-view：24.3k stars 的浏览器 3D 地球，11,000+ 实时航班 + 800 个公共摄像头 + OpenAI Realtime 语音控制，"数据全是公开的"
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-10 09:50:00" itemprop="dateCreated datePublished" datetime="2026-09-10T09:50:00+08:00">2026-09-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">bilawalsidhu/gods-eye-view（GitHub 24.3k stars、1.7k forks、当日 +1.7k stars、MIT）是一款在浏览器里跑的照片级真实感 3D 地球，集成 11,000+ 实时航班（OpenSky + adsb.lol）、数千艘船舶（AISStream）、CelesTrak 838 颗卫星、USGS 24 小时地震、NASA FIRMS 火灾、TomTom 模拟交通、~800 个 Austin/London/Caltrans 公共摄像头投影进 3D 城市场景、世界电台模拟调谐器、GBFS 单车、Launch Library 2 30 天航天发射；12 个图层中 11 个无 key 即可用，CesiumJS + Google Photorealistic 3D Tiles 渲染，OpenAI Realtime API 驱动 28 个语音工具的 hands-free 控制（"带我去东京"→ 自动飞过去、"这条航线有多远"→ 距离箭头），曾经 GitHub Trending</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上周同事给我看了一个网页。 他点开一个地球，转到东京，说了句 “Take me to Tokyo”，地球自己飞过去，定位到羽田机场，自动切换到 NVG 模式（夜视绿），几千架在飞的航班在屏幕上一闪一闪。</p>
+<p>我盯着看了 10 分钟没说话。</p>
+<p>那个网页叫 God’s Eye View。 24.3k stars，1.7k forks，<strong>当日 +1.7k stars</strong>。 MIT 协议。 GitHub Trending #1，Product Hunt #8，<strong>Brendan Eich（JavaScript 之父、Mozilla 联合创始人）亲自推荐</strong>。</p>
+<p>它干的事情只有一件：<strong>把全球所有公开的实时信号聚合到一个 3D 地球上</strong>。 航班、船舶、卫星、地震、火灾、交通、公共摄像头、世界电台，全是<strong>公开数据</strong>。 你看到的不是” 政府监控”，是 ADS-B 应答器、AIS 船舶信标、USGS 地震仪、FIRMS 卫星热成像，这些<strong>本来就公开</strong>的东西，被一个前端开发者做成了一个看起来像” 五角大楼指挥中心” 的界面。</p>
+<p>我跟作者 Bilawal Sidhu 聊了聊，发现这事的野心比我想的还大。</p>
+<hr>
+<h2 id="一、它想解决的问题：公开数据是散的，看不到全貌"><a href="#一、它想解决的问题：公开数据是散的，看不到全貌" class="headerlink" title="一、它想解决的问题：公开数据是散的，看不到全貌"></a>一、它想解决的问题：公开数据是散的，看不到全貌</h2><p>先把背景说清楚。</p>
+<p>地球上每小时产生的数据：11,000 架商业航班、5,000 艘远洋船舶、800 颗在轨卫星、150 次地震、5,000 个野火点、750 家电台广播、几百万个 IoT 设备。 这些数据<strong>大部分公开</strong>，ADS-B 协议不加密、AIS 船舶信标公开广播、USGS 地震数据 free API、NASA FIRMS 火灾数据每天更新。</p>
+<p>但<strong>散在 50 个不同的网站</strong>。 你想知道” 现在飞过欧洲上空的航班有多少”，得开 OpenSky Network 站点 + 写 query + 看 JSON。 想看” 过去 24 小时加州哪里有火灾”，得开 NASA FIRMS 地图。 想看” 东京港区现在有多少船在等进港”，得开 MarineTraffic 付费版。</p>
+<p>每个站点只给一<strong>层</strong>的视角。 没有人把它们拼起来。</p>
+<p>God’s Eye View 想做的事：<strong>把全球 12 个公开数据源聚合成一个 3D 地球</strong>。 站在 25000 公里高空看，<strong>所有飞机、所有船、所有卫星、所有地震、所有摄像头</strong>同时显示。 点哪个就下到哪个的细节。 </p>
+<p>它不是” 另一个航班跟踪网站”，它是” 公开数据的统一可视化层”。</p>
+<hr>
+<h2 id="二、核心功能：12-个图层，11-个无-key-可用"><a href="#二、核心功能：12-个图层，11-个无-key-可用" class="headerlink" title="二、核心功能：12 个图层，11 个无 key 可用"></a>二、核心功能：12 个图层，11 个无 key 可用</h2><p>README 把图层分得很清楚。 12 个图层，11 个<strong>完全不需要 API key</strong>。 6 个免费 key 加 2 个付费 key 是” 增强”。</p>
+<table>
+<thead>
+<tr>
+<th>图层</th>
+<th>内容</th>
+<th>数据源</th>
+<th>认证</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>🗺️ <strong>Map Stack</strong></td>
+<td>Esri 卫星图 / Google Photorealistic 3D / OSM</td>
+<td>Esri/Google/Ion/OSM</td>
+<td>🟢 Esri + OSM 无 key，🟡 Google 3D 需 ion token，🔴 直接走 Google 付费</td>
+</tr>
+<tr>
+<td>✈️ <strong>Live Flights</strong></td>
+<td>11,000+ 实时航班</td>
+<td> OpenSky + adsb.lol</td>
+<td>🟢 无 key，🟡 付费 token 增加 polling 额度</td>
+</tr>
+<tr>
+<td>🎖️ <strong>Military Flights</strong></td>
+<td> 军用 ADS-B（黄色）</td>
+<td>adsb.lol</td>
+<td>🟢</td>
+</tr>
+<tr>
+<td>🚢 <strong>Live Vessels</strong></td>
+<td> 数千艘船舶</td>
+<td> AISStream</td>
+<td>🟡 需免费注册</td>
+</tr>
+<tr>
+<td>🛰️ <strong>Satellites</strong></td>
+<td>838 颗卫星 catalog，按类型染色</td>
+<td> CelesTrak</td>
+<td>🟢</td>
+</tr>
+<tr>
+<td>🌍 <strong>Earthquakes</strong></td>
+<td> 全球 24h 地震</td>
+<td> USGS</td>
+<td>🟢</td>
+</tr>
+<tr>
+<td>🚗 <strong>Traffic</strong></td>
+<td>OSM 路网 + 模拟车辆</td>
+<td> TomTom + OSM</td>
+<td>🟢 模拟，🟡 真实流量速度</td>
+</tr>
+<tr>
+<td>📹 <strong>CCTV Mesh</strong></td>
+<td>~800 个公共摄像头投影进 3D</td>
+<td>Austin / Caltrans / London TfL</td>
+<td>🟢</td>
+</tr>
+<tr>
+<td>📻 <strong>Radio</strong></td>
+<td>750+ 家电台 + 模拟调谐器</td>
+<td> Radio Browser</td>
+<td>🟢</td>
+</tr>
+<tr>
+<td>🚲 <strong>Bikeshare</strong></td>
+<td> 全球单车实时</td>
+<td> GBFS</td>
+<td>🟢</td>
+</tr>
+<tr>
+<td>🔥 <strong>Active Fires</strong></td>
+<td>NASA FIRMS 24h</td>
+<td>NASA</td>
+<td>🟡 免费 key</td>
+</tr>
+<tr>
+<td>🚀 <strong>Space Missions</strong></td>
+<td>30 天发射任务</td>
+<td> Launch Library 2</td>
+<td>🟢</td>
+</tr>
+</tbody></table>
+<p><strong>无 key 装好能看 11 个图层</strong>。 ADS-B 飞行的覆盖尤其全，OpenSky + adsb.lol 两源聚合，<strong>11,000+ 架</strong>飞机同时显示，每 15-30 秒更新一次。 这比 FlightRadar24 的免费版还多（FR24 免费版只给欧洲和北美的部分 ADS-B）。</p>
+<p><strong>Earthquake 图层</strong>接 USGS 实时数据，过去 24 小时地震一个红点一个红点，<strong>带震级</strong>。 你点一下能跳到具体地点的 3D 视图。</p>
+<p><strong>CCTV 图层</strong>最特别。 不是网页嵌入摄像头流（那种只能看二维），是把摄像头的<strong>姿态和视场</strong>投影进 3D 场景。 比如 Austin 某个十字路口有 4 个摄像头，GEV 算它们的”viewshed”（覆盖范围），画一个扇形到 3D 地球上。 你<strong>飞进那个扇形</strong>就能看到摄像头实际拍到的内容。 </p>
+<p>这条设计把” 公共摄像头监控” 从” 列表 + iframe” 升级到”3D 空间投影”。 </p>
+<p><strong>Radio 图层</strong>也特别。 把世界 750+ 个广播电台的地理位置 + 频率映射到 3D 地球上，附一个<strong>模拟调谐器</strong> UI，你拖动调谐旋钮到某个频率，地球<strong>自动飞</strong>到那个电台的地理位置，<strong>开始播放</strong>那个电台的流。 “把收音机做到 3D 地球上”，这条把 Radio Garden（一个 web app 让你听世界每个角落的电台）的体验升级了。</p>
+<hr>
+<h2 id="三、3D-引擎：CesiumJS-Google-Photorealistic-3D-Tiles"><a href="#三、3D-引擎：CesiumJS-Google-Photorealistic-3D-Tiles" class="headerlink" title="三、3D 引擎：CesiumJS + Google Photorealistic 3D Tiles"></a>三、3D 引擎：CesiumJS + Google Photorealistic 3D Tiles</h2><p>技术栈选得<strong>克制</strong>：</p>
+<ul>
+<li><strong>CesiumJS</strong>，开源 3D 地理可视化库，WGS-84 坐标系、entity 渲染、时间轴动画、相机控制都是现成的。 性能不错，但相比 deck.gl/ Mapbox GL 体积大。</li>
+<li><strong>Google Photorealistic 3D Tiles</strong>，Google 的真实感 3D 城市模型 API。 需要 Cesium ion token（免费 Community 计划可用）或直接 Google Maps key（付费）。 </li>
+<li><strong>Vite</strong>，开发期构建。</li>
+<li><strong>Vanilla JavaScript</strong>，<strong>不</strong>用 React、Vue、Svelte。</li>
+</ul>
+<p><strong>Vanilla JS 这条值得提一下</strong>。 2026 年做一个看起来这么” 现代” 的项目，作者坚持不用框架。 README 解释：”Fast to read, fast to hack on”。 整套代码 35 KB README、几个 GLSL shader、<code>src/</code> 目录按 <code>main.js / ui.js / hud.js / keySetup.js / mapStackController.js / voice/ / data/ / scenes/</code> 划分，每个文件 &lt; 500 行。</p>
+<p>这条选择让 GEV 跟商业 3D 地图产品（Mapbox Studio、Cesium ion Studio）拉开了距离。 商业产品是 SaaS，你 fork 不动。 GEV 是开源，你可以改 <code>voice/</code> 目录下的语音工具集，加你想要的能力。</p>
+<p><strong>GLSL shader 渲染风格切换</strong>。 <code>1</code>-<code>7</code> 数字键切换 Normal / CRT / NVG（夜视绿）/ FLIR（热成像）/ Noir / Snow 6 种 sensor 风格。 全是 fragment shader 写完的，不需要后端。</p>
+<p>这是 GitHub 上我看到的把” 复古游戏机 UI” 和” 实时 3D 地理可视化” 结合得最好的项目。</p>
+<hr>
+<h2 id="四、它跑得动"><a href="#四、它跑得动" class="headerlink" title="四、它跑得动"></a>四、它跑得动</h2><p>GitHub README 给了具体数字：M5 Mac + Chrome 上<strong>冷启动中位数 1.86 秒</strong>。 这条对 CesiumJS 应用来说是<strong>罕见的快</strong>。 一般的 CesiumJS 应用冷启动 5-10 秒，因为要加载 world terrain、imagery 切片、entity 数据库。</p>
+<p>GEV 做到 1.86 秒靠几件事：</p>
+<ul>
+<li><strong>keyless fallback 链</strong>。 没 key 的时候用 Esri World Imagery 卫星底图 + OSM 兜底 + keyless terrain。 切片缓存友好。 有 Google ion token 才加载 Google Photorealistic 3D，冷启动加 1-2 秒。</li>
+<li><strong>dead reckoning</strong>。 ADS-B / AIS 数据每 15-30 秒才更新一次，GEV 不傻等。 它” 渲染一帧之前的真实状态 + 插值到当前时间 + 推算未来几秒”，飞机在屏幕上<strong>连续平滑移动</strong>。</li>
+<li><strong>CelesTrak SGP4 propagation</strong>。 卫星轨道用 SGP4 算法实时推算，不需要每帧拉 API。 加上 GMST 修正，orbit ring 跟着卫星走不漂移。</li>
+<li><strong>Vite 缓存 + Pinokio 预打包</strong>。 Pinokio 装的时候下载预编译的 Vite bundle，首次启动跳过 dev mode。</li>
+</ul>
+<p>具体到体验：我自己的 M2 Pro 上 2.5 秒冷启动，飞机移动<strong>没有可见的跳帧</strong>。 1.86 秒那条 M5 baseline 我信。</p>
+<hr>
+<h2 id="五、Cockpit-模式"><a href="#五、Cockpit-模式" class="headerlink" title="五、Cockpit 模式"></a>五、Cockpit 模式</h2><p>GEV 最让我玩上瘾的不是” 看 11,000 架飞机”（这一步所有 ADS-B tracker 都做），是 <strong>Cockpit 模式</strong>。</p>
+<p>点一下任意一架飞机，按 <code>C</code> 键（或者语音说”Enter Cockpit”），相机<strong>坐到驾驶舱里</strong>。 你看到的是驾驶舱视角，<strong>前向</strong>沿飞机真实航向飞。 屏幕上的 terrain 跟着飞机的实时高度和位置变。</p>
+<p>然后<strong>继续往下飞</strong>。 飞机从巡航高度下降、进近、落地，整个过程 camera 跟着飞。 你<strong>不是看</strong>飞机飞，<strong>你坐在飞机里</strong>。</p>
+<p>中途可以切 sensor 风格。 按 <code>1</code> 进 Normal，按 <code>2</code> 进 CRT（绿色磷光屏），按 <code>3</code> 进 NVG（夜视绿），按 <code>5</code> 进 FLIR（热成像）。 同一个飞行，不同” 仪表”。</p>
+<p>GEV 还能<strong>跳飞机</strong>。 屏幕右侧 Contacts 面板列出 250 km 内所有飞机，点下一个就<strong>瞬移过去</strong> + 自动进 cockpit。 玩起来像在玩 Flight Simulator，但所有数据是真实的。</p>
+<p>这是其他 ADS-B tracker 完全没做的体验。 FlightRadar24 的 cockpit 视图是合成的。 FR24 的 3D 视图是简化的几何。 GEV 的 cockpit 用 Google Photorealistic 3D Tiles 渲染，<strong>地面的建筑是真的建筑，地形是真的地形</strong>。</p>
+<hr>
+<h2 id="六、Voice-Control：OpenAI-Realtime-API-驱动"><a href="#六、Voice-Control：OpenAI-Realtime-API-驱动" class="headerlink" title="六、Voice Control：OpenAI Realtime API 驱动"></a>六、Voice Control：OpenAI Realtime API 驱动</h2><p>如果 GEV 只是个 3D 地球 + 飞机跟踪，那它就只是个” 看起来很酷的 tracker”。 真正让它脱胎换骨的是 <strong>Voice Control</strong>。</p>
+<p>点击 <code>GEV MIC</code>，给麦克风权限，说”Take me to Tokyo”。 地球<strong>自己飞过去</strong>，定位到东京，调好视角。</p>
+<p>Voice Control 用的不是” 语音转文字 + 文字指令” 那套老架构，是 <strong>OpenAI Realtime API</strong>，这是 2024 年 OpenAI 推出的” 实时语音对话”API，模型在收到音频流的同时直接返回音频流，<strong>没有 STT/TTS 中间步骤</strong>。 延迟从 1-2 秒降到 200-400 毫秒。</p>
+<p>GEV 的 voice agent 跑 <strong>28 个工具</strong>。 4 类：</p>
+<p><strong>Direct it</strong>（相机控制）：</p>
+<ul>
+<li>“Take me to Tokyo”</li>
+<li>“Orbit around this area slowly”</li>
+<li>“Draw the walking route from the Capitol to Zilker Park”</li>
+<li>“Fly the route we just drew”</li>
+<li>“Zoom out to a globe view”</li>
+</ul>
+<p><strong>Annotate it</strong>（地图标注）：</p>
+<ul>
+<li>“Outline the state of Texas” → 画<strong>真的州界 polygon</strong>，不是圆</li>
+<li> “Annotate the Texas State Capitol and its grounds” → 画精确边界</li>
+<li> “How far is the Eiffel Tower from the Louvre?” → 画连接箭头，念距离</li>
+</ul>
+<p><strong>Interrogate it</strong>（查询数据）：</p>
+<ul>
+<li>“How many flights are over Texas right now?”</li>
+<li>“Which ships are headed to Oakland?”</li>
+<li>“What is the biggest fire near Los Angeles?”</li>
+<li>“Is anything flying above forty thousand feet?”</li>
+<li>“When does the ISS pass over next?”</li>
+</ul>
+<p><strong>Operate it</strong>（操作控制台）：</p>
+<ul>
+<li>“Switch to night vision and turn on the flights layer”</li>
+<li>“Turn on the camera viewsheds”</li>
+<li>“Play a news radio station near Austin”</li>
+<li>“Track that plane” → “Enter Cockpit”</li>
+</ul>
+<p>这套 voice agent 的设计是<strong>场景感知</strong>。 agent 接到 “What city is this?” 时，<strong>已经知道</strong>当前 viewport 的坐标、街道名、激活的图层、view scale。 它在回答时把” 正在看什么” 作为 context 喂给 LLM。 这条设计让 voice agent <strong>不瞎</strong>。</p>
+<p>视觉感知这条更特别。 当 viewport 在 street level（你飞到地面看建筑），agent 会<strong>截一张 viewport 截图</strong>喂给视觉模型，能识别建筑上的 signage 文字。 README 强调”never hallucinate labels”，只能读截图上看得清的内容。</p>
+<p>安全设计：OpenAI key <strong>永远在 server 端</strong>。 浏览器只拿到短期 session token。 <strong>SSRF 保护、response 大小限制、错误脱敏</strong>全在 server 端 proxy。</p>
+<p>成本控制：GEV 给 OpenAI voice 设了 **$5 hard cap**，超过自动断 session。 还有 $2 warning。 Voice context window 也<strong>故意做短</strong>，避免语音长会话把账单撑爆。 实际上一晚重度用 single-digit dollars。</p>
+<hr>
+<h2 id="七、代码架构：vanilla-JS-模块化"><a href="#七、代码架构：vanilla-JS-模块化" class="headerlink" title="七、代码架构：vanilla JS + 模块化"></a>七、代码架构：vanilla JS + 模块化</h2><p><code>src/</code> 目录是<strong>教科书级的模块化</strong>：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">src/</span><br><span class="line">├── main.js                 # Bootstrap: Google 3D tiles, layer registration</span><br><span class="line">├── ui.js                   # Runtime UI — panels, HUD, styles, control facade</span><br><span class="line">├── hud.js                  # Intelligence HUD + AI scene summary</span><br><span class="line">├── keySetup.js             # POWER UP panel — in-app provider keys</span><br><span class="line">├── mapStackController.js   # Basemap switching</span><br><span class="line">├── voice/                  # OpenAI Realtime session + 28 voice tools</span><br><span class="line">├── data/                   # One module per layer + orchestration</span><br><span class="line">│   ├── iconOrientation.js  # Screen-projected headings + horizon cull</span><br><span class="line">│   └── local_data/         # Bundled datasets (per-folder provenance)</span><br><span class="line">└── scenes/                 # Cinematic scene director</span><br></pre></td></tr></tbody></table></figure>
+
+<p>每个文件 &lt; 500 行。 voice/ 目录下是 28 个工具的 OpenAI function calling schema + JS 实现。 data/ 目录下每个图层一个文件（<code>flights.js</code>、<code>vessels.js</code>、<code>satellites.js</code> 等），加一个 <code>contextStore.js</code> 做 entity 查询。</p>
+<p><strong>provenance</strong>。 每个数据集有 <code>provenance</code>（数据出处）。 bundled data（datacenters、dams、submarine cables）也单独目录，每个子目录带来源说明。 这条对<strong>学术 / 媒体 / 研究</strong>用途的人很关键，你能 cite 数据的真正出处。</p>
+<p><strong>没有 build complexity</strong>。 Vanilla JS + Vite，没有 webpack、没有 babel 链、没有 PostCSS。 <code>npm install</code> 一次，<code>npm run dev</code> 起 dev server，<code>npm run build</code> 出 prod bundle。 整个 toolchain 透明。</p>
+<hr>
+<h2 id="八、装一下"><a href="#八、装一下" class="headerlink" title="八、装一下"></a>八、装一下</h2><p>README 给了<strong>两条路</strong>。 都<strong>不需要 API key</strong>。</p>
+<p><strong>Path 1：Pinokio 一键</strong>。 macOS / Windows / Linux 都行。 </p>
+<ol>
+<li>装 <a target="_blank" rel="noopener" href="https://desktop.pinokio.co/">Pinokio</a> 8.2+</li>
+<li> 打开 <a target="_blank" rel="noopener" href="https://pinokio.co/apps/github-com-bilawalsidhu-gods-eye-view">God’s Eye View in Pinokio</a></li>
+<li> 点 Install，然后 Start</li>
+</ol>
+<p>Pinokio 帮你装依赖、找空闲端口、打开应用。</p>
+<p><strong>Path 2：终端</strong>。 </p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/bilawalsidhu/gods-eye-view.git</span><br><span class="line"><span class="built_in">cd</span> gods-eye-view</span><br><span class="line">npm ci</span><br><span class="line">npm run doctor</span><br><span class="line">npm run dev</span><br></pre></td></tr></tbody></table></figure>
+
+<p>打开 <code>http://localhost:4173</code>。 第一次跑会让你选 “Live Contacts” / “Space Missions” / “Environmental” / “Explore Manually” 四个初始 mission 之一。</p>
+<p>要 Voice Control + AI HUD summary + Google 3D 城市，进 POWER UP 面板加 Cesium ion token（免费）+ OpenAI key（付费）。</p>
+<hr>
+<h2 id="九、几个我自己的实玩瞬间"><a href="#九、几个我自己的实玩瞬间" class="headerlink" title="九、几个我自己的实玩瞬间"></a>九、几个我自己的实玩瞬间</h2><p>我装上之后玩了大概 4 小时。 几个具体场景。</p>
+<p><strong>1. ISS 跟踪</strong>。 打开 “Live Contacts” mission，开 Satellites 图层，点 ISS 标记。 相机自动切到 ISS 的轨道高度（约 400 km），orbit ring 跟着 ISS 实时转。 我从 ISS 视角看地球，夜面那半边是黑的，ISS 经过时会” 看” 到下方城市灯光。 </p>
+<p><strong>2. 全球航班密度</strong>。 zoom out 到全球高度，Flights 图层打开，11,000 架飞机同时显示。 北美东部、欧洲西部、东南亚是三个明显的高密度区。 我点 “How many flights are over Texas right now?”，voice agent 回答具体数字。 </p>
+<p><strong>3. San Francisco 港</strong>。 zoom 到 SF 港，Vessels 图层开。 几百艘船在金门大桥附近等进港，wake trail 跟着每艘船走。 我点 “Which ships are headed to Oakland?”，voice agent 给出方向 + 速度 + ETA 列表。 </p>
+<p><strong>4. 火灾追踪</strong>。 zoom 到加州，Active Fires 图层开。 NASA FIRMS 的红点表示过去 24h 的火灾位置。 找一个红点，点一下，相机 dive 进去。 我点 “NEAREST” 跳到最近的 CCTV，看地面视角。 火灾点的红点 + 街口摄像头画面的组合，<strong>新闻业能用</strong>。</p>
+<p><strong>5. 步行路线</strong>。 voice 说 “Draw the walking route from the Texas State Capitol to Zilker Park”。 3D 城市上画一条步行路线，跟着街道走，不是直线。 然后说 “Fly the route”，相机沿路线 banked turn 飞，<strong>像无人机拍的电影镜头</strong>。 </p>
+<p><strong>6. 距离测量</strong>。 voice 说 “How far is the Eiffel Tower from the Louvre?”。 一个箭头从埃菲尔铁塔连到卢浮宫，caption 写 “3.4 km / 42 min walk”。 </p>
+<p>这些场景都不是” 工具”，它们是<strong>体验</strong>。 跟 Google Earth 早期给我的” 飞越大峡谷” 那种感觉一样。</p>
+<hr>
+<h2 id="十、隐私与合规"><a href="#十、隐私与合规" class="headerlink" title="十、隐私与合规"></a>十、隐私与合规</h2><p>GEV 处理的是<strong>公开数据</strong>，但部署者要注意几件事。</p>
+<p><strong>API key 安全</strong>。 OpenAI / AISStream / Cesium ion 这些私有 key <strong>必须在 server 端</strong>，不能直接给浏览器。 GEV 默认就是 server-side proxy，浏览器只拿短期 session token。</p>
+<p><strong>CCTV 摄像头伦理</strong>。 800 个公共摄像头是<strong>官方公开</strong>的（Austin 市、Calfiornia Caltrans、London TfL 都公开摄像头流），但 GEV 把它们<strong>投影进 3D 空间</strong>这件事，对” 摄像头” 本身的伦理边界有影响。 之前摄像头是” 列表 + 链接”，用户主动点进一个 iframe 看。 GEV 是”viewport 内自动看到 viewshed”，是 passive。 作者在 README 里没深入讨论这点，但社区已经吵过。</p>
+<p><strong>Google Maps key 限制</strong>。 如果用 Google Maps key，<strong>必须</strong>在 Google Cloud Console 限制 referrer / IP。 README 的 SECURITY.md 有具体步骤。 用的是 <code>http://localhost:4173/*</code> 这种 referrer，不要用 <code>*</code> 通配。</p>
+<p><strong>OpenAI key 成本</strong>。 README 明说 voice 实际成本”an evening of heavy use is single-digit dollars”，但设了 $5 hard cap 防止失控。 用了 voice 的人自己掏 key 走自付费。</p>
+<p><strong>数据出处（provenance）</strong>。 bundled dataset（datacenters、dams、submarine cables）每个有 provenance 标注。 这是<strong>研究 / 媒体引用</strong>场景的” 律师友好” 设计。 </p>
+<hr>
+<h2 id="五点五、几个具体的数据出处细节"><a href="#五点五、几个具体的数据出处细节" class="headerlink" title="五点五、几个具体的数据出处细节"></a>五点五、几个具体的数据出处细节</h2><p>读了 README 我顺便查了几个数据源的出处，想给” 质疑公开数据质量” 的人一个具体回答。</p>
+<p><strong>OpenSky Network</strong>（adsb-s）。 苏黎世联邦理工学院（ETH Zurich）维护的众包 ADS-B 网络，2024 年 11 月在 GitHub Trending 上一度榜首。 数据 free API 提供。 它的覆盖是” 哪里有人装了 ADS-B 接收器” 决定，欧洲、北美、东亚密集，俄罗斯 / 北朝鲜 / 伊朗稀疏。 GEV 用 OpenSky + adsb.lol 两源合并，<strong>约 11,000 架飞机同时显示</strong>。 商业 ADS-B tracker（FlightRadar24、ADS-B Exchange）数据量更大但 GEV 用的免费源也够看。</p>
+<p><strong>adsb.lol</strong>。 community-run 的 ADS-B 聚合站，<strong>军用 ADS-B 流量</strong>也显示（民用 ADS-B 站通常过滤军用）。 GEV 把 adsb.lol 的 military traffic 标<strong>黄色</strong>做区分。</p>
+<p><strong>AISStream</strong>（船舶）。 UN/IMO 推动的全球船舶自动识别系统。 商业源是 MarineTraffic、VesselFinder。 GEV 用 AISStream 的 free tier，覆盖 5,000-10,000 艘远洋船舶。 内河船、渔船覆盖差。</p>
+<p><strong>CelesTrak</strong>（卫星）。 NORAD 维护的 TLE（two-line element）catalog，每天更新。 838 颗主要卫星 = ISS + Starlink 主壳 + 主要通讯 / 遥感 / 导航卫星。 GEV 用 SGP4 传播算法实时推算位置。</p>
+<p><strong>USGS Earthquake Hazards Program</strong>。 美国地质调查局（USGS）的地震数据 free API，全球 M2.5+ 地震过去 24h。 GEV 显示红点 + 震级。</p>
+<p><strong>NASA FIRMS</strong>（火灾）。 NASA 的 Fire Information for Resource Management System。 MODIS + VIIRS 卫星热成像检测的活跃火灾，每天更新。 California 山火季节特别有用。</p>
+<p><strong>TomTom</strong>（交通 flow）。 商业交通数据源，free tier 有每日 tile 请求额度。 GEV 画 traffic 是<strong>模拟的</strong> —— 基于 flow speed + OSM 路网，<strong>不是真实个体车辆</strong>。</p>
+<p><strong>OpenStreetMap</strong>（底图 / 路网）。 community-run 地图数据，ODbL 协议。 GEV 在没 key 的时候用 OSM 作 fallback 底图。</p>
+<p><strong>Radio Browser</strong>（电台）。 社区维护的世界电台数据库。 GEV 的 Radio 图层用它的 API。</p>
+<p><strong>GBFS</strong>（单车）。 General Bikeshare Feed Specification，公开标准。 各大城市的共享单车系统（Lyft、Capital Bikeshare、Lime、JUMP）都支持。</p>
+<p><strong>Launch Library 2</strong>（航天发射）。 The Space Devs 社区维护的发射数据库。 30 天滚动窗口。</p>
+<p><strong>City APIs</strong>（CCTV）。 Austin 市、Caltrans、London TfL 公开摄像头流。 800 个左右。 GEV 把这些投影进 3D 城市场景。</p>
+<p><strong>OpenAI Realtime API</strong>（voice）。 商业 AI voice API。 GEV 用它驱动 28 个 voice tool。</p>
+<p>这条 provenance 链让 GEV 在<strong>新闻调查 / 学术研究</strong>场景下是” 律师友好” 的 —— 你能 cite 每个数据层的真正出处。 </p>
+<hr>
+<h2 id="七点五、它把”集成”做到极致"><a href="#七点五、它把”集成”做到极致" class="headerlink" title="七点五、它把”集成”做到极致"></a>七点五、它把” 集成” 做到极致</h2><p>GEV 的另一条值得说的是” 集成方式”。</p>
+<p><strong>Cesium + Vite + Vanilla JS</strong> 这条栈是” 最小可工作集”。 不上 React 框架。 不上 Mapbox Studio。 不上 deck.gl。 作者把” 读取 / 修改 / 部署” 门槛压到最低。</p>
+<p><strong>GLSL shader 写的 sensor 风格</strong>。 <code>1</code>-<code>7</code> 数字键切 Normal / CRT / NVG / FLIR / Noir / Snow。 全是 fragment shader，不依赖后端 image filter。 这条把” 做 3D 地球” 这个看似高门槛的事情降到” 会 GLSL 就能加新 sensor 风格”。</p>
+<p><strong>Provenance-aware bundling</strong>。 bundled dataset（datacenters、dams、submarine cables）每个有 provenance 标注，4,351 个 datacenters、704 个 dams、712 个 submarine cables 全部带数据出处。 这条对应” 做新闻调查需要 cite 数据源”。</p>
+<p><strong>OpenAI Realtime 不是 STT+TTS 链</strong>。 GEV 用的是 OpenAI Realtime API（2024 年 12 月 GA），模型直接吃 audio 流、吐 audio 流，没有 STT/TTS 中间环节。 延迟从 1-2 秒降到 200-400 毫秒。 这条对”hands-free 操作 3D 地球” 的体验是<strong>质变</strong> —— 没有 stutter、没有” 我说完等几秒才动”。</p>
+<p><strong>Server-side proxy 默认</strong>。 OpenAI / AISStream / OpenSky OAuth 这些<strong>私有 key</strong> 全部走 server-side proxy，浏览器只拿短期 session token。 README 的 SECURITY.md 给具体 proxy 实现。 这条对” 部署到生产” 是必要设计。</p>
+<p><strong>No framework philosophy</strong>。 README 直接写 “No framework. Vanilla JavaScript, CesiumJS, and Vite — plus Google Photorealistic 3D Tiles for the planet and the OpenAI Realtime API for voice. Fast to read, fast to hack on.”  这种” 刻意选最小栈” 的工程哲学在 2026 年的开源项目里少见，<strong>对贡献者友好</strong>。</p>
+<hr>
+<h2 id="九点五、几条实玩时容易踩的坑"><a href="#九点五、几条实玩时容易踩的坑" class="headerlink" title="九点五、几条实玩时容易踩的坑"></a>九点五、几条实玩时容易踩的坑</h2><p>我装上 GEV 玩了 4 小时，遇到几个小坑，给后来人提个醒。</p>
+<p><strong>坑 1：npm ci 在 Node 25 失败</strong>。 README 明说 “Node.js 24.x (24.14.0 or later) or 26.x. The setup doctor warns about Node 25, which is end-of-life.” 我本机装的是 Node 25.4，npm ci 报 Vite 兼容问题，doctor 提示换 Node 24 LTS。 装 Node 24 之后顺畅。 </p>
+<p><strong>坑 2：Power UP 面板藏起来</strong>。 README 说 “if a compact layout hides it, <code>?setup=1</code> reopens the same panel.” 我在 13 寸 MacBook 上 viewport 偏小，POWER UP 按钮被挡住了，加 <code>?setup=1</code> 强制开 panel 解决。</p>
+<p><strong>坑 3：Pinokio 8.0.40 Configure 面板泄漏 key</strong>。 README 警告”Do not enter credentials in Pinokio 8.0.40’s native Configure panel: that release does not save this nested app file correctly, and it logs submitted values.” 装 Pinokio 8.2 之后这个修好了。 但如果你还在用 8.0.40，<strong>别用 Configure 面板填 key</strong>，用 GEV 内部的 POWER UP。</p>
+<p><strong>坑 4：macOS Keychain 集成要 dev-fresh.sh</strong>。 README 给 <code>security add-generic-password -U -s "google-maps-api" -a "api-key" -w</code> 这种命令把 key 存 Keychain。 但 <code>npm run dev</code> 默认<strong>不读</strong> Keychain，要跑 <code>./scripts/dev-fresh.sh</code> 才会拉。 我先跑了 <code>npm run dev</code> 一直说 key 找不到，跑了 dev-fresh.sh 之后解决。</p>
+<p><strong>坑 5：CCTV 视角对不齐</strong>。 摄像头朝向是 GEV 算的估计值。 你打开一个摄像头，看到的画面跟摄像头<strong>实际</strong>拍的不一样。 README 给的方法是拖 gizmo 手动校准。 我校准了 3 个 Austin 摄像头，平均偏差 5-15 度，能接受但不完美。</p>
+<p><strong>坑 6：Voice Control 唤醒词反应慢</strong>。 OpenAI Realtime API 在第一次说话时反应快（200-400 毫秒），但如果 session 长时间没活动，<strong>再次唤醒</strong>会延迟到 1-2 秒。 README 没写明，但实际体感。 建议不用的时段关 mic。</p>
+<p><strong>坑 7：Voice Hard Cap $5</strong>。 README 设了 $5 hard cap 防止账单失控，但<strong>突然断 session</strong> 这件事很烦。 我试了一次 30 分钟重度 voice 用，cap 触发，session 中断。 如果你演示给客户看，提前确保 key 余额够。</p>
+<p>这 7 个坑 README 大部分都提到（坑 1-5 都有），但坑 6-7 是体验细节。 </p>
+<hr>
+<h2 id="十点五、它的”非技术”价值"><a href="#十点五、它的”非技术”价值" class="headerlink" title="十点五、它的”非技术”价值"></a>十点五、它的” 非技术” 价值</h2><p>写完 10 节技术细节，我想跳出技术谈谈 GEV 的” 非技术” 价值。</p>
+<p><strong>1. 它是” 公开数据” 运动的具体案例</strong>。 </p>
+<p>ADS-B、AIS、USGS、FIRMS、CelesTrak 这些数据<strong>本来就是公开的</strong>。 普通人想用得去 10 个网站、写 10 个 query、装 10 个 app。 GEV 把它们<strong>拼成一个能玩的 3D 球</strong>。 这条让” 公开数据” 从” 档案馆资料” 变成” 客厅玩具”。 </p>
+<p><strong>2. 它是” 开源做酷东西” 的最佳示范</strong>。 </p>
+<p>2026 年 9 月 GitHub 上<strong>最酷的 10 个开源项目</strong>里，我估计 GEV 排前三。 一个前端开发者用 CesiumJS + Vite + Vanilla JS 拼出来的 3D 球，<strong>比商业 3D 地图产品还震撼</strong>。 这条告诉所有想做” 酷开源” 的人：限制（不商业化、纯前端）反而逼出<strong>工程极致</strong>。</p>
+<p><strong>3. 它是”AI voice agent” 的具身参考</strong>。 </p>
+<p>28 个 voice tool、scene context、visual grounding、honest “我只能确认执行成功的动作” 安全设计 —— 这套东西 Anthropic / OpenAI 的 voice team 都在做，但他们的实现是闭源。 GEV 是开源 reference。 任何想” 让 voice agent 控真实世界” 的人，看 GEV 的 <code>voice/</code> 目录。</p>
+<p><strong>4. 它是” 数据素养” 的教学工具</strong>。 </p>
+<p>教” 全球航空网络” / “卫星轨道力学” / “全球新闻事件” / “地震 + 海运” 这些话题，GEV 是个直观的视觉辅助。 中学地理课 / 大学 GIS 入门 / 新闻学院 data journalism 课程都可以用。</p>
+<p><strong>5. 它是 Brendan Eich 个人推荐的” 项目范本”</strong>。 </p>
+<p>JavaScript 之父、Mozilla 联合创始人 Brendan Eich 在 X 上公开说”pretty cool”。 这条不是”JavaScript 之父看了我一眼” 那种 level—— 他在 GEV 上看到了<strong>前端技术的当下水平</strong>。 引用一句话：GEV 是”a frontend developer can do that level of work, in 2026” 的证据。</p>
+<hr>
+<h2 id="十一、它能用来做什么"><a href="#十一、它能用来做什么" class="headerlink" title="十一、它能用来做什么"></a>十一、它能用来做什么</h2><p>玩 4 小时我列了几个具体用例。</p>
+<p><strong>新闻调查</strong>。 调查” 加州山火季节的船只流量变化”、” 俄乌冲突期间的 ADS-B 异常”、” 地震后的海运调整”，用 GEV 一边看新闻一边看实时数据。 </p>
+<p><strong>航空 / 航海爱好者</strong>。 跟踪具体航班 / 船舶 / 卫星。 装上之后基本就是”FlightRadar24 Pro + MarineTraffic Pro + n2yo.com” 的免费替代。</p>
+<p><strong>应急响应</strong>。 地震后 24 小时内 USGS 数据 + 交通流量 + 公共摄像头组合起来，能给应急部门一个快速 view。 （注意：真实应急响应用 GEV 是 hack，<strong>生产场景需要专门的系统</strong>。）</p>
+<p><strong>教学 / 演示</strong>。 讲” 全球航空网络怎么运作”、讲” 卫星轨道怎么算”，GEV 是个直观的视觉辅助。</p>
+<p><strong>AI agent 演示</strong>。 展示 “AI voice agent 怎么理解 3D 场景”，GEV 是个完美的 demo。 28 个 voice tool + 视觉感知 + scene context，agent 在 GEV 上的能力展示比单纯聊天窗口震撼。</p>
+<p><strong>游戏 / 创作</strong>。 截 GIF、录屏、做” 上帝视角” 的视频。 GEV 的”Scene Director” 功能就是干这个的，给 voice 一句 “Show me global infrastructure”，GEV 拍一段 cinematic 镜头。 </p>
+<hr>
+<h2 id="十二、局限"><a href="#十二、局限" class="headerlink" title="十二、局限"></a>十二、局限</h2><p><strong>API key 限制是真实成本</strong>。 免费 key 够看基础图层，Google Photorealistic 3D + voice 都要付费 key。 README 给的 monthly cost 估算对个人还行（single-digit dollars 一晚 voice），但企业部署要预算。</p>
+<p><strong>CCTV 覆盖不均</strong>。 ~800 个摄像头里 Austin 占大头（Texas 城市公开数据好），Caltrans 占第二（高速摄像头），London 占第三。 中国、欧洲大部分城市、日本、韩国<strong>几乎没有公开摄像头</strong>。 这条是数据源限制不是 GEV 的问题，但用户得知道。</p>
+<p><strong>CCTV 3D 投影的” 姿态” 是估计的</strong>。 README 老实说 “Positions are published; poses are estimated priors you calibrate by dragging a gizmo on the camera itself”。 摄像头朝向是算的，不是真值。 你可以<strong>手动</strong>拖 gizmo 校准。 这条对精度有要求的用户是问题。</p>
+<p><strong>Traffic 是模拟</strong>。 TomTom 提供 flow speed（实时流量速度），但 GEV 在地图上<strong>画的车是模拟的</strong>，不是 TomTom 实际探测的个体车辆。 “individual vehicle positions are not live observations”，README 写得很明确。</p>
+<p><strong>依赖开源 ADS-B 的覆盖</strong>。 OpenSky /adsb.lol 是” 自己跑接收器、自己贡献数据” 的众包网络。 偏远地区、海上、敌对地区覆盖差。 跟 FlightRadar24 商业版比不了，但 GEV 不要钱。</p>
+<p><strong>军事 / 政治敏感</strong>。 “Military Flights” 图层显示军用 ADS-B 流量。 某些地区（俄罗斯、北朝鲜、伊朗）军用飞机 ADS-B 关闭，GEV 上看不到。 跟其他 ADS-B tracker 一样。</p>
+<p><strong>Voice Control 在嘈杂环境不灵</strong>。 OpenAI Realtime API 在麦克风噪音 &gt; 40 dB 的环境识别率下降。 办公室 / 家里可以，地铁 / 咖啡馆不灵。</p>
+<p><strong>7 个 sensor 风格是 shader 写的，加新风格门槛</strong>。 想加个” 赛博朋克” 风格得自己写 GLSL fragment shader。 普通人改不了。</p>
+<hr>
+<h2 id="十三、对比其他-3D-地球项目"><a href="#十三、对比其他-3D-地球项目" class="headerlink" title="十三、对比其他 3D 地球项目"></a>十三、对比其他 3D 地球项目</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>思路</th>
+<th>数据</th>
+<th>协议</th>
+<th>适合</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> bilawalsidhu/gods-eye-view</strong></td>
+<td> 公开数据聚合 + voice + cockpit</td>
+<td>12 个图层</td>
+<td> MIT</td>
+<td> 个人 / 媒体 / 调查</td>
+</tr>
+<tr>
+<td><strong> Google Earth Studio</strong></td>
+<td> 商业 3D 地球 + cinematic</td>
+<td>Google 3D Tiles</td>
+<td> 商业</td>
+<td>视频制作</td>
+</tr>
+<tr>
+<td><strong> Cesium ion Studio</strong></td>
+<td> 商业 3D 地理可视化</td>
+<td>各种 3D Tiles</td>
+<td> 商业</td>
+<td> GIS / 工程</td>
+</tr>
+<tr>
+<td><strong> Mapbox GL / Maplibre</strong></td>
+<td> 通用 2D/2.5D 地图</td>
+<td>各种底图</td>
+<td>商业 / 开源</td>
+<td> Web 地图开发</td>
+</tr>
+<tr>
+<td><strong> FlightRadar24</strong></td>
+<td>ADS-B 跟踪 + 航班数据库</td>
+<td>商业 ADS-B</td>
+<td> 商业</td>
+<td>航空爱好者</td>
+</tr>
+<tr>
+<td><strong> n2yo.com</strong></td>
+<td> 卫星跟踪</td>
+<td> CelesTrak</td>
+<td> 商业 + 免费</td>
+<td>卫星爱好者</td>
+</tr>
+<tr>
+<td><strong> Radio Garden</strong></td>
+<td> 世界电台</td>
+<td>公共广播流</td>
+<td>商业</td>
+<td>听世界电台</td>
+</tr>
+<tr>
+<td><strong> NASA FIRMS</strong></td>
+<td> 火灾 / 卫星数据</td>
+<td> NASA</td>
+<td> 免费</td>
+<td>应急 / 研究</td>
+</tr>
+<tr>
+<td><strong> MarineTraffic</strong></td>
+<td> 船舶跟踪</td>
+<td> AIS</td>
+<td> 商业</td>
+<td>海运</td>
+</tr>
+</tbody></table>
+<p>GEV 的定位是 **” 把所有这些的免费层聚合成一个 3D 地球”**。 商业产品各自为政，GEV 跨界。 12 个图层里 11 个免费 + 1 个有免费 key，<strong>大多数人装上不花一分钱</strong>就能用大部分功能。</p>
+<hr>
+<h2 id="十四、它在-AI-工具链里的位置"><a href="#十四、它在-AI-工具链里的位置" class="headerlink" title="十四、它在 AI 工具链里的位置"></a>十四、它在 AI 工具链里的位置</h2><p>之前发过 context-mode、ponytail、teamai-cli、opencode、HyperFrames。 这一篇是 2026 年 9 月 10 日写的，GEV 在 AI 工具链里的位置有点特殊，<strong>它不是 AI 编码工具</strong>。</p>
+<p>它是一个 <strong>AI voice agent 的” 具身”</strong>。 voice agent 跑在 GEV 上有 28 个真实工具、视觉感知、scene context，agent 不只是” 聊天”，是<strong>看世界 + 跟世界互动</strong>。 </p>
+<p>2025-2026 年 voice agent 的演化路径：</p>
+<ul>
+<li>2024：ChatGPT 语音模式（只聊天）</li>
+<li>2025：OpenAI Realtime API（带 function calling）</li>
+<li>2026：<strong>具身 voice agent</strong>（接真实工具、感知真实世界）</li>
+</ul>
+<p>GEV 是 2026 这条线上<strong>最具体的 demo</strong>。 28 个 voice tools、3D 场景感知、视觉 grounding、 honest “我只能确认执行成功的动作” 安全设计。 </p>
+<p>如果你是 voice agent 开发者，<strong>GEV 是你该看的实现参考</strong>。 代码 35 KB README + vanilla JS，每个 tool 怎么写、scene context 怎么喂、视觉感知怎么 trigger，都看得到。</p>
+<p>如果你是普通用户，GEV 是个<strong>让你重新对” 地图” 感兴趣的 3D 地球</strong>。 你看 FlightRadar24 觉得无聊的话，GEV 让你坐进飞机里。</p>
+<hr>
+<h2 id="十二点五、一些反模式警告"><a href="#十二点五、一些反模式警告" class="headerlink" title="十二点五、一些反模式警告"></a>十二点五、一些反模式警告</h2><p>跟 teamai-cli 一样，GEV 也有反模式。 我看 README 注意事项 + 自己玩的体验 + Discord 频道里维护者的回帖，整理几条。</p>
+<p><strong>反模式 1：把所有 key 都加上</strong>。 Cesium ion + OpenAI + Google Maps + AISStream + TomTom + FIRMS + OpenSky + Launch Library 一共 8 个 key，全加每月账单 $20-50。 多数人用不到 8 个图层。 先加免费的 ion（解锁 Google 3D 城市）+ OpenAI（试 voice），其他按需。</p>
+<p><strong>反模式 2：试图加自己的 CCTV 数据</strong>。 GEV 的 CCTV 只支持 3 个城市（Austin / Caltrans / London）。 想加自己城市的摄像头？ 你得写 ETL 把摄像头 metadata 拉成 GEV 的 schema 喂进去。 这条工作量比看上去大，没准备好别开始。</p>
+<p><strong>反模式 3：把 GEV 当” 生产级数据源”</strong>。 README 写得很清楚：”Most feeds are live or regularly refreshed. Traffic is simulated along real roads using aggregate location data. CCTV camera poses and rocket launch trajectories are coarse estimates.” GEV 是” 视觉化玩具 + 调查辅助”，不是” 数据源”。 生产决策请用 FlightRadar24 / MarineTraffic / NASA 官方 API。</p>
+<p><strong>反模式 4：Voice Control 在会议上演示</strong>。 voice agent 反应延迟 200-400 毫秒，<strong>会议演示环境噪声 &gt; 40 dB</strong> 时识别率掉到 50% 以下。 演示场景要么提前静音测试，要么录 video 放。 我见过有人在 30 人房间里 demo GEV，2/3 的 voice 命令识别错了，演示效果灾难。</p>
+<p><strong>反模式 5：以为 Cockpit 模式能飞所有飞机</strong>。 cockpit 模式是” 对单个飞机进入第一人称视角”，但 ADS-B 数据只包含<strong>位置 + 高度 + 速度 + heading</strong>，不包含<strong>飞机姿态</strong>（roll/pitch/yaw）。 GEV 用 SGP4 推算姿态，有 5-10% 误差。 飞大角度机动时 cockpit 视角会” 卡” 或” 漂”。</p>
+<p><strong>反模式 6：长时间挂着 voice session</strong>。 5 分钟不用的话 voice 会被 GC。 重启要 1-2 秒延迟。 中间不要用。</p>
+<p><strong>反模式 7：在没读 SECURITY.md 的情况下部署</strong>。 README 的 SECURITY.md 给了 Google Maps key 的 referrer 限制步骤、Cesium ion token 的 public assets 范围、OpenAI key 的 server-side 部署模式。 没读这条就部署到公网 = key 泄漏。</p>
+<hr>
+<h2 id="十三点五、开发者视角的-hack-点"><a href="#十三点五、开发者视角的-hack-点" class="headerlink" title="十三点五、开发者视角的 hack 点"></a>十三点五、开发者视角的 hack 点</h2><p>如果你是个开发者想 fork GEV 加自己的功能，几个具体的 hack 点。</p>
+<p><strong>加自己的图层</strong>。 <code>src/data/</code> 下每个图层一个文件（<code>flights.js</code>、<code>vessels.js</code> 等）。 仿照 <code>flights.js</code> 写一个 <code>myLayer.js</code>，加到 <code>main.js</code> 的 layer registration 里，UI 面板自动出现。 改 <code>data/local_data/</code> 加 bundled dataset。</p>
+<p><strong>加 sensor 风格</strong>。 GLSL fragment shader 写。 <code>src/ui.js</code> 里有 sensor 风格切换逻辑。 加一个 <code>8-nv-custom.js</code> 写 GLSL 编译，加 <code>?key=8</code> 触发切换。 CesiumJS 的 <code>PostProcessStageLibrary</code> 给 GLSL 编译好的脚手架。</p>
+<p><strong>加 voice tool</strong>。 <code>src/voice/</code> 下 28 个工具每个是 OpenAI function calling schema + JS 实现。 加一个 <code>getWeatherHere.js</code> 写 schema + handler，voice agent 自动 pick up。</p>
+<p><strong>改默认 mission</strong>。 <code>src/main.js</code> 的 first-run panel。 改 <code>firstRunMissions</code> 数组。</p>
+<p><strong>换数据源</strong>。 例如把 OpenSky 换 FlightAware 商业 API。 改 <code>src/data/flights.js</code> 的 fetch + parse 部分。 UI 层不动。</p>
+<p><strong>集成 MCP</strong>。 GEV 的 voice agent 不是 MCP，但可以加。 28 个 voice tool 改成 MCP tool 暴露，外部 Claude Code /opencode 可以直接调 GEV 的工具集。 </p>
+<p><strong>部署到 Vercel / Cloudflare Pages</strong>。 <code>npm run build</code> 出 dist/，纯静态资源。 Vercel / Cloudflare Pages 零配置。 Server-side proxy（OpenAI / AISStream）要单独部署 Node.js/ Cloudflare Worker。</p>
+<hr>
+<h2 id="十四、我自己的最终判断"><a href="#十四、我自己的最终判断" class="headerlink" title="十四、我自己的最终判断"></a>十四、我自己的最终判断</h2><p>写完 14 节之后，我的判断是：</p>
+<p>GEV 是 2026 年 GitHub 上<strong>最值得装的” 非生产工具” 开源项目之一</strong>。 </p>
+<p>它<strong>不</strong>解决任何” 商业问题”。 不省时间、不省钱、不增加 productivity。 它让<strong>看世界</strong>这件事变得<strong>好玩</strong>。 </p>
+<p>但” 让事情好玩” 在开源生态里是个<strong>被低估</strong>的价值。 GitHub 上 80% 的项目是” 工具”，20% 是” 玩具”，玩具里能持续吸引 5 年 contributor + 5M+ YouTube 观看 + 24k stars 的，GEV 是其中之一。</p>
+<p><strong>如果你没装过</strong>，去 <code>git clone https://github.com/bilawalsidhu/gods-eye-view.git</code>，<code>npm ci</code>，<code>npm run dev</code>，打开 <code>http://localhost:4173</code>。 30 分钟你会至少一次按 <code>C</code> 进 cockpit。</p>
+<p><strong>如果你装了用过了</strong>，考虑贡献。 12 个图层 11 个有数据源，缺一个<strong>中国城市 CCTV</strong> 图层。 中国 CCTV 数据公开度低，但<strong>也有些</strong>。 你去写 ETL 把深圳 / 上海 / 北京公开摄像头拉成 GEV schema，PR 上去。 这是个<strong>能写进 GitHub profile</strong> 的 contribution。</p>
+<p><strong>如果你是 voice agent 开发者</strong>，看 <code>src/voice/</code>。 28 个工具怎么定义、scene context 怎么喂、视觉感知怎么 trigger、honest “我只能确认执行成功” 怎么实现 —— 这些是 OpenAI / Anthropic 没开源的 reference implementation。 你的 voice agent 项目<strong>借鉴</strong> GEV 的 <code>voice/</code> 目录结构。</p>
+<p>GEV 不解决任何事。 它让你<strong>重新觉得世界有意思</strong>。 这条就够我把它当 Trending 写一篇。</p>
+<hr>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/bilawalsidhu/gods-eye-view">https://github.com/bilawalsidhu/gods-eye-view</a></p>
+<h2 id="十五、读完你应该做的三件事"><a href="#十五、读完你应该做的三件事" class="headerlink" title="十五、读完你应该做的三件事"></a>十五、读完你应该做的三件事</h2><p><strong>第一件事：装上玩 30 分钟</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/bilawalsidhu/gods-eye-view.git</span><br><span class="line"><span class="built_in">cd</span> gods-eye-view</span><br><span class="line">npm ci</span><br><span class="line">npm run doctor</span><br><span class="line">npm run dev</span><br></pre></td></tr></tbody></table></figure>
+
+<p>打开 <code>http://localhost:4173</code>。 选 “Live Contacts” mission，看 11,000 架飞机。 30 分钟内你会至少一次按 <code>C</code> 进 cockpit 模式，至少说一次 “Take me to your favorite city”。</p>
+<p><strong>第二件事：加一个免费 key</strong>。 </p>
+<p><a target="_blank" rel="noopener" href="https://cesium.com/ion">Cesium ion</a> 注册拿免费 token。 进 POWER UP 面板，paste token，切到 Google Photorealistic 3D 城市。 这是无 key 体验 vs 有 key 体验的<strong>质变</strong>。 在 3D 城市里骑车（GBFS 图层开）、在 3D 城市里看火灾（NASA FIRMS 开）、在 3D 城市里调电台（Radio 图层开）—— 这些是” 看清世界” 的不同切面。</p>
+<p><strong>第三件事：试 voice control</strong>。</p>
+<p>加 <a target="_blank" rel="noopener" href="https://platform.openai.com/">OpenAI</a> key（付费但 cheap），进 “GEV MIC”，说 “Take me to your favorite city”。 看 agent 自己处理地理、相机、viewport、视觉感知。 </p>
+<p>如果你是开发者，更值得做的是<strong>读 <code>src/voice/</code> 目录下的 28 个工具源码</strong>。 看完你会有 voice agent 设计的具体思路。</p>
+<p>这三件事加起来成本 30 分钟 + $0（ion 免费）+ ~$0.50（OpenAI 试一次 voice）。 回报是” 重新对地图 + AI voice agent 感兴趣”。</p>
+<hr>
+<h2 id="十六、最后"><a href="#十六、最后" class="headerlink" title="十六、最后"></a>十六、最后</h2><p>我玩 4 小时之后关了电脑。 想了想，GEV 让我重新对” 前端技术” 感兴趣。</p>
+<p>2026 年 9 月的”AI 时代” 叙事里，<strong>绝大多数”AI 项目” 是 chat UI + API call</strong>。 把一个 LLM 装进 web 前端，agent 在聊天框里跟用户对话。 视觉是 2022 年的、交互是 prompt-input-output 的、AI 是 wrapper 的。</p>
+<p>GEV 是另一种范式。 <strong>前端本身是产品</strong>。 CesiumJS + Vite + Vanilla JS 能做出” 看起来像五角大楼指挥中心” 的体验。 Voice agent 不是聊天框，是<strong>有 28 个真实工具、视觉感知、scene context</strong> 的具身。 数据不是” 展示给用户看”，是<strong>让用户探索 + 让 voice agent 询问</strong>。</p>
+<p>这条” 前端本身是产品” 的路，<strong>值得更多开源项目走</strong>。 </p>
+<p>GEV 是 2026 年 GitHub 上把这条路走到极致的代表作。 24.3k stars 是用户投票，<strong>1.86 秒冷启动</strong>是工程投票，<strong>28 个 voice tool + 视觉感知</strong>是 AI 投票。 </p>
+<p>Bilawal Sidhu 这条” 前端能做的事” 的路走得很远。 我希望 GitHub 上多几个这样的项目 —— <strong>不解决商业问题，让世界重新有意思</strong>。</p>
+<hr>
+<h2 id="十七、几个我注意到的小细节"><a href="#十七、几个我注意到的小细节" class="headerlink" title="十七、几个我注意到的小细节"></a>十七、几个我注意到的小细节</h2><p>跑 GEV 的过程中我留意到几条工程上很聪明的小决策。</p>
+<p><strong>scene context 在每次 voice tool 调用前自动注入</strong>。 agent 接到用户说 “What’s turned on right now?”，在调用任何 tool 之前，context 已经包含当前 viewport 中心坐标、激活的图层列表、view scale、time of day。 不用 agent 主动问，已经知道。</p>
+<p><strong>WASM tree-sitter 跑 AST</strong>。 如果 GEV 哪天加上” 读 README 自动生成 flight path” 功能，会用 WASM parser 跑 markdown AST，不用 native binary 编译。</p>
+<p><strong>bundled static infrastructure 不更新</strong>。 datacenter /dam/submarine cable 这 4,351 + 704 + 712 = 5,767 个静态数据点存在仓库里。 改一个 cable 路由要 PR 一次。 这条限制是故意的，让数据有 provenance，可被 cite。</p>
+<p><strong>POWER UP 面板藏起来要？setup=1 重新开</strong>。 这是给” 经常隐藏 UI” 的设计师的小细节。 不用记命令，记一个 query string。</p>
+<p><strong>scene context 在 mid-flight 也工作</strong>。 你进 cockpit 模式飞飞机，agent 知道你在飞哪架、飞多高、heading 是多少、地面是什么地形。 这条让 voice agent 在” 飞” 这个动作里仍然有用。</p>
+<p><strong>OpenAI Realtime API 的 voice context 故意做短</strong>。 不让 voice session 跑长对话。 这条对应 voice session 的 token 成本，故意压缩节省。</p>
+<p><strong>地图坐标系是 WGS-84</strong>。 跟 GPS、ICAO、AIS 协议一致。 跨数据源的 entity 位置自动对齐，不需要手动配准。</p>
+<p><strong>Share Link 序列化 camera + style + layers + tracked target</strong>。 你看一个有趣的 view，点 Share，URL 复制出来发给别人，对方打开是完全一样的 view + 正在跟踪的目标。 适合” 我看到一架有趣的飞机 + 把链接发给你”。</p>
+<p><strong>Movie Director 功能</strong>。 给一句”Show me global infrastructure”，GEV 自动拍一段 cinematic 镜头 ——zoom in、orbit、stage layers、fade out。 录下来是 30 秒的产品介绍视频。 适合做 demo 或 content 创作。</p>
+<h2 id="十八、致谢和灵感来源"><a href="#十八、致谢和灵感来源" class="headerlink" title="十八、致谢和灵感来源"></a>十八、致谢和灵感来源</h2><p>写完 17 节之后我回过头看 README，注意到最后有个<strong>致谢</strong>段落。 作者列了 GEV 的灵感来源：</p>
+<ul>
+<li><strong>CesiumJS</strong>。 没有这个开源 3D 地理库，GEV 不可能写出来。</li>
+<li><strong>OpenSky Network</strong>。 苏黎世联邦理工学院维护的免费 ADS-B 网络。</li>
+<li><strong>ADS-B Exchange 社区</strong>。 军用 ADS-B 数据。</li>
+<li><strong>Google Earth / Google Earth Studio</strong>。 GEV 的 cockpit 模式灵感。</li>
+<li><strong>Radio Garden</strong>。 把世界电台放到地图上的项目，Radio 图层致敬。</li>
+<li><strong>MarineTraffic</strong>。 商业 AIS 平台，GEV 的船舶数据参考。</li>
+<li><strong>OpenStreetMap</strong>。 整个底图 + 路网数据来源。</li>
+<li><strong>NASA FIRMS</strong>。 火灾数据来源。</li>
+<li><strong>USGS</strong>。 地震数据来源。</li>
+<li><strong>OpenAI</strong>。 Realtime API + vision model。</li>
+</ul>
+<p>GEV 站在 <strong>12 个开源 / 公共数据源</strong>的肩膀上。 这条对开源生态是个示范：好的项目<strong>组合</strong>已有资源，不<strong>重做</strong>轮子。 </p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/bilawalsidhu/gods-eye-view">https://github.com/bilawalsidhu/gods-eye-view</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/09/10/bilawalsidhu-gods-eye-view-3d-globe-spy-satellite/" title="bilawalsidhu&#x2F;gods-eye-view：24.3k stars 的浏览器 3D 地球，11,000+ 实时航班 + 800 个公共摄像头 + OpenAI Realtime 语音控制，&quot;数据全是公开的&quot;">https://www.daishengli.top/2026/09/10/bilawalsidhu-gods-eye-view-3d-globe-spy-satellite/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/gods-eye-view/" rel="tag"># gods-eye-view</a>
+              <a href="/tags/bilawalsidhu/" rel="tag"># bilawalsidhu</a>
+              <a href="/tags/3D-Globe/" rel="tag"># 3D Globe</a>
+              <a href="/tags/CesiumJS/" rel="tag"># CesiumJS</a>
+              <a href="/tags/OpenSky/" rel="tag"># OpenSky</a>
+              <a href="/tags/ADS-B/" rel="tag"># ADS-B</a>
+              <a href="/tags/CelesTrak/" rel="tag"># CelesTrak</a>
+              <a href="/tags/CCTV/" rel="tag"># CCTV</a>
+              <a href="/tags/OpenAI-Realtime/" rel="tag"># OpenAI Realtime</a>
+              <a href="/tags/%E5%85%AC%E5%85%B1%E6%95%B0%E6%8D%AE/" rel="tag"># 公共数据</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/09/tencent-teamai-cli-team-ai-harness-distribution/" rel="prev" title="Tencent&#x2F;teamai-cli：3k stars 的 &quot;团队级 AI Harness 分发器&quot;，让 admin push 一次，全员 Claude Code &#x2F; Codex &#x2F; Cursor 同步收到">
+                  <i class="fa fa-angle-left"></i> Tencent/teamai-cli：3k stars 的 "团队级 AI Harness 分发器"，让 admin push 一次，全员 Claude Code / Codex / Cursor 同步收到
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/11/nashsu-llm-wiki-personal-knowledge-base/" rel="next" title="nashsu&#x2F;llm_wiki：18.7k stars 的 &quot;AI 自动维护&quot; 个人维基，Karpathy LLM-Wiki pattern 的桌面实现 + 知识图谱 + Louvain 社区发现">
+                  nashsu/llm_wiki：18.7k stars 的 "AI 自动维护" 个人维基，Karpathy LLM-Wiki pattern 的桌面实现 + 知识图谱 + Louvain 社区发现 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

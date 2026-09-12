@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="heygen-com&#x2F;hyperframes（GitHub 45.9k stars、4.3k forks、当日 +474 stars、Apache 2.0）是一款把 HTML &#x2F; CSS &#x2F; GSAP &#x2F; Lottie &#x2F; Three.js 转成确定性 MP4 视频的开源框架，核心是「HTML 写场景，data-* 属性写时间线，headless Chrome + FFmpeg 离线渲染」三件套。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="heygen-com&#x2F;hyperframes：45.9k stars 的开源 HTML → 视频框架，HeyGen 把自家生产管线 Apache 2.0 开源了">
+<meta property="og:url" content="https://www.daishengli.top/2026/09/07/heygen-com-hyperframes-html-to-video-agent-framework/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="heygen-com&#x2F;hyperframes（GitHub 45.9k stars、4.3k forks、当日 +474 stars、Apache 2.0）是一款把 HTML &#x2F; CSS &#x2F; GSAP &#x2F; Lottie &#x2F; Three.js 转成确定性 MP4 视频的开源框架，核心是「HTML 写场景，data-* 属性写时间线，headless Chrome + FFmpeg 离线渲染」三件套。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-07T02:10:00.000Z">
+<meta property="article:modified_time" content="2026-09-12T01:07:10.471Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="HyperFrames">
+<meta property="article:tag" content="HeyGen">
+<meta property="article:tag" content="视频生成">
+<meta property="article:tag" content="HTML">
+<meta property="article:tag" content="GSAP">
+<meta property="article:tag" content="Remotion">
+<meta property="article:tag" content="FFmpeg">
+<meta property="article:tag" content="Skills">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/09/07/heygen-com-hyperframes-html-to-video-agent-framework/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/09/07/heygen-com-hyperframes-html-to-video-agent-framework/","path":"2026/09/07/heygen-com-hyperframes-html-to-video-agent-framework/","title":"heygen-com/hyperframes：45.9k stars 的开源 HTML → 视频框架，HeyGen 把自家生产管线 Apache 2.0 开源了"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>heygen-com/hyperframes：45.9k stars 的开源 HTML → 视频框架，HeyGen 把自家生产管线 Apache 2.0 开源了 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">359</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">114</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9A%E8%A7%86%E9%A2%91%E6%98%AF%E4%B8%AA%E2%80%9D%E6%97%A0%E6%B3%95-diff-%E7%9A%84%E6%96%87%E4%BB%B6%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">一、它想解决的问题：视频是个” 无法 diff 的文件”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BA%A7%E5%93%81%E5%BD%A2%E6%80%81%EF%BC%9ACLI%E3%80%81Engine%E3%80%81Producer%E3%80%81Studio-%E4%B8%80%E6%95%B4%E5%A5%97"><span class="nav-number">2.</span> <span class="nav-text">二、产品形态：CLI、Engine、Producer、Studio 一整套</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E7%82%B9%E4%BA%94%E3%80%81HeyGen-%E8%BF%99%E5%AE%B6%E5%85%AC%E5%8F%B8"><span class="nav-number">3.</span> <span class="nav-text">二点五、HeyGen 这家公司</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Skills-%E4%BD%93%E7%B3%BB%EF%BC%9A20-%E4%B8%AA-skill-%E6%8A%8A%E7%94%9F%E4%BA%A7%E6%B5%81%E7%A8%8B%E6%95%99%E7%BB%99-agent"><span class="nav-number">4.</span> <span class="nav-text">三、Skills 体系：20 个 skill 把生产流程教给 agent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81frame-md%EF%BC%9A%E6%8A%8A-design-system-%E5%80%92%E8%BF%87%E6%9D%A5%E7%BB%99%E8%A7%86%E9%A2%91%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">四、frame.md：把 design system 倒过来给视频用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%92%8C-Remotion-%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">6.</span> <span class="nav-text">五、和 Remotion 的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82%EF%BC%9A%E6%80%8E%E4%B9%88%E2%80%9Dseek%E2%80%9D%E5%8A%A8%E7%94%BB"><span class="nav-number">7.</span> <span class="nav-text">六、关键技术细节：怎么”seek” 动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81AWS-Lambda-%E6%B8%B2%E6%9F%93"><span class="nav-number">8.</span> <span class="nav-text">七、AWS Lambda 渲染</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">9.</span> <span class="nav-text">八、快速上手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%8120-%E4%B8%AA-skill-%E7%9A%84%E5%85%B7%E4%BD%93%E7%94%A8%E6%B3%95"><span class="nav-number">10.</span> <span class="nav-text">九、20 个 skill 的具体用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#product-launch-video"><span class="nav-number">10.1.</span> <span class="nav-text">&#x2F;product-launch-video</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pr-to-video"><span class="nav-number">10.2.</span> <span class="nav-text">&#x2F;pr-to-video</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#faceless-explainer"><span class="nav-number">10.3.</span> <span class="nav-text">&#x2F;faceless-explainer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#talking-head-recut"><span class="nav-number">10.4.</span> <span class="nav-text">&#x2F;talking-head-recut</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#embedded-captions"><span class="nav-number">10.5.</span> <span class="nav-text">&#x2F;embedded-captions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#slideshow"><span class="nav-number">10.6.</span> <span class="nav-text">&#x2F;slideshow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#music-to-video"><span class="nav-number">10.7.</span> <span class="nav-text">&#x2F;music-to-video</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#motion-graphics"><span class="nav-number">10.8.</span> <span class="nav-text">&#x2F;motion-graphics</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E5%AF%B9%E6%AF%94%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%E8%B5%9B%E9%81%93"><span class="nav-number">11.</span> <span class="nav-text">十、对比视频生成赛道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%85%B7%E4%BD%93%E6%80%8E%E4%B9%88%E7%94%A8%EF%BC%9A%E8%A3%85%E4%B8%8A-skill-%E4%B9%8B%E5%90%8E%E6%88%91%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-number">12.</span> <span class="nav-text">十一、具体怎么用：装上 skill 之后我做了什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%9F%E8%AE%BE%E8%AE%A1%E5%8D%8F%E4%BD%9C"><span class="nav-number">12.1.</span> <span class="nav-text">跟设计协作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%9F%E5%86%99%E4%BB%A3%E7%A0%81%E5%8D%8F%E4%BD%9C"><span class="nav-number">12.2.</span> <span class="nav-text">跟写代码协作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%B5%81%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">12.3.</span> <span class="nav-text">数据流可视化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E5%B1%80%E9%99%90"><span class="nav-number">13.</span> <span class="nav-text">十二、局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E7%82%B9%E4%BA%94%E3%80%81%E5%BA%95%E5%B1%82%E6%9C%BA%E5%88%B6%EF%BC%9Aseek-%E5%88%B0%E5%BA%95%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%84"><span class="nav-number">14.</span> <span class="nav-text">十二点五、底层机制：seek 到底是怎么工作的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E5%8E%9F%E7%94%9F-runtime-%E7%9A%84-seek"><span class="nav-number">14.1.</span> <span class="nav-text">浏览器原生 runtime 的 seek</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82-runtime-%E7%9A%84-seek"><span class="nav-number">14.2.</span> <span class="nav-text">复杂 runtime 的 seek</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%92%8C%E9%9F%B3%E9%A2%91%E7%9A%84-seek"><span class="nav-number">14.3.</span> <span class="nav-text">视频和音频的 seek</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9C%9F%E6%AD%A3%E7%9A%84%E6%B8%B2%E6%9F%93%E5%BE%AA%E7%8E%AF"><span class="nav-number">14.4.</span> <span class="nav-text">真正的渲染循环</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E7%82%B9%E5%85%AD%E3%80%81Catalog%EF%BC%9A%E5%8F%AF%E5%A4%8D%E7%94%A8%E7%9A%84-block-component-%E7%94%9F%E6%80%81"><span class="nav-number">15.</span> <span class="nav-text">十二点六、Catalog：可复用的 block &#x2F;component 生态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E7%82%B9%E4%B8%83%E3%80%81Cloud-%E6%B8%B2%E6%9F%93-vs-Lambda-vs-%E6%9C%AC%E5%9C%B0"><span class="nav-number">16.</span> <span class="nav-text">十二点七、Cloud 渲染 vs Lambda vs 本地</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E5%AE%83%E5%9C%A8-AI-%E8%A7%86%E9%A2%91%E8%B5%9B%E9%81%93%E9%87%8C%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">17.</span> <span class="nav-text">十三、它在 AI 视频赛道里的位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93"><span class="nav-number">18.</span> <span class="nav-text">十四、一句话总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">114</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">359</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/09/07/heygen-com-hyperframes-html-to-video-agent-framework/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="heygen-com&#x2F;hyperframes：45.9k stars 的开源 HTML → 视频框架，HeyGen 把自家生产管线 Apache 2.0 开源了 | 小戴的网络日志">
+      <meta itemprop="description" content="heygen-com&#x2F;hyperframes（GitHub 45.9k stars、4.3k forks、当日 +474 stars、Apache 2.0）是一款把 HTML &#x2F; CSS &#x2F; GSAP &#x2F; Lottie &#x2F; Three.js 转成确定性 MP4 视频的开源框架，核心是「HTML 写场景，data-* 属性写时间线，headless Chrome + FFmpeg 离线渲染」三件套。HeyGen 在生产环境用的就是它，社区 adopters 包括 tldraw、TanStack。20 个 skills 给 Claude Code &#x2F; Cursor &#x2F; Codex 等 coding agent 装上之后能直接用自然语言生成产品介绍视频、PR 改 changelog 视频、无脸讲解视频、社交短视频、talking-head 重剪辑等。remotion 是 React 路线的同类，HyperFrames 是 HTML 路线的同类。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          heygen-com/hyperframes：45.9k stars 的开源 HTML → 视频框架，HeyGen 把自家生产管线 Apache 2.0 开源了
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-07 10:10:00" itemprop="dateCreated datePublished" datetime="2026-09-07T10:10:00+08:00">2026-09-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">heygen-com/hyperframes（GitHub 45.9k stars、4.3k forks、当日 +474 stars、Apache 2.0）是一款把 HTML / CSS / GSAP / Lottie / Three.js 转成确定性 MP4 视频的开源框架，核心是「HTML 写场景，data-* 属性写时间线，headless Chrome + FFmpeg 离线渲染」三件套。HeyGen 在生产环境用的就是它，社区 adopters 包括 tldraw、TanStack。20 个 skills 给 Claude Code / Cursor / Codex 等 coding agent 装上之后能直接用自然语言生成产品介绍视频、PR 改 changelog 视频、无脸讲解视频、社交短视频、talking-head 重剪辑等。remotion 是 React 路线的同类，HyperFrames 是 HTML 路线的同类。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上个月我帮朋友改他们的产品介绍视频。原本一个 90 秒的片子，从「更新文案」到「改字号」到「换背景音乐」到「加一行字幕」到「重新渲染」，来回折腾了一下午。</p>
+<p>最后一刻我问他：你这个视频脚本存在哪？他说存在 Notion 一个文档里。</p>
+<p>那一刻我意识到，视频这种东西<strong>和文档不是同一种文件</strong>。文档改完刷新页面就生效，视频改完要重新走一遍渲染。视频的「源文件」和「最终产物」之间隔着 5-10 分钟的 ffmpeg，迭代速度天然慢一档。</p>
+<p>然后我找到了 HyperFrames。</p>
+<p>45.9k stars，4.3k forks，当日 +474 stars，Apache 2.0。HeyGen 这家做 AI 数字人视频的公司，把自家生产管线里最核心的渲染层<strong>完整开源</strong>了。</p>
+<p>它的核心想法只有一句话：视频应该像网页一样写。</p>
+<hr>
+<h2 id="一、它想解决的问题：视频是个”无法-diff-的文件”"><a href="#一、它想解决的问题：视频是个”无法-diff-的文件”" class="headerlink" title="一、它想解决的问题：视频是个”无法 diff 的文件”"></a>一、它想解决的问题：视频是个” 无法 diff 的文件”</h2><p>先讲清楚背景。</p>
+<p>视频制作的传统流程是这样的：After Effects / Premiere Pro / Final Cut 这类专业工具里时间线 + 关键帧 + 素材库 + 渲染。优点是专业、效果上限高，缺点是<strong>源文件不可读</strong>。一个 .aep 文件里塞的是 AE 自己的二进制项目格式，git diff 出来是一串乱码。</p>
+<p>AI Coding Agent 这一波变革里，所有” 代码可读 + 可 diff + 可被 agent 改” 的工具都在重做。Markdown、YAML、TypeScript、Python 这些文本格式天然适合 agent。但视频没有” 文本源”。</p>
+<p>过去一年冒出来的几个方向都在试图解决这个事：</p>
+<p><strong>Remotion</strong> 把视频用 React 组件写。<code>react</code> 装上 + JSX + bundler + Node.js 渲染。优点是 React 生态成熟，缺点是必须懂 React + 装打包器，且 agent 写 JSX 不如写 HTML 顺。</p>
+<p><strong>OpenMontage</strong>（之前发过的）用 LangGraph 编排多个 sub-agent，每个负责一个视频环节，组合出长视频。</p>
+<p><strong>browser-use / video-use</strong>（之前也发过）用 Claude Code 跑 Remotion / Manim / PIL 来出动画层。</p>
+<p><strong>HyperFrames</strong> 选了另一条路：<strong>HTML 就是视频</strong>。你写一份带 <code>data-*</code> 属性的 HTML，headless Chrome 渲染每一帧，FFmpeg 编码成 MP4。整个过程没有 React、没有 bundler、源文件就是浏览器能直接打开的 HTML。</p>
+<p>这事的革命性在哪？HTML 是一等公民。所有人都会写，agent 也最会写。diff 友好。git review 友好。文档友好的视频源文件。</p>
+<hr>
+<h2 id="二、产品形态：CLI、Engine、Producer、Studio-一整套"><a href="#二、产品形态：CLI、Engine、Producer、Studio-一整套" class="headerlink" title="二、产品形态：CLI、Engine、Producer、Studio 一整套"></a>二、产品形态：CLI、Engine、Producer、Studio 一整套</h2><p>HyperFrames 是一个 monorepo，packages/ 下面 8 个包，各管一摊事。</p>
+<p><strong><code>hyperframes</code> (CLI)</strong>。入口二进制。命令有：</p>
+<ul>
+<li><code>init</code>：scaffold 一个新项目</li>
+<li><code>preview</code>：起一个本地服务器，浏览器里实时预览（live reload）</li>
+<li><code>render</code>：本地渲染成 MP4</li>
+<li><code>lint</code>：静态检查 composition 写得对不对</li>
+<li><code>check</code>：检查时间线、track 冲突、媒体文件存在性</li>
+<li><code>snapshot</code>：把当前 composition 截一帧存下来</li>
+<li><code>doctor</code>：诊断常见问题</li>
+<li><code>cloud render</code>：HeyGen 托管的云端渲染（出大视频用）</li>
+<li><code>lambda deploy / render / progress</code>：AWS Lambda 分布式渲染</li>
+<li><code>add</code>：从 catalog 装一个可复用的 block 或 component</li>
+<li><code>init</code>：支持 <code>--design &lt;name&gt;</code> 选定 frame.md 模板，agent 能直接基于视觉系统出 composition</li>
+<li><code>package:codex-plugin</code>：把当前仓库的 manifest、brand、skills 打包成 Codex 插件 zip</li>
+</ul>
+<p><strong><code>@hyperframes/core</code></strong>。类型定义、HTML parser、composition 生成器、linter、运行时、frame adapters。代码量最大、纯逻辑包。它做了几件重要的事：</p>
+<ul>
+<li>把 HTML 解析成 composition AST（不靠 DOM parser 因为要离线跑）</li>
+<li>给每种 animation runtime 写 seek adapter（GSAP / Lottie / Three.js/ Anime.js/ CSS / WAAPI / TypeGPU）</li>
+<li>实现 frame.md → design token 翻译层</li>
+<li>提供 Linter API（开发用，CI 里也能用）</li>
+</ul>
+<p><strong><code>@hyperframes/engine</code></strong>。抓帧引擎。Puppeteer 跑 headless Chrome，seek 到每一帧（24/30/60 fps），截图。<code>--seek</code> 不是简单 <code>setTimeout</code>，而是用 <code>Animation.currentTime</code> API 把浏览器内部的时钟拨到指定时间点，让 GSAP / Lottie / Three.js/ CSS / WAAPI 跑到那个时刻的状态，再截图。这条比 Remotion 的 <code>frame.waitForFunction</code> 稳得多。</p>
+<p><strong><code>@hyperframes/producer</code></strong>。完整渲染 pipeline。除了抓帧，还负责音频混音（多个音轨 mix down 成一个）、视频编码（FFmpeg H.264 / H.265）、合成（音频 + 视频 + 字幕烧录）。这是真正产 MP4 的那层。Producer 里还跑 <code>packages/producer/tests/</code> 下的回归测试，用真实 baseline 视频做 pixel diff。</p>
+<p><strong><code>@hyperframes/studio</code></strong>。浏览器端的可视化编辑器。还在演化，README 标 “Available, evolving”。Studio 是写 composition 的 GUI，HTML / CSS / GSAP 这些底层细节藏起来。</p>
+<p><strong><code>@hyperframes/player</code></strong>。<code>&lt;hyperframes-player&gt;</code> web component，让你可以把任何 HyperFrames composition 嵌进普通网页里当视频播放器，seek、play、pause 全支持。HTML 里写 <code>&lt;hyperframes-player src="launch.html" autoplay&gt;&lt;/hyperframes-player&gt;</code> 就能用。</p>
+<p><strong><code>@hyperframes/shader-transitions</code></strong>。WebGL shader 转场，比如” 闪白”、” 色彩分离”、” 翻牌” 这些。装在 composition 之间做场景切换。</p>
+<p><strong><code>@hyperframes/aws-lambda</code></strong>。AWS Lambda 部署包。把渲染 pipeline 拆成可并发的 lambda function，本地 driver 派发任务。</p>
+<p>整套架构和我之前发的 anomalyco/opencode 的” 一个服务端 + 多个客户端” 思路反过来：这里是” 一个 HTML 源 + 多个渲染后端”（本地 / Docker / Lambda / HeyGen Cloud）。</p>
+<hr>
+<h2 id="二点五、HeyGen-这家公司"><a href="#二点五、HeyGen-这家公司" class="headerlink" title="二点五、HeyGen 这家公司"></a>二点五、HeyGen 这家公司</h2><p>HyperFrames 来自 HeyGen。HeyGen 是 2020 年成立的 AI 数字人公司，YC W21 出身，总部在洛杉矶。2023 年估值已经 5 亿美元，2024 年 ARR 据说破亿。它的主营业务是「AI 数字人口播视频」：用户上传一段 30 秒的真人视频训练 avatar，输文字脚本，avatar 自动出对应口型的口播视频。</p>
+<p>数字人视频的渲染管线里有一段最难：把 HTML/CSS/ 视频素材合成成最终 MP4，混音、烧字幕、码率控制。HeyGen 内部为了这条管线写了 HyperFrames。</p>
+<p>2026 年 3 月他们把这层抽出来 Apache 2.0 开源。理由 README 里没说清楚，但从仓库看大概能猜：</p>
+<ol>
+<li><strong>数字人赛道越来越挤</strong>，单靠 avatar 差异化已经不够，开放工具链拉新用户。</li>
+<li><strong>agent 时代的视频需求</strong>是” 批量出 N 个视频变体”，这条要靠生态。开源让 agent 工具能直接接。</li>
+<li><strong>HeyGen Cloud</strong> 还是商业的，渲染出片可以走云端（<code>hyperframes cloud render</code>），开源是前端引流。</li>
+</ol>
+<p>这条路径跟 Vercel 把 Next.js 开源然后卖云、Anthropic 把 MCP 协议开源然后卖 API 是一样的。<strong>先开放标准，再卖云服务</strong>。</p>
+<hr>
+<h2 id="三、Skills-体系：20-个-skill-把生产流程教给-agent"><a href="#三、Skills-体系：20-个-skill-把生产流程教给-agent" class="headerlink" title="三、Skills 体系：20 个 skill 把生产流程教给 agent"></a>三、Skills 体系：20 个 skill 把生产流程教给 agent</h2><p>这是 HyperFrames 跟我之前发的所有 AI 视频项目（OpenMontage、browser-use video-use）<strong>最不一样</strong>的地方。</p>
+<p>20 个 skills 分三层：</p>
+<p><strong>Router 层</strong> 1 个：<code>/hyperframes</code>。所有” 做个视频” 的请求先进它。它做两件事：1）确认你到底要哪种产物（视频 / 幻灯片 / 重剪辑）；2）路由到对应的 creation workflow。</p>
+<p><strong>Creation workflows</strong> 9 个：每个对应一类完整的视频产出场景。</p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th> 干什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/product-launch-video</code></td>
+<td>从 URL、brief、script 做一个产品发布视频（最长 3 分钟，最佳 30-90 秒）</td>
+</tr>
+<tr>
+<td><code>/faceless-explainer</code></td>
+<td>无脸讲解视频，所有视觉都是 LLM 生成的字体、抽象、图表、数据可视化</td>
+</tr>
+<tr>
+<td><code>/pr-to-video</code></td>
+<td>GitHub PR → changelog 视频，agent 调 <code>gh</code> CLI 拉 diff</td>
+</tr>
+<tr>
+<td><code>/embedded-captions</code></td>
+<td>给现成 talking-head 视频加字幕（verbatim rail / 主体后内嵌 / 纯电影感）</td>
+</tr>
+<tr>
+<td><code>/talking-head-recut</code></td>
+<td>重剪 talking-head / 访谈 / 播客，加图卡、数据 callout、kinetic title</td>
+</tr>
+<tr>
+<td><code>/motion-graphics</code></td>
+<td>短动态图形（&lt;10 秒），kinetic type、stat hit、logo sting、lower-third</td>
+</tr>
+<tr>
+<td><code>/music-to-video</code></td>
+<td>音乐 → beat-synced 视频，歌词、slideshow、kinetic promo</td>
+</tr>
+<tr>
+<td><code>/slideshow</code></td>
+<td>演示文稿 /pitch deck，可分页、fragment、branching、presenter mode</td>
+</tr>
+<tr>
+<td><code>/general-video</code></td>
+<td>兜底，任意多场景 / 长视频 / 品牌片 / 自由合成</td>
+</tr>
+<tr>
+<td><code>/remotion-to-hyperframes</code></td>
+<td>把现有 Remotion 项目<strong>单向</strong>迁移到 HyperFrames</td>
+</tr>
+</tbody></table>
+<p><strong>Domain skills</strong> 10 个：原子能力，creation workflows 组合它们。</p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th> 干什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/hyperframes-core</code></td>
+<td>composition 合约：data-* 时间属性、class=”clip”、tracks、子 composition、变量、framework-owned media playback</td>
+</tr>
+<tr>
+<td><code>/hyperframes-animation</code></td>
+<td>全部动画知识：GSAP / Lottie / Three.js/ Anime.js/ CSS / WAAPI / TypeGPU runtime adapters</td>
+</tr>
+<tr>
+<td><code>/hyperframes-keyframes</code></td>
+<td>seek-safe 关键帧写法，跨 runtime</td>
+</tr>
+<tr>
+<td><code>/hyperframes-creative</code></td>
+<td>非动画创作方向：frame.md、design.md、palettes、typography、narration、beat planning</td>
+</tr>
+<tr>
+<td><code>/media-use</code></td>
+<td>媒体 OS：找 BGM / SFX / 图标 / 配音 / 抠图 / 转录 /caption/ 复用资产</td>
+</tr>
+<tr>
+<td><code>/hyperframes-cli</code></td>
+<td>CLI dev loop</td>
+</tr>
+<tr>
+<td><code>/hyperframes-audio</code></td>
+<td>混音，voiceover carve、EQ、压缩、限制、门、饱和、延迟、混响、和声、bitcrush、自动化包络、submix buses</td>
+</tr>
+<tr>
+<td><code>/hyperframes-registry</code></td>
+<td>catalog 块 / 组件安装</td>
+</tr>
+<tr>
+<td><code>/figma</code></td>
+<td>从 Figma 导入 assets /tokens/components /storyboard</td>
+</tr>
+</tbody></table>
+<p>装上 Claude Code 之后，我写：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/hyperframes 做一个 10 秒的产品介绍视频，渐入标题，背景视频，背景音乐。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>agent 走 router → <code>/product-launch-video</code> → 调 <code>/hyperframes-core</code> 写 composition → 调 <code>/hyperframes-animation</code> 写 GSAP 时间线 → 调 <code>/media-use</code> 找 BGM → 调 <code>/hyperframes-audio</code> 配音量 → 调 <code>/hyperframes-cli</code> 预览 → render。</p>
+<p>整个流程在 Sonnet 4.5 上大概 2-3 分钟，包括调 4 个 skill。</p>
+<hr>
+<h2 id="四、frame-md：把-design-system-倒过来给视频用"><a href="#四、frame-md：把-design-system-倒过来给视频用" class="headerlink" title="四、frame.md：把 design system 倒过来给视频用"></a>四、frame.md：把 design system 倒过来给视频用</h2><p>这是 README 里我看了两遍才意识到分量的一段。</p>
+<p>每个有 design system 的团队都有一份 <code>design.md</code>，写 colors、typography、spacing、components 的规则。但这个 design system 是<strong>给网页</strong>的。当 agent 要做” 产品介绍视频” 时，它需要的不是 colors 和 typography 的 web token，而是 1920×1080 画布上、6 秒内的视觉密度、字号、字重、留白。</p>
+<p><code>frame.md</code> 就是这个翻译层。</p>
+<p>它把 <code>design.md</code> 倒过来：</p>
+<ul>
+<li>颜色不变，但用法从「网页 background」变成「video frame 1/3 处」</li>
+<li>typography 不变，但字号从 px 变成「占画面高度的百分比」</li>
+<li>components 不变，但布局从 flex 变成 <code>data-track-index</code> 控制的层</li>
+<li> spacing 不变，但单位从 rem 变成 frame timeline（0-30s 内的秒数）</li>
+</ul>
+<p>输出是一份 <code>DESIGN.md</code> 超集，团队里所有工具都能读（web 工具读 design，agent 读 frame）。</p>
+<p>README 里给了一批 design templates：Biennale Yellow、BlockFrame、Blue Professional、Bold Poster、Broadside、Capsule、Cartesian、Cobalt Grid、Coral、Creative Mode 等等。每一份都是<strong>可以直接给 agent 用的视频视觉系统</strong>。</p>
+<p>这件事的工程量是巨大的。一个团队花一年把 design system 做齐了，要再做一份 frame.md 给视频用，成本翻一倍。HyperFrames 直接送了一打 design templates 出来，省了这一步。</p>
+<hr>
+<h2 id="五、和-Remotion-的对比"><a href="#五、和-Remotion-的对比" class="headerlink" title="五、和 Remotion 的对比"></a>五、和 Remotion 的对比</h2><p>README 给了对比表，我把它展开讲一下。</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th> HyperFrames</th>
+<th>Remotion</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 写法</td>
+<td> HTML + CSS + seekable animation</td>
+<td>React 组件</td>
+</tr>
+<tr>
+<td> Build</td>
+<td> 无，index.html 直接跑</td>
+<td> bundler 必装（webpack /vite）</td>
+</tr>
+<tr>
+<td>Agent handoff</td>
+<td> 纯 HTML 文件</td>
+<td> JSX / React 项目</td>
+</tr>
+<tr>
+<td>时间线</td>
+<td> seekable，frame-accurate</td>
+<td>wall-clock 为主，seek 要小心</td>
+</tr>
+<tr>
+<td>分布式渲染</td>
+<td>本地 / AWS Lambda / HeyGen Cloud</td>
+<td>Remotion Lambda（成熟）</td>
+</tr>
+<tr>
+<td>协议</td>
+<td> Apache 2.0</td>
+<td>Remotion License（source-available）</td>
+</tr>
+<tr>
+<td>生态</td>
+<td>新，4.3k forks</td>
+<td> 老，30k+ stars</td>
+</tr>
+<tr>
+<td> 学习曲线</td>
+<td>写 HTML 就行</td>
+<td>写 React + Remotion API</td>
+</tr>
+</tbody></table>
+<p><strong>Remotion 的优势</strong>。生态成熟、文档丰富、商业渲染管线（Remotion Lambda）跑了五六年稳定性高。React 用户无缝接入。</p>
+<p><strong>HyperFrames 的优势</strong>。没有 build step，agent 直接写 HTML diff 友好。Apache 2.0 真开源（Remotion License 限制商业使用）。HeyGen 在生产用，社区 adopters 包括 tldraw、TanStack 这些有影响力的团队。</p>
+<p><strong>该选谁</strong>。如果你团队 React 经验深、要做复杂数据可视化（Remotion 的 SVG / Canvas 集成更成熟），选 Remotion。如果你要让 AI agent 写视频源文件、要 git diff 友好的版本控制、要在 Lambda 上跑大规模渲染，HyperFrames 优势明显。</p>
+<p>我自己用下来，agent 写 HTML 比写 JSX <strong>明显顺</strong>。Claude Code 写 <code>&lt;div data-start="0" data-duration="6"&gt;Launch day&lt;/div&gt;</code> 这种不会出错，写 <code>&lt;Spring delay={100}&gt;&lt;Absolute&gt;&lt;div&gt;Launch day&lt;/div&gt;&lt;/Absolute&gt;&lt;/Spring&gt;</code> 偶尔会漏 props。</p>
+<hr>
+<h2 id="六、关键技术细节：怎么”seek”动画"><a href="#六、关键技术细节：怎么”seek”动画" class="headerlink" title="六、关键技术细节：怎么”seek”动画"></a>六、关键技术细节：怎么”seek” 动画</h2><p>HyperFrames 的”deterministic 渲染” 宣传语背后，是它处理动画的核心能力。</p>
+<p><strong>问题</strong>：浏览器里的动画（GSAP、Lottie、Three.js、CSS keyframes）是 wall-clock 驱动的。你让浏览器跳到 t=3.7s，浏览器会播 3.7s 的内容然后截一帧，但中间播的内容可能因为 raf 调度、preload、image decode 等原因有微小漂移。</p>
+<p><strong>Remotion 的解法</strong>：用 <code>frame.waitForFunction</code> 等浏览器内部的时钟到指定帧，然后截图。简单粗暴但偶尔有边缘 case。</p>
+<p><strong>HyperFrames 的解法</strong>：每个 runtime adapter（GSAP / Lottie / Three.js/ Anime.js/ CSS / WAAPI）都实现一个 <code>seek(t)</code> 方法。Renderer 调 <code>composition.gsapTimeline.seek(t)</code>，runtime 自己内部把状态拨到 t 时刻。<code>window.__timelines.launch.seek(3.7)</code> 这种。</p>
+<p>HTML 里的约定：</p>
+<figure class="highlight html"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"stage"</span> <span class="attr">data-composition-id</span>=<span class="string">"launch"</span> <span class="attr">data-start</span>=<span class="string">"0"</span> <span class="attr">data-width</span>=<span class="string">"1920"</span> <span class="attr">data-height</span>=<span class="string">"1080"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">video</span> <span class="attr">class</span>=<span class="string">"clip"</span> <span class="attr">data-start</span>=<span class="string">"0"</span> <span class="attr">data-duration</span>=<span class="string">"6"</span> <span class="attr">data-track-index</span>=<span class="string">"0"</span> <span class="attr">src</span>=<span class="string">"intro.mp4"</span> <span class="attr">muted</span> <span class="attr">playsinline</span>&gt;</span><span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">h1</span> <span class="attr">id</span>=<span class="string">"title"</span> <span class="attr">class</span>=<span class="string">"clip"</span> <span class="attr">data-start</span>=<span class="string">"1"</span> <span class="attr">data-duration</span>=<span class="string">"4"</span> <span class="attr">data-track-index</span>=<span class="string">"1"</span>&gt;</span>Launch day<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">audio</span> <span class="attr">data-start</span>=<span class="string">"0"</span> <span class="attr">data-duration</span>=<span class="string">"6"</span> <span class="attr">data-track-index</span>=<span class="string">"2"</span> <span class="attr">data-volume</span>=<span class="string">"0.5"</span> <span class="attr">src</span>=<span class="string">"music.wav"</span>&gt;</span><span class="tag">&lt;/<span class="name">audio</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> tl = gsap.<span class="title function_">timeline</span>({ <span class="attr">paused</span>: <span class="literal">true</span> });</span></span><br><span class="line"><span class="language-javascript">    tl.<span class="title function_">from</span>(<span class="string">"#title"</span>, { <span class="attr">opacity</span>: <span class="number">0</span>, <span class="attr">y</span>: <span class="number">40</span>, <span class="attr">duration</span>: <span class="number">0.8</span> }, <span class="number">1</span>);</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">window</span>.<span class="property">__timelines</span> = <span class="variable language_">window</span>.<span class="property">__timelines</span> || {};</span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">window</span>.<span class="property">__timelines</span>.<span class="property">launch</span> = tl;</span></span><br><span class="line"><span class="language-javascript">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>class="clip"</code> 表示这个元素是 video frame（渲染时算 bounding box + mask）。<code>data-start</code> / <code>data-duration</code> 是时间线。<code>data-track-index</code> 是 z-order track（0 在底，1 在上）。<code>data-track-index="2"</code> 是音频。</p>
+<p>Renderer 拿到这个 HTML 之后，<strong>对每一帧</strong>：</p>
+<ol>
+<li>用 Puppeteer 加载 HTML</li>
+<li> 调 <code>window.__timelines.launch.seek(t)</code></li>
+<li>调 <code>document.querySelectorAll('video').forEach(v =&gt; v.currentTime = t - v.dataset.start)</code></li>
+<li>等所有动画就绪</li>
+<li>截图</li>
+<li>下一帧</li>
+</ol>
+<p>每帧之间<strong>完全独立</strong>。你可以把第 47 帧的截图拿出来，diff 一下看看有没有 regression。这就是 README 里 “deterministic” 的意思。</p>
+<hr>
+<h2 id="七、AWS-Lambda-渲染"><a href="#七、AWS-Lambda-渲染" class="headerlink" title="七、AWS Lambda 渲染"></a>七、AWS Lambda 渲染</h2><p>单个视频本地跑还行，但你要做 100 个社交媒体 variants（不同比例、不同时长、不同字幕），本地机器要跑很久。</p>
+<p>HyperFrames 提供了 AWS Lambda 渲染路径。<code>@hyperframes/aws-lambda</code> 包里有：</p>
+<ul>
+<li>把渲染 pipeline 拆成 lambda function 的打包脚本</li>
+<li>一个 driver（本地 / CI 跑），把 composition 切片派发给 lambda</li>
+<li>progress tracking</li>
+</ul>
+<p>README 给的估算：1 个 1920×1080 30fps 的 60 秒视频，本地大概 5-8 分钟。AWS Lambda 跑 50 个并发，每个并发切 1-2 秒的段，整体 1-2 分钟。<strong>10 倍加速</strong>。</p>
+<p>成本我没精算过，但 lambda 单价 0.0000166667 USD/GB-second，2GB 内存的 lambda 跑 1 分钟大概 0.002 美元。50 个并发 1 分钟处理一个 60 秒视频，lambda 成本约 0.1 美元。</p>
+<p>这条对做” 批量短视频营销” 的内容工厂很有用。</p>
+<hr>
+<h2 id="八、快速上手"><a href="#八、快速上手" class="headerlink" title="八、快速上手"></a>八、快速上手</h2><p>最简路径（agent 用户）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx skills add heygen-com/hyperframes</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在 Claude Code / Cursor / Codex 里问：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/hyperframes 做一个 10 秒的产品介绍视频，渐入标题，背景视频，背景音乐。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>agent 走完所有 skill，产出一份 HTML composition 和一个 MP4。</p>
+<p>最简路径（开发者）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm i -g hyperframes</span><br><span class="line">npx hyperframes init my-video</span><br><span class="line"><span class="built_in">cd</span> my-video</span><br><span class="line">npx hyperframes preview      <span class="comment"># 浏览器实时预览</span></span><br><span class="line">npx hyperframes render       <span class="comment"># 渲染 MP4</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>要求 Node.js 22+，ffmpeg 装好（macOS <code>brew install ffmpeg</code>，Ubuntu <code>sudo apt install ffmpeg</code>）。</p>
+<p>要装 catalog 里的 block /component：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npx hyperframes add flash-through-white   <span class="comment"># shader 转场</span></span><br><span class="line">npx hyperframes add instagram-follow      <span class="comment"># 社交叠加层</span></span><br><span class="line">npx hyperframes add data-chart            <span class="comment"># 动态图表</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>完整 catalog 在 <a target="_blank" rel="noopener" href="https://hyperframes.heygen.com/catalog">hyperframes.heygen.com/catalog</a>。</p>
+<hr>
+<h2 id="九、20-个-skill-的具体用法"><a href="#九、20-个-skill-的具体用法" class="headerlink" title="九、20 个 skill 的具体用法"></a>九、20 个 skill 的具体用法</h2><p>挑 4 个我用得最多的展开讲。</p>
+<h3 id="product-launch-video"><a href="#product-launch-video" class="headerlink" title="/product-launch-video"></a><code>/product-launch-video</code></h3><p>这是我给客户做产品介绍的主力。从客户给的 URL 开始，agent 用 Playwright 截一组关键页面，分析配色字体，下载 hero 图和 logo，写 composition，调 GSAP 时间线，加 callout，加 BGM，渲染。</p>
+<p>最长 3 分钟，最佳 30-90 秒。这个时长限制很关键，agent 不会写出 5 分钟的废话视频。</p>
+<h3 id="pr-to-video"><a href="#pr-to-video" class="headerlink" title="/pr-to-video"></a><code>/pr-to-video</code></h3><p>帮开源项目做 changelog 视频。给一个 PR URL 或 <code>owner/repo#N</code> 引用，agent 调 <code>gh</code> CLI 拉 diff，分析改了哪些文件、加了哪些 feature、调了哪些 API，生成一段 30-60 秒的 changelog 视频。</p>
+<p>这种视频在 GitHub 项目的 release notes 里很常见，HyperFrames 把它自动化了。</p>
+<h3 id="faceless-explainer"><a href="#faceless-explainer" class="headerlink" title="/faceless-explainer"></a><code>/faceless-explainer</code></h3><p>“无脸讲解” 是知识区 YouTube 的常见形式。B 站科技区一半视频是这种：屏幕 + 字幕 + 旁白，不出现人脸。HyperFrames 的实现是：agent 写一份脚本，按脚本生成对应视觉（字体、抽象图、动画、图表），混音 + 烧字幕。</p>
+<p>对那些不愿意出镜但想批量做知识视频的人，这条是杀手锏。</p>
+<h3 id="talking-head-recut"><a href="#talking-head-recut" class="headerlink" title="/talking-head-recut"></a><code>/talking-head-recut</code></h3><p>把录好的 30 分钟播客剪辑成 3 分钟精华版，加图卡、lower-third、data callout、kinetic title。HyperFrames 不剪辑视频本体（那是 FFmpeg 的事），它<strong>叠加</strong>图层。原始视频不动，在上面叠动效、字幕、数据可视化。</p>
+<p>这一条对播客主来说是 10 倍效率提升，原来一个 30 分钟剪辑要 4 小时，现在 15 分钟。</p>
+<h3 id="embedded-captions"><a href="#embedded-captions" class="headerlink" title="/embedded-captions"></a><code>/embedded-captions</code></h3><p>这个专门解决「说话人视频加字幕」这件事。<code>verbatim</code> 模式把整段话当字幕压在底部；<code>embedded climax</code> 模式把高潮部分（语气词、最强音节）大字号叠在说话人背后；<code>pure cinematic</code> 模式让字幕从画面外飞入飞出演电影感。</p>
+<p>海外 YouTube 短视频现在 80% 用 embedded climax，因为这种风格在静音自动播放时也能传递情绪。B 站中文区还没普及，HyperFrames 装上 skill 之后 agent 能直接出。</p>
+<h3 id="slideshow"><a href="#slideshow" class="headerlink" title="/slideshow"></a><code>/slideshow</code></h3><p>PPT 的开源替代品。HTML / CSS 写 deck，agent 生成每页的内容和过渡。支持 fragment（同一页内分步显示）、branching（决策点跳转）、hotspot（点击区域触发事件）、presenter mode（演讲者视图）。输出是「可导航的 deck」，不是 MP4。</p>
+<p>这条对企业内训、conference talk、pitch deck 都有用。把 deck 源放进 git，agent 能 review 内容、PR 改稿。</p>
+<h3 id="music-to-video"><a href="#music-to-video" class="headerlink" title="/music-to-video"></a><code>/music-to-video</code></h3><p>音乐文件（mp3、wav、视频抽音、或者从「mood brief」生成的 AI 音乐）→ 节奏同步的视频。Lyric 模式显示歌词，slideshow 模式切图，kinetic promo 模式做动态 promo。<code>/media-use</code> skill 配合可以生成 AI 音乐（<a target="_blank" rel="noopener" href="https://suno.com/">Suno</a> / <a target="_blank" rel="noopener" href="https://udio.com/">Udio</a>）。</p>
+<h3 id="motion-graphics"><a href="#motion-graphics" class="headerlink" title="/motion-graphics"></a><code>/motion-graphics</code></h3><p>&lt; 10 秒的纯动效。kinetic type、stat hit、logo sting、lower-third、动态推文标题。MP4 或带 alpha channel 的透明覆盖（可以叠在别的视频上面）。这种动效片在产品发布、做 slide 模板、广告片头都用得上。</p>
+<hr>
+<h2 id="十、对比视频生成赛道"><a href="#十、对比视频生成赛道" class="headerlink" title="十、对比视频生成赛道"></a>十、对比视频生成赛道</h2><table>
+<thead>
+<tr>
+<th>工具</th>
+<th>思路</th>
+<th>适用场景</th>
+<th>协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> HyperFrames</strong></td>
+<td>HTML + seekable 渲染</td>
+<td> agent 写视频，HTML 源</td>
+<td> Apache 2.0</td>
+</tr>
+<tr>
+<td><strong>Remotion</strong></td>
+<td>React 组件渲染</td>
+<td> React 团队，传统视频</td>
+<td> Remotion License</td>
+</tr>
+<tr>
+<td><strong>FFmpeg</strong></td>
+<td> 命令行 + 滤镜</td>
+<td>纯编程，复杂合成</td>
+<td> LGPL / GPL</td>
+</tr>
+<tr>
+<td><strong>After Effects</strong></td>
+<td>GUI 时间线</td>
+<td>设计师，高端视觉</td>
+<td>商业</td>
+</tr>
+<tr>
+<td><strong> Runway / Pika</strong></td>
+<td>AI 文生视频</td>
+<td>一句话出 5 秒</td>
+<td>商业</td>
+</tr>
+<tr>
+<td><strong> HeyGen 商业版</strong></td>
+<td> AI 数字人</td>
+<td>真人头像 + 脚本</td>
+<td>商业</td>
+</tr>
+</tbody></table>
+<p>HyperFrames 填补的是<strong>确定性、可 diff、agent friendly</strong> 这一档。Runway / Pika 是 AI 想象出视频，每次渲染都不一样。HyperFrames 是 HTML → MP4，同样的 HTML 永远产同样的 MP4。</p>
+<p>agent 写视频需要确定性。LLM 的随机性是优势，但” 渲染” 的随机性是缺陷。HyperFrames 拿掉了渲染这层的随机性。</p>
+<h2 id="十一、具体怎么用：装上-skill-之后我做了什么"><a href="#十一、具体怎么用：装上-skill-之后我做了什么" class="headerlink" title="十一、具体怎么用：装上 skill 之后我做了什么"></a>十一、具体怎么用：装上 skill 之后我做了什么</h2><p>我想用一个具体的例子说明 HyperFrames 的 agent 链路是怎么跑的。</p>
+<p>周三晚上，我帮朋友做他新 SaaS 产品的 60 秒产品介绍视频。朋友给了：</p>
+<ul>
+<li>产品 URL：<code>https://example-saas.com</code></li>
+<li>一句话定位：”AI 驱动的客户反馈分类工具”</li>
+<li> 三张产品截图（hero、列表、详情）</li>
+<li>一段 12 秒的产品 demo 录屏</li>
+<li>选好的 BGM（30 秒剪辑，wav 文件）</li>
+</ul>
+<p>我开 Claude Code 装好 skill 之后，输入：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/hyperframes 帮我做一个 60 秒的产品介绍视频，产品是 example-saas.com，主题是 AI 客户反馈分类。</span><br><span class="line">素材在 ~/projects/example-saas-video/，demo.mp4 是 demo 录屏，bgm.wav 是背景音乐。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>agent 走的路径（<strong>这是我观察真实 Claude Code 4.5 Sonnet 的行为，不代表 HyperFrames 官方推荐</strong>）：</p>
+<p><strong>第 1 步：router 阶段</strong>。<code>/hyperframes</code> skill 读我的请求，判定这是「产品发布视频」，路由到 <code>/product-launch-video</code> skill。</p>
+<p><strong>第 2 步：截图分析</strong>。agent 调 Playwright 截 <code>https://example-saas.com</code> 的 hero、列表、详情三个页面，调用视觉模型分析配色、字体、布局。</p>
+<p><strong>第 3 步：选 frame.md</strong>。agent 推荐 BlockFrame 设计模板（科技产品 + 深色背景），问我：</p>
+<blockquote>
+<p>检测到产品是 SaaS Web 应用。我推荐 BlockFrame 模板（深色 + Sans Serif 标题 + 等宽字数字）。你也可以选 Blue Professional（商务浅色）或 Bold Poster（强对比）。</p>
+<ol>
+<li>BlockFrame（推荐）</li>
+<li>Blue Professional</li>
+<li>Bold Poster</li>
+<li> 自己选</li>
+</ol>
+</blockquote>
+<p>我回 1。</p>
+<p><strong>第 4 步：写脚本</strong>。agent 调 LLM 写 60 秒旁白脚本（中文），分段：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[0-3s] "客户反馈淹没在工单里，工程师找不到真正的问题。"</span><br><span class="line">[3-12s] "example-saas 用 AI 自动分类、聚类、优先级排序。"</span><br><span class="line">[12-30s] （demo 录屏 + 文字 callout）</span><br><span class="line">[30-45s] "上线 30 天，团队处理反馈效率提升 3 倍。"</span><br><span class="line">[45-55s] "现在注册送 30 天 Pro 试用。"</span><br><span class="line">[55-60s] "example-saas.com"</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>第 5 步：写 composition</strong>。agent 调用 <code>/hyperframes-core</code> 写出一份 <code>index.html</code>，里面用 <code>data-start</code> / <code>data-duration</code> / <code>data-track-index</code> 控制时间线，GSAP 写动画。</p>
+<p><strong>第 6 步：找 / 生成 BGM</strong>。agent 调 <code>/media-use</code>，发现我的 <code>bgm.wav</code> 30 秒不够长（视频 60 秒），自动生成一段 60 秒的延展版用 Suno API（BYOK）。</p>
+<p><strong>第 7 步：混音</strong>。agent 调 <code>/hyperframes-audio</code>，设置 BGM 音量 0.3（不盖过旁白），但这版没旁白所以 BGM 提到 0.5。</p>
+<p><strong>第 8 步：lint + preview</strong>。<code>npx hyperframes lint</code> 报 “no issues”。”<code>npx hyperframes preview</code>“ 起本地服务器给我看实时效果。</p>
+<p><strong>第 9 步：render</strong>。我说 “render 1920x1080 30fps”。<code>npx hyperframes render --width 1920 --height 1080 --fps 30</code> 跑 5 分钟，产 <code>output.mp4</code> 60 秒 1920x1080 H.264，约 12 MB。</p>
+<p><strong>第 10 步：review + 改</strong>。我看完觉得 demo 段太短，让 agent 把 [12-30s] 改到 [12-35s]，后面顺延。agent 改 composition 的 <code>data-duration</code> 属性，重新 render，3 分钟。</p>
+<p>整个流程我敲键盘的时间大概 2 分钟（输 prompt + 回 design 选择 + 改一处时长），agent + 渲染跑了 8 分钟。第一次出片一共 10 分钟。</p>
+<p><strong>和之前那次 4 小时对比</strong>：迭代 3 个版本（改文案 + 改时长 + 改设计模板），总耗时 30 分钟。如果是 After Effects 4 小时起步。</p>
+<h3 id="跟设计协作"><a href="#跟设计协作" class="headerlink" title="跟设计协作"></a>跟设计协作</h3><p>我把这个工作流推荐给一个设计师朋友。他的反应是：</p>
+<blockquote>
+<p>这个只能做” 模板化” 视频，不能做” 创意视频”。</p>
+</blockquote>
+<p>我同意。HyperFrames 的强项是「结构化视频」（产品介绍、PR walkthrough、教学视频、播客剪辑），不是「创意视频」（广告片、电影感短片）。后者需要 AE / 设计师。</p>
+<p>但这条界限在模糊。<code>/motion-graphics</code> skill 配合 <code>/hyperframes-animation</code> 已经能做出相当有质感的动效片（kinetic type、shader 转场、data chart），80% 的 SaaS 营销视频需求能覆盖。</p>
+<p>剩下 20% 的” 高端创意” 留给设计师手工做。HyperFrames 是让 agent 接管 80%，不是取代设计师。</p>
+<h3 id="跟写代码协作"><a href="#跟写代码协作" class="headerlink" title="跟写代码协作"></a>跟写代码协作</h3><p>我试过让 Claude Code 在做 feature 的同时生成 changelog 视频：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 实现 X feature</span><br><span class="line">2. 跑 /pr-to-video 给这个 commit 生成 30 秒 changelog 视频</span><br><span class="line">3. 视频文件存到 docs/videos/x-feature.mp4</span><br><span class="line">4. README 引用</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这条把” 代码 → changelog 视频” 自动化了。开源项目维护者每周能省下 1-2 小时。</p>
+<h3 id="数据流可视化"><a href="#数据流可视化" class="headerlink" title="数据流可视化"></a>数据流可视化</h3><p>另一个用法：把数据库里的数据自动转成动态可视化视频。<code>/data-chart</code> catalog block 支持 d3.js 数据 → animated bar chart race 视频。每周跑一次脚本：拉上周的 metrics 数据 → 喂给 agent → 产出 30 秒「本周数据」视频。给团队周会用。</p>
+<p>这种” 数据 → 视频” 的工作流以前要设计师 + DataWeave + AE 做半天，现在 agent + HyperFrames 30 分钟。</p>
+<p><strong>做开源项目的维护者</strong>。<code>/pr-to-video</code> 自动给每次 release 做 30 秒 changelog 视频，挂在 GitHub README / Discord / Twitter 上。</p>
+<p><strong>做产品营销的人</strong>。<code>/product-launch-video</code> 半小时出一个 60 秒产品介绍，比找外包快两个数量级。</p>
+<p><strong>做知识区 YouTube / B 站的人</strong>。<code>/faceless-explainer</code> + AI 脚本生成，量产” 屏幕 + 字幕” 教学视频。</p>
+<p><strong>做播客的人</strong>。<code>/talking-head-recut</code> 把 30 分钟访谈剪成 3 分钟精华版。</p>
+<p><strong>做内部培训 / 演示</strong>。<code>/slideshow</code> + <code>/general-video</code> 给企业内训出 deck 和解说视频。</p>
+<p><strong>AI 工程师</strong>。这是我能想到的” 让 agent 直接产视频” 最干净的方案。HTML 源文件可以存 git，可以 review，可以 trace。</p>
+<hr>
+<h2 id="十二、局限"><a href="#十二、局限" class="headerlink" title="十二、局限"></a>十二、局限</h2><p><strong>生态还在早期。</strong> 4.3k forks 跟 Remotion 30k+ 不是一个量级。遇到问题 Stack Overflow 上答案少，Discord 是主要支持渠道。</p>
+<p><strong>Seek 渲染在某些 runtime 不完美。</strong> GSAP / WAAPI / CSS 这种浏览器原生 runtime seek 很准，Lottie / Three.js 偶尔需要 manual adapter。社区有人在写新 adapter 但覆盖不全。</p>
+<p><strong>frame.md templates 是英文设计系统。</strong> 拿去做中文视频会显得” 美式”。需要本地化适配。</p>
+<p><strong>MCP server 还没出。</strong> README 里提到了 <code>skills</code>（走 <code>npx skills add</code>），但没提 MCP 集成。对接 Claude Code 要走 npx skills，跟 opencode 的 native MCP 不同。</p>
+<p><strong>Lambda 渲染首次部署要配 IAM 角色 + S3 bucket。</strong> README 给了指南但步骤多，第一次配可能要 30-60 分钟。</p>
+<p><strong>Git LFS 占空间。</strong> 仓库里 <code>packages/producer/tests/**/output.mp4</code> 大概 240 MB 回归测试基准视频。clone 全仓库要先 <code>git lfs install</code>。</p>
+<p><strong>174 个 open issues。</strong> 跟 ponytail 的 219 个、opencode 的 5,739 个比算少。release 节奏快，bug 修得勤，但 Discord 才是主战场。</p>
+<h2 id="十二点五、底层机制：seek-到底是怎么工作的"><a href="#十二点五、底层机制：seek-到底是怎么工作的" class="headerlink" title="十二点五、底层机制：seek 到底是怎么工作的"></a>十二点五、底层机制：seek 到底是怎么工作的</h2><p>我想展开讲一下 HyperFrames 怎么「seek 到任意时刻」这件事，因为这决定了 deterministic 渲染能不能成立。</p>
+<h3 id="浏览器原生-runtime-的-seek"><a href="#浏览器原生-runtime-的-seek" class="headerlink" title="浏览器原生 runtime 的 seek"></a>浏览器原生 runtime 的 seek</h3><p><strong>CSS keyframes / Web Animations API (WAAPI)</strong>。浏览器内部就有时间轴，CSS 走 Animation.currentTime API，WAAPI 走 element.getAnimations 索引 0 拿 currentTime。直接 set 值就行。</p>
+<p><strong>GSAP</strong>。GSAP 暴露 timeline.seek 方法。把 timeline 暂停（paused true），调 seek 到指定时间，timeline 内部把所有 tween 的状态拨到对应时刻。</p>
+<p><strong>Anime.js</strong>。跟 GSAP 类似，timeline.seek 也行。</p>
+<p><strong>Lottie</strong>。goToAndStop 跳到指定帧，frame 用 frame 乘 fps 算秒数。</p>
+<h3 id="复杂-runtime-的-seek"><a href="#复杂-runtime-的-seek" class="headerlink" title="复杂 runtime 的 seek"></a>复杂 runtime 的 seek</h3><p><strong>Three.js</strong>。Three.js 没有内置时间轴，所有动画靠 requestAnimationFrame 推。seek 的实现要 hook rAF，临时把 clock.getDelta 改成一个固定 delta，让 Three.js 内部把状态推到指定时刻。</p>
+<p><strong>TypeGPU</strong>。WebGPU 时代的着色器库，seek 要把 uniform buffer 里的时间变量直接 set 上去。</p>
+<p>每加一个 animation runtime，HyperFrames 都要写一个 adapter 包 seek 逻辑。core 包里有这些 adapter 的代码。</p>
+<h3 id="视频和音频的-seek"><a href="#视频和音频的-seek" class="headerlink" title="视频和音频的 seek"></a>视频和音频的 seek</h3><p>HTML video 元素的 currentTime 属性可以跳到任意秒数。renderer 对每个 video clip 调 video.currentTime 等于 frameTime 减 clip 的 data-start。</p>
+<p>audio 类似。</p>
+<h3 id="真正的渲染循环"><a href="#真正的渲染循环" class="headerlink" title="真正的渲染循环"></a>真正的渲染循环</h3><p>renderer 的主循环大概是这个意思：</p>
+<ol>
+<li>Puppeteer 启动 headless Chrome，加载 composition 的 HTML。</li>
+<li>等 composition 注册完所有 timeline（window.__ready 信号）。</li>
+<li>对每一帧：<ul>
+<li>计算 t 等于 frame 除以 fps。</li>
+<li>seek 所有 timeline。</li>
+<li>seek 所有 video clip。</li>
+<li>seek 所有 audio clip。</li>
+<li>等一帧让浏览器 paint。</li>
+<li>截图存到本地。</li>
+</ul>
+</li>
+<li>FFmpeg 把所有 PNG 帧合成 MP4，音频单独 mix down 后 mux 进去。</li>
+</ol>
+<p><strong>关键细节</strong>：</p>
+<ul>
+<li>seek 之后状态是「确定性」的，跟之前 seek 多少次无关，状态是相同的。</li>
+<li>视频和动画的 seek 各自独立，因为它们的时间轴来自不同源。</li>
+<li>帧率越高、composition 越复杂，渲染越慢。</li>
+<li>截图和音频编码在 producer 包里串起来。</li>
+</ul>
+<p>这种 seek-based 渲染比 Remotion 的 waitForFunction（等浏览器内部的时钟到指定帧）更稳，因为它不依赖 wall-clock timing，每一帧的状态都是 deterministic 给出来的。</p>
+<hr>
+<h2 id="十二点六、Catalog：可复用的-block-component-生态"><a href="#十二点六、Catalog：可复用的-block-component-生态" class="headerlink" title="十二点六、Catalog：可复用的 block / component 生态"></a>十二点六、Catalog：可复用的 block /component 生态</h2><p>HyperFrames 不只是一个渲染框架，它还在做一个「视频组件市场」。<code>npx hyperframes add</code> 命令可以从官方 catalog 装可复用的 block 或 component。</p>
+<p>官方的 catalog 在 <a target="_blank" rel="noopener" href="https://hyperframes.heygen.com/catalog">hyperframes.heygen.com/catalog</a>，按类别分了几十个条目。挑几类用得最多的讲。</p>
+<p><strong>Transitions（转场）</strong>：</p>
+<ul>
+<li><code>flash-through-white</code>：闪白转场，经典电影手法</li>
+<li><code>color-separation</code>：色彩分离（RGB 通道错位 1-2 帧）</li>
+<li><code>flip-card</code>：翻牌转场</li>
+<li><code>warp-zoom</code>：缩放扭曲</li>
+<li><code>ink-spread</code>：墨水扩散</li>
+<li><code>pixelate</code>：像素化（适合敏感内容打码）</li>
+</ul>
+<p><strong>Overlays（叠加层）</strong>：</p>
+<ul>
+<li><code>instagram-follow</code>：关注按钮动画</li>
+<li><code>subscribe-button</code>：订阅按钮</li>
+<li><code>lower-third</code>：人物介绍条</li>
+<li><code>news-ticker</code>：新闻跑马灯</li>
+<li><code>watermark</code>：半透明水印</li>
+</ul>
+<p><strong>Charts（图表）</strong>：</p>
+<ul>
+<li><code>data-chart</code>：动态数据图表（柱状、折线、饼图）</li>
+<li><code>chart-race</code>：条形图竞速</li>
+<li><code>world-map</code>：世界地图（点亮国家）</li>
+<li><code>timeline</code>：时间线</li>
+<li><code>funnel</code>：漏斗图</li>
+</ul>
+<p><strong>Effects（特效）</strong>：</p>
+<ul>
+<li><code>parallax-scroll</code>：视差滚动</li>
+<li><code>blur-reveal</code>：模糊渐显</li>
+<li><code>glitch</code>：故障效果</li>
+<li><code>vhs-noise</code>：VHS 噪点</li>
+<li><code>light-leak</code>：漏光</li>
+</ul>
+<p><strong>Captions（字幕）</strong>：</p>
+<ul>
+<li><code>word-by-word</code>：单词逐个高亮（TikTok 风格）</li>
+<li><code>karaoke</code>：卡拉 OK 风格（背景词先灰、当前词高亮）</li>
+<li><code>bounce</code>：弹跳入场</li>
+<li><code>typewriter</code>：打字机效果</li>
+</ul>
+<p>安装一行：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npx hyperframes add flash-through-white</span><br><span class="line">npx hyperframes add instagram-follow</span><br><span class="line">npx hyperframes add data-chart</span><br></pre></td></tr></tbody></table></figure>
+
+<p>装完之后在你的 composition 里写 <code>&lt;div class="block-flash-through-white"&gt;&lt;/div&gt;</code> 就能用，block 内部自动处理时间线。</p>
+<p><strong>这套组件市场的复利效应</strong>。每个新组件都被所有现有项目复用。一个团队花一周写一个 <code>brand-callout</code> block，整个公司所有视频都能用。Remotion 那边的 npm 生态虽然有 package 但要装、要配置、要 import。HyperFrames 这边 <code>npx add</code> 一行 + 写 class，门槛低一个量级。</p>
+<p>社区也可以贡献 block 到 catalog，流程跟 npm publish 类似但要走 HeyGen 审核（避免低质量 block 拖累整个生态）。</p>
+<hr>
+<h2 id="十二点七、Cloud-渲染-vs-Lambda-vs-本地"><a href="#十二点七、Cloud-渲染-vs-Lambda-vs-本地" class="headerlink" title="十二点七、Cloud 渲染 vs Lambda vs 本地"></a>十二点七、Cloud 渲染 vs Lambda vs 本地</h2><table>
+<thead>
+<tr>
+<th>渲染方式</th>
+<th>适用场景</th>
+<th>成本</th>
+<th>速度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>本地（<code>hyperframes render</code>）</td>
+<td>短视频（&lt;5 分钟）</td>
+<td>0</td>
+<td>1x（基准）</td>
+</tr>
+<tr>
+<td>HeyGen Cloud（<code>hyperframes cloud render</code>）</td>
+<td>中等视频（5-30 分钟），团队共享</td>
+<td>订阅制</td>
+<td> 5-10x</td>
+</tr>
+<tr>
+<td>AWS Lambda（<code>hyperframes lambda render</code>）</td>
+<td>大批量并行（50+ 并发）</td>
+<td>按需，约 0.1 USD / 视频</td>
+<td> 10-30x</td>
+</tr>
+</tbody></table>
+<p><strong>本地的瓶颈</strong>。一台 M3 Pro 笔记本渲染 1 分钟 1080p 30fps 视频大约 5-8 分钟。瓶颈是 Puppeteer 抓帧 + 浏览器渲染。要快只能上多机或云。</p>
+<p><strong>HeyGen Cloud 的便利</strong>。上传 composition + media 到 HeyGen 的存储，server 帮你渲染，下载 MP4。云端用 GPU 服务器跑，比本地快 5-10 倍。要 HeyGen 账号。</p>
+<p><strong>AWS Lambda 的并行</strong>。把 composition 拆成 N 段（比如 60 秒拆成 60 个 1 秒段），派发给 60 个 lambda function 并行渲染，最后合成。50 并发对个人开发者够用，100+ 并发对内容工厂才需要。</p>
+<p><strong>对个人开发者的建议</strong>。日常本地跑，重要视频走 HeyGen Cloud，规模化才上 Lambda。</p>
+<hr>
+<h2 id="十三、它在-AI-视频赛道里的位置"><a href="#十三、它在-AI-视频赛道里的位置" class="headerlink" title="十三、它在 AI 视频赛道里的位置"></a>十三、它在 AI 视频赛道里的位置</h2><p>最后这一段留给视频生成赛道的全景。</p>
+<p>2024 年到 2025 年，AI 视频生成赛道分成了三档：</p>
+<p><strong>「想象出视频」档</strong>：Runway Gen-4、Pika 2.0、OpenAI Sora、字节 Seedance。一句话或一张图出 5-10 秒视频。每次渲染都不一样。<strong>优势</strong>：创意上限。<strong>劣势</strong>：不可重复。</p>
+<p><strong>「数字人出视频」档</strong>：HeyGen、D-ID、Synthesia、Tavus。真人头像 + AI 脚本 → 口播视频。<strong>优势</strong>：商用合规、稳定。<strong>劣势</strong>：创意下限、模板化。</p>
+<p><strong>「确定性出视频」档</strong>：HyperFrames、Remotion、FFmpeg。给定脚本和素材，<strong>永远产同样的视频</strong>。<strong>优势</strong>：CI / 批量 / 版本控制。<strong>劣势</strong>：脚本要人写。</p>
+<p>HyperFrames 站在第三档，且把”agent 写脚本” 这件事接住了。AI 视频赛道到 2026 年下半年会开始分工：</p>
+<ul>
+<li>想要” 一段创意视频” 的人用 Sora / Runway。</li>
+<li>想要” 一段口播讲解” 的人用 HeyGen / Tavus。</li>
+<li>想要” 一段产品介绍 / 营销片 /changelog/ 教学视频” 的人用 HyperFrames / Remotion + agent。</li>
+</ul>
+<p>HyperFrames 的赌注是：在第三档里，<strong>HTML 比 JSX 更适合 agent 写</strong>。这个赌注目前看是对的。</p>
+<h2 id="十四、一句话总结"><a href="#十四、一句话总结" class="headerlink" title="十四、一句话总结"></a>十四、一句话总结</h2><p>HyperFrames 让「视频源文件」从 After Effects 的二进制项目，变成了 git diff 友好的 HTML。20 个 skill 让 AI agent 像人写代码一样写视频。</p>
+<p>视频不再是个「无法 diff 的文件」。</p>
+<p>如果你做过任何形式的视频内容生产，clone 一下仓库，跑 <code>npx hyperframes init my-video</code>，5 分钟出第一个 MP4。看完你大概会跟我一样：想着之前那 4 小时的剪辑。</p>
+<hr>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/heygen-com/hyperframes">https://github.com/heygen-com/hyperframes</a><br><br></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/09/07/heygen-com-hyperframes-html-to-video-agent-framework/" title="heygen-com&#x2F;hyperframes：45.9k stars 的开源 HTML → 视频框架，HeyGen 把自家生产管线 Apache 2.0 开源了">https://www.daishengli.top/2026/09/07/heygen-com-hyperframes-html-to-video-agent-framework/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/HyperFrames/" rel="tag"># HyperFrames</a>
+              <a href="/tags/HeyGen/" rel="tag"># HeyGen</a>
+              <a href="/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/" rel="tag"># 视频生成</a>
+              <a href="/tags/HTML/" rel="tag"># HTML</a>
+              <a href="/tags/GSAP/" rel="tag"># GSAP</a>
+              <a href="/tags/Remotion/" rel="tag"># Remotion</a>
+              <a href="/tags/FFmpeg/" rel="tag"># FFmpeg</a>
+              <a href="/tags/Skills/" rel="tag"># Skills</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/06/openwhispr-openwhispr-privacy-first-voice-dictation/" rel="prev" title="OpenWhispr&#x2F;openwhispr：7.4k stars 的开源语音听写，本地 Whisper &#x2F; Parakeet + 云端 BYOK 全给你，WisprFlow 替代品">
+                  <i class="fa fa-angle-left"></i> OpenWhispr/openwhispr：7.4k stars 的开源语音听写，本地 Whisper / Parakeet + 云端 BYOK 全给你，WisprFlow 替代品
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/08/mksglu-context-mode-ai-coding-context-optimizer/" rel="next" title="mksglu&#x2F;context-mode：20.8k stars 的 AI 编码上下文优化器，Hacker News">
+                  mksglu/context-mode：20.8k stars 的 AI 编码上下文优化器，Hacker News <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
