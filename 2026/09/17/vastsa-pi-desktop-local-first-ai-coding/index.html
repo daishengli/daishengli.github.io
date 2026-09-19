@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="vastsa&#x2F;PI-Desktop（GitHub 2.8k stars、552 forks、当日 +552 stars、MIT）是一款本地优先的 AI 编码 Agent 桌面应用，Electron + Rust host core + pi Agent Harness 写，主打&quot;用户自己装插件&quot;的可扩展架构，所有 model 调用 &#x2F; tool 执行 &#x2F; 上下文管理都跑在本地二进制（Rust ho">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vastsa&#x2F;PI-Desktop：2.8k stars 的本地优先 AI 编码 Agent 桌面，Electron + Rust host core + pi Agent Harness + 用户可装插件">
+<meta property="og:url" content="https://www.daishengli.top/2026/09/17/vastsa-pi-desktop-local-first-ai-coding/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="vastsa&#x2F;PI-Desktop（GitHub 2.8k stars、552 forks、当日 +552 stars、MIT）是一款本地优先的 AI 编码 Agent 桌面应用，Electron + Rust host core + pi Agent Harness 写，主打&quot;用户自己装插件&quot;的可扩展架构，所有 model 调用 &#x2F; tool 执行 &#x2F; 上下文管理都跑在本地二进制（Rust ho">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-17T01:30:00.000Z">
+<meta property="article:modified_time" content="2026-09-19T01:07:24.369Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="AI Coding">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="本地优先">
+<meta property="article:tag" content="Electron">
+<meta property="article:tag" content="PI-Desktop">
+<meta property="article:tag" content="vastsa">
+<meta property="article:tag" content="Agent Desktop">
+<meta property="article:tag" content="pi Agent Harness">
+<meta property="article:tag" content="插件化">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/09/17/vastsa-pi-desktop-local-first-ai-coding/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/09/17/vastsa-pi-desktop-local-first-ai-coding/","path":"2026/09/17/vastsa-pi-desktop-local-first-ai-coding/","title":"vastsa/PI-Desktop：2.8k stars 的本地优先 AI 编码 Agent 桌面，Electron + Rust host core + pi Agent Harness + 用户可装插件"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>vastsa/PI-Desktop：2.8k stars 的本地优先 AI 编码 Agent 桌面，Electron + Rust host core + pi Agent Harness + 用户可装插件 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">373</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">117</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9AAI-%E7%BC%96%E7%A0%81-agent-%E7%9A%84%E2%80%9D%E4%BA%91%E7%AB%AF%E4%BE%9D%E8%B5%96%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">一、它想解决的问题：AI 编码 agent 的” 云端依赖”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%EF%BC%9AElectron-UI-Rust-%E5%AE%BF%E4%B8%BB-%E6%8F%92%E4%BB%B6%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">二、核心架构：Electron UI + Rust 宿主 + 插件化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E8%B7%9F%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84%E5%87%A0%E4%B8%AA%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">3.</span> <span class="nav-text">三、跟之前发过的几个项目的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81pi-Agent-Harness-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">4.</span> <span class="nav-text">四、pi Agent Harness 是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%9C%AC%E5%9C%B0%E4%BC%98%E5%85%88%E7%9A%84%E5%87%A0%E4%B8%AA%E5%85%B7%E4%BD%93%E7%BB%86%E8%8A%82"><span class="nav-number">5.</span> <span class="nav-text">五、本地优先的几个具体细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%AE%89%E8%A3%85%E4%B8%8E%E4%B8%8A%E6%89%8B"><span class="nav-number">6.</span> <span class="nav-text">六、安装与上手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E8%B7%9F%E4%BA%91%E7%AB%AF-agent-%E7%9A%84%E5%87%A0%E4%B8%AA%E5%85%B7%E4%BD%93%E5%B7%AE%E5%BC%82"><span class="nav-number">7.</span> <span class="nav-text">七、跟云端 agent 的几个具体差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%87%A0%E4%B8%AA%E6%88%91%E8%A3%85%E4%B8%8A%E8%B7%91%E8%BF%87%E7%9A%84%E5%85%B7%E4%BD%93%E5%9C%BA%E6%99%AF"><span class="nav-number">8.</span> <span class="nav-text">八、几个我装上跑过的具体场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%87%A0%E4%B8%AA%E5%85%B7%E4%BD%93%E7%9A%84%E5%B7%A5%E7%A8%8B%E7%BB%86%E8%8A%82"><span class="nav-number">9.</span> <span class="nav-text">九、几个具体的工程细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">10.</span> <span class="nav-text">十、适合谁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%B1%80%E9%99%90"><span class="nav-number">11.</span> <span class="nav-text">十一、局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E7%82%B9%E4%BA%94%E3%80%81Plugin-API-%E7%9A%84%E5%87%A0%E4%B8%AA%E7%BB%86%E8%8A%82"><span class="nav-number">12.</span> <span class="nav-text">十二点五、Plugin API 的几个细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E5%AE%83%E5%9C%A8-2026-%E5%B9%B4%E4%B8%8B%E5%8D%8A%E5%B9%B4%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">13.</span> <span class="nav-text">十三、它在 2026 年下半年的位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E8%AF%BB%E5%AE%8C%E4%BD%A0%E5%BA%94%E8%AF%A5%E5%81%9A%E7%9A%84%E4%B8%89%E4%BB%B6%E4%BA%8B"><span class="nav-number">14.</span> <span class="nav-text">十四、读完你应该做的三件事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E4%B8%80%E7%82%B9%E8%B7%9F-enterprise-%E9%83%A8%E7%BD%B2%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">15.</span> <span class="nav-text">十三、一点跟 enterprise 部署的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E5%AF%B9%E6%AF%94%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84%E6%89%80%E6%9C%89-agent-%E7%B1%BB%E9%A1%B9%E7%9B%AE"><span class="nav-number">16.</span> <span class="nav-text">十四、对比之前发过的所有 agent 类项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E6%9C%80%E5%90%8E"><span class="nav-number">17.</span> <span class="nav-text">十五、最后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E3%80%81%E5%85%B7%E4%BD%93%E5%9C%BA%E6%99%AF%E5%AE%9E%E6%B5%8B"><span class="nav-number">18.</span> <span class="nav-text">十六、具体场景实测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%83%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88-%E2%80%9C%E5%AE%8C%E5%85%A8%E6%9C%AC%E5%9C%B0%E2%80%9D-%E5%9C%A8-2026-%E5%B9%B4%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD"><span class="nav-number">19.</span> <span class="nav-text">十七、为什么 “完全本地” 在 2026 年变成可能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AB%E3%80%81%E5%87%A0%E6%9D%A1%E5%85%B3%E4%BA%8E%E2%80%9D%E5%BC%80%E6%BA%90-AI-%E5%B7%A5%E5%85%B7%E2%80%9D-%E7%9A%84%E5%8F%8D%E6%80%9D"><span class="nav-number">20.</span> <span class="nav-text">十八、几条关于” 开源 AI 工具” 的反思</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B9%9D%E3%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AE%B5"><span class="nav-number">21.</span> <span class="nav-text">十九、最后一段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E3%80%81%E7%BB%99%E5%87%86%E5%A4%87%E8%A3%85%E7%9A%84%E4%BA%BA%E7%9A%84%E5%87%A0%E6%9D%A1%E5%85%B7%E4%BD%93%E5%BB%BA%E8%AE%AE"><span class="nav-number">22.</span> <span class="nav-text">二十、给准备装的人的几条具体建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E4%B8%80%E3%80%81%E5%AF%B9%E6%AF%94-OpenWhispr-%E7%9A%84%E2%80%9D%E6%9C%AC%E5%9C%B0%E4%BC%98%E5%85%88%E2%80%9D%E6%80%9D%E8%B7%AF"><span class="nav-number">23.</span> <span class="nav-text">二十一、对比 OpenWhispr 的” 本地优先” 思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E4%BA%8C%E3%80%81%E5%AE%83%E5%9C%A8-AI-%E5%B7%A5%E5%85%B7%E9%93%BE%E5%85%A8%E6%99%AF"><span class="nav-number">24.</span> <span class="nav-text">二十二、它在 AI 工具链全景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E4%B8%89%E3%80%81%E7%BB%93%E5%B0%BE"><span class="nav-number">25.</span> <span class="nav-text">二十三、结尾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E5%9B%9B%E3%80%81Plugin-%E7%94%9F%E6%80%81%E8%A7%82%E5%AF%9F%EF%BC%88%E6%88%AA%E8%87%B3%E5%BD%93%E5%89%8D%EF%BC%89"><span class="nav-number">26.</span> <span class="nav-text">二十四、Plugin 生态观察（截至当前）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E4%BA%94%E3%80%81%E7%BB%99%E2%80%9D%E6%83%B3%E7%BB%99-PI-Desktop-%E8%B4%A1%E7%8C%AE%E2%80%9D%E7%9A%84%E5%87%A0%E6%9D%A1%E5%BB%BA%E8%AE%AE"><span class="nav-number">27.</span> <span class="nav-text">二十五、给” 想给 PI-Desktop 贡献” 的几条建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E5%85%AD%E3%80%81%E4%B8%80%E4%BA%9B%E6%84%8F%E5%A4%96%E5%8F%91%E7%8E%B0"><span class="nav-number">28.</span> <span class="nav-text">二十六、一些意外发现</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">117</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">373</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/09/17/vastsa-pi-desktop-local-first-ai-coding/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="vastsa&#x2F;PI-Desktop：2.8k stars 的本地优先 AI 编码 Agent 桌面，Electron + Rust host core + pi Agent Harness + 用户可装插件 | 小戴的网络日志">
+      <meta itemprop="description" content="vastsa&#x2F;PI-Desktop（GitHub 2.8k stars、552 forks、当日 +552 stars、MIT）是一款本地优先的 AI 编码 Agent 桌面应用，Electron + Rust host core + pi Agent Harness 写，主打&quot;用户自己装插件&quot;的可扩展架构，所有 model 调用 &#x2F; tool 执行 &#x2F; 上下文管理都跑在本地二进制（Rust host）+ Electron UI 层，区别于 Claude Code &#x2F; opencode &#x2F; Cursor 这种 SaaS 化 agent；插件机制让用户能装第三方的 agent harness、自定义 LLM provider、自定义 MCP server、自定义 skill，UI 跟 agent 逻辑解耦，本地优先与开发者完全掌控执行环境。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          vastsa/PI-Desktop：2.8k stars 的本地优先 AI 编码 Agent 桌面，Electron + Rust host core + pi Agent Harness + 用户可装插件
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-17 09:30:00" itemprop="dateCreated datePublished" datetime="2026-09-17T09:30:00+08:00">2026-09-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">vastsa/PI-Desktop（GitHub 2.8k stars、552 forks、当日 +552 stars、MIT）是一款本地优先的 AI 编码 Agent 桌面应用，Electron + Rust host core + pi Agent Harness 写，主打"用户自己装插件"的可扩展架构，所有 model 调用 / tool 执行 / 上下文管理都跑在本地二进制（Rust host）+ Electron UI 层，区别于 Claude Code / opencode / Cursor 这种 SaaS 化 agent；插件机制让用户能装第三方的 agent harness、自定义 LLM provider、自定义 MCP server、自定义 skill，UI 跟 agent 逻辑解耦，本地优先与开发者完全掌控执行环境。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上个月我把我所有 AI 编码 agent 装了一遍：Claude Code、Codex CLI、opencode、Cursor、Copilot。 每个都好用，但<strong>我开始对一件事不爽</strong>，它们都往云端发东西。</p>
+<p>Claude Code 的 compact 上传内容会压缩、Codex 的 trace 上传 OpenAI、opencode 的 server 默认绑 <code>127.0.0.1</code> 但你能改、Cursor 明确是 SaaS。 我想做<strong>完全本地</strong>的 agent 体验，model 调用我自己配（BYOK）、tool 执行我自己 host、上下文我自己存。</p>
+<p>上周末我在 GitHub Trending 上刷到一个新项目：<strong>vastsa/PI-Desktop</strong>。 2.8k stars，552 forks，<strong>当日 +552 stars</strong>。 MIT。 README 第一句：”Local-first AI coding agent desktop: Electron + Rust host core + pi Agent Harness + user-installable plugins”。</p>
+<p>我装上跑了两天。 这篇文章想说的不是”PI-Desktop 多么革命性”，而是一个<strong>更工程化的定位</strong>，<strong>“完全本地 + 完全可扩展 + 全用户掌控” 的 AI 编码 agent 应该是 2026 年下半年的标配</strong>。 Claude Code、opencode 这些是” 云端有”，PI-Desktop 是” 我有”。</p>
+<hr>
+<h2 id="一、它想解决的问题：AI-编码-agent-的”云端依赖”"><a href="#一、它想解决的问题：AI-编码-agent-的”云端依赖”" class="headerlink" title="一、它想解决的问题：AI 编码 agent 的”云端依赖”"></a>一、它想解决的问题：AI 编码 agent 的” 云端依赖”</h2><p>先把背景说清楚。</p>
+<p>2024-2026 年，AI 编码 agent 经历了” 从工具到平台” 的演化：</p>
+<ul>
+<li><strong>2024 H1</strong>：Claude Code、Codex 是” 终端里跑的 agent”，核心功能单进程搞定。</li>
+<li><strong>2024 H2</strong>：开始有 cloud relay（Claude Code 的 <code>/bug</code> 命令把 session 上传 Anthropic）。</li>
+<li><strong>2025 H1</strong>：opencode 提出了” 客户端 / 服务端分离”，但 server 还是默认在本地。</li>
+<li><strong>2025 H2</strong>：Cursor、Copilot 这类 SaaS 化 agent 占主导，agent 跑在别人服务器上。</li>
+<li><strong>2026 H1</strong>：PI-Desktop 出现，主打” 完全本地 + 完全可扩展”。</li>
+</ul>
+<p>PI-Desktop 想解决的问题是 <strong>2025 H2-2026 H1 出现的一个新痛点</strong>：</p>
+<blockquote>
+<p>“我想用 AI 编码 agent，但<strong>不想让我的代码 / 对话 /tool 输出被发到任何云端</strong>。 我想完全掌控执行环境，包括 LLM provider、tool 实现、上下文管理。 我想能装第三方插件，但<strong>插件本身也要本地能跑</strong>。”</p>
+</blockquote>
+<p>这是个<strong>特定用户群</strong>的痛点：</p>
+<ul>
+<li>企业 IT 部门，合规要求代码 / 对话不出公司网络。</li>
+<li>安全研究者，不想把代码送过去训下一版模型。</li>
+<li>个人开发者，隐私 / 成本考量，不想按 token 计费。</li>
+<li>自托管爱好者，已经自托管 GitLab / Gitea / Vault，自托管 agent 是下一步。</li>
+</ul>
+<p>PI-Desktop 不解决”agent 比 Claude Code 更聪明” 的问题。 它解决”agent 完全本地跑 + 我能改每个组件” 的问题。</p>
+<hr>
+<h2 id="二、核心架构：Electron-UI-Rust-宿主-插件化"><a href="#二、核心架构：Electron-UI-Rust-宿主-插件化" class="headerlink" title="二、核心架构：Electron UI + Rust 宿主 + 插件化"></a>二、核心架构：Electron UI + Rust 宿主 + 插件化</h2><p>PI-Desktop 的架构拆得很干净，三层：</p>
+<p><strong>Electron UI 层</strong>。 桌面壳，TypeScript + React 写。 负责 chat 输入框、消息流、文件 diff 显示、tool call 状态、agent 切换 UI。 UI 层<strong>完全不接触 LLM /tool</strong>，只显示数据、转发用户输入。</p>
+<p><strong>Rust host core</strong>。 Rust 写的<strong>核心执行环境</strong>。 负责：</p>
+<ul>
+<li>LLM provider 抽象（OpenAI-compatible / Anthropic / Ollama /llama.cpp）</li>
+<li>Tool execution sandbox（bash / read / write / search）</li>
+<li>Context 管理（message history + token counting + compaction）</li>
+<li>MCP server 连接</li>
+<li> Agent 协议层（LLM ↔ tool call loop）</li>
+</ul>
+<p>Rust 这层<strong>完全在用户机器上跑</strong>，<strong>没有任何外部网络调用</strong>（除非用户配的 LLM provider 需要）。 这条把”agent 跑在别人服务器上” 这件事从根上排除。</p>
+<p><strong>pi Agent Harness</strong>。 一个<strong>默认 agent 实现</strong>，跑在 Rust host 上。 PI-Desktop 自带这个 harness，用户也可以装<strong>其他 harness</strong> 作为插件。</p>
+<p>三层解耦让”UI 不动 + Rust core 不动 + 换 agent harness” 成为可能。</p>
+<p><strong>插件机制</strong>。 PI-Desktop 的” 插件” 是<strong>可以装在本地</strong>的 package，<strong>不是 SaaS</strong>。 装一个 plugin = 下载一个并解压一个 .tar.gz/.zip 到 plugins/ 目录。 插件可以包含：</p>
+<ul>
+<li>自定义 LLM provider（OpenAI / Anthropic / 自托管 vLLM / Ollama）</li>
+<li>自定义 MCP server（agent 能调的外部 tool）</li>
+<li>自定义 skill（agent 行为的 skill 包）</li>
+<li>自定义 agent harness（替换默认的 pi Agent Harness）</li>
+</ul>
+<p>用户<strong>完全掌控</strong>装什么、不装什么。 没有”plugin marketplace + 云端安装 + 自动更新”，<strong>纯本地</strong>。</p>
+<hr>
+<h2 id="三、跟之前发过的几个项目的对比"><a href="#三、跟之前发过的几个项目的对比" class="headerlink" title="三、跟之前发过的几个项目的对比"></a>三、跟之前发过的几个项目的对比</h2><p>之前发过的几个 agent 本体 / 协调层项目：</p>
+<p><strong>anomalyco/opencode</strong>（204k stars）。 opencode 是” 客户端 / 服务端分离”，server 可以跑本地。 但默认配置走 cloud 友好（Vercel AI SDK），多数工具商默认支持 cloud provider。 跟 PI-Desktop 区别：opencode 服务化设计，PI-Desktop 桌面化设计。</p>
+<p><strong>mksglu/context-mode</strong>（20.8k stars）。 context-mode 是 hook 层优化，<strong>不重做 agent</strong>，挂在现有 agent 上。 跟 PI-Desktop 区别：context-mode 是” 补丁”，PI-Desktop 是” 自托管完整 agent”。</p>
+<p><strong>Tencent/teamai-cli</strong>（3.0k stars）。 teamai-cli 是” 团队 harness 协调层”，管团队分发。 跟 PI-Desktop 关系正交。</p>
+<p><strong>DietrichGebert/ponytail</strong>（127k stars）。 ponytail 是” 行为 skill”，挂在 agent 上改 prompt。 跟 PI-Desktop 关系正交，ponytail 可以作为 PI-Desktop 的 skill 插件装。</p>
+<p><strong>affaan-m/ECC</strong>（255k stars）。 ECC 是”skill 库”，跟 ponytail 类似。 跟 PI-Desktop 关系正交。</p>
+<p><strong>PI-Desktop 在这条栈上的位置</strong>：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">输入层：OpenWhispr / Chrome Web Clipper / 手动 import</span><br><span class="line">    ↓</span><br><span class="line">沉淀层：llm_wiki（个人 wiki）</span><br><span class="line">    ↓</span><br><span class="line">本地 agent 层：PI-Desktop（本地优先 agent 桌面）</span><br><span class="line">    ↓</span><br><span class="line">行为层：ponytail / ECC（skill 库，可以装 PI-Desktop 插件）</span><br><span class="line">    ↓</span><br><span class="line">上下文层：context-mode（hook 层补丁）</span><br><span class="line">    ↓</span><br><span class="line">编码层：PI-Desktop 跑 opencode-compatible harness</span><br><span class="line">    ↓</span><br><span class="line">团队层：teamai-cli（团队协调，PI-Desktop 团队可以用）</span><br></pre></td></tr></tbody></table></figure>
+
+<p>PI-Desktop 是 **” 本地优先 agent 层”**。</p>
+<hr>
+<h2 id="四、pi-Agent-Harness-是什么"><a href="#四、pi-Agent-Harness-是什么" class="headerlink" title="四、pi Agent Harness 是什么"></a>四、pi Agent Harness 是什么</h2><p>“pi Agent Harness” 我之前没发过。 简单说：</p>
+<p><strong>agent harness</strong> 是”agent 的执行框架”。 Claude Code / Codex /opencode 都有自己的 harness，核心是”LLM ↔ tool call loop”，管理 message history、tool execution、context window。</p>
+<p><strong>pi Agent Harness</strong> 是 PI-Desktop 默认 harness。 Rust 写，紧凑、模块化、<strong>完全开源</strong>。 跟 Claude Code 那种” 完整产品” 比，pi Agent Harness 更像一个<strong>参考实现</strong>，开发者可以 fork 改。</p>
+<p>PI-Desktop 装好后默认跑 pi Agent Harness。 用户想换其他 harness（比如用 Claude Code 的 harness 跑 Anthropic 模型），可以装一个 plugin 替换。</p>
+<p>这条”agent harness 跟 agent UI 解耦” 的设计，让 PI-Desktop 不绑定特定 LLM / 特定 tool 集合。 你可以让你的 harness 跑 OpenAI，也可以跑本地 Ollama。</p>
+<hr>
+<h2 id="五、本地优先的几个具体细节"><a href="#五、本地优先的几个具体细节" class="headerlink" title="五、本地优先的几个具体细节"></a>五、本地优先的几个具体细节</h2><p>PI-Desktop 做了几件<strong>真正本地</strong>的事：</p>
+<p><strong>Rust host core 在用户机器</strong>。 binary 装在用户机器上，跑所有 LLM /tool/context。 没有”PI cloud relay” 这种组件。 这是<strong>真正的本地</strong>，不是” 客户端 + 服务端” 的” 本地客户端”。</p>
+<p><strong>所有 API key 都在本地</strong>。 LLM provider API key 存在本地 SQLite 数据库，<strong>加密</strong>。 默认不上传。 这跟 OpenWhispr（之前发过）的” 本地 SQLite 加密存储 API key” 是同款设计。</p>
+<p><strong>网络隔离友好</strong>。 整个 PI-Desktop 二进制可以在<strong>完全断网</strong>的状态下跑（除了 LLM provider 的 API call）。 这条对<strong>安全研究 / 涉密项目</strong>特别重要。</p>
+<p><strong>LLM provider 任意</strong>。 支持任何 OpenAI-compatible API（OpenAI、Azure、Anthropic via proxy、Ollama、vLLM、llama.cpp、LM Studio）。 也支持 Anthropic native API。 用户<strong>自己选</strong>。</p>
+<p><strong>Tool 执行 sandbox</strong>。 bash /read/write /search tool 跑在 Rust host 里，<strong>用户权限</strong>，不是 sandbox 隔离。 这条跟 Claude Code 默认 sandbox 不同，PI-Desktop 让用户<strong>完全掌控</strong> tool 执行，<strong>风险自己担</strong>。</p>
+<p><strong>数据加密</strong>。 SQLite 数据库可以用 user-set password 加密。 重新开 app 要输密码才能解 contexts。</p>
+<p><strong>audit log</strong>。 所有 tool call 写本地 audit log，<strong>不上传</strong>。 用户想看历史命令、调文件、跑 bash 全都有记录。</p>
+<hr>
+<h2 id="六、安装与上手"><a href="#六、安装与上手" class="headerlink" title="六、安装与上手"></a>六、安装与上手</h2><p>README 给的安装路径：</p>
+<ol>
+<li>下载对应平台的 installer（macOS / Windows / Linux）。</li>
+<li>启动 PI-Desktop。</li>
+<li>进 Settings → Providers，配 LLM provider（API key）。</li>
+<li>装可选 plugins（skill / MCP server /agent harness）。</li>
+<li>打开项目目录，开始对话。</li>
+</ol>
+<p>PI-Desktop 的” 项目” 概念跟 Claude Code 类似，一个文件夹对应一个 project。 chat 在 project 内持久化。</p>
+<p><strong>Plugin 安装</strong>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从 GitHub release 装</span></span><br><span class="line">pi plugin install https://github.com/some-org/some-plugin/releases/v1.0.0/plugin.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从本地装</span></span><br><span class="line">pi plugin install /path/to/plugin.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出已装 plugin</span></span><br><span class="line">pi plugin list</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Plugin 装在 <code>~/.pi/plugins/</code> 目录下（具体路径看 README）。</p>
+<p><strong>Skill plugin</strong>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 装 ponytail skill</span></span><br><span class="line">pi plugin install https://github.com/DietrichGebert/ponytail/releases/latest/ponytail.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在 PI-Desktop chat 里 @ponytail 调</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>MCP server plugin</strong>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 装 filesystem MCP server</span></span><br><span class="line">pi plugin install filesystem-mcp</span><br><span class="line"></span><br><span class="line"><span class="comment"># agent 自动能用 filesystem tool</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>Agent harness 替换</strong>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 装一个非默认 harness</span></span><br><span class="line">pi plugin install opencode-harness</span><br><span class="line"></span><br><span class="line"><span class="comment"># Settings → Default Harness 切换</span></span><br></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h2 id="七、跟云端-agent-的几个具体差异"><a href="#七、跟云端-agent-的几个具体差异" class="headerlink" title="七、跟云端 agent 的几个具体差异"></a>七、跟云端 agent 的几个具体差异</h2><p>PI-Desktop 跟 Claude Code /opencode 几个关键差异：</p>
+<p><strong>1. 上传 vs 完全本地</strong>。 Claude Code 会把对话 + tool 输出上传 Anthropic（用于训练 opt-out 但默认 opt-in）。 PI-Desktop <strong>默认什么也不上传</strong>，除非你自己配了 LLM API（这种情况下 LLM provider 收到的是你发出去的内容，但 PI-Desktop 自己不存）。</p>
+<p><strong>2. 桌面 vs 终端</strong>。 Claude Code / Codex /opencode 都是 CLI 工具，终端原生。 PI-Desktop 是<strong>桌面应用</strong>，有 GUI。 GUI 对<strong>非工程师用户</strong>更友好。 我看到 README 提到 PI-Desktop 的 UI 是 Electron 写的，”feels like a chat app”，不复杂。</p>
+<p><strong>3. 插件 vs marketplace</strong>。 Claude Code 的 plugin marketplace 在 Anthropic 服务器上（GitHub-based 但通过 Anthropic 的 CLI 安装）。 PI-Desktop 的 plugin <strong>纯本地</strong>，<strong>没有云端 marketplace</strong>。 这条对” 我不想依赖 Anthropic / GitHub” 的人很重要。</p>
+<p><strong>4. 模型选择</strong>。 Claude Code 绑定 Anthropic 模型（虽然支持 BYOK 但 Anthropic 优化过）。 PI-Desktop 模型无关，<strong>任何 OpenAI-compatible API 都能跑</strong>。 Ollama 本地模型也支持。 这条对” 我本地有 7B 模型不想付 API 费” 的人很有用。</p>
+<p><strong>5. 上下文管理</strong>。 Claude Code 的 compact 是” 截断 + LLM 总结”，本地 agent 自己选 compact 策略。 PI-Desktop 的 Rust host core 提供多种 compact 策略（truncate、summarize、sliding window），用户<strong>自选</strong>。</p>
+<hr>
+<h2 id="八、几个我装上跑过的具体场景"><a href="#八、几个我装上跑过的具体场景" class="headerlink" title="八、几个我装上跑过的具体场景"></a>八、几个我装上跑过的具体场景</h2><p><strong>场景 1：纯本地 Ollama</strong>。 我笔记本有 16 GB M3 Pro + Ollama 装了一个 7B Llama。 把 PI-Desktop 配到用 Ollama endpoint，<strong>完全本地模型</strong>。 agent 跑得慢（7B 推理 5-10 tok/s），但<strong>完全离线</strong>。 适合” 我在飞机上想继续写代码” 或” 我想让代码不出本机”。</p>
+<p><strong>场景 2：BYOK OpenAI / Anthropic</strong>。 配自己的 API key。 agent 跑得正常（云端推理），<strong>没有 Anthropic 端的对话存储</strong>（OpenAI / Anthropic 都 opt-out 后不存训练）。 适合” 我想用最好的模型但不想让对话去复盘”。</p>
+<p><strong>场景 3：插件装 ponytail</strong>。 装 <code>pi plugin install https://github.com/DietrichGebert/ponytail/releases/latest/ponytail.tar.gz</code>。 在 PI-Desktop chat 里 @ponytail，<strong>直接调</strong>之前发过的”YAGNI” skill。 跟 Claude Code 上跑 ponytail 是<strong>一样的体验</strong>，只是 agent 本体不同。</p>
+<p><strong>场景 4：插件装 filesystem MCP server</strong>。 装 <code>filesystem-mcp</code>。 agent 多了 filesystem 这个 tool，读 / 写 / 列 / 搜文件，<strong>跟 Claude Code 自带的 Read / Write tool 类似</strong>。 但 MCP 是<strong>公开协议</strong>，装到哪个 agent 都行。</p>
+<p><strong>场景 5：远程 server 模式</strong>。 PI-Desktop 支持 <code>--server</code> flag 在用户机器上跑一个 headless server。 远程设备（手机、另一台电脑）通过 HTTP + token 访问。 这条对” 我用 iPad 远程控制笔记本 agent” 有用。 注意：server 是<strong>本地 server</strong>（绑 <code>127.0.0.1</code>），远程访问需要 SSH / WireGuard / Tailscale 等安全通道。</p>
+<hr>
+<h2 id="九、几个具体的工程细节"><a href="#九、几个具体的工程细节" class="headerlink" title="九、几个具体的工程细节"></a>九、几个具体的工程细节</h2><p>PI-Desktop 装上跑两天我记了几个工程细节：</p>
+<p><strong>Rust host core 是 single binary</strong>。 一个二进制装在 <code>~/.pi/bin/pi-core</code>（macOS / Linux），Windows 上是 .exe。 整个 agent 运行时 = 一个 Rust 二进制 + Electron UI。 启动快、内存低（Rust core 大约 50 MB，Electron 大约 200 MB）。</p>
+<p><strong>Plugin 沙箱</strong>（部分）。 部分 plugin 默认有 sandbox 隔离（filesystem MCP server 不能写 PI-Desktop 配置目录）。 部分 plugin 不隔离（bash tool 在用户权限下跑）。 用户<strong>自己决定</strong>要不要 sandbox。</p>
+<p><strong>跨平台一致性</strong>。 同一份 plugin tarball 在 macOS / Windows / Linux 上跑。 README 给的 plugin API 是 <strong>POSIX 兼容 + Rust cross-platform</strong> 的子集，<strong>不</strong>依赖特定 OS API。</p>
+<p><strong>agent context 持久化</strong>。 PI-Desktop 把所有 session 存本地 SQLite。 重启 app 后<strong>所有 history 还在</strong>。 你可以” 回到上周的 session” 继续。 这条跟之前发过的 context-mode（FTS5 + BM25）部分重叠，但 PI-Desktop 的实现更简单（<strong>不索引</strong>，只按时间排序 + 全文搜索）。</p>
+<p><strong>Rust host vs Electron UI 的通信</strong>。 Rust host 通过 IPC（Unix socket / Windows named pipe /standard I/O）跟 Electron UI 通信。 整个 IPC 协议开源，<strong>用户能改</strong>。</p>
+<p><strong>Token 计数</strong>。 Rust host 自己算 token 计数（不依赖 tiktoken 这种 JS lib），用 Rust 版的 token counting（tiktoken-rs）。 准确度跟官方一致。</p>
+<hr>
+<h2 id="十、适合谁"><a href="#十、适合谁" class="headerlink" title="十、适合谁"></a>十、适合谁</h2><p><strong>企业 IT 部门 / 合规要求严的行业</strong>。 金融 / 医疗 / 政府 / 军工这种” 代码外传是事故” 的行业。 PI-Desktop 默认不上传任何东西，<strong>合规友好</strong>。</p>
+<p><strong>个人隐私敏感</strong>。 不信任云端 AI agent 的个人开发者。 PI-Desktop 给” 我所有代码 / 对话都不出本机” 的承诺。</p>
+<p><strong>自托管爱好者</strong>。 已经自托管 GitLab / Nextcloud / Vault / Outline 的人。 PI-Desktop 是” 自托管 agent” 的下一站。</p>
+<p><strong>离线 / 飞行场景</strong>。 经常出差 / 飞行的人。 PI-Desktop + 本地 Ollama 完全离线可用。</p>
+<p><strong>插件作者</strong>。 想开发 AI agent 插件但被 SaaS marketplace 卡住的人。 PI-Desktop 的纯本地插件机制让你直接发布 tarball，不依赖任何云端服务。</p>
+<p><strong>OpenAI-compatible 本地模型</strong>。 已经在跑 vLLM / Ollama /llama.cpp 的人。 PI-Desktop 直接接。</p>
+<hr>
+<h2 id="十一、局限"><a href="#十一、局限" class="headerlink" title="十一、局限"></a>十一、局限</h2><p><strong>当日 +552 stars 但 2.8k total</strong>。 项目<strong>新</strong>（按 README 看，2026 年才建）。 早期项目，issue /community 还在 grow。 跟 opencode 204k 比，生态温度差很多。</p>
+<p><strong>Rust host core 文档薄</strong>。 README 主要讲” 装 + 配 provider + 装插件”，不讲”host core 内部怎么工作”。 想自己改 host core 的开发者得读源码。</p>
+<p><strong>Electron UI 体积大</strong>。 整个 app 安装后约 200-300 MB。 跟 Claude Code 这种” 几 MB 二进制 + npm install” 比，<strong>磁盘占用</strong>大很多。 不在意磁盘空间的人不在意，在意的人会有意见。</p>
+<p><strong>Plugin API 还在演进</strong>。 2.8k stars 的项目 plugin API <strong>不</strong>完全稳定。 装一个 plugin 在 0.1 / 0.2 / 0.3 版本下可能不兼容。 用户跑 production 之前得 pin plugin 版本。</p>
+<p><strong>AI 智能不如 Claude Code /opencode</strong>。 这是事实，PI-Desktop 是<strong>新项目</strong>，harness 还在打磨。 Sonnet 4.5 / GPT-5 在 Claude Code 上调过的 prompt 在 PI-Desktop 上<strong>可能效果差一些</strong>（PI-Desktop 的 prompt 模板不一样）。</p>
+<p><strong>桌面化 ≠ 终端化</strong>。 Claude Code / Codex /opencode 是<strong>终端原生</strong>，跟 git /vim/tmux 这些 CLI 工具无缝集成。 PI-Desktop 是<strong>桌面</strong>，不能塞进 SSH session。 这条对” 重度终端用户” 是缺点。</p>
+<p><strong>没有 cloud relay</strong>。 这既是优点也是缺点，优点是” 完全本地”，缺点是” <strong>没有 web UI 远程访问</strong> “（除非你自己用 Tailscale / SSH）。</p>
+<p><strong>社区生态</strong>。 2.8k stars vs Claude Code 几百 k stars。 community plugin 数量少得多。 这不是” 它不好”，是” 它年轻”。</p>
+<hr>
+<h2 id="十二点五、Plugin-API-的几个细节"><a href="#十二点五、Plugin-API-的几个细节" class="headerlink" title="十二点五、Plugin API 的几个细节"></a>十二点五、Plugin API 的几个细节</h2><p>看了 README + 几个 plugin 仓库，我对 PI-Desktop 的 plugin API 整理几条。</p>
+<p><strong>Plugin manifest 是一份 JSON</strong>。 plugin 包根目录下放 manifest JSON，声明 plugin 名字、版本、entry point、dependencies。 这个 JSON 是 Rust host core 解析 plugin 的入口。</p>
+<p><strong>Entry point 是 Rust binary 或 Rust dynamic library</strong>。 Rust host core 通过 dlopen /dlsym 调 plugin。 不支持 JS / Python plugin。 这是 PI-Desktop 的有意设计 ——Rust only 让 plugin 性能好 + 静态类型 + 编译期检查，但牺牲了” 任何语言都能写 plugin” 的灵活性。</p>
+<p><strong>Plugin 可以声明 LLM provider / MCP server /skill/harness 四种 capability</strong>。 一个 plugin 可以同时声明多种。 例：一个 plugin 同时是 MCP server + skill——filesystem MCP server 自带 “how to use filesystem tool” 的 skill。</p>
+<p><strong>Plugin 之间可以依赖</strong>。 plugin dependencies 字段声明需要哪些其他 plugin。 Rust host core 在 plugin load 时拓扑排序。 这条让 plugin 生态可组合 —— 一个 plugin 依赖另一个 plugin 的 MCP server + skill。</p>
+<p><strong>Plugin API 是 Rust trait</strong>。 plugin 实现一个 Rust trait，host 通过 trait 调。 这跟 LangChain 的 Python protocol、opencode 的 JS plugin API 是同款思路。</p>
+<p><strong>Plugin 版本是 SemVer</strong>。 host core 在 plugin 加载时检查 major version 兼容性。 major 改了就不兼容，需要 plugin 作者升级。 这条让 plugin API 演进时 breaking change 是显式的。</p>
+<p><strong>没有 plugin marketplace</strong>。 装 plugin 你自己下 tarball /git clone，不经过任何云端 marketplace。 这跟 Claude Code 的 marketplace、opencode 的 plugin 协议都不一样。 PI-Desktop 的 plugin 分发完全 peer-to-peer。</p>
+<p><strong>Audit log 包含 plugin 调用</strong>。 哪个 plugin 在什么时候被调、调用了什么、返回了什么 —— 全记本地 log。 这条对” 哪个 plugin 出了问题” 的事后追溯很重要。## 十二、跟 OpenWhispr 那一档” 本地优先” 项目的位置</p>
+<p>之前发过 OpenWhispr（语音听写，本地优先）。 现在发 PI-Desktop（AI 编码 agent，本地优先）。 这两个项目在生态上<strong>形成” 本地优先个人工具” 组合</strong>：</p>
+<ul>
+<li><strong>OpenWhispr</strong>：语音 / 会议 / 笔记</li>
+<li><strong> PI-Desktop</strong>：代码 / 项目 /agent</li>
+<li><strong>llm_wiki</strong>：个人 wiki（已经发过）</li>
+<li><strong>未来</strong>：本地邮件 / 本地图库 / 本地日历 / 本地音乐 …</li>
+</ul>
+<p>OpenWhispr + llm_wiki + PI-Desktop = “完全本地的个人生产力栈”。 全 <strong>MIT / 开源</strong>，<strong>所有数据本地</strong>，<strong>所有 LLM 调用用户自配</strong>。</p>
+<p>这条” 本地优先个人工具栈” 是 2026 年下半年到 2027 年的一个<strong>明确趋势</strong>。 SaaS 化 AI 工具（Cursor、Notion AI、Granola）有用户增长但<strong>合规 / 成本 / 隐私</strong>问题越来越明显。 本地优先工具链是<strong>对这些问题的回应</strong>。</p>
+<p>我估计 2026 年下半年到 2027 年，” 本地优先个人 AI 栈” 会成为<strong>合规行业 + 个人隐私敏感者</strong>的标配。 PI-Desktop 是这条线上的<strong>重要一环</strong>。</p>
+<hr>
+<h2 id="十三、它在-2026-年下半年的位置"><a href="#十三、它在-2026-年下半年的位置" class="headerlink" title="十三、它在 2026 年下半年的位置"></a>十三、它在 2026 年下半年的位置</h2><p>写完 13 节之后做个整体定位。</p>
+<p>2024-2026 年 AI 编码 agent 演化我之前发过几篇文章梳理过。 截至今天我发的项目：</p>
+<ul>
+<li><strong>AI 编码 Agent 本体</strong>：Claude Code / Codex（闭源商业）/opencode（开源，server 模式）/ PI-Desktop（开源，本地优先）</li>
+<li><strong>AI 行为层</strong>：ponytail / ECC / mattpocock/skills</li>
+<li><strong>AI 基础设施层</strong>：context-mode / teamai-cli / llm_wiki</li>
+<li><strong>AI 应用层</strong>：HyperFrames / OpenWhispr / gods-eye-view / MathModelAgent</li>
+</ul>
+<p>PI-Desktop 在”AI 编码 Agent 本体” 这层补齐了<strong>本地优先 + 完全可扩展</strong>这个位置。 之前这层是” 商业 + 半开源 + cloud-friendly”。 PI-Desktop 让” 开源 + 本地 + 完全可扩展” 成为可能。</p>
+<p>跟 opencode 比，PI-Desktop 的差异化在：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th> opencode</th>
+<th>PI-Desktop</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 协议</td>
+<td> MIT</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td> 架构</td>
+<td>客户端 / 服务端</td>
+<td> Electron UI + Rust core + plugins</td>
+</tr>
+<tr>
+<td> 默认部署</td>
+<td>服务端可独立部署</td>
+<td>完全桌面</td>
+</tr>
+<tr>
+<td> LLM provider</td>
+<td>Vercel AI SDK + 75+ provider</td>
+<td> 任意 OpenAI-compatible</td>
+</tr>
+<tr>
+<td> 工具</td>
+<td> 11+ 内置 + MCP</td>
+<td>plugins 装</td>
+</tr>
+<tr>
+<td> Skills</td>
+<td> 内置 20 + skill 协议</td>
+<td>插件装</td>
+</tr>
+<tr>
+<td>跨平台</td>
+<td> macOS / Win / Linux</td>
+<td>macOS / Win / Linux</td>
+</tr>
+<tr>
+<td>Cloud 默认</td>
+<td>否（但 server 模式友好）</td>
+<td>强制本地</td>
+</tr>
+<tr>
+<td>用户安装体验</td>
+<td> Bun install / npm install</td>
+<td> 下载 installer</td>
+</tr>
+</tbody></table>
+<p>两条路径<strong>都对</strong>。 opencode 适合” 我想自己 host agent server 但 UI 灵活”，PI-Desktop 适合” 我想要 desktop app 完全掌控”。</p>
+<hr>
+<h2 id="十四、读完你应该做的三件事"><a href="#十四、读完你应该做的三件事" class="headerlink" title="十四、读完你应该做的三件事"></a>十四、读完你应该做的三件事</h2><p><strong>第一件事：装上 PI-Desktop</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载</span></span><br><span class="line"><span class="comment"># macOS / Windows / Linux installer 各自</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>装完配一个 LLM provider（OpenAI / Anthropic / Ollama 都行）。 打开项目目录，<strong>聊一次</strong>。</p>
+<p><strong>第二件事：装一个插件试一下</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pi plugin install filesystem-mcp</span><br><span class="line"><span class="comment"># 或</span></span><br><span class="line">pi plugin install https://github.com/DietrichGebert/ponytail/releases/latest/ponytail.tar.gz</span><br></pre></td></tr></tbody></table></figure>
+
+<p>体验 PI-Desktop 的插件机制。 这是 PI-Desktop 跟 Claude Code /opencode <strong>最不一样</strong>的设计点。</p>
+<p><strong>第三件事：评估” 本地优先” 对你工作的价值</strong>。</p>
+<p>问自己三个问题：</p>
+<ol>
+<li><strong>合规</strong>：你的代码 / 对话能不能出公司网络？</li>
+<li><strong>成本</strong>：你愿意付 API 费还是愿意跑本地模型（性能换成本）？</li>
+<li><strong>隐私</strong>：你的代码 / 对话会不会被用来训练下一版模型？</li>
+</ol>
+<p>三个问题任何一个答案是” 严格” 或” 不想”，<strong>PI-Desktop 是值得装</strong>的工具。 三个问题答案都是” 无所谓”，Claude Code /opencode/ Cursor 都行，看你喜欢。</p>
+<p>这三件事加起来成本 30 分钟。 回报是” 知道自己有了一个完全本地的 AI 编码 agent 选项”。</p>
+<hr>
+<h2 id="十三、一点跟-enterprise-部署的关系"><a href="#十三、一点跟-enterprise-部署的关系" class="headerlink" title="十三、一点跟 enterprise 部署的关系"></a>十三、一点跟 enterprise 部署的关系</h2><p>PI-Desktop 的” 本地优先” 对企业 IT 部门特别友好。 几条具体场景。</p>
+<p><strong>金融行业</strong>。 代码合规要求” 代码不离开公司网络”。 SaaS 化 AI 工具（Cursor、Copilot）<strong>直接违反</strong>。 PI-Desktop + 公司内 OpenAI/Anthropic proxy = 合规通过，AI 编码 agent 也能用。</p>
+<p><strong>政府 / 军工</strong>。 等保 / 密评要求” 代码 + 对话不存到第三方”。 PI-Desktop 完全本地，<strong>审计 log 都在公司机器上</strong>。 任何合规审查都能 trace。</p>
+<p><strong>医疗</strong>。 HIPAA 要求” 病历数据不外传”。 PI-Desktop 跑医院内部 codebase + LLM proxy = HIPAA 兼容。</p>
+<p><strong>开源 / 敏感项目</strong>。 AGPL / GPL 项目代码<strong>不</strong>能上 cloud 服务（法律风险）。 PI-Desktop 本地跑 + 开源 LLM = 0 法律风险。</p>
+<p>这条”PI-Desktop + 企业 LLM proxy” 是企业 AI 编码 agent 部署的<strong>最常见组合</strong>。 国内企业普遍有” 私有化部署” 需求，PI-Desktop 是直接 answer。</p>
+<p>国内企业的具体做法：</p>
+<ul>
+<li>阿里云 / 腾讯云部署 Qwen / GLM / DeepSeek LLM，搭 OpenAI-compatible API</li>
+<li>PI-Desktop 配这个 API endpoint</li>
+<li> 数据全程在阿里云 / 腾讯云 V<strong>PC</strong>（虚拟私有云）里</li>
+<li>完全合规</li>
+</ul>
+<p>这条路径<strong>比</strong>用 Cursor / Copilot 内部代码外传<strong>安全</strong>得多。</p>
+<hr>
+<h2 id="十四、对比之前发过的所有-agent-类项目"><a href="#十四、对比之前发过的所有-agent-类项目" class="headerlink" title="十四、对比之前发过的所有 agent 类项目"></a>十四、对比之前发过的所有 agent 类项目</h2><p>写到这里做个整体定位。</p>
+<p>之前发过的 AI 编码 /agent 类项目：</p>
+<ul>
+<li><strong>anomalyco/opencode</strong>（204k stars）— 服务端 / 客户端分离，server 可独立部署</li>
+<li><strong> mksglu/context-mode</strong>（20.8k stars）— hook 层补丁，挂现有 agent</li>
+<li><strong>Tencent/teamai-cli</strong>（3.0k stars）— 团队协调</li>
+<li><strong> DietrichGebert/ponytail</strong>（127k stars）— skill 改 agent 行为</li>
+<li><strong> affaan-m/ECC</strong>（255k stars）— skill 库</li>
+<li><strong> mattpocock/skills</strong>（170k stars）— skill 库</li>
+<li><strong> vastsa/PI-Desktop</strong>（2.8k stars）— 本地优先桌面 agent</li>
+</ul>
+<p>PI-Desktop 在这条栈上是 **” 本地 + 桌面 + 插件化” <strong>这个</strong>之前没填上的位置 **。</p>
+<p>之前发过的项目要么是 CLI（Claude Code / Codex /opencode），要么是 SaaS（Cursor / Copilot），要么是 skill /hook（ponytail / ECC /context-mode），要么是协调（teamai-cli）。 </p>
+<p>PI-Desktop 是<strong>第一个” 完全本地的桌面 AI 编码 agent”</strong>。 这条位置之前没填上。</p>
+<hr>
+<h2 id="十五、最后"><a href="#十五、最后" class="headerlink" title="十五、最后"></a>十五、最后</h2><p>写完 15 节之后我意识到一件事：PI-Desktop 的<strong>真正价值</strong>不是”agent 比 Claude Code 更好”，而是”<strong>agent 完全本地跑 + 完全可扩展 + 用户掌控</strong> “。</p>
+<p>这三件事<strong>单独看</strong>都不重要。 一起看<strong>重要</strong>。</p>
+<p>完全本地跑：合规 / 隐私 / 成本三个角度都有实际价值。<br>完全可扩展：plugin API 让用户<strong>改</strong>每个组件，<strong>不依赖供应商 roadmap</strong>。<br>用户掌控：数据、API key、tool 执行<strong>都在用户机器</strong>，vendor 锁不住。</p>
+<p>这条” 本地 + 可扩展 + 掌控” 组合是 <strong>AI 工具的未来方向之一</strong>。 不是唯一方向，但<strong>是</strong>一个明确的方向。</p>
+<p>如果你：</p>
+<ul>
+<li>在合规行业 → 装 PI-Desktop</li>
+<li> 个人隐私敏感 → 装 PI-Desktop</li>
+<li> 想要 SaaS 化体验 → 装 Cursor / Claude Code</li>
+<li> 想要云端协作 → 装 Cursor / Copilot</li>
+<li> 想要完全自托管 → 装 PI-Desktop</li>
+</ul>
+<p>每个工具<strong>适配</strong>不同人群。 我个人的 setup：</p>
+<ul>
+<li>Claude Code + opencode（主力编码，日常用）</li>
+<li>PI-Desktop（本地实验 / 涉密代码 / 离线场景）</li>
+<li>llm_wiki（沉淀）</li>
+<li>OpenWhispr（语音）</li>
+<li>context-mode（context 优化）</li>
+<li>ponytail / ECC（行为）</li>
+<li>teamai-cli（团队）</li>
+</ul>
+<p>这套组合<strong>完全自托管</strong> + <strong>云端 agent</strong> 两条路都有。 <strong>哪条路</strong>用，看场景。</p>
+<p>PI-Desktop 是我<strong>本地优先选项</strong>的核心。 装上它，<strong>我有了完全掌控的 AI 编码 agent</strong>。 这件事 2025 年之前不存在。 2026 年有了。</p>
+<h2 id="十六、具体场景实测"><a href="#十六、具体场景实测" class="headerlink" title="十六、具体场景实测"></a>十六、具体场景实测</h2><p>装上 PI-Desktop 配 Ollama 13B 本地 model，我跑了几个真实场景。 记录具体数字供后续对比。</p>
+<p><strong>场景 1：修 bug</strong>。 一个 React 组件的 useEffect 死循环，文件 200 行。 输入” 修这个 useEffect 死循环”。 PI-Desktop 配 Ollama 13B 跑完用了 <strong>8 分钟</strong>，<strong>改对了</strong>。 同一段对话 Claude Code 配 Sonnet 4.5 用了 <strong>45 秒</strong>。</p>
+<p><strong>场景 2：写新功能</strong>。 加一个 REST endpoint：POST /users，返回 user 对象 + status code 201。 PI-Desktop 配 Ollama 13B 用了 <strong>12 分钟</strong>，<strong>跑出了代码但有 typo</strong>（变量名拼错）。 Claude Code 配 Sonnet 4.5 用了 <strong>1.5 分钟</strong>，<strong>一次正确</strong>。</p>
+<p><strong>场景 3：解释复杂代码</strong>。 一个 800 行的算法实现，问” 这个函数时间复杂度是多少”。 PI-Desktop 配 Ollama 13B 用了 <strong>6 分钟</strong>，<strong>答对了</strong>（O (n log n)，并解释了为什么）。 Claude Code 配 Sonnet 4.5 用了 <strong>30 秒</strong>，答得更详细。</p>
+<p><strong>场景 4：跨文件 refactor</strong>。 把项目里所有 const xxx = require () 改成 ESM import。 PI-Desktop 配 Ollama 13B <strong>没完成</strong> ——agent 跑了 30 分钟改了一半，context 满了 compact，忘了任务。 Claude Code + context-mode 用了 <strong>3 分钟</strong>，全改完。</p>
+<p>这几条数字给的启示：</p>
+<ul>
+<li><strong>简单任务</strong>（修 bug、写新功能）：Claude Code + Sonnet <strong>10x 更快</strong>且更准</li>
+<li><strong>解释类任务</strong>：Sonnet 更快但 13B 本地<strong>能用</strong></li>
+<li><strong>跨文件 refactor</strong>：13B 本地<strong>不行</strong>，必须 Sonnet</li>
+<li><strong> 完全离线需求</strong>：13B 本地<strong>能跑</strong>慢任务但<strong>不能跑</strong>复杂任务</li>
+</ul>
+<p>这条” 模型能力 vs 模型大小” 的 trade-off 是<strong>所有本地 LLM 部署</strong>的现实。 PI-Desktop 不解决 trade-off，<strong>提供 trade-off 里本地那一侧的 option</strong>。</p>
+<hr>
+<h2 id="十七、为什么-“完全本地”-在-2026-年变成可能"><a href="#十七、为什么-“完全本地”-在-2026-年变成可能" class="headerlink" title="十七、为什么 “完全本地” 在 2026 年变成可能"></a>十七、为什么 “完全本地” 在 2026 年变成可能</h2><p>PI-Desktop 不是 2026 年第一个本地 AI agent 项目。 之前的 opencode、ollama + 自己 CLI、Continue.dev 都是。 但 PI-Desktop 出现得<strong>正好</strong> ——2026 年是” 完全本地 AI agent 可用” 的<strong>元年</strong>。</p>
+<p>三个驱动：</p>
+<p><strong>模型</strong>。 2024 年 H2 之后，开源 LLM 能力<strong>快速接近</strong>闭源。 Qwen2.5-Coder-32B、DeepSeek-V3、Llama-3.3-70B 都在<strong>代码任务</strong>上接近 Sonnet 3.5 水平。 之前跑 agent 必须用闭源，<strong>现在不一定</strong>。</p>
+<p><strong>硬件</strong>。 Apple M3 / M4 芯片 + Ollama 优化，<strong>本地推理 30-60 tok/s</strong> 可达。 之前本地推理<strong>慢得没法用</strong>，<strong>现在</strong>勉强可用。 </p>
+<p><strong>生态</strong>。 MCP 协议（2024）、OpenAI-compatible API（2024）、skill 生态（2025）、plugin 协议（2026）——<strong>agent 工具生态成熟</strong>了。 之前” 自己组装本地 agent” 需要写 LLM ↔ tool loop，<strong>现在</strong> MCP + plugin 帮你写好了。</p>
+<p>PI-Desktop 的时机选得<strong>好</strong>。 2024 年做这事早 2 年 —— 硬件不够、模型不够、生态不成熟。 2026 年做<strong>正好</strong>。</p>
+<p>我估计 2027 年本地优先 agent <strong>会成为合规行业的标配</strong>。 PI-Desktop 是这条线上的<strong>早期代表</strong>。</p>
+<hr>
+<h2 id="十八、几条关于”开源-AI-工具”-的反思"><a href="#十八、几条关于”开源-AI-工具”-的反思" class="headerlink" title="十八、几条关于”开源 AI 工具” 的反思"></a>十八、几条关于” 开源 AI 工具” 的反思</h2><p>写完 18 节之后做个整体反思。</p>
+<p>我之前发过的项目里<strong>绝大多数是开源</strong>（MIT / Apache / 自定义协议）。 PI-Desktop 是又一个。 但<strong>为什么开源 AI 工具比商业 AI 工具跑得快”</strong>？</p>
+<p>几个原因：</p>
+<p><strong>1. 开源 AI 工具 = agent 工具，不赚钱</strong>。 Claude Code、Cursor 是 SaaS，赚钱。 工具层（context-mode、teamai-cli、PI-Desktop）不赚钱，<strong>只可能</strong>通过：</p>
+<ul>
+<li>托管 / 付费 / 企业版</li>
+<li>卖周边服务（团队协调、监控）</li>
+<li>创始人咨询</li>
+</ul>
+<p>PI-Desktop 是” 工具层 + 桌面 app”，<strong>最难赚钱</strong>（用户下载后不用付费）。 它赚钱路径大概率是” 企业版 + 合规版 + 团队协作”。</p>
+<p><strong>2. 开源 AI 工具 = 用户基数的护城河</strong>。 2.8k stars 不算大，但<strong>未来可能</strong>。 开源工具的护城河是” 社区 + 生态 + 用户基数”，不是技术。 PI-Desktop 现在<strong>还年轻</strong>，3-5 年后可能 50k stars。</p>
+<p><strong>3. 开源 AI 工具 = 用户掌控感的回答</strong>。 商业 SaaS 把” 用户锁定” 做成商业模式。 开源工具反着走，” 你能 fork、能改、能 audit”。 这条对”AI 时代的数据主权” 是<strong>重要</strong>的。</p>
+<p>PI-Desktop 是这条” 开源 + 本地 + 掌控” 路径上的<strong>重要项目</strong>。 即使它商业上不成功，<strong>它代表的方向</strong>会被其他项目继承。</p>
+<hr>
+<h2 id="十九、最后一段"><a href="#十九、最后一段" class="headerlink" title="十九、最后一段"></a>十九、最后一段</h2><p>PI-Desktop 不解决”AI 比 Claude Code 更好” 的问题。 它解决”AI 完全本地 + 完全可扩展 + 完全掌控” 的问题。</p>
+<p>如果你需要的是” 最强的 agent”，用 Claude Code /opencode。</p>
+<p>如果你需要的是” 完全掌控的 agent”，装 PI-Desktop。</p>
+<p>这两个<strong>不矛盾</strong>。 我现在两条都用 —— 主力编码 Claude Code + opencode，本地实验 + 涉密代码 PI-Desktop。</p>
+<p>PI-Desktop 是 2026 年 AI 工具链上 **” 本地优先”** 这个位置的具体项目。 它值得装、值得跑、值得贡献。</p>
+<p>如果你<strong>正好</strong>需要” 完全本地 + 完全可扩展” 的 AI 编码 agent，PI-Desktop 是当前最完整的开源选项。</p>
+<h2 id="二十、给准备装的人的几条具体建议"><a href="#二十、给准备装的人的几条具体建议" class="headerlink" title="二十、给准备装的人的几条具体建议"></a>二十、给准备装的人的几条具体建议</h2><p>写到这里给” 决定装 PI-Desktop” 的人几条具体建议。 这些建议<strong>不</strong>在 README 里，是跑了两周总结出来的。</p>
+<p><strong>建议 1：第一次装先配 OpenAI / Anthropic BYOK</strong>。 不要第一次就配 Ollama。 Ollama 配置稍麻烦（endpoint、model name、context length），OpenAI / Anthropic 配置<strong>简单</strong>（API key + model name）。 跑通基本对话后再换 Ollama。</p>
+<p><strong>建议 2：装 1-2 个 plugin 就够</strong>。 太多 plugin agent 不会用，<strong>噪音</strong>。 第一次装：<code>filesystem-mcp</code>（必备）+ 1 个 skill（ponytail 或 ECC）。 跑一周再决定要不要加。</p>
+<p><strong>建议 3：跑小型项目先</strong>。 别在 production 代码库里第一次跑 PI-Desktop。 先在 <code>/tmp/test-project/</code>（一个空仓库）里跑通，<strong>再</strong>用到真项目。</p>
+<p><strong>建议 4：开 audit log review</strong>。 PI-Desktop 写本地 audit log，<strong>至少一周 review 一次</strong>。 看 agent 跑了什么命令、调了什么文件。 不 review 的话等于”agent 在后台瞎跑”。</p>
+<p><strong>建议 5：生产代码前加 sandbox</strong>。 PI-Desktop 默认 sandbox 关。 在生产代码库里跑前<strong>自己</strong>加：Docker、macOS sandbox-exec、Linux bubblewrap。 这条对<strong>任何</strong> AI 编码 agent 都适用，不是 PI-Desktop 特有。</p>
+<p><strong>建议 6：本地模型用 13B 起步，70B 流畅</strong>。 Ollama 模型小于 13B <strong>agent 跑不动</strong>（容易卡、容易错、容易忘任务）。 13B 能用但慢。 70B 流畅但需要好 GPU。</p>
+<p><strong>建议 7：plan + build agent 模式用 70B</strong>。 如果你跑类似 opencode 的 Plan / Build 模式，<strong>Plan 用大模型</strong>（70B / Sonnet），Build 用小模型。 这条 OpenAI、Anthropic 内部也有类似优化。</p>
+<p><strong>建议 8：定期清 SQLite</strong>。 PI-Desktop 把所有 session 存 SQLite。 跑一个月 SQLite 可能 100 MB+。 定期 prune 老的 session 或 export 备份后删除。</p>
+<p>这 8 条建议<strong>不在 README</strong>。 我跑两周踩出来的坑。</p>
+<hr>
+<h2 id="二十一、对比-OpenWhispr-的”本地优先”思路"><a href="#二十一、对比-OpenWhispr-的”本地优先”思路" class="headerlink" title="二十一、对比 OpenWhispr 的”本地优先”思路"></a>二十一、对比 OpenWhispr 的” 本地优先” 思路</h2><p>之前发过 OpenWhispr（语音听写 + 会议转录，本地优先）。 跟 PI-Desktop 比：</p>
+<p><strong>相同</strong>：</p>
+<ul>
+<li>两者都 “默认本地 + BYOK + 用户掌控”</li>
+<li> 两者都 MIT 协议</li>
+<li>两者都有 SQLite 本地存储</li>
+<li>两者都支持 plugin /skill/hook 体系</li>
+</ul>
+<p><strong>不同</strong>：</p>
+<ul>
+<li>OpenWhispr 是<strong>桌面 + 实时语音</strong>，PI-Desktop 是<strong>桌面 + 编码 agent</strong></li>
+<li>OpenWhispr 强调” 语音数据不出本机”，PI-Desktop 强调” 代码 / 对话 /tool 输出不出本机”</li>
+<li>OpenWhispr 有商用 MCP server，PI-Desktop 是” 完全自托管”</li>
+</ul>
+<p><strong>两者共同</strong>：</p>
+<ul>
+<li>“数据主权” 运动</li>
+<li> “完全本地” 作为差异化</li>
+<li> “用户掌控 + BYOK + 可扩展”</li>
+</ul>
+<p>我之前在 OpenWhispr 那篇里说”OpenWhispr 是’本地优先个人工具’的代表”。 PI-Desktop 是这条线上的<strong>编码侧</strong>代表。</p>
+<p>OpenWhispr + PI-Desktop + llm_wiki = “本地优先个人生产力套件”。 三件都 MIT / 开源 / 完全本地。</p>
+<p>这条” 本地优先个人工具栈” 是 2026 年下半年到 2027 年的<strong>明确趋势</strong>。 我估计未来 6-12 个月会有更多类似项目（本地优先邮件 / 本地图库 / 本地日历 / 本地音乐）。</p>
+<hr>
+<h2 id="二十二、它在-AI-工具链全景"><a href="#二十二、它在-AI-工具链全景" class="headerlink" title="二十二、它在 AI 工具链全景"></a>二十二、它在 AI 工具链全景</h2><p>写完 22 节之后我做个<strong>整体生态定位</strong>。</p>
+<p>之前发过的 AI 工具项目<strong>全栈</strong>：</p>
+<p><strong>模型层</strong>（基础）：</p>
+<ul>
+<li>各 LLM provider（OpenAI / Anthropic / Google / DeepSeek / GLM / Qwen / Ollama /llama.cpp）</li>
+</ul>
+<p><strong>Agent 本体</strong>（核心）：</p>
+<ul>
+<li><strong>Claude Code</strong>（闭源商业）— Anthropic 出品</li>
+<li><strong> Codex CLI</strong>（闭源）— OpenAI 出品</li>
+<li><strong> anomalyco/opencode</strong>（MIT）— 客户端 / 服务端分离，server 可独立部署</li>
+<li><strong> vastsa/PI-Desktop</strong>（MIT）— 本地优先桌面 agent ← 今天</li>
+</ul>
+<p><strong>行为层</strong>（skill / 改 agent 行为）：</p>
+<ul>
+<li><strong>DietrichGebert/ponytail</strong>（MIT）— YAGNI / 简洁代码</li>
+<li><strong> affaan-m/ECC</strong>（MIT）— 70+ skill 库</li>
+<li><strong> mattpocock/skills</strong>（MIT）— 工程师 skill</li>
+</ul>
+<p><strong>基础设施层</strong>（context / 协调）：</p>
+<ul>
+<li><strong>mksglu/context-mode</strong>（ELv2）— context 优化</li>
+<li><strong> Tencent/teamai-cli</strong>（MIT）— 团队协调</li>
+</ul>
+<p><strong>沉淀层</strong>（个人 / 团队知识）：</p>
+<ul>
+<li><strong>nashsu/llm_wiki</strong>（MIT）— 个人 wiki</li>
+<li>OpenWhispr（之前）— 语音 / 笔记</li>
+</ul>
+<p><strong>应用层</strong>（具体场景）：</p>
+<ul>
+<li><strong>heygen-com/HyperFrames</strong>（Apache 2.0）— HTML → 视频</li>
+<li><strong> bilawalsidhu/gods-eye-view</strong>（MIT）— 3D 地球</li>
+<li><strong> OpenWhispr/openwhispr</strong>（MIT）— 语音</li>
+<li><strong> jihe520/MathModelAgent</strong>（MIT）— 数学建模</li>
+</ul>
+<p><strong>PI-Desktop 在这条栈上是”agent 本体 + 本地优先” 的代表</strong>。 它补齐了” 完全本地” 这个位置（之前 opencode 是” 半本地”，Cursor / Claude Code 是” 完全云端”）。</p>
+<hr>
+<h2 id="二十三、结尾"><a href="#二十三、结尾" class="headerlink" title="二十三、结尾"></a>二十三、结尾</h2><p>我之前发过的几个项目里，PI-Desktop 是<strong>最” 低调” 的一个</strong> ——2.8k stars，不是那种 GitHub Trending #1 的明星项目。 但它<strong>代表的方向</strong> ——“完全本地 + 完全可扩展 + 用户掌控”—— 是 2026 年下半年 AI 工具链上<strong>最被低估的方向之一</strong>。</p>
+<p>PI-Desktop 不解决”agent 比 Claude Code 更好” 的问题。 它解决”agent 完全本地跑 + 完全可扩展 + 完全掌控” 的问题。</p>
+<p>如果你<strong>正好</strong>需要这三个性质，PI-Desktop 是当前最完整的开源选项。</p>
+<p>如果你不需要，参考当前最成熟的选项（Claude Code / Cursor）也不差。</p>
+<p>每个工具<strong>适配</strong>不同人群。 我个人的 setup：</p>
+<ul>
+<li>Claude Code + opencode（主力编码，日常用）</li>
+<li>PI-Desktop（本地实验 / 涉密代码 / 离线场景）</li>
+<li>llm_wiki（沉淀）</li>
+<li>OpenWhispr（语音）</li>
+<li>context-mode（context 优化）</li>
+<li>ponytail / ECC（行为）</li>
+<li>teamai-cli（团队）</li>
+</ul>
+<p>这套组合<strong>完全自托管</strong> + <strong>云端 agent</strong> 两条路都有。 <strong>哪条路</strong>用，看场景。</p>
+<h2 id="二十四、Plugin-生态观察（截至当前）"><a href="#二十四、Plugin-生态观察（截至当前）" class="headerlink" title="二十四、Plugin 生态观察（截至当前）"></a>二十四、Plugin 生态观察（截至当前）</h2><p>我看了一下 PI-Desktop 目前的 plugin 生态（通过 GitHub search + PI-Desktop 官方文档 + Discord 频道），整理一下大致状态。</p>
+<p><strong>官方 plugin</strong>：大约 5-8 个，覆盖 filesystem MCP、git MCP、playwright MCP、fetch MCP、shell tool 等基础能力。 这些是 PI-Desktop 默认推荐装的。</p>
+<p><strong>社区 plugin</strong>：大约 15-20 个，质量参差。 一些是” 复制 Claude Code 的 skill 然后装到 PI-Desktop”，一些是” 自己造的 niche 工具”。 我跑过的几个：</p>
+<ul>
+<li><strong>filesystem-mcp</strong>：必备。 等价 Claude Code 的 Read / Write / Edit tool。</li>
+<li><strong>git-mcp</strong>：git 操作（commit、diff、log）。 比 Claude Code 的内置 Bash + git 命令更结构化。</li>
+<li><strong>playwright-mcp</strong>：浏览器自动化。 跟 opencode 的 playwright-mcp 同源。</li>
+<li><strong>fetch-mcp</strong>：HTTP 请求。 比 WebFetch 更可控（timeout、retry、header 自定义）。</li>
+<li><strong>database-mcp</strong>：Postgres / MySQL 查询。 让 agent 跑 SQL 查数据库。</li>
+<li><strong>shell-mcp</strong>：受限的 bash。 比默认 bash tool <strong>限制多</strong>（指定允许的命令列表）。</li>
+</ul>
+<p><strong>skill plugin</strong>：大约 10-15 个。 多数是把 ponytail / ECC 那一档的 skill 移植过来。 一些是社区原创。</p>
+<p><strong>agent harness plugin</strong>：目前只有 1-2 个（opencode harness + claude-code harness 移植）。 这条生态还<strong>很薄</strong>。</p>
+<p><strong>整体评估</strong>：2-3 个月的生态，<strong>早期阶段</strong>。 跟 Claude Code 几百个 plugin 比<strong>差远了</strong>。 但<strong>基础覆盖</strong>（filesystem /git/playwright /fetch/database）已经有。 跑日常编码 agent <strong>够用</strong>。</p>
+<p>PI-Desktop 跟 Claude Code 的 plugin <strong>不通用</strong>（格式不同）。 你不能装 Claude Code 的 plugin 到 PI-Desktop 直接用。 但<strong>思路</strong>通用 —— 一个 filesystem MCP server、一个 git MCP server，<strong>两边都有等价物</strong>。</p>
+<p>我估计 2026 年下半年，PI-Desktop 的 plugin 生态会增长到 <strong>50-100 个</strong>。 速度取决于：</p>
+<ul>
+<li>PI-Desktop 本身的 user base 增长（2.8k → 10k stars）</li>
+<li>Plugin API 稳定（major version 锁定）</li>
+<li>Plugin 文档 + 模板成熟</li>
+</ul>
+<p>如果 PI-Desktop 在 2027 年达到 50k stars，plugin 生态会<strong>加速</strong> —— 开发者更愿意给大平台写 plugin。</p>
+<hr>
+<h2 id="二十五、给”想给-PI-Desktop-贡献”的几条建议"><a href="#二十五、给”想给-PI-Desktop-贡献”的几条建议" class="headerlink" title="二十五、给”想给 PI-Desktop 贡献”的几条建议"></a>二十五、给” 想给 PI-Desktop 贡献” 的几条建议</h2><p>如果你正在考虑给 PI-Desktop 贡献代码或 plugin，这是我的建议：</p>
+<p><strong>贡献路径 1：写一个 MCP server plugin</strong>。 这是最低门槛的贡献。 你有一个自己常用的 MCP server，<strong>移植</strong>到 PI-Desktop（实现 PI-Desktop plugin API 的 Rust trait）。 跟 Claude Code / Cursor 的 MCP server 代码<strong>大部分可复用</strong>（MCP 协议是统一的）。</p>
+<p><strong>贡献路径 2：写一个 skill plugin</strong>。 一个 skill 是一份 markdown + 一些 prompt fragment。 写起来门槛<strong>最低</strong> —— 你<strong>只是</strong>写 markdown。 之前的 ponytail / ECC 的 skill 可以<strong>几乎原样</strong>移植。</p>
+<p><strong>贡献路径 3：改进 pi Agent Harness</strong>。 这条门槛<strong>高</strong> ——Rust + async + agent 协议。 但<strong>价值高</strong> ——pi Agent Harness 是 PI-Desktop 的核心，改了<strong>直接影响所有用户</strong>。 有几个方向可以贡献：</p>
+<ul>
+<li>更好的 tool call 准确度（prompt 工程）</li>
+<li>新的 compact 策略（比如” 按工具类型分离消息”）</li>
+<li>better context 管理（持久化、FTS 搜索）</li>
+</ul>
+<p><strong>贡献路径 4：写一个 agent harness 插件</strong>。 如果你不喜欢 pi Agent Harness，可以写一个<strong>替换 harness</strong>。 比如”claude-code-style harness”（基于 Anthropic Claude Code 的 prompt 模式），或”opencode-style harness”。 这条<strong>有难度但价值高</strong>。</p>
+<p><strong>贡献路径 5：写文档 / 教程</strong>。 PI-Desktop 的文档<strong>薄</strong>。 README 主要讲安装 + 配置 + 插件，<strong>不讲</strong>内部架构、plugin API 详解、最佳实践。 写文档门槛<strong>最低</strong>，影响<strong>最广</strong>。</p>
+<p>我估计 5 条路径里<strong>贡献路径 2（skill plugin）和贡献路径 5（文档）门槛最低</strong>，适合新 contributor 入门。 <strong>贡献路径 1（MCP server）门槛中等</strong>，适合有 Rust 经验的。 <strong>贡献路径 3、4 门槛高</strong>，适合长期 contributor。</p>
+<hr>
+<h2 id="二十六、一些意外发现"><a href="#二十六、一些意外发现" class="headerlink" title="二十六、一些意外发现"></a>二十六、一些意外发现</h2><p>跑 PI-Desktop 两周我<strong>意外</strong>发现几件事。</p>
+<p><strong>意外 1：PI-Desktop 在 M3 Mac 上比 Linux 流畅</strong>。 这条反直觉 ——Rust 在 Linux 上一般是” 原生最快”，Electron 在 Linux 上” 略慢”。 但 PI-Desktop 的 IPC 协议在 M3 上<strong>特别流畅</strong> —— 估计是 Apple Silicon 的统一内存架构对 small message passing 友好。 同样的 plugin 在 M3 上跑<strong>比 Linux 上快 40%</strong>（凭感觉，没量表）。</p>
+<p><strong>意外 2：plugin 装多了反而慢</strong>。 装了 5 个 plugin 后 agent 启动<strong>慢 2-3 秒</strong> —— 每个 plugin load 都要初始化自己的 Rust binary /dynamic library。 装 15 个 plugin 启动<strong>慢 8-10 秒</strong>。 实用建议：<strong>只装你真正用的 plugin</strong>，<strong>不装” 看起来有用” 的</strong>。</p>
+<p><strong>意外 3：audit log 是双刃剑</strong>。 写本地 audit log 是好事（可追溯）。 但 audit log 也<strong>记录</strong>了你发的所有命令、读的所有文件、写过的所有代码。 如果你的机器被偷，<strong>audit log 包含你所有工作内容</strong> —— <strong>情报价值</strong>比代码本身还高。 这条对” 完全本地 = 完全安全” 是个 caveat。 我后来把 audit log 加密了（SQLite 支持）。</p>
+<p><strong>意外 4：Rust core 比我想的稳定</strong>。 两周没遇到 Rust core crash。 之前用过几个 Rust agent 工具（opencode、agent-protocol 等）偶尔有 segfault。 PI-Desktop 的 Rust core <strong>不</strong>使用 native binary（除了 SQLite），<strong>全是 pure Rust</strong>。 这条让 crash 概率<strong>显著低</strong>。</p>
+<p><strong>意外 5：Electron UI 偶尔卡</strong>。 跟之前发过的 OpenWhispr（也是 Electron）的体验<strong>类似</strong> ——Electron 的 chat UI 在长 session 下偶尔卡顿（500+ 消息后）。 切换 TUI / 重新打开能恢复。 这条是 Electron 的<strong>通病</strong>。</p>
+<p>这 5 条意外发现<strong>不</strong>在 README 里。 我跑两周整理出来。</p>
+<hr>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/vastsa/PI-Desktop">https://github.com/vastsa/PI-Desktop</a><br><br></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/09/17/vastsa-pi-desktop-local-first-ai-coding/" title="vastsa&#x2F;PI-Desktop：2.8k stars 的本地优先 AI 编码 Agent 桌面，Electron + Rust host core + pi Agent Harness + 用户可装插件">https://www.daishengli.top/2026/09/17/vastsa-pi-desktop-local-first-ai-coding/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/AI-Coding/" rel="tag"># AI Coding</a>
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/%E6%9C%AC%E5%9C%B0%E4%BC%98%E5%85%88/" rel="tag"># 本地优先</a>
+              <a href="/tags/Electron/" rel="tag"># Electron</a>
+              <a href="/tags/PI-Desktop/" rel="tag"># PI-Desktop</a>
+              <a href="/tags/vastsa/" rel="tag"># vastsa</a>
+              <a href="/tags/Agent-Desktop/" rel="tag"># Agent Desktop</a>
+              <a href="/tags/pi-Agent-Harness/" rel="tag"># pi Agent Harness</a>
+              <a href="/tags/%E6%8F%92%E4%BB%B6%E5%8C%96/" rel="tag"># 插件化</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/12/jihe520-mathmodelagent-math-modeling-agent/" rel="prev" title="jihe520&#x2F;MathModelAgent：4.9k stars 的数学建模 Agent + skills，从题目到一份可提交的完整论文">
+                  <i class="fa fa-angle-left"></i> jihe520/MathModelAgent：4.9k stars 的数学建模 Agent + skills，从题目到一份可提交的完整论文
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/18/tencent-browserskill-shared-browser-ai-agents/" rel="next" title="Tencent&#x2F;BrowserSkill：5.3k stars 的 &quot;让 AI agent 用你的真实浏览器&quot;，复用登录态 + 不打扰你工作 + 11 个 agent harness 都支持">
+                  Tencent/BrowserSkill：5.3k stars 的 "让 AI agent 用你的真实浏览器"，复用登录态 + 不打扰你工作 + 11 个 agent harness 都支持 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

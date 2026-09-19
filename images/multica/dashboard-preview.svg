@@ -1,0 +1,243 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" font-family="ui-monospace, 'JetBrains Mono', 'SF Mono', Menlo, monospace">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0e14"/>
+      <stop offset="1" stop-color="#11161f"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1a2030" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a2030"/>
+      <stop offset="1" stop-color="#11161f"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect width="1200" height="900" fill="url(#grid)" opacity="0.6"/>
+
+  <!-- 顶部状态栏 -->
+  <g transform="translate(40, 40)">
+    <rect width="1120" height="50" fill="#0d131c" stroke="#1a2030"/>
+    <circle cx="22" cy="25" r="6" fill="#00d4ff">
+      <animate attributeName="opacity" values="1;0.2;1" dur="1.5s" repeatCount="indefinite"/>
+    </circle>
+    <text x="42" y="30" fill="#00d4ff" font-size="14" font-weight="700" letter-spacing="2">MULTICA.DASHBOARD</text>
+    <text x="280" y="30" fill="#5a6678" font-size="12">// your AI agents, side by side</text>
+    <text x="1080" y="30" fill="#5a6678" font-size="12">v1.0</text>
+  </g>
+
+  <!-- 标题 -->
+  <g transform="translate(40, 130)">
+    <text x="0" y="0" fill="#e6e6e6" font-size="32" font-weight="800">AI AGENTS AS TEAMMATES</text>
+    <text x="0" y="28" fill="#5a6678" font-size="13">// 看板视图：把 Claude Code / Codex / Cursor 当"虚拟员工"管</text>
+    <line x1="0" y1="46" x2="1120" y2="46" stroke="#1a2030"/>
+  </g>
+
+  <!-- 看板三列：TODO / DOING / DONE -->
+  <g transform="translate(40, 200)">
+    <!-- TODO 列 -->
+    <g transform="translate(0, 0)">
+      <text x="0" y="0" fill="#9ba3b3" font-size="12" font-weight="600" letter-spacing="1">📋 TODO · 3</text>
+
+      <g transform="translate(0, 20)">
+        <rect width="340" height="100" fill="url(#card)" stroke="#1a2030"/>
+        <rect width="3" height="100" fill="#5a6678"/>
+        <text x="14" y="22" fill="#e6e6e6" font-size="13" font-weight="600">#143 升级 Element Plus 到 2.7</text>
+        <text x="14" y="42" fill="#5a6678" font-size="11">需要先 audit 现有组件兼容性</text>
+        <g transform="translate(14, 60)">
+          <rect width="80" height="20" fill="#1a2030" stroke="#2a3142"/>
+          <text x="40" y="14" fill="#00d4ff" font-size="10" text-anchor="middle">@opencode</text>
+        </g>
+        <g transform="translate(100, 60)">
+          <rect width="60" height="20" fill="#1a2030" stroke="#2a3142"/>
+          <text x="30" y="14" fill="#5a6678" font-size="10" text-anchor="middle">P2</text>
+        </g>
+      </g>
+
+      <g transform="translate(0, 130)">
+        <rect width="340" height="100" fill="url(#card)" stroke="#1a2030"/>
+        <rect width="3" height="100" fill="#5a6678"/>
+        <text x="14" y="22" fill="#e6e6e6" font-size="13" font-weight="600">#144 把 Login 改成 OAuth 2.0</text>
+        <text x="14" y="42" fill="#5a6678" font-size="11">对接公司 IdP，需要密钥</text>
+        <g transform="translate(14, 60)">
+          <rect width="80" height="20" fill="#1a2030" stroke="#2a3142"/>
+          <text x="40" y="14" fill="#00d4ff" font-size="10" text-anchor="middle">@claude-code</text>
+        </g>
+        <g transform="translate(100, 60)">
+          <rect width="60" height="20" fill="#1a2030" stroke="#ff8a3d"/>
+          <text x="30" y="14" fill="#ff8a3d" font-size="10" text-anchor="middle">P1</text>
+        </g>
+      </g>
+
+      <g transform="translate(0, 240)">
+        <rect width="340" height="100" fill="url(#card)" stroke="#1a2030"/>
+        <rect width="3" height="100" fill="#5a6678"/>
+        <text x="14" y="22" fill="#e6e6e6" font-size="13" font-weight="600">#145 CI 加 Playwright 冒烟测试</text>
+        <text x="14" y="42" fill="#5a6678" font-size="11">对 5 个核心页面截图回归</text>
+        <g transform="translate(14, 60)">
+          <rect width="60" height="20" fill="#1a2030" stroke="#2a3142"/>
+          <text x="30" y="14" fill="#00d4ff" font-size="10" text-anchor="middle">@codex</text>
+        </g>
+        <g transform="translate(80, 60)">
+          <rect width="60" height="20" fill="#1a2030" stroke="#2a3142"/>
+          <text x="30" y="14" fill="#5a6678" font-size="10" text-anchor="middle">P3</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- DOING 列 -->
+    <g transform="translate(370, 0)">
+      <text x="0" y="0" fill="#00d4ff" font-size="12" font-weight="600" letter-spacing="1">🔄 DOING · 2</text>
+
+      <g transform="translate(0, 20)">
+        <rect width="340" height="100" fill="url(#card)" stroke="#00d4ff" stroke-width="1.5"/>
+        <rect width="3" height="100" fill="#00d4ff"/>
+        <text x="14" y="22" fill="#e6e6e6" font-size="13" font-weight="600">#142 修登录页验证码不显示</text>
+        <text x="14" y="42" fill="#5a6678" font-size="11">改完单测，commit 中...</text>
+        <!-- 进度条 -->
+        <rect x="14" y="55" width="280" height="6" fill="#1a2030"/>
+        <rect x="14" y="55" width="220" height="6" fill="#00d4ff"/>
+        <text x="300" y="61" fill="#5a6678" font-size="10" text-anchor="end">80%</text>
+        <g transform="translate(14, 75)">
+          <rect width="80" height="20" fill="#1a2030" stroke="#00d4ff"/>
+          <text x="40" y="14" fill="#00d4ff" font-size="10" text-anchor="middle">@claude-code</text>
+        </g>
+        <text x="14" y="93" fill="#5a6678" font-size="9">⏱ 已跑 8 分 · 改了 4 个文件</text>
+      </g>
+
+      <g transform="translate(0, 130)">
+        <rect width="340" height="100" fill="url(#card)" stroke="#00d4ff" stroke-width="1.5"/>
+        <rect width="3" height="100" fill="#00d4ff"/>
+        <text x="14" y="22" fill="#e6e6e6" font-size="13" font-weight="600">#141 重构 xiban 权限系统</text>
+        <text x="14" y="42" fill="#5a6678" font-size="11">⚠️ 阻塞：等 @daishengli 确认</text>
+        <rect x="14" y="55" width="280" height="6" fill="#1a2030"/>
+        <rect x="14" y="55" width="100" height="6" fill="#ff8a3d"/>
+        <text x="300" y="61" fill="#ff8a3d" font-size="10" text-anchor="end">⏸ 阻塞</text>
+        <g transform="translate(14, 75)">
+          <rect width="80" height="20" fill="#1a2030" stroke="#00d4ff"/>
+          <text x="40" y="14" fill="#00d4ff" font-size="10" text-anchor="middle">@opencode</text>
+        </g>
+        <text x="14" y="93" fill="#5a6678" font-size="9">💬 "权限模型有 2 种思路，能确认下吗？"</text>
+      </g>
+    </g>
+
+    <!-- DONE 列 -->
+    <g transform="translate(740, 0)">
+      <text x="0" y="0" fill="#00ff88" font-size="12" font-weight="600" letter-spacing="1">✅ DONE · 4 (今天)</text>
+
+      <g transform="translate(0, 20)">
+        <rect width="340" height="100" fill="url(#card)" stroke="#1a2030"/>
+        <rect width="3" height="100" fill="#00ff88"/>
+        <text x="14" y="22" fill="#e6e6e6" font-size="13" font-weight="600">#140 改个请求超时 bug</text>
+        <text x="14" y="42" fill="#5a6678" font-size="11">PR #456 已合并</text>
+        <g transform="translate(14, 60)">
+          <rect width="80" height="20" fill="#1a2030" stroke="#00ff88"/>
+          <text x="40" y="14" fill="#00ff88" font-size="10" text-anchor="middle">@claude-code</text>
+        </g>
+        <g transform="translate(100, 60)">
+          <rect width="80" height="20" fill="#1a2030" stroke="#2a3142"/>
+          <text x="40" y="14" fill="#5a6678" font-size="10" text-anchor="middle">✓ merged</text>
+        </g>
+        <text x="14" y="93" fill="#5a6678" font-size="9">⏱ 用了 12 分 · 学到 skill: api-timeout-retry</text>
+      </g>
+
+      <g transform="translate(0, 130)">
+        <rect width="340" height="100" fill="url(#card)" stroke="#1a2030"/>
+        <rect width="3" height="100" fill="#00ff88"/>
+        <text x="14" y="22" fill="#e6e6e6" font-size="13" font-weight="600">#138 写 ECharts 封装组件</text>
+        <text x="14" y="42" fill="#5a6678" font-size="11">PR #454 已合并</text>
+        <g transform="translate(14, 60)">
+          <rect width="80" height="20" fill="#1a2030" stroke="#00ff88"/>
+          <text x="40" y="14" fill="#00ff88" font-size="10" text-anchor="middle">@codex</text>
+        </g>
+        <g transform="translate(100, 60)">
+          <rect width="80" height="20" fill="#1a2020" stroke="#2a3142"/>
+          <text x="40" y="14" fill="#5a6678" font-size="10" text-anchor="middle">✓ merged</text>
+        </g>
+        <text x="14" y="93" fill="#5a6678" font-size="9">⏱ 用了 18 分 · 学到 skill: echarts-vue3</text>
+      </g>
+
+      <g transform="translate(0, 240)">
+        <rect width="340" height="100" fill="url(#card)" stroke="#1a2030"/>
+        <rect width="3" height="100" fill="#00ff88"/>
+        <text x="14" y="22" fill="#e6e6e6" font-size="13" font-weight="600">#137 写 README</text>
+        <g transform="translate(14, 35)">
+          <rect width="80" height="20" fill="#1a2030" stroke="#00ff88"/>
+          <text x="40" y="14" fill="#00ff88" font-size="10" text-anchor="middle">@cursor-agent</text>
+        </g>
+        <g transform="translate(100, 35)">
+          <rect width="80" height="20" fill="#1a2030" stroke="#2a3142"/>
+          <text x="40" y="14" fill="#5a6678" font-size="10" text-anchor="middle">✓ merged</text>
+        </g>
+        <text x="14" y="80" fill="#5a6678" font-size="9">⏱ 用了 5 分</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- 底部数据栏 -->
+  <g transform="translate(40, 600)">
+    <line x1="0" y1="0" x2="1120" y2="0" stroke="#1a2030"/>
+    <text x="0" y="26" fill="#5a6678" font-size="11" letter-spacing="2">// AGENT FLEET</text>
+
+    <g transform="translate(0, 40)">
+      <rect width="265" height="80" fill="url(#card)" stroke="#1a2030"/>
+      <text x="14" y="24" fill="#00d4ff" font-size="11" font-weight="600">@claude-code</text>
+      <text x="14" y="44" fill="#5a6678" font-size="10">2 在跑 / 4 完成 / 1 阻塞</text>
+      <text x="14" y="62" fill="#e6e6e6" font-size="18" font-weight="700">$ 0.42</text>
+      <text x="265" y="62" fill="#5a6678" font-size="10" text-anchor="end">今日 API 成本</text>
+    </g>
+    <g transform="translate(285, 40)">
+      <rect width="265" height="80" fill="url(#card)" stroke="#1a2030"/>
+      <text x="14" y="24" fill="#00d4ff" font-size="11" font-weight="600">@codex</text>
+      <text x="14" y="44" fill="#5a6678" font-size="10">1 在跑 / 2 完成</text>
+      <text x="14" y="62" fill="#e6e6e6" font-size="18" font-weight="700">$ 0.18</text>
+      <text x="265" y="62" fill="#5a6678" font-size="10" text-anchor="end">今日 API 成本</text>
+    </g>
+    <g transform="translate(570, 40)">
+      <rect width="265" height="80" fill="url(#card)" stroke="#1a2030"/>
+      <text x="14" y="24" fill="#00d4ff" font-size="11" font-weight="600">@opencode</text>
+      <text x="14" y="44" fill="#5a6678" font-size="10">1 在跑 / 3 完成</text>
+      <text x="14" y="62" fill="#e6e6e6" font-size="18" font-weight="700">$ 0.08</text>
+      <text x="265" y="62" fill="#5a6678" font-size="10" text-anchor="end">今日 API 成本</text>
+    </g>
+    <g transform="translate(855, 40)">
+      <rect width="265" height="80" fill="url(#card)" stroke="#1a2030"/>
+      <text x="14" y="24" fill="#00d4ff" font-size="11" font-weight="600">@cursor-agent</text>
+      <text x="14" y="44" fill="#5a6678" font-size="10">0 在跑 / 1 完成</text>
+      <text x="14" y="62" fill="#e6e6e6" font-size="18" font-weight="700">$ 0.05</text>
+      <text x="265" y="62" fill="#5a6678" font-size="10" text-anchor="end">今日 API 成本</text>
+    </g>
+  </g>
+
+  <!-- Skill 库展示 -->
+  <g transform="translate(40, 760)">
+    <text x="0" y="0" fill="#5a6678" font-size="11" letter-spacing="2">// TEAM SKILL LIBRARY · auto-growing</text>
+    <g transform="translate(0, 14)">
+      <g>
+        <rect width="155" height="32" fill="#0d131c" stroke="#1a2030"/>
+        <text x="77" y="20" fill="#00d4ff" font-size="11" text-anchor="middle">api-timeout-retry</text>
+      </g>
+      <g transform="translate(165, 0)">
+        <rect width="155" height="32" fill="#0d131c" stroke="#1a2030"/>
+        <text x="77" y="20" fill="#00d4ff" font-size="11" text-anchor="middle">echarts-vue3</text>
+      </g>
+      <g transform="translate(330, 0)">
+        <rect width="155" height="32" fill="#0d131c" stroke="#1a2030"/>
+        <text x="77" y="20" fill="#00d4ff" font-size="11" text-anchor="middle">vue3-best-practices</text>
+      </g>
+      <g transform="translate(495, 0)">
+        <rect width="155" height="32" fill="#0d131c" stroke="#1a2030"/>
+        <text x="77" y="20" fill="#00d4ff" font-size="11" text-anchor="middle">xiban-conventions</text>
+      </g>
+      <g transform="translate(660, 0)">
+        <rect width="155" height="32" fill="#0d131c" stroke="#1a2030"/>
+        <text x="77" y="20" fill="#00d4ff" font-size="11" text-anchor="middle">sdkman-jdk-setup</text>
+      </g>
+      <g transform="translate(825, 0)">
+        <rect width="155" height="32" fill="#0d131c" stroke="#1a2030"/>
+        <text x="77" y="20" fill="#00d4ff" font-size="11" text-anchor="middle">+ 18 more</text>
+      </g>
+    </g>
+  </g>
+</svg>
