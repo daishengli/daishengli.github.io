@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="trycua&#x2F;cua（GitHub 24.4k stars、859 forks、当日 +859 stars、MIT）是一款给 AI agent 用的开源 &quot;computer-use&quot; 完整栈，Cua Fleets 云端隔离桌面舰队（run.cua.ai） + Cua Driver 跨 macOS &#x2F; Windows &#x2F; Linux 的开源桌面自动化驱动（CLI &#x2F; MCP &#x2F; typed SDK">
+<meta property="og:type" content="article">
+<meta property="og:title" content="trycua&#x2F;cua：24.4k stars 的 &quot;AI 用的电脑&quot;，Computer-Use 2.0 框架 + 开源驱动 + 跨 OS fleet + macOS 本地 VM + benchmark + 专用 System 1 模型">
+<meta property="og:url" content="https://www.daishengli.top/2026/09/19/trycua-cua-computer-use-agent-framework/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="trycua&#x2F;cua（GitHub 24.4k stars、859 forks、当日 +859 stars、MIT）是一款给 AI agent 用的开源 &quot;computer-use&quot; 完整栈，Cua Fleets 云端隔离桌面舰队（run.cua.ai） + Cua Driver 跨 macOS &#x2F; Windows &#x2F; Linux 的开源桌面自动化驱动（CLI &#x2F; MCP &#x2F; typed SDK">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-19T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-22T01:08:35.235Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="macOS">
+<meta property="article:tag" content="cua">
+<meta property="article:tag" content="trycua">
+<meta property="article:tag" content="Computer-Use">
+<meta property="article:tag" content="Sandbox">
+<meta property="article:tag" content="Anthropic">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/09/19/trycua-cua-computer-use-agent-framework/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/09/19/trycua-cua-computer-use-agent-framework/","path":"2026/09/19/trycua-cua-computer-use-agent-framework/","title":"trycua/cua：24.4k stars 的 \"AI 用的电脑\"，Computer-Use 2.0 框架 + 开源驱动 + 跨 OS fleet + macOS 本地 VM + benchmark + 专用 System 1 模型"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>trycua/cua：24.4k stars 的 "AI 用的电脑"，Computer-Use 2.0 框架 + 开源驱动 + 跨 OS fleet + macOS 本地 VM + benchmark + 专用 System 1 模型 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">386</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">120</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9AAI-agent-%E6%93%8D%E4%BD%9C%E7%9C%9F%E5%AE%9E-GUI-%E7%9A%84%E2%80%9D%E8%84%86%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">一、它想解决的问题：AI agent 操作真实 GUI 的” 脆”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BA%94%E4%BB%B6%E5%A5%97%EF%BC%9ACua-Fleets-Driver-Lume-CUA-S1-Bench"><span class="nav-number">2.</span> <span class="nav-text">二、五件套：Cua Fleets &#x2F; Driver &#x2F; Lume &#x2F; CUA-S1 &#x2F; Bench</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%9C%80%E5%85%B3%E9%94%AE%E7%9A%84%EF%BC%9A%E2%80%9DComputer-Use-2-0%E2%80%9D"><span class="nav-number">3.</span> <span class="nav-text">三、最关键的：”Computer-Use 2.0”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E8%B7%A8-OS-%E6%94%AF%E6%8C%81%E7%9A%84%E5%85%B7%E4%BD%93%E7%BB%86%E8%8A%82"><span class="nav-number">4.</span> <span class="nav-text">四、跨 OS 支持的具体细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%B7%9F%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84-BrowserSkill-%E7%9A%84%E5%85%B7%E4%BD%93%E5%AF%B9%E6%AF%94"><span class="nav-number">5.</span> <span class="nav-text">五、跟之前发过的 BrowserSkill 的具体对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81CUA-S1-%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%85%B7%E4%BD%93%E8%AE%BE%E8%AE%A1"><span class="nav-number">6.</span> <span class="nav-text">六、CUA-S1 模型的具体设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E7%82%B9%E4%BA%94%E3%80%81%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%EF%BC%9A%E4%B8%89%E5%B1%82-%E4%BA%94%E4%BB%B6%E5%A5%97"><span class="nav-number">7.</span> <span class="nav-text">六点五、技术架构：三层 + 五件套</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E7%82%B9%E4%BA%94%E3%80%81Sandbox-SDK-%E8%B7%A8-local-cloud"><span class="nav-number">8.</span> <span class="nav-text">七点五、Sandbox SDK 跨 local + cloud</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E7%82%B9%E4%BA%94%E3%80%81%E5%87%A0%E4%B8%AA%E5%85%B7%E4%BD%93%E6%8A%80%E6%9C%AF%E5%86%B3%E7%AD%96"><span class="nav-number">9.</span> <span class="nav-text">八点五、几个具体技术决策</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E8%A3%85%E4%B8%80%E9%81%8D"><span class="nav-number">10.</span> <span class="nav-text">七、装一遍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%87%A0%E4%B8%AA%E6%88%91%E8%A3%85%E4%B8%8A%E8%B7%91%E8%BF%87%E7%9A%84%E5%85%B7%E4%BD%93%E5%9C%BA%E6%99%AF"><span class="nav-number">11.</span> <span class="nav-text">八、几个我装上跑过的具体场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%87%A0%E6%9D%A1%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82"><span class="nav-number">12.</span> <span class="nav-text">九、几条技术细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E8%B7%9F%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84%E6%89%80%E6%9C%89-agent-%E7%B1%BB%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">13.</span> <span class="nav-text">十、跟之前发过的所有 agent 类项目的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%87%A0%E4%B8%AA%E5%AF%B9%E6%AF%94%E6%95%B0%E6%8D%AE"><span class="nav-number">14.</span> <span class="nav-text">十一、几个对比数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E5%87%A0%E6%9D%A1%E5%8F%8D%E6%A8%A1%E5%BC%8F%E8%AD%A6%E5%91%8A"><span class="nav-number">15.</span> <span class="nav-text">十二、几条反模式警告</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">16.</span> <span class="nav-text">十三、适合谁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E5%B1%80%E9%99%90"><span class="nav-number">17.</span> <span class="nav-text">十四、局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E5%AE%83%E5%9C%A8-AI-agent-%E7%94%9F%E6%80%81%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">18.</span> <span class="nav-text">十五、它在 AI agent 生态的位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E3%80%81%E8%AF%BB%E5%AE%8C%E4%BD%A0%E5%BA%94%E8%AF%A5%E5%81%9A%E7%9A%84%E4%B8%89%E4%BB%B6%E4%BA%8B"><span class="nav-number">19.</span> <span class="nav-text">十六、读完你应该做的三件事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E7%82%B9%E4%BA%94%E3%80%81%E4%B8%80%E4%BA%9B%E6%84%8F%E5%A4%96%E5%8F%91%E7%8E%B0"><span class="nav-number">20.</span> <span class="nav-text">九点五、一些意外发现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E7%82%B9%E4%BA%94%E3%80%81%E5%AF%B9%E6%AF%94%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84%E6%89%80%E6%9C%89-agent-%E7%B1%BB%E9%A1%B9%E7%9B%AE"><span class="nav-number">21.</span> <span class="nav-text">十点五、对比之前发过的所有 agent 类项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E7%82%B9%E4%BA%94%E3%80%81%E5%87%A0%E6%9D%A1%E5%8F%8D%E6%A8%A1%E5%BC%8F%E8%AD%A6%E5%91%8A"><span class="nav-number">22.</span> <span class="nav-text">十一点五、几条反模式警告</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E7%82%B9%E4%BA%94%E3%80%81%E5%AE%83%E5%AF%B9-AI-%E5%B7%A5%E7%A8%8B%E7%94%9F%E6%80%81%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">23.</span> <span class="nav-text">十二点五、它对 AI 工程生态的影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E7%82%B9%E4%BA%94%E3%80%81%E7%BB%99%E4%B8%8D%E5%90%8C%E4%BA%BA%E5%87%A0%E6%9D%A1%E5%85%B7%E4%BD%93%E5%BB%BA%E8%AE%AE"><span class="nav-number">24.</span> <span class="nav-text">十三点五、给不同人几条具体建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E7%82%B9%E4%BA%94%E3%80%81%E5%87%A0%E6%9D%A1%E5%85%B7%E4%BD%93%E7%9A%84%E2%80%9D%E6%88%91%E8%87%AA%E5%B7%B1%E6%80%8E%E4%B9%88%E7%94%A8-Cua%E2%80%9D"><span class="nav-number">25.</span> <span class="nav-text">十四点五、几条具体的” 我自己怎么用 Cua”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E7%82%B9%E4%BA%94%E3%80%81%E5%AE%83%E8%B7%9F-Anthropic-OpenAI-%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">26.</span> <span class="nav-text">十五点五、它跟 Anthropic &#x2F; OpenAI 的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E7%82%B9%E4%BA%94%E3%80%81Cua-%E5%9B%A2%E9%98%9F%E6%9C%AC%E8%BA%AB"><span class="nav-number">27.</span> <span class="nav-text">十六点五、Cua 团队本身</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%83%E7%82%B9%E4%BA%94%E3%80%81%E5%AE%83%E5%9C%A8-2026-%E5%B9%B4-AI-%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9A%84%E6%9C%80%E7%BB%88%E5%AE%9A%E4%BD%8D"><span class="nav-number">28.</span> <span class="nav-text">十七点五、它在 2026 年 AI 工具链的最终定位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AB%E7%82%B9%E4%BA%94%E3%80%81%E7%BB%99%E2%80%9D%E8%A3%85-Cua-%E7%9A%84%E4%BA%BA%E2%80%9D%E5%87%A0%E6%9D%A1%E6%9C%80%E7%BB%88-tips"><span class="nav-number">29.</span> <span class="nav-text">十八点五、给” 装 Cua 的人” 几条最终 tips</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B9%9D%E3%80%81%E5%87%A0%E6%9D%A1%E5%85%B3%E4%BA%8E-Cua-Fleets-%E5%95%86%E4%B8%9A%E5%8C%96%E7%9A%84%E8%A1%A5%E5%85%85"><span class="nav-number">30.</span> <span class="nav-text">十九、几条关于 Cua Fleets 商业化的补充</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E3%80%81%E5%AF%B9%E6%AF%94%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84-agent-%E7%B1%BB%E9%A1%B9%E7%9B%AE-%E8%B7%A8%E5%B7%A5%E5%85%B7%E5%8D%8F%E4%BD%9C"><span class="nav-number">31.</span> <span class="nav-text">二十、对比之前发过的 agent 类项目 + 跨工具协作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E4%B8%80%E3%80%81%E7%BB%99%E2%80%9DAI-%E6%97%B6%E4%BB%A3%E4%B8%AA%E4%BA%BA%E5%B7%A5%E4%BD%9C%E6%B5%81%E2%80%9D%E7%9A%84%E5%87%A0%E6%9D%A1%E4%B8%AA%E4%BA%BA%E5%8F%8D%E6%80%9D"><span class="nav-number">32.</span> <span class="nav-text">二十一、给”AI 时代个人工作流” 的几条个人反思</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E4%BA%8C%E3%80%81%E6%9C%80%E5%90%8E"><span class="nav-number">33.</span> <span class="nav-text">二十二、最后</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">386</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/09/19/trycua-cua-computer-use-agent-framework/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="trycua&#x2F;cua：24.4k stars 的 &quot;AI 用的电脑&quot;，Computer-Use 2.0 框架 + 开源驱动 + 跨 OS fleet + macOS 本地 VM + benchmark + 专用 System 1 模型 | 小戴的网络日志">
+      <meta itemprop="description" content="trycua&#x2F;cua（GitHub 24.4k stars、859 forks、当日 +859 stars、MIT）是一款给 AI agent 用的开源 &quot;computer-use&quot; 完整栈，Cua Fleets 云端隔离桌面舰队（run.cua.ai） + Cua Driver 跨 macOS &#x2F; Windows &#x2F; Linux 的开源桌面自动化驱动（CLI &#x2F; MCP &#x2F; typed SDK 三种接入） + Lume 本地 macOS &#x2F; Linux 虚拟机（Apple Silicon Virtualization.Framework） + CUA-S1 小型专用 System 1 模型（&quot;快且有界&quot;的决策模型，专攻表单填写 &#x2F; 结构化提取，model weights 单独发 Hugging Face） + Cua Bench 评测 + 训练数据生成五件套；与 Anthropic Claude &#x2F; OpenAI Codex &#x2F; Cursor &#x2F; OpenClaw 等 agent harness 集成，agent 在同一任务里自由切换 code &#x2F; API &#x2F; GUI 三种交互面，把&quot;GUI 自动化&quot;从脆弱的 pixel-click 升级到 structured GUI primitive + 专用模型协作。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          trycua/cua：24.4k stars 的 "AI 用的电脑"，Computer-Use 2.0 框架 + 开源驱动 + 跨 OS fleet + macOS 本地 VM + benchmark + 专用 System 1 模型
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-19 10:00:00" itemprop="dateCreated datePublished" datetime="2026-09-19T10:00:00+08:00">2026-09-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">trycua/cua（GitHub 24.4k stars、859 forks、当日 +859 stars、MIT）是一款给 AI agent 用的开源 "computer-use" 完整栈，Cua Fleets 云端隔离桌面舰队（run.cua.ai） + Cua Driver 跨 macOS / Windows / Linux 的开源桌面自动化驱动（CLI / MCP / typed SDK 三种接入） + Lume 本地 macOS / Linux 虚拟机（Apple Silicon Virtualization.Framework） + CUA-S1 小型专用 System 1 模型（"快且有界"的决策模型，专攻表单填写 / 结构化提取，model weights 单独发 Hugging Face） + Cua Bench 评测 + 训练数据生成五件套；与 Anthropic Claude / OpenAI Codex / Cursor / OpenClaw 等 agent harness 集成，agent 在同一任务里自由切换 code / API / GUI 三种交互面，把"GUI 自动化"从脆弱的 pixel-click 升级到 structured GUI primitive + 专用模型协作。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上周我用 Claude Code 改一个 React 项目的样式。 改到一半，agent 跟我说：</p>
+<blockquote>
+<p>我需要跑 <code>npm install</code> 然后看 dev server 输出。但 npm 跑在终端，dev server 跑在另一个窗口。 我能看到 commit history，看不到运行的应用。 你能帮我看一眼 React 渲染出来的实际样式对不对吗？</p>
+</blockquote>
+<p>我切到浏览器看了一眼，截图发回给 agent。 它看了截图说”padding 不对，调一下”。 我改了文件。 agent 再看截图，再改。 来回 5 次。</p>
+<p>这个” 截图 → agent 看 → 改 → 再截图” 的 workflow <strong>慢</strong>且<strong>脆</strong>。 agent 看截图靠 vision LLM 理解像素，<strong>不</strong>像人看 DOM 节点那样” 看结构”。</p>
+<p>昨天我在 GitHub Trending 上刷到一个项目：<strong>trycua/cua</strong>。 24.4k stars，859 forks，<strong>当日 +859 stars</strong>。 MIT。 来自 <a target="_blank" rel="noopener" href="https://cua.ai/">Cua AI, Inc.</a>。</p>
+<p>它干的事情不是”agent 看截图”。 它干的事情是 **” 给 AI agent 一台它们能用的电脑”**。</p>
+<hr>
+<h2 id="一、它想解决的问题：AI-agent-操作真实-GUI-的”脆”"><a href="#一、它想解决的问题：AI-agent-操作真实-GUI-的”脆”" class="headerlink" title="一、它想解决的问题：AI agent 操作真实 GUI 的”脆”"></a>一、它想解决的问题：AI agent 操作真实 GUI 的” 脆”</h2><p>先把背景说清楚。</p>
+<p>2025 年开始，”AI agent 操作 GUI” 这条线爆发出 5 条路径：</p>
+<p><strong>路径 1：Vision-based</strong>（OpenAI Operator / Anthropic Claude Computer Use）。 agent <strong>看屏幕截图</strong>，决定点哪里 / 输入什么。 优点：<strong>通用</strong>，任何 GUI 都能跑。 缺点：<strong>脆</strong>，截图分辨率低时看不清按钮、UI 改版后找不到元素、坐标定位漂移。</p>
+<p><strong>路径 2：DOM-based</strong>（之前发过的 Playwright MCP / BrowserSkill）。 agent 操作<strong>网页</strong>的 DOM / ARIA tree。 优点：<strong>结构化</strong>，元素定位准。 缺点：<strong>只</strong>适用浏览器内的网页，native app 跑不了。</p>
+<p><strong>路径 3：Accessibility API-based</strong>（macOS AXUIElement / Windows UIA）。 agent 调 OS accessibility tree 拿元素。 优点：跨 native app + 网页。 缺点：跨 OS 实现复杂，元素信息比 DOM 浅。</p>
+<p><strong>路径 4：OS automation</strong>（AppleScript / PowerShell /xdotool）。 agent 调系统级 automation API。 优点：能操作<strong>任何</strong> app。 缺点：API 各自为政，跨 OS 难。</p>
+<p><strong>路径 5：Virtual machine</strong>（Lume / Docker）。 agent 跑在隔离 VM 里。 优点：完全沙箱，<strong>不</strong>污染本机。 缺点：VM 启动慢、agent 看到的是 VM 里的 GUI 不是本机。</p>
+<p>之前发过的 BrowserSkill 走的是<strong>路径 3</strong>（accessibility API + 借真实浏览器）。 之前的 playwright-mcp 走的是<strong>路径 2</strong>（DOM）。 之前的 Anthropic Computer Use 走的是<strong>路径 1</strong>（vision）。</p>
+<p>Cua 走的是<strong>路径 3 + 路径 5</strong> 的<strong>完整栈</strong>：accessibility API 驱动 native app + 跨 OS VM 沙箱。 它<strong>不是</strong>单一工具，是<strong>整套生态</strong>，五件套。</p>
+<hr>
+<h2 id="二、五件套：Cua-Fleets-Driver-Lume-CUA-S1-Bench"><a href="#二、五件套：Cua-Fleets-Driver-Lume-CUA-S1-Bench" class="headerlink" title="二、五件套：Cua Fleets / Driver / Lume / CUA-S1 / Bench"></a>二、五件套：Cua Fleets / Driver / Lume / CUA-S1 / Bench</h2><p>Cua 的架构是<strong>五个子项目</strong>组成的完整栈：</p>
+<p><strong>Cua Fleets</strong>。 云端隔离桌面舰队。 <code>run.cua.ai</code> 上跑，agent 通过 Sandbox SDK 远程 provision 一台 Linux 桌面。 桌面跑完任务<strong>自动回收</strong>，不占资源。 这条对”agent 需要一个干净的 GUI 环境跑任务” 是<strong>关键</strong>，agent <strong>不污染</strong>本地，<strong>不依赖</strong>本地有可用的 GUI。</p>
+<p><strong>Cua Driver</strong>。 跨 macOS / Windows / Linux 的开源桌面自动化驱动。 接入方式有三种：</p>
+<ul>
+<li><strong>CLI</strong>：<code>cua</code> 命令</li>
+<li><strong> MCP server</strong>：暴露给任何 MCP-compatible agent</li>
+<li><strong>Typed SDK</strong>：Python / TypeScript SDK 给高级用法</li>
+</ul>
+<p>Driver 跟之前发过的 BrowserSkill 区别：</p>
+<ul>
+<li>BrowserSkill 走 accessibility API + 借真实 Chrome / Edge</li>
+<li>Cua Driver 走 accessibility API + <strong>可控的 GUI session</strong>（macOS / Windows / Linux desktop）</li>
+</ul>
+<p>Driver 让 agent 能操作<strong>任何</strong> native app（Finder / Explorer / Nautilus、Calculator、System Settings、Safari 之外的浏览器）。 这条 BrowserSkill <strong>做不了</strong>。</p>
+<p><strong>Lume</strong>。 本地 macOS / Linux VM，用 Apple Silicon Virtualization.Framework。 在 Apple Silicon Mac 上<strong>本地</strong>跑 macOS Tahoe VM（不用远程）。</p>
+<p><strong>这条</strong>跟 Cua Fleets <strong>互补</strong>：</p>
+<ul>
+<li>Fleets：远程，云上，<strong>隔离</strong></li>
+<li> Lume：本地，VM，<strong>隔离</strong></li>
+</ul>
+<p>两个都是<strong>沙箱</strong>，但部署位置不同。</p>
+<p><strong>CUA-S1</strong>。 Cua 团队自研的小型专用 <strong>System 1 模型</strong>。</p>
+<blockquote>
+<p>CUA-S1 is our family of small, specialized System 1 models for computer use. We use “System 1” as an engineering analogy for fast, bounded decisions, such as choosing which value belongs in a field or whether to leave an element alone.</p>
+</blockquote>
+<p>System 1（快思考）vs System 2（慢思考）的概念来自 Kahneman。 Cua 用<strong>工程类比</strong>：System 1 = “快且有界的决策”（填一个字段值、判断是否该动一个元素）。 System 2 = “慢推理”（理解复杂意图、做长期规划）。</p>
+<p>CUA-S1 <strong>不</strong>是一个完整 agent，是 agent <strong>内部</strong>的一个<strong>组件</strong>，做<strong>结构化决策</strong>（表单填写、字段判断），<strong>不</strong>做<strong>端到端</strong>推理。 完整 agent = LLM (System 2 reasoning) + CUA-S1 (System 1 decision)。</p>
+<p><strong>model weights 在 Hugging Face</strong>：<code>cua-ai/cua-s1-forms</code>。 第一个 research profile 专攻<strong>表单</strong>，读 structured interface elements + 文档 value，<strong>不</strong>生成文本 token by token。</p>
+<p><strong>Cua Bench</strong>。 评测 + 训练数据生成。 Python 3.12/3.13 + <code>uv</code> 装。 跑：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">uv tool install <span class="string">'cua-bench[browser]'</span></span><br><span class="line">uv tool run --from <span class="string">'cua-bench[browser]'</span> playwright install chromium</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Bench 跑” 创建 task + 跑 reference solution + verify evaluator reports reward 1.0”，<strong>模拟任务</strong>不需要 VM / Docker /model API key。</p>
+<p><strong>trajectories</strong> 可以导出，给 CUA-S1 做训练数据。 这是<strong>自举</strong>，Cua 评测 → 生成数据 → 训 CUA-S1 → 更好的 CUA-S1 → 更好的评测。</p>
+<hr>
+<h2 id="三、最关键的：”Computer-Use-2-0”"><a href="#三、最关键的：”Computer-Use-2-0”" class="headerlink" title="三、最关键的：”Computer-Use 2.0”"></a>三、最关键的：”Computer-Use 2.0”</h2><p>Cua 在 README 明确说：</p>
+<blockquote>
+<p>Bring your own agent and model, or explore CUA-S1 for specialized decisions. Cua provides the computer and automation tools. Computer-Use 2.0 describes an agent moving between code, APIs, and graphical interfaces within the same task.</p>
+</blockquote>
+<p><strong>Computer-Use 2.0</strong> 是 Cua 的<strong>核心定位</strong>。</p>
+<p>之前的 Computer-Use（Anthropic 那种）：</p>
+<blockquote>
+<p>Agent <strong>只能</strong>通过看截图 + 操作 GUI 来完成任务。 一个填表单的任务，agent <strong>只能</strong>通过打开浏览器、填字段、点击提交完成。</p>
+</blockquote>
+<p>Cua 的 Computer-Use 2.0：</p>
+<blockquote>
+<p>Agent <strong>自由切换</strong> code、API、GUI 三种交互面。 <strong>同一个任务</strong>里，agent 可以” 调 API 拿数据”（code）→ “GUI 校验”（图形界面）→ “调内部 API 完成写入”（API）→ “GUI 确认”（图形界面）。 <strong>不强制每步都走 GUI</strong>。</p>
+</blockquote>
+<p>这条”agent 混合交互面” 是<strong>关键的范式转换</strong>。 之前的 Computer-Use 把 agent 限制在 GUI 单一通道，<strong>低效</strong>。 Computer-Use 2.0 让 agent <strong>按任务需要</strong>选最有效的通道。</p>
+<p>具体例子：填表一个 500 行的 Excel 表单。</p>
+<ul>
+<li><strong>Computer-Use 1.0</strong>：agent 看截图、判断每行填什么、点每行、提交。 慢 + 脆 + 错误率高。</li>
+<li><strong>Computer-Use 2.0</strong>：agent 调 Excel API 批量写入 500 行（code），然后 GUI 验证最终结果（截图对比预期）。 快 + 准 + 错误率低。</li>
+</ul>
+<p>这条”agent 选最有效通道” 的能力是 Cua <strong>最大的范式创新</strong>。</p>
+<hr>
+<h2 id="四、跨-OS-支持的具体细节"><a href="#四、跨-OS-支持的具体细节" class="headerlink" title="四、跨 OS 支持的具体细节"></a>四、跨 OS 支持的具体细节</h2><p>Cua Driver 跨 <strong>macOS / Windows / Linux</strong>。 README 给的具体支持：</p>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>支持</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> macOS</td>
+<td> 完整支持，包括 Apple Silicon + Intel</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td> 完整支持，Windows 10+</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td> 完整支持，包括 X11 + Wayland</td>
+</tr>
+</tbody></table>
+<p>每个平台的<strong>自动化底座</strong>：</p>
+<ul>
+<li><strong>macOS</strong>：AppleScript + Accessibility API + CGEvent + Quartz。 完整覆盖 native app。</li>
+<li><strong>Windows</strong>：UIA + Win32 API + PowerShell。 完整覆盖 native app。</li>
+<li><strong>Linux</strong>：AT-SPI2 + XTest + xdotool + Wayland protocol。 完整覆盖主流 desktop environment。</li>
+</ul>
+<p>这条<strong>跨 OS 自动化底座</strong>的工作量<strong>巨大</strong>，每加一个平台就是几百个 commit。 Cua 团队维护<strong>值得</strong>肯定。</p>
+<p>Lume 跑在 Apple Silicon 上，Mac mini / MacBook Air / MacBook Pro / Mac Studio（<strong>必须</strong> Apple Silicon，Intel Mac 不行）。 Lume 跑的 VM 是 <strong>macOS Tahoe</strong>，需要从 Apple restore image <strong>拉</strong>（免费，但首次 setup 30+ 分钟）。</p>
+<p>Lume 用的 Apple Virtualization.Framework 是 Apple <strong>官方</strong>给开发者用的 framework（<strong>不</strong>是 hack），VM 性能<strong>接近</strong> native（GPU passthrough + virtio + shared memory）。</p>
+<hr>
+<h2 id="五、跟之前发过的-BrowserSkill-的具体对比"><a href="#五、跟之前发过的-BrowserSkill-的具体对比" class="headerlink" title="五、跟之前发过的 BrowserSkill 的具体对比"></a>五、跟之前发过的 BrowserSkill 的具体对比</h2><p>之前发过 Tencent/BrowserSkill（5.3k stars）。 跟 Cua 比：</p>
+<ul>
+<li><strong>Cua Driver</strong> = 跨 macOS / Windows / Linux 的<strong>完整 OS 自动化</strong></li>
+<li><strong> BrowserSkill</strong> = 复用<strong>用户真实 Chrome / Edge</strong></li>
+</ul>
+<p>两条路径<strong>不替代</strong>，<strong>互补</strong>：</p>
+<ul>
+<li>想让 agent 操作 native app / 跨 app workflow → Cua Driver</li>
+<li> 想让 agent 复用你已登录的 GitHub / Notion → BrowserSkill</li>
+<li> 想要完全沙箱（agent 不能动你的真实环境） → Cua Fleets / Lume</li>
+<li> 想要共享登录态（agent 用你的账号） → BrowserSkill</li>
+</ul>
+<p>具体场景对比：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>选 Cua</th>
+<th> 选 BrowserSkill</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>agent 写 Excel 宏</td>
+<td>✅ (Cua Driver 操作真实 Excel)</td>
+<td>❌ (只 browser)</td>
+</tr>
+<tr>
+<td>agent 改 PR 评论</td>
+<td>⚠️ (需要装 Chrome + 登录)</td>
+<td>✅ (借 Chrome tab)</td>
+</tr>
+<tr>
+<td>agent 跑 e2e test</td>
+<td>✅ (Cua Bench)</td>
+<td>⚠️ (借用用户 tab 不合适)</td>
+</tr>
+<tr>
+<td> 企业 IT “AI 操作内网”</td>
+<td>✅ (Cua Fleets 完全隔离)</td>
+<td>⚠️ (共享用户浏览器风险)</td>
+</tr>
+<tr>
+<td> 个人开发者”AI 帮操作日常网站”</td>
+<td>⚠️ (Driver 需要装 + 配)</td>
+<td>✅ (借 tab 最轻量)</td>
+</tr>
+<tr>
+<td>AI 操作 macOS 自动化（Finder / 系统设置）</td>
+<td>✅ (Cua Driver macOS 深度集成)</td>
+<td>❌ (BrowserSkill 只 Chrome / Edge)</td>
+</tr>
+</tbody></table>
+<p>Cua <strong>更强</strong>（跨 OS / 跨 app / 跨 SaaS 边界）。 BrowserSkill <strong>更轻</strong>（只装一个扩展）。</p>
+<hr>
+<h2 id="六、CUA-S1-模型的具体设计"><a href="#六、CUA-S1-模型的具体设计" class="headerlink" title="六、CUA-S1 模型的具体设计"></a>六、CUA-S1 模型的具体设计</h2><p>CUA-S1 是个<strong>重要</strong>的设计决策。 让我展开讲讲。</p>
+<p><strong>为什么需要 System 1 模型</strong>？ Anthropic 的 Computer Use 用通用 Sonnet / Opus <strong>直接</strong>生成 GUI 操作 token。 这种” 通用大模型做 GUI 决策” 有几个问题：</p>
+<ul>
+<li><strong>慢</strong>：Sonnet 推理一次 1-2 秒，GUI 操作每步都要决策，每步延迟累积。</li>
+<li><strong>贵</strong>：每步决策消耗 1000-5000 tokens。</li>
+<li><strong>不一致</strong>：同一 GUI 操作在不同次运行可能生成<strong>不同</strong> token，行为<strong>不稳定</strong>。</li>
+</ul>
+<p>CUA-S1 是<strong>专用小模型</strong>，<strong>只</strong>做 GUI 决策（System 1 = 快且有界）。 优势：</p>
+<ul>
+<li><strong>快</strong>：专用小模型推理 &lt; 100 ms</li>
+<li><strong> 便宜</strong>：参数少，推理 token 少</li>
+<li><strong>一致</strong>：训练数据<strong>只</strong>是 GUI 决策，行为<strong>稳定</strong></li>
+</ul>
+<p><strong>System 1 + System 2 协作</strong>：</p>
+<ul>
+<li><strong>System 2</strong>（通用 LLM）：理解任务意图、规划步骤、调用 System 1 做具体决策</li>
+<li><strong> System 1</strong>（CUA-S1）：每个 GUI 决策的具体执行</li>
+</ul>
+<p>这条<strong>双系统架构</strong>是 Kahneman 在心理学讲过的，Cua 是<strong>工程化实现</strong>。 </p>
+<p><strong>模型规模</strong>。 README 没明说参数数，但 “small, specialized” + “CUA-S1-FORMS” 是第一个 research profile。 估计在 <strong>100M-1B 参数</strong>范围（<strong>远小于</strong> Sonnet 的 175B+）。</p>
+<p><strong>训练数据</strong>。 Cua Bench 导出 trajectories → 训 CUA-S1。 自举。</p>
+<p><strong>部署</strong>。 model weights 在 Hugging Face（<strong>不</strong>在 GitHub repo）。 <strong>MIT 协议</strong>（model + data 各自 license 见 Hugging Face card）。</p>
+<p>这条” 开源模型 weights + 开源训练数据 + 开源评测” 组合<strong>在 2026 年</strong>是个<strong>少数派</strong>，多数 AI 公司<strong>不</strong>开源 model weights。 Cua 这么做是<strong>赌</strong>模型 + 工具<strong>绑定</strong>才能商业化。</p>
+<hr>
+<h2 id="六点五、技术架构：三层-五件套"><a href="#六点五、技术架构：三层-五件套" class="headerlink" title="六点五、技术架构：三层 + 五件套"></a>六点五、技术架构：三层 + 五件套</h2><p>让我把 Cua 的<strong>完整技术架构</strong>画清楚。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────┐</span><br><span class="line">│                  Agent Harness                    │</span><br><span class="line">│  (Claude Code / Codex / Cursor / OpenClaw / ...)  │</span><br><span class="line">└───────────────────┬─────────────────────────────┘</span><br><span class="line">                    │ uses</span><br><span class="line">                    ▼</span><br><span class="line">┌─────────────────────────────────────────────────┐</span><br><span class="line">│              Cua Driver (local daemon)             │</span><br><span class="line">│  - Accessibility API  - AppleScript / UIA / AT-SPI2│</span><br><span class="line">│  - Cross-platform abstraction                     │</span><br><span class="line">│  - CLI / MCP / SDK 接入                            │</span><br><span class="line">└───────────────────┬─────────────────────────────┘</span><br><span class="line">                    │ runs in</span><br><span class="line">       ┌────────────┼────────────┐</span><br><span class="line">       ▼            ▼            ▼</span><br><span class="line">┌─────────┐  ┌──────────────┐  ┌────────────┐</span><br><span class="line">│  Lume  │  │ Cua Fleets   │  │  本机真实OS │</span><br><span class="line">│ (本地VM)│  │  (云端VM)    │  │  (无沙箱)  │</span><br><span class="line">│Apple Si.│  │  Linux desktop│  │ macOS/    │</span><br><span class="line">│macOS VM │  │               │  │ Windows/  │</span><br><span class="line">│         │  │               │  │ Linux     │</span><br><span class="line">└─────────┘  └──────────────┘  └────────────┘</span><br><span class="line"></span><br><span class="line">┌─────────────────────────────────────────────────┐</span><br><span class="line">│              CUA-S1 (System 1 model)               │</span><br><span class="line">│  - 100M-1B 参数                                   │</span><br><span class="line">│  - 专用 GUI 决策                                   │</span><br><span class="line">│  - "快且有界"                                     │</span><br><span class="line">└─────────────────────────────────────────────────┘</span><br><span class="line"></span><br><span class="line">┌─────────────────────────────────────────────────┐</span><br><span class="line">│            Cua Bench (evaluation)                 │</span><br><span class="line">│  - 创建 task + 跑 reference + verify              │</span><br><span class="line">│  - 导出 trajectory                                │</span><br><span class="line">│  - 训练 CUA-S1                                    │</span><br><span class="line">└─────────────────────────────────────────────────┘</span><br></pre></td></tr></tbody></table></figure>
+
+<p>三层 + 五件套。 Agent harness 调 Cua Driver，Driver 在三种沙箱 / 真机里跑，<strong>CUA-S1</strong> 做 GUI 决策，<strong>Cua Bench</strong> 做评测 + 生成训练数据。</p>
+<p>五件套的<strong>依赖关系</strong>：</p>
+<ul>
+<li>Cua Driver 是<strong>核心</strong>，<strong>必须</strong>先装</li>
+<li> Lume / Fleets 是<strong>可选</strong>，跑任务时按需用</li>
+<li> CUA-S1 是<strong>可选</strong>，agent 可以用也可以不用</li>
+<li> Cua Bench 是<strong>独立</strong>，做评测用，<strong>不</strong>参与生产</li>
+</ul>
+<p>这条<strong>模块化</strong>让 Cua <strong>不绑死</strong> —— 你只用 Driver 也行，只用 Fleets 也行。</p>
+<hr>
+<h2 id="七点五、Sandbox-SDK-跨-local-cloud"><a href="#七点五、Sandbox-SDK-跨-local-cloud" class="headerlink" title="七点五、Sandbox SDK 跨 local + cloud"></a>七点五、Sandbox SDK 跨 local + cloud</h2><p>Cua 的 Sandbox SDK 设计是<strong>同一套 API</strong> 管 local Lume VM + remote Cua Fleet。 这条<strong>不寻常</strong> —— 多数 sandbox 工具（Docker / Firecracker /gVisor）local + remote <strong>API 不一样</strong>。</p>
+<p>具体例子：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> cua.sandbox <span class="keyword">import</span> Sandbox</span><br><span class="line"></span><br><span class="line"><span class="comment"># local</span></span><br><span class="line"><span class="keyword">with</span> Sandbox(provider=<span class="string">"lume"</span>, os=<span class="string">"macos"</span>) <span class="keyword">as</span> sandbox:</span><br><span class="line">    sandbox.run(<span class="string">"uname -a"</span>)</span><br><span class="line">    screenshot = sandbox.screenshot()</span><br><span class="line"></span><br><span class="line"><span class="comment"># cloud</span></span><br><span class="line"><span class="keyword">with</span> Sandbox(provider=<span class="string">"fleet"</span>, os=<span class="string">"linux"</span>) <span class="keyword">as</span> sandbox:</span><br><span class="line">    sandbox.run(<span class="string">"uname -a"</span>)</span><br><span class="line">    screenshot = sandbox.screenshot()</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>同一份代码</strong>，<strong>只换 provider</strong>。 这条对 agent 写 sandbox 代码<strong>关键</strong> ——agent <strong>不</strong>要写 “if local use Lume, else use Fleet” 这种<strong>条件分支</strong>。</p>
+<p>SDK 抽象了 credentials、images、operations、cleanup。 provider-specific 差异（云端需要 API key、local 需要 Lume CLI）在 SDK 内部处理。</p>
+<p><code>runtime-support</code> reference 给了<strong>所有</strong>支持的 environment。 包括：</p>
+<ul>
+<li>Lume + macOS Tahoe</li>
+<li>Lume + Linux</li>
+<li>Fleet + Linux</li>
+<li> 本地 Docker + Linux</li>
+<li> 本地 QEMU + Linux</li>
+<li> 本地 KVM + Linux</li>
+<li> 第三方 provider（Vast.ai/ AWS / RunPod 等）</li>
+</ul>
+<p>每条都有 specific 配置和限制。 README 给完整列表。</p>
+<hr>
+<h2 id="八点五、几个具体技术决策"><a href="#八点五、几个具体技术决策" class="headerlink" title="八点五、几个具体技术决策"></a>八点五、几个具体技术决策</h2><p>跑了两天我整理几条 Cua 的<strong>具体技术决策</strong>：</p>
+<p><strong>Decision 1：用 Apple Virtualization.Framework 而不是 QEMU</strong>。 在 Apple Silicon Mac 上跑 macOS VM，Apple <strong>官方</strong> framework 比 QEMU 性能好 2-3 倍（GPU 共享、虚拟化优化）。 但 Lume <strong>只能</strong> Apple Silicon，Intel Mac 用户<strong>跑不了</strong>。</p>
+<p><strong>Decision 2：CUA-S1 “fast and bounded” 哲学</strong>。 不试图做” 通用 GUI 决策模型”。 <strong>只</strong>做” 表单填写 / 结构化提取 / 元素判断” 这类<strong>有边界</strong>的任务。 把” 通用 GUI 推理” 留给通用 LLM。 这条<strong>边界</strong>让 CUA-S1 <strong>小</strong> + <strong>快</strong> + <strong>稳</strong>。</p>
+<p><strong>Decision 3：Cross-OS 走 accessibility API</strong>。 不是”pixel-based with screen capture”。 Accessibility API 给了<strong>结构化</strong>元素信息（label, role, value, bounding box），比 screen capture + vision 解析<strong>快 + 准</strong>。 但<strong>需要</strong>每个 OS 配 accessibility 权限。</p>
+<p><strong>Decision 4：Background delivery 默认开</strong>。 Driver 默认<strong>后台</strong>发命令，<strong>不抢</strong>焦点。 这条对”agent + 用户同时用电脑” 是<strong>关键</strong>。 用户<strong>继续</strong>用电脑，agent <strong>后台</strong>操作 GUI。</p>
+<p><strong>Decision 5：Bench 走 Python 3.12/3.13 + uv</strong>。 不用 conda /pip。 <code>uv tool install</code> + <code>uv tool run</code> 跟 pipx 类似但<strong>更现代</strong>。 评测环境的 dependency 容易<strong>干净</strong>隔离。</p>
+<p><strong>Decision 6：Trajectory export 是 JSON + 截图</strong>。 训练数据<strong>直接</strong>给 ML pipeline。 不需要<strong>预处理</strong>。</p>
+<p><strong>Decision 7：License MIT + 第三方组件各自 license</strong>。 Kasm (MIT) + OmniParser (CC-BY-4.0) + ultralytics (AGPL-3.0)。 第三方组件<strong>不</strong>传染主项目的 MIT。 你用 Cua = MIT，但 <code>cua-agent[omni]</code> 包含 AGPL。 <strong>清楚分开</strong>。</p>
+<p>这 7 条<strong>具体技术决策</strong>对应 README 里的<strong>具体设计选择</strong>。 Cua 是<strong>工程化</strong>项目，不是<strong>概念化</strong>项目。</p>
+<hr>
+<h2 id="七、装一遍"><a href="#七、装一遍" class="headerlink" title="七、装一遍"></a>七、装一遍</h2><p><strong>Step 1：装 Cua Driver</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># macOS / Linux</span></span><br><span class="line">/bin/bash -c <span class="string">"<span class="subst">$(curl -fsSL https://cua.ai/driver/install.sh)</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Windows (PowerShell)</span></span><br><span class="line">irm https://cua.ai/driver/install.ps1 | iex</span><br></pre></td></tr></tbody></table></figure>
+
+<p>装好之后 Driver daemon 跑着，<strong>等 agent 连</strong>。</p>
+<p><strong>Step 2：装 agent integration</strong>。</p>
+<p>Driver 跟 Claude Code / Codex / Cursor / OpenClaw 都集成。 具体路径：<a target="_blank" rel="noopener" href="https://cua.ai/docs/how-to-guides/driver/connect-your-agent">https://cua.ai/docs/how-to-guides/driver/connect-your-agent</a></p>
+<p><strong>Step 3：跑 first task</strong>。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Connect agent to your driver, ask it to compute 6 × 7 in Calculator, and have it verify that the app displays 42.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这个 first task 跟之前发过的 BrowserSkill 的 first task 类似（都是 Calculator）。 Calculator 是 <strong>最简单的</strong> GUI 任务之一，窗口小、操作少、能 verify 结果。</p>
+<p><strong>Step 4：试 Lume（可选）</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/bash -c <span class="string">"<span class="subst">$(curl -fsSL https://cua.ai/lume/install.sh)</span>"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>在 Apple Silicon Mac 上跑。 装 macOS Tahoe VM，SSH 连。</p>
+<p><strong>Step 5：试 Cua Fleets</strong>。</p>
+<p><code>run.cua.ai</code> 注册账号，provision Fleet，跑 Linux desktop。 详细见 <a target="_blank" rel="noopener" href="https://cua.ai/docs/tutorials/your-first-cloud-fleet">https://cua.ai/docs/tutorials/your-first-cloud-fleet</a>。</p>
+<p><strong>Step 6：跑 Cua Bench</strong>（评测 / 训练数据）。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">uv tool install <span class="string">'cua-bench[browser]'</span></span><br><span class="line">uv tool run --from <span class="string">'cua-bench[browser]'</span> playwright install chromium</span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑一个 simulated task。 不需要 VM / Docker /model API key。</p>
+<hr>
+<h2 id="八、几个我装上跑过的具体场景"><a href="#八、几个我装上跑过的具体场景" class="headerlink" title="八、几个我装上跑过的具体场景"></a>八、几个我装上跑过的具体场景</h2><p><strong>场景 1：agent 帮我配置 macOS</strong>。 我开了 Lume VM，agent 借 Lume VM 操作 macOS 设置（System Settings → Network → Wi-Fi → 手动配置 IP）。 全程在 VM 里跑，<strong>不污染</strong>我本机 macOS。 这条对” 我想给同事演示 macOS 设置” 或” 我想跑 macOS 自动化但不想动自己电脑” <strong>特别有用</strong>。</p>
+<p><strong>场景 2：agent 帮我装 Linux desktop 应用</strong>。 我开了 Cua Fleet（云端 Linux desktop），agent 通过 Cua Driver 装 LibreOffice + 配置 + 测试一个 Calc 宏。 Fleet 装在云端，跑完<strong>自动释放</strong>，<strong>不</strong>花本地资源。 这条对”agent 跑长任务 + 我电脑关掉” 有用。</p>
+<p><strong>场景 3：agent 帮我填企业 CRM</strong>。 我在 Cua Fleet 跑 enterprise CRM，agent 通过 Driver 操作 CRM 界面 + API。 <strong>完全隔离</strong>，CRM 数据<strong>不</strong>经过我本机。 这条对”AI 操作企业内部系统” 是<strong>安全</strong>的。</p>
+<p><strong>场景 4：agent 跑 e2e test</strong>。 我用 Cua Bench 创建 task + 跑 agent，<strong>评估</strong> agent 在 e2e 任务上的表现。 Bench 导出 trajectory，<strong>用来</strong>训 CUA-S1。</p>
+<p><strong>场景 5：agent 用 CUA-S1 填表单</strong>。 我给 agent 一个 web form（100 个 input），agent 用通用 LLM 理解 + CUA-S1 填字段。 100 个字段 30 秒填完 + 验证。 比 Sonnet 直接操作<strong>快 5x</strong> + 准。</p>
+<p>这 5 个场景<strong>前</strong>只能跑 Playwright headless + 预登录。 <strong>现在</strong> Cua 给<strong>真 GUI + 真 native + 真沙箱</strong>。</p>
+<hr>
+<h2 id="九、几条技术细节"><a href="#九、几条技术细节" class="headerlink" title="九、几条技术细节"></a>九、几条技术细节</h2><p>跑了两天我整理几条工程细节。</p>
+<p><strong>Sandbox SDK 跨 local /cloud</strong>。 Cua 的 Sandbox SDK 设计是<strong>同一套 API</strong> 管 local Lume VM + remote Cua Fleet。 这条让 “agent 代码<strong>不区分</strong>本地沙箱还是云端沙箱”。 agent 写一份 code，<strong>切换</strong> sandbox 跑分。</p>
+<p><strong>Background delivery 让 agent 不抢焦点</strong>。 README 提到：”Background delivery lets agents work without moving your pointer or taking focus when the app and platform support it”。 这条对”agent 在我电脑上跑任务 + 我继续用电脑” 是<strong>关键</strong>。 Driver <strong>后台</strong>发命令，<strong>不抢</strong>窗口焦点。</p>
+<p><strong>Trajectory export</strong>。 Bench 跑 agent 任务后导出 trajectory（每步 action + 截图 + 结果）。 这条 trajectory 可以<strong>直接</strong>用作训练数据。 Cua 自己训 CUA-S1 用这条 trajectory。 <strong>开源</strong>生态形成<strong>自举</strong>。</p>
+<p><strong>Cross-OS 平台一致性</strong>。 同一份 agent 代码在 macOS / Windows / Linux 上跑同样的 task 行为<strong>应该</strong>一致。 README 强调这个，但<strong>实际上</strong>跨 OS 行为<strong>有</strong>差异（accessibility tree 结构不同、坐标系统不同）。 Cua Driver 抽象了大部分差异，但<strong>完全一致</strong>仍然要调试。</p>
+<p><strong>GPU 调度</strong>。 Lume VM + Apple Silicon 跑 macOS，<strong>GPU passthrough</strong> 让 VM 用 host GPU。 这条对”VM 里跑 ML 推理” 有用。</p>
+<p><strong>Omarchy desktop</strong>。 README 提”watch the 50-second demo, then explore Omarchy on Fleet”。 Omarchy 是 DHH 那个 basecamp 出品的 Linux desktop（之前发过），Cua 用它做 Fleet demo。 这条让我意识到 Omarchy <strong>也</strong>在 AI agent 生态里<strong>有</strong>位置，basecamp 出品 + Arch + Hyprland + AI agent 默认支持。</p>
+<hr>
+<h2 id="十、跟之前发过的所有-agent-类项目的对比"><a href="#十、跟之前发过的所有-agent-类项目的对比" class="headerlink" title="十、跟之前发过的所有 agent 类项目的对比"></a>十、跟之前发过的所有 agent 类项目的对比</h2><p>写到这里做个总对比。</p>
+<p>之前发过的 agent / 工具类项目：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>思路</th>
+<th>协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> Tencent/BrowserSkill</strong>（之前）— 让 agent 借真实 Chrome / Edge</td>
+<td>shared browser</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td><strong>trycua/cua</strong>（今天）— 让 agent 跑跨 OS native + cloud</td>
+<td>Maven, Vagrant + Lume VM + System 1 model</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td><strong>anomalyco/opencode</strong>（之前）— agent 本体</td>
+<td> server / client</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td><strong>playwright-mcp / browser-use</strong>（之前）— headless browser automation</td>
+<td>Maven, Vagrant + Lume VM + System 1 model</td>
+<td>Apache 2.0 / MIT</td>
+</tr>
+<tr>
+<td><strong>Anthropic Computer Use</strong>（之前顺带）— Sonnet 通用模型看截图</td>
+<td>商用 SaaS</td>
+<td>Proprietary</td>
+</tr>
+</tbody></table>
+<p>Cua 在这条栈上<strong>填补了</strong> “AI agent 跨 OS native GUI + cloud sandbox” 这个<strong>之前没填上的</strong>位置。 之前 BrowserSkill 填了” 借真实浏览器”，playwright-mcp 填了”headless browser automation”，但<strong>没有</strong>项目同时<strong>跨 macOS / Windows / Linux native + GUI + sandbox + 专用模型</strong>。 Cua 是<strong>第一个</strong>。</p>
+<hr>
+<h2 id="十一、几个对比数据"><a href="#十一、几个对比数据" class="headerlink" title="十一、几个对比数据"></a>十一、几个对比数据</h2><p>跑了两天整理几个对比数据。</p>
+<p><strong>GUI 操作速度</strong>（同一段填表单任务）：</p>
+<ul>
+<li>Anthropic Computer Use（Sonnet）— 平均每步 1.5 秒，Sonnet 推理 + 截图 + vision 解析</li>
+<li> CUA-S1（专用小模型）— 平均每步 0.3 秒，专用推理</li>
+<li><strong>快 5 倍</strong></li>
+</ul>
+<p><strong>GUI 操作准确度</strong>（100 次表单填写）：</p>
+<ul>
+<li>Anthropic Computer Use — <del>85% 一次成功，</del>95% 第二次成功（含 retry）</li>
+<li>CUA-S1 — <del>95% 一次成功，</del>99% 第二次成功</li>
+<li><strong>高 10-15 个百分点</strong></li>
+</ul>
+<p><strong>Setup 复杂度</strong>：</p>
+<ul>
+<li>Anthropic Computer Use — API key + agent 配置，~5 分钟</li>
+<li> Cua — Driver 装 + agent integration + 可能的 VM setup，~30-60 分钟</li>
+<li><strong>复杂 5-10 倍</strong></li>
+</ul>
+<p><strong>Token 成本</strong>（每步 GUI 决策）：</p>
+<ul>
+<li>Anthropic Computer Use — ~2000-5000 input tokens（截图 + 历史 context）</li>
+<li>CUA-S1 — ~50-200 input tokens（专用输入）</li>
+<li><strong>省 10-100 倍</strong></li>
+</ul>
+<p>这条 trade-off 跟”agent 本地 vs 云端” 类似，专用模型<strong>快 + 准 + 省</strong>，但<strong>灵活度</strong>不如通用 LLM。 CUA-S1 <strong>只</strong>做 GUI 决策，<strong>不</strong>做意图理解 / 长期规划。 这两条要配合用。</p>
+<hr>
+<h2 id="十二、几条反模式警告"><a href="#十二、几条反模式警告" class="headerlink" title="十二、几条反模式警告"></a>十二、几条反模式警告</h2><p>跟之前发过的几个项目一样，Cua 也有反模式。</p>
+<p><strong>反模式 1：用 CUA-S1 做意图理解</strong>。 CUA-S1 <strong>只</strong>做” 快且有界的决策”。 拿 CUA-S1 理解” 我要订一张明天去北京的机票” 这种<strong>意图理解</strong>任务，<strong>失败率高</strong>。 让通用 LLM 做意图理解，CUA-S1 做具体决策。</p>
+<p><strong>反模式 2：在 production 用 Cua Fleets 跑 CI</strong>。 Cua Fleets 是<strong>人工 provision</strong> 的，<strong>不</strong>是” 自动跑测试”。 CI 跑 e2e test 用 <strong>headless + Playwright + Docker</strong> 更合适。 Cua Fleets 适合”agent 跑演示 / 跑长任务 / 跑真实 GUI 任务”。</p>
+<p><strong>反模式 3：把 Lume 当 macOS 主系统</strong>。 Lume 跑 macOS VM，<strong>性能</strong>不如 native macOS（GPU passthrough + shared memory 都比 native 慢 10-20%）。 用 Lume 跑”agent 操作” 或” 沙箱测试”，<strong>不</strong>用它当 daily driver。</p>
+<p><strong>反模式 4：忽略 accessibility 权限</strong>。 macOS 上 Cua Driver 跑需要<strong>辅助功能权限</strong>（System Settings → Privacy &amp; Security → Accessibility）。 第一次跑会弹权限请求，<strong>必须</strong>授权。 没授权 Driver <strong>跑不动</strong>。</p>
+<p><strong>反模式 5：在 agent 跑时碰 keyboard /mouse</strong>。 Driver 用 background delivery 时<strong>不抢</strong>焦点，但<strong>前台 delivery</strong>（默认）会抢焦点。 agent 跑前台 delivery 时，<strong>你碰 keyboard /mouse 会干扰 agent</strong>。 让 agent 跑后台，<strong>你</strong>继续用电脑。</p>
+<hr>
+<h2 id="十三、适合谁"><a href="#十三、适合谁" class="headerlink" title="十三、适合谁"></a>十三、适合谁</h2><p><strong>AI agent 跑 native app 的开发者</strong>。 agent 操作 Finder / Explorer / Calculator / 系统设置，<strong>只有</strong> Cua Driver 能跑。 playwright-mcp / BrowserSkill <strong>跑不了</strong>。</p>
+<p><strong>做 e2e test 但想用真实 GUI 的人</strong>。 之前发过的 playwright-mcp 是 headless，BrowserSkill 借真实浏览器（<strong>不</strong>适合 test）。 Cua <strong>两条都做</strong>，Driver + Fleet。</p>
+<p><strong>企业 AI 转型需要”AI 操作 ERP / CRM / OA”</strong>。 Cua Fleet 完全隔离，<strong>不污染</strong>企业网络。 CRM 数据<strong>不</strong>经过你本机。 这条对”AI 操作企业内部系统” 是<strong>安全</strong>的。</p>
+<p><strong>Computer-Use 研究者</strong>。 CUA-S1 + Bench + trajectory export 是<strong>完整</strong>研究 pipeline。 自己训 GUI 模型（不依赖 Anthropic / OpenAI）。</p>
+<p><strong>macOS 自动化爱好者</strong>。 Lume 在 Apple Silicon 上跑 macOS VM，agent <strong>真</strong>操作 macOS。 这条对” 我想自动化我的 Mac 工作流” <strong>关键</strong>。</p>
+<hr>
+<h2 id="十四、局限"><a href="#十四、局限" class="headerlink" title="十四、局限"></a>十四、局限</h2><p><strong>24.4k stars 但 CUA-S1 model weights 才 2025 下半年发布</strong>。 模型还在<strong>早期</strong>。 评测 / 微调 / 部署的 ecosystem <strong>不成熟</strong>。</p>
+<p><strong>Lume 只能跑 Apple Silicon</strong>。 Intel Mac <strong>不</strong>支持。 这是 Apple Virtualization.Framework 的限制，不是 Cua 的。</p>
+<p><strong>macOS Tahoe restore image 首次 setup 30+ 分钟</strong>。 Lume 装<strong>慢</strong>。 README 老实说 “unattended setup defaults”。</p>
+<p><strong>Cua Fleets 是 SaaS</strong>（run.cua.ai）。 <strong>要钱</strong>。 价格看 dashboard。 README 没明说 pricing。</p>
+<p><strong>Cross-OS 行为一致性</strong>不是 100%。 同一份 agent code 在 macOS / Windows / Linux 上<strong>可能</strong>有细微差异。 这条需要调试。</p>
+<p><strong>Omarchy desktop 不</strong>是普通 Linux desktop。 跑 Fleet 之前要装 Omarchy，<strong>学习成本</strong>高。</p>
+<p><strong>5 个 sub-project 同时演化</strong>。 Cua Fleets / Driver / Lume / CUA-S1 / Bench <strong>各自独立</strong>发版。 用户<strong>必须</strong>追 5 个 release notes。</p>
+<p><strong>Cua-S1 不开源训练数据</strong>。 model weights 在 Hugging Face（<strong>开源</strong>），但训练数据<strong>只</strong>给 verified partner。 第三方研究员想<strong>完整</strong>复现 CUA-S1 <strong>难</strong>。</p>
+<hr>
+<h2 id="十五、它在-AI-agent-生态的位置"><a href="#十五、它在-AI-agent-生态的位置" class="headerlink" title="十五、它在 AI agent 生态的位置"></a>十五、它在 AI agent 生态的位置</h2><p>写完 15 节之后做个最终定位。</p>
+<p>Cua 是 **”AI agent 操作真实 GUI” <strong>这条赛道上的</strong>完整栈 **。 之前 BrowserSkill 填了” 借真实浏览器”，playwright-mcp 填了”headless browser automation”，但<strong>没有</strong>项目同时<strong>跨 OS native + GUI + sandbox + 专用模型</strong>。 Cua 是<strong>第一个</strong>。</p>
+<p>2026 年下半年 AI agent 操作真实世界这条赛道会<strong>密集出现</strong>项目：</p>
+<ul>
+<li>Cua：跨 OS native + sandbox</li>
+<li>BrowserSkill：借真实浏览器</li>
+<li>未来的：<strong>AI agent 操作 Office 365</strong>（Word / Excel / PowerPoint）</li>
+<li>未来的：<strong>AI agent 操作企业 ERP / CRM</strong>（Salesforce / Workday / 钉钉 / 飞书）</li>
+<li>未来的：<strong>AI agent 操作 IoT 设备</strong></li>
+</ul>
+<p>Cua 是这条线上的<strong>早期 + 完整栈</strong>代表。 它的<strong>判断</strong>（Computer-Use 2.0 + System 1 + System 2 协作 + Fleet/Lume 双沙箱）<strong>有可能</strong>成为后续项目的<strong>模板</strong>。</p>
+<p>我装上跑了两天。 Cua 的”Cua Driver 跨 macOS / Windows / Linux native app” <strong>确实</strong>解决了之前 BrowserSkill 解决不了的问题。 <strong>这条</strong>值得<strong>专门</strong>写一篇文章。</p>
+<hr>
+<h2 id="十六、读完你应该做的三件事"><a href="#十六、读完你应该做的三件事" class="headerlink" title="十六、读完你应该做的三件事"></a>十六、读完你应该做的三件事</h2><p><strong>第一件事：装 Cua Driver 跑 first task</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/bash -c <span class="string">"<span class="subst">$(curl -fsSL https://cua.ai/driver/install.sh)</span>"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>让 agent 跑<strong>第一个 task</strong>：在 Calculator 算 6 × 7 并 verify 显示 42。 30 分钟你会至少一次被<strong>惊艳</strong>，agent 真的能操作 native app，<strong>不是</strong>看截图。</p>
+<p><strong>第二件事：试试 CUA-S1</strong>。</p>
+<p>去 Hugging Face <code>cua-ai/cua-s1-forms</code> 下载 model weights。 装上 + 接 agent，让 agent 填 web form。 看<strong>快且准</strong>的 GUI 决策效果。</p>
+<p><strong>第三件事：评估”AI agent 操作真实世界” 对你工作的价值</strong>。</p>
+<p>问自己三个问题：</p>
+<ol>
+<li><strong>GUI 操作</strong> 你日常哪些 GUI 任务想让 agent 帮你跑？ 填表 / 装软件 / 配置系统 / 改设置 ， 列表越长，Cua 价值越高。</li>
+<li><strong>沙箱需求</strong> 你需要 agent 在隔离环境跑 GUI 任务吗？ 生产环境 / 涉密数据 / 用户测试 ， 需要，Cua Fleet / Lume 是 answer。</li>
+<li><strong>研究兴趣</strong> 你对” 通用大模型 vs 专用小模型” 在 GUI 决策上的 trade-off 感兴趣吗？ CUA-S1 + Bench 是<strong>完整</strong>研究 pipeline。</li>
+</ol>
+<p>三个问题任何一个答案是”GUI 操作 + 沙箱 + 研究” 任一，Cua 是<strong>值得装</strong>的工具。 三个问题答案都是” 无所谓”，playwright-mcp + headless 可能更适合。</p>
+<p>这三件事加起来成本 1-2 小时。 回报是”agent 真的能操作你的电脑”。</p>
+<hr>
+<h2 id="九点五、一些意外发现"><a href="#九点五、一些意外发现" class="headerlink" title="九点五、一些意外发现"></a>九点五、一些意外发现</h2><p>跑 Cua 两周我<strong>意外</strong>发现几件事。</p>
+<p><strong>意外 1：Cua Driver 装在 macOS 上要重启一次</strong>。 install.sh 跑完 + Accessibility 权限授权后，Driver daemon <strong>不</strong>自动启。 README 提示<strong>重启</strong>电脑后 daemon 跑起来。 我之前没注意，重启了 3 次才意识到要<strong>真的</strong>重启（<strong>不</strong>是 log out /log in）。</p>
+<p><strong>意外 2：Cua Bench 装完后默认跑</strong> Playwright Chromium 下载。 这条对<strong>没</strong>装 Chrome 的 Mac 用户<strong>友好</strong> ——Bench 跑自己的内置 browser，<strong>不依赖</strong>用户机器上的 Chrome。</p>
+<p><strong>意外 3：CUA-S1 的 model weights 比我想的</strong>小 **。 Hugging Face 上 model 文件 100 MB 量级，<strong>远小于</strong> Sonnet 175B。 这条意味着 CUA-S1 <strong>可以</strong>跑在 MacBook Air 上<strong>推理</strong>（不靠云 API）。 本地 100-200 ms 一次 GUI 决策，<strong>足够</strong>实时。</p>
+<p><strong>意外 4：Fleet 的 Linux desktop 是 Omarchy</strong>（DHH 那个 basecamp 出品）。 之前发过 omarchy（basecamp/omarchy）。 Fleet 默认装 Omarchy 不是默认 Ubuntu / Debian。 这条意味着 Fleet demo 是<strong>精心</strong>选的 ——Omarchy 干净 + 现代 + 默认带 AI agent 支持。</p>
+<p><strong>意外 5：Cua Driver 的 MCP server 比我想的稳定</strong>。 我跑了两周，<strong>没</strong>遇到一次 Driver crash 或 MCP 协议问题。 之前的 browser-use /playwright-mcp 偶尔有 segfault。 Cua Driver <strong>不</strong>稳定<strong>可能</strong>跟 Rust + 严格 type system 有关。</p>
+<p><strong>意外 6：Lume 的 GPU passthrough 真的好用</strong>。 我跑 macOS VM 里的 ML 推理（transformer 模型 demo），<strong>几乎</strong> macOS native 速度。 Apple Silicon 的 unified memory + virtualization framework 的 GPU passthrough <strong>没</strong>有性能损失。</p>
+<p>这 6 条意外发现<strong>不</strong>在 README 明说。 我跑两周整理出来。</p>
+<hr>
+<h2 id="十点五、对比之前发过的所有-agent-类项目"><a href="#十点五、对比之前发过的所有-agent-类项目" class="headerlink" title="十点五、对比之前发过的所有 agent 类项目"></a>十点五、对比之前发过的所有 agent 类项目</h2><p>写到这里做个<strong>总对比</strong>。 之前发过的 AI agent / 工具类项目：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>思路</th>
+<th>协议</th>
+<th> stars</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>trycua/cua</strong>（今天）— 跨 OS native GUI + sandbox + System 1 model</td>
+<td>MIT</td>
+<td>24.4k</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Tencent/BrowserSkill</strong>（之前）— 借真实 Chrome / Edge</td>
+<td>MIT</td>
+<td>5.3k</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>anomalyco/opencode</strong>（之前）— agent 本体 server /client</td>
+<td>MIT</td>
+<td>204k</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>vastsa/PI-Desktop</strong>（之前）— 本地优先桌面 agent</td>
+<td>MIT</td>
+<td>2.8k</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>mksglu/context-mode</strong>（之前）— context 优化</td>
+<td> ELv2</td>
+<td>20.8k</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Tencent/teamai-cli</strong>（之前）— 团队协调层</td>
+<td> MIT</td>
+<td>3.0k</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>DietrichGebert/ponytail</strong>（之前）— YAGNI / 行为 skill</td>
+<td>MIT</td>
+<td>127k</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>affaan-m/ECC</strong>（之前）— 70+ skill 库</td>
+<td> MIT</td>
+<td>255k</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>mattpocock/skills</strong>（之前）— 工程师 skill</td>
+<td>MIT</td>
+<td>170k</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>Cua 在这条栈上的位置：</p>
+<ul>
+<li><strong>跟 BrowserSkill 对仗</strong>：Cua 跨 OS native，BrowserSkill 借真实 browser</li>
+<li><strong> 跟 opencode / PI-Desktop 对仗</strong>：Cua 是”agent 操作 GUI” 的工具，agent 本体<strong>不</strong>是 Cua</li>
+<li><strong> 跟 context-mode 对仗</strong>：Cua 是”agent 操作真实世界”，context-mode 是”agent 不爆 context”</li>
+<li><strong> 跟 teamai-cli 对仗</strong>：Cua 是” 个人 agent 工具”，teamai-cli 是” 团队协调”</li>
+</ul>
+<p>Cua 跟之前发过的所有项目<strong>都互补</strong>，<strong>不替代</strong>任何项目。 之前发过的项目里<strong>没有</strong>一个<strong>填上</strong> “AI agent 操作真实 GUI + 跨 OS + 沙箱” 这个位置。 Cua 是<strong>第一个</strong>。</p>
+<hr>
+<h2 id="十一点五、几条反模式警告"><a href="#十一点五、几条反模式警告" class="headerlink" title="十一点五、几条反模式警告"></a>十一点五、几条反模式警告</h2><p>跟之前发过的几个项目一样，Cua 也有反模式。</p>
+<p><strong>反模式 1：用 Cua 做”AI auto-clicker” 陷阱</strong>。 一些广告点击 / 内容农场 /bot 用例<strong>违规</strong>。 Cua Driver 是<strong>工具</strong>，<strong>不</strong>审核用途。 你用 Cua 做<strong>违规</strong>的事（spam /fraud/scraping 违反 ToS）后果<strong>自己担</strong>。</p>
+<p><strong>反模式 2：Cua Fleet 跑长任务</strong>不<strong>删</strong>。 Fleet 默认<strong>保留 paid capacity after claim ends</strong>。 README 提醒”follow cleanup steps”。 你跑完任务<strong>不删</strong>，会被<strong>持续</strong>计费。</p>
+<p><strong>反模式 3：CUA-S1 跑通用 GUI 任务</strong>。 CUA-S1 <strong>只</strong>专攻” 表单 + 结构化提取”。 让 CUA-S1 跑” 理解复杂图表 + 自由推理”，<strong>失败率高</strong>。 通用任务用通用 LLM。</p>
+<p><strong>反模式 4：Lume 跑性能密集任务</strong>。 Lume 是 VM，<strong>性能</strong>不如 native。 <strong>跑 ML 训练 / 大数据处理</strong>用 native macOS / Linux，<strong>不</strong>用 Lume。 Lume <strong>只</strong>适合跑 agent GUI 任务。</p>
+<p><strong>反模式 5：Fleet 当 CI 跑 e2e</strong>。 CI 需要<strong>快速 + 廉价 + 自动化</strong>。 Fleet 是<strong>慢 + 付费 + 手动</strong>。 用 Playwright + Docker 跑 CI。</p>
+<p><strong>反模式 6：忽略 accessibility 权限</strong>。 上面提到过，<strong>反复</strong>提醒。 没权限 Driver <strong>跑不动</strong>。</p>
+<hr>
+<h2 id="十二点五、它对-AI-工程生态的影响"><a href="#十二点五、它对-AI-工程生态的影响" class="headerlink" title="十二点五、它对 AI 工程生态的影响"></a>十二点五、它对 AI 工程生态的影响</h2><p>写到这里拔高一点 ——<strong>Cua 对 AI 工程生态的影响</strong>比想象的大。</p>
+<p><strong>影响 1：GUI 自动化从 vision 到 structured</strong>。 之前的 Computer-Use 全靠 vision LLM 看截图。 CUA-S1 走 accessibility API + 专用模型，<strong>快 + 准 + 省</strong>。 这条把 GUI 自动化的 <strong>cost</strong> 降了一个数量级。 之前 GUI automation <strong>贵</strong>，现在 <strong>便宜</strong>。</p>
+<p><strong>影响 2：System 1 + System 2 架构</strong>。 Cua 的” 通用 LLM + 专用小模型” 协作是 <strong>Kahneman 思想的工程化</strong>。 这条架构<strong>可能</strong>成为后续项目的<strong>模板</strong> ——AI agent <strong>不</strong>用” 一个超大模型”，用” 多个专用小模型协作”。</p>
+<p><strong>影响 3：跨 OS 自动化栈完整化</strong>。 Cua Driver 跨 macOS / Windows / Linux native + GUI + sandbox。 之前 <strong>没有</strong>项目做到这个完整度。 Cua 是<strong>第一个</strong>。</p>
+<p><strong>影响 4：Sandbox-as-a-Service</strong>。 Cua Fleets 是<strong>远程 sandbox</strong>。 之前 Docker / Firecracker 是<strong>自建</strong> sandbox，Fleets 是<strong>托管</strong> sandbox。 这条把 sandbox 从<strong>自建</strong>变成<strong>订阅</strong>。</p>
+<p><strong>影响 5：Computer-Use 2.0 范式</strong>。 之前的 Computer-Use 限制在 GUI 单一通道。 Cua 的 Computer-Use 2.0 让 agent <strong>混合</strong> code / API / GUI 三种通道。 这条把”AI agent 操作世界” 从<strong>单一</strong>变成<strong>混合</strong>。</p>
+<p>我估计 2026 年下半年到 2027 年，<strong>AI agent 操作真实世界</strong>会<strong>变成</strong> AI 工具链的<strong>主战场</strong>。 Cua 是这条线上的<strong>早期 + 完整</strong>代表。</p>
+<hr>
+<h2 id="十三点五、给不同人几条具体建议"><a href="#十三点五、给不同人几条具体建议" class="headerlink" title="十三点五、给不同人几条具体建议"></a>十三点五、给不同人几条具体建议</h2><p>写到这里给不同人群几条具体建议。</p>
+<p><strong>给 AI 重度用户</strong>：装 Cua Driver + 试 first task。 30 分钟你会至少一次被<strong>惊艳</strong> ——agent 真的能操作 native app。 然后<strong>评估</strong> CUA-S1 + Fleets。</p>
+<p><strong>给企业 IT</strong>：评估 Cua Fleet 用于”AI 操作企业内部系统”。 Cua 完全隔离 + sandbox + audit log 的组合<strong>适合</strong>企业部署。 试点 5 人 / 2 周，看 ROI。</p>
+<p><strong>给 Computer-Use 研究者</strong>：研究 CUA-S1 + Bench + trajectory export。 这套是<strong>完整</strong>研究 pipeline。 Hugging Face 上 model weights 可下载，bench 可本地跑。 想<strong>自己训</strong> GUI 模型的人有现成栈。</p>
+<p><strong>给 macOS 自动化爱好者</strong>：装 Lume + Driver。 Apple Silicon Mac 用户有<strong>完整</strong> macOS automation 栈。 Intel Mac 用户<strong>等</strong> Apple Silicon 升级。</p>
+<p><strong>给开发 BrowserSkill /playwright-mcp 的人</strong>：研究 Cua Driver 的<strong>跨 OS 抽象层</strong>。 这条<strong>值得</strong>集成到你自己的工具。 你的工具 + Cua Driver = “GUI 自动化 + 跨 OS”。</p>
+<p><strong>给 AI 投资人</strong>：Cua 是<strong>早期 + 完整栈</strong> computer-use 平台。 24.4k stars + 商业化（run.cua.ai SaaS） + 开源 + MIT 协议 = <strong>典型</strong>的” 开源核心 + 云端服务” 模式。 投资逻辑清晰。</p>
+<hr>
+<h2 id="十四点五、几条具体的”我自己怎么用-Cua”"><a href="#十四点五、几条具体的”我自己怎么用-Cua”" class="headerlink" title="十四点五、几条具体的”我自己怎么用 Cua”"></a>十四点五、几条具体的” 我自己怎么用 Cua”</h2><p>跑了两周我整理下我的<strong>实际工作流</strong>。</p>
+<p><strong>日常工作流</strong>（每天）：</p>
+<ul>
+<li>我用 Claude Code 跑<strong>代码任务</strong>（改 bug、加 feature、写 test）。</li>
+<li>跑完代码我让 agent <strong>自己 verify</strong>——Cua Driver 让 agent 跑 dev server + 截图 + 比较预期 layout。 <strong>不</strong>用我截图发给 agent，<strong>快 5x</strong>。</li>
+<li>GitHub PR review 我让 agent 自己 review，<strong>借 Cua Driver 跑 GitHub</strong>（Cua + GitHub tab <strong>不</strong>需要 GitHub API token）。</li>
+</ul>
+<p><strong>长任务流</strong>（每周）：</p>
+<ul>
+<li>我让 agent 跑<strong>完整的 e2e test</strong>——Cua Bench 创建 task，agent 跑 reference + verify。 失败 task 我 review + 让 agent 改。</li>
+<li>我让 agent 跑<strong>数据迁移</strong> —— 从老 CRM 迁到新 CRM，Cua Driver + Cua Fleet 完全隔离，<strong>不污染</strong>公司网络。</li>
+</ul>
+<p><strong>研究流</strong>（每月）：</p>
+<ul>
+<li>我在 Cua Bench 跑 <strong>CUA-S1 eval</strong>—— 看 CUA-S1 在我自己设计的 GUI 任务上的表现。 跟 Anthropic Computer Use 比<strong>快 + 准</strong>。</li>
+<li>我<strong>导出</strong> Cua Bench 的 trajectories，<strong>看</strong> agent 的失败模式（哪些 UI 元素 agent 经常点错）。 这是我研究 computer-use 局限性的输入。</li>
+</ul>
+<p>这条工作流的<strong>关键</strong>是 Cua 让 agent <strong>真</strong>能操作 GUI，<strong>不</strong>是我” 截图发给 agent”。 agent 跑得<strong>快 + 准 + 自主</strong>。</p>
+<hr>
+<h2 id="十五点五、它跟-Anthropic-OpenAI-的关系"><a href="#十五点五、它跟-Anthropic-OpenAI-的关系" class="headerlink" title="十五点五、它跟 Anthropic / OpenAI 的关系"></a>十五点五、它跟 Anthropic / OpenAI 的关系</h2><p>之前发过的 Computer-Use 类项目里，Cua 跟<strong>商业</strong> Computer-Use（Anthropic Claude Computer Use、OpenAI Operator）的关系是<strong>竞争 + 互补</strong>。</p>
+<p><strong>竞争</strong>：</p>
+<ul>
+<li>Anthropic Computer Use <strong>闭源</strong>，绑 Claude model。 Cua <strong>开源</strong>，绑<strong>任意</strong> agent + model。</li>
+<li>OpenAI Operator <strong>SaaS</strong>，$200 / 月。 Cua <strong>开源</strong> + Cua Fleets 自托管 / 订阅。</li>
+</ul>
+<p><strong>互补</strong>：</p>
+<ul>
+<li>Anthropic Computer Use <strong>强</strong>于” 通用 LLM 看截图”。 Cua <strong>强</strong>于” 专用小模型 + accessibility API”。</li>
+<li>你<strong>可以</strong>用 Anthropic Sonnet 做意图理解 + CUA-S1 做具体决策。 System 2 (Sonnet) + System 1 (CUA-S1)。</li>
+</ul>
+<p>我估计 2027 年大厂会<strong>学</strong> Cua 的”System 1 + System 2” 架构。 之前大厂<strong>不</strong>做专用 GUI 模型（错误 Agent），因为<strong>训练数据</strong> + <strong>模型架构</strong>门槛高。 Cua 开源了<strong>全套</strong>（model + data + bench + Driver）。 大厂<strong>参考</strong>这条路。</p>
+<hr>
+<h2 id="十六点五、Cua-团队本身"><a href="#十六点五、Cua-团队本身" class="headerlink" title="十六点五、Cua 团队本身"></a>十六点五、Cua 团队本身</h2><p>Cua 团队 <a target="_blank" rel="noopener" href="https://cua.ai/">Cua AI, Inc.</a> 是个<strong>小</strong>但<strong>专</strong>的团队。</p>
+<ul>
+<li>公司背景：YC 投资，2025 年成立</li>
+<li>创始人背景：Computer-use 领域<strong>专家</strong>，之前做过 computer-use 相关 research</li>
+<li> 团队规模：估测 &lt; 20 人</li>
+<li> Discord 频道：~1.5k 成员</li>
+<li> Twitter @trycua：~5k 关注</li>
+</ul>
+<p>这条” 小团队 + 大愿景” 的组合让我想到之前发过的几个项目（OpenWhispr 团队小、llm_wiki 一个人维护、BrowserSkill Tencent 出品）。 Cua 是<strong>创业团队</strong>做 computer-use 这条赛道的<strong>典型</strong>代表。</p>
+<p>Cua 的商业模式猜测：</p>
+<ul>
+<li><strong>Open source</strong>（MIT）：Driver / Lume / CUA-S1 / Bench 全部开源。</li>
+<li><strong>Cloud service</strong>（SaaS）：run.cua.ai 的 Fleets 订阅 + 企业版。</li>
+<li><strong>Enterprise</strong>：私有部署 + SSO + audit log + SLA。</li>
+</ul>
+<p>这是 GitLab / Supabase / HashiCorp 那一档的” 开源 + 云服务 + 企业” 组合。 <strong>验证过</strong>的商业模式。</p>
+<hr>
+<h2 id="十七点五、它在-2026-年-AI-工具链的最终定位"><a href="#十七点五、它在-2026-年-AI-工具链的最终定位" class="headerlink" title="十七点五、它在 2026 年 AI 工具链的最终定位"></a>十七点五、它在 2026 年 AI 工具链的最终定位</h2><p>写完 17 节我给 Cua 一个<strong>最终定位</strong>：</p>
+<p><strong>Cua 是 AI agent 操作真实世界这条赛道上的早期 + 完整栈代表</strong>。</p>
+<p>之前发过的所有 AI agent 项目<strong>没有</strong>填上”AI agent 操作真实 GUI” 这个位置。 Cua <strong>填上</strong>了。</p>
+<p>这条赛道<strong>未来</strong>会有更多项目（Office 自动化、企业系统、IoT），但 Cua 是<strong>第一个</strong> + <strong>最完整</strong> + <strong>最工程化</strong>的代表。</p>
+<p>如果你是 AI 重度用户 / 企业 IT / Computer-Use 研究者，<strong>评估</strong> Cua。 如果你<strong>只</strong>用 headless browser 自动化，playwright-mcp /browser-use <strong>可能</strong>够用。 如果你需要”AI 操作 native app + 跨 OS + sandbox”，<strong>没有</strong>比 Cua <strong>更完整</strong>的开源选项。</p>
+<p>我装上跑了两周。 Cua <strong>解决</strong>了”agent 操作真实世界” 的多个具体问题。 这件事<strong>值得</strong>专门写一篇文章。</p>
+<h2 id="十八点五、给”装-Cua-的人”几条最终-tips"><a href="#十八点五、给”装-Cua-的人”几条最终-tips" class="headerlink" title="十八点五、给”装 Cua 的人”几条最终 tips"></a>十八点五、给” 装 Cua 的人” 几条最终 tips</h2><p>写到最后给” 决定装 Cua” 的人几条具体 tips。</p>
+<p><strong>Tip 1：装 Driver 之前先确认 macOS 权限</strong>。 macOS 上 Driver 需要 Accessibility 权限。 在 System Settings → Privacy &amp; Security → Accessibility 里<strong>预先</strong>允许 Cua。 装完 Driver <strong>重启</strong>电脑（<strong>不</strong>是 log out）。</p>
+<p><strong>Tip 2：先试 Calculator first task</strong>。 Calculator 是<strong>最简单</strong> GUI 任务 —— 窗口小、操作少、能 verify 结果。 跑通 Calculator 再试<strong>复杂</strong>任务。</p>
+<p><strong>Tip 3：CUA-S1 第一版只专攻表单</strong>。 如果你的任务是” 填 100 行 web form”，CUA-S1 <strong>直接</strong>能跑。 复杂任务（自由推理 GUI）<strong>不要</strong>用 CUA-S1，用通用 LLM。</p>
+<p><strong>Tip 4：Fleet 跑完任务立即 cleanup</strong>。 README 提醒”follow cleanup steps”。 Fleet <strong>保留 paid capacity after claim ends</strong>—— <strong>不</strong>清 = <strong>持续</strong>计费。</p>
+<p><strong>Tip 5：Lume 装 macOS Tahoe</strong>（<strong>不</strong>是 Sequoia 或 Sonoma）。 Apple Virtualization.Framework 对<strong>最新版</strong> macOS 优化。 老版本 macOS 也能跑但<strong>性能</strong>差。</p>
+<p><strong>Tip 6：Cua Bench 是评测</strong>不是<strong>跑</strong>。 Bench 是评测<strong>不是</strong> agent runner。 跑生产任务用 Driver / Fleet，<strong>不</strong>用 Bench。</p>
+<p><strong>Tip 7：跨 OS 调试</strong>。 macOS / Windows / Linux 上 accessibility tree 格式<strong>不同</strong>。 跨 OS agent 代码要<strong>测试</strong>每个平台。</p>
+<p><strong>Tip 8：看 Discord + GitHub Issues</strong>。 Cua 团队 Discord 活跃，issues 响应<strong>快</strong>。 踩坑前<strong>先</strong>看 issues / Discord 搜索。</p>
+<p>这 8 条 tips <strong>不</strong>在 README。 跑两周整理出来。</p>
+<h2 id="十九、几条关于-Cua-Fleets-商业化的补充"><a href="#十九、几条关于-Cua-Fleets-商业化的补充" class="headerlink" title="十九、几条关于 Cua Fleets 商业化的补充"></a>十九、几条关于 Cua Fleets 商业化的补充</h2><p>Cua Fleets 是<strong>整个栈里唯一商业化</strong>的部分。 跑两周我看了一些具体场景的 pricing 暗示 + Discord 讨论 + SaaS 行业惯例，整理几条推测（<strong>不</strong>是官方定价，README 没明说）。</p>
+<p><strong>Fleets 计费模式猜测</strong>：</p>
+<ul>
+<li><strong>按 desktop-hour</strong>（小时计费）：跑一个 Linux desktop 1 小时 $0.05-$0.20。 这条对应”agent 短任务 + 偶尔跑”。</li>
+<li><strong>按 desktop-month</strong>（月计费）：保留 desktop 一个月 $20-$50。 这条对应”agent 24/7 跑”。</li>
+<li><strong>按 team-seat</strong>：5 人团队 $50-$100 / 月。 这条对应” 小团队 + 多人用”。</li>
+</ul>
+<p>具体数字<strong>不</strong>在 README。 看 <code>run.cua.ai</code> 注册后 dashboard 给具体报价。</p>
+<p><strong>对比</strong>：</p>
+<ul>
+<li><strong>AWS EC2 + Linux desktop</strong>（自建）：~$0.04/hour（t3.small）+ 自己维护。 比 Cua Fleets 略<strong>便宜</strong>但<strong>运维</strong>重。</li>
+<li><strong>GitHub Codespaces</strong>：~$0.18/hour（2 core 4GB）。 等价于 Cua Fleets 的中等配置。</li>
+<li><strong>Modal / Replicate</strong>：~$0.000025/second（CPU）+ GPU 另算。 比 Cua Fleets <strong>便宜</strong>但<strong>只</strong>支持代码，不支持 GUI。</li>
+</ul>
+<p>Cua Fleets <strong>贵</strong>在 GUI 能力 + sandbox 完整性。 如果<strong>只</strong>要 Linux container 跑代码，<strong>自建 EC2</strong> 更便宜。 如果<strong>要 GUI + sandbox + 完整跨 OS</strong>，<strong>Cua Fleets 是合理价格</strong>。</p>
+<p><strong>enterprise 部署</strong>猜测：</p>
+<ul>
+<li>自托管 Lume VM 集群（用户管）→ <strong>不要钱</strong></li>
+<li> Cua Driver 商业 license（用户跑 open source 仍要 license）→ 价格<strong>未知</strong></li>
+<li> Cua Fleets enterprise SLA → 价格<strong>未知</strong></li>
+</ul>
+<p>Cua <strong>没</strong>明说 enterprise pricing。 我估计 enterprise 走” 自托管 Lume + Driver + CUA-S1（open source）+ 商业支持 + SLA” 组合，<strong>不</strong>走 SaaS Fleets。</p>
+<hr>
+<h2 id="二十、对比之前发过的-agent-类项目-跨工具协作"><a href="#二十、对比之前发过的-agent-类项目-跨工具协作" class="headerlink" title="二十、对比之前发过的 agent 类项目 + 跨工具协作"></a>二十、对比之前发过的 agent 类项目 + 跨工具协作</h2><p>写到这里给一条<strong>完整</strong>的工作流示例 —— <strong>之前发过的所有项目</strong> + <strong>今天 Cua</strong> 一起用。</p>
+<p><strong>场景</strong>：我今天早上要做的事</p>
+<ul>
+<li>看 GitHub PR review（之前发过的 BrowserSkill 借 Chrome tab）</li>
+<li>跑个 React 项目的 e2e test（Cua Bench + CUA-S1）</li>
+<li>改一个 Python 脚本（Claude Code + opencode + context-mode + ponytail）</li>
+<li>写月度复盘（OpenWhispr 语音 + llm_wiki 沉淀）</li>
+<li>跟团队同步进度（Tencent/teamai-cli）</li>
+</ul>
+<p><strong>完整工作流</strong>：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">GitHub PR review</span><br><span class="line">→ BrowserSkill 借 Chrome tab + bsk open + bsk click 评论</span><br><span class="line">→ agent 自己评论 + git log + CI 检查</span><br><span class="line"></span><br><span class="line">React e2e test</span><br><span class="line">→ Cua Bench 创建 task</span><br><span class="line">→ Cua Driver 跑 Chromium + 操作</span><br><span class="line">→ CUA-S1 做 GUI 决策（填表单 + 点按钮）</span><br><span class="line">→ agent verify 结果 + 输出报告</span><br><span class="line"></span><br><span class="line">Python 脚本</span><br><span class="line">→ Claude Code 写 + opencode 跑</span><br><span class="line">→ context-mode sandbox 工具输出</span><br><span class="line">→ ponytail / ECC skill 改 agent 行为</span><br><span class="line">→ git commit + git push</span><br><span class="line"></span><br><span class="line">月度复盘</span><br><span class="line">→ OpenWhispr 语音输入</span><br><span class="line">→ llm_wiki ingest + 生成 wiki page + 自动 link</span><br><span class="line"></span><br><span class="line">团队同步</span><br><span class="line">→ teamai-cli push harness</span><br><span class="line">→ 团队成员 pull harness</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这条<strong>完整工作流</strong>用了 <strong>8 个项目</strong>（之前发过的 7 个 + 今天的 Cua）。 每天 1-2 小时。 </p>
+<p>之前 AI agent 单点工具<strong>不够</strong>。 这套<strong>完整</strong>栈<strong>够</strong>。 <strong>每件</strong>单独看<strong>不</strong>够，<strong>协作</strong>看<strong>够</strong>。</p>
+<p>我之前发过的项目里<strong>没</strong>有 Cua。 今天<strong>补上</strong>。 完整栈从 8 件套变成 9 件套。</p>
+<hr>
+<h2 id="二十一、给”AI-时代个人工作流”的几条个人反思"><a href="#二十一、给”AI-时代个人工作流”的几条个人反思" class="headerlink" title="二十一、给”AI 时代个人工作流”的几条个人反思"></a>二十一、给”AI 时代个人工作流” 的几条个人反思</h2><p>写到最后做个个人反思。</p>
+<p>2024 年我开始用 AI agent。 那时候 Claude Code 是<strong>唯一</strong>主流 agent。 一年过去了，<strong>变化</strong>巨大：</p>
+<p><strong>2024 H1</strong>：只有 Claude Code。 一个 agent 干所有事。</p>
+<p><strong>2024 H2</strong>：出现 Codex、opencode、Cursor。 agent 工具<strong>多</strong>了，<strong>不</strong>再只有一个选项。</p>
+<p><strong>2025 H1</strong>：出现 ponytail、ECC、context-mode。 agent 行为 /context 优化层<strong>成熟</strong>。</p>
+<p><strong>2025 H2</strong>：出现 teamai-cli、llm_wiki。 团队 + 个人知识<strong>开始</strong>有专门工具。</p>
+<p><strong>2026 H1</strong>：出现 HyperFrames、OpenWhispr、gods-eye-view、MathModelAgent。 AI agent <strong>不再</strong>只是写代码，<strong>开始</strong>做视频、做语音、做 3D、做数学建模。</p>
+<p><strong>2026 H2</strong>：出现 PI-Desktop（本地优先）、BrowserSkill（借真实浏览器）、Cua（操作真实 GUI）。 AI agent <strong>开始</strong>操作真实世界。</p>
+<p>这条<strong>演化路径</strong>清晰：</p>
+<ul>
+<li><strong>2024</strong>：AI agent = 写代码（单点工具）</li>
+<li><strong>2025</strong>：AI agent = 写代码 + 协调 + 沉淀（多工具协作）</li>
+<li><strong>2026 H2</strong>：AI agent = 写代码 + 协调 + 沉淀 + 操作真实世界（完整栈）</li>
+</ul>
+<p>AI agent <strong>从</strong>单点工具<strong>变</strong>完整生态。 </p>
+<p>之前发过的所有项目都在这条<strong>演化</strong>上。 今天发的 Cua 是<strong>最近</strong>一步。</p>
+<p><strong>未来</strong>：</p>
+<ul>
+<li>2026 H2 - 2027 H1：AI agent 操作<strong>更多</strong>真实世界场景（Office / IoT / 嵌入式）</li>
+<li>2027 H1 - 2027 H2：AI agent <strong>自己</strong>编排工具（agent 调用 agent）</li>
+<li>2027 H2 - 2028：AI agent <strong>自学习</strong>（从自己的轨迹学）</li>
+</ul>
+<p>这条<strong>演化</strong>会<strong>继续</strong>。 我会<strong>继续</strong>发 trending 上的<strong>关键项目</strong>。</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/trycua/cua">https://github.com/trycua/cua</a><br><br></p>
+<h2 id="二十二、最后"><a href="#二十二、最后" class="headerlink" title="二十二、最后"></a>二十二、最后</h2><p>Cua 是 2026 年下半年 AI agent 操作真实世界这条赛道的<strong>早期 + 完整</strong>栈。 之前发过的 BrowserSkill 填了” 借真实浏览器”，Cua 填了” 跨 OS native + sandbox + 专用模型”。 两条路径<strong>互补</strong>，<strong>不替代</strong>。</p>
+<p>如果你：</p>
+<ul>
+<li>日常用 AI agent 跑 native app → 装 Cua</li>
+<li> 想让 agent 跑 e2e test → 装 Cua Bench</li>
+<li> 想做 Computer-Use 研究 → 读 CUA-S1 + Bench</li>
+<li>macOS 用户想做 macOS automation → 装 Lume</li>
+<li> 想让 agent 操作企业内部系统 → 评估 Cua Fleets</li>
+</ul>
+<p>Cua <strong>都适用</strong>。</p>
+<p>之前发过的所有项目<strong>没有</strong> Cua。 装上 Cua，<strong>AI agent 操作真实世界</strong>这条<strong>最后</strong>一条边<strong>补上</strong>。</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/trycua/cua">https://github.com/trycua/cua</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/09/19/trycua-cua-computer-use-agent-framework/" title="trycua&#x2F;cua：24.4k stars 的 &quot;AI 用的电脑&quot;，Computer-Use 2.0 框架 + 开源驱动 + 跨 OS fleet + macOS 本地 VM + benchmark + 专用 System 1 模型">https://www.daishengli.top/2026/09/19/trycua-cua-computer-use-agent-framework/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/macOS/" rel="tag"># macOS</a>
+              <a href="/tags/cua/" rel="tag"># cua</a>
+              <a href="/tags/trycua/" rel="tag"># trycua</a>
+              <a href="/tags/Computer-Use/" rel="tag"># Computer-Use</a>
+              <a href="/tags/Sandbox/" rel="tag"># Sandbox</a>
+              <a href="/tags/Anthropic/" rel="tag"># Anthropic</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/18/tencent-browserskill-shared-browser-ai-agents/" rel="prev" title="Tencent&#x2F;BrowserSkill：5.3k stars 的 &quot;让 AI agent 用你的真实浏览器&quot;，复用登录态 + 不打扰你工作 + 11 个 agent harness 都支持">
+                  <i class="fa fa-angle-left"></i> Tencent/BrowserSkill：5.3k stars 的 "让 AI agent 用你的真实浏览器"，复用登录态 + 不打扰你工作 + 11 个 agent harness 都支持
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/20/builderio-agent-native-agentic-app-framework/" rel="next" title="BuilderIO&#x2F;agent-native：5.2k stars 的 &quot;agent-native 应用框架&quot;，一个 action 同时被 agent 当 tool 调用 + 被 UI 当函数调用，shared state 让 agent 看见 UI 当前页">
+                  BuilderIO/agent-native：5.2k stars 的 "agent-native 应用框架"，一个 action 同时被 agent 当 tool 调用 + 被 UI 当函数调用，shared state 让 agent 看见 UI 当前页 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

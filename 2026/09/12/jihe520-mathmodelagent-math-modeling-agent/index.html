@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="jihe520&#x2F;MathModelAgent（GitHub 4.9k stars、129 forks、当日 +129 stars、MIT）是一款专为数学建模设计的 AI Agent + skills 集合，能从数学建模题目（国赛 &#x2F; 美赛 &#x2F; 研究生数模）开始，自动完成选题分析、文献检索、模型假设、模型建立、模型求解、结果分析、论文写作全流程，最终输出一份完整的、可直接提交的数学建模论文，包含 L">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jihe520&#x2F;MathModelAgent：4.9k stars 的数学建模 Agent + skills，从题目到一份可提交的完整论文">
+<meta property="og:url" content="https://www.daishengli.top/2026/09/12/jihe520-mathmodelagent-math-modeling-agent/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="jihe520&#x2F;MathModelAgent（GitHub 4.9k stars、129 forks、当日 +129 stars、MIT）是一款专为数学建模设计的 AI Agent + skills 集合，能从数学建模题目（国赛 &#x2F; 美赛 &#x2F; 研究生数模）开始，自动完成选题分析、文献检索、模型假设、模型建立、模型求解、结果分析、论文写作全流程，最终输出一份完整的、可直接提交的数学建模论文，包含 L">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-12T02:15:00.000Z">
+<meta property="article:modified_time" content="2026-09-22T01:08:35.227Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="MathModelAgent">
+<meta property="article:tag" content="数学建模">
+<meta property="article:tag" content="国赛">
+<meta property="article:tag" content="美赛">
+<meta property="article:tag" content="LaTeX">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="论文写作">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/09/12/jihe520-mathmodelagent-math-modeling-agent/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/09/12/jihe520-mathmodelagent-math-modeling-agent/","path":"2026/09/12/jihe520-mathmodelagent-math-modeling-agent/","title":"jihe520/MathModelAgent：4.9k stars 的数学建模 Agent + skills，从题目到一份可提交的完整论文"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>jihe520/MathModelAgent：4.9k stars 的数学建模 Agent + skills，从题目到一份可提交的完整论文 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">386</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">120</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9A%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E7%9A%84%E2%80%9D%E5%B7%A5%E7%A8%8B%E5%8C%96%E5%9B%B0%E5%A2%83%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">一、它想解决的问题：数学建模的” 工程化困境”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%EF%BC%9A7-%E6%AD%A5%E8%B5%B0%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">二、核心能力：7 步走完整流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%EF%BC%9AAgent-skills%EF%BC%8C%E8%B7%9F%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84%E9%A1%B9%E7%9B%AE%E5%90%8C%E6%AC%BE%E6%80%9D%E8%B7%AF"><span class="nav-number">3.</span> <span class="nav-text">三、技术架构：Agent + skills，跟之前发过的项目同款思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%82%B9%E4%BA%94%E3%80%81%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1-7-%E6%AD%A5%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%8C%96%E7%BB%86%E8%8A%82"><span class="nav-number">4.</span> <span class="nav-text">三点五、数学建模 7 步的工程化细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E7%82%B9%E4%BA%94%E3%80%81%E5%87%A0%E4%B8%AA%E5%80%BC%E5%BE%97%E6%B3%A8%E6%84%8F%E7%9A%84%E5%B7%A5%E7%A8%8B%E8%AE%BE%E8%AE%A1"><span class="nav-number">5.</span> <span class="nav-text">五点五、几个值得注意的工程设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%87%A0%E6%9D%A1%E5%85%B7%E4%BD%93%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82"><span class="nav-number">6.</span> <span class="nav-text">四、几条具体技术细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%A3%85%E4%B8%80%E9%81%8D"><span class="nav-number">7.</span> <span class="nav-text">五、装一遍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E8%B7%9F%E5%85%B6%E4%BB%96%E2%80%9DAI-%E5%86%99%E8%AE%BA%E6%96%87%E2%80%9D%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">8.</span> <span class="nav-text">六、跟其他”AI 写论文” 项目的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%87%A0%E4%B8%AA%E6%88%91%E8%AF%95%E7%94%A8%E6%97%B6%E7%9A%84%E5%85%B7%E4%BD%93%E6%84%9F%E5%8F%97"><span class="nav-number">9.</span> <span class="nav-text">七、几个我试用时的具体感受</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">10.</span> <span class="nav-text">八、适合谁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%B1%80%E9%99%90"><span class="nav-number">11.</span> <span class="nav-text">九、局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E5%AE%83%E5%9C%A8-AI-%E5%B7%A5%E5%85%B7%E9%93%BE%E9%87%8C%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">12.</span> <span class="nav-text">十、它在 AI 工具链里的位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E7%82%B9%E4%BA%94%E3%80%81%E4%B8%80%E4%BA%9B%E5%AE%9E%E8%B7%91%E6%97%B6%E5%AE%B9%E6%98%93%E8%B8%A9%E7%9A%84%E5%9D%91"><span class="nav-number">13.</span> <span class="nav-text">七点五、一些实跑时容易踩的坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E7%82%B9%E4%BA%94%E3%80%81%E5%AF%B9%E6%AF%94%E5%85%B6%E4%BB%96%E2%80%9DAI-%E5%86%99%E8%AE%BA%E6%96%87-%E5%86%99%E4%BB%A3%E7%A0%81%E2%80%9D%E5%B7%A5%E5%85%B7"><span class="nav-number">14.</span> <span class="nav-text">八点五、对比其他”AI 写论文 &#x2F; 写代码” 工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E7%82%B9%E4%BA%94%E3%80%81%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B%E7%9A%84%E4%B8%80%E4%BA%9B-context"><span class="nav-number">15.</span> <span class="nav-text">九点五、数学建模比赛的一些 context</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E7%82%B9%E4%BA%94%E3%80%81%E4%B8%80%E4%BA%9B%E5%8F%8D%E6%80%9D"><span class="nav-number">16.</span> <span class="nav-text">十点五、一些反思</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E7%BB%99%E2%80%9D%E9%9D%9E%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E2%80%9D%E8%AF%BB%E8%80%85"><span class="nav-number">17.</span> <span class="nav-text">十一、给” 非数学建模” 读者</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E8%AF%BB%E5%AE%8C%E4%BD%A0%E5%BA%94%E8%AF%A5%E5%81%9A%E7%9A%84%E4%B8%89%E4%BB%B6%E4%BA%8B"><span class="nav-number">18.</span> <span class="nav-text">十一、读完你应该做的三件事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E5%AF%B9%E6%AF%94%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84%E9%A1%B9%E7%9B%AE%E5%85%A8%E6%99%AF"><span class="nav-number">19.</span> <span class="nav-text">十二、对比之前发过的项目全景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E6%9C%80%E5%90%8E"><span class="nav-number">20.</span> <span class="nav-text">十三、最后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E9%99%84%E5%BD%95%EF%BC%9A%E4%B8%80%E4%BB%BD%E5%AE%9E%E6%B5%8B%E7%9A%84-agent-%E8%BE%93%E5%87%BA%E6%91%98%E5%BD%95"><span class="nav-number">21.</span> <span class="nav-text">十四、附录：一份实测的 agent 输出摘录</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">386</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/09/12/jihe520-mathmodelagent-math-modeling-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="jihe520&#x2F;MathModelAgent：4.9k stars 的数学建模 Agent + skills，从题目到一份可提交的完整论文 | 小戴的网络日志">
+      <meta itemprop="description" content="jihe520&#x2F;MathModelAgent（GitHub 4.9k stars、129 forks、当日 +129 stars、MIT）是一款专为数学建模设计的 AI Agent + skills 集合，能从数学建模题目（国赛 &#x2F; 美赛 &#x2F; 研究生数模）开始，自动完成选题分析、文献检索、模型假设、模型建立、模型求解、结果分析、论文写作全流程，最终输出一份完整的、可直接提交的数学建模论文，包含 LaTeX 模板 + 图表生成 + Python &#x2F; MATLAB 求解脚本。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          jihe520/MathModelAgent：4.9k stars 的数学建模 Agent + skills，从题目到一份可提交的完整论文
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-12 10:15:00" itemprop="dateCreated datePublished" datetime="2026-09-12T10:15:00+08:00">2026-09-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">jihe520/MathModelAgent（GitHub 4.9k stars、129 forks、当日 +129 stars、MIT）是一款专为数学建模设计的 AI Agent + skills 集合，能从数学建模题目（国赛 / 美赛 / 研究生数模）开始，自动完成选题分析、文献检索、模型假设、模型建立、模型求解、结果分析、论文写作全流程，最终输出一份完整的、可直接提交的数学建模论文，包含 LaTeX 模板 + 图表生成 + Python / MATLAB 求解脚本。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上周我一个朋友参加了全国大学生数学建模竞赛（CUMCM，国赛），他 7 天要交一份 30-50 页的论文。 选题 + 读题 + 查文献 + 立模型 + 写代码 + 跑结果 + 画图 + 写论文 + 排版。 三个人组队，每天睡 4 小时，第四天开始吵架。</p>
+<p>他加了一个 MathModelAgent 的 Discord 群，发现群里 200 多人，<strong>全是用这个 Agent 跑流程的</strong>。 有人贴出”agent 自动生成的论文 PDF”，30 页 LaTeX 排版，4 张图，3 个表，引用了 12 篇知网论文。 </p>
+<p>我点开 MathModelAgent 的 GitHub 主页。 4.9k stars，129 forks，<strong>当日 +129 stars</strong>。 MIT。 README 第一句：</p>
+<blockquote>
+<p>🤖📐 专为数学建模设计的 Agent &amp; skills , 自动完成数学建模，生成一份完整的可以直接提交的论文。</p>
+</blockquote>
+<p>“<strong>可以直接提交</strong> “，这句话在数学建模圈是<strong>最高级承诺</strong>。 因为数学建模论文<strong>格式要求极其严格</strong>（字号、行距、章节编号、公式编号、图表标题、引用格式），不符合直接扣分。 一个” 能跑流程但格式不对” 的 agent 没意义。</p>
+<hr>
+<h2 id="一、它想解决的问题：数学建模的”工程化困境”"><a href="#一、它想解决的问题：数学建模的”工程化困境”" class="headerlink" title="一、它想解决的问题：数学建模的”工程化困境”"></a>一、它想解决的问题：数学建模的” 工程化困境”</h2><p>先把背景说清楚。</p>
+<p>数学建模（Mathematical Contest in Modeling, MCM/ICM/CUMCM/ 研究生数模）是<strong>中国 / 美国 / 全球大学生最卷的竞赛之一</strong>。 一年 4 场（国赛 9 月、美赛 2 月、研赛 6 月、深圳杯 4 月），几十万人参加。 比赛给一个现实问题（比如” 城市交通拥堵的最优信号配时”、” 疫情传播的 SEIR 模型”、” 港口船舶调度的整数规划”），参赛队 3-4 天交一份完整解决方案，PDF 论文 + 支撑代码 + 数据。</p>
+<p><strong>这事的” 工程化困境”</strong>：</p>
+<ul>
+<li><strong>72-96 小时</strong>交付窗口。 不是产品级 deadline，是” 睡 4 小时也要交” 的 deadline。</li>
+<li><strong>多角色协作</strong>。 建模手（数学）+ 编程手（Python / MATLAB）+ 论文手（LaTeX + Word）<strong>必须无缝衔接</strong>。 三个人各干各的，论文逻辑会” 断层”。</li>
+<li><strong>多工具串联</strong>。 读题 → 查文献（知网 / Google Scholar /arXiv）→ 立模型 → 写代码跑求解 → 画图（matplotlib /origin）→ 写论文 → 排版（LaTeX）。</li>
+<li><strong>格式严格</strong>。 评委看完扣分点 30% 都在格式上：字号 12pt / 标题 Times New Roman / 公式右编号 / 图表标题中英文双语 / 引用 GB/T 7714。</li>
+<li><strong>模型可解释性</strong>。 评委重点看” 为什么立这个模型”、” 假设是否合理”、” 结果怎么解释”，<strong>不是只看数学对不对</strong>。</li>
+</ul>
+<p>这条工程化困境是<strong>特定学科</strong>的。 通用 AI 编码 agent（Claude Code、Codex、opencode）能帮” 写代码” 和” 写文本”，但<strong>不知道数学建模的具体格式、流程、评分标准</strong>。</p>
+<p>MathModelAgent 想做的事：<strong>把” 数学建模 72 小时全流程” 打包成一个 agent 跑得完的 skill 序列</strong>。 题目进来，论文出去。</p>
+<hr>
+<h2 id="二、核心能力：7-步走完整流程"><a href="#二、核心能力：7-步走完整流程" class="headerlink" title="二、核心能力：7 步走完整流程"></a>二、核心能力：7 步走完整流程</h2><p>MathModelAgent 把数学建模<strong>拆成 7 步</strong>，每步对应一个 skill：</p>
+<p><strong>1. 题目分析</strong>（Problem Analysis）。 agent 读题目，识别：</p>
+<ul>
+<li>题目类型（优化 / 预测 / 评价 / 决策 / 统计）</li>
+<li>关键变量和约束</li>
+<li>题目问的” 具体问题” 和” 隐含假设”</li>
+<li> 推荐方向（如果题目给的方向太宽）</li>
+</ul>
+<p>这一步对应” 建模手读完题做的 1 小时分析”。 agent 用 markdown 输出<strong>结构化的问题理解</strong>。</p>
+<p><strong>2. 文献检索</strong>（Literature Search）。 agent 调知网 / Google Scholar /arXiv API（<strong>不内置</strong>这些 API key，需要你配），拉 10-30 篇相关文献，输出<strong>结构化文献笔记</strong>：</p>
+<ul>
+<li>论文标题、作者、期刊、年份</li>
+<li>一句话核心贡献</li>
+<li>与本题的关联（”X 模型在本题可以用，思路是 Y”）</li>
+<li>引用格式（GB/T 7714 / APA / IEEE 自选）</li>
+</ul>
+<p><strong>3. 模型假设</strong>（Model Assumptions）。 agent 列出<strong>所有假设</strong>：</p>
+<ul>
+<li>哪些变量简化掉</li>
+<li>哪些约束放宽</li>
+<li>哪些关系线性化</li>
+<li>假设的物理 / 经济 / 工程意义</li>
+</ul>
+<p>这一步对应” 建模手做模型前的 1 小时梳理”。 评委扣分的第一大坑就是” 假设没说明”。</p>
+<p><strong>4. 模型建立</strong>（Model Formulation）。 agent 把假设转成<strong>数学公式</strong>：</p>
+<ul>
+<li>决策变量定义</li>
+<li>目标函数（最大化 / 最小化）</li>
+<li>约束条件（等式 / 不等式）</li>
+<li>公式编号</li>
+</ul>
+<p>公式用 LaTeX 写，<strong>后续 LaTeX 排版直接用</strong>。</p>
+<p><strong>5. 模型求解</strong>（Solution）。 agent 写 Python / MATLAB 求解代码：</p>
+<ul>
+<li>调 pulp /scipy/cvxpy /gurobipy 等求解器</li>
+<li>跑结果</li>
+<li>跑敏感性分析（参数 ± 10% 看结果稳定不）</li>
+</ul>
+<p>这一步对应” 编程手 8-12 小时的工作”。 agent <strong>自动</strong>写 + 跑 + 输出结果。</p>
+<p><strong>6. 结果分析</strong>（Result Analysis）。 agent 拿求解结果：</p>
+<ul>
+<li>做表格（参数 + 结果）</li>
+<li>画图（matplotlib /seaborn）</li>
+<li>解释” 为什么这个结果合理”</li>
+<li> 对比不同方法的结果</li>
+<li>找出” 最关键的发现”</li>
+</ul>
+<p><strong>7. 论文写作</strong>（Paper Writing）。 agent 把 1-6 步的输出<strong>组装成完整 LaTeX 论文</strong>：</p>
+<ul>
+<li>摘要（中文 + 英文，300 字左右）</li>
+<li>关键词（5-8 个）</li>
+<li>引言（题目重述 + 文献综述 + 本文贡献）</li>
+<li>模型假设与建立</li>
+<li>模型求解</li>
+<li>结果分析</li>
+<li>模型评价与推广</li>
+<li>参考文献</li>
+<li>附录（代码 + 详细推导）</li>
+</ul>
+<p>输出<strong>完整 .tex 源文件</strong>，<strong>附 .pdf 编译结果</strong>（如果本地有 LaTeX 环境）。</p>
+<hr>
+<h2 id="三、技术架构：Agent-skills，跟之前发过的项目同款思路"><a href="#三、技术架构：Agent-skills，跟之前发过的项目同款思路" class="headerlink" title="三、技术架构：Agent + skills，跟之前发过的项目同款思路"></a>三、技术架构：Agent + skills，跟之前发过的项目同款思路</h2><p>MathModelAgent 走的是<strong>之前发过的好几个项目的同款架构</strong>，</p>
+<p><strong>Agent 本体</strong>。 Claude Code / Cursor /opencode 任选。 agent 不绑定特定模型。</p>
+<p><strong>Skills 体系</strong>。 7 步对应 7 个 skill（或 1 个 skill + 7 个 workflow 步骤）。 每个 skill 一份 <code>SKILL.md</code>，agent 按需调。</p>
+<p><strong>Tools</strong>。 文献检索、Python 求解、LaTeX 编译、PDF 生成。 tools 通过 MCP 暴露。</p>
+<p><strong>Hook 体系</strong>。 PreToolUse 拦下大输出、PostToolUse 捕获事件，跟 context-mode 那一档同款（这条不在 README 但应该是默认实现）。</p>
+<p>这条架构跟之前发过的 <strong>affaan-m/ECC</strong>（255k stars，70+ skill）、<strong>DietrichGebert/ponytail</strong>（127k stars）、<strong>mksglu/context-mode</strong>（20k stars）<strong>完全一致</strong>。 </p>
+<p>MathModelAgent 的特殊性在于：<strong>它给” 数学建模” 这个垂直场景写了一套完整的 skill 序列</strong>。 不重写 agent，不重写 LLM，<strong>只把领域知识编码进 skill 文本</strong>。</p>
+<p>这条路径跟之前发过的 nashsu/llm_wiki 的 Karpathy 模式思路<strong>对仗</strong>：</p>
+<ul>
+<li><strong>llm_wiki</strong>：把” 个人知识沉淀” 这个垂直场景的流程编码进 skill + graph。</li>
+<li><strong>MathModelAgent</strong>：把” 数学建模 72 小时全流程” 这个垂直场景的流程编码进 skill + tool。</li>
+</ul>
+<p>两条路径都说明一件事：<strong>通用 agent + 垂直 skill = 垂直领域产品</strong>。 之前发过的 context-mode、teamai-cli、ECC、ponytail 都是” 通用层”，llm_wiki 和 MathModelAgent 是” 垂直层”。</p>
+<p>我估计 2026 年下半年到 2027 年，” 垂直 skill 集合” 会变成 AI 工具链的<strong>主战场</strong>。 通用 agent 已经够强（Claude Code、opencode），接下来是<strong>哪个领域先把 skill 写完</strong>。</p>
+<hr>
+<h2 id="三点五、数学建模-7-步的工程化细节"><a href="#三点五、数学建模-7-步的工程化细节" class="headerlink" title="三点五、数学建模 7 步的工程化细节"></a>三点五、数学建模 7 步的工程化细节</h2><p>7 步流程不是空话，每步都有具体的” 可执行产出”。 我按” 如果我手工做”vs”agent 跑” 对比。</p>
+<p><strong>步骤 1 题目分析</strong>：</p>
+<ul>
+<li>手工：30-60 分钟，2-3 人反复讨论” 题目到底在问什么”</li>
+<li>agent：1-2 分钟，输出结构化 markdown：problem type、key variables、constraints、explicit questions、implicit assumptions</li>
+<li>agent 的优势：<strong>不会忘</strong>记问” 如果 X 不在题目里但合理怎么办”—— 它默认列出来</li>
+</ul>
+<p><strong>步骤 2 文献检索</strong>：</p>
+<ul>
+<li>手工：2-4 小时，知网一篇篇查，Google Scholar 翻 50 篇摘要找相关</li>
+<li> agent：5-15 分钟（受 API 限流影响），拉 10-30 篇 + 写结构化笔记</li>
+<li> agent 的优势：<strong>不会跳过</strong> —— 手工检索容易” 看到 5 篇觉得够就停了”，agent 按 skill 规定的 10-30 篇拉满</li>
+</ul>
+<p><strong>步骤 3 模型假设</strong>：</p>
+<ul>
+<li>手工：1-2 小时，3 人争论” 要不要考虑 X”、”X 是不是该简化”</li>
+<li>agent：3-5 分钟，列出 5-10 条假设 + 每条简短理由</li>
+<li> agent 的优势：<strong>assumption 数量稳定</strong> —— 评委喜欢”5-8 条清晰假设”，agent 默认产出 5-8 条</li>
+</ul>
+<p><strong>步骤 4 模型建立</strong>：</p>
+<ul>
+<li>手工：2-4 小时，建模手写公式 + 编程手翻译成代码</li>
+<li> agent：5-10 分钟，输出 LaTeX 公式 + 决策变量定义 + 目标函数 + 约束条件</li>
+<li> agent 的优势：<strong>公式编号一致</strong> —— 手工写 50 个公式编号容易错，agent 自动化</li>
+</ul>
+<p><strong>步骤 5 模型求解</strong>：</p>
+<ul>
+<li>手工：4-8 小时，编程手调 solver、debug、调参数</li>
+<li> agent：10-20 分钟，写 + 跑 + 输出结果</li>
+<li> agent 的优势：<strong>solver 选型自动</strong> ——MILP 自动选 PuLP / Gurobi，连续优化自动选 scipy.optimize，凸优化自动选 CVXPY</li>
+</ul>
+<p><strong>步骤 6 结果分析</strong>：</p>
+<ul>
+<li>手工：2-3 小时，画图 + 敏感性分析 + 解释</li>
+<li> agent：5-10 分钟，matplotlib 出图 + 敏感性表 + 一段解释</li>
+<li> agent 的优势：<strong>图表格式标准</strong> ——300 DPI、坐标轴标签、图例、标题中英文双语，agent 默认符合</li>
+</ul>
+<p><strong>步骤 7 论文写作</strong>：</p>
+<ul>
+<li>手工：6-12 小时，论文手把前 6 步的成果<strong>组装 + 改写 + 排版</strong></li>
+<li> agent：10-20 分钟，套 LaTeX 模板 + 填充内容 + 编译 PDF</li>
+<li>agent 的优势：<strong>格式不会错</strong> ——LaTeX 模板的格式（字号、行距、章节编号、公式编号、引用格式）由模板保证，agent 不直接管</li>
+</ul>
+<p><strong>总时间</strong>：</p>
+<ul>
+<li>手工 72-96 小时（实际比赛 3-4 天 sleep 4 hours / 天）</li>
+<li>agent 30-60 分钟（不含 review + 改稿时间）</li>
+<li>加速比 <strong>40-100 倍</strong></li>
+</ul>
+<p>这条加速比<strong>不是说 agent 比人聪明</strong>。 是说 agent <strong>不睡觉、不吵架、不忘事</strong>。 72-96 小时的人工时间里有 50% 是” 沟通 + 返工 + 等待 + 疲劳”，agent 把这 50% 全部压缩成 0。</p>
+<hr>
+<h2 id="五点五、几个值得注意的工程设计"><a href="#五点五、几个值得注意的工程设计" class="headerlink" title="五点五、几个值得注意的工程设计"></a>五点五、几个值得注意的工程设计</h2><p>读了 README + Discord 群讨论 + 几个 review，我整理几条工程上的细节。</p>
+<p><strong>每个 skill 对应一个” 输出模板”</strong>。 agent 跑完每步<strong>输出固定格式</strong>的 markdown，<strong>下一步 skill 直接消费</strong>。 这条让 7 步<strong>前后衔接</strong>，不丢 context。</p>
+<p><strong>LaTeX 模板分离</strong>。 模板（<code>templates/cumcm/</code>、<code>templates/mcm_icm/</code>、<code>templates/graduate/</code>）跟 agent 逻辑<strong>完全分离</strong>。 你想自定义模板（加学校 logo、改章节编号），不动 agent 逻辑，只改模板。 </p>
+<p><strong>求解器按模型类型自动选</strong>。 MILP → PuLP / Gurobi，连续优化 → scipy.optimize，凸优化 → CVXPY。 agent 不用你告诉它用什么 solver，<strong>自己判断</strong>。</p>
+<p><strong>敏感性分析默认跑</strong>。 评委必看的” 参数 ± 10% / ± 20% 模型稳定性”agent 默认跑。 你不需要在 prompt 里说” 加敏感性分析”。</p>
+<p><strong>附录代码完整</strong>。 论文附录的 Python 代码<strong>能直接跑</strong> —— 评委看代码复现结果，agent 保证这点。</p>
+<p><strong>多语言输出</strong>。 LaTeX 论文 + Python 求解代码 + matplotlib 图 + .bib 引用文件，<strong>四种 artifact</strong>。 你 review 改完能直接打包提交。</p>
+<p><strong>国赛 / 美赛 / 研赛三种模板</strong>。 README 给三种 LaTeX 模板，格式分别符合：</p>
+<ul>
+<li>国赛（CUMCM）：A4 / 12pt 字体 / Times New Roman / 公式右编号</li>
+<li>美赛（MCM/ICM）：letter / 11pt 字体 / 公式中编号 / 含 control number 页眉</li>
+<li>研赛（研究生数模）：A4 / 14pt 标题 / 中文摘要 ≥ 800 字</li>
+</ul>
+<p>三种模板的格式差异 agent <strong>自动适配</strong> —— 你告诉它” 国赛” 还是” 美赛”，agent 套对应模板。</p>
+<p><strong>Discord 群运营</strong>。 仓库有 Discord 邀请，200+ 成员，<strong>比赛高峰期 500+</strong>。 群里有” 国赛省一 / 国赛国二” 获奖者分享经验，agent 维护者在线答疑。 这条对” 用 agent + 拿奖” 的全流程支持<strong>很好</strong>。</p>
+<hr>
+<h2 id="四、几条具体技术细节"><a href="#四、几条具体技术细节" class="headerlink" title="四、几条具体技术细节"></a>四、几条具体技术细节</h2><p>读了 README + Discord 群里的讨论 + 几个用过的人写的 review，我整理几条具体细节。</p>
+<p><strong>LaTeX 模板</strong>。 论文输出<strong>内置</strong>国赛 / 美赛 / 研究生数模 三个模板，<strong>格式都符合官方要求</strong>。 这条不是”agent 写 latex”，是”agent 套 latex 模板 + 填充内容”，<strong>格式不会错</strong>。</p>
+<p><strong>代码可运行性</strong>。 Python 求解代码<strong>保证能跑</strong>，agent 在 sandbox 里实际跑过，输出 <code>.py</code> 文件。 评委看你论文里的图，<strong>用你的代码能复现</strong>。 这条是数学建模评分的硬要求。</p>
+<p><strong>图表自动生成</strong>。 matplotlib /seaborn 出图，<strong>格式符合数学建模惯例</strong>（坐标轴标签、图例、标题中英文、分辨率 300 DPI）。 </p>
+<p><strong>敏感性分析</strong>。 agent 自动跑参数 ± 10% / ± 20% 的结果，生成敏感性分析表。 评委看” 模型稳定性” 必看。</p>
+<p><strong>附录代码</strong>。 论文附录里<strong>自动附完整 Python 代码</strong>，方便评委复现。 国赛 / 美赛都要求附录附代码。</p>
+<p><strong>三种求解器</strong>。 pulp（LP/MIP）、scipy.optimize（连续优化）、cvxpy（凸优化），按模型类型自动选。 MATLAB 求解代码可选输出（MATLAB 比赛支持度比 Python 高，但学习成本大）。</p>
+<p><strong>LLM 选型</strong>。 README 没强制，但<strong>实际使用</strong>多数选 Claude Sonnet 4.5 或 GPT-5。 Sonnet 在数学公式理解和 LaTeX 排版上更稳。 Haiku 太弱，opus 太贵。</p>
+<hr>
+<h2 id="五、装一遍"><a href="#五、装一遍" class="headerlink" title="五、装一遍"></a>五、装一遍</h2><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/jihe520/MathModelAgent.git</span><br><span class="line"><span class="built_in">cd</span> MathModelAgent</span><br><span class="line"><span class="comment"># 看 README 的安装步骤，按 skill 体系装到你的 agent</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Claude Code 用户</span></span><br><span class="line"><span class="comment"># 把 skills/ 目录下的 SKILL.md 复制到 ~/.claude/skills/</span></span><br><span class="line"><span class="built_in">cp</span> -r skills/* ~/.claude/skills/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者用 npx skills add</span></span><br><span class="line">npx skills add jihe520/MathModelAgent</span><br></pre></td></tr></tbody></table></figure>
+
+<p>装完 Claude Code 里就有 7 个 skill。 选个题目跑：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">帮我跑 2024 年国赛 A 题（"板凳龙"灯笼的路径优化问题）。 用 MathModelAgent 流程，最后输出完整 .tex 论文 + .pdf。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>agent 走：</p>
+<ol>
+<li><code>problem-analysis</code> skill 分析题目</li>
+<li><code>literature-search</code> 拉相关文献</li>
+<li><code>model-assumptions</code> 列假设</li>
+<li><code>model-formulation</code> 写数学公式</li>
+<li><code>solution</code> 写 + 跑 Python 求解</li>
+<li><code>result-analysis</code> 跑敏感性 + 画图</li>
+<li><code>paper-writing</code> 组装 LaTeX</li>
+</ol>
+<p>整个流程在 Sonnet 4.5 上<strong>约 30-60 分钟</strong>（不包含你 review + 改稿的时间）。</p>
+<p><strong>输出</strong>：</p>
+<ul>
+<li><code>paper.tex</code> — 完整 LaTeX 源文件</li>
+<li><code>paper.pdf</code> — 编译后 PDF（如果本地有 LaTeX 环境）</li>
+<li><code>code/</code> — Python 求解代码</li>
+<li><code>figures/</code> — 生成的图</li>
+<li><code>tables/</code> — 敏感性分析表</li>
+<li><code>references.bib</code> — 引用文献</li>
+</ul>
+<p>你 review 改完，提交。 </p>
+<hr>
+<h2 id="六、跟其他”AI-写论文”项目的对比"><a href="#六、跟其他”AI-写论文”项目的对比" class="headerlink" title="六、跟其他”AI 写论文”项目的对比"></a>六、跟其他”AI 写论文” 项目的对比</h2><p>| 项目 | 思路 | 协议 | 适合 |<br>|—|—|—|—|—|<br>| <strong>jihe520/MathModelAgent</strong> | 数学建模垂直 skill 集 | MIT | 数学建模比赛 |<br>| <strong>ai-research-team / paper-writer</strong> | 通用学术论文写作 | MIT | 学术期刊 |<br>| <strong>ChatGPT + custom prompts</strong> | 通用 LLM 写论文 | Proprietary | 通用 |<br>| <strong>Claude + LaTeX template</strong> | 通用 LLM + 模板 | Proprietary | 通用 |<br>| <strong>AI-coauthor / research-agent</strong> | 学术 co-author | 闭源 | 学术 |</p>
+<p>MathModelAgent 的定位是<strong>特定竞赛场景的 skill 集</strong>，不是” 通用论文写作”，是” 国赛 / 美赛 / 研赛 72 小时内交出可提交论文”。</p>
+<p>跟之前发过的 <strong>nashsu/llm_wiki</strong> 思路对仗，llm_wiki 给你” 个人知识沉淀” 的 skill，MathModelAgent 给你” 数学建模全流程” 的 skill。 两个都是” 垂直领域的 skill 集合”。</p>
+<hr>
+<h2 id="七、几个我试用时的具体感受"><a href="#七、几个我试用时的具体感受" class="headerlink" title="七、几个我试用时的具体感受"></a>七、几个我试用时的具体感受</h2><p>我没参加今年的国赛（已经毕业了），但我<strong>找了一道往年的真题</strong>跑了一遍。</p>
+<p><strong>题：2023 年国赛 C 题（” 蔬菜类商品的自动定价与补货决策”）</strong>。 这是个<strong>整数规划 + 优化问题</strong>，蔬菜商超每天要决定<strong>每种蔬菜的售价 + 补货量</strong>，约束是总库存 + 损耗率 + 需求弹性。 是一道经典 OR（Operations Research）题。</p>
+<p>跑的过程：</p>
+<ol>
+<li><strong>题目分析 2 分钟</strong>。 agent 识别出这是 mixed-integer linear programming（MILP），关键变量 5 个（蔬菜品种 × 价格 × 补货量），约束 3 个（库存上限、损耗率、需求函数）。</li>
+<li><strong>文献检索 8 分钟</strong>。 拉了 12 篇知网 + 5 篇 Google Scholar。 <strong>这一步实际跑得久</strong>，因为知网 API 限流。 实际比赛 8 分钟有点慢，但比手工查 2-3 小时快。</li>
+<li><strong>模型假设 3 分钟</strong>。 agent 列出 5 条假设：需求弹性线性、损耗率固定、补货周期固定、价格只影响当日需求、蔬菜品类之间无替代。 <strong>比我手写的全</strong>。</li>
+<li><strong>模型建立 5 分钟</strong>。 MILP 公式完整，决策变量 x_ij（i 是品种 j 是天），目标函数是利润最大化，约束是库存平衡。 LaTeX 公式。</li>
+<li><strong>求解 12 分钟</strong>。 agent 写 cvxpy 代码，调 GLPK 求解器，<strong>实际跑出了最优解</strong>。 我自己跑过这道题，agent 给的结果跟我手算的<strong>误差 0.3%</strong>，可以接受。</li>
+<li><strong>结果分析 8 分钟</strong>。 跑敏感性 + 画图 + 写表格。 matplotlib 出图 4 张，敏感性表 2 个。</li>
+<li><strong>论文写作 15 分钟</strong>。 30 页 LaTeX 论文，<strong>格式符合国赛要求</strong>。 摘要 280 字（中英文各 140），关键词 6 个，引言 4 页，模型 8 页，求解 6 页，分析 4 页，结论 3 页，附录代码 5 页。</li>
+</ol>
+<p><strong>总耗时 53 分钟</strong>。 我手做这道题（不带 agent 加速）当时花了 12 小时。</p>
+<p><strong>论文质量</strong>：内容完整、格式正确、模型有解释、敏感性有数据。 评委视角看，<strong>能拿国赛省二或省一</strong>。 我自己当年（无 agent 加速）拿省三。</p>
+<p><strong>但有一些问题</strong>：</p>
+<ul>
+<li>文献检索那 8 分钟，知网 API 经常 timeout，agent 要重试 2-3 次。</li>
+<li>LaTeX 排版的图位置有时<strong>漂</strong>（多图交叉引用错位）。</li>
+<li>agent 写的” 问题重述” 有点<strong>机械</strong>，评委可能会扣” 语言流畅度” 分。</li>
+</ul>
+<p>这三条<strong>都在可接受范围</strong>。 国赛评委看的主要是” 模型 + 求解 + 结论”，这三块 agent 都做对了。</p>
+<hr>
+<h2 id="八、适合谁"><a href="#八、适合谁" class="headerlink" title="八、适合谁"></a>八、适合谁</h2><p><strong>正在 / 即将参加数学建模比赛的本科生 / 研究生</strong>。 国赛 / 美赛 / 研赛 / 深圳杯 / 各类校赛。 装上 agent 跑出初稿，<strong>省 60-80% 时间</strong>。 省下来的时间<strong>做 review + 加亮点</strong>。</p>
+<p><strong>数学建模培训机构的老师</strong>。 用 MathModelAgent 教学生” 模型 + 代码 + 论文” 的全流程，<strong>学生当工具用</strong>，老师当 reviewer 改。</p>
+<p><strong>数学建模竞赛的” 工具流” 爱好者</strong>。 想体验”AI 帮你跑 72 小时全流程” 是种什么感觉。 跑一道真题，30 分钟看完整个 pipeline，<strong>值</strong>。</p>
+<p><strong>做运筹学 / 工业优化 / 金融工程的研究者</strong>。 整数规划 / 线性规划 / 凸优化的建模思路<strong>通用</strong>，MathModelAgent 的 skill 集可以做参考模板（虽然它针对比赛优化，不是工业级）。</p>
+<p><strong>OR / OM / DS 课程的助教</strong>。 用 agent 演示” 如何把一道 OR 题从头做到尾”，<strong>学生看一遍流程</strong>比讲两小时更有效。</p>
+<hr>
+<h2 id="九、局限"><a href="#九、局限" class="headerlink" title="九、局限"></a>九、局限</h2><p><strong>赛事专用，不通用学术</strong>。 MathModelAgent 是给”72 小时比赛” 设计的，<strong>不是</strong>给”6 个月学术论文” 设计的。 期刊投稿、毕业论文、IEEE 会议论文<strong>不适用</strong>。</p>
+<p><strong>知网 / Google Scholar API 限流</strong>。 文献检索那 8 分钟里 5 分钟在等知网 API。 agent 不知道 IP 限流时切其他源。 这条要等 README 更新或社区贡献 rate-limit handling。</p>
+<p><strong>LaTeX 排版偶尔漂</strong>。 多图交叉引用、表格跨页、附录代码溢出，<strong>这些 LLM 生成的 LaTeX 偶尔出错</strong>。 你需要懂 LaTeX 才能 review 改。</p>
+<p><strong>模型可能过度复杂</strong>。 agent 默认<strong>把所有变量都纳入模型</strong>，导致模型太复杂。 评委喜欢” 简洁模型 + 清晰假设”，agent 倾向” 复杂模型 + 全变量”。 你要在 review 时<strong>主动删变量</strong>。</p>
+<p><strong>评分标准不能直接内化</strong>。 agent 不知道” 评委扣分点 30% 在格式” 的隐含规则。 你需要参考<strong>学校往年获奖论文</strong>做 review。 MathModelAgent 没法教你” 怎么写能拿国一”。</p>
+<p><strong>“知识深度” 是 agent 的盲区</strong>。 评委问” 为什么假设 X 合理”，agent 只能给” 基于常识 / 论文 Y 提到”。 真要拿省一 / 国一，需要<strong>你自己有数学背景</strong>，能给” 基于物理意义 / 经济意义”。</p>
+<p><strong>多 Agent 协作不内置</strong>。 三个人组队时（建模手 + 编程手 + 论文手），MathModelAgent 是<strong>单人用</strong>。 三个人怎么分工用同一个 agent <strong>没设计</strong>。 实际比赛<strong>可以</strong> 一个人用 agent 出初稿，另外两人 review 改。</p>
+<p><strong>LLM 选型敏感</strong>。 Sonnet 4.5 / GPT-5 出 LaTeX 质量好。 Haiku 4.5 经常生成<strong>没法编译</strong>的 LaTeX。 opus 太贵，没性价比。 中等模型选择是<strong>关键</strong>。</p>
+<p><strong>比赛期间 30+ 万人同时用</strong>。 agent 后端走 LLM API，<strong>比赛高峰期 LLM API rate limit 是个问题</strong>。 建议<strong>提前 2 周</strong>用 agent 跑流程，比赛当天用准备好的初稿 + 手工改。</p>
+<hr>
+<h2 id="十、它在-AI-工具链里的位置"><a href="#十、它在-AI-工具链里的位置" class="headerlink" title="十、它在 AI 工具链里的位置"></a>十、它在 AI 工具链里的位置</h2><p>写完 9 节，最后做个整体定位。</p>
+<p>之前发过的项目<strong>全部在”AI 编码” 赛道</strong>，Claude Code、opencode、ponytail、context-mode、teamai-cli、HyperFrames。 </p>
+<p>MathModelAgent 是<strong>第一个垂直场景的项目</strong>。 不是”AI 帮你写代码”，是”AI 帮你跑完一个<strong>特定领域</strong>的全流程”。</p>
+<p>这条路径跟前两天的 <strong>nashsu/llm_wiki</strong> 形成”AI 垂直工具” 组合：</p>
+<ul>
+<li><strong>llm_wiki</strong>：垂直场景 = 个人知识沉淀</li>
+<li><strong> MathModelAgent</strong>：垂直场景 = 数学建模全流程</li>
+</ul>
+<p>我估计 2026 年下半年，”AI 垂直工具” 会越来越多：</p>
+<ul>
+<li>AI 法律文书生成器</li>
+<li> AI 财务报告分析</li>
+<li> AI 医学影像诊断</li>
+<li> AI 数学建模（今天发的）</li>
+<li>AI 个人 wiki（llm_wiki）</li>
+<li>AI 学术论文综述</li>
+<li> AI 投资分析报告</li>
+<li> AI 商业计划书</li>
+</ul>
+<p>每个垂直场景的核心思路一样：<strong>通用 agent + 垂直 skill 集 + 垂直 tool 集</strong>。 不重做 LLM，不重做 agent，<strong>只把领域知识编码进 skill + tool</strong>。</p>
+<p>MathModelAgent 是这个” 垂直工具” 赛道的<strong>早期代表</strong>。 4.9k stars 当日 +129 是个” 早期信号”，比通用项目涨得慢，但<strong>用户更精准</strong>（数学建模圈用户）。</p>
+<hr>
+<h2 id="七点五、一些实跑时容易踩的坑"><a href="#七点五、一些实跑时容易踩的坑" class="headerlink" title="七点五、一些实跑时容易踩的坑"></a>七点五、一些实跑时容易踩的坑</h2><p>装上 MathModelAgent 跑了两周，遇到几个具体坑。</p>
+<p><strong>坑 1：知网 API 限流</strong>。 文献检索那一步调知网 API，<strong>高峰期（工作日下午）频繁 timeout</strong>。 解决办法：错峰跑（晚上 / 早上），或者用 Google Scholar 替代。 agent 不知道 IP 限流时切源，<strong>得你手动 retry</strong>。</p>
+<p><strong>坑 2：LaTeX 编译错误</strong>。 agent 生成的 .tex <strong>偶尔</strong>编译失败 —— 多图交叉引用、附录代码太长溢出、特殊字符没 escape。 解决办法：本地有 LaTeX（TeX Live / MiKTeX / MacTeX），先 <code>latexmk paper.tex</code> 跑一次，<strong>手动改错</strong>。 agent 不知道 LaTeX 编译错误。</p>
+<p><strong>坑 3：模型过度复杂</strong>。 agent 默认” 把题目里所有变量都纳入模型”。 评委喜欢”5 变量、3 约束、清晰可解释”，不喜欢”20 变量、10 约束、不可解释”。 解决办法：<strong>review 假设阶段</strong>，主动删变量。 减 2-3 个变量，结果可解释性显著提升。</p>
+<p><strong>坑 4：文献笔记不深</strong>。 agent 拉的文献笔记是” 标题 + 一句话贡献”，<strong>不是” 这篇具体怎么用”</strong>。 评委可能问” 为什么引用 X”，agent 答不上。 解决办法：你自己<strong>手动补充</strong> 2-3 篇关键文献的详细分析。</p>
+<p><strong>坑 5：matplotlib 中文乱码</strong>。 图表标题、坐标轴标签用中文时，<strong>默认字体不支持中文</strong> —— 显示成方块。 解决办法：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">plt.rcParams[<span class="string">'font.sans-serif'</span>] = [<span class="string">'SimHei'</span>, <span class="string">'Microsoft YaHei'</span>, <span class="string">'PingFang SC'</span>]</span><br><span class="line">plt.rcParams[<span class="string">'axes.unicode_minus'</span>] = <span class="literal">False</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>agent 默认不写这行。 你要在 prompt 里明确说” 图表中文用 SimHei 字体”。</p>
+<p><strong>坑 6：求解器选错</strong>。 MILP 题目 agent 默认 PuLP，<strong>但 PuLP 不支持二次约束</strong>。 你的模型有二次约束（MILP with QP），agent 选错 solver，<strong>求解失败</strong>。 解决办法：review 求解代码，<strong>手动换 Gurobi / CPLEX</strong>。 </p>
+<p><strong>坑 7：appendix 代码溢出页</strong>。 LaTeX 附录代码<strong>默认 verbatim 块</strong>，长代码不分页，导致页溢出。 解决办法：在 LaTeX 模板里加 <code>\usepackage{listings}</code> + <code>breaklines=true</code>。</p>
+<p><strong>坑 8：PDF 编译需要本地 LaTeX</strong>。 agent 在 sandbox 里<strong>没法编译 PDF</strong>（沙箱通常没装 LaTeX）。 你本地需要装 LaTeX 才能 <code>latexmk paper.tex</code> 出 PDF。 解决：装 MacTeX（macOS）/ TeX Live（Linux）/ MiKTeX（Windows），或者用 Overleaf 在云端编译。</p>
+<p><strong>坑 9：模型可解释性差</strong>。 agent 写模型时<strong>默认技术语言</strong> ——“我们构建一个 MILP，目标函数为…”, 评委可能扣” 模型不直观” 分。 解决办法：你在 review 时<strong>重写” 模型建立” 段</strong>，用<strong>白话 + 公式</strong>结合的方式，” 直观解释” 和” 数学公式” 交替。</p>
+<p>这 9 个坑 README 没全写。 我整理出来给后来人提个醒。</p>
+<hr>
+<h2 id="八点五、对比其他”AI-写论文-写代码”工具"><a href="#八点五、对比其他”AI-写论文-写代码”工具" class="headerlink" title="八点五、对比其他”AI 写论文 / 写代码”工具"></a>八点五、对比其他”AI 写论文 / 写代码” 工具</h2><p>| 工具 | 思路 | 协议 | 适合 |<br>|—|—|—|—|—|<br>| <strong>jihe520/MathModelAgent</strong> | 数学建模 7 步垂直 skill | MIT | 比赛 |<br>| <strong>affaan-m/agent-skills</strong> | 通用 agent skills 库 | MIT | 通用 |<br>| <strong>google-deepmind/funsearch</strong> | LLM 进化算法发现新数学 | Apache 2.0 | 研究 |<br>| <strong>SWE-bench/verified</strong> | 修 GitHub issue benchmark | MIT | 评估 |<br>| <strong>comet-ml/opik</strong> | LLM evaluation 框架 | Apache 2.0 | 工程 |<br>| <strong>openai/evals</strong> | OpenAI 评估框架 | MIT | 评估 |</p>
+<p>MathModelAgent 跟 <strong>funsearch</strong> 思路有点像但目标不同。 funsearch 是” 用 LLM 找新数学”，MathModelAgent 是” 用 LLM 跑已有数学”。 前者偏研究，后者偏应用。</p>
+<p>跟 <strong>SWE-bench</strong> 比，MathModelAgent 不是 benchmark—— 它是<strong>生产工具</strong>。 SWE-bench 评估 agent 修 GitHub issue 能力，MathModelAgent 跑数学建模流程。 评估 vs 工具。</p>
+<p>跟 <strong>opik / openai/evals</strong> 比，MathModelAgent <strong>不评估</strong> —— 它<strong>生成</strong>。 评估工具跟生成工具是不同赛道。</p>
+<p>MathModelAgent 的定位是 **” 特定比赛场景的 skill 集”<strong>，不是” 通用 LLM 工具”。 这个定位让它在 4.9k stars 这个数字上</strong>用户极其精准 **—— 全是数学建模圈的学生 + 老师 + 培训师。</p>
+<hr>
+<h2 id="九点五、数学建模比赛的一些-context"><a href="#九点五、数学建模比赛的一些-context" class="headerlink" title="九点五、数学建模比赛的一些 context"></a>九点五、数学建模比赛的一些 context</h2><p>写到这里给不了解数学建模的读者补点 context。</p>
+<p><strong>国赛（CUMCM）</strong>：全国大学生数学建模竞赛。 每年 9 月第二个周末（72-96 小时）。 全国约 4 万队参加（每队 3 人），约 12 万人。 题目分 A / B / C / D / E / F 题，<strong>A / B 偏理工（优化、方程）</strong>、<strong>C / D 偏经管（统计、规划）</strong>、<strong>E / F 偏新兴（机器学习、大数据）</strong>。 评省一、省二、省三 + 国一、国二（极少）。</p>
+<p><strong>美赛（MCM/ICM）</strong>：美国大学生数学建模竞赛。 每年 2 月初（4 天）。 全球约 2 万队参加。 题目 MCM（A 连续、B 离散、C 数据洞察）+ ICM（D 运筹、E 环境、F 政策）。 评 M 奖（一等）、H 奖（二等）、S 奖（三等）、U 奖（参与）。</p>
+<p><strong>研赛</strong>：中国研究生数学建模竞赛。 每年 6 月（4-5 天）。 约 1 万队参加。 题目 6-12 道，<strong>深度比国赛大</strong>。</p>
+<p><strong>深圳杯</strong>：深圳市数学建模竞赛。 每年 4 月。 规模小但<strong>奖金高</strong>。</p>
+<p><strong>阿里妈妈 / 华为 / 京东数学建模赛</strong>：企业赞助的比赛，<strong>跟找工作挂钩</strong>。 一等奖直接面试 pass。</p>
+<p>MathModelAgent 的 skill 集<strong>对国赛和研赛最有效</strong> —— 这两场题目偏工程优化，agent 的 MILP / 凸优化 solver 自动选型 + 敏感性分析 + LaTeX 模板<strong>正好对应国赛评分的” 格式 + 内容 + 模型可解释性” 三板斧</strong>。</p>
+<p>美赛偏<strong>英文写作</strong> + <strong>MCM/ICM 模板</strong>，agent 也能跑，但<strong>英文润色</strong>和”global context” 模型综述 agent 不擅长 —— 美赛要求” 国际视野”，agent 写的综述偏” 国内视角”。</p>
+<p>阿里 / 华为这种企业赛，agent <strong>适用</strong> —— 题目是工程优化，模型 + 求解 + 报告三件套。 但<strong>赛后还需要</strong>做 presentation，agent 帮不了。</p>
+<hr>
+<h2 id="十点五、一些反思"><a href="#十点五、一些反思" class="headerlink" title="十点五、一些反思"></a>十点五、一些反思</h2><p>写完 10 节之后我意识到一件事：MathModelAgent 的真正价值不是” 省时间”，是 **” 让数学建模从’专科技能’变成’通用 AI 工具能做的事’”**。</p>
+<p>之前数学建模是<strong>门槛很高</strong>的活动。 你需要：</p>
+<ul>
+<li>知道哪种模型用 LP / MILP / DP / 启发式</li>
+<li>会写 LaTeX</li>
+<li> 会用 PuLP /scipy/ Gurobi</li>
+<li> 会 matplotlib 画图</li>
+<li>知道国赛 / 美赛评分标准</li>
+</ul>
+<p>这五条任何一条都不会，数学建模就<strong>做不到</strong>。</p>
+<p>MathModelAgent 把这五条<strong>全包了</strong>。 你只要：</p>
+<ul>
+<li>懂一点数学（什么是最优化、什么是统计）</li>
+<li>会用 Claude Code / Cursor</li>
+</ul>
+<p>就能跑完 7 步，<strong>交一份格式完整、模型正确、有敏感性分析的论文</strong>。</p>
+<p>这条” 降低门槛” 的效应是<strong>双刃剑</strong>：</p>
+<ul>
+<li><strong>好的一面</strong>：更多人能参加数学建模，<strong>领域扩大</strong>。 数学建模” 全民化”。</li>
+<li><strong>坏的一面</strong>：agent 出的论文<strong>格式 + 模型</strong>都像样，<strong>知识深度</strong>和<strong>创新点</strong>需要真本事。 “省三 / 省二” 门槛降低，但” 省一 / 国一” 门槛<strong>没降</strong> —— 评委看的还是<strong>洞察 + 创新</strong>。</li>
+</ul>
+<p>这条对数学建模教育的影响是：老师要重新设计评分标准。 “格式 + 模型 + 报告” 的<strong>基础分</strong> agent 帮你拿了，评委要<strong>专门看洞察 + 创新</strong>。 否则 agent 出的论文全 90 分，区分度没了。</p>
+<p>我估计 2026 年下半年到 2027 年，<strong>国赛 / 美赛 / 研赛的评分标准会调整</strong>。 评委更看重” 为什么立这个模型”、” 你的洞察是什么”、” 你怎么解释反直觉的结果”。 这些是 agent 短期内<strong>做不好的</strong>。</p>
+<hr>
+<h2 id="十一、给”非数学建模”读者"><a href="#十一、给”非数学建模”读者" class="headerlink" title="十一、给”非数学建模”读者"></a>十一、给” 非数学建模” 读者</h2><p>如果你不是数学建模圈的，这篇<strong>看着像另一个世界的工具</strong>。 但我建议你读读，因为：</p>
+<p><strong>MathModelAgent 是”AI 垂直工具” 的早期代表</strong>。 它的成功路径（通用 agent + 垂直 skill + 垂直 tool）会<strong>复制到其他领域</strong>：</p>
+<ul>
+<li>医学论文 AI 写作</li>
+<li>法律文书 AI 生成</li>
+<li>投资分析 AI 报告</li>
+<li>商业计划书 AI 起草</li>
+<li>学术综述 AI 综合</li>
+<li>财务分析 AI 报表</li>
+</ul>
+<p>每条赛道都会出现一个类似 MathModelAgent 的项目 —— 给那个领域的”72 小时全流程” 写一套 skill + tool 集。</p>
+<p>如果你想”AI 时代的个人机会”，<strong>关注你所在领域的垂直 AI 工具</strong>。 一个<strong>懂你领域知识 + 会用 AI agent</strong> 的人，写出来的 vertical skill 集<strong>就是这个领域的 MathModelAgent</strong>。</p>
+<p>这条比” 写通用 skill” 更稀缺。 通用 skill 大家都能写。 垂直 skill 需要<strong>领域知识</strong>。</p>
+<hr>
+<h2 id="十一、读完你应该做的三件事"><a href="#十一、读完你应该做的三件事" class="headerlink" title="十一、读完你应该做的三件事"></a>十一、读完你应该做的三件事</h2><p><strong>第一件事：装上跑一道真题</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/jihe520/MathModelAgent.git</span><br><span class="line"><span class="comment"># 按 README 装到你的 agent</span></span><br><span class="line">npx skills add jihe520/MathModelAgent</span><br></pre></td></tr></tbody></table></figure>
+
+<p>找一道你熟悉的国赛 / 美赛 / 研赛真题（建议选 MILP / 优化题，agent 跑得最稳）。 30-60 分钟出初稿，<strong>体验全流程</strong>。</p>
+<p><strong>第二件事：装 Claude Sonnet 4.5 / GPT-5</strong>。</p>
+<p>MathModelAgent 强烈依赖 LLM 质量。 Haiku 太弱、opus 太贵。 <strong>Sonnet 4.5 / GPT-5 是甜蜜点</strong>。 你的 API key 月预算 $30-50 跑 5-10 道真题。</p>
+<p><strong>第三件事：找几个往年获奖论文做 review baseline</strong>。</p>
+<p>agent 出的初稿<strong>格式对、内容全</strong>，但<strong>知识深度</strong>和<strong>语言流畅度</strong>比不上真省一 / 国一论文。 你需要：</p>
+<ul>
+<li>找 2-3 篇往年省一 / 国一论文做<strong>对照标准</strong></li>
+<li>看哪些部分 agent 写得<strong>好</strong>（模型 + 求解）</li>
+<li>哪些部分 agent 写得<strong>机械</strong>（问题重述 + 结论）</li>
+<li>主动加<strong>亮点</strong>：敏感性分析的物理解释、创新点的真实洞察</li>
+</ul>
+<p>这三件事加起来成本 2-3 小时。 回报是” 下次比赛省 60-80% 时间”，把 72 小时的 deadline 变成 24 小时的 review + 加亮点。</p>
+<hr>
+<h2 id="十二、对比之前发过的项目全景"><a href="#十二、对比之前发过的项目全景" class="headerlink" title="十二、对比之前发过的项目全景"></a>十二、对比之前发过的项目全景</h2><p>写完 11 节我想给”AI 工具链全景” 做个更新。 截至今天（2026 年 9 月 12 日）我发过的项目：</p>
+<p><strong>输入层</strong>：</p>
+<ul>
+<li><strong>OpenWhispr/openwhispr</strong>（7.4k stars）— 语音 / 会议转录</li>
+<li><strong> bilawalsidhu/gods-eye-view</strong>（24.3k stars）— 3D 地球 / 视觉</li>
+<li><strong> jihe520/MathModelAgent</strong>（4.9k stars）— 数学建模（今天）</li>
+</ul>
+<p><strong>沉淀层</strong>：</p>
+<ul>
+<li><strong>nashsu/llm_wiki</strong>（18.7k stars）— 个人知识 wiki</li>
+<li><strong>Tencent/teamai-cli</strong>（3.0k stars）— 团队知识协调</li>
+</ul>
+<p><strong>编码层（AI 编码）</strong>：</p>
+<ul>
+<li><strong>anomalyco/opencode</strong>（204k stars）— agent 本体</li>
+<li><strong> mksglu/context-mode</strong>（20.8k stars）— context 优化</li>
+<li><strong> DietrichGebert/ponytail</strong>（127k stars）— 行为约束</li>
+<li><strong> affaan-m/ECC</strong>（255k stars）— skill 库</li>
+<li><strong> mattpocock/skills</strong>（170k stars）— 工程师 skill</li>
+<li><strong>heygen-com/hyperframes</strong>（45.9k stars）— 视频生成</li>
+</ul>
+<p><strong>之前没填的层</strong>：</p>
+<ul>
+<li>写作 / 内容生成（除了 HyperFrames 视频）</li>
+<li>翻译 / 本地化</li>
+<li>客户支持 / 对话</li>
+<li>销售 / 营销</li>
+</ul>
+<p>MathModelAgent 让我意识到 **” 垂直领域 skill 集” <strong>是 2026 年下半年 AI 工具链的</strong>主战场 **。 之前发过的项目<strong>已经在</strong>不同层布局，但每个垂直领域的 skill 集<strong>还没被填满</strong>。</p>
+<p>数学建模是个<strong>适合做垂直工具</strong>的好场景 —— 流程明确、模板可复用、评测标准清晰。 其他类似的” 垂直工具候选”：</p>
+<ul>
+<li>学术论文综述（每周读 50 篇论文 + 写综述）</li>
+<li>投资分析报告（季度财报 + 行业研究 + 估值模型）</li>
+<li>商业计划书（市场分析 + 商业模式 + 财务预测）</li>
+<li>法律合同（条款审查 + 风险评估 + 修订建议）</li>
+<li>医学影像诊断（图像分类 + 报告生成 + 随访建议）</li>
+</ul>
+<p>每条都能套”MathModelAgent 模式”—— <strong>通用 agent + 垂直 skill + 垂直 tool + 垂直 template</strong>。</p>
+<hr>
+<h2 id="十三、最后"><a href="#十三、最后" class="headerlink" title="十三、最后"></a>十三、最后</h2><p>MathModelAgent 是 4.9k stars 的项目，比之前发过的 context-mode、teamai-cli、llm_wiki 都小。 但它代表的”AI 垂直工具” 路径是<strong>值得关注的</strong>。</p>
+<p>通用 AI agent 已经强到<strong>任何垂直领域都能跑</strong>。 下一步不是”agent 变得更强”，是” <strong>领域知识被编码进 skill + tool</strong>“。 这条<strong>门槛低</strong>（任何懂领域 + 懂 agent 的人都能做），但<strong>价值高</strong>（每个领域都缺一个 MathModelAgent）。</p>
+<p>如果你正在做某个<strong>特定领域</strong>的 AI 工具（不一定是数学建模），参考 MathModelAgent 的路径：</p>
+<ol>
+<li><strong>识别领域的 5-7 步标准流程</strong>。 数学建模 = 7 步。 你的领域呢？ 写代码 / 写报告 / 做分析 / 做诊断，<strong>总有固定流程</strong>。</li>
+<li><strong>把每步变成一个 skill</strong>。 每个 skill 一份 SKILL.md，agent 按需调。</li>
+<li><strong>把领域专用 tool 抽出来</strong>。 数学建模的 tool = 文献检索、Python 求解、LaTeX 编译。 你的领域的 tool = ?</li>
+<li><strong> 写垂直 template</strong>。 数学建模的 template = 国赛 / 美赛 / 研赛 LaTeX。 你的领域的 template = ?</li>
+<li><strong> 跑 + 改 + 沉淀</strong>。 跑 10 个真实场景，<strong>改 skill + tool + template</strong>。 跑得动 + 跑得好。</li>
+</ol>
+<p>这条 5 步是” <strong>通用 agent → 垂直产品</strong> “的施工图。 MathModelAgent 证明了它跑得通。 你的领域也能。</p>
+<hr>
+<h2 id="十四、附录：一份实测的-agent-输出摘录"><a href="#十四、附录：一份实测的-agent-输出摘录" class="headerlink" title="十四、附录：一份实测的 agent 输出摘录"></a>十四、附录：一份实测的 agent 输出摘录</h2><p>为了让数字不空，我贴一段我跑 2023 国赛 C 题时 agent 输出的<strong>真实摘录</strong>（删去具体数字保留结构）。 这段是步骤 4「模型建立」的输出：</p>
+<blockquote>
+<p>决策变量：x_ij 表示第 i 种蔬菜第 j 天的补货量（单位：kg），p_ij 表示第 i 种蔬菜第 j 天的售价（单位：元 /kg）。<br>目标函数：max Σ_{i,j} p_ij * (1 - α_i) * d_ij - c_i * x_ij，其中 α_i 是损耗率，c_i 是单位进价，d_ij 是当日需求。<br>约束 1（库存平衡）：I_ij = I_{i,j-1} + x_ij - (1-α_i)*d_ij，初始库存 I_{i,0} = I_i0。<br>约束 2（库存上限）：I_ij ≤ C_i，C_i 是最大库存容量。<br>约束 3（非负）：x_ij, p_ij ≥ 0。</p>
+</blockquote>
+<p>你看，<strong>LaTeX 风格 + 决策变量定义 + 目标函数 + 三类约束 + 编号</strong> —— 这是数学建模论文<strong>最标准的模型段写法</strong>。 agent 一步到位。</p>
+<p>我手工写这段需要 30-60 分钟（建模手 + 编程手来回改），agent 30 秒。 这条<strong>模型段</strong>的快速且规范是整个 agent 工作流中<strong>最值钱</strong>的一步，<strong>其他段都可以后续改</strong>。<br>项目地址：<a target="_blank" rel="noopener" href="https://github.com/jihe520/MathModelAgent">https://github.com/jihe520/MathModelAgent</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/09/12/jihe520-mathmodelagent-math-modeling-agent/" title="jihe520&#x2F;MathModelAgent：4.9k stars 的数学建模 Agent + skills，从题目到一份可提交的完整论文">https://www.daishengli.top/2026/09/12/jihe520-mathmodelagent-math-modeling-agent/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/MathModelAgent/" rel="tag"># MathModelAgent</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/" rel="tag"># 数学建模</a>
+              <a href="/tags/%E5%9B%BD%E8%B5%9B/" rel="tag"># 国赛</a>
+              <a href="/tags/%E7%BE%8E%E8%B5%9B/" rel="tag"># 美赛</a>
+              <a href="/tags/LaTeX/" rel="tag"># LaTeX</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E5%86%99%E4%BD%9C/" rel="tag"># 论文写作</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/11/nashsu-llm-wiki-personal-knowledge-base/" rel="prev" title="nashsu&#x2F;llm_wiki：18.7k stars 的 &quot;AI 自动维护&quot; 个人维基，Karpathy LLM-Wiki pattern 的桌面实现 + 知识图谱 + Louvain 社区发现">
+                  <i class="fa fa-angle-left"></i> nashsu/llm_wiki：18.7k stars 的 "AI 自动维护" 个人维基，Karpathy LLM-Wiki pattern 的桌面实现 + 知识图谱 + Louvain 社区发现
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/17/vastsa-pi-desktop-local-first-ai-coding/" rel="next" title="vastsa&#x2F;PI-Desktop：2.8k stars 的本地优先 AI 编码 Agent 桌面，Electron + Rust host core + pi Agent Harness + 用户可装插件">
+                  vastsa/PI-Desktop：2.8k stars 的本地优先 AI 编码 Agent 桌面，Electron + Rust host core + pi Agent Harness + 用户可装插件 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

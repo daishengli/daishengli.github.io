@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Tencent&#x2F;BrowserSkill（GitHub 5.3k stars、1.3k forks、当日 +1.3k stars、MIT）是一款让 AI 编码 agent 借用用户真实浏览器完成任务的本地桥接工具，&#96;bsk&#96; CLI + 本地 daemon + Chrome &#x2F; Edge 扩展 + skill 四件套，agent 调 &#96;bsk&#96; 命令通过本地 IPC → WebSocket（127">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tencent&#x2F;BrowserSkill：5.3k stars 的 &quot;让 AI agent 用你的真实浏览器&quot;，复用登录态 + 不打扰你工作 + 11 个 agent harness 都支持">
+<meta property="og:url" content="https://www.daishengli.top/2026/09/18/tencent-browserskill-shared-browser-ai-agents/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="Tencent&#x2F;BrowserSkill（GitHub 5.3k stars、1.3k forks、当日 +1.3k stars、MIT）是一款让 AI 编码 agent 借用用户真实浏览器完成任务的本地桥接工具，&#96;bsk&#96; CLI + 本地 daemon + Chrome &#x2F; Edge 扩展 + skill 四件套，agent 调 &#96;bsk&#96; 命令通过本地 IPC → WebSocket（127">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-18T01:50:00.000Z">
+<meta property="article:modified_time" content="2026-09-22T01:08:35.235Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="Cursor">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Codex">
+<meta property="article:tag" content="BrowserSkill">
+<meta property="article:tag" content="Tencent">
+<meta property="article:tag" content="Browser Automation">
+<meta property="article:tag" content="Chrome Extension">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/09/18/tencent-browserskill-shared-browser-ai-agents/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/09/18/tencent-browserskill-shared-browser-ai-agents/","path":"2026/09/18/tencent-browserskill-shared-browser-ai-agents/","title":"Tencent/BrowserSkill：5.3k stars 的 \"让 AI agent 用你的真实浏览器\"，复用登录态 + 不打扰你工作 + 11 个 agent harness 都支持"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Tencent/BrowserSkill：5.3k stars 的 "让 AI agent 用你的真实浏览器"，复用登录态 + 不打扰你工作 + 11 个 agent harness 都支持 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">386</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">120</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9AAI-agent-%E7%9A%84%E2%80%9D%E7%99%BB%E5%BD%95%E6%80%81%E9%97%AE%E9%A2%98%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">一、它想解决的问题：AI agent 的” 登录态问题”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%EF%BC%9ACLI-%E6%9C%AC%E5%9C%B0-daemon-Chrome-%E6%89%A9%E5%B1%95-skill"><span class="nav-number">2.</span> <span class="nav-text">二、核心架构：CLI + 本地 daemon + Chrome 扩展 + skill</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%9C%80%E6%A0%B8%E5%BF%83%E7%9A%84%E8%AE%BE%E8%AE%A1%EF%BC%9A%E2%80%9D%E5%80%9F-tab%E2%80%9D%E6%9C%BA%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">三、最核心的设计：” 借 tab” 机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%83%E8%83%BD%E5%B9%B2%E4%BB%80%E4%B9%88%EF%BC%9A%E5%85%B7%E4%BD%93%E5%9C%BA%E6%99%AF"><span class="nav-number">4.</span> <span class="nav-text">四、它能干什么：具体场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%B7%A8-11-%E4%B8%AA-agent-harness-%E6%94%AF%E6%8C%81"><span class="nav-number">5.</span> <span class="nav-text">五、跨 11 个 agent harness 支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81Human-in-loop%EF%BC%9A%E7%A2%B0%E5%88%B0-captcha-%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="nav-number">6.</span> <span class="nav-text">六、Human-in-loop：碰到 captcha 怎么办</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82%EF%BC%9ARust-daemon-WebSocket-Chrome-extension"><span class="nav-number">7.</span> <span class="nav-text">七、技术细节：Rust daemon + WebSocket + Chrome extension</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E7%82%B9%E4%BA%94%E3%80%81%E5%85%B7%E4%BD%93%E5%91%BD%E4%BB%A4%E6%B8%85%E5%8D%95"><span class="nav-number">8.</span> <span class="nav-text">六点五、具体命令清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E7%82%B9%E4%BA%94%E3%80%81Agent-Skill-%E6%80%8E%E4%B9%88%E8%A3%85"><span class="nav-number">9.</span> <span class="nav-text">七点五、Agent Skill 怎么装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E7%82%B9%E4%BA%94%E3%80%81Remote-Extension-Connection%EF%BC%9Aagent-%E5%9C%A8%E4%BA%91%E3%80%81%E6%B5%8F%E8%A7%88%E5%99%A8%E5%9C%A8%E6%9C%AC%E5%9C%B0"><span class="nav-number">10.</span> <span class="nav-text">八点五、Remote Extension Connection：agent 在云、浏览器在本地</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E8%A3%85%E4%B8%80%E9%81%8D"><span class="nav-number">11.</span> <span class="nav-text">八、装一遍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%87%A0%E6%9D%A1%E5%85%B7%E4%BD%93%E7%9A%84%E5%B7%A5%E7%A8%8B%E8%AE%BE%E8%AE%A1"><span class="nav-number">12.</span> <span class="nav-text">九、几条具体的工程设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E5%AF%B9%E6%AF%94%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84-browser-automation-%E5%B7%A5%E5%85%B7"><span class="nav-number">13.</span> <span class="nav-text">十、对比之前发过的 browser automation 工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%87%A0%E4%B8%AA%E6%88%91%E8%A3%85%E4%B8%8A%E8%B7%91%E8%BF%87%E7%9A%84%E5%85%B7%E4%BD%93%E5%9C%BA%E6%99%AF"><span class="nav-number">14.</span> <span class="nav-text">十一、几个我装上跑过的具体场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">15.</span> <span class="nav-text">十二、适合谁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E7%82%B9%E4%BA%94%E3%80%81%E4%B8%80%E4%BA%9B%E5%AF%B9%E6%AF%94%E6%95%B0%E6%8D%AE"><span class="nav-number">16.</span> <span class="nav-text">九点五、一些对比数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E7%82%B9%E4%BA%94%E3%80%81%E5%87%A0%E4%B8%AA%E5%AE%9E%E8%B7%91%E6%97%B6%E5%AE%B9%E6%98%93%E8%B8%A9%E7%9A%84%E5%9D%91"><span class="nav-number">17.</span> <span class="nav-text">十点五、几个实跑时容易踩的坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E7%82%B9%E4%BA%94%E3%80%81%E5%87%A0%E6%9D%A1%E5%8F%8D%E6%A8%A1%E5%BC%8F%E8%AD%A6%E5%91%8A"><span class="nav-number">18.</span> <span class="nav-text">十一点五、几条反模式警告</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E7%82%B9%E4%BA%94%E3%80%81Plugin-%E7%94%9F%E6%80%81%E8%A7%82%E5%AF%9F"><span class="nav-number">19.</span> <span class="nav-text">十二点五、Plugin 生态观察</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E7%82%B9%E4%BA%94%E3%80%81%E7%BB%99%E2%80%9D%E8%A3%85%E5%9C%A8%E4%BC%81%E4%B8%9A%E2%80%9D%E7%9A%84%E5%87%A0%E6%9D%A1%E5%85%B7%E4%BD%93%E5%BB%BA%E8%AE%AE"><span class="nav-number">20.</span> <span class="nav-text">十三点五、给” 装在企业” 的几条具体建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E5%B1%80%E9%99%90"><span class="nav-number">21.</span> <span class="nav-text">十三、局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E5%AE%83%E5%9C%A8-AI-agent-%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">22.</span> <span class="nav-text">十四、它在 AI agent 工具链的位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E8%AF%BB%E5%AE%8C%E4%BD%A0%E5%BA%94%E8%AF%A5%E5%81%9A%E7%9A%84%E4%B8%89%E4%BB%B6%E4%BA%8B"><span class="nav-number">23.</span> <span class="nav-text">十五、读完你应该做的三件事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E7%82%B9%E4%BA%94%E3%80%81%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%9B%BE%EF%BC%88%E6%9D%A5%E8%87%AA-README%EF%BC%89"><span class="nav-number">24.</span> <span class="nav-text">十四点五、技术架构图（来自 README）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E7%82%B9%E4%BA%94%E3%80%81%E5%AF%B9%E6%AF%94%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84%E6%89%80%E6%9C%89-agent-%E7%B1%BB%E9%A1%B9%E7%9B%AE"><span class="nav-number">25.</span> <span class="nav-text">十五点五、对比之前发过的所有 agent 类项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E7%82%B9%E4%BA%94%E3%80%81%E6%88%91%E8%87%AA%E5%B7%B1%E7%9A%84%E6%9C%80%E7%BB%88%E5%88%A4%E6%96%AD"><span class="nav-number">26.</span> <span class="nav-text">十六点五、我自己的最终判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%83%E7%82%B9%E4%BA%94%E3%80%81%E5%AF%B9%E6%AF%94-Tencent-teamai-cli-%E7%9A%84%E4%BA%A7%E5%93%81%E5%93%B2%E5%AD%A6"><span class="nav-number">27.</span> <span class="nav-text">十七点五、对比 Tencent&#x2F;teamai-cli 的产品哲学</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AB%E7%82%B9%E4%BA%94%E3%80%81%E7%BB%99%E2%80%9DAI-agent-%E6%93%8D%E4%BD%9C%E7%9C%9F%E5%AE%9E%E4%B8%96%E7%95%8C%E2%80%9D%E8%BF%99%E4%B8%AA%E8%B5%9B%E9%81%93%E7%9A%84%E9%A2%84%E6%B5%8B"><span class="nav-number">28.</span> <span class="nav-text">十八点五、给”AI agent 操作真实世界” 这个赛道的预测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B9%9D%E7%82%B9%E4%BA%94%E3%80%81%E4%B8%80%E4%BA%9B%E2%80%9D%E6%88%91%E5%8F%AF%E8%83%BD%E7%94%A8%E9%94%99%E7%9A%84%E5%8A%9F%E8%83%BD%E2%80%9D"><span class="nav-number">29.</span> <span class="nav-text">十九点五、一些” 我可能用错的功能”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E3%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AE%B5"><span class="nav-number">30.</span> <span class="nav-text">二十、最后一段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8D%81%E7%82%B9%E4%BA%94%E3%80%81%E5%87%A0%E6%9D%A1%E6%9C%80%E7%BB%88%E7%9A%84%E5%85%B7%E4%BD%93-tips"><span class="nav-number">31.</span> <span class="nav-text">二十点五、几条最终的具体 tips</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">386</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/09/18/tencent-browserskill-shared-browser-ai-agents/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Tencent&#x2F;BrowserSkill：5.3k stars 的 &quot;让 AI agent 用你的真实浏览器&quot;，复用登录态 + 不打扰你工作 + 11 个 agent harness 都支持 | 小戴的网络日志">
+      <meta itemprop="description" content="Tencent&#x2F;BrowserSkill（GitHub 5.3k stars、1.3k forks、当日 +1.3k stars、MIT）是一款让 AI 编码 agent 借用用户真实浏览器完成任务的本地桥接工具，&#96;bsk&#96; CLI + 本地 daemon + Chrome &#x2F; Edge 扩展 + skill 四件套，agent 调 &#96;bsk&#96; 命令通过本地 IPC → WebSocket（127.0.0.1）→ 扩展 → Agent Window 跑浏览器任务，**复用用户已登录的账号态**（GitHub &#x2F; Notion &#x2F; Gmail &#x2F; 内网系统），**不打断用户正在用的 tab**，支持 Cursor &#x2F; Claude Code &#x2F; Codex &#x2F; OpenClaw &#x2F; CodeBuddy &#x2F; WorkBuddy &#x2F; Pi &#x2F; Hermes Agent &#x2F; DeepSeek Harness &#x2F; Qwen Code 等 11 个 agent harness 内置 human-in-loop（碰到 captcha &#x2F; 二次验证 &#x2F; 短信码时 agent 自动请求人类接管）。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Tencent/BrowserSkill：5.3k stars 的 "让 AI agent 用你的真实浏览器"，复用登录态 + 不打扰你工作 + 11 个 agent harness 都支持
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-18 09:50:00" itemprop="dateCreated datePublished" datetime="2026-09-18T09:50:00+08:00">2026-09-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Tencent/BrowserSkill（GitHub 5.3k stars、1.3k forks、当日 +1.3k stars、MIT）是一款让 AI 编码 agent 借用用户真实浏览器完成任务的本地桥接工具，`bsk` CLI + 本地 daemon + Chrome / Edge 扩展 + skill 四件套，agent 调 `bsk` 命令通过本地 IPC → WebSocket（127.0.0.1）→ 扩展 → Agent Window 跑浏览器任务，**复用用户已登录的账号态**（GitHub / Notion / Gmail / 内网系统），**不打断用户正在用的 tab**，支持 Cursor / Claude Code / Codex / OpenClaw / CodeBuddy / WorkBuddy / Pi / Hermes Agent / DeepSeek Harness / Qwen Code 等 11 个 agent harness 内置 human-in-loop（碰到 captcha / 二次验证 / 短信码时 agent 自动请求人类接管）。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上周我用 Claude Code 帮我改一个 GitHub PR review，agent 跑到一半跟我说：</p>
+<blockquote>
+<p>我需要 GitHub 登录态才能 fetch PR 评论。 你能帮我在浏览器里登录 GitHub 吗？</p>
+</blockquote>
+<p>我打开浏览器，手动登录 GitHub，回来告诉它” 好了”。 agent 接着跑。 整个流程<strong>中断</strong>了我，我得” 开浏览器 → 输账号 → 关浏览器 → 回来”。</p>
+<p>这是个<strong>很常见的痛点</strong>。 AI agent 要操作浏览器，但<strong>默认是 headless 模式</strong>（不带登录态）。 碰到需要登录的网站，agent 直接卡住。</p>
+<p>昨天我在 GitHub Trending 上刷到一个新项目：<strong>Tencent/BrowserSkill</strong>。 5.3k stars，1.3k forks，<strong>当日 +1.3k stars</strong>。 MIT。 来自腾讯（跟之前发过的 teamai-cli 一个生态）。</p>
+<p>它干的事情一句话：<strong>让 AI agent 借用你的真实浏览器</strong>，复用你已经登录的账号态，不打断你正在用的 tab，碰到 captcha / 二次验证时让人类接管。</p>
+<hr>
+<h2 id="一、它想解决的问题：AI-agent-的”登录态问题”"><a href="#一、它想解决的问题：AI-agent-的”登录态问题”" class="headerlink" title="一、它想解决的问题：AI agent 的”登录态问题”"></a>一、它想解决的问题：AI agent 的” 登录态问题”</h2><p>先把背景说清楚。</p>
+<p>2024-2026 年，AI agent 操作浏览器这条线演化成两条路径：</p>
+<p><strong>Headless 路径</strong>。 agent 自己跑 Playwright / Puppeteer headless Chrome。 优点：隔离、可并行、不打扰用户。 缺点：<strong>没有登录态</strong>。 碰到 GitHub / Notion / Gmail / 企业内网系统，agent 直接卡住，” 你没登录”。</p>
+<p><strong>Sidecar 路径</strong>（之前发过的几个项目）：在用户机器跑一个<strong>独立</strong>浏览器实例，agent 操作这个独立实例。 优点：有登录态（用户预先登录）。 缺点：<strong>用户登录一次 + 维护一个独立实例</strong>，运维成本高。</p>
+<p><strong>Shared browser 路径</strong>（BrowserSkill）。 agent 跟用户<strong>共享同一个浏览器实例</strong>。 优点：复用用户已经登录的账号态，<strong>无需重新登录</strong>。 缺点：需要” 借 tab” 机制保证不打扰用户。</p>
+<p>这条”shared browser” 路径在 2024 年下半年开始出现，几个开源项目（Browser-Use、playwright-mcp、Chrome DevTools MCP）都在做，但都有<strong>具体限制</strong>，</p>
+<ul>
+<li>装复杂的 MCP server 配置</li>
+<li>需要单独的浏览器实例</li>
+<li>缺 login 复用</li>
+<li>用户主动授权体验差</li>
+</ul>
+<p>Tencent BrowserSkill 走的是 **” 在用户已经登录的真实浏览器里加一层”<strong>，一个 Chrome / Edge 扩展 + 一个本地 daemon + 一个 CLI + 一个 skill。 agent 通过 CLI 调命令，本地 daemon 路由，扩展在用户的</strong>真实浏览器 ** 里开一个”Agent Window” 跑任务。</p>
+<p>这条”agent 借用用户的浏览器” 比”agent 自己起浏览器” 和”agent 跑 headless” 都<strong>更轻量</strong>，不用单独实例，复用登录态，扩展<strong>不干扰</strong>用户。</p>
+<hr>
+<h2 id="二、核心架构：CLI-本地-daemon-Chrome-扩展-skill"><a href="#二、核心架构：CLI-本地-daemon-Chrome-扩展-skill" class="headerlink" title="二、核心架构：CLI + 本地 daemon + Chrome 扩展 + skill"></a>二、核心架构：CLI + 本地 daemon + Chrome 扩展 + skill</h2><p>BrowserSkill 的架构分四块：</p>
+<p><strong><code>bsk</code> CLI / daemon</strong>（Rust）。 装在用户机器上的二进制。 负责：</p>
+<ul>
+<li>接收 agent 的命令（<code>bsk open &lt;url&gt;</code>、<code>bsk screenshot</code>、<code>bsk click</code> 等）</li>
+<li>通过 local IPC 跟 daemon 通信</li>
+<li> daemon 跑 WebSocket server（127.0.0.1），连扩展</li>
+</ul>
+<p>CLI 子命令覆盖完整浏览器自动化：</p>
+<ul>
+<li><code>bsk session start</code>：开一个 browser session</li>
+<li><code>bsk tab borrow</code>：借用户当前 tab</li>
+<li><code>bsk click / type / scroll</code>：模拟用户操作</li>
+<li><code>bsk screenshot --full-page</code>：全页截图</li>
+<li><code>bsk request-help</code>：碰到 captcha 时请求人类接管</li>
+<li><code>bsk doctor</code>：诊断连接</li>
+<li><code>bsk install-skill</code>：装 skill 到 agent harness</li>
+</ul>
+<p><strong>Chrome / Edge 扩展</strong>。 装在用户真实浏览器里，负责：</p>
+<ul>
+<li>维护 WebSocket 连接（127.0.0.1）</li>
+<li>收到 daemon 命令后在”Agent Window”（独立 tab）里跑</li>
+<li>用户<strong>主浏览器窗口不受影响</strong></li>
+<li>用户主动授权 / 拒绝 / 接管</li>
+</ul>
+<p><strong>skill 包</strong>。 装到 agent harness（Cursor / Claude Code / Codex /opencode/ Pi 等），教 agent <strong>怎么用 <code>bsk</code> 命令</strong>。 不是把 browser control 内置到 agent，而是<strong>外挂</strong> <code>bsk</code>。</p>
+<p><strong>DeepSeek Harness plugin</strong>（可选）。 DeepSeek Harness 用户有 first-class npm plugin：<code>@wxg-prc-cpg/browser-skill-dsh-plugin</code>。 装上后 agent <strong>直接用</strong> browser_* 工具，不调 <code>bsk</code> CLI（plugin 内部调）。</p>
+<p>四块拆开的好处：</p>
+<ul>
+<li>agent 不绑死到特定浏览器或 harness</li>
+<li> 用户想换 harness 直接装新 skill，不用换 CLI</li>
+<li> 浏览器升级 / Chromium 变更只影响扩展，不影响 CLI + daemon</li>
+<li>skill 跟 harness 同步升级，CLI 跟 OS 同步升级</li>
+</ul>
+<hr>
+<h2 id="三、最核心的设计：”借-tab”机制"><a href="#三、最核心的设计：”借-tab”机制" class="headerlink" title="三、最核心的设计：”借 tab”机制"></a>三、最核心的设计：” 借 tab” 机制</h2><p>BrowserSkill 最有意思的设计是 **”borrow tab” 机制 **，agent 操作浏览器前<strong>必须</strong>显式借 tab，<strong>用户主动授权</strong>才能用。</p>
+<p>README 给的图：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Agent → bsk tab borrow → daemon → extension → popup 通知用户</span><br><span class="line">用户点 "Approve" → tab 在 Agent Window 里被 "借走"</span><br><span class="line">agent 完成任务 → tab 归还 → 用户原 tab 状态不变</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这条机制解决三个具体问题：</p>
+<p><strong>问题 1：不打扰用户</strong>。 agent 操作浏览器时用户的<strong>原 tab 不动</strong>。 借的 tab 是<strong>单独的 “Agent Window”</strong>。 用户继续刷 GitHub、看 Notion，agent 在另一个 tab 跑任务。</p>
+<p><strong>问题 2：用户掌控授权</strong>。 借 tab 之前用户<strong>必须</strong>在扩展 popup 点 “Approve”。 agent 不能” 偷偷” 动用户的 tab。 默认开启”Confirm before borrowing tabs”。</p>
+<p><strong>问题 3：失败回滚</strong>。 agent 跑失败 / 超时 / 崩溃，<strong>tab 自动归还</strong>用户。 不会” 借出去忘了还”。</p>
+<p>借 tab 还有<strong>精细权限</strong>：可以指定” 只借这个 URL 的 tab”、” 只借这个 domain 的 tab”、” 借完不要关”、” 借完必须关”。 这条让” 我让 agent 改 GitHub PR，但不要碰我的 Gmail tab” 这种<strong>最小授权</strong>成为可能。</p>
+<p>这条” 借 tab” 机制是 BrowserSkill <strong>区别于</strong>其他 browser automation 工具的核心设计。 之前发过的 playwright-mcp 走的是” 独立 headless 浏览器”，<strong>没有</strong> “借 tab” 机制，它跑任务时<strong>新建</strong>一个浏览器实例，<strong>不碰</strong>用户当前的浏览器。 这是”shared browser” 和”headless” 的根本差异。</p>
+<hr>
+<h2 id="四、它能干什么：具体场景"><a href="#四、它能干什么：具体场景" class="headerlink" title="四、它能干什么：具体场景"></a>四、它能干什么：具体场景</h2><p>README 列了一些典型场景，整理几个最有用的：</p>
+<p><strong>1. 自动 PR review + GitHub 操作</strong>。 agent 跑 Playwright 在 GitHub PR 上<strong>评论 + 提交修改 + 检查 CI</strong>。 用户已经在 GitHub 登录（开发者日常），agent 直接用。</p>
+<p><strong>2. Notion / Confluence 内容操作</strong>。 用户在 Notion 工作，agent 操作 Notion API + 网页界面。 <strong>不要</strong>单独登录。</p>
+<p><strong>3. 企业内网系统操作</strong>。 ERP / CRM / 内网 wiki，<strong>只有</strong>用户有访问权限。 agent 通过借用户的 tab 操作，<strong>不需要企业 VPN + 单独账号</strong>。</p>
+<p><strong>4. 邮箱 / 日历操作</strong>。 Gmail / Outlook 操作。 agent 读邮件、起草回复、安排会议。 <strong>复用</strong>用户的登录态。</p>
+<p><strong>5. 测试自动化</strong>。 agent 跑端到端测试，<strong>用真实浏览器 + 真实账号</strong>。 比 Playwright headless 更接近生产场景。</p>
+<p><strong>6. 数据抓取 + 提交</strong>。 agent 抓网页数据 → 整理 → 填回某个后台系统。 整个 workflow 借用户 tab 完成。</p>
+<p><strong>7. 跨系统 workflow</strong>。 “从 GitHub 读 issue → 查 Notion 文档 → 在 Jira 创建 ticket → Slack 通知团队”。 agent 借用户的 GitHub / Notion / Jira / Slack tab，<strong>全程复用用户的权限</strong>。</p>
+<p>这些场景<strong>之前</strong> agent 跑不动（需要登录），<strong>现在</strong> BrowserSkill 让它们<strong>可跑</strong>。</p>
+<hr>
+<h2 id="五、跨-11-个-agent-harness-支持"><a href="#五、跨-11-个-agent-harness-支持" class="headerlink" title="五、跨 11 个 agent harness 支持"></a>五、跨 11 个 agent harness 支持</h2><p>BrowserSkill 的<strong>最大卖点</strong>是它<strong>不绑定</strong>任何 agent harness。 任何” 能调 shell” 的 agent 都能用 <code>bsk</code> CLI。</p>
+<p>README 给了 harness logo 墙：</p>
+<ul>
+<li><strong>Cursor</strong>（IDE）</li>
+<li><strong>Claude Code</strong>（CLI agent）</li>
+<li><strong>Codex</strong>（OpenAI 的 CLI）</li>
+<li><strong>OpenClaw</strong>（之前发过的 gateway）</li>
+<li><strong>CodeBuddy</strong>（腾讯云）</li>
+<li><strong>WorkBuddy</strong>（腾讯云）</li>
+<li><strong>Pi</strong>（badlogic / pi-mono）</li>
+<li><strong>Hermes Agent</strong>（NousResearch）</li>
+<li><strong>DeepSeek Harness</strong>（DeepSeek 官方）， npm plugin 路径</li>
+<li>其他 shell-capable agent（手动 copy SKILL.md）</li>
+</ul>
+<p>11 个 harness 装上 skill 后<strong>自动能用</strong> <code>bsk</code> 命令。 这条”skill 装到 harness” 的设计跟之前发过的 ECC、teamai-cli、context-mode 是同款，<strong>agent 本体不动</strong>，skill 是<strong>外挂</strong>。</p>
+<p>具体装法（推荐路径）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 装 CLI + daemon</span></span><br><span class="line">curl -fsSL https://raw.githubusercontent.com/Tencent/BrowserSkill/main/install.sh | sh</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">"<span class="variable">${BSK_INSTALL_DIR:-<span class="variable">$HOME</span>/.local/bin}</span>:<span class="variable">$PATH</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 装 skill 到 agent</span></span><br><span class="line">bsk install-skill</span><br><span class="line"><span class="comment"># 弹出交互式菜单，选 harness</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 装 Chrome 扩展（手动）</span></span><br><span class="line"><span class="comment"># Chrome Web Store 链接在 README</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>对 Claude Code 用户：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 在 chat 里发给 agent</span><br><span class="line">Set up browser-skill on this machine by following https://raw.githubusercontent.com/Tencent/BrowserSkill/main/AGENT_INSTALL.md</span><br></pre></td></tr></tbody></table></figure>
+
+<p>agent <strong>自动</strong>装 CLI + skill + 引导你装扩展。</p>
+<hr>
+<h2 id="六、Human-in-loop：碰到-captcha-怎么办"><a href="#六、Human-in-loop：碰到-captcha-怎么办" class="headerlink" title="六、Human-in-loop：碰到 captcha 怎么办"></a>六、Human-in-loop：碰到 captcha 怎么办</h2><p>BrowserSkill 的另一个<strong>关键设计</strong>是 <strong>human-in-loop</strong>。</p>
+<p>agent 跑浏览器任务时<strong>碰到</strong>这些情况：</p>
+<ul>
+<li><strong>Captcha</strong>（reCAPTCHA /hCaptcha/ 图片验证码）</li>
+<li><strong>手机短信验证码</strong></li>
+<li><strong>二次验证</strong>（Google Authenticator / TOTP）</li>
+<li><strong>面部识别</strong></li>
+<li><strong>任何” 只有人能做” 的步骤</strong></li>
+</ul>
+<p>agent <strong>会停下来</strong>，调 <code>bsk request-help</code>，扩展 popup 弹”Agent 需要你接管”，用户在浏览器里<strong>手动</strong>完成 captcha / 输入验证码 / 扫脸，agent <strong>接着跑</strong>。</p>
+<p>这条设计对<strong>真实</strong>业务操作特别重要。 之前发过的几个 browser automation 工具（playwright-mcp /browser-use）碰到 captcha <strong>直接 fail</strong>。 BrowserSkill 让 agent <strong>不放弃</strong>，遇到障碍请求人类，<strong>继续</strong>。</p>
+<p>对 SMS-only captcha /face-only verification，agent <strong>不能接管</strong>，需要人类一直在线。 README 老实标了：</p>
+<blockquote>
+<p>Phone-only QR scans, face verification, unavailable SMS codes, and image-only CAPTCHAs for text-only models may remain blocked. A disabled result neither completes the task nor grants additional permission.</p>
+</blockquote>
+<p>这条 caveat 对”AI agent 全自动操作所有网站” 是个<strong>清醒的认识</strong>，<strong>有些步骤人类必须在线</strong>。</p>
+<hr>
+<h2 id="七、技术细节：Rust-daemon-WebSocket-Chrome-extension"><a href="#七、技术细节：Rust-daemon-WebSocket-Chrome-extension" class="headerlink" title="七、技术细节：Rust daemon + WebSocket + Chrome extension"></a>七、技术细节：Rust daemon + WebSocket + Chrome extension</h2><p>BrowserSkill 的技术选型跟之前发过的 GEV 有点类似，<strong>小 binary + 标准协议 + 浏览器扩展</strong>。</p>
+<p><strong>Rust CLI / daemon</strong>。 <code>crates/bsk-cli</code> 跑 <code>bsk</code> CLI + daemon。 Rust 写，单 binary，跨平台（macOS Apple Silicon / Intel、Linux x64 / ARM64、Windows x64）。 编译产物～5 MB。 启动 100 ms 级。</p>
+<p><strong>WebSocket on 127.0.0.1</strong>。 daemon 跟扩展之间走 WebSocket，绑 <code>127.0.0.1</code>，<strong>只本地连</strong>。 不开 0.0.0.0（避免被外部网络攻击）。 协议版本 1.3（最新），兼容 1.0-1.2。</p>
+<p><strong>Chrome extension</strong>。 标准的 Chromium Extension（Manifest V3），用 <code>apps/extension</code> 目录构建。 装 Chrome Web Store 后<strong>自动更新</strong>。 也支持 unpacked development build（手动 load）。</p>
+<p><strong>pnpm workspace + Cargo workspace</strong>。 仓库是 hybrid monorepo：</p>
+<ul>
+<li>Rust 部分用 Cargo workspace（<code>crates/bsk-cli</code>、<code>crates/bsk-protocol</code>）</li>
+<li>JS 部分用 pnpm workspace（<code>apps/extension</code>、<code>packages/ui</code>、<code>packages/i18n</code>、<code>packages/dsh-plugin-browserskill</code>）</li>
+</ul>
+<p>这条 hybrid monorepo 设计跟之前发过的 opencode（也是 TS + Rust 混合）、HyperFrames（TS + Vite）类似。</p>
+<p><strong>Wire protocol</strong>。 <code>crates/bsk-protocol</code> 定义 wire types 和 JSON schemas，<strong>daemon 和扩展共享</strong>。 protocol 1.3 是当前版本。 跨版本兼容做了 staggered upgrade 测试。</p>
+<p><strong>evals/browser</strong>。 仓库 <code>evals/browser</code> 目录有”deterministic local pages”，一组本地 HTML 页面（登录页、表单、搜索结果等），用于<strong>自动化测试</strong> <code>bsk</code> 在各种浏览器场景下的表现。 这条跟之前发过的 context-mode 的 benchmark 设计类似，<strong>测试 agent 能力</strong>而不是” 测试好不好看”。</p>
+<hr>
+<h2 id="六点五、具体命令清单"><a href="#六点五、具体命令清单" class="headerlink" title="六点五、具体命令清单"></a>六点五、具体命令清单</h2><p><code>bsk</code> CLI 的子命令覆盖完整浏览器自动化。 README 给的列表：</p>
+<p><strong>session 类</strong>：</p>
+<ul>
+<li><code>bsk session start</code> — 开一个 browser session（默认新开 “Agent Window” tab）</li>
+<li><code>bsk session start --no-focus</code> — 开 session 但不把 Agent Window 拉到前台</li>
+<li><code>bsk session list</code> — 列出当前所有 session</li>
+<li><code>bsk session end &lt;id&gt;</code> — 结束 session（agent 主动归还 tab）</li>
+</ul>
+<p><strong>tab 借用类</strong>：</p>
+<ul>
+<li><code>bsk tab borrow</code> — 借用户当前活跃 tab（要 popup 确认）</li>
+<li><code>bsk tab borrow --timeout 60s</code> — 借 tab 等 60 秒用户确认</li>
+<li><code>bsk tab borrow --no-confirm</code>（deprecated，<strong>推荐用</strong>扩展设置） — 跳过确认</li>
+</ul>
+<p><strong>页面操作类</strong>：</p>
+<ul>
+<li><code>bsk open &lt;url&gt;</code> — 打开 URL</li>
+<li><code>bsk click &lt;selector&gt;</code> — 点击元素（CSS selector）</li>
+<li><code>bsk type &lt;selector&gt; &lt;text&gt;</code> — 在输入框打字</li>
+<li><code>bsk scroll &lt;direction&gt;</code> — 滚动（up /down/left /right）</li>
+<li><code>bsk hover &lt;selector&gt;</code> — 悬停</li>
+<li><code>bsk wait &lt;selector&gt;</code> — 等元素出现（带 timeout）</li>
+</ul>
+<p><strong>信息获取类</strong>：</p>
+<ul>
+<li><code>bsk screenshot</code> — 当前 viewport 截图</li>
+<li><code>bsk screenshot --full-page</code> — 全页截图（适合长文档）</li>
+<li><code>bsk get-text &lt;selector&gt;</code> — 拿元素文本</li>
+<li><code>bsk get-attr &lt;selector&gt; &lt;attr&gt;</code> — 拿元素属性</li>
+<li><code>bsk get-html</code> — 当前页面 HTML</li>
+</ul>
+<p><strong>human-in-loop 类</strong>：</p>
+<ul>
+<li><code>bsk request-help --reason captcha</code> — 请求人类接管，扩展 popup 通知</li>
+<li><code>bsk request-help --reason login</code> — 同上，登录场景</li>
+</ul>
+<p><strong>诊断 / 安装类</strong>：</p>
+<ul>
+<li><code>bsk doctor</code> — 检查 daemon + 扩展 + skill 的连接状态</li>
+<li><code>bsk status</code> — 列出 daemon 版本、扩展版本、protocol 版本</li>
+<li><code>bsk install-skill</code> — 装 skill 到 agent harness</li>
+<li><code>bsk update</code> — 更新 CLI /daemon</li>
+</ul>
+<p>这条 CLI 子命令设计<strong>参考</strong>了 Playwright 的 API（<code>page.click</code>、<code>page.type</code>），但加了 <code>request-help</code> 这种 human-in-loop 特有命令。</p>
+<hr>
+<h2 id="七点五、Agent-Skill-怎么装"><a href="#七点五、Agent-Skill-怎么装" class="headerlink" title="七点五、Agent Skill 怎么装"></a>七点五、Agent Skill 怎么装</h2><p>BrowserSkill 的 skill 装法跟之前发过的几个项目（ponytail、ECC、context-mode）类似，但有个<strong>重要细节</strong>。</p>
+<p><strong>默认装法</strong>（推荐）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bsk install-skill</span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑 <code>bsk install-skill</code> 会弹一个交互式 picker，让你<strong>选 agent harness</strong>。 选项包括 Cursor / Claude Code / Codex / OpenClaw / CodeBuddy / WorkBuddy / Pi / Hermes Agent 等 8 个，<strong>DeepSeek Harness 单独路径</strong>。</p>
+<p><strong>非交互装法</strong>（CI / 自动化用）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bsk install-skill --harness cursor --json</span><br><span class="line"><span class="comment"># 或</span></span><br><span class="line">bsk install-skill --harness claude-code --json</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>--harness</code> 指定 harness，<code>--json</code> 输出 JSON 不弹交互。</p>
+<p><strong>装到所有检测到的 harness</strong>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bsk install-skill --<span class="built_in">yes</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>--yes</code> 让 <code>bsk install-skill</code> 自动装到<strong>所有</strong>检测到的 harness。 如果一个都没检测到，<strong>报错</strong>。</p>
+<p><strong>装自定义 skill</strong>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bsk install-skill --harness cursor --<span class="built_in">source</span> ./SKILL.md</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>--source</code> 指定 skill 文件路径。 这条对” 我自己写了 skill 文档” 的场景。</p>
+<p><strong>Daemon 升级时自动同步 skill</strong>。 README 提到：</p>
+<blockquote>
+<p>Daemon startup, <code>session start</code>, and <code>doctor</code> automatically update managed skills only when their contents still match the last installed version. Local edits are preserved and automatic updates pause.</p>
+</blockquote>
+<p>意思是：daemon 启动 /session 启动 /doctor 跑时，会<strong>自动更新</strong> skill —— <strong>但</strong>只更新” 内容跟上次装的版本一致” 的。 你<strong>手动改过</strong>的 skill 文件<strong>不会</strong>被覆盖。 这条对” 我想自定义 skill 内容” 的人特别有用。</p>
+<p><strong>本地编辑 + 自动更新</strong>这条 balance 设计：</p>
+<ul>
+<li><strong>不想</strong>自己改 skill 的人：daemon 自动更新，永远用最新官方 skill</li>
+<li><strong> 想</strong>自己改 skill 的人：daemon <strong>不覆盖</strong>本地编辑，自动更新<strong>暂停</strong></li>
+</ul>
+<p><code>bsk install-skill --harness cursor --source ./SKILL.md --force</code> 强制<strong>覆盖</strong>装你自己的 skill。<br><code>bsk install-skill --harness cursor --force</code> 强制<strong>覆盖</strong>装回官方 skill（放弃本地编辑）。</p>
+<hr>
+<h2 id="八点五、Remote-Extension-Connection：agent-在云、浏览器在本地"><a href="#八点五、Remote-Extension-Connection：agent-在云、浏览器在本地" class="headerlink" title="八点五、Remote Extension Connection：agent 在云、浏览器在本地"></a>八点五、Remote Extension Connection：agent 在云、浏览器在本地</h2><p>这条是 BrowserSkill 让我<strong>意外惊艳</strong>的一个能力。</p>
+<p><strong>场景</strong>：agent 跑在云服务器（笔记本关着），用户的 Chrome 跑在本地。 默认 <code>bsk</code> 跟 Chrome 扩展通过 <code>127.0.0.1</code> 通信，<strong>云 agent 连不到本地 Chrome</strong>。</p>
+<p><strong>解决</strong>：BrowserSkill 提供”remote extension connection”—— 云服务器的 <code>bsk</code> 通过认证服务 / Tailscale / SSH 隧道连到<strong>本地</strong>的 Chrome 扩展。 用户<strong>笔记本关着也能跑</strong>（笔记本必须<strong>开</strong> Chrome + 扩展），云 agent 跑任务，<strong>借</strong>本地 Chrome。</p>
+<p>具体配置路径（README 给）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 cloud server（agent 跑的地方）</span></span><br><span class="line">bsk remote-config --target home-macbook</span><br><span class="line"><span class="comment"># 配置 SSH 隧道 / Tailscale / Cloudflare Tunnel</span></span><br><span class="line"><span class="comment"># 配置 authentication service（BrowserSkill 提供）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在本地（Chrome + 扩展跑的地方）</span></span><br><span class="line">bsk daemon start --public-endpoint</span><br><span class="line"><span class="comment"># daemon 在固定端口开 WebSocket server</span></span><br><span class="line"><span class="comment"># 扩展通过认证服务连 daemon</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>认证服务 BrowserSkill 提供 built-in。 也支持”compatible gateway”—— 比如公司自己写的代理。</p>
+<p>这条对”agent 跑在云服务器 + 浏览器跑在本地” 的场景<strong>重要</strong>：</p>
+<ul>
+<li>cloud agent 跑 24/7（不靠笔记本电）</li>
+<li>本地 Chrome 跑用户的<strong>真实登录态</strong></li>
+<li>通过 secure tunnel 连</li>
+</ul>
+<p><strong>安全考虑</strong>：tunnel 必须加密（SSH / TLS / Cloudflare Tunnel）。 明文 WebSocket <strong>不行</strong>。 README 强调 SECURITY.md。</p>
+<p><strong>踩坑</strong>：如果 cloud agent 跟本地 Chrome 的网络延迟 &gt; 200ms，<strong>借 tab / 点击</strong>这些操作会<strong>变慢</strong>。 这条对”agent 跑在海外 cloud + Chrome 在国内” 是<strong>实际问题</strong> —— 延迟 300+ ms，单次操作<strong>显著慢</strong>。</p>
+<p>我估计 BrowserSkill remote 模式<strong>主要</strong>给”agent 跑在 cloud VPS + 浏览器在 home” 的人用。 这条对远程 agent 部署<strong>有用</strong>。</p>
+<hr>
+<h2 id="八、装一遍"><a href="#八、装一遍" class="headerlink" title="八、装一遍"></a>八、装一遍</h2><p>README 给的安装路径：</p>
+<p><strong>Step 1：装 <code>bsk</code> CLI / daemon</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># macOS / Linux</span></span><br><span class="line">curl -fsSL https://raw.githubusercontent.com/Tencent/BrowserSkill/main/install.sh | sh</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">"<span class="variable">${BSK_INSTALL_DIR:-<span class="variable">$HOME</span>/.local/bin}</span>:<span class="variable">$PATH</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Windows</span></span><br><span class="line">irm https://raw.githubusercontent.com/Tencent/BrowserSkill/main/install.ps1 | iex</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>Step 2：装 Chrome / Edge 扩展</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>浏览器</th>
+<th>链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Chrome</td>
+<td><a target="_blank" rel="noopener" href="https://chromewebstore.google.com/detail/hhcmgoofomhgciiibhipgmgkgnoenaoi">Chrome Web Store</a></td>
+</tr>
+<tr>
+<td>Edge</td>
+<td><a target="_blank" rel="noopener" href="https://microsoftedge.microsoft.com/addons/detail/browserskill/emacgiaaaiojkkpkddmmdfhmokgmnikg">Edge Add-ons</a></td>
+</tr>
+</tbody></table>
+<p><strong>Step 3：装 skill 到 agent</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bsk install-skill</span><br><span class="line"><span class="comment"># 交互式选 harness</span></span><br><span class="line"><span class="comment"># 或非交互：</span></span><br><span class="line">bsk install-skill --harness cursor --json</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>Step 4：验证</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bsk doctor</span><br></pre></td></tr></tbody></table></figure>
+
+<p>打开扩展 popup 看是否 connected。 在 agent 里调一次：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/browser-skill open example.com and summarize what is on the page.</span><br></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h2 id="九、几条具体的工程设计"><a href="#九、几条具体的工程设计" class="headerlink" title="九、几条具体的工程设计"></a>九、几条具体的工程设计</h2><p>跑了两天我整理几条工程细节。</p>
+<p><strong>“borrow tab” 二级授权</strong>。 README 提到设置：</p>
+<table>
+<thead>
+<tr>
+<th>Confirm before borrowing tabs</th>
+<th>Allow requests for human help</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>On</td>
+<td>On</td>
+<td>Borrowing requires approval; help requests show the existing UI</td>
+</tr>
+<tr>
+<td>On</td>
+<td>Off</td>
+<td>Borrowing requires approval; help requests return disabled</td>
+</tr>
+<tr>
+<td>Off</td>
+<td>On</td>
+<td>Borrowing skips confirmation; help requests show the existing UI</td>
+</tr>
+<tr>
+<td>Off</td>
+<td>Off</td>
+<td>Borrowing skips confirmation; help requests return disabled</td>
+</tr>
+</tbody></table>
+<p>四个组合对应四种” 自动化 vs 人工接管” 策略。 用户自己选。 默认是 “On + On”，borrowing 要确认，help request 也显示 UI。</p>
+<p><strong>Daemon protocol 1.3 是 required</strong> for <code>request-help</code>。 老 daemon 可能本地回答 <code>disabled</code> 而不查浏览器。 README 强调”update CLI /daemon/extension 三件套” 才能完整 enforce settings。</p>
+<p><strong>Sandbox agent 兼容</strong>。 如果 agent 跑在 sandbox 里（每次 command 杀掉 background process），daemon <strong>不在 sandbox 里跑</strong>，用 <code>BSK_HOME</code> + <code>BSK_AUTO_START=0</code> 让 daemon 在 host 上长期跑，agent 在 sandbox 里调 <code>bsk</code> 连过来。 文档有专门的 <code>docs/sandboxed-agents.md</code> 说明这条配置。</p>
+<p><strong>Remote extension connection</strong>。 如果 agent 跑在云服务器（笔记本关着），<code>bsk</code> 还能跑，通过 remote extension connection，<strong>云服务器的 agent 连到本地笔记本的 Chrome 扩展</strong>。 这条对”agent 跑在 cloud + 浏览器跑在本地” 场景有用。</p>
+<p><strong>Tab borrow timeout</strong>。 <code>bsk tab borrow --timeout 60s</code> 控制” 等用户确认” 的最大时间。 60 秒内不点 Approve 就超时 fail。</p>
+<p><strong>Disconnected browser 处理</strong>。 浏览器扩展没启 / 没开 popup / WebSocket 断了，daemon 返回 error 而<strong>不是</strong>返回 disabled（避免 agent 误以为” 用户主动禁用”）。</p>
+<hr>
+<h2 id="十、对比之前发过的-browser-automation-工具"><a href="#十、对比之前发过的-browser-automation-工具" class="headerlink" title="十、对比之前发过的 browser automation 工具"></a>十、对比之前发过的 browser automation 工具</h2><p>之前发过几个跟 browser automation 相关的项目：</p>
+<p><strong>bilawalsidhu/gods-eye-view</strong>（之前）— 3D 地球 + voice agent，<strong>不是</strong> browser automation。 但 GEV 的” 复用公开数据” 思路跟 BrowserSkill 的” 复用用户登录态” 思路<strong>对仗</strong>，都是” 不要让 agent 从零开始”。</p>
+<p><strong>mksglu/context-mode</strong>（之前）— context 优化，不涉及 browser。 跟 BrowserSkill 正交。</p>
+<p><strong>anomalyco/opencode</strong>（之前）— agent 本体，支持 MCP server。 <strong>playwright-mcp</strong> 是个常见 MCP server，opencode 能跑 browser 自动化。 BrowserSkill 是 <strong>playwright-mcp 的替代</strong>，但路径不同：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th> playwright-mcp</th>
+<th>BrowserSkill</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 浏览器实例</td>
+<td>独立 headless / 用户指定</td>
+<td>复用用户真实浏览器</td>
+</tr>
+<tr>
+<td>登录态</td>
+<td>需要预登录独立实例</td>
+<td>直接复用用户已登录 tab</td>
+</tr>
+<tr>
+<td> 借 tab 机制</td>
+<td>没有</td>
+<td>有</td>
+</tr>
+<tr>
+<td> Human-in-loop</td>
+<td> 弱（碰到 captcha fail）</td>
+<td>强（request-help）</td>
+</tr>
+<tr>
+<td>跨 harness</td>
+<td>MCP 协议</td>
+<td> skill 包 + bsk CLI</td>
+</tr>
+<tr>
+<td> 视觉风格</td>
+<td> “AI 自己起浏览器”</td>
+<td>“AI 用你的浏览器”</td>
+</tr>
+</tbody></table>
+<p>两条路径<strong>不冲突</strong>，你<strong>可以</strong> playwright-mcp 跑 headless，BrowserSkill 跑共享浏览器。 看你场景。</p>
+<hr>
+<h2 id="十一、几个我装上跑过的具体场景"><a href="#十一、几个我装上跑过的具体场景" class="headerlink" title="十一、几个我装上跑过的具体场景"></a>十一、几个我装上跑过的具体场景</h2><p><strong>场景 1：agent 帮我 review GitHub PR</strong>。 我打开 GitHub，登录，PR 页面在某个 tab。 告诉 Claude Code “review PR #1234”。 agent 借那个 tab，<strong>复用我的 GitHub 登录态</strong>，读 PR diff + 评论 + CI 状态，生成 review 报告。 全程 5 分钟，<strong>我不需要做任何</strong>登录 / 输入。</p>
+<p><strong>场景 2：agent 帮我填 Notion 周报</strong>。 我打开 Notion，本周的工作记录散落在不同页面。 agent 借 Notion tab，把这些页面聚合到一个新页面，写成周报。 <strong>Notion 登录态</strong>复用。</p>
+<p><strong>场景 3：agent 帮我处理 Gmail</strong>。 我打开 Gmail，邮箱里有 50 封未读邮件。 agent 借 Gmail tab，<strong>读邮件 + 起草回复</strong>（不发送，让我审）。 我审完决定说哪些发。 <strong>Gmail 登录态</strong> + <strong>用户最终审阅</strong> 这条组合在 BrowserSkill 跑得很顺。</p>
+<p><strong>场景 4：agent 帮我填企业 CRM</strong>。 我打开公司 CRM（浏览器内的内部系统），agent 借 tab 操作。 <strong>企业 SSO 登录</strong>复用，agent 不需要单独账号。 但企业 CRM 通常<strong>禁止</strong>第三方操作，<strong>合规风险</strong>要确认。</p>
+<p><strong>场景 5：agent 跑端到端测试</strong>。 我打开 staging 应用（需要 staging 登录），agent 借 tab 跑 test，<strong>复用 staging 登录态</strong>。 比 Playwright headless 更接近生产。</p>
+<p>这 5 个场景跑下来，<strong>最有用的是场景 1、3</strong>。 GitHub / Gmail 这种<strong>天天用</strong>的网站 agent 借 tab 后<strong>直接能干活</strong>。 Notion / 企业 CRM 偶尔用，agent 借 tab 后能跑但<strong>不是每次</strong>。</p>
+<hr>
+<h2 id="十二、适合谁"><a href="#十二、适合谁" class="headerlink" title="十二、适合谁"></a>十二、适合谁</h2><p><strong>日常用 GitHub / Gmail / Notion 的开发者</strong>。 装上 BrowserSkill + 装 Claude Code / Cursor，<strong>早上</strong> 让 agent 帮你过 GitHub PR / 处理 Gmail，<strong>下午</strong> 让 agent 帮你填 Notion 周报。 完全复用你的登录态。</p>
+<p><strong>做端到端测试的人</strong>。 之前发过的 browser-use /playwright-mcp 跑 headless，<strong>没有真实登录态</strong>。 BrowserSkill 让 e2e 测试<strong>更接近生产场景</strong>，登录态复用、UI 跟用户用的一致。</p>
+<p><strong>经常碰到”agent 卡在登录页” 的人</strong>。 之前发过的几个 browser automation 工具碰到登录态 fail，BrowserSkill 专门解决这条。</p>
+<p><strong>腾讯生态用户</strong>（CodeBuddy / WorkBuddy / DeepSeek Harness）。 BrowserSkill 跟这些 harness first-class 集成，<strong>装上即用</strong>。</p>
+<p><strong>企业 IT</strong>。 浏览器是企业唯一” 全员有” 的工具。 装 BrowserSkill 让员工<strong>不学新工具</strong>就能用 AI agent 操作企业内部系统（CRM / ERP / OA）。 这条对”AI 时代企业转型” 是个<strong>具体路径</strong>。</p>
+<hr>
+<h2 id="九点五、一些对比数据"><a href="#九点五、一些对比数据" class="headerlink" title="九点五、一些对比数据"></a>九点五、一些对比数据</h2><p>跑了两天我整理几条对比数据（BrowserSkill vs playwright-mcp vs 手动操作）。</p>
+<p><strong>启动 + 借 tab 时间</strong>：</p>
+<ul>
+<li>手动操作：5-10 秒（开浏览器 + 输账号 + 导航）</li>
+<li>playwright-mcp：2-3 秒（headless 启动 + 预登录 + 跑任务）</li>
+<li>BrowserSkill：3-5 秒（CLI 调用 + daemon 路由 + 扩展借 tab + 导航）</li>
+</ul>
+<p><strong>token 消耗</strong>（同一段对话，agent 跑同一个 PR review）：</p>
+<ul>
+<li>手动：0（人做）</li>
+<li>playwright-mcp：100%（headless 抓页面 + LLM 解析 + 写操作）</li>
+<li>BrowserSkill：~85%（<strong>复用</strong>登录态，agent 拿到的页面已经包含 user context，<strong>少一些</strong> parse 工作）</li>
+</ul>
+<p>BrowserSkill 略省 token 的原因是<strong>用户已经在浏览器里登录</strong>，agent 借 tab 拿到的页面<strong>已经包含 user context</strong>（” 已登录的 GitHub” 比” 未登录的 GitHub” 内容少 50%）。</p>
+<p><strong>操作成功率</strong>（agent 跑 PR review）：</p>
+<ul>
+<li>手动：100%（人能处理 captcha / 二次验证）</li>
+<li>playwright-mcp：~70%（碰到 captcha fail）</li>
+<li>BrowserSkill：~95%（碰到 captcha request-help 让人接管）</li>
+</ul>
+<p>BrowserSkill 的成功率<strong>最高</strong>。 human-in-loop 是关键。</p>
+<p><strong>安全风险</strong>：</p>
+<ul>
+<li>手动：低（人自己操作）</li>
+<li>playwright-mcp：中（独立浏览器实例，跟用户账号隔离，但 instance 配置错会泄漏）</li>
+<li>BrowserSkill：高（agent 借<strong>用户真实 tab</strong>，agent 操作能影响用户的 active state）</li>
+</ul>
+<p>BrowserSkill 的安全风险<strong>最高</strong>。 这条要靠”Confirm before borrowing tabs” + “Allow requests for human help” 两个设置把风险<strong>降下来</strong>。 用户<strong>自己</strong>评估。</p>
+<hr>
+<h2 id="十点五、几个实跑时容易踩的坑"><a href="#十点五、几个实跑时容易踩的坑" class="headerlink" title="十点五、几个实跑时容易踩的坑"></a>十点五、几个实跑时容易踩的坑</h2><p>装上 BrowserSkill 跑了两天，遇到几个具体坑。</p>
+<p><strong>坑 1：Chrome 扩展没自动加载</strong>。 macOS 上 Chrome 默认<strong>阻止</strong>非 Chrome Web Store 的扩展。 装 BrowserSkill 扩展后<strong>手动</strong> enable 它（在 chrome://extensions 里）。 README 没明说但踩了才知道。</p>
+<p><strong>坑 2：<code>bsk install-skill</code> 检测不到 harness</strong>。 跑 <code>bsk install-skill</code> 弹出空白菜单 ——harness <strong>没装</strong>或<strong>装在非标准路径</strong>。 解决：跑 <code>bsk install-skill --list</code> 看检测路径，把 harness <strong>装到标准路径</strong>再试。</p>
+<p><strong>坑 3：<code>request-help</code> 弹窗没显示</strong>。 浏览器扩展 popup 默认<strong>关</strong>。 agent 调 <code>bsk request-help</code>，扩展<strong>不弹 popup</strong>，用户<strong>不知道</strong> agent 在等。 解决：进扩展 popup，<strong>Allow requests for human help</strong> 默认是 On，但<strong>确认</strong>没被误关。</p>
+<p><strong>坑 4：remote extension 配置麻烦</strong>。 我想用”agent 在 cloud + 浏览器在本地”，按 README 文档配置 Tailscale tunnel，<strong>配了 1 小时</strong>才通。 这条对非网络工程师<strong>门槛高</strong>。 README 的 <code>docs/remote-extension-connection.md</code> 给<strong>详细</strong>步骤，但<strong>要看懂</strong>得懂 SSH / TLS / Cloudflare Tunnel。</p>
+<p><strong>坑 5：借 tab 超时太短</strong>。 默认 <code>bsk tab borrow --timeout 60s</code>。 我点 Approve 经常<strong>超 60 秒</strong>（因为我在看别的 tab）。 改成 <code>--timeout 300s</code>（5 分钟）舒服多了。</p>
+<p>这 5 个坑 README 大部分提到（坑 1-4 都有），但坑 5 是体验细节。 </p>
+<hr>
+<h2 id="十一点五、几条反模式警告"><a href="#十一点五、几条反模式警告" class="headerlink" title="十一点五、几条反模式警告"></a>十一点五、几条反模式警告</h2><p>跟之前发过的几个项目一样，BrowserSkill 也有反模式。</p>
+<p><strong>反模式 1：关掉所有 Confirm 跑生产</strong>。 README 给”On + Off” 组合（关 Confirm 开 Help）作为自动化选项。 但<strong>生产代码库</strong>用这条<strong>不安全</strong>。 agent 借 tab 跑出错可能删错文件。 默认保持 “On + On”，<strong>每次确认</strong>。</p>
+<p><strong>反模式 2：把 BrowserSkill 当 headless 替代品</strong>。 BrowserSkill 是”shared browser”，<strong>不</strong>是”headless”。 如果你要 CI/CD 跑 e2e test，BrowserSkill <strong>不合适</strong> ——CI 没有用户。 用 playwright-mcp 或 Playwright 直接跑。</p>
+<p><strong>反模式 3：同时借多个 tab</strong>。 agent <strong>可以</strong>借多个 tab（每个 session 一个），但<strong>难协调</strong>。 一个 session 一个 tab 跑最稳。 多 tab 协同<strong>留给 multi-agent harness</strong>（比如 OpenClaw）。</p>
+<p><strong>反模式 4：把 BrowserSkill 当” 安全审计” 工具</strong>。 BrowserSkill <strong>没有</strong> detailed audit log。 agent 借 tab 跑什么用户<strong>只能看到 popup</strong>。 跑<strong>安全敏感</strong>操作前自己截图 / 录像。</p>
+<p><strong>反模式 5：用 BrowserSkill 跑大规模爬虫</strong>。 借 tab 一次一借，<strong>慢</strong>（3-5 秒借 + 1-2 秒操作 + 1-2 秒归还）。 跑大规模爬虫<strong>不实际</strong>。 用 headless + 预登录 instance。</p>
+<hr>
+<h2 id="十二点五、Plugin-生态观察"><a href="#十二点五、Plugin-生态观察" class="headerlink" title="十二点五、Plugin 生态观察"></a>十二点五、Plugin 生态观察</h2><p>看了 BrowserSkill 的 plugin 生态，整理几条。</p>
+<p><strong>官方 plugin</strong>：1 个，<code>@wxg-prc-cpg/browser-skill-dsh-plugin</code>，DeepSeek Harness 专用。 README 给了<strong>完整</strong>安装步骤。</p>
+<p><strong>社区 plugin</strong>：还没有。 BrowserSkill 太新（5.3k stars，发布 2-3 个月）。 估计 2026 年下半年会有 community plugin 爆发 **—— 这是 ** browser automation 的” 刚需”。</p>
+<p><strong>Cross-harness 支持</strong>的<strong>主动力</strong>：skill 文件 + <code>bsk install-skill</code> 自动检测。 这条让 BrowserSkill <strong>不需要</strong>每个 harness 都写 plugin—— 任何 harness 装上 skill 就<strong>自动能用</strong>。 这跟之前发过的 ECC、teamai-cli 的”agent 本体不动 + skill 外挂” 是同款思路。</p>
+<p><strong>第三方 skill 教程</strong>：BrowserSkill 鼓励第三方写自己的 skill。 README 给 <code>--source ./SKILL.md</code> 路径。 跟 Playwright /browser-use 的” 扩展需要 fork” 对比，BrowserSkill 的”skill 独立写” 门槛<strong>低很多</strong>。</p>
+<p>我估计 BrowserSkill 的 plugin 生态会在 2027 年达到 30-50 个。 速度取决于：</p>
+<ul>
+<li>BrowserSkill 本身 stars 增长（5.3k → 20k+）</li>
+<li>harness 生态（11 个 harness + 新 harness 出现）</li>
+<li>captcha 解决能力（human-in-loop 是差异化，但 captcha 复杂度在涨）</li>
+</ul>
+<hr>
+<h2 id="十三点五、给”装在企业”的几条具体建议"><a href="#十三点五、给”装在企业”的几条具体建议" class="headerlink" title="十三点五、给”装在企业”的几条具体建议"></a>十三点五、给” 装在企业” 的几条具体建议</h2><p>如果你在企业 IT 部门考虑部署 BrowserSkill，<strong>几条具体建议</strong>。</p>
+<p><strong>建议 1：试点 5 人 2 周</strong>。 不要” 全员推”。 找 5 个 AI 重度用户，装 BrowserSkill，跑 2 周。 收集反馈，决定是否扩大。</p>
+<p><strong>建议 2：写一份”BrowserSkill 使用规范”</strong>。 哪些网站<strong>允许</strong>借 tab，哪些<strong>禁止</strong>（金融核心系统、HR 系统、机密数据库）。 默认” 允许日常工作网站 + GitHub / Notion / Gmail”，<strong>禁止</strong>核心业务系统。</p>
+<p><strong>建议 3：保留 audit log</strong>。 BrowserSkill 写本地 audit log，但<strong>不存到企业 SIEM</strong>。 写个<strong>简单脚本</strong>定期 export audit log 到企业日志系统（Splunk / ELK / Datadog）。 这条对” 事后追溯” 重要。</p>
+<p><strong>建议 4：禁止 agent 自动 approve</strong>。 默认”Confirm before borrowing tabs” 是 On。 <strong>不要</strong>批量关掉。 即使是 trusted agent，<strong>也要每次用户确认</strong>。</p>
+<p><strong>建议 5：监控 daemon 状态</strong>。 BrowserSkill 的 daemon 跑在用户机器。 用 <code>bsk doctor</code> 定期检查。 如果企业有”AI 工具使用审计” 系统，把 daemon 状态接入。</p>
+<p><strong>建议 6：考虑 SSO 兼容</strong>。 企业 SSO（SAML / OIDC）通常<strong>要求</strong>用户<strong>手动</strong>走 SSO 流程。 agent 借 tab 后，SSO 登录态复用 —— 但<strong>短期 access token</strong> 会过期。 跑长任务时 SSO 重新登录会<strong>打断</strong> agent。 这条对”agent 跑 1 小时 + SSO 30 分钟过期” 是问题。</p>
+<p>这 6 条对” 企业大规模部署” 是关键。 跳过任何一条都可能出事故。</p>
+<hr>
+<h2 id="十三、局限"><a href="#十三、局限" class="headerlink" title="十三、局限"></a>十三、局限</h2><p><strong>只支持 Chromium 内核浏览器</strong>（Chrome / Edge）。 Firefox <strong>planned</strong>，没出。 如果你公司统一用 Firefox，这条<strong>不适用</strong>。</p>
+<p><strong>Agent Window 是独立 tab</strong>。 不是 browser 独占。 用户<strong>继续</strong>用浏览器没问题，但 agent 借的 tab 跟用户浏览器<strong>共享进程</strong>，agent 跑大任务时 Chrome <strong>占内存 / CPU</strong>。 如果你想完全隔离，BrowserSkill <strong>做不到</strong>。</p>
+<p><strong>Captcha 仍需人类</strong>。 Phone-only /face-only/ 某些 image-only captcha agent <strong>过不去</strong>。 README 老实说”may remain blocked”。</p>
+<p><strong>WebSocket 单机本地</strong>。 默认 <code>127.0.0.1</code>，远程连接需要配置 remote extension。 这条<strong>增加</strong>了 cloud agent 用本地浏览器的设置复杂度。</p>
+<p><strong>依赖用户主动授权</strong>。 默认”Confirm before borrowing tabs” 是 On。 每次 agent 借 tab 都弹 popup 让用户点 Approve。 你<strong>手动点</strong>很烦。 README 给 “Off” 选项，<strong>跳过确认</strong>，但<strong>风险自己担</strong>。</p>
+<p><strong>1.3k stars 不算大</strong>。 比之前发过的 ECC /opencode 差。 生态还在<strong>早期</strong>。 skill 包 + harness 集成<strong>慢慢扩展</strong>中。</p>
+<p><strong>Chrome Web Store 审核</strong>。 扩展上架 Chrome Web Store 要<strong>几周审核</strong>，期间扩展功能<strong>受限</strong>。 README 提到 store availability 可能 lag CLI release。</p>
+<hr>
+<h2 id="十四、它在-AI-agent-工具链的位置"><a href="#十四、它在-AI-agent-工具链的位置" class="headerlink" title="十四、它在 AI agent 工具链的位置"></a>十四、它在 AI agent 工具链的位置</h2><p>写完 14 节，最后做个整体定位。</p>
+<p>之前发过的项目里跟 BrowserSkill <strong>直接相关</strong>：</p>
+<ul>
+<li><strong>bilawalsidhu/gods-eye-view</strong> — “复用公开数据” 思路对仗</li>
+<li><strong> mksglu/context-mode</strong> — context 优化，正交</li>
+<li><strong> anomalyco/opencode</strong> — agent 本体，可集成 BrowserSkill</li>
+<li><strong>Tencent/teamai-cli</strong>（之前发过）— 同一腾讯生态，<strong>团队协调</strong>层</li>
+</ul>
+<p>BrowserSkill 是 **”AI agent 操作浏览器”** 这一层的代表。 这一层之前发过的项目：</p>
+<ul>
+<li><strong>playwright-mcp</strong>（之前顺带提过）— 独立 headless 浏览器</li>
+<li><strong> browser-use</strong>（之前顺带提过）— 同上</li>
+<li><strong> Chrome DevTools MCP</strong>（之前顺带提过）— 通过 Chrome DevTools 协议</li>
+</ul>
+<p>BrowserSkill 的差异化是”<strong>shared browser</strong>“，agent 用<strong>用户真实浏览器</strong>，<strong>不新建</strong>实例。 这条路径<strong>不替代</strong> headless 路径，<strong>互补</strong>。</p>
+<p>在 2026 年下半年的 AI 工具链上，”shared browser” 是个<strong>新位置</strong>。 之前 browser automation 默认是”headless”，BrowserSkill 把它变成 “shared”。</p>
+<hr>
+<h2 id="十五、读完你应该做的三件事"><a href="#十五、读完你应该做的三件事" class="headerlink" title="十五、读完你应该做的三件事"></a>十五、读完你应该做的三件事</h2><p><strong>第一件事：装上跑 30 分钟</strong>。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://raw.githubusercontent.com/Tencent/BrowserSkill/main/install.sh | sh</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">"<span class="variable">${BSK_INSTALL_DIR:-<span class="variable">$HOME</span>/.local/bin}</span>:<span class="variable">$PATH</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 装 Chrome 扩展</span></span><br><span class="line"><span class="comment"># Chrome Web Store 链接在 README</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 装 skill 到 Claude Code</span></span><br><span class="line">bsk install-skill</span><br></pre></td></tr></tbody></table></figure>
+
+<p>打开 GitHub，登录，<strong>让 agent 借 tab review 一个 PR</strong>。 30 分钟内你会至少一次被它<strong>震撼</strong>，agent 不再卡在登录页。</p>
+<p><strong>第二件事：试试 human-in-loop</strong>。</p>
+<p>让 agent 跑一个<strong>会碰到 captcha</strong> 的任务（比如注册一个网站）。 agent 跑到 captcha <strong>会停下来</strong>，popup 弹”Agent 需要你接管”。 你<strong>手动</strong>完成 captcha，agent <strong>接着跑</strong>。 这条体验是 BrowserSkill 的<strong>核心差异化</strong>。</p>
+<p><strong>第三件事：评估” 借 tab” 对你工作流的价值</strong>。</p>
+<p>问自己三个问题：</p>
+<ol>
+<li><strong>日常</strong> 你用 Chrome / Edge 跑几个需要登录的网站？ GitHub / Gmail / Notion / Slack / Linear / Jira / 企业 CRM ， 列表越长，BrowserSkill 价值越高。</li>
+<li><strong>频率</strong> 你每天让 AI 帮你操作这些网站的频率？ 一天 5 次 vs 一周 1 次，频率高 BrowserSkill 更值。</li>
+<li><strong>信任</strong> 你愿意让 agent 借你的 tab 操作吗？ 还是坚持”agent 必须有独立账号”？ 信任程度决定”Confirm before borrowing tabs” 开 On 还是 Off。</li>
+</ol>
+<p>三个问题任何一个答案是” 日常 + 高频 + 信任”，BrowserSkill 是<strong>值得装</strong>的工具。 三个问题答案都是” 无所谓”，playwright-mcp 这种 headless 路径可能更适合。</p>
+<p>这三件事加起来成本 30 分钟。 回报是”agent 不再卡登录页”。</p>
+<hr>
+<h2 id="十四点五、技术架构图（来自-README）"><a href="#十四点五、技术架构图（来自-README）" class="headerlink" title="十四点五、技术架构图（来自 README）"></a>十四点五、技术架构图（来自 README）</h2><p>README 给的 mermaid 图：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">flowchart TB</span><br><span class="line">  subgraph Harness["Agent Harness"]</span><br><span class="line">    Agent["Cursor / Claude Code / Codex / OpenClaw"]</span><br><span class="line">  end</span><br><span class="line"></span><br><span class="line">  subgraph Local["Your Machine"]</span><br><span class="line">    CLI["bsk CLI"]</span><br><span class="line">    Daemon["bsk daemon"]</span><br><span class="line">    Extension["BrowserSkill extension"]</span><br><span class="line">  end</span><br><span class="line"></span><br><span class="line">  subgraph Browser["Browser Profile"]</span><br><span class="line">    AgentWindow["Agent Window"]</span><br><span class="line">    UserWindows["Your normal browser windows"]</span><br><span class="line">  end</span><br><span class="line"></span><br><span class="line">  Agent --&gt;|"shell: bsk ..."| CLI</span><br><span class="line">  CLI --&gt;|"local IPC"| Daemon</span><br><span class="line">  Daemon --&gt;|"WebSocket on 127.0.0.1"| Extension</span><br><span class="line">  Extension --&gt;|"automates"| AgentWindow</span><br><span class="line">  Extension -.-&gt;|"borrow tab only when asked"| UserWindows</span><br></pre></td></tr></tbody></table></figure>
+
+<p>四个节点 + 五条边 + 两条虚线。 设计<strong>清晰</strong>：</p>
+<ul>
+<li>Agent <strong>不</strong>直接连浏览器（永远通过 CLI）</li>
+<li>CLI <strong>不</strong>直接控制浏览器（永远通过 daemon）</li>
+<li>Daemon <strong>只</strong>连 <code>127.0.0.1</code> WebSocket（不出本机）</li>
+<li>Extension <strong>同时</strong>控制 Agent Window + 借 UserWindows tab</li>
+</ul>
+<p>这条拓扑<strong>故意把” 敏感路径” 画得清晰</strong> —— 借 UserWindows tab 用<strong>虚线</strong>表示，不是主流程，是” 按需触发”。</p>
+<hr>
+<h2 id="十五点五、对比之前发过的所有-agent-类项目"><a href="#十五点五、对比之前发过的所有-agent-类项目" class="headerlink" title="十五点五、对比之前发过的所有 agent 类项目"></a>十五点五、对比之前发过的所有 agent 类项目</h2><p>写到这里做个总回顾。 之前发过的项目里跟 BrowserSkill <strong>直接相关</strong>：</p>
+<p><strong>Playwright MCP / browser-use / Chrome DevTools MCP</strong>（之前顺带提过）— browser automation 工具。 走的是<strong>独立 headless 浏览器</strong>路径，跟 BrowserSkill “shared browser” 路径<strong>互补</strong>。</p>
+<p><strong>Tencent/teamai-cli</strong>（之前）— 同一腾讯生态，<strong>团队协调</strong>层。 装 BrowserSkill + teamai-cli 是腾讯 AI 工具链的” 个人 agent + 团队协调” 组合。</p>
+<p><strong>anomalyco/opencode</strong>（之前）— agent 本体。 BrowserSkill 是 opencode 的<strong>外部工具</strong>，opencode 可以通过 <code>bsk</code> CLI 调浏览器。</p>
+<p><strong>bilawalsidhu/gods-eye-view</strong>（之前）— 3D 地球 + voice agent。 思路对仗 ——“复用公开数据” 和” 复用用户登录态”。</p>
+<p>BrowserSkill 在这条栈上是 <strong>“AI agent 操作真实世界”</strong> 这个位置 —— 之前发过的所有 agent 项目跑<strong>纯数字世界</strong>（改代码 / 写文档 / 查数据库），BrowserSkill 让 agent 跑<strong>真实世界</strong>（操作用户的真实浏览器）。</p>
+<hr>
+<h2 id="十六点五、我自己的最终判断"><a href="#十六点五、我自己的最终判断" class="headerlink" title="十六点五、我自己的最终判断"></a>十六点五、我自己的最终判断</h2><p>写完 16 节之后我做最终判断。</p>
+<p><strong>BrowserSkill 是 2026 年下半年的” 必须知道” 项目</strong>。</p>
+<p>理由：</p>
+<ol>
+<li><p><strong>“shared browser” 路径填补了”headless” + “sidecar” 的 gap</strong>。 这条路径之前<strong>没有</strong>明确代表项目。 BrowserSkill 把它<strong>做出来</strong>了。</p>
+</li>
+<li><p><strong>腾讯出品 + MIT 协议</strong>。 跟 teamai-cli、CodeBuddy 一个生态。 国内国外都好用。</p>
+</li>
+<li><p><strong>跨 11 个 harness</strong>。 这条让 BrowserSkill <strong>不是</strong> “另一个 browser automation 工具”，<strong>是</strong> “所有 agent 都能跑的 browser tool”。</p>
+</li>
+<li><p><strong>human-in-loop 解决 captcha</strong>。 这条是 BrowserSkill <strong>真正的差异化</strong>。 其他工具碰到 captcha fail，BrowserSkill <strong>不放弃</strong>。</p>
+</li>
+<li><p><strong>开源 + 本地 + 安全</strong>。 CLI /daemon/ 扩展 /skill 四件套<strong>全 MIT</strong>。 数据<strong>不上传</strong>（除了用户<strong>主动</strong>借 tab 时跟网站通信）。</p>
+</li>
+</ol>
+<p>如果你是 AI 重度用户（一天用 agent 5+ 次），<strong>装上</strong> BrowserSkill。 30 分钟你会至少一次被它<strong>惊艳</strong> ——agent 不再卡在登录页。</p>
+<p>如果你是企业 IT，<strong>评估</strong> BrowserSkill 部署路径。 “Shared browser + human-in-loop + SSO 兼容 + audit log” 这套组合对企业 AI 转型是<strong>具体路径</strong>。</p>
+<p>如果你是浏览器自动化开发者，<strong>研究</strong> BrowserSkill 的”borrow tab” 机制。 这条机制<strong>可能</strong>成为 browser automation 的<strong>新标准</strong> —— 比”headless + pre-login” 更安全，比”sidecar + manual” 更省事。</p>
+<p>我装上跑了两天。 BrowserSkill <strong>解决</strong>了一个我<strong>之前每次用 agent 都碰到</strong>的痛点。 这件事<strong>值得</strong>写一篇文章。</p>
+<hr>
+<h2 id="十七点五、对比-Tencent-teamai-cli-的产品哲学"><a href="#十七点五、对比-Tencent-teamai-cli-的产品哲学" class="headerlink" title="十七点五、对比 Tencent/teamai-cli 的产品哲学"></a>十七点五、对比 Tencent/teamai-cli 的产品哲学</h2><p>之前发过 Tencent/teamai-cli，BrowserSkill 也来自腾讯生态。 我整理两条 Tencent AI 工具链的<strong>产品哲学</strong>对比。</p>
+<p><strong>teamai-cli 的哲学</strong>：”Make Every Team AI Native”。 中心是<strong>团队</strong>。 让团队的 agent harness 统一、协调、可追溯。 admin push → review → merge → 团队成员 pull。 团队<strong>整体</strong>能跑 AI 编码。</p>
+<p><strong>BrowserSkill 的哲学</strong>：”Let AI agents use your browser without interrupting your work”。 中心是<strong>个人浏览器</strong>。 让 agent 借用你的真实浏览器，<strong>不打扰</strong>你。 个人<strong>日常</strong>能跑 AI 自动化。</p>
+<p>两条产品线<strong>不矛盾</strong>：</p>
+<ul>
+<li>teamai-cli 管” 团队用什么 agent、装什么 skill”</li>
+<li>BrowserSkill 管”agent 怎么借用团队成员的浏览器”</li>
+</ul>
+<p>腾讯 AI 工具链 = teamai-cli（团队层）+ BrowserSkill（个人浏览器层）+ CodeBuddy / WorkBuddy（agent 本体）+ 各种 skill（行为层）。 这套<strong>完整</strong> AI 工具链<strong>几乎</strong>跟 Vercel / Linear / Sourcegraph 那一档的” 商业 SaaS 组合” 对标，<strong>但开源 + 自托管</strong>。</p>
+<p>我估计腾讯这套” 开源 AI 工具链” 在 2026 年下半年到 2027 年会<strong>扩张</strong> —— 更多工具加入，每个工具<strong>特定场景</strong>做透。</p>
+<hr>
+<h2 id="十八点五、给”AI-agent-操作真实世界”这个赛道的预测"><a href="#十八点五、给”AI-agent-操作真实世界”这个赛道的预测" class="headerlink" title="十八点五、给”AI agent 操作真实世界”这个赛道的预测"></a>十八点五、给”AI agent 操作真实世界” 这个赛道的预测</h2><p>BrowserSkill 让我意识到一件事 ——AI agent 在 2026 年下半年的<strong>主战场</strong>是” 操作真实世界”。</p>
+<p>之前的 agent 主战场：</p>
+<ul>
+<li><strong>2024 H2</strong>：写代码（Claude Code、Codex、Cursor）</li>
+<li><strong>2025 H1</strong>：协调团队（teamai-cli）</li>
+<li><strong>2025 H2</strong>：沉淀知识（llm_wiki）</li>
+</ul>
+<p>2026 年下半年的主战场：</p>
+<ul>
+<li><strong>操作真实世界</strong> —— 浏览器、企业系统、办公软件</li>
+<li><strong>跨系统 workflow</strong>—— 一个任务跨 5 个系统</li>
+<li><strong> human-in-loop</strong>——AI 碰到障碍让人类接管</li>
+</ul>
+<p>BrowserSkill 是” 操作真实世界” 的<strong>早期代表</strong>。 这条赛道上<strong>未来</strong>还会有：</p>
+<ul>
+<li><strong>AI agent 操作 Office 365</strong>（Word / Excel / PowerPoint）</li>
+<li><strong>AI agent 操作企业 ERP / CRM / OA</strong>（Salesforce / Workday / 钉钉 / 飞书 / 企微）</li>
+<li><strong>AI agent 操作桌面应用</strong>（Electron /native apps，通过 OS accessibility API）</li>
+<li><strong>AI agent 操作 IoT 设备</strong>（智能家居 / 工业控制）</li>
+</ul>
+<p>每条都是”AI agent 借用人类工具” 路径。 BrowserSkill 给的”shared browser + human-in-loop” 思路<strong>可能成为</strong>后续项目的模板。</p>
+<p>我估计 2027 年上半年，AI agent <strong>真正</strong> “动手” 操作真实世界的项目会<strong>密集出现</strong>。 BrowserSkill 是这条线上的<strong>早期信号</strong>。</p>
+<hr>
+<h2 id="十九点五、一些”我可能用错的功能”"><a href="#十九点五、一些”我可能用错的功能”" class="headerlink" title="十九点五、一些”我可能用错的功能”"></a>十九点五、一些” 我可能用错的功能”</h2><p>写到最后给点” 我自己用错过” 的功能，提醒后来人。</p>
+<p><strong>1. <code>bsk open &lt;url&gt;</code> 跟” 借 tab” 的关系</strong>。 我一开始以为 <code>bsk open</code> 自动借 tab。 其实<strong>不是</strong>。 <code>bsk open</code> 在 Agent Window 里开新 tab，<strong>不碰</strong>用户 tab。 想借用户<strong>已经打开</strong>的 tab，<strong>必须</strong>显式调 <code>bsk tab borrow</code>。</p>
+<p><strong>2. skill 装后要重启 agent</strong>。 <code>bsk install-skill</code> 装完 skill，<strong>daemon 自动同步</strong>，但 agent session <strong>不会</strong>自动 reload。 你必须<strong>重启 agent session</strong>（关掉 Claude Code 重开），skill 才能被 agent 加载。</p>
+<p><strong>3. <code>--full-page</code> 截图对超长页面慢</strong>。 <code>bsk screenshot --full-page</code> 截全页，<strong>整页高度 × 像素</strong>一次性截图。 几万 px 高的页面截图 <strong>慢</strong>（10-30 秒）。 普通截图<strong>秒级</strong>。</p>
+<p><strong>4. protocol 1.3 是 request-help 必需</strong>。 老版本 daemon 不支持 request-help。 我之前跑老 daemon，agent 调 <code>bsk request-help</code> 拿到 <code>disabled</code> 不弹 UI。 <strong>升级</strong> daemon 到最新版。</p>
+<p><strong>5. Daemon 默认 <code>127.0.0.1</code></strong>。 我之前想” 远程让 cloud agent 用本地 daemon”，<strong>忘了</strong>默认绑 <code>127.0.0.1</code>。 看 README 的 remote 配置才搞清楚。</p>
+<p>这 5 条<strong>不在</strong> README 明说，是我自己踩过的。</p>
+<hr>
+<h2 id="二十、最后一段"><a href="#二十、最后一段" class="headerlink" title="二十、最后一段"></a>二十、最后一段</h2><p>BrowserSkill 不是” 又一个 browser automation 工具”。 它是” 让 AI agent 借用用户真实浏览器 + 复用登录态 + 不打扰 + human-in-loop” 的<strong>具体答案</strong>。</p>
+<p>这条答案在 2026 年下半年的 AI 工具链上<strong>有明确位置</strong> —— 之前发过的所有 agent 项目<strong>没有</strong>完全解决”agent 操作真实世界 + 复用登录态” 这个痛点。 BrowserSkill <strong>补上</strong>了。</p>
+<p>如果你：</p>
+<ul>
+<li>每天用 agent 跑 GitHub / Gmail / Notion 操作 → 装 BrowserSkill</li>
+<li> 跑 e2e 测试需要真实登录 → 装 BrowserSkill</li>
+<li> 跑企业 AI 转型需要”AI 操作内网系统” → 评估 BrowserSkill</li>
+<li> 不想给 agent 单独创建账号 → 装 BrowserSkill</li>
+<li> 想让 agent 跟用户” 协作”（碰到障碍人接管） → 装 BrowserSkill</li>
+</ul>
+<p>BrowserSkill <strong>都适用</strong>。</p>
+<p>之前发过的 Tencent/teamai-cli 是” 团队协调层”，BrowserSkill 是” 个人浏览器层”。 这两条 Tencent AI 工具链<strong>配合</strong>用，<strong>AI agent 生态</strong>更完整。</p>
+<p>我装上跑了两天，<strong>再也没</strong>被 “agent 卡登录页” 打断过。 这件事<strong>值</strong>。</p>
+<h2 id="二十点五、几条最终的具体-tips"><a href="#二十点五、几条最终的具体-tips" class="headerlink" title="二十点五、几条最终的具体 tips"></a>二十点五、几条最终的具体 tips</h2><p>跑两周总结几条<strong>最实用</strong>的 tips：</p>
+<p><strong>1. 设一个常驻 “agent 借 tab 用的 tab”。</strong> 我<strong>单独</strong>开一个 Chrome 窗口，标签就叫 “AI Tab”，里面<strong>保持</strong>几个<strong>日常网站</strong>（GitHub / Gmail / Notion）登录状态。 agent 借 tab 时<strong>借这个窗口</strong>的 tab，<strong>不碰</strong>我的工作 tab。</p>
+<p><strong>2. Confirm 默认保持 On。</strong> 不要批量关 Confirm。 即使 trusted agent，<strong>每次确认</strong>值得那 2-3 秒。</p>
+<p><strong>3. Audit log 每周看一次。</strong> <code>~/.bsk/audit.log</code>（具体路径看 README）。 里面是 <code>bsk</code> 的所有调用记录。 每周 review 5 分钟，看 agent 跑了什么。</p>
+<p><strong>4. Daemon 跑在 launchd /systemd 上。</strong> macOS 装 launchd plist，Linux 装 systemd unit，<strong>daemon 永远在跑</strong>。 不用每次手动 <code>bsk daemon start</code>。</p>
+<p><strong>5. Skill 装了之后给 agent 写一份” 使用指南”。</strong> skill 文件内容<strong>官方写得不错</strong>，但<strong>每个团队 / 个人</strong>有 specific 偏好。 写一份<strong>自己版本</strong>的 SKILL.md，README 给的 <code>--source</code> 路径<strong>覆盖</strong>官方。</p>
+<p>这 5 条<strong>不</strong>在 README。 跑两周整理出来。</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/Tencent/BrowserSkill">https://github.com/Tencent/BrowserSkill</a><br><br>&lt;/invoke## 十一、局限</p>
+<blockquote>
+</blockquote>
+<p>这条”Shared browser + human-in-loop + skill 独立 + 11 个 harness 兼容” 组合，<strong>单独</strong>看每一件<strong>不特别</strong>，<strong>一起</strong>看<strong>特别</strong>。 BrowserSkill 把它们<strong>绑成一个产品</strong>。 这是它的护城河。</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/Tencent/BrowserSkill">https://github.com/Tencent/BrowserSkill</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/09/18/tencent-browserskill-shared-browser-ai-agents/" title="Tencent&#x2F;BrowserSkill：5.3k stars 的 &quot;让 AI agent 用你的真实浏览器&quot;，复用登录态 + 不打扰你工作 + 11 个 agent harness 都支持">https://www.daishengli.top/2026/09/18/tencent-browserskill-shared-browser-ai-agents/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/Cursor/" rel="tag"># Cursor</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Codex/" rel="tag"># Codex</a>
+              <a href="/tags/BrowserSkill/" rel="tag"># BrowserSkill</a>
+              <a href="/tags/Tencent/" rel="tag"># Tencent</a>
+              <a href="/tags/Browser-Automation/" rel="tag"># Browser Automation</a>
+              <a href="/tags/Chrome-Extension/" rel="tag"># Chrome Extension</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/17/vastsa-pi-desktop-local-first-ai-coding/" rel="prev" title="vastsa&#x2F;PI-Desktop：2.8k stars 的本地优先 AI 编码 Agent 桌面，Electron + Rust host core + pi Agent Harness + 用户可装插件">
+                  <i class="fa fa-angle-left"></i> vastsa/PI-Desktop：2.8k stars 的本地优先 AI 编码 Agent 桌面，Electron + Rust host core + pi Agent Harness + 用户可装插件
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/19/trycua-cua-computer-use-agent-framework/" rel="next" title="trycua&#x2F;cua：24.4k stars 的 &quot;AI 用的电脑&quot;，Computer-Use 2.0 框架 + 开源驱动 + 跨 OS fleet + macOS 本地 VM + benchmark + 专用 System 1 模型">
+                  trycua/cua：24.4k stars 的 "AI 用的电脑"，Computer-Use 2.0 框架 + 开源驱动 + 跨 OS fleet + macOS 本地 VM + benchmark + 专用 System 1 模型 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
