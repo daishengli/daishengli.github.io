@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" font-family="ui-monospace, 'JetBrains Mono', 'SF Mono', Menlo, monospace">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0e14"/>
+      <stop offset="1" stop-color="#11161f"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1a2030" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="mise" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff5e5e"/>
+      <stop offset="1" stop-color="#ff8a3d"/>
+    </linearGradient>
+    <linearGradient id="old" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1a1f2a"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect width="1200" height="900" fill="url(#grid)" opacity="0.6"/>
+
+  <!-- 顶部状态栏 -->
+  <g transform="translate(40, 40)">
+    <rect width="1120" height="50" fill="#0d131c" stroke="#1a2030"/>
+    <circle cx="22" cy="25" r="6" fill="#ff5e5e">
+      <animate attributeName="opacity" values="1;0.2;1" dur="1.5s" repeatCount="indefinite"/>
+    </circle>
+    <text x="42" y="30" fill="#ff5e5e" font-size="14" font-weight="700" letter-spacing="2">DEV.ENV.UNIFIED</text>
+    <text x="220" y="30" fill="#5a6678" font-size="12">// 1 FILE > 6 TOOLS</text>
+    <text x="1080" y="30" fill="#5a6678" font-size="12">v2025</text>
+  </g>
+
+  <!-- 标题 -->
+  <g transform="translate(40, 130)">
+    <text x="0" y="0" fill="#e6e6e6" font-size="36" font-weight="800">FROM 6 TOOLS TO 1 FILE</text>
+    <text x="0" y="32" fill="#5a6678" font-size="14">// mise.toml 替代 nvm + pyenv + sdkman + asdf + direnv + make</text>
+    <line x1="0" y1="50" x2="1120" y2="50" stroke="#1a2030"/>
+  </g>
+
+  <!-- 左侧：旧世界 6 个工具 -->
+  <g transform="translate(40, 220)">
+    <text x="0" y="0" fill="#5a6678" font-size="11" letter-spacing="2">// BEFORE · LEGACY STACK</text>
+
+    <!-- 工具盒 -->
+    <g transform="translate(0, 20)">
+      <rect width="500" height="64" fill="url(#old)" stroke="#2a3142"/>
+      <text x="20" y="28" fill="#9ba3b3" font-size="14" font-weight="600">nvm</text>
+      <text x="20" y="48" fill="#5a6678" font-size="11">Node.js versions (.nvmrc)</text>
+      <text x="480" y="40" fill="#5a6678" font-size="11" text-anchor="end">~/.nvm</text>
+    </g>
+
+    <g transform="translate(0, 94)">
+      <rect width="500" height="64" fill="url(#old)" stroke="#2a3142"/>
+      <text x="20" y="28" fill="#9ba3b3" font-size="14" font-weight="600">pyenv</text>
+      <text x="20" y="48" fill="#5a6678" font-size="11">Python versions (.python-version)</text>
+      <text x="480" y="40" fill="#5a6678" font-size="11" text-anchor="end">~/.pyenv</text>
+    </g>
+
+    <g transform="translate(0, 168)">
+      <rect width="500" height="64" fill="url(#old)" stroke="#2a3142"/>
+      <text x="20" y="28" fill="#9ba3b3" font-size="14" font-weight="600">sdkman</text>
+      <text x="20" y="48" fill="#5a6678" font-size="11">Java / Maven / Gradle / Kotlin</text>
+      <text x="480" y="40" fill="#5a6678" font-size="11" text-anchor="end">~/.sdkman</text>
+    </g>
+
+    <g transform="translate(0, 242)">
+      <rect width="500" height="64" fill="url(#old)" stroke="#2a3142"/>
+      <text x="20" y="28" fill="#9ba3b3" font-size="14" font-weight="600">asdf</text>
+      <text x="20" y="48" fill="#5a6678" font-size="11">Go / Rust / Terraform / kubectl (+200)</text>
+      <text x="480" y="40" fill="#5a6678" font-size="11" text-anchor="end">~/.asdf</text>
+    </g>
+
+    <g transform="translate(0, 316)">
+      <rect width="500" height="64" fill="url(#old)" stroke="#2a3142"/>
+      <text x="20" y="28" fill="#9ba3b3" font-size="14" font-weight="600">direnv</text>
+      <text x="20" y="48" fill="#5a6678" font-size="11">Per-project .env loading</text>
+      <text x="480" y="40" fill="#5a6678" font-size="11" text-anchor="end">.envrc</text>
+    </g>
+
+    <g transform="translate(0, 390)">
+      <rect width="500" height="64" fill="url(#old)" stroke="#2a3142"/>
+      <text x="20" y="28" fill="#9ba3b3" font-size="14" font-weight="600">make / npm scripts</text>
+      <text x="20" y="48" fill="#5a6678" font-size="11">Tasks: build / test / lint / deploy</text>
+      <text x="480" y="40" fill="#5a6678" font-size="11" text-anchor="end">Makefile</text>
+    </g>
+
+    <!-- 总结 -->
+    <g transform="translate(0, 484)">
+      <text x="0" y="0" fill="#ff5e5e" font-size="14" font-weight="700">6 个工具 / 6 份配置 / 6 个 zshrc 加载段</text>
+      <text x="0" y="22" fill="#5a6678" font-size="11">onboarding 新人 = 半小时装环境</text>
+    </g>
+  </g>
+
+  <!-- 中间箭头 -->
+  <g transform="translate(580, 410)">
+    <path d="M 0 0 L 80 0 L 80 -30 L 110 10 L 80 50 L 80 20 L 0 20 Z" fill="#ff5e5e" opacity="0.9"/>
+    <text x="55" y="14" fill="#0a0e14" font-size="14" font-weight="800" text-anchor="middle">SWITCH</text>
+  </g>
+
+  <!-- 右侧：新世界 1 个文件 -->
+  <g transform="translate(720, 220)">
+    <text x="0" y="0" fill="#5a6678" font-size="11" letter-spacing="2">// AFTER · mise.toml</text>
+
+    <!-- 代码块 -->
+    <g transform="translate(0, 20)">
+      <rect width="440" height="500" fill="#0d131c" stroke="#ff5e5e" stroke-width="2"/>
+      <!-- 文件标签 -->
+      <rect width="440" height="32" fill="#1a2030"/>
+      <text x="20" y="22" fill="#ff5e5e" font-size="13" font-weight="600">mise.toml</text>
+      <text x="100" y="22" fill="#5a6678" font-size="11">~/projects/webapp/mise.toml</text>
+
+      <!-- 代码内容 -->
+      <g font-size="13" font-family="ui-monospace, monospace">
+        <text x="20" y="60" fill="#5a6678">[tools]</text>
+        <text x="20" y="82" fill="#e6e6e6">node    = "22.11.0"</text>
+        <text x="20" y="102" fill="#e6e6e6">python  = "3.12.7"</text>
+        <text x="20" y="122" fill="#e6e6e6">go      = "1.23.4"</text>
+        <text x="20" y="142" fill="#e6e6e6">java    = "17-tem"</text>
+        <text x="20" y="162" fill="#e6e6e6">terraform = "1.10"</text>
+
+        <text x="20" y="200" fill="#5a6678">[env]</text>
+        <text x="20" y="222" fill="#e6e6e6">NODE_ENV      = "production"</text>
+        <text x="20" y="242" fill="#e6e6e6">DATABASE_URL  = { required = true }</text>
+        <text x="20" y="262" fill="#e6e6e6">_.file        = ".env"</text>
+
+        <text x="20" y="300" fill="#5a6678">[tasks]</text>
+        <text x="20" y="322" fill="#e6e6e6">dev   = "vite"</text>
+        <text x="20" y="342" fill="#e6e6e6">test  = "vitest run"</text>
+        <text x="20" y="362" fill="#e6e6e6">build = "vite build"</text>
+        <text x="20" y="382" fill="#e6e6e6">lint  = "ruff check ."</text>
+
+        <text x="20" y="420" fill="#5a6678">[tasks.ci]</text>
+        <text x="20" y="442" fill="#e6e6e6">run = ["lint", "test", "build"]</text>
+      </g>
+    </g>
+
+    <!-- 总结 -->
+    <g transform="translate(0, 540)">
+      <text x="0" y="0" fill="#00ff88" font-size="14" font-weight="700">1 个文件 / 1 行命令 / 0 onboarding</text>
+      <text x="0" y="22" fill="#5a6678" font-size="11">git clone → mise install → ready</text>
+    </g>
+  </g>
+
+  <!-- 底部数据条 -->
+  <g transform="translate(40, 820)">
+    <line x1="0" y1="-20" x2="1120" y2="-20" stroke="#1a2030"/>
+    <text x="0" y="0" fill="#5a6678" font-size="11" letter-spacing="2">// KEY METRICS</text>
+
+    <g transform="translate(0, 20)">
+      <rect width="265" height="48" fill="#0d131c" stroke="#1a2030"/>
+      <text x="14" y="20" fill="#ff5e5e" font-size="11" letter-spacing="1">[01] 启动</text>
+      <text x="14" y="38" fill="#9ba3b3" font-size="11">asdf 800ms+ vs mise 30ms</text>
+    </g>
+    <g transform="translate(285, 20)">
+      <rect width="265" height="48" fill="#0d131c" stroke="#1a2030"/>
+      <text x="14" y="20" fill="#ff5e5e" font-size="11" letter-spacing="1">[02] 工具数</text>
+      <text x="14" y="38" fill="#9ba3b3" font-size="11">900+ · Node/Rust/Go/TF/jq...</text>
+    </g>
+    <g transform="translate(570, 20)">
+      <rect width="265" height="48" fill="#0d131c" stroke="#1a2030"/>
+      <text x="14" y="20" fill="#ff5e5e" font-size="11" letter-spacing="1">[03] 兼容</text>
+      <text x="14" y="38" fill="#9ba3b3" font-size="11">读 .tool-versions 零迁移</text>
+    </g>
+    <g transform="translate(855, 20)">
+      <rect width="265" height="48" fill="#0d131c" stroke="#1a2030"/>
+      <text x="14" y="20" fill="#ff5e5e" font-size="11" letter-spacing="1">[04] 安全</text>
+      <text x="14" y="38" fill="#9ba3b3" font-size="11">信任提示 · 不用社区插件</text>
+    </g>
+  </g>
+</svg>

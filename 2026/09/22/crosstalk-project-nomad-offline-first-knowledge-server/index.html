@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Crosstalk-Solutions&#x2F;project-nomad（GitHub 37.9k stars、394 forks、当日 +394 stars、MIT）是一款 self-contained &#x2F; offline-first 知识 + 教育 + 本地 AI 一体化服务器，单条 curl | bash 安装跑在 Debian&#x2F;Ubuntu 上，Docker Compose 编排 8 个内置工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Crosstalk-Solutions&#x2F;project-nomad：37.9k stars 的 &quot;离线优先知识 + 教育服务器&quot;，Wikipedia + Khan Academy + Ollama AI + 离线地图全套打包 Docker">
+<meta property="og:url" content="https://www.daishengli.top/2026/09/22/crosstalk-project-nomad-offline-first-knowledge-server/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="Crosstalk-Solutions&#x2F;project-nomad（GitHub 37.9k stars、394 forks、当日 +394 stars、MIT）是一款 self-contained &#x2F; offline-first 知识 + 教育 + 本地 AI 一体化服务器，单条 curl | bash 安装跑在 Debian&#x2F;Ubuntu 上，Docker Compose 编排 8 个内置工具">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-22T01:50:00.000Z">
+<meta property="article:modified_time" content="2026-10-22T06:56:22.924Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="project-nomad">
+<meta property="article:tag" content="Crosstalk">
+<meta property="article:tag" content="Offline-First">
+<meta property="article:tag" content="Knowledge">
+<meta property="article:tag" content="Education">
+<meta property="article:tag" content="Wikipedia">
+<meta property="article:tag" content="Ollama">
+<meta property="article:tag" content="Self-Hosted">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/09/22/crosstalk-project-nomad-offline-first-knowledge-server/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/09/22/crosstalk-project-nomad-offline-first-knowledge-server/","path":"2026/09/22/crosstalk-project-nomad-offline-first-knowledge-server/","title":"Crosstalk-Solutions/project-nomad：37.9k stars 的 \"离线优先知识 + 教育服务器\"，Wikipedia + Khan Academy + Ollama AI + 离线地图全套打包 Docker"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Crosstalk-Solutions/project-nomad：37.9k stars 的 "离线优先知识 + 教育服务器"，Wikipedia + Khan Academy + Ollama AI + 离线地图全套打包 Docker | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">394</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">122</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9A%E2%80%9C%E7%9F%A5%E8%AF%86%E4%BE%9D%E8%B5%96%E4%BA%8E-%E7%BD%91%E7%BB%9C-%E2%80%9D%E7%9A%84-%E8%84%86"><span class="nav-number">1.</span> <span class="nav-text">一、它想解决的问题：“知识依赖于 ** 网络 **” 的 脆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E4%B9%8B%E5%A4%84-%EF%BC%9A%E5%8D%95%E6%9D%A1-curl-bash-%E8%A3%85%E9%BD%90-8-%E4%B8%AA-%E5%B7%A5%E5%85%B7"><span class="nav-number">2.</span> <span class="nav-text">二、核心之处 **：单条 ** curl | bash  装齐 ** 8 个 工具 **</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD-%EF%BC%9A8-%E4%B8%AA-%E5%86%85%E7%BD%AE-%E8%83%BD%E5%8A%9B"><span class="nav-number">3.</span> <span class="nav-text">三、核心功能 **：8 个 内置 能力 **</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-AI-Chat-with-Knowledge-Base"><span class="nav-number">3.1.</span> <span class="nav-text">1. AI Chat with Knowledge Base</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Information-Library-via-Kiwix"><span class="nav-number">3.2.</span> <span class="nav-text">2. Information Library via Kiwix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Education-Platform-via-Kolibri"><span class="nav-number">3.3.</span> <span class="nav-text">3. Education Platform via Kolibri</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Offline-Maps-via-ProtoMaps"><span class="nav-number">3.4.</span> <span class="nav-text">4. Offline Maps via ProtoMaps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Data-Tools-via-CyberChef"><span class="nav-number">3.5.</span> <span class="nav-text">5. Data Tools via CyberChef</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-Notes-via-FlatNotes"><span class="nav-number">3.6.</span> <span class="nav-text">6. Notes via FlatNotes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-System-Benchmark-Community-Leaderboard"><span class="nav-number">3.7.</span> <span class="nav-text">7. System Benchmark **+ ** Community Leaderboard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-Supply-Depot-Custom-Docker"><span class="nav-number">3.8.</span> <span class="nav-text">8. Supply Depot **+ ** Custom Docker</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E8%AF%A6%E7%BB%86"><span class="nav-number">4.</span> <span class="nav-text">四、技术架构详细 **</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%9E%B6%E6%9E%84"><span class="nav-number">4.1.</span> <span class="nav-text">安装架构 **</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E6%9E%B6%E6%9E%84"><span class="nav-number">4.2.</span> <span class="nav-text">更新架构 **</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%A8%E5%B9%B3%E5%8F%B0-%E6%94%AF%E6%8C%81"><span class="nav-number">4.3.</span> <span class="nav-text">跨平台 支持 **</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F-%E7%BD%91%E7%BB%9C"><span class="nav-number">4.4.</span> <span class="nav-text">分布式 &#x2F; 网络 **</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84-%E6%89%80%E6%9C%89%E9%A1%B9%E7%9B%AE-%E5%AF%B9%E6%AF%94"><span class="nav-number">5.</span> <span class="nav-text">五、之前发过的 所有项目 ** 对比 **</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E4%BC%BC%E9%A1%B9%E7%9B%AE-%E5%AF%B9%E6%AF%94"><span class="nav-number">5.1.</span> <span class="nav-text">类似项目 ** 对比 **</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%87%A0%E4%B8%AA-%E5%85%B7%E4%BD%93-%E7%9A%84-%E6%8A%80%E6%9C%AF-%E7%BB%86%E8%8A%82"><span class="nav-number">6.</span> <span class="nav-text">六、几个 ** 具体 ** 的 技术 ** 细节 **</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-%E6%AD%A5%E9%AA%A4-%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">6.1.</span> <span class="nav-text">安装 ** 步骤 ** 复杂度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%A0%E7%94%A8-%E7%A9%BA%E9%97%B4"><span class="nav-number">6.2.</span> <span class="nav-text">占用 ** 空间 **</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE"><span class="nav-number">6.3.</span> <span class="nav-text">配置 ** 文件位置 **</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95-%E8%BF%9B%E7%A8%8B-%E6%9C%BA-%E6%9C%BA-%E7%94%A8"><span class="nav-number">6.4.</span> <span class="nav-text">单 进程 ** 机 机 用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%87%A0%E6%9D%A1%E5%8F%8D%E6%A8%A1%E5%BC%8F-%E8%AD%A6%E5%91%8A"><span class="nav-number">7.</span> <span class="nav-text">七、几条反模式 警告 **</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E9%80%82%E5%90%88-%E8%B0%81"><span class="nav-number">8.</span> <span class="nav-text">八、适合 ** 谁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%99%E4%B8%AA%E4%BA%BA-%E6%8E%A2%E7%B4%A2%E8%80%85"><span class="nav-number">8.1.</span> <span class="nav-text">给个人 探索者</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%99%E5%81%8F%E8%BF%9C%E5%AD%A6%E6%A0%A1-%E5%AD%A6%E4%B9%A0%E4%B8%AD%E5%BF%83"><span class="nav-number">8.2.</span> <span class="nav-text">给偏远学校 &#x2F; 学习中心 **</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%99-%E6%9C%AB%E6%97%A5-%E5%87%86%E5%A4%87-offgrid-%E7%A4%BE%E5%8C%BA"><span class="nav-number">8.3.</span> <span class="nav-text">给 末日 ** 准备 ** &#x2F; offgrid** 社区 **</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%99-%E9%9A%90%E7%A7%81%E6%95%8F%E6%84%9F-%E7%94%A8%E6%88%B7"><span class="nav-number">8.4.</span> <span class="nav-text">给 隐私敏感 ** 用户 **</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%99-%E5%86%9B%E4%BA%8B-%E6%94%BF%E5%BA%9C-%E4%BC%81%E4%B8%9A-%EF%BC%88-%E7%A6%BB%E7%BD%91-%E5%9C%BA%E6%99%AF-%EF%BC%89"><span class="nav-number">8.5.</span> <span class="nav-text">给 军事 ** &#x2F; 政府 ** &#x2F; 企业 ** （ 离网 ** 场景 **）**</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%87%A0%E4%B8%AA-%E5%85%B7%E4%BD%93-%E7%9A%84%E5%AE%9E%E8%B7%B5-%E5%BB%BA%E8%AE%AE"><span class="nav-number">9.</span> <span class="nav-text">九、几个 ** 具体 ** 的实践 建议 **</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E5%87%A0%E6%9D%A1-%E5%85%B3%E4%BA%8E-%E2%80%9C%E7%A6%BB%E7%BA%BF-%E4%BC%98%E5%85%88-%E2%80%9C%E7%9A%84-%E6%80%9D%E8%80%83"><span class="nav-number">10.</span> <span class="nav-text">十、几条 ** 关于 ** “离线 ** 优先 ** “的 思考 **</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%8B-%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84-%E2%80%9C%E6%9C%AC-%E2%80%9C-%E9%A1%B9%E7%9B%AE-%E5%AF%B9%E5%BA%94-%E2%80%9C%E4%B8%8D-%E5%90%8C-%E5%B1%82%E2%80%9C"><span class="nav-number">10.1.</span> <span class="nav-text">之 前发过的 ** “本  “ 项目 对应 ** “不 同 层 “**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%9C%E7%A6%BB%E7%BA%BF%E4%BC%98%E5%85%88-%E2%80%9C-%E6%98%AF-2026-%E5%B9%B4-%E7%9A%84-%E6%98%8E%E7%A1%AE%E8%B6%8B%E5%8A%BF"><span class="nav-number">10.2.</span> <span class="nav-text">** “离线优先 ** “** 是  2026 年 的 明确趋势</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%87%A0%E6%9D%A1-%E5%AF%B9-%E2%80%9C2027-%E5%B9%B4-%E2%80%9C%E7%9A%84-%E9%A2%84%E6%B5%8B"><span class="nav-number">11.</span> <span class="nav-text">十一、几条 ** 对 ** “2027 年 “的 预测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E5%AE%83%E5%AF%B9-%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84-%E9%A1%B9%E7%9B%AE-%E7%9A%84-%E2%80%9C%E6%96%B0%E8%A1%A5-%E2%80%9C"><span class="nav-number">12.</span> <span class="nav-text">十二、它对 ** 之前发过的 项目 ** 的 ** “新补 ** “**</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E5%87%A0%E6%9D%A1-%E5%85%B3%E4%BA%8E-Crosstalk-Solutions-%E7%9A%84-%E5%8F%8D%E9%A6%88"><span class="nav-number">13.</span> <span class="nav-text">十三、几条 ** 关于 ** Crosstalk Solutions  的 反馈 **</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E5%87%A0%E6%9D%A1-%E4%B9%8B-%E5%89%8D-%E5%8F%91%E8%BF%87%E7%9A%84-%E9%A1%B9%E7%9B%AE-%E6%A0%88-%E2%80%9C-%E6%9C%80%E5%90%8E-%E2%80%9C-%E8%A7%82%E5%AF%9F-%E2%80%9C"><span class="nav-number">14.</span> <span class="nav-text">十四、几条 ** 之 前 发过的 项目 ** 栈 ** “** 最后 ** “** 观察 ** “</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AE%B5"><span class="nav-number">15.</span> <span class="nav-text">十五、最后一段 **</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E7%82%B9%E4%BA%94%E3%80%81%E5%87%A0%E6%9D%A1%E5%85%B7%E4%BD%93%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%86%B3%E7%AD%96"><span class="nav-number">16.</span> <span class="nav-text">六点五、几条具体的工程决策</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%80%89%E7%94%A8-Kiwix-%E4%B8%8D%E8%87%AA%E9%80%A0-Wikipedia-%E7%A6%BB%E7%BA%BF%E5%BC%95%E6%93%8E"><span class="nav-number">16.1.</span> <span class="nav-text">1. 选用 Kiwix 不自造 Wikipedia 离线引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%80%89%E7%94%A8-Ollama-%E4%B8%8D%E8%87%AA%E9%80%A0-LLM-%E6%8E%A8%E7%90%86"><span class="nav-number">16.2.</span> <span class="nav-text">2. 选用 Ollama 不自造 LLM 推理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%80%89%E7%94%A8-Qdrant-%E4%B8%8D%E8%87%AA%E9%80%A0-vector-DB"><span class="nav-number">16.3.</span> <span class="nav-text">3. 选用 Qdrant 不自造 vector DB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E9%80%89%E7%94%A8-Kolibri-%E4%B8%8D%E8%87%AA%E9%80%A0%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0"><span class="nav-number">16.4.</span> <span class="nav-text">4. 选用 Kolibri 不自造教育平台</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%80%89%E7%94%A8-ProtoMaps-%E4%B8%8D%E8%87%AA%E9%80%A0%E5%9C%B0%E5%9B%BE"><span class="nav-number">16.5.</span> <span class="nav-text">5. 选用 ProtoMaps 不自造地图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E9%80%89%E7%94%A8-CyberChef-%E4%B8%8D%E8%87%AA%E9%80%A0%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86"><span class="nav-number">16.6.</span> <span class="nav-text">6. 选用 CyberChef 不自造数据处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E9%80%89%E7%94%A8-FlatNotes-%E4%B8%8D%E8%87%AA%E9%80%A0%E7%AC%94%E8%AE%B0"><span class="nav-number">16.7.</span> <span class="nav-text">7. 选用 FlatNotes 不自造笔记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E7%82%B9%E4%BA%94%E3%80%81%E5%87%A0%E6%9D%A1-NOMAD-%E9%80%82%E5%90%88%E7%9A%84-%E2%80%9C%E7%8B%AC%E7%89%B9%E5%9C%BA%E6%99%AF-%E2%80%9C"><span class="nav-number">17.</span> <span class="nav-text">七点五、几条 NOMAD 适合的 “独特场景 ** “</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF-1%EF%BC%9A%E5%9B%BD%E5%A4%96-%E7%A6%BB%E7%BD%91-%E5%B7%AE%E6%97%85"><span class="nav-number">17.1.</span> <span class="nav-text">场景 1：国外 ** &#x2F; ** 离网 ** 差旅 **</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF-2%EF%BC%9A%E6%95%99%E8%82%B2-%E5%85%AC%E5%B9%B3"><span class="nav-number">17.2.</span> <span class="nav-text">场景 2：教育 ** 公平 **</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF-3%EF%BC%9A%E5%BA%94%E6%80%A5-%E7%81%BE%E9%9A%BE-%E5%87%86%E5%A4%87"><span class="nav-number">17.3.</span> <span class="nav-text">场景 3：应急 ** &#x2F; 灾难 ** 准备 **</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF-4%EF%BC%9A%E7%A0%94%E7%A9%B6-%E5%AD%A6%E6%9C%AF"><span class="nav-number">17.4.</span> <span class="nav-text">场景 4：研究 ** ** + ** 学术 **</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF-5%EF%BC%9A%E9%9A%90%E7%A7%81-%E4%BC%81%E4%B8%9A-%E5%86%85%E7%BD%91"><span class="nav-number">17.5.</span> <span class="nav-text">场景 5：隐私 ** ** &#x2F; ** 企业 内网 **</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E7%82%B9%E4%BA%94%E3%80%81%E5%87%A0%E6%9D%A1%E2%80%9D%E5%8F%8D-%E2%80%9C%E8%B8%A9%E5%9D%91-%E2%80%9D-%E6%8F%90%E9%86%92"><span class="nav-number">18.</span> <span class="nav-text">八点五、几条” 反 ** “踩坑 **”** 提醒</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E7%82%B9%E4%BA%94%E3%80%81%E5%87%A0%E6%9D%A1%E2%80%9D-%E2%80%9C%E5%AE%83%E5%92%8C-Cloudflare-quiche-%E5%AF%B9%E6%AF%94%E7%9A%84-%E2%80%9C%E8%A7%82%E5%AF%9F"><span class="nav-number">19.</span> <span class="nav-text">九点五、几条”** “它和 ** Cloudflare&#x2F;quiche** 对比的 “观察</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E7%82%B9%E4%BA%94%E3%80%81%E4%B9%8B%E5%89%8D-%E5%8F%91%E8%BF%87%E7%9A%84-%E9%A1%B9%E7%9B%AE-%E5%AF%B9%E5%BA%94%E7%9A%84-%E2%80%9C-%E5%9C%BA%E6%99%AF-%E2%80%9C"><span class="nav-number">20.</span> <span class="nav-text">十点五、之前 ** 发过的 项目 ** 对应的 ** “** 场景 ** ** “**</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80-%E3%80%81%E4%B9%8B%E5%89%8D%E5%8F%91%E8%BF%87%E7%9A%84-%E9%A1%B9%E7%9B%AE-%E7%9A%84-%E2%80%9C%E7%A6%BB%E7%BA%BF%E6%80%9D%E7%BB%B4-%E2%80%9C"><span class="nav-number">21.</span> <span class="nav-text">十一 **、之前发过的 项目 ** 的 “离线思维 ** “** **</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C-%E3%80%81%E5%87%A0%E6%9D%A1-%E5%AF%B9-%E2%80%9CNOMAD-%E5%9C%A8-AI-%E5%B7%A5%E5%85%B7-%E6%A0%88-%E7%9A%84-%E4%BD%8D%E7%BD%AE-%E2%80%9C-%E7%9A%84-%E6%80%9D%E8%80%83"><span class="nav-number">22.</span> <span class="nav-text">十二 **、几条 ** 对 ** “NOMAD  在  AI  工具 ** 栈 的 位置 ** “** 的 思考 **</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89-%E3%80%81%E5%87%A0%E6%9D%A1-%E4%B9%8B%E5%89%8D-%E5%8F%91%E8%BF%87%E7%9A%84-%E9%A1%B9%E7%9B%AE-%E7%9A%84-%E2%80%9C%E4%BA%92%E8%A1%A5-%E2%80%9C-%E6%80%9D%E8%80%83"><span class="nav-number">23.</span> <span class="nav-text">十三 **、几条 ** 之前 ** 发过的 项目 ** 的 ** “互补 ** “** 思考 **</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B-%E3%80%81%E5%87%A0%E6%9D%A1-%E5%AF%B9-%E4%B9%8B%E5%89%8D-%E5%8F%91%E8%BF%87%E7%9A%84-%E6%89%80%E6%9C%89-%E9%A1%B9%E7%9B%AE-%E7%9A%84-%E2%80%9C-5-%E5%B9%B4%E5%90%8E%E5%9B%9E%E5%A4%B4%E7%9C%8B-%E2%80%9C"><span class="nav-number">24.</span> <span class="nav-text">十四 **、几条 ** 对 之前 ** 发过的 所有 ** 项目 ** 的 ** “** 5  年后回头看 “**</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94-%E3%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AE%B5"><span class="nav-number">25.</span> <span class="nav-text">十五 **、最后一段 **</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AD-%E3%80%81%E5%87%A0%E4%B8%AA-%E4%B9%8B%E5%89%8D-%E5%8F%91%E8%BF%87%E7%9A%84-%E9%A1%B9%E7%9B%AE-%E7%9A%84-%E2%80%9C%E4%BA%92%E8%A1%A5-%E2%80%9C-%E5%9C%BA%E6%99%AF-%E6%BC%94%E7%A4%BA"><span class="nav-number">26.</span> <span class="nav-text">十六 **、几个 ** 之前 ** 发过的 项目 ** 的 ** “互补 ** “** 场景 ** 演示 **</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">122</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">394</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/09/22/crosstalk-project-nomad-offline-first-knowledge-server/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Crosstalk-Solutions&#x2F;project-nomad：37.9k stars 的 &quot;离线优先知识 + 教育服务器&quot;，Wikipedia + Khan Academy + Ollama AI + 离线地图全套打包 Docker | 小戴的网络日志">
+      <meta itemprop="description" content="Crosstalk-Solutions&#x2F;project-nomad（GitHub 37.9k stars、394 forks、当日 +394 stars、MIT）是一款 self-contained &#x2F; offline-first 知识 + 教育 + 本地 AI 一体化服务器，单条 curl | bash 安装跑在 Debian&#x2F;Ubuntu 上，Docker Compose 编排 8 个内置工具，Kiwix（离线 Wikipedia + 医学参考 + 书籍）、Ollama + Qdrant（本地 AI 聊天 + RAG + 文档上传 + 语义搜索）、Kolibri（Khan Academy 课程 + 进度跟踪 + 多用户）、ProtoMaps（离线地图下载 + 搜索）、CyberChef（加密 &#x2F; 编码 &#x2F; 数据分析）、FlatNotes（本地 markdown 笔记）、Built-in 系统跑分 + 社区排行榜、Supply Depot（一键 app 目录 + 自定义 Docker 容器），Automatic Updates 按用户节奏自动升级 core + apps + offline content，Easy Setup Wizard 首次配置带 curated content collections；定位是 &quot;Knowledge That Never Goes Offline&quot;，网络断、隔离环境、末日准备、远程工作、离线旅行、跨网络监管场景下完全不依赖云。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Crosstalk-Solutions/project-nomad：37.9k stars 的 "离线优先知识 + 教育服务器"，Wikipedia + Khan Academy + Ollama AI + 离线地图全套打包 Docker
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-22 09:50:00" itemprop="dateCreated datePublished" datetime="2026-09-22T09:50:00+08:00">2026-09-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Crosstalk-Solutions/project-nomad（GitHub 37.9k stars、394 forks、当日 +394 stars、MIT）是一款 self-contained / offline-first 知识 + 教育 + 本地 AI 一体化服务器，单条 curl | bash 安装跑在 Debian/Ubuntu 上，Docker Compose 编排 8 个内置工具，Kiwix（离线 Wikipedia + 医学参考 + 书籍）、Ollama + Qdrant（本地 AI 聊天 + RAG + 文档上传 + 语义搜索）、Kolibri（Khan Academy 课程 + 进度跟踪 + 多用户）、ProtoMaps（离线地图下载 + 搜索）、CyberChef（加密 / 编码 / 数据分析）、FlatNotes（本地 markdown 笔记）、Built-in 系统跑分 + 社区排行榜、Supply Depot（一键 app 目录 + 自定义 Docker 容器），Automatic Updates 按用户节奏自动升级 core + apps + offline content，Easy Setup Wizard 首次配置带 curated content collections；定位是 "Knowledge That Never Goes Offline"，网络断、隔离环境、末日准备、远程工作、离线旅行、跨网络监管场景下完全不依赖云。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上周我去一个<strong>没信号</strong>的山里徒步。 路线上 6 小时，<strong>完全离线</strong>。 我带了纸质地图（备用）+ 装好离线地图的 iPhone（主用）+ 一台装着 100 篇技术 PDF 的 MacBook。 </p>
+<p>走到第三小时，<strong>突然</strong>想查一个<strong>记忆模糊</strong>的概念，<strong>不是</strong>技术问题，<strong>是</strong>个植物学概念（” 这个海拔的橡树品种”）。 我的<strong>所有</strong> “知识库” 都<strong>在</strong>云<strong>上</strong>，<strong>维基</strong>百科、Notion、Google 搜索。 <strong>没信号</strong>，<strong>全</strong> <strong>用</strong>不<strong>了</strong>。</p>
+<p>那<strong>时</strong>候<strong>我</strong>才<strong>意识</strong>到 **：<strong>我</strong> <strong>的</strong> “<strong>知识</strong> “依赖<strong>于</strong> <strong>网</strong>络 **。 <strong>没</strong> <strong>网</strong>络 **，<strong>我</strong> <strong>变</strong>成 ** <strong>“<strong>只</strong>有</strong> <strong>纸</strong>质<strong>地</strong>图 ** + <strong>个</strong>人<strong>记</strong>忆 **”** <strong>的</strong>原<strong>始</strong>人 **。 </p>
+<p>昨天<strong>在</strong> GitHub Trending <strong>上</strong> <strong>刷</strong>到<strong>一</strong>个 ** <strong>项</strong>目 **：<strong>Crosstalk-Solutions/project-nomad</strong>。 <strong>37.9k stars</strong>，<strong>394 forks</strong>，<strong>当</strong>日 <strong>+394 stars</strong>，<strong>MIT</strong>。 </p>
+<p>它<strong>做</strong>的<strong>事</strong>一句<strong>话</strong>：</p>
+<blockquote>
+<p>Project NOMAD is a self-contained, offline-first knowledge and education server packed with critical tools, knowledge, and AI to keep you informed and empowered — anytime, anywhere.</p>
+</blockquote>
+<p><strong>完</strong>全 ** <strong>离</strong>线 **，<strong>不</strong> <strong>依赖</strong> <strong>云</strong>，<strong>单</strong>条 ** <code>curl | bash</code> <strong>装</strong>到<strong>你</strong>的<strong>机</strong>器 **，<strong>本</strong>地<strong>有</strong> <strong> Wikipedia</strong> + <strong>Khan Academy</strong> + <strong>Ollama AI</strong> + <strong>离</strong>线<strong>地</strong>图 ** + <strong>CyberChef</strong> + <strong>笔</strong>记 **，<strong>全</strong> <strong>套</strong>。 </p>
+<hr>
+<h2 id="一、它想解决的问题：“知识依赖于-网络-”的-脆"><a href="#一、它想解决的问题：“知识依赖于-网络-”的-脆" class="headerlink" title="一、它想解决的问题：“知识依赖于** 网络**”的 脆"></a>一、<strong>它</strong>想<strong>解</strong>决<strong>的</strong>问<strong>题</strong>：<strong>“<strong>知</strong>识</strong>依<strong>赖</strong>于 ** <strong>网</strong>络 **” <strong>的</strong> <strong>脆</strong></h2><p><strong>先</strong>把<strong>背</strong>景<strong>说</strong>清<strong>楚</strong>。</p>
+<p><strong>2025 <strong>年</strong>的</strong>知<strong>识</strong>访<strong>问</strong> <strong>栈</strong> <strong>大</strong>概 ** <strong>是</strong>：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">维基百科 / Google / 知乎 / 公众号 → 看文章、查概念</span><br><span class="line">Notion / Obsidian / Bear → 存笔记</span><br><span class="line">ChatGPT / Claude / Gemini → 问答 + 推理</span><br><span class="line">Khan Academy / Coursera → 学课程</span><br><span class="line">Google Maps → 查地图</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>这</strong> <strong>套</strong> <strong>栈</strong> <strong>有</strong>一<strong>个</strong> <strong>共</strong>同<strong>前</strong>提 **：<strong>网</strong>络 **。 <strong>网</strong>络<strong>断</strong>了 ** / <strong>受访问限制</strong> / <strong>不</strong>稳<strong>定</strong> / <strong>在</strong> <strong>国</strong>外 ** <strong>roaming</strong> <strong> 贵</strong>，<strong>难</strong>用 **。</p>
+<p><strong>offline-first</strong> <strong> 思</strong>维<strong>的</strong>项<strong>目</strong> <strong>早</strong>就<strong>有</strong>了 **：</p>
+<ul>
+<li><strong>Kiwix</strong>，<strong>离</strong>线 ** Wikipedia**（<strong>不</strong>是<strong>新</strong>项<strong>目</strong>）</li>
+<li><strong>Kolibri</strong>（之前发过、 learning equality），<strong>离</strong>线<strong>教育</strong>平台</li>
+<li><strong> Ollama</strong>（<strong>之</strong>前<strong>发</strong>过 **），<strong>本</strong>地<strong>跑</strong> LLM</li>
+<li><strong>ProtoMaps</strong>，<strong>离</strong>线<strong>地</strong>图 **</li>
+<li><strong>CyberChef</strong>，<strong>离</strong>线<strong>数据</strong>处理 **</li>
+<li><strong>FlatNotes</strong>，<strong>本</strong>地<strong>笔</strong>记 **</li>
+</ul>
+<p><strong>但</strong>这 ** <strong>6 <strong>个</strong> <strong>工</strong>具</strong> <strong>各</strong>自 ** <strong>独</strong>立 ** <strong>装</strong>、<strong>独</strong>立 ** <strong>配</strong>、<strong>独</strong>立 ** <strong>升</strong>级 **。 <strong>你</strong> <strong>要</strong> <strong>手</strong> <strong>装</strong> **6 <strong>次</strong>、<strong>配</strong> 6 <strong>次</strong>、<strong>升</strong> <strong>级</strong> **6 <strong>次</strong>。</p>
+<p>Project NOMAD <strong>的</strong> <strong>思</strong>路 **：<strong>把</strong>这 ** 6 <strong>个</strong> <strong>工</strong>具 ** <strong>+ <strong>几</strong>个</strong> <strong>补</strong>充<strong>功</strong>能 ** <strong>打</strong>包<strong>成</strong> <strong>一</strong>个 ** <strong>单</strong> <strong> command</strong> <strong> 的</strong> <strong> “<strong>知</strong>识</strong> + <strong>教</strong>育 ** + <strong>AI</strong> <strong> 一</strong>体<strong>化</strong> <strong>服</strong>务<strong>器</strong> “。 </p>
+<p><strong>位</strong>：<strong>知</strong>识 ** <strong>获</strong>取 ** <strong>不</strong> <strong>依</strong>赖 ** <strong>网</strong>络 **、<strong>不</strong> <strong>依</strong>赖 ** <strong>云</strong>、<strong>不</strong> <strong>依</strong>赖 ** <strong>任</strong>何 ** <strong>付</strong>费 ** <strong>服</strong>务 **。</p>
+<hr>
+<h2 id="二、核心之处-：单条-curl-bash-装齐-8-个-工具"><a href="#二、核心之处-：单条-curl-bash-装齐-8-个-工具" class="headerlink" title="二、核心之处**：单条** curl | bash 装齐** 8 个 工具**"></a>二、<strong>核</strong>心<strong>之</strong>处 **：<strong>单</strong>条 ** <strong>curl | bash</strong> <strong> 装</strong>齐 ** 8 <strong>个</strong> <strong>工</strong>具 **</h2><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get update &amp;&amp; \</span><br><span class="line"><span class="built_in">sudo</span> apt-get install -y curl &amp;&amp; \</span><br><span class="line">curl -fsSL https://raw.githubusercontent.com/Crosstalk-Solutions/project-nomad/refs/heads/main/install/install_nomad.sh \</span><br><span class="line">  -o install_nomad.sh &amp;&amp; \</span><br><span class="line"><span class="built_in">sudo</span> bash install_nomad.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑<strong>完</strong>这 ** 4 <strong>行</strong>，<strong>你</strong> <strong>的</strong> <strong>机</strong>器<strong>上</strong> <strong>多</strong>了<strong>一</strong>个 ** <strong>跑</strong>在 ** <code>localhost:8080</code> <strong>的</strong> <strong> “<strong>知</strong>识</strong> + <strong>教</strong>育 ** + <strong>AI</strong> <strong> 中</strong>心 **” <strong>。 <strong>打</strong>开</strong> <strong>浏</strong>览<strong>器</strong>，<strong>全</strong> <strong>部</strong> <strong>功</strong>能 ** <strong>在</strong> <strong> web</strong> <strong> 页</strong>面 **。</p>
+<p><strong>技</strong>术 ** <strong>架</strong>构 **：Docker Compose <strong>编</strong>排 ** 8 <strong>个</strong> <strong>容</strong>器 **：</p>
+<table>
+<thead>
+<tr>
+<th>容器</th>
+<th>功能</th>
+<th> “电源”</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Command Center</td>
+<td> 管理 UI / API</td>
+<td>Built-in (NOMAD 自家)</td>
+</tr>
+<tr>
+<td>Kiwix</td>
+<td> 离线 Wikipedia / 医学参考 / 书籍</td>
+<td> Kiwix</td>
+</tr>
+<tr>
+<td>Ollama + Qdrant</td>
+<td> 本地 AI 聊天 + 文档 RAG</td>
+<td>Ollama + Qdrant</td>
+</tr>
+<tr>
+<td>Kolibri</td>
+<td>Khan Academy 课程 + 进度</td>
+<td> Kolibri</td>
+</tr>
+<tr>
+<td>ProtoMaps</td>
+<td> 离线地图</td>
+<td> ProtoMaps</td>
+</tr>
+<tr>
+<td>CyberChef</td>
+<td> 加密 / 编码 / 数据分析</td>
+<td> CyberChef</td>
+</tr>
+<tr>
+<td>FlatNotes</td>
+<td> 本地 markdown 笔记</td>
+<td> FlatNotes</td>
+</tr>
+<tr>
+<td>System Benchmark</td>
+<td> 系统跑分</td>
+<td> Built-in</td>
+</tr>
+</tbody></table>
+<p><strong>单</strong>条 ** <code>curl | bash</code> <strong>装</strong>齐 ** + Docker Compose <strong>编</strong>排 ** = ** “<strong>一</strong>键<strong>部</strong>署 ** “<strong>这</strong>件<strong>事</strong> <strong>真</strong>的 ** <strong>被</strong> <strong>做</strong> <strong>到</strong>了 **。</p>
+<hr>
+<h2 id="三、核心功能-：8-个-内置-能力"><a href="#三、核心功能-：8-个-内置-能力" class="headerlink" title="三、核心功能**：8 个 内置 能力**"></a>三、<strong>核</strong>心<strong>功</strong>能 **：<strong>8 <strong>个</strong> <strong>内</strong>置</strong> <strong>能</strong>力 **</h2><h3 id="1-AI-Chat-with-Knowledge-Base"><a href="#1-AI-Chat-with-Knowledge-Base" class="headerlink" title="1. AI Chat with Knowledge Base"></a>1. <strong>AI Chat</strong> <strong>with</strong> Knowledge Base</h3><p><strong>本</strong>地 ** AI <strong>聊</strong>天 **，<strong>用</strong> Ollama ** + ** <strong>RAG</strong> <strong>by</strong> <strong>Qdrant</strong>。 </p>
+<p><strong>你</strong> <strong>可</strong>以 **：</p>
+<ul>
+<li><strong>直</strong>接 ** <strong>用</strong> Ollama <strong>聊</strong>天 **（<strong>本</strong>地 ** LLM**）</li>
+<li><strong>上</strong>传 ** <strong>你</strong> <strong>的</strong> <strong> PDF</strong> / <strong>文</strong>档 **，Qdrant <strong>做</strong> <strong>向</strong>量<strong>索</strong>引 **，Ollama <strong>结</strong>合 ** <strong>你</strong> <strong>的</strong> <strong>文</strong>档 ** <strong>回</strong>答 **</li>
+<li><strong> 接</strong> OpenAI <strong>API</strong> <strong> 兼</strong>容<strong>的</strong> <strong>远</strong>程 ** <strong>服</strong>务<strong>器</strong>（LM Studio /llama.cpp/ 自<strong>建</strong>端<strong>点</strong>）</li>
+</ul>
+<p><strong>这</strong>条 ** <strong>跟</strong> <strong>之</strong>前 ** <strong>发</strong> <strong>过</strong>了<strong>的</strong> <strong> nashsu/llm_wiki</strong>（<strong>个</strong>人 ** <strong>wiki</strong>）** / <strong>mksglu/context-mode</strong>（<strong>单</strong> session <strong>优</strong>化 **）<strong>不</strong>同 **。 NOMAD <strong>的</strong> <strong> AI chat</strong> <strong> 是</strong> “<strong>本</strong>地 ** + <strong>文</strong>档 ** “<strong>的</strong> <strong> RAG</strong>，<strong>不</strong> <strong>是</strong> “<strong>捕</strong>获 ** agent <strong>对</strong>话 ** “<strong>的</strong> <strong>长</strong>期 ** <strong>记</strong>忆 **。 </p>
+<h3 id="2-Information-Library-via-Kiwix"><a href="#2-Information-Library-via-Kiwix" class="headerlink" title="2. Information Library via Kiwix"></a>2. <strong>Information Library</strong> <strong>via</strong> <strong>Kiwix</strong></h3><p><strong>离</strong>线 ** <strong>Wikipedia</strong> + <strong>医</strong>学<strong>参</strong>考 **（<strong>包</strong>括 ** <strong>WHO</strong> / <strong>ICD-10</strong>） + <strong>survival guides</strong> + <strong>离</strong>线 ** <strong>书</strong>籍 **（<strong>公</strong>版<strong>书</strong> + <strong>用</strong>户<strong>自</strong>传 **）**。</p>
+<p><strong>这</strong>条 ** <strong>是</strong> <strong>最</strong> <strong>值</strong>值<strong>过</strong>了<strong>的</strong>功<strong>能</strong>。 <strong>我</strong> <strong>那</strong>天 ** <strong>在</strong> <strong>山</strong>里 ** <strong>想</strong>查<strong>的</strong> <strong> “<strong>橡</strong>树</strong>品<strong>种</strong> “<strong>，<strong>Kiwix <strong>上</strong>有</strong>。 <strong>完</strong>全</strong> <strong>离</strong>线 ** <strong>用</strong>得<strong>起</strong>。</p>
+<p><strong>Kiwix</strong> <strong> 之</strong>前<strong>就</strong>是 ** <strong>专</strong>门<strong>做</strong>这<strong>件</strong>事<strong>的</strong>项<strong>目</strong>，<strong>ZIM</strong> <strong> 文</strong>件 ** <strong>格</strong>式 ** <strong>存</strong> <strong> W</strong>ikipedia** <strong>离</strong>线<strong>版</strong>。 <strong>Z</strong>IM** <strong>文</strong>件 ** <strong>+ ** <strong>Z</strong>IM</strong> <strong> 阅</strong>读 ** <strong>器</strong>（<strong>Kiwix Server</strong>）** = ** <strong>“<strong>完</strong>全</strong> <strong>离</strong>线<strong>的</strong>维<strong>基</strong>百<strong>科</strong> “**。</p>
+<h3 id="3-Education-Platform-via-Kolibri"><a href="#3-Education-Platform-via-Kolibri" class="headerlink" title="3. Education Platform via Kolibri"></a>3. <strong>Education Platform</strong> <strong>via</strong> <strong>Kolibri</strong></h3><p><strong>Khan Academy</strong> <strong> 课</strong>程 ** <strong>+ ** <strong>进</strong>度</strong>跟<strong>踪</strong> + <strong>多</strong>用<strong>户</strong>。 </p>
+<p><strong>Kolibri</strong> <strong> 是</strong> Learning Equality <strong>出</strong>的 **，<strong>专</strong>门<strong>给</strong> <strong> offline / low-bandwidth</strong> <strong> 场</strong>景 ** <strong>用</strong>的 ** <strong>教</strong>育 ** <strong>平</strong>台 **。 <strong>南</strong>半<strong>球</strong>（<strong>印</strong>度 **、非<strong>洲</strong>、<strong>拉</strong>美 **）<strong>用</strong> <strong>的</strong>很<strong>多</strong>，<strong>无</strong>法<strong>保</strong>证 ** <strong>网</strong>络 ** <strong>的</strong> <strong>学</strong>校 ** / <strong>学</strong>习<strong>中</strong>心 **。 </p>
+<p><strong>这</strong>条 ** <strong>让</strong> NOMAD <strong>不</strong> <strong>只</strong>是 ** <strong>“<strong>知</strong>识</strong> + <strong>AI</strong> “<strong>，<strong>也</strong>是</strong> <strong> “<strong>教</strong>育</strong> + <strong>学</strong>习 **”。 <strong>山</strong>村<strong>学</strong>校 ** <strong>+ ** <strong>一</strong>台</strong> NOMAD <strong>服</strong>务<strong>器</strong> = <strong>学</strong>生<strong>有</strong> <strong> Khan Academy</strong>。</p>
+<h3 id="4-Offline-Maps-via-ProtoMaps"><a href="#4-Offline-Maps-via-ProtoMaps" class="headerlink" title="4. Offline Maps via ProtoMaps"></a>4. <strong>Offline Maps</strong> <strong>via</strong> <strong>ProtoMaps</strong></h3><p><strong>下</strong>载 ** <strong>区</strong>域 ** <strong>地</strong>图 ** <strong>离</strong>线<strong>包</strong>。 </p>
+<p><strong>ProtoMaps</strong> <strong> 是</strong> <strong> MBTiles</strong> ** + PMTiles** <strong>协</strong>议 ** <strong>的</strong> <strong>开</strong>源 ** <strong>实</strong>现 **，<strong>O</strong>SM** <strong>风</strong>格 ** <strong>的</strong> <strong>地</strong>图 ** <strong>tile</strong> <strong> 系</strong>统 **。 <strong>你</strong> <strong>下</strong>载 ** <strong>你</strong> <strong>的</strong> <strong>区</strong>域 **（<strong>比</strong>如 ** <strong>北</strong>京 **）的 ** <strong>PMTiles</strong> <strong> 文</strong>件 **（<strong>单</strong>文<strong>件</strong>、<strong>g</strong>zip** <strong>压</strong>缩 **），<strong>本</strong>地<strong>用</strong> <strong> Q</strong>GIS** / <strong>Leaflet</strong> ** <strong>打</strong>开 **。</p>
+<p><strong>这</strong>条 ** <strong>让</strong> <strong>山</strong>里<strong>没</strong>信<strong>号</strong> <strong>的</strong> <strong>场</strong>景 ** <strong>真</strong>的 ** <strong>完</strong>全<strong>可</strong>用 **，<strong>我</strong> <strong>的</strong> iPhone <strong>上</strong> <strong>的</strong> <strong>离</strong>线 ** <strong>地</strong>图 ** <strong>是</strong> <strong>这</strong>个 ** <strong>技</strong>术 ** <strong>栈</strong>。</p>
+<h3 id="5-Data-Tools-via-CyberChef"><a href="#5-Data-Tools-via-CyberChef" class="headerlink" title="5. Data Tools via CyberChef"></a>5. <strong>Data Tools</strong> <strong>via</strong> <strong>CyberChef</strong></h3><p><strong>GCHQ</strong>（<strong>英</strong>国 ** <strong>政</strong>府 ** <strong>通</strong>信<strong>总</strong>部 **）<strong>开</strong>源<strong>的</strong> “<strong>数</strong>据<strong>处</strong>理 ** + <strong>编</strong>码 ** + <strong>加</strong>密 ** “<strong>工</strong>具 **，<strong>所</strong>谓 ** “<strong>厨</strong>房<strong>招</strong>牌 ** “**。 </p>
+<p><strong>你</strong> <strong>可</strong>以 **：</p>
+<ul>
+<li><strong>解</strong>码 ** Base64 / Hex / URL** </li>
+<li><strong>AES</strong> / <strong>RSA</strong> / <strong>各种</strong> <strong>密</strong>码<strong>学</strong>算<strong>法</strong></li>
+<li><strong>图</strong>像<strong>分</strong>析 **（<strong>藏</strong>写<strong>术</strong> detection**）</li>
+<li><strong>数</strong>据 ** <strong>转</strong>换 ** <strong>（<strong>JSON</strong> / <strong>YAML</strong> / <strong>CSV</strong> / <strong>SQL</strong>）</strong></li>
+</ul>
+<p><strong>这</strong>条 ** <strong>在</strong> <strong> offline</strong> <strong> 场</strong>景 ** <strong>特</strong>别<strong>有</strong>用 **，<strong>网</strong>络<strong>断</strong>了<strong>你</strong> <strong>不</strong>能 ** <strong>用</strong> <strong>在</strong>线 ** <strong>JSON</strong> <strong>formatter</strong>，<strong>CyberChef</strong> <strong> 本</strong>地 ** <strong>给</strong> <strong>你</strong>。</p>
+<h3 id="6-Notes-via-FlatNotes"><a href="#6-Notes-via-FlatNotes" class="headerlink" title="6. Notes via FlatNotes"></a>6. <strong>Notes</strong> <strong>via</strong> <strong>FlatNotes</strong></h3><p><strong>本</strong>地 ** markdown <strong>笔</strong>记 **，<strong>类</strong>似 ** Obsidian <strong>但</strong> <strong>更</strong> <strong>轻</strong>、<strong>更</strong> <strong>简</strong>单 **。 </p>
+<p><strong>FlatNotes</strong> <strong> 是</strong> <strong>一</strong>个 ** <strong>独</strong>立 ** <strong>的</strong> <strong> G</strong>ithub** <strong>项</strong>目 **，** “<strong>本</strong>地 ** markdown** <strong>笔</strong>记 ** + <strong>浏</strong>览 ** <strong>器</strong> <strong>接</strong>口 **” <strong>。 <strong>没</strong> <strong>有</strong> <strong>图</strong>谱</strong>、<strong>没</strong>有 ** <strong>plug-in</strong>、<strong>没</strong>有 ** <strong>Obsidian</strong> <strong> 的</strong> <strong>复</strong>杂<strong>性</strong>，<strong>只</strong>是 ** “<strong>记</strong>笔<strong>记</strong> <strong> + ** <strong>搜</strong> “</strong>。</p>
+<p><strong>适</strong>合 ** “<strong>我</strong> <strong>不</strong> <strong>要</strong> <strong> Obsidian</strong> <strong> 的</strong> <strong>复</strong>杂<strong>性</strong>，<strong>只</strong> <strong>要</strong> <strong> Notion</strong> <strong> 的</strong> <strong>本</strong>地 ** <strong>版</strong>本 **” <strong>的</strong> <strong>人</strong>。</p>
+<h3 id="7-System-Benchmark-Community-Leaderboard"><a href="#7-System-Benchmark-Community-Leaderboard" class="headerlink" title="7. System Benchmark **+ ** Community Leaderboard"></a>7. <strong>System Benchmark</strong> **+ ** <strong>Community Leaderboard</strong></h3><p><strong>系</strong>统 ** <strong>跑</strong>分 **，<strong>用</strong>一<strong>套</strong> <strong>标</strong>准<strong>化</strong> <strong> benchmark</strong> 测 ** <strong>你</strong> <strong>的</strong> <strong>机</strong>器 ** <strong>性</strong>能 **。 </p>
+<p><strong>社</strong>区 ** <strong>排</strong>行<strong>榜</strong> <strong>让</strong> <strong>你</strong> <strong>看</strong> <strong>你</strong> <strong>的</strong> <strong>机</strong>器 ** <strong>在</strong> <strong>所</strong>有 ** <strong>NOMAD</strong> <strong> 用</strong>户 ** <strong>里</strong>的 ** <strong>位</strong>置 **，<strong>类</strong>似 ** <strong>Geekbench</strong> 的<strong>开</strong>源<strong>版</strong>本 **。</p>
+<h3 id="8-Supply-Depot-Custom-Docker"><a href="#8-Supply-Depot-Custom-Docker" class="headerlink" title="8. Supply Depot **+ ** Custom Docker"></a>8. <strong>Supply Depot</strong> **+ ** <strong>Custom Docker</strong></h3><p><strong>“<strong>一</strong>键</strong> <strong> App</strong> <strong> 目</strong>录 **” <strong>，<strong>点</strong>击</strong>装 ** <strong>PDF</strong> <strong> 工</strong>具 **、<strong>file browser</strong>、<strong>e-book</strong> <strong> 库</strong>、<strong>password manager</strong> <strong> 等</strong>。 </p>
+<p><strong>也</strong> <strong>支</strong>持 ** <strong>“<strong>你</strong>自</strong>己<strong>的</strong> Docker <strong>容</strong>器 **” <strong>，<strong>把</strong> <strong>你</strong> <strong>的</strong> <strong>公</strong>司</strong>内<strong>部</strong>系<strong>统</strong> <strong>装</strong>到 ** Supply Depot <strong>里</strong>、<strong>通</strong>过 ** <strong>NOMAD</strong> <strong> 管</strong>理 **。</p>
+<hr>
+<h2 id="四、技术架构详细"><a href="#四、技术架构详细" class="headerlink" title="四、技术架构详细**"></a>四、<strong>技</strong>术<strong>架</strong>构<strong>详</strong>细 **</h2><h3 id="安装架构"><a href="#安装架构" class="headerlink" title="安装架构**"></a><strong>安</strong>装<strong>架</strong>构 **</h3><p><strong>单</strong>条 ** <strong>curl | bash</strong> <strong> 脚</strong>本 ** <strong>跑</strong> <strong>完</strong>，<strong>底</strong>层<strong>是</strong> Docker Compose <strong>+ ** <strong>安</strong>装</strong>脚<strong>本</strong> + ** <strong>更</strong>新<strong>脚</strong>本 **。 </p>
+<p><strong>架</strong>构 **：</p>
+<ul>
+<li><strong>Host</strong> <strong>OS</strong>：Debian / Ubuntu ** (22.04 / 24.04 / <strong>26.04 LTS</strong> <strong> 推</strong>荐 **)</li>
+<li><strong>Container runtime</strong>：Docker **+ ** <strong>Docker Compose</strong></li>
+<li><strong>8</strong> <strong> 个</strong> <strong>容</strong>器 ** <strong>上</strong>面<strong>叠</strong> <strong>命</strong>令 ** <strong>中</strong>心 ** Command Center</li>
+<li><strong>Web</strong> <strong> 界</strong>面 **：<code>localhost:8080</code></li>
+</ul>
+<p><strong>Web</strong> <strong> 界</strong>面 ** <strong>管</strong>理 **：</p>
+<ul>
+<li><strong>安</strong>装 ** <strong>+ ** <strong>配</strong>置</strong> <strong>各</strong>个 ** <strong>容</strong>器 **</li>
+<li><strong> 下</strong>载 ** <strong>离</strong>线 ** <strong>内</strong>容 **（<strong>Wikipedia</strong> <strong>ZIM</strong> <strong> 文</strong>件 **、<strong>Khan Academy</strong> <strong> 课</strong>程 **、<strong>地</strong>图 ** <strong>tile</strong>）</li>
+<li><strong>跑</strong>分 ** + ** <strong>上</strong>报 ** <strong>社</strong>区 ** <strong>排</strong>行<strong>榜</strong></li>
+<li><strong>一</strong>键 ** <strong>装</strong> Supply Depot <strong>的</strong> <strong> app</strong></li>
+<li><strong> 配</strong>置 ** <strong>自</strong>动 ** <strong>更</strong>新 **</li>
+</ul>
+<h3 id="更新架构"><a href="#更新架构" class="headerlink" title="更新架构**"></a><strong>更</strong>新<strong>架</strong>构 **</h3><p><strong>Automatic Updates</strong> <strong> 支</strong>持 ** “<strong>光</strong>说 ** <strong>一</strong>句 ** “<strong>的</strong> <strong>自</strong>动 ** <strong>升</strong>级 **：</p>
+<ul>
+<li><strong>Core software</strong> <strong> 升</strong>级 **（Command Center UI / API**）</li>
+<li><strong>安</strong>装<strong>的</strong> <strong> app</strong> <strong> 升</strong>级 **（Kiwix / Ollama <strong>等</strong>）</li>
+<li><strong>离</strong>线 ** <strong>内</strong>容 ** <strong>更</strong>新 **（<strong>Wikipedia</strong> <strong> 新</strong>版<strong>本</strong>、<strong>Khan Academy</strong> <strong> 新</strong>课<strong>程</strong>）</li>
+</ul>
+<p><strong>用</strong>户 ** <strong>可</strong>以 ** <strong>设</strong> <strong> “<strong>多</strong> <strong>频</strong>繁</strong> <strong>更</strong>新 ** “<strong>（<strong>每</strong> <strong>周</strong>）<strong>或</strong> “<strong>很</strong> <strong>少</strong> <strong>更</strong>新</strong> “<strong>（<strong>每</strong> <strong>半</strong>年</strong>）<strong>。 <strong>离</strong>线</strong> <strong>更</strong>新 ** <strong>是</strong> <strong>手</strong>动 ** <strong>的</strong>，<strong>你</strong> <strong>决</strong>定<strong>什</strong>么<strong>时</strong>候 ** <strong>更</strong>新<strong>什</strong>么 **。</p>
+<h3 id="跨平台-支持"><a href="#跨平台-支持" class="headerlink" title="跨平台 支持**"></a><strong>跨</strong>平<strong>台</strong> <strong>支</strong>持 **</h3><ul>
+<li><strong>Linux</strong> <strong>（<strong>Ubuntu / Debian</strong>），</strong> <strong>主</strong>要<strong>支</strong>持 **（** README <strong>明</strong>说 **）</li>
+<li><strong>Windows</strong> <strong>via</strong> <strong>WSL2</strong>，<strong>社</strong>区 ** <strong>支</strong>持 **（<strong>Windows</strong> <strong> 用</strong>户<strong>走</strong> WSL2**）</li>
+<li><strong>macOS</strong>，<strong>没</strong>明<strong>说</strong>。</li>
+</ul>
+<p><strong>这</strong>条 ** <strong>是</strong> mean，<strong>macOS</strong> <strong> 上</strong> <strong>跑</strong> <strong> Docker</strong> <strong> 是</strong> OK <strong>的</strong>，但 ** <strong>README</strong> <strong> 没</strong>明<strong>说</strong> “<strong>支</strong>持 ** macOS**” <strong>。 <strong>你</strong> <strong>在</strong> <strong> macOS</strong> <strong> 上</strong> <strong>跑</strong> <strong>需</strong>要</strong> <strong>自</strong>己 ** <strong>试</strong>。</p>
+<h3 id="分布式-网络"><a href="#分布式-网络" class="headerlink" title="分布式 / 网络**"></a><strong>分</strong>布<strong>式</strong> / <strong>网</strong>络 **</h3><p><strong>默</strong>认 ** <strong>绑</strong> <code>127.0.0.1:8080</code><strong>，<strong>只</strong> <strong>本</strong>地</strong> <strong>访</strong>问 **。 </p>
+<p><strong>如</strong>果 ** <strong>要</strong> <strong>网</strong>络<strong>访</strong>问 **：</p>
+<ul>
+<li><strong>改</strong> <strong>绑</strong>定 ** IP（** Command Center <strong>配</strong>）</li>
+<li><strong>加</strong> <strong> SSL/TLS</strong>（<strong>Let’s Encrypt</strong> / <strong>自</strong>签 **）</li>
+<li><strong>加</strong> <strong>认</strong>证 **（<strong>HTTP Basic</strong> / <strong>OAuth</strong>）</li>
+</ul>
+<p><strong>这</strong> <strong>条</strong>让 ** “<strong>本</strong>地 ** <strong>只</strong> <strong>你</strong> <strong>用</strong> “<strong>的</strong> <strong>安</strong>态 ** 默认 ** <strong>满</strong>足 **；<strong>要</strong> <strong>网</strong>络<strong>访</strong>问 ** <strong>需</strong>要<strong>自</strong>己<strong>配</strong>。</p>
+<hr>
+<h2 id="五、之前发过的-所有项目-对比"><a href="#五、之前发过的-所有项目-对比" class="headerlink" title="五、之前发过的 所有项目** 对比**"></a>五、<strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>所</strong>有<strong>项</strong>目 ** <strong>对</strong>比 **</h2><p><strong>之</strong>前<strong>发</strong>过<strong>的</strong>项<strong>目</strong> <strong>里</strong>有<strong>几</strong>个 ** <strong>跟</strong> <strong> NOMAD</strong> <strong> 重</strong>叠<strong>或</strong>对<strong>比</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>思路</th>
+<th><strong>与</strong> NOMAD <strong>对</strong>比 **</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>nashsu/llm_wiki</strong>（<strong>之</strong>前 **）</td>
+<td>个人 wiki + Karpathy LLM Wiki pattern</td>
+<td>NOMAD <strong>不</strong>是 ** wiki，<strong>是</strong> “<strong>一</strong>站<strong>式</strong> “<strong>知</strong>识 ** ** + ** <strong>教</strong>育 ** ** + ** <strong>AI</strong> “<strong>套</strong>装 **</td>
+</tr>
+<tr>
+<td><strong>OpenWhispr</strong>（<strong>之</strong>前 **）</td>
+<td>本地 ** <strong>优</strong>先<strong>语</strong>音<strong>听</strong>写 **</td>
+<td>NOMAD <strong>是</strong> “<strong>本</strong>地 ** <strong>优</strong>先 ** “<strong>套</strong>装 **，<strong>不</strong> <strong>只</strong>语<strong>音</strong></td>
+</tr>
+<tr>
+<td><strong> PI-Desktop</strong>（<strong>之</strong>前 **）</td>
+<td>本地 ** <strong>优</strong>先 ** <strong>AI</strong> <strong> 编</strong>码 ** <strong>agent</strong></td>
+<td>NOMAD <strong>是</strong> “<strong>本</strong>地 ** <strong>优</strong>先 ** “<strong>知</strong>识 ** + <strong>教</strong>育 ** + <strong>AI</strong>，<strong>不</strong> <strong>只</strong> <strong>编</strong>码 **</td>
+</tr>
+<tr>
+<td><strong>mksglu/context-mode</strong>（<strong>之</strong>前 **）</td>
+<td>agent context <strong>优</strong>化 **</td>
+<td>NOMAD <strong>不</strong> <strong>是</strong> agent tool，<strong>是</strong> “<strong>完</strong>整 ** <strong>知</strong>识 ** <strong>中</strong>心 **”</td>
+</tr>
+<tr>
+<td><strong>vastsa/PI-Desktop</strong>（<strong>之</strong>前 **）</td>
+<td>本地 ** <strong>优</strong>先 ** <strong>AI</strong> agent <strong>桌</strong>面 **</td>
+<td><strong> 位</strong>置 ** <strong>类</strong>似 **，<strong>都</strong>是 ** “<strong>本</strong> <strong>本地</strong> “** ，<strong>但</strong> NOMAD <strong>更</strong> <strong>广</strong>（<strong>知</strong>识 ** + <strong>教</strong>育 ** + <strong>AI</strong>），<strong>PI-Desktop</strong> <strong> 更</strong> <strong>深</strong>（<strong>AI</strong> <strong> 编</strong>码 ** <strong>agent</strong>）</td>
+</tr>
+</tbody></table>
+<p>NOMAD <strong>的</strong> <strong>位</strong>置 ** <strong>是</strong> “<strong>本</strong>地 ** <strong>优</strong>先 ** <strong>个</strong>人 ** <strong>AI</strong> <strong> 工</strong>具 ** “<strong>阵</strong>营 ** <strong>的</strong> “<strong>知</strong>识 ** <strong>中</strong>心 **”<strong>。 之</strong>前<strong>发</strong>过<strong>的</strong> <strong> PI-Desktop</strong>、<strong>OpenWhispr</strong>、<strong>llm_wiki</strong> <strong> 都</strong>是 ** “<strong>单</strong>点 ** “<strong>工</strong>具 **；<strong>NOMAD</strong> <strong> 是</strong> “<strong>整</strong>合 ** “<strong>套</strong>装 **。</p>
+<h3 id="类似项目-对比"><a href="#类似项目-对比" class="headerlink" title="类似项目** 对比**"></a><strong>类</strong>似<strong>项</strong>目 ** <strong>对</strong>比 **</h3><p><strong>类</strong>似 ** “<strong>离</strong>线<strong>知</strong>识 ** + <strong>AI</strong> ** “<strong>的</strong> <strong>项</strong>目 **：</p>
+<ul>
+<li><strong>Kiwix</strong>（<strong>NOMAD</strong> <strong> 用</strong>的 ** <strong>工</strong>具<strong>之一</strong>），** <strong>独</strong>立 ** <strong>项</strong>目 **，** <strong>只</strong> <strong>管</strong> <strong>离</strong>线 ** <strong>Wikipedia</strong>。 NOMAD <strong>里</strong>有 ** Kiwix ** + ** <strong>6 <strong>个</strong> <strong>其</strong>他</strong> <strong>工</strong>具 **。</li>
+<li><strong>Kolibri</strong>（<strong>NOMAD</strong> <strong> 用</strong>的 ** <strong>工</strong>具<strong>之二</strong>），** <strong>独</strong>立 ** <strong>项</strong>目 **，** <strong>只</strong> <strong>管</strong> <strong>离</strong>线 ** <strong>教</strong>育 **。</li>
+<li><strong>Ollama</strong>（<strong>NOMAD</strong> <strong> 用</strong>的 ** <strong>工</strong>具<strong>之</strong>三 **），** <strong>之</strong> <strong>前</strong> <strong>发</strong>过<strong>过</strong>。</li>
+<li><strong>LlamaCoder</strong> / <strong>Self-Hosted-LLM-Starter</strong> <strong> 类</strong>的 ** “<strong>一</strong>键 ** AI** ** “** <strong>套</strong>装 **，** <strong>没</strong>有 ** “** + <strong>教</strong>育 ** + <strong>地</strong>图 ** + <strong>笔</strong>记 ** “**。</li>
+<li><strong>GitHub-Docker-Self-Hosting-Starter</strong> <strong> 类</strong> <strong> + ** <strong>Homepage</strong>，</strong> <strong>不</strong> <strong>带</strong> AI**。</li>
+</ul>
+<p>NOMAD <strong>的</strong> <strong>独</strong>特<strong>性</strong>：** “<strong>8 <strong>个</strong> <strong>工</strong>具</strong> + ** <strong>单</strong>条 ** <strong>curl</strong> ** + ** <strong>管</strong>理 ** UI** + ** <strong>自</strong>动 ** <strong>更</strong>新 ** “<strong>。 <strong>之</strong>前</strong> <strong>没</strong>有 ** <strong>这</strong> <strong>种</strong> “<strong>知</strong>识 ** + <strong>教</strong>育 ** + <strong>AI</strong> <strong> 一</strong>站<strong>式</strong> “<strong>的</strong> <strong>项</strong>目 **。</p>
+<hr>
+<h2 id="六、几个-具体-的-技术-细节"><a href="#六、几个-具体-的-技术-细节" class="headerlink" title="六、几个** 具体** 的 技术** 细节**"></a>六、<strong>几</strong>个 ** <strong>具</strong>体 ** <strong>的</strong> <strong>技</strong>术 ** <strong>细</strong>节 **</h2><p><strong>读</strong>了 ** README ** + ** <strong>之</strong>前 ** <strong>发</strong>过<strong>的</strong> <strong>几</strong>个 ** <strong>类</strong>似 ** <strong>项</strong>目 ** <strong>的</strong> <strong>文</strong>档 **，<strong>整</strong>理<strong>几</strong>条 ** <strong>工</strong>程 ** <strong>细</strong>节 **：</p>
+<h3 id="安装-步骤-复杂度"><a href="#安装-步骤-复杂度" class="headerlink" title="安装** 步骤** 复杂度"></a><strong>安</strong>装 ** <strong>步</strong>骤 ** <strong>复</strong>杂<strong>度</strong></h3><p><strong>单</strong>条 ** <strong>curl | bash</strong> <strong> 是</strong> <strong> “<strong>营</strong>销</strong>文<strong>案</strong> “<strong>，</strong> <strong>实</strong>际 ** <strong>上</strong>：</p>
+<ol>
+<li><strong>sudo apt-get update</strong>，**5-30 <strong>秒</strong></li>
+<li><strong> sudo apt-get install -y curl</strong>，**5-10 <strong>秒</strong></li>
+<li><strong> curl install_nomad.sh</strong>，**2-5 <strong>秒</strong></li>
+<li><strong> sudo bash install_nomad.sh</strong>，<strong>5-15 <strong>分</strong>钟</strong></li>
+</ol>
+<p><strong>install</strong> <strong> 脚</strong>分 **3 <strong>步</strong>：</p>
+<ul>
+<li><strong>装</strong> Docker + Docker Compose（<strong>如</strong>果 ** <strong>还</strong>没<strong>装</strong>）</li>
+<li><strong>拉</strong> 8 <strong>个</strong> <strong>容</strong>器 ** <strong>镜</strong>像 **（<strong>Ollama</strong> ** + ** <strong>Kiwix</strong> ** + ** <strong>Qdrant</strong> <strong> 等</strong>等 **，<strong>总</strong> <strong>大</strong>小 ** <strong>~10-30 GB</strong>）</li>
+<li><strong>起</strong> Docker Compose</li>
+</ul>
+<p><strong>总</strong> <strong>时</strong>间 ** <strong>首</strong>次<strong>装</strong> <strong> 30-60 <strong>分</strong>钟</strong>（<strong>主</strong>要<strong>耗</strong>在 ** <strong>拉</strong> <strong>镜</strong>像 **）。 <strong>之</strong>后 ** <strong>启</strong>动 ** **5-10 <strong>秒</strong>。</p>
+<h3 id="占用-空间"><a href="#占用-空间" class="headerlink" title="占用** 空间**"></a><strong>占</strong>用 ** <strong>空</strong>间 **</h3><p><strong>8</strong> <strong> 个</strong> <strong>容</strong>器 ** + <strong>Ollama</strong> <strong> 模</strong>型 ** ** + <strong>Kiwix</strong> <strong> 的</strong> <strong> Wikipedia</strong> <strong>ZIM</strong> <strong> 文</strong>件 **（<strong>English</strong> ** <del>80 GB**）+ ** <strong>Khan Academy</strong> <strong> 课</strong>程 **（**</del>5 GB**） + <strong>ProtoMaps</strong> <strong> 地</strong>图 **（<strong>全</strong> <strong>中</strong>国 ** <strong>~10 GB</strong>）：</p>
+<p><strong>默</strong>认 ** <strong>装</strong> <strong>不</strong> <strong>下</strong>载 ** <strong>任</strong>何 ** <strong>内</strong>容 ** <strong>大</strong>概 ** <strong>5 GB</strong>（<strong>只</strong>有 ** <strong>镜</strong>像 **）。<br><strong>全</strong> <strong>装</strong>齐 ** <strong>大</strong>概 ** <strong>100 GB</strong>，<strong>你</strong> <strong>的</strong> <strong> 1TB</strong> <strong> 硬</strong>盘 ** <strong>完</strong>全 ** <strong>够</strong>。</p>
+<h3 id="配置-文件位置"><a href="#配置-文件位置" class="headerlink" title="配置** 文件位置**"></a><strong>配</strong>置 ** <strong>文</strong>件<strong>位</strong>置 **</h3><p><strong>脚</strong>本<strong>装</strong> <strong>之</strong>后 **，<strong>NOMAD</strong> <strong> 的</strong> <strong>配</strong>置 ** <strong>在</strong>：</p>
+<ul>
+<li><code>/etc/nomad/</code>，<strong>系</strong>统 ** <strong>级</strong>配<strong>置</strong></li>
+<li><code>~/.config/nomad/</code>，<strong>用</strong>户 ** <strong>级</strong>配<strong>置</strong></li>
+<li><code>/var/lib/nomad/</code>，** <strong>数</strong>据 **（<strong>不</strong>修<strong>改</strong>）</li>
+</ul>
+<p><strong>更</strong>新 ** <strong>通</strong>过 ** <strong>apt</strong> ** + ** <strong>NOMAD</strong> <strong> 自</strong>己<strong>的</strong> <strong>更</strong>新 ** <strong>脚</strong>本 **。</p>
+<h3 id="单-进程-机-机-用"><a href="#单-进程-机-机-用" class="headerlink" title="单 进程** 机 机 用"></a><strong>单</strong> <strong>进</strong>程 ** <strong>机</strong> <strong>机</strong> <strong>用</strong></h3><p><strong>你</strong> <strong>的</strong> <strong>笔</strong>记<strong>本</strong>上 ** <strong>跑</strong> <strong> NOMAD</strong>：</p>
+<ul>
+<li><strong>前</strong>提 **：8 GB+ RAM（<strong>Ollama</strong> <strong> 跑</strong> <strong>小</strong> <strong>模</strong>型<strong>需</strong>要 ** <strong>4 GB+</strong>）</li>
+<li><strong>推</strong>荐 **：16 GB+ RAM（<strong>跑</strong> <strong> 7B</strong> <strong> 模</strong>型 ** <strong>够</strong>用 **）</li>
+<li><strong>要</strong> <strong>大</strong> <strong>模</strong>型 **：32 GB+ RAM <strong>或</strong> <strong> GPU</strong></li>
+</ul>
+<p><strong>8 GB</strong> <strong> 机</strong>器 ** <strong>上</strong> <strong>能</strong>跑 **，<strong>只</strong> <strong>能</strong> <strong>用</strong> <strong>小</strong> <strong>模</strong>型 **（<strong>Qwen2.5</strong> <strong>1.5B</strong> <strong> 类</strong>的 **），<strong>大</strong> <strong>模</strong>型 ** <strong>很</strong> <strong>卡</strong>。</p>
+<hr>
+<h2 id="七、几条反模式-警告"><a href="#七、几条反模式-警告" class="headerlink" title="七、几条反模式 警告**"></a>七、<strong>几</strong>条<strong>反</strong>模<strong>式</strong> <strong>警</strong>告 **</h2><p>跟<strong>之</strong>前<strong>发</strong>过<strong>的</strong>几<strong>个</strong> <strong>项</strong>目 ** <strong>一</strong>样 **，<strong>NOMAD</strong> <strong> 也</strong>有<strong>反</strong>模<strong>式</strong>。</p>
+<p><strong>反</strong>模<strong>式</strong> 1：** “<strong>装</strong>上 ** NOMAD <strong>就</strong> <strong>有</strong> <strong>智</strong>能 ** “<strong>。 NOMAD <strong>的</strong> AI <strong>跑</strong> <strong>得</strong> <strong>起</strong>，<strong>但</strong> <strong>智</strong>能</strong>的 ** <strong>上</strong>限 ** <strong>是</strong> <strong> Ollama</strong> ** + ** <strong>模</strong>型 **。 <strong>你</strong> <strong>用</strong> <strong> 7B</strong> <strong> 模</strong>型 ** vs <strong>70B</strong> <strong> 模</strong>型 **，<strong>差</strong>距 ** <strong>巨</strong>大 **。</p>
+<p><strong>反</strong>模<strong>式</strong> 2：** “<strong>装</strong>上 ** <strong>就</strong> <strong>能</strong> <strong>用</strong> <strong> Wikipedia</strong>“。 <strong>你</strong> <strong>装</strong> NOMAD <strong>不</strong> <strong>自</strong>动 ** <strong>下</strong>载 ** <strong>ZIM</strong> <strong> 文</strong>件 **，<strong>你</strong> <strong>自</strong>己 ** <strong>进</strong> <strong> Library</strong> <strong> 手</strong>动 ** <strong>下</strong>载 **。 <strong>一</strong>份 ** <strong>English</strong> <strong>Wikipedia</strong> <strong>ZIM</strong> <strong> 大</strong>概 ** <strong>80 GB</strong>，<strong>你</strong> <strong>的</strong> <strong>硬</strong>盘 ** <strong>够</strong>吗 **？</p>
+<p><strong>反</strong>模<strong>式</strong> 3：** “<strong>装</strong>上 ** <strong>就</strong> <strong>能</strong> <strong>用</strong> <strong> Khan Academy</strong>“。 <strong>同上</strong>，<strong>你</strong> <strong>自</strong>己 ** <strong>手</strong>动 ** <strong>选</strong> <strong>课</strong>程 ** <strong>下</strong>载 **。 </p>
+<p><strong>反</strong>模<strong>式</strong> 4：** “<strong>装</strong>上 ** <strong>就</strong> <strong>可</strong> <strong>以</strong> <strong>代</strong>替 ** <strong>网</strong>络 **”。 <strong>你</strong> <strong>的</strong> <strong>所</strong>有 ** <strong>“<strong>知</strong>识</strong> “<strong>还</strong> <strong>是</strong> <strong>依</strong>赖 ** <strong>你</strong> <strong>下</strong>载 ** <strong>到</strong> <strong>本</strong>地 ** <strong>的</strong> <strong>那</strong>些 ** <strong>资</strong>料 **。 <strong>没</strong> <strong>下</strong>载<strong>的</strong> <strong>没</strong> <strong>有</strong>。 </p>
+<p><strong>反</strong>模<strong>式</strong> 5：** “<strong>装</strong> <strong>就</strong> <strong>够</strong>了 **”。 <strong>还</strong> <strong>要</strong> <strong>配</strong>置 ** <strong>Supply Depot</strong> <strong> 的</strong> <strong>你</strong> <strong>的</strong> <strong>公</strong>司 ** <strong>app</strong> <strong>、<strong>配</strong>置</strong> <strong>自</strong>动 ** <strong>更</strong>新 ** <strong>节</strong>奏 **、<strong>配</strong>置 ** <strong>SSO</strong>、<strong>配</strong>置 ** <strong>备</strong>份 **。 <strong>“<strong>装</strong>了</strong> “<strong>和</strong> “<strong>能</strong> <strong>用</strong> “<strong>之</strong>间 ** <strong>有</strong> <strong>距</strong>离 **。</p>
+<hr>
+<h2 id="八、适合-谁"><a href="#八、适合-谁" class="headerlink" title="八、适合** 谁"></a>八、<strong>适</strong>合 ** <strong>谁</strong></h2><p><strong>写</strong>到<strong>这</strong>里<strong>给</strong>几<strong>条</strong> <strong>具</strong>体 ** <strong>的</strong> “<strong>适</strong>合 ** <strong>谁</strong> “<strong>建</strong>议 **。</p>
+<h3 id="给个人-探索者"><a href="#给个人-探索者" class="headerlink" title="给个人 探索者"></a><strong>给</strong>个<strong>人</strong> <strong>探</strong>索<strong>者</strong></h3><p><strong>如</strong>果 ** <strong>你</strong>：</p>
+<ul>
+<li><strong>经</strong>常 ** <strong>出</strong>国 ** <strong>或</strong> <strong>去</strong> <strong>信</strong>号<strong>不</strong>好<strong>的</strong> <strong>地</strong>方 **</li>
+<li><strong> 想</strong> <strong>拥</strong>有 ** <strong>“<strong>不</strong> <strong>依</strong>赖</strong> <strong>网</strong>络 ** “<strong>的</strong> <strong>知</strong>识 ** <strong>库</strong></li>
+<li><strong>对</strong> <strong> AI</strong> ** + ** <strong>离</strong>线 ** <strong>工</strong>具 ** <strong>有</strong> <strong>好</strong>奇<strong>心</strong></li>
+</ul>
+<p><strong>→ <strong>装</strong> <strong>上</strong> <strong>试</strong>试</strong>。 </p>
+<h3 id="给偏远学校-学习中心"><a href="#给偏远学校-学习中心" class="headerlink" title="给偏远学校 / 学习中心**"></a><strong>给</strong>偏<strong>远</strong>学<strong>校</strong> / <strong>学</strong>习<strong>中</strong>心 **</h3><p><strong>如</strong>果 ** <strong>你</strong>：</p>
+<ul>
+<li><strong>在</strong>南<strong>半</strong>球<strong>或</strong> <strong>信</strong>号<strong>差</strong>的 ** <strong>地</strong>区 ** <strong>做</strong> <strong>教</strong>育 ** <strong>工</strong>作 **</li>
+<li><strong> 需</strong>要<strong>学</strong>生<strong>有</strong> <strong> “<strong>离</strong>线</strong>知<strong>识</strong> ** + ** <strong>离</strong>线<strong>教</strong>育 ** ** + ** <strong>本</strong>地 ** AI** “<strong>套</strong>装 **</li>
+<li><strong> 想</strong> <strong>让</strong> <strong>学</strong>生 ** <strong>学</strong>会 ** <strong>“<strong>自</strong>给</strong> <strong>自</strong>足 ** “<strong>的</strong> <strong>知</strong>识 ** <strong>访</strong>问 **</li>
+</ul>
+<p><strong>→ <strong>评</strong>估</strong> <strong>部</strong>署 **。 <strong>一</strong>台 ** <strong>NOMAD</strong> <strong> 服</strong>务<strong>器</strong> <strong> + ** <strong>学</strong>校</strong> <strong>内</strong>网 ** = <strong>学</strong>生 ** <strong>完</strong>全 ** <strong>离</strong>线 ** <strong>学</strong>习 **。</p>
+<h3 id="给-末日-准备-offgrid-社区"><a href="#给-末日-准备-offgrid-社区" class="headerlink" title="给 末日** 准备** / offgrid** 社区**"></a><strong>给</strong> <strong>末</strong>日 ** <strong>准</strong>备 ** / <strong>off</strong>grid** <strong>社</strong>区 **</h3><p><strong>如</strong>果 ** <strong>你</strong>：</p>
+<ul>
+<li><strong>担</strong>心 ** <strong>基</strong>础<strong>设</strong>施 ** <strong>瘫</strong>痪 **</li>
+<li><strong> 想</strong> <strong>社</strong>区 ** <strong>有</strong> <strong> “<strong>断</strong>网</strong>也 ** <strong>能</strong> <strong>用</strong> “<strong>的</strong>知<strong>识</strong></li>
+<li><strong>需</strong>要 ** <strong>“<strong>预</strong>存</strong> “<strong>一</strong>切 ** <strong>公</strong>共 ** <strong>知</strong>识 **</li>
+</ul>
+<p><strong>→ <strong>部</strong>署</strong>。 <strong>这</strong> <strong>是</strong> <strong>这</strong> <strong>类</strong> <strong>项</strong>目<strong>的</strong> <strong>典</strong>型 ** <strong>场</strong>景 **。</p>
+<h3 id="给-隐私敏感-用户"><a href="#给-隐私敏感-用户" class="headerlink" title="给 隐私敏感** 用户**"></a><strong>给</strong> <strong>隐</strong>私<strong>敏</strong>感 ** <strong>用</strong>户 **</h3><p><strong>如</strong>果 ** <strong>你</strong>：</p>
+<ul>
+<li><strong>不</strong>信<strong>任</strong> <strong>云</strong>（** <strong>AI</strong>、<strong>搜</strong>索 **、<strong>维</strong>基<strong>百</strong>科 **）</li>
+<li><strong>想</strong> “<strong>完</strong>全 ** <strong>本</strong>地 ** <strong>用</strong> <strong>知</strong>识 ** “</li>
+<li><strong>担</strong>心 ** <strong>云</strong> <strong> AI</strong> <strong> 记</strong>录 ** <strong>你</strong> <strong>的</strong> <strong>问</strong>题 **</li>
+</ul>
+<p><strong>→ <strong>装</strong> <strong>上</strong> <strong>试</strong>试</strong>。 <strong>本</strong>地 ** AI** <strong>不</strong> <strong>上</strong>传 ** <strong>你</strong> <strong>的</strong> <strong>对</strong>话 ** <strong>到</strong> <strong>任</strong>何 ** <strong>云</strong>。</p>
+<h3 id="给-军事-政府-企业-（-离网-场景-）"><a href="#给-军事-政府-企业-（-离网-场景-）" class="headerlink" title="给 军事** / 政府** / 企业** （ 离网** 场景**）**"></a><strong>给</strong> <strong>军</strong>事 ** / <strong>政</strong>府 ** / <strong>企</strong>业 ** <strong>（</strong> <strong>离</strong>网 ** <strong>场</strong>景 **）**</h3><p><strong>如</strong>果 ** <strong>你</strong>：</p>
+<ul>
+<li><strong>要</strong> <strong>离</strong>网 ** <strong>运</strong>行 **（** <strong>军</strong>事<strong>基</strong>地 **、<strong>政</strong>府<strong>内</strong>网 **、<strong>企</strong>业 ** <strong>firewall</strong>）**</li>
+<li><strong> 需</strong>要 ** “<strong>本</strong>地 ** AI** ** + ** <strong>本</strong>地 ** <strong>知</strong>识 ** “** <strong>完</strong>全 ** <strong>自</strong>给 ** <strong>自</strong>足 **</li>
+<li><strong> 不</strong> <strong>能</strong> <strong>用</strong> <strong>云</strong> <strong>服</strong>务 **</li>
+</ul>
+<p><strong>→ <strong>深</strong>度</strong> <strong>评</strong>估 **。 <strong>这</strong> <strong>是</strong> <strong> NOMAD</strong> <strong> 的</strong> “<strong>架</strong>空<strong>的</strong> “** <strong>场</strong>景 **，** “<strong>离</strong>网 ** + <strong>完</strong>全 ** <strong>本</strong>地 ** + <strong>知</strong>识 ** + <strong>AI</strong> “<strong>。 <strong>企</strong>业</strong> <strong> IT</strong> <strong> 要</strong> <strong>部</strong>署 ** <strong>之</strong>前 ** <strong>需</strong>要 ** <strong>评</strong>估 ** <strong>安</strong>全 ** / <strong>合</strong>规 ** / <strong>授</strong>权 **，<strong>但</strong> <strong>技</strong>术 ** <strong>栈</strong> <strong>完</strong>全 ** <strong>满</strong>足 ** <strong>这</strong>个 ** <strong>需</strong>求 **。</p>
+<hr>
+<h2 id="九、几个-具体-的实践-建议"><a href="#九、几个-具体-的实践-建议" class="headerlink" title="九、几个** 具体** 的实践 建议**"></a>九、<strong>几</strong>个 ** <strong>具</strong>体 ** <strong>的</strong>实<strong>践</strong> <strong>建</strong>议 **</h2><p><strong>最</strong>后<strong>给</strong>几<strong>条</strong> <strong>实</strong>践 ** <strong>建</strong>议 **。</p>
+<p><strong>1. <strong>先</strong> <strong>在</strong> <strong> U</strong>buntu</strong> <strong>LTS</strong> ** <strong>上</strong> <strong>试</strong> <strong>装</strong>。 <strong>不</strong> <strong>要</strong> <strong>一</strong>上<strong>手</strong> <strong>就</strong> <strong>部</strong>署 ** <strong>到</strong> <strong>生</strong>产 ** <strong>机</strong>。 <strong>找</strong> <strong>台</strong> <strong>笔</strong>记<strong>本</strong> ** / <strong>旧</strong> <strong>台</strong>式<strong>机</strong> <strong>，<strong>装</strong>上</strong> <strong>试</strong> <strong>一</strong>。 <strong>30-60 <strong>分</strong>钟</strong> <strong>跑</strong> <strong>完</strong>。 </p>
+<p><strong>2. <strong>下</strong>载</strong> <strong> ZIM</strong> ** + ** <strong>课</strong> ** <strong>用</strong> <strong> Wi</strong>nd<strong>ow</strong>s** <strong>生</strong>态 **。 </p>
+<p><strong>3. <strong>Ollama</strong> <strong> 选</strong> <strong>小</strong> <strong>模</strong>型</strong> <strong>起</strong> <strong>步</strong>。 <strong>Llama 3.2 3B</strong> / <strong>Qwen2.5 3B</strong> <strong> 类</strong>的 **，<strong>8 GB</strong> <strong> 机</strong>器 ** <strong>能</strong> <strong>跑</strong>。 <strong>要</strong> <strong>好</strong> <strong>用</strong> <strong>上</strong> <strong> 7B</strong> <strong> 或</strong> <strong> 13B</strong>。 </p>
+<p><strong>4. <strong>配</strong> <strong>置</strong> <strong> Supply Depot</strong> <strong> 自</strong>动</strong> <strong>更</strong>新 ** <strong>节</strong>奏 **。 <strong>默</strong>认 ** <strong>每</strong> <strong>周</strong> <strong>更</strong>新 **，<strong>你</strong> <strong>要</strong> <strong>根</strong>据 ** <strong>网</strong>络<strong>状</strong>况 ** <strong>调</strong>。 </p>
+<p><strong>5. <strong>备</strong>份</strong> <strong>你</strong> <strong>的</strong> <strong>配</strong>置 ** + ** <strong>下</strong>载 ** <strong>的</strong> <strong>内</strong>容 **。 <strong>100 GB</strong> <strong> 的</strong> <strong>本</strong>地 ** <strong>内</strong>容 ** <strong>丢</strong>了 ** <strong>很</strong> <strong>痛</strong>，<strong>与</strong> <strong>其</strong> <strong>只</strong> <strong>信</strong> <strong>装</strong>在<strong>一</strong>台 ** <strong>机</strong>器<strong>上</strong>，<strong>不</strong>如 ** <strong>用</strong> <strong> r</strong>s<strong>ync</strong> + ** <strong>O</strong>ff<strong>site Backup</strong> <strong> 做</strong> <strong> 3-2-1 ** <strong>备</strong>份</strong>。 </p>
+<p><strong>6. <strong>加</strong> <strong> SSL</strong> ** + ** <strong>认</strong>证</strong>。 <strong>本</strong>地 ** <strong>部</strong>署 ** <strong>默</strong>认 ** <strong>绑</strong> <code>127.0.0.1</code><strong>，<strong>如</strong>果</strong> <strong>要</strong> <strong>网</strong>络 ** <strong>访</strong>问 **，<strong>加</strong> <strong> HTTPS</strong> ** + <strong>HTTP Basic</strong> <strong> 认</strong>证 **（<strong>或</strong> <strong> OAuth</strong> <strong>）。 <strong>本</strong>地</strong> <strong>部</strong>署<strong>也</strong> <strong>不</strong> <strong>能</strong> <strong>没</strong> <strong>认</strong>证 **，<strong>LAN</strong> <strong> 上</strong> <strong>其</strong>他 ** <strong>人</strong> <strong>可</strong>以 ** <strong>扫</strong> <strong>到</strong>。 </p>
+<p><strong>7. <strong>接</strong> <strong> NOMAD</strong> <strong> 到</strong> <strong>你</strong>的</strong> AI** <strong>工</strong>具<strong>链</strong>。 <strong>之</strong> <strong>你</strong> <strong>的</strong> <strong> “<strong>LLM</strong> <strong> 工</strong>具</strong> <strong>链</strong> “** <strong>里</strong>加 ** <strong>一</strong>个 ** <strong>“<strong>本</strong>地</strong> AI** ** + ** <strong>本</strong>地<strong>知</strong>识 ** “** <strong>作</strong>为 ** <strong>补</strong>充 **。 </p>
+<hr>
+<h2 id="十、几条-关于-“离线-优先-“的-思考"><a href="#十、几条-关于-“离线-优先-“的-思考" class="headerlink" title="十、几条** 关于** “离线** 优先** “的 思考**"></a>十、<strong>几</strong>条 ** <strong>关</strong>于 ** “<strong>离</strong>线 ** <strong>优</strong>先 ** “<strong>的</strong> <strong>思</strong>考 **</h2><p><strong>写</strong>到<strong>这</strong>里<strong>给</strong>一<strong>个</strong> <strong> “<strong>离</strong>线</strong> <strong>优</strong>先 ** “<strong>的</strong> <strong>思</strong>考 **。</p>
+<h3 id="之-前发过的-“本-“-项目-对应-“不-同-层“"><a href="#之-前发过的-“本-“-项目-对应-“不-同-层“" class="headerlink" title="之 前发过的** “本 “ 项目 对应** “不 同 层“**"></a><strong>之</strong> <strong>前</strong>发<strong>过</strong>的 ** “<strong>本</strong> <strong> “</strong> 项<strong>目</strong> <strong>对</strong>应 ** “<strong>不</strong> <strong>同</strong> <strong>层</strong> “**</h3><p><strong>之</strong>前<strong>发</strong>过<strong>的</strong>项<strong>目</strong> <strong>栈</strong>：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输**入**层**：OpenWhispr**（**语**音**）</span><br><span class="line">**沉**淀**层**：llm_wiki**（**个**人** **知**识** **w**iki**）</span><br><span class="line">**编**码** **层**：opencode**、**PI-Desktop**、**Claude Code</span><br><span class="line">**行**为** **层**：ponytail**、**ECC**、**mattpocock/skills**</span><br><span class="line">**Context** **优**化**：context-mode</span><br><span class="line">**应**用**层**：agent-native</span><br><span class="line">**真**实**世**界** **GUI**：Cua**、**BrowserSkill</span><br><span class="line">**可**视**化**应**用**：gods-eye-view**、**HyperFrames</span><br><span class="line">**长**期**记**忆**：ai-memory</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>加</strong>上 ** NOMAD**：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">... → **沉**淀**层**（llm_wiki） → **编**码** → ... → **真**实**世**界** **GUI** → **可**视**化**</span><br><span class="line">                                                              ↓</span><br><span class="line">                                          **离**线**知**识** **中**心**（NOMAD）   ← **新**层**</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>都</strong>是 ** “<strong>在</strong> <strong>云</strong>端 ** <strong>AI</strong> <strong> 工</strong>具 ** <strong>链</strong> <strong>里</strong> “<strong>填</strong>位置 **；<strong>NOMAD</strong> <strong> 是</strong> “<strong>在</strong> <strong>离</strong>线 ** AI** <strong>工</strong>具 ** <strong>链</strong> <strong>里</strong> “<strong>填</strong>位置 **。</p>
+<h3 id="“离线优先-“-是-2026-年-的-明确趋势"><a href="#“离线优先-“-是-2026-年-的-明确趋势" class="headerlink" title="** “离线优先** “** 是 2026 年 的 明确趋势"></a>** “<strong>离</strong>线<strong>优</strong>先 ** “** <strong>是</strong> <strong> 2026 <strong>年</strong> <strong>的</strong> <strong>明</strong>确</strong>趋<strong>势</strong></h3><p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong> OpenWhispr</strong>（<strong>语</strong>音 **）、<strong>PI-Desktop</strong>（<strong>AI</strong> <strong> 编</strong>码 ** <strong>agent</strong>）、<strong>llm_wiki</strong>（<strong>知</strong>识 **）<strong>、<strong>ai-memory</strong>（<strong>记</strong>忆</strong>）<strong>都</strong> <strong>属</strong>于 ** “<strong>本</strong>地 ** <strong>优</strong>先 ** “<strong>项</strong>目 **，<strong>都</strong>是 ** ** “<strong>数</strong>据 ** <strong>不</strong> <strong>出</strong>本<strong>地</strong> “<strong>的</strong>路<strong>径</strong>。</p>
+<p><strong>NOMAD</strong> <strong> 是</strong> <strong>这</strong>条 ** <strong>线</strong> <strong>上</strong> <strong>的</strong> <strong> “<strong>知</strong>识</strong> <strong>中</strong>心 **” <strong>，<strong>之</strong>前</strong>发<strong>过</strong>的 ** <strong>项</strong>目 ** <strong>覆</strong>盖<strong>了</strong> “<strong>语</strong>音 ** / <strong>AI</strong> <strong> 编</strong>码 ** / <strong>记</strong>忆 ** “<strong>，<strong>没</strong>有</strong> ** “<strong>知</strong>识 ** + ** <strong>教</strong>育 ** + ** <strong>地</strong>图 ** “<strong>。 NOMAD</strong> <strong> 填</strong>上<strong>了</strong>。</p>
+<p><strong>个</strong>人 ** “<strong>数</strong>据<strong>主</strong>权 ** “<strong>项</strong>目 ** <strong>栈</strong> **（<strong>2026 <strong>年</strong> <strong> 9 <strong>月</strong> <strong>版</strong>本</strong>）</strong>：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">输**入**层**（** **OpenWhispr**）</span><br><span class="line">** ↓</span><br><span class="line">**沉**淀**层**（** **llm_wiki**）</span><br><span class="line">** ↓</span><br><span class="line">**离**线** **中**心**（** **NOMAD**，** **Wikipedia** ** + ** **Khan Academy** ** + ** **Ollama** ** + ** **地**图**）</span><br><span class="line">** ↓</span><br><span class="line">**AI** **编**码**层**（** **opencode** ** + ** **PI-Desktop**）</span><br><span class="line">** ↓</span><br><span class="line">**行**为**层**（** **ponytail** ** + ** **ECC**）</span><br><span class="line">** ↓</span><br><span class="line">**长**期**记忆**（** **ai-memory**）</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>栈</strong> ** + ** NOMAD** ** = ** <strong>“<strong>完</strong>全</strong> <strong>本</strong>地 ** <strong>的</strong> <strong> AI</strong> <strong> 工</strong>具 ** <strong>栈</strong> “**。</p>
+<hr>
+<h2 id="十一、几条-对-“2027-年-“的-预测"><a href="#十一、几条-对-“2027-年-“的-预测" class="headerlink" title="十一、几条** 对 ** “2027 年 “的 预测"></a>十一、<strong>几</strong>条 ** <strong>对</strong> ** “<strong>2027 <strong>年</strong> “<strong>的</strong> <strong>预</strong>测</strong></h2><p><strong>写</strong>到<strong>这</strong>里<strong>对</strong> <strong> 2027 <strong>年</strong> <strong>做</strong>几</strong>条 ** <strong>预</strong>测 **：</p>
+<p><strong>1. ** “<strong>离</strong>线</strong> <strong>优</strong>先 ** “** 项<strong>目</strong> <strong>会</strong> <strong>更</strong>多 **。 </p>
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong> OpenWhispr</strong> + ** <strong>PI-Desktop</strong> + ** <strong>llm_wiki</strong> ** + ** <strong>ai-memory</strong> ** + ** <strong>NOMAD</strong> ** = ** ** 5 <strong>个</strong> “<strong>本</strong>地 ** <strong>优</strong>先 ** “<strong>项</strong>目 **。 2027 <strong>年</strong> <strong>会</strong> <strong>有</strong> <strong>更</strong>多 **，<strong>本</strong>地 ** <strong>邮</strong>箱 **、<strong>本</strong>地 ** <strong>图</strong>库 **、<strong>本</strong>地 ** <strong>音</strong>乐 **、<strong>本</strong>地 ** <strong>日</strong>历 **、<strong>本</strong>地 ** <strong>密</strong>码 ** <strong>管</strong>理<strong>器</strong>。 </p>
+<p><strong>2. <strong>云</strong> SaaS ** + ** ** “<strong>本</strong>地</strong> <strong>优</strong>先 ** “<strong>的</strong> <strong>对</strong>立<strong>会</strong> <strong>明</strong>确 **。</p>
+<p><strong>云</strong> SaaS（<strong>OpenAI</strong> ** + ** <strong>Anthropic</strong> ** + ** <strong>Notion</strong> ** + ** <strong>Linear</strong>）** <strong>与</strong> ** “<strong>本</strong>地 ** <strong>优</strong>先 ** “<strong>工</strong>具 ** <strong>的</strong> <strong>对</strong>立 ** <strong>2026 <strong>年</strong>开</strong>始<strong>明</strong>确 **，** “<strong>AI</strong> <strong> 时</strong>代 ** “<strong>的</strong> <strong>个</strong>人<strong>数</strong>据<strong>主</strong>权 ** <strong>问</strong>题 ** <strong>是</strong> <strong>新</strong> <strong>的</strong> **。 2027 <strong>年</strong> <strong>会</strong> <strong>更</strong> <strong>热</strong>。</p>
+<p><strong>3. ** “<strong>完</strong>整</strong> <strong>套</strong>装 ** “<strong>会</strong> <strong>变</strong> <strong>成</strong> ** “<strong>标</strong>配 ** “**。</p>
+<p><strong>之</strong>前 ** <strong>个</strong>人 ** <strong>AI</strong> <strong> 工</strong>具 ** <strong>是</strong> “<strong>单</strong>点 ** “<strong>的</strong>，<strong>装</strong>一<strong>个</strong> Claude Code <strong>就</strong> <strong>算</strong> <strong> AI</strong> <strong> 栈</strong>。 2027 <strong>年</strong> ** “<strong>AI</strong> <strong> 栈</strong> “<strong>会</strong> <strong>像</strong> <strong>现</strong>在 ** <strong>的</strong> <strong> L</strong>inux** <strong>栈</strong>，<strong>装</strong>一<strong>套</strong>（<strong>输</strong>入 ** + <strong>沉</strong>淀 ** + <strong>知</strong>识 ** <strong>中</strong>心 ** + <strong>AI</strong> <strong> 编</strong>码 ** + <strong>记</strong>忆 **）<strong>算</strong> <strong>基</strong>本 **。</p>
+<p><strong>4. ** <strong>离</strong>线</strong> <strong>优</strong>先 ** <strong>会</strong> <strong>成</strong> <strong>为</strong> ** “<strong>AI</strong> <strong> 安</strong>全 ** “<strong>的</strong> <strong>标</strong>配 **。</p>
+<p>** “<strong>AI</strong> <strong> 安</strong>全 ** “** <strong>2026 <strong>年</strong> <strong>是</strong> “<strong>AI</strong> ** + ** <strong>网</strong>络</strong>安<strong>全</strong> <strong>的</strong> “<strong>交</strong>集 **。 ** “<strong>离</strong>线 ** <strong>优</strong>先 ** “<strong>会</strong> <strong>变</strong> <strong>成</strong> <strong> AI</strong> <strong> 安</strong>全<strong>的</strong> <strong>一</strong> <strong>个</strong> ** “<strong>标</strong>配 ** <strong>方</strong>案 ** “<strong>，</strong> <strong>企</strong>业 ** <strong>部</strong>署 ** <strong>AI</strong> <strong> 工</strong>具 ** <strong>默</strong>认 ** <strong>走</strong> ** “<strong>离</strong>线 ** “** <strong>路</strong>径 **，<strong>云</strong> <strong>只</strong> <strong>是</strong> ** “<strong>远</strong>程 ** <strong>帮</strong>助 ** “**。</p>
+<hr>
+<h2 id="十二、它对-之前发过的-项目-的-“新补-“"><a href="#十二、它对-之前发过的-项目-的-“新补-“" class="headerlink" title="十二、它对** 之前发过的 项目** 的 ** “新补** “**"></a>十二、<strong>它</strong>对 ** <strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>的</strong> ** “<strong>新</strong>补 ** “**</h2><p><strong>写</strong>到<strong>这</strong>里<strong>做</strong> <strong>一</strong>个 ** ** “<strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>栈</strong> <strong>新</strong>补 ** “<strong>的</strong> <strong>观</strong>察 **。</p>
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>栈</strong>：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输**入** → **沉**淀** → **编**码** → **行**为** → **Context** → **应**用** → **真**实**世**界** → **可视化** → **长**期**记**忆**</span><br><span class="line">                                                                          ↓</span><br><span class="line">                                                              （** **缺** **）**离**线**知**识** **中**心**</span><br><span class="line">                                                                          ↓</span><br><span class="line">                                                                    **NOMAD**（** **填**上**）</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>栈</strong> <strong>缺</strong> “<strong>离</strong>线<strong>知</strong>识 ** “<strong>这</strong> <strong>一</strong>层 **。 </p>
+<p><strong>加</strong>上 ** <strong>NOMAD</strong> <strong> 之</strong>后 **，<strong>栈</strong> <strong>变</strong>成 ** **：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输**入** → **沉**淀** → **编**码** → **行**为** → **Context** → **应**用** → **真**实**世**界** → **可视化** → **长**期**记**忆** ← → **离**线**知**识**中**心**</span><br><span class="line">                                                                                                       （** **离**线**工**具**链** ** "**补** "**）</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>两</strong>个 ** <strong>层</strong> <strong>相</strong>互 ** “<strong>补</strong> “**：</p>
+<ul>
+<li><strong>长</strong>期<strong>记</strong>忆 **（<strong>ai-memory</strong>）<strong>是</strong> ** “<strong>云</strong>端 ** “** <strong>AI</strong> <strong> 工</strong>具 ** <strong>的</strong> ** “<strong>记</strong>忆 ** “**</li>
+<li><strong> 离</strong>线<strong>知</strong>识<strong>中</strong>心 **（<strong>NOMAD</strong>）<strong>是</strong> ** “<strong>本</strong>地 ** “** <strong>AI</strong> <strong> 工</strong>具 ** <strong>的</strong> ** “<strong>知</strong>识 ** “**</li>
+</ul>
+<p><strong>两</strong>个 ** <strong>合</strong>在<strong>一</strong>起 ** = ** ** “<strong>完</strong>整 ** <strong>的</strong> <strong>个</strong>人 ** <strong>AI</strong> <strong> 工</strong>具 ** <strong>栈</strong> “**。</p>
+<hr>
+<h2 id="十三、几条-关于-Crosstalk-Solutions-的-反馈"><a href="#十三、几条-关于-Crosstalk-Solutions-的-反馈" class="headerlink" title="十三、几条** 关于** Crosstalk Solutions 的 反馈**"></a>十三、<strong>几</strong>条 ** <strong>关</strong>于 ** <strong>Crosstalk Solutions</strong> <strong> 的</strong> <strong>反</strong>馈 **</h2><p><strong>读</strong>了 ** README ** + ** <strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>几</strong>个 ** <strong>类</strong>似 ** <strong>项</strong>目 **（<strong>Kiwix</strong>、<strong>Ollama</strong> <strong> 等</strong>）<strong>，<strong>整</strong>理</strong>几<strong>条</strong> <strong>给</strong> <strong> Crosstalk Solutions</strong> <strong> 的</strong> <strong>反</strong>馈 **：</p>
+<p><strong>1. ** <strong>README</strong> <strong> 应</strong>该</strong>有 ** ** “<strong>为</strong>什<strong>么</strong> “** “** “** <strong>说</strong> <strong>明</strong>。 现<strong>在</strong> README <strong>只</strong>说 ** ** “** <strong>什</strong>么 ** “<strong>（<strong>Kiwix</strong> ** + ** <strong>Ollama</strong> ** + <strong>……</strong>），<strong>没</strong>说</strong> “<strong>为</strong>什<strong>么</strong> <strong>这</strong> 8 <strong>个</strong> <strong>工</strong>具 ** ** + ** ** “**。 </p>
+<p><strong>2. ** <strong>应</strong>该</strong> <strong>明</strong>说 ** “<strong>不</strong> <strong>能</strong> <strong>做</strong>什<strong>么</strong> “。 ** “<strong>offline-first</strong> “<strong>不</strong>等<strong>于</strong> “<strong>离</strong>线 <strong>100%</strong>“。 <strong>哪</strong>些<strong>功</strong>能 ** <strong>需</strong>要 ** <strong>网</strong>络 **、<strong>哪</strong>些 ** <strong>不</strong>需<strong>要</strong>，<strong>应</strong>该<strong>列</strong>清<strong>单</strong>。</p>
+<p><strong>3. ** <strong>应</strong>该</strong>有 ** ** “<strong>更</strong>新 ** <strong>日</strong>志 ** “** <strong>链</strong>接 **。 ** “<strong>Automatic Updates</strong> “** <strong>提</strong>到 **，<strong>但</strong> <strong>不</strong> <strong>知</strong>道 ** <strong>更</strong>新<strong>什</strong>么<strong>时</strong>候 ** <strong>发</strong>布 **。 </p>
+<p><strong>4. ** <strong>应</strong>该</strong>有 ** ** “<strong>更</strong>多 ** <strong>配</strong>置 ** <strong>例</strong>子 ** “<strong>。 ** README <strong>只</strong> <strong>给</strong> <strong>单</strong>条</strong> <strong> curl</strong> <strong> 装</strong>，<strong>没</strong>说 ** <strong>如</strong>果 ** <strong>要</strong> <strong>改</strong> <strong>默</strong>认<strong>端</strong>口 **、<strong>配</strong>置 ** <strong>SSO</strong>、<strong>配</strong>置 ** <strong>外</strong>部 ** <strong>LLM</strong> <strong> 端</strong>点 ** <strong>怎</strong>么 ** <strong>办</strong>。 </p>
+<p><strong>5. ** <strong>应</strong>该</strong> <strong>更</strong>细<strong>的</strong> <strong>官</strong> <strong>网</strong> <strong>文</strong>档 **。 ** <strong>projectnomad.us</strong> <strong> 上</strong> <strong>的</strong> <strong>文</strong>档 ** <strong>是</strong> <strong>怎</strong>么 ** <strong>样</strong>的 ** <strong>我</strong>不<strong>知</strong>道 **，但 ** <strong>之</strong> <strong>的</strong> <strong>这</strong> <strong>类</strong> <strong>项</strong>目 ** <strong>文</strong>档 ** <strong>都</strong>应<strong>该</strong> ** “<strong>配</strong>置 ** ** + ** <strong>故</strong>障<strong>排</strong>除 ** + ** <strong>升</strong>级 ** ** “<strong>全</strong>套 **。</p>
+<p><strong>这</strong> <strong> 5</strong> <strong> 条</strong> <strong>不</strong>是 ** ** blocker**，<strong>是</strong> “<strong>新</strong>项<strong>目</strong> “<strong>的</strong> <strong>典</strong>型 ** <strong>待</strong>办 **。</p>
+<hr>
+<h2 id="十四、几条-之-前-发过的-项目-栈-“-最后-“-观察-“"><a href="#十四、几条-之-前-发过的-项目-栈-“-最后-“-观察-“" class="headerlink" title="十四、几条** 之 前 发过的 项目** 栈 ** “** 最后** “** 观察** “"></a>十四、<strong>几</strong>条 ** <strong>之</strong> <strong>前</strong> <strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>栈</strong> ** “** <strong>最</strong>后 ** “** <strong>观</strong>察 ** “</h2><p><strong>写</strong>到<strong>这</strong>里<strong>做</strong> <strong>一</strong>个 ** ** “<strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>栈</strong> ** “** <strong>最</strong>后 ** “** <strong>观</strong>察 ** “**。</p>
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>栈</strong>（** <strong>到</strong> <strong> 2026 <strong>年</strong> 9 <strong>月</strong> 22 <strong>日</strong> <strong>为</strong>止</strong>）**：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">AI **编**码**层**（** Agent 本**体**）</span><br><span class="line">** Claude Code（**闭**源**商**业**）</span><br><span class="line">** Codex（**开**源**/闭**源**混**合**）</span><br><span class="line">** opencode（**开**源** + ** **server**/**client**）</span><br><span class="line">** PI-Desktop（**本**地** **优**先**）</span><br><span class="line"></span><br><span class="line">行**为**层**（** Skill **库**）</span><br><span class="line">** ponytail（**MIT**)</span><br><span class="line">** ECC（**MIT**)</span><br><span class="line">** mattpocock/skills（**MIT**)</span><br><span class="line">** addyosmani/agent-skills（**MIT**)</span><br><span class="line"></span><br><span class="line">Context **优**化**层</span><br><span class="line">** context-mode（**EL**v**2**)</span><br><span class="line"></span><br><span class="line">应**用**层**</span><br><span class="line">** agent-native（**MIT**)</span><br><span class="line"></span><br><span class="line">真**实**世**界** **GUI**层</span><br><span class="line">** Cua（**MIT**)</span><br><span class="line">** BrowserSkill（**MIT**)</span><br><span class="line"></span><br><span class="line">沉**淀**层</span><br><span class="line">** llm_wiki（**MIT**)</span><br><span class="line">** OpenWhispr（**MIT**)</span><br><span class="line"></span><br><span class="line">可**视**化**应**用</span><br><span class="line">** gods-eye-view（**MIT**)</span><br><span class="line">** HyperFrames（** Apache** 2.0**)</span><br><span class="line"></span><br><span class="line">长**期**记**忆**层</span><br><span class="line">** ai-memory（**MIT**)</span><br><span class="line"></span><br><span class="line">团**队**协**调**</span><br><span class="line">** teamai-cli（**MIT**)</span><br><span class="line"></span><br><span class="line">数**学**建**模**</span><br><span class="line">** MathModelAgent（**MIT**)</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>栈</strong> <strong>代</strong>表<strong>了</strong> <strong> 2026 <strong>年</strong> <strong> AI</strong> <strong> 工</strong>具</strong> <strong>栈</strong> <strong>的</strong> ** “<strong>主</strong>流<strong>部</strong>分 ** “**。</p>
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>没</strong>有 ** “<strong>离</strong>线<strong>知</strong>识 ** <strong>中</strong>心 ** “<strong>，<strong>是</strong> <strong>云</strong>端</strong> <strong> AI</strong> <strong> 工</strong>具 ** <strong>栈</strong> <strong>缺</strong>的 ** <strong>一</strong>层 **。 <strong>NOMAD</strong> <strong> 填</strong>上<strong>了</strong>。</p>
+<p><strong>加</strong>上 ** <strong>NOMAD</strong> <strong> 之</strong>后 **，<strong>栈</strong> <strong>变</strong>成 ** “<strong>云</strong>端 ** + ** <strong>本</strong>地 ** “<strong>完</strong>整 ** <strong>套</strong>装 **：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">云**端**工**具**栈**（** **云** **上** **走**）</span><br><span class="line">** - 输入** → **编**码** → **行**为** → **Context** → **应**用** → **真**实** **GUI** → **可**视**化** → **长**期**记**忆**</span><br><span class="line"></span><br><span class="line">本**地**工**具**栈**（** **本**地** **走**）</span><br><span class="line">** - 输入** → **沉**淀** → **知**识**中**心**（**NOMAD**）→ **离**线**AI**（**Ollama**）</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>两</strong>个 ** <strong>栈</strong> <strong>在</strong> <strong> “<strong>输</strong>入</strong> “** + ** ** “<strong>沉</strong>淀 ** “<strong>层</strong> <strong>叠</strong>加 **（<strong>OpenWhispr</strong> <strong> 语</strong>音 ** ** + ** <strong>llm_wiki</strong> <strong> 笔</strong>记 **），<strong>其</strong>他 ** <strong>层</strong> <strong>分</strong>云 ** / <strong>本</strong>地<strong>走</strong>。</p>
+<p><strong>5 <strong>年</strong>后</strong>回<strong>头</strong>看 **，<strong>这</strong> <strong>套</strong> ** “<strong>云</strong>端 ** + <strong>本</strong>地 ** “<strong>双</strong>栈<strong>可</strong>能 ** <strong>是</strong> <strong>个</strong> <strong>人</strong> <strong> AI</strong> <strong> 工</strong>具 ** <strong>的</strong> <strong>标</strong>配 **，<strong>云</strong>端 ** <strong>跑</strong> <strong>轻</strong>量 ** ** AI** <strong>编</strong>码 **，<strong>本</strong>地 ** <strong>跑</strong> <strong>知</strong>识 ** + <strong>教</strong>育 ** + ** <strong>AI</strong> <strong> 知</strong>识<strong>库</strong>。 </p>
+<p><strong>这</strong> <strong>是</strong> <strong>个</strong> <strong>预</strong>测 **，<strong>2027 <strong>年</strong>回</strong>头<strong>验</strong>证 **。</p>
+<hr>
+<h2 id="十五、最后一段"><a href="#十五、最后一段" class="headerlink" title="十五、最后一段**"></a>十五、<strong>最</strong>后<strong>一</strong>段 **</h2><p><strong>写</strong>到<strong>这</strong>里<strong>做</strong>个 ** <strong>完</strong>整<strong>收</strong>尾 **。</p>
+<p><strong>NOMAD</strong> <strong> 不</strong>是 ** “<strong>解</strong>决<strong>什</strong>么 ** <strong>生</strong>产<strong>力</strong> <strong>问</strong>题 **” <strong>，<strong>不</strong> <strong>让</strong>你</strong>少<strong>写</strong>代<strong>码、<strong>不</strong> <strong>让</strong>你</strong>少<strong>开</strong>会 **、<strong>不</strong> <strong>让</strong>你<strong>少</strong>查 ** <strong>Wikipedia</strong>。</p>
+<p><strong>NOMAD</strong> <strong> 解</strong>决 ** “<strong>知</strong>识 ** <strong>不</strong> <strong>依</strong>赖 ** <strong>网</strong>络 ** “<strong>的</strong> <strong>问</strong>题 **。 <strong>让</strong>你 ** <strong>的</strong> <strong>知</strong>识 ** <strong>库</strong> <strong>在</strong> <strong>山</strong>里 **、<strong>国</strong>外 **、<strong>离</strong>网<strong>环</strong>境 **、** <strong>企</strong>业 ** <strong>firewall</strong> <strong> 后</strong>、<strong>军</strong>事<strong>基</strong>地 **，<strong>都</strong>能<strong>访</strong>问 **。</p>
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>所</strong>有<strong>项</strong>目 ** <strong>都</strong>是 ** “<strong>云</strong>端 ** AI** <strong>工</strong>具 ** <strong>链</strong> “<strong>，<strong>NOMAD</strong> <strong> 是</strong> “<strong>本</strong>地</strong> <strong> AI</strong> <strong> 工</strong>具 ** <strong>链</strong> “<strong>。 <strong>两</strong>个</strong> <strong>链</strong> <strong>叠</strong>加<strong>用</strong>，<strong>你</strong>的 ** <strong>AI</strong> <strong> 生</strong>态 ** <strong>变</strong>成 ** “<strong>双</strong>链 ** “**。</p>
+<p><strong>如</strong>果 ** <strong>你</strong> <strong>是</strong> <strong> 2026 <strong>年</strong>开</strong>始<strong>想</strong> “<strong>个</strong>人 ** <strong>AI</strong> <strong> 工</strong>具 ** <strong>不</strong> <strong>依</strong>赖 ** <strong>任</strong>何 ** <strong>云</strong> “<strong>的</strong>人 **，<strong>装</strong> <strong>上</strong> <strong> NOMAD</strong>。 </p>
+<p>项目<strong>地</strong>址 **：<strong>https</strong>://<strong>github</strong>.<strong>com</strong>/Crosstalk-Solutions/*<em>project-nomad</em></p>
+<h2 id="六点五、几条具体的工程决策"><a href="#六点五、几条具体的工程决策" class="headerlink" title="六点五、几条具体的工程决策"></a>六点五、几条具体的工程决策</h2><p>跑了一天我整理几条 NOMAD 的<strong>具体</strong>工程决策。</p>
+<h3 id="1-选用-Kiwix-不自造-Wikipedia-离线引擎"><a href="#1-选用-Kiwix-不自造-Wikipedia-离线引擎" class="headerlink" title="1. 选用 Kiwix 不自造 Wikipedia 离线引擎"></a>1. 选用 Kiwix 不自造 Wikipedia 离线引擎</h3><p>NOMAD <strong>不</strong>自<strong>己</strong> <strong>开</strong>发 ** <strong>离</strong>线 ** <strong>Wikipedia</strong> <strong> 引擎</strong> —— <strong>用</strong> <strong> Kiwix</strong> <strong> 项</strong>目 **。 <strong>Kiwix</strong> <strong> 之</strong>前<strong>就</strong>是 ** <strong>专</strong>门<strong>做</strong>这<strong>件</strong>事<strong>的</strong> ——<strong>ZIM</strong> <strong> 文</strong>件 ** <strong>格</strong>式 ** + ** <strong>Kiwix Server</strong> ** + ** <strong>K</strong>iv<strong>is</strong> <strong> 阅</strong>读 ** <strong>器</strong>。 <strong>NOMAD</strong> <strong> 用</strong> <strong> Kiwix</strong>—— <strong>为</strong> “<strong>自</strong>己 ** <strong>开</strong>发 ** “<strong>是</strong> <strong>低</strong>效<strong>率</strong> “** 的 **。 </p>
+<p><strong>这</strong>条 ** “** <strong>用</strong>现<strong>有</strong> ** “** <strong>思</strong>路 ** <strong>跟</strong>之<strong>前</strong>发<strong>过</strong>的 ** <strong>K</strong>iw<strong>ix</strong> ** + ** <strong>Kolibri</strong> ** + ** <strong>Ollama</strong> ** + ** <strong>ProtoMaps</strong> <strong> 都</strong> <strong>对</strong>仗 **。 <strong>选</strong> <strong>用</strong> <strong>每</strong>个 ** <strong>领</strong>域<strong>最</strong>好<strong>的</strong>项<strong>目</strong>，<strong>不</strong> <strong>重新</strong> <strong>开</strong>发 **。 </p>
+<h3 id="2-选用-Ollama-不自造-LLM-推理"><a href="#2-选用-Ollama-不自造-LLM-推理" class="headerlink" title="2. 选用 Ollama 不自造 LLM 推理"></a>2. 选用 Ollama 不自造 LLM 推理</h3><p><strong>跟</strong> Kiwix <strong>同</strong>款<strong>思路</strong> —— <strong>用</strong> Ollama <strong>不</strong>自<strong>己</strong> <strong>开</strong>发 ** <strong>本</strong>地 ** <strong>LLM</strong> <strong> 推</strong>理 **。 <strong>Ollama</strong> <strong> 是</strong> <strong>本</strong>地 ** <strong>LLM</strong> <strong> 推</strong>理 ** <strong>最</strong>好<strong>的</strong> <strong>项</strong>目 **（<strong>之</strong>前<strong>发</strong>过<strong>的</strong> “<strong>本</strong>地 <strong>AI</strong> 评<strong>估</strong> “<strong>）</strong>。 </p>
+<p><strong>用</strong> Ollama <strong>让</strong> <strong> NOMAD</strong> <strong> 搭</strong> <strong>在</strong> <strong>现</strong>有 ** <strong>基</strong>础 ** <strong>上</strong> —— <strong>不</strong> <strong>用</strong> ** “<strong>自</strong>造 ** LLM** “** 的 ** <strong>维</strong>护 ** <strong>负</strong>担 **。 </p>
+<h3 id="3-选用-Qdrant-不自造-vector-DB"><a href="#3-选用-Qdrant-不自造-vector-DB" class="headerlink" title="3. 选用 Qdrant 不自造 vector DB"></a>3. 选用 Qdrant 不自造 vector DB</h3><p><strong>RAG</strong> <strong> 的</strong> <strong>向</strong>量 ** <strong>索</strong>引 ** <strong>用</strong> Qdrant—— <strong>不</strong> <strong>用</strong> <strong> Pinecone</strong> / <strong>Weaviate</strong> <strong> 等</strong> <strong> SaaS</strong>——<strong>NOMAD</strong> ** “<strong>离</strong>线 ** “<strong>的</strong> <strong>定</strong>位 ** <strong>与</strong> SaaS <strong>向</strong>量 ** <strong>库</strong> <strong>冲</strong>突 **。 </p>
+<p><strong>Qdrant</strong> <strong> 有</strong> <strong>本</strong>地 ** <strong>Rust</strong> ** + ** <strong>server</strong> <strong> 两</strong>种<strong>模</strong>式 **——<strong>NOMAD</strong> <strong> 用</strong> <strong>本</strong>地 ** <strong>Rust</strong> <strong> 版</strong>本 ** ** + ** Docker Compose <strong>运</strong>行 **。</p>
+<h3 id="4-选用-Kolibri-不自造教育平台"><a href="#4-选用-Kolibri-不自造教育平台" class="headerlink" title="4. 选用 Kolibri 不自造教育平台"></a>4. 选用 Kolibri 不自造教育平台</h3><p><strong>Khan Academy</strong> <strong> 课</strong>程 ** ** + ** <strong>进</strong>度 ** ** + ** <strong>多</strong>用<strong>户</strong> —— <strong>用</strong> <strong> Kolibri</strong> <strong> 不</strong>自<strong>造</strong>。 <strong>Kolibri</strong> <strong> 是</strong> <strong> Learning Equality</strong> <strong> 出</strong>的 **—— <strong>专</strong>门<strong>给</strong> <strong> offline / low-bandwidth</strong> <strong> 场</strong>景<strong>的</strong> <strong>教</strong>育 ** <strong>平</strong>台 **。 </p>
+<p><strong>用</strong> Kolibri <strong>的</strong> <strong>同</strong>款<strong>思路</strong> —— <strong>用</strong> <strong>最</strong>好<strong>的</strong> <strong>领</strong>域 ** <strong>工</strong>具 **，<strong>不</strong> <strong>自</strong>造 **。</p>
+<h3 id="5-选用-ProtoMaps-不自造地图"><a href="#5-选用-ProtoMaps-不自造地图" class="headerlink" title="5. 选用 ProtoMaps 不自造地图"></a>5. 选用 ProtoMaps 不自造地图</h3><p><strong>离</strong>线 ** <strong>地</strong>图 ** <strong>用</strong> <strong> ProtoMaps</strong>—— <strong>自</strong>带 ** <strong>MBTiles</strong> / <strong>PMTiles</strong> <strong> 协</strong>议 **。 <strong>ProtoMaps</strong> <strong> 是</strong> <strong> “<strong>地</strong>图</strong> <strong>代</strong>码 ** “<strong>的</strong> <strong>解</strong>决 ** <strong>方</strong>案 **—— <strong>类</strong>似 ** O<strong>SM</strong> 但 ** <strong>支</strong>持 ** <strong>完</strong>全 ** <strong>本</strong>地 ** <strong>tile</strong>。 </p>
+<h3 id="6-选用-CyberChef-不自造数据处理"><a href="#6-选用-CyberChef-不自造数据处理" class="headerlink" title="6. 选用 CyberChef 不自造数据处理"></a>6. 选用 CyberChef 不自造数据处理</h3><p><strong>GCHQ</strong> <strong> 开</strong>源<strong>的</strong> <strong> CyberChef</strong>—— <strong>专</strong>门 ** <strong>数</strong>据 ** <strong>处</strong>理 ** ** + ** <strong>编</strong>码 ** ** + ** <strong>加</strong>密 **。 <strong>不</strong> <strong>自</strong>造 ** <strong>轮</strong>子 **。</p>
+<h3 id="7-选用-FlatNotes-不自造笔记"><a href="#7-选用-FlatNotes-不自造笔记" class="headerlink" title="7. 选用 FlatNotes 不自造笔记"></a>7. 选用 FlatNotes 不自造笔记</h3><p><strong>本</strong>地 ** <strong>markdown</strong> <strong> 笔</strong>记 **—— <strong>用</strong> <strong> FlatNotes</strong> <strong> 不</strong> <strong>自</strong>造 **。 <strong>FlatNotes</strong> <strong> 是</strong> <strong>轻</strong> <strong>量</strong> <strong>的</strong> <strong>本</strong>地 ** <strong>markdown</strong> <strong> 笔</strong>记 ** ** + ** <strong>浏</strong>览 ** <strong>器</strong> <strong>接</strong>口 **—— <strong>不</strong> <strong>需</strong>要 ** <strong>图</strong>谱 ** ** / <strong>plug-in</strong> / <strong>plugin</strong> <strong> 的</strong> <strong>人</strong> <strong>最</strong> <strong>适</strong>合 **。</p>
+<p><strong>这</strong>条 ** <strong>选</strong> <strong>用</strong> <strong>的</strong>思路 **——** “<strong>不</strong> <strong>自</strong>造 ** <strong>轮</strong>子 **，<strong>用</strong> <strong>领</strong>域 ** <strong>最</strong>好<strong>的</strong> ** “<strong>—— <strong>是</strong> <strong> NOMAD</strong> <strong> 的</strong> <strong>一</strong> <strong>大</strong> <strong>亮</strong>点</strong>。 </p>
+<hr>
+<h2 id="七点五、几条-NOMAD-适合的-“独特场景-“"><a href="#七点五、几条-NOMAD-适合的-“独特场景-“" class="headerlink" title="七点五、几条 NOMAD 适合的 “独特场景** “"></a>七点五、几条 NOMAD 适合的 “<strong>独</strong>特<strong>场</strong>景 ** “</h2><p>跑了一天我<strong>整</strong>理<strong>几</strong>条 ** “<strong>NOMAD</strong> <strong> 的</strong> “<strong>独</strong>特<strong>场</strong>景 ** “**：</p>
+<h3 id="场景-1：国外-离网-差旅"><a href="#场景-1：国外-离网-差旅" class="headerlink" title="场景 1：国外** / ** 离网** 差旅**"></a>场<strong>景</strong> 1：<strong>国</strong>外 ** / ** <strong>离</strong>网 ** <strong>差</strong>旅 **</h3><p><strong>你</strong> <strong>去</strong> <strong>国</strong>外 ** <strong>边</strong>远<strong>地</strong>区 **（** <strong>非</strong>洲 **、<strong>南</strong>美 **、<strong>东</strong>南<strong>亚</strong> <strong>部</strong>分<strong>地</strong>区 **），<strong>网</strong>络 ** <strong>不</strong> <strong>稳</strong>定<strong>或</strong> <strong>贵</strong> —— <strong>装</strong> <strong>上</strong> <strong> NOMAD</strong> ** + ** <strong>手</strong>机 ** ** + ** <strong>笔</strong>记<strong>本</strong> —— <strong>完</strong>全 ** <strong>离</strong>线 ** <strong>用</strong> <strong>维</strong>基<strong>百</strong>科 ** + ** <strong>Khan Academy</strong> + ** <strong>AI</strong> ** + ** <strong>地</strong>图 ** + ** <strong>笔</strong>记 **。 </p>
+<h3 id="场景-2：教育-公平"><a href="#场景-2：教育-公平" class="headerlink" title="场景 2：教育** 公平**"></a>场<strong>景</strong> 2：<strong>教</strong>育 ** <strong>公</strong>平 **</h3><p><strong>南</strong>半<strong>球</strong>的 ** <strong>学</strong>校 **—— <strong>装</strong> <strong>上</strong> <strong>一</strong> <strong>台</strong> <strong> NOMAD</strong>—— <strong>学</strong>生 ** <strong>有</strong> <strong>免</strong>费 ** ** + ** <strong>本</strong>地 ** <strong>化</strong> <strong>教</strong>育 ** <strong>资</strong>源 **。 <strong>Khan Academy</strong> ** + ** <strong>Kolibri</strong> ** + ** <strong>本</strong>地 ** <strong>AI</strong> ** = <strong>学</strong>生 ** <strong>不</strong>依<strong>赖</strong> <strong>网</strong>络 ** <strong>的</strong> <strong>学</strong>习 **。</p>
+<h3 id="场景-3：应急-灾难-准备"><a href="#场景-3：应急-灾难-准备" class="headerlink" title="场景 3：应急** / 灾难** 准备**"></a>场<strong>景</strong> 3：<strong>应</strong>急 ** / <strong>灾</strong>难 ** <strong>准</strong>备 **</h3><p><strong>基</strong>础 ** <strong>设</strong>施 ** <strong>瘫</strong>痪<strong>时</strong> ——** ** “<strong>本</strong>地<strong>知</strong>识<strong>中</strong>心 ** “** <strong>就</strong>是 ** ** “<strong>应</strong>急<strong>指</strong>挥 ** “<strong>的</strong> <strong>资</strong>源 **—— <strong>军</strong>事 **、<strong>政</strong>府 **、** NGO** <strong>部</strong>署 ** <strong>是</strong> <strong>常</strong>见 ** <strong>做</strong>法 **。</p>
+<h3 id="场景-4：研究-学术"><a href="#场景-4：研究-学术" class="headerlink" title="场景 4：研究** ** + ** 学术**"></a>场<strong>景</strong> 4：<strong>研</strong>究 ** ** + ** <strong>学</strong>术 **</h3><p><strong>你</strong> <strong>的</strong> <strong>研</strong>究 ** <strong>领</strong>域 ** ** “<strong>很</strong>冷<strong>门</strong> “<strong>——</strong> <strong> 如</strong>果 ** <strong>出</strong>去<strong>考</strong>古 **、<strong>地</strong>质<strong>考</strong>察 **、<strong>野</strong>外<strong>调</strong>查 **—— <strong>网</strong>络<strong>不</strong>好<strong>或</strong> <strong>完</strong>全 ** <strong>没</strong> —— <strong>装</strong> <strong>上</strong> <strong> NOMAD</strong>—— <strong>查</strong> <strong>离</strong>线 ** <strong>学</strong>术 ** <strong>资</strong>源 ** + <strong>AI</strong> <strong> 问</strong>答 **。</p>
+<h3 id="场景-5：隐私-企业-内网"><a href="#场景-5：隐私-企业-内网" class="headerlink" title="场景 5：隐私** ** / ** 企业 内网**"></a>场<strong>景</strong> 5：<strong>隐</strong>私 ** ** / ** <strong>企业</strong> <strong>内</strong>网 **</h3><p><strong>企</strong>业 ** <strong>IT</strong> <strong> 规</strong>定 ** “<strong>数</strong>据 ** <strong>不</strong> <strong>出</strong> <strong>公</strong>网 ** “<strong>——</strong> <strong> 装</strong> <strong>上</strong> <strong> NOMAD</strong>—— <strong>内</strong>部 ** <strong>员</strong>工 ** <strong>查</strong> <strong>内</strong>部 ** <strong>技</strong> + ** <strong>用</strong> <strong>本</strong>地 ** <strong>AI</strong> ** = <strong>不</strong>泄<strong>露</strong>任<strong>何</strong>数<strong>据</strong>。</p>
+<p><strong>这</strong> <strong> 5</strong> <strong> 个</strong> <strong>场</strong>景 ** <strong>之</strong>前 ** <strong>没</strong>有 ** ** “<strong>一</strong>站<strong>式</strong> “<strong>解</strong>决 ** <strong>方</strong>案 **。 NOMAD <strong>是</strong> <strong>第</strong>一<strong>个</strong>。</p>
+<hr>
+<h2 id="八点五、几条”反-“踩坑-”-提醒"><a href="#八点五、几条”反-“踩坑-”-提醒" class="headerlink" title="八点五、几条”反 ** “踩坑**”** 提醒"></a>八点五、几条” <strong>反</strong> ** “<strong>踩</strong>坑 **”** 提醒</h2><p>跑了一天<strong>踩</strong>了<strong>几</strong>个 ** <strong>坑</strong>，<strong>整</strong>理<strong>下</strong>来 **：</p>
+<p><strong>坑 1：</strong> <strong>Docker</strong> <strong> 版</strong>本 ** <strong>不</strong>够 ** <strong>。 ** NOMAD <strong>要</strong> <strong>求</strong> <strong> Docker</strong> <strong>20.10</strong> <strong> 以</strong>上</strong> + ** <strong>Docker Compose</strong> <strong>v2</strong> <strong>。 <strong>如</strong>果</strong> <strong>你</strong> <strong>的</strong> <strong>机</strong>器 ** <strong>跑</strong> <strong>着</strong> <strong>老</strong>版 ** Docker**，<strong>脚</strong>本 ** <strong>会</strong> <strong>报</strong>错 **。 <strong>先</strong> <strong> apt-get upgrade docker-ce</strong>。</p>
+<p><strong>坑 2：</strong> <strong>swap</strong> <strong> 不</strong>足 ** <strong>。 ** Ollama <strong>跑</strong> <strong> LLM</strong> <strong> 模</strong>型</strong> <strong>用</strong> <strong> RAM</strong> ** + ** <strong>swap</strong>。 <strong>8 GB</strong> <strong> 机</strong>器 ** ** + ** <strong>0 swap</strong> <strong> 跑</strong> <strong> 7B</strong> <strong> 模</strong>型 ** <strong>很</strong> <strong>卡</strong> ——<strong>OOM</strong> <strong> 崩</strong>溃 **。 <strong>swap</strong> <strong> 设</strong> <strong> 8 GB</strong> <strong> 安</strong>全 **。 </p>
+<p><strong>坑 3：</strong> <strong>ZIM</strong> <strong> 文</strong>件 ** <strong>超</strong>大 **。 ** <strong>English</strong> <strong>Wikipedia</strong> <strong>ZIM</strong> ** 80 GB**。 <strong>之</strong>前<strong>没</strong>装<strong>硬</strong>盘<strong>的</strong>不<strong>下</strong>载 **—— <strong>下</strong>载 ** <strong>半</strong>天 ** + <strong>占</strong>硬<strong>盘</strong> <strong> 100 GB</strong> **+ **。 </p>
+<p><strong>坑 4：</strong> <strong>Khan Academy</strong> <strong> 课</strong>程 ** <strong>更</strong>新 ** <strong>慢</strong>。 ** <strong>Khan Academy</strong> <strong> 不</strong>定<strong>期</strong> <strong>更</strong>新 ** <strong>课</strong>程 **。 <strong>NOMAD</strong> <strong> 更</strong>新 ** <strong>课</strong>程 ** <strong>时</strong> <strong>可</strong>能 ** <strong>半</strong>天 ** <strong>到</strong> <strong> 1</strong> <strong> 天</strong>。 </p>
+<p><strong>坑 5：</strong> <strong>Supply Depot</strong> <strong> 的</strong> <strong> app</strong> <strong> 不</strong> <strong>总</strong>是 ** <strong>最</strong>新 **。 ** <strong>Supply Depot</strong> <strong> 的</strong> <strong> app</strong> <strong> 来</strong>自 ** <strong>Docker</strong> ** Hub**—— <strong>你</strong> <strong>装</strong>的 ** <strong>可</strong>能 ** <strong>不</strong>是 ** <strong>最</strong>新<strong>版</strong>本 **。 <strong>手</strong>动 ** <strong>配</strong>置 ** <strong>Docker</strong> <strong>tag</strong> <strong> 要</strong> <strong>最</strong>新 **。</p>
+<p><strong>坑 6：</strong> <strong>WSL2</strong> <strong> 网</strong>络 ** <strong>配</strong>置 **。 ** <strong>Windows</strong> <strong> 上</strong> <strong> WSL2</strong> <strong> 跑</strong> <strong> NOMAD</strong>—— <strong>你</strong> <strong>要</strong> <strong> port forwarding</strong>（** localhost:8080** <strong>从</strong> WSL <strong>到</strong> Windows**）。 <strong>WSL</strong> <strong> 的</strong> <strong> networking</strong> <strong> 有</strong> <strong>时</strong> <strong>跳</strong> IP** <strong>（</strong> “<strong>重启</strong> <strong> wsl</strong> <strong> 后</strong> <strong> IP</strong> <strong> 变</strong>了 ** “**）。 </p>
+<p><strong>坑 7：</strong> <strong>本</strong>地 ** <strong>AI</strong> <strong>Ollama</strong> <strong> 模</strong>型 ** <strong>权</strong>重 ** <strong>文</strong>件 ** <strong>大</strong>。 ** <strong>Llama 3.2 7B</strong> <strong>Q4</strong> <strong> 大</strong>概 ** <strong>5 GB</strong>。 <strong>本</strong>地 ** <strong>跑</strong> <strong>好</strong>几个 ** <strong>不</strong>同 ** <strong>模</strong>型 **—— <strong>你</strong> <strong>的</strong> <strong>硬</strong>盘 ** <strong>跑</strong> <strong>很</strong>快 **。</p>
+<p><strong>这</strong> <strong> 7</strong> <strong> 个</strong> <strong>坑</strong> <strong>不</strong>在 ** README <strong>明</strong>说 **—— <strong>之</strong>前 ** <strong>发</strong>过<strong>的</strong> <strong> PI-Desktop</strong> <strong> 那</strong>篇 ** <strong>我</strong> <strong>整</strong>理<strong>过</strong> <strong>类</strong>似 ** <strong>的</strong> <strong>踩</strong>坑 **—— <strong>之</strong> <strong>前</strong> <strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>大</strong>多 ** <strong>有</strong> ** “** <strong>早</strong>期 ** <strong>项</strong>目 ** “<strong>的</strong> <strong>典</strong>型 ** <strong>问</strong>题 **。</p>
+<hr>
+<h2 id="九点五、几条”-“它和-Cloudflare-quiche-对比的-“观察"><a href="#九点五、几条”-“它和-Cloudflare-quiche-对比的-“观察" class="headerlink" title="九点五、几条”** “它和** Cloudflare/quiche** 对比的 “观察"></a>九点五、几条”** “<strong>它</strong>和 ** Cloudflare/quiche** <strong>对</strong>比<strong>的</strong> “<strong>观察</strong></h2><p><strong>当</strong>天 ** <strong>trending</strong> <strong> 上</strong> <strong>还</strong> <strong>有</strong> <strong> cloudflare/quiche</strong>（<strong>12k</strong> <strong>stars</strong>）——** “**** ** QUIC** ** + ** <strong>HTTP/3</strong> ** <strong>实</strong>现 **。 </p>
+<p><strong>两</strong>个 ** <strong>项</strong>目 ** <strong>完</strong>全 ** <strong>不</strong>同 ** <strong>领</strong>域 **——<strong>quiche</strong> <strong> 是</strong> <strong>网</strong>络 ** <strong>协</strong>议<strong>层</strong>（** <strong>Cloudflare</strong> <strong> 的</strong> “<strong>开</strong>源 ** ** QUIC** ** “<strong>）</strong>，<strong>NOMAD</strong> <strong> 是</strong> <strong>知</strong>识 ** + <strong>AI</strong> <strong> 应</strong>用<strong>层</strong>。 </p>
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>其</strong>他 ** <strong>trending</strong> <strong> 项</strong>目<strong>里</strong>也 ** <strong>常</strong>有 ** <strong>“<strong>完</strong>全</strong> <strong>不</strong>同 ** <strong>领</strong>域 ** “** <strong>的</strong>。 今日 ** trending <strong>的</strong> <strong>应</strong>该<strong>选</strong> <strong>的</strong>是 ** NOMAD** <strong>是</strong> <strong>因</strong>为 **：</p>
+<ol>
+<li><strong>它</strong> <strong>填</strong>上<strong>了</strong> <strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>栈</strong> <strong>空</strong>缺<strong>的</strong> “<strong>离</strong>线<strong>知</strong>识 ** “<strong>档</strong>位 **</li>
+<li><strong> 它</strong>和<strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong> OpenWhispr</strong>（<strong>语</strong>音 **）、<strong>llm_wiki</strong>（<strong>知</strong>识 **）、<strong>PI-Desktop</strong>（** AI agent**）<strong>都</strong>是 ** <strong>同</strong>款 ** “<strong>本</strong>地 ** <strong>优</strong>先 ** “<strong>路</strong>径 **—— <strong>叠</strong>加<strong>用</strong></li>
+<li><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>栈</strong> <strong>缺</strong> “<strong>离</strong>线<strong>知</strong>识 ** <strong>中</strong>心 ** “<strong>——<strong>NOMAD</strong> <strong> 是</strong> <strong>新</strong>增</strong></li>
+</ol>
+<hr>
+<h2 id="十点五、之前-发过的-项目-对应的-“-场景-“"><a href="#十点五、之前-发过的-项目-对应的-“-场景-“" class="headerlink" title="十点五、之前** 发过的 项目** 对应的 ** “** 场景** ** “**"></a>十点五、<strong>之</strong>前 ** <strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>对</strong>应<strong>的</strong> ** “** <strong>场</strong>景 ** ** “**</h2><p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>各</strong>自 ** <strong>对</strong>应 ** <strong>特</strong>定 ** <strong>场</strong>景 **。 <strong>之</strong>后 ** <strong>看</strong> NOMAD** <strong>，<strong>它</strong> <strong>对</strong>应</strong>的 ** ** “<strong>特</strong>定 ** <strong>场</strong>景 ** “**：</p>
+<ul>
+<li><strong>OpenWhispr</strong>：语<strong>音</strong> <strong>记</strong>录 **（<strong>单</strong>机<strong>场</strong>景 **）</li>
+<li><strong>PI-Desktop</strong>：** AI** <strong>编</strong>码 ** <strong>agent</strong>（<strong>单</strong>机<strong>场</strong>景 **）</li>
+<li><strong>llm_wiki</strong>：** 个<strong>人</strong>知<strong>识</strong> <strong> w</strong>iki**（<strong>单</strong>机<strong>场</strong>景 **）</li>
+<li><strong>ai-memory</strong>：** 长<strong>期</strong>记<strong>忆</strong>（<strong>单</strong>机 ** + ** <strong>团</strong>队 **）</li>
+<li><strong>teamai-cli</strong>：** 团<strong>队</strong> <strong> harness</strong> <strong> 分</strong>发 **（<strong>团</strong>队 ** <strong>场</strong>景 **）</li>
+<li><strong>Cua</strong> / <strong>BrowserSkill</strong>：** 操<strong>作</strong> <strong>真</strong>实<strong>世</strong>界 **（<strong>本</strong>地 ** + <strong>云</strong>）</li>
+<li><strong>agent-native</strong>：** 应<strong>用</strong> ** + ** <strong>agent</strong> <strong> 协</strong>作 **（<strong>应</strong>用 ** <strong>层</strong>）</li>
+<li><strong>HyperFrames</strong> / <strong>gods-eye-view</strong>：<strong>可</strong>视<strong>化</strong>（** <strong>创</strong>意 ** <strong>场</strong>景 **）</li>
+<li><strong>MathModelAgent</strong>：** <strong>学</strong>科<strong>垂</strong>直<strong>场</strong>景 **</li>
+<li><strong>NOMAD</strong>：** “<strong>知</strong>识 ** ** + ** <strong>教</strong>育 ** + ** <strong>本</strong>地 ** <strong>AI</strong> ** “<strong>套</strong>装 **（<strong>本</strong>地 ** + ** <strong>垂</strong>直 ** <strong>场</strong>景 **）</li>
+</ul>
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>都</strong> <strong>对</strong>应 ** “<strong>单</strong>点 ** <strong>场</strong>景 **”，<strong>NOMAD</strong> <strong> 对</strong>应 ** “<strong>一</strong>站<strong>式</strong> ** “** 本<strong>地</strong> <strong>场</strong>景 **。</p>
+<hr>
+<h2 id="十一-、之前发过的-项目-的-“离线思维-“"><a href="#十一-、之前发过的-项目-的-“离线思维-“" class="headerlink" title="十一**、之前发过的 项目** 的 “离线思维** “** **"></a>十一 **、<strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>的</strong> “<strong>离</strong>线<strong>思</strong>维 ** “** **</h2><p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong> OpenWhispr</strong>、<strong>PI-Desktop</strong>、<strong>llm_wiki</strong>、<strong>ai-memory</strong> <strong> 都</strong> <strong>有</strong> ** “<strong>离</strong>线<strong>思</strong>维 ** “<strong>—— <strong>但</strong> <strong>之</strong>前</strong>发<strong>过</strong>的 ** <strong>都</strong>是 ** ** “<strong>单</strong>点<strong>思</strong>维 ** “<strong>—— <strong>只</strong> <strong>管</strong> ** “<strong>本</strong>地</strong> <strong>语</strong>音 ** “<strong>或</strong> ** “<strong>本</strong>地 ** <strong>AI</strong> <strong> 编</strong>码 ** “<strong>或</strong> ** “<strong>本</strong>地 ** <strong>知</strong>识 ** “<strong>或</strong> ** “<strong>本</strong>地 ** <strong>记</strong>忆 ** “**。</p>
+<p><strong>NOMAD</strong> <strong> 是</strong> ** “<strong>整</strong>合<strong>思</strong>维 ** “<strong>—— <strong>之</strong>前</strong>发<strong>过</strong>的 ** <strong>所</strong>有 ** <strong>离</strong>线 ** <strong>项</strong>目 ** <strong>整</strong>合<strong>到</strong> <strong>一</strong>个 ** <strong>单</strong> <strong> command</strong> <strong> 部</strong>署<strong>的</strong> <strong>服</strong>务<strong>器</strong>。</p>
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>个</strong> <strong>个</strong> <strong>装</strong> —— <strong>要</strong> <strong> 6 <strong>个</strong> * <em><strong>服</strong>务</em> * 器</strong> ** + ** <strong>6 <strong>个</strong> ** <strong>配</strong>置</strong>。 NOMAD <strong>1 <strong>个</strong> <strong>服</strong>务</strong>器 ** = <strong>6 <strong>个</strong> <strong>项</strong>目</strong> ** + ** <strong>2 <strong>个</strong> ** <strong>管</strong>理</strong> <strong> UI</strong>。</p>
+<p><strong>这</strong> <strong>是</strong> ** <strong>之</strong>前<strong>发</strong>过<strong>的</strong> ** <strong>6 <strong>个</strong> <strong>离</strong>线</strong> <strong>项</strong>目 ** ** “<strong>没</strong> <strong>做</strong> <strong>的</strong> “** ——** <strong>整</strong>合 **。 </p>
+<hr>
+<h2 id="十二-、几条-对-“NOMAD-在-AI-工具-栈-的-位置-“-的-思考"><a href="#十二-、几条-对-“NOMAD-在-AI-工具-栈-的-位置-“-的-思考" class="headerlink" title="十二**、几条** 对 ** “NOMAD 在 AI 工具** 栈 的 位置** “** 的 思考**"></a>十二 **、<strong>几</strong>条 ** <strong>对</strong> ** “<strong>NOMAD</strong> <strong> 在</strong> <strong> AI</strong> <strong> 工</strong>具 ** <strong>栈</strong> <strong>的</strong> <strong>位</strong>置 ** “** <strong>的</strong> <strong>思</strong>考 **</h2><p><strong>写</strong>到<strong>这</strong>里<strong>给</strong>个 ** ** “<strong>位</strong>置 ** “<strong>判</strong>断 **。</p>
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> ** “<strong>云</strong>端 ** AI** <strong>工</strong>具 ** <strong>栈</strong> “**：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">输**入**层** → **编**码**层** → **行**为**层** → **Context** → **应**用**层** → **真**实**世**界** → **可**视**化** → **长**期**记**忆**</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> ** “<strong>本</strong>地 ** AI** <strong>工</strong>具 ** <strong>栈</strong> “<strong>（</strong> <strong>之</strong>前 ** <strong>只</strong>有 ** <strong>单</strong>点 ** “<strong>）</strong>：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">输**入**层**（**OpenWhispr**）→ **沉**淀**层**（**llm_wiki**）→ **AI** **编**码**（**PI-Desktop**）→ **长**期**记**忆**（**ai-memory**）</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>加</strong>上 ** <strong>NOMAD</strong> <strong> 之</strong>后 **，<strong>本</strong>地 ** <strong>栈</strong> <strong>变</strong>成 **：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">输**入**层**（**OpenWhispr**）→ **沉**淀**层**（**llm_wiki**）→ **离**线**知**识** **中**心**（**NOMAD**）→ **AI** **编**码**（**PI-Desktop**）→ **长**期**记**忆**（**ai-memory**）</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>新</strong> <strong>加</strong>的 ** ** “<strong>离</strong>线<strong>知</strong>识 ** <strong>中</strong>心 ** “<strong>层</strong> —— <strong>之</strong>前 ** <strong>缺</strong>的 ** <strong>层</strong> —— <strong>填</strong>上<strong>了</strong>。</p>
+<p>这条 ** <strong>补</strong>上<strong>之</strong>后 ** <strong>的</strong> <strong>栈</strong> <strong>表</strong>达<strong>更</strong> <strong>完</strong>整 **：</p>
+<ul>
+<li><strong>输</strong>入 **（<strong>语</strong>音 ** + <strong>网</strong>页 **）——<strong>OpenWhispr</strong> ** + ** <strong>Chrome</strong> ** Web Clipper**（<strong>之</strong> <strong>前</strong> * <em><strong>未</strong>发</em><em>过</em> *）</li>
+<li><strong>沉</strong>淀 **（<strong>本</strong>地 ** <strong>笔</strong>记 **）——<strong>llm_wiki</strong></li>
+<li><strong> 离</strong>线<strong>知</strong>识 ** <strong>中</strong>心 **（<strong>本</strong>地 ** <strong>维</strong>基 ** + ** <strong>本</strong>地 ** <strong>课</strong>程 ** + ** <strong>本</strong>地 ** <strong>AI</strong>）——<strong>NOMAD</strong></li>
+<li><strong>AI</strong> <strong> 编</strong>码 **（<strong>本</strong>地 ** <strong>优</strong>先 ** agent**）——<strong>PI-Desktop</strong></li>
+<li><strong> 长</strong>期<strong>记</strong>忆 **（<strong>跨</strong> <strong> session</strong> / ** <strong>跨</strong> <strong> agent</strong>）——<strong>ai-memory</strong></li>
+</ul>
+<p>5 <strong>层</strong> <strong>栈</strong> ——<strong>5</strong> <strong> 个</strong> <strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 **——** <strong>2</strong> <strong> 层</strong> <strong>叠</strong>加 ** <strong>栈</strong> <strong>（<strong>云</strong>端</strong> + <strong>本</strong>地 **）。 </p>
+<hr>
+<h2 id="十三-、几条-之前-发过的-项目-的-“互补-“-思考"><a href="#十三-、几条-之前-发过的-项目-的-“互补-“-思考" class="headerlink" title="十三**、几条** 之前** 发过的 项目** 的 ** “互补** “** 思考**"></a>十三 **、<strong>几</strong>条 ** <strong>之</strong>前 ** <strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>的</strong> ** “<strong>互</strong>补 ** “** <strong>思</strong>考 **</h2><p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>栈</strong> <strong>各</strong>自 ** <strong>占</strong>位 **。 <strong>之</strong>后 ** <strong>看</strong> NOMAD**，<strong>它</strong> <strong>和</strong>之<strong>前</strong> <strong>发</strong>过<strong>的</strong> <strong>所</strong>有 ** <strong>本</strong>地 ** <strong>项</strong>目 ** <strong>叠</strong>加 **：</p>
+<ul>
+<li><strong>NOMAD</strong> ** + ** <strong>OpenWhispr</strong>—— 语<strong>音</strong> ** + ** <strong>本</strong>地<strong>知</strong>识 **。 录<strong>音</strong> <strong>后</strong> <strong>用</strong> <strong> Whisper</strong> <strong> 本</strong>地 ** <strong>转</strong>文<strong>字</strong>，<strong>然</strong>后 ** <strong>存</strong>进 ** <strong>NOMAD</strong> <strong> 的</strong> <strong> FlatNotes</strong>。</li>
+<li><strong>NOMAD</strong> ** + ** <strong>PI-Desktop</strong> ——** <strong>AI</strong> <strong> 编</strong>码 ** ** + ** <strong>本</strong>地 ** <strong>知</strong>识 **。 <strong>写</strong>代<strong>码</strong>时 ** <strong>查</strong> <strong>本</strong>地 ** <strong>维</strong>基<strong>百</strong>科 ** + ** <strong>用</strong> <strong>本</strong>地 ** <strong>Ollama</strong> <strong>AI</strong> ** + ** <strong>离</strong>线 ** <strong>课</strong>程 **—— <strong>全</strong> <strong>程</strong> <strong>不</strong> <strong>上</strong>云 **。</li>
+<li><strong>NOMAD</strong> ** + ** <strong>llm_wiki</strong>——** <strong>wiki</strong> ** + ** <strong>本</strong>地<strong>知</strong>识 **。 <strong>llm_wiki</strong> <strong> 管</strong> ** “<strong>个</strong>人<strong>笔</strong>记 ** “<strong>，<strong>NOMAD</strong> <strong> 管</strong> ** “<strong>公</strong>共</strong> <strong>知</strong>识 ** “<strong>—— <strong>两</strong>个</strong> <strong>不</strong> <strong>冲</strong>突 **。</li>
+<li><strong>NOMAD</strong> ** + ** <strong>ai-memory</strong>——** <strong>长</strong>期<strong>记</strong>忆 ** ** + ** <strong>本</strong>地 ** <strong>知</strong>识 **。 <strong>ai-memory</strong> <strong> 记</strong> ** “<strong>agent</strong> ** session ** ** “<strong>，<strong>NOMAD</strong> <strong> 存</strong> ** “<strong>公</strong>共</strong> <strong>知</strong>识 ** “<strong>—— <strong>两</strong>个</strong> <strong>合</strong>起<strong>来</strong> ** = ** ** “<strong>agent</strong> <strong> 有</strong> <strong>个</strong>人<strong>记</strong>忆 ** ** + ** <strong>公</strong>共 ** <strong>知</strong>识 ** “**。</li>
+</ul>
+<p><strong>两</strong>个 ** <strong>项</strong>目 ** <strong>叠</strong>加 ** = ** ** “<strong>1+1</strong> <strong>&gt;</strong> <strong>2</strong>“**。 </p>
+<hr>
+<h2 id="十四-、几条-对-之前-发过的-所有-项目-的-“-5-年后回头看-“"><a href="#十四-、几条-对-之前-发过的-所有-项目-的-“-5-年后回头看-“" class="headerlink" title="十四**、几条** 对 之前** 发过的 所有** 项目** 的 ** “** 5 年后回头看 “**"></a>十四 **、<strong>几</strong>条 ** <strong>对</strong> <strong>之</strong>前 ** <strong>发</strong>过<strong>的</strong> <strong>所</strong>有 ** <strong>项</strong>目 ** <strong>的</strong> ** “** <strong>5</strong> <strong> 年</strong>后<strong>回</strong>头<strong>看</strong> “**</h2><p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>所</strong>有 ** <strong>项</strong>目 ** <strong>——</strong> <strong>5</strong> <strong> 年</strong>后<strong>回</strong>头<strong>看</strong> —— <strong>会</strong> <strong>是</strong> ** “<strong>个</strong>人 ** AI** <strong>工</strong>具 ** <strong>栈</strong> <strong>的</strong> <strong>标</strong>配 ** “**：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2024 **年** **位**：Claude Code**（**闭**源**商**业**） + ** ** Notion**（**SaaS**）——**云** **AI** **栈**</span><br><span class="line">2026 **年** **位**：NOMAD** ** + ** **llm_wiki** + ** **ai-memory** + ** **PI-Desktop** ** + ** **OpenWhispr**——**本**地** ** + ** **云** ** "**双**栈**"</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>表</strong>达<strong>了</strong> ** “<strong>从</strong> <strong>云</strong> <strong>变</strong> ** “<strong>双</strong>栈 ** “<strong>的</strong> <strong>演</strong>化 **。 </p>
+<p><strong>5</strong> <strong> 年</strong>后<strong>回</strong>头<strong>看</strong> —— <strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>会</strong> <strong>是</strong> “<strong>个</strong>人 ** <strong>AI</strong> <strong> 工</strong>具 ** <strong>的</strong> ** “<strong>Linux</strong> <strong> 时</strong>代 ** “** <strong>——</strong> <strong>“<strong>Linux</strong> <strong> 时</strong>代</strong> “** <strong>那</strong>些 ** ** <strong>开</strong>源 ** <strong>项</strong>目 ** ** （<strong>Linux</strong>、<strong>gcc</strong>、<strong>Apache</strong>、<strong>Python</strong>、<strong>……</strong>）<strong>—— <strong>变</strong> <strong>了</strong> ** “<strong>现</strong>代</strong>计<strong>算</strong>的 ** <strong>基</strong>础 ** “**。</p>
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>也</strong> <strong>会</strong> <strong>是</strong> ——** “** <strong>现</strong>代 ** <strong>个</strong>人 ** <strong>AI</strong> <strong> 工</strong>具 ** ** “<strong>的</strong> <strong>基</strong>础 **。</p>
+<hr>
+<h2 id="十五-、最后一段"><a href="#十五-、最后一段" class="headerlink" title="十五**、最后一段**"></a>十五 **、<strong>最</strong>后<strong>一</strong>段 **</h2><p><strong>写</strong>到<strong>这</strong>里<strong>做</strong> <strong>一</strong>个 ** ** “<strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>的</strong> ** “** <strong>最</strong>后 ** “** <strong>判</strong>断 ** “**。</p>
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>所</strong>有 ** <strong>项</strong>目 **：</p>
+<ul>
+<li><strong>给</strong> ** “<strong>云</strong>端 ** <strong>AI</strong> <strong> 栈</strong> “** <strong>填</strong>位置<strong>的</strong>有 ** <strong>9</strong> <strong> 个</strong>（<strong>Claude Code</strong>、<strong>Codex</strong>、<strong>opencode</strong>、<strong>ponytail</strong>、<strong>ECC</strong>、<strong>mattpocock/skills</strong>、<strong>addyosmani/agent-skills</strong>、<strong>context-mode</strong>、<strong>agent-native</strong>、<strong>Cua</strong>、<strong>BrowserSkill</strong>、<strong>HyperFrames</strong>、<strong>gods-eye-view</strong>、<strong>MathModelAgent</strong>、<strong>teamai-cli</strong>、<strong>mattpocock/skills</strong>、<strong>addyosmani/agent-skills</strong> —— <strong>大</strong>概 ** <strong>15-18</strong> <strong> 个</strong>项<strong>目</strong> <strong>算</strong>上 ** <strong>添</strong>添<strong>去</strong>去 ** <strong>20</strong> <strong> 个</strong>）**</li>
+<li><strong> 给</strong> ** “<strong>本</strong>地 ** <strong>AI</strong> <strong> 栈</strong> “** <strong>填</strong>位置<strong>的</strong> <strong> 5</strong> <strong> 个</strong>（<strong>OpenWhispr</strong>、<strong>PI-Desktop</strong>、<strong>llm_wiki</strong>、<strong>ai-memory</strong>、<strong>NOMAD</strong>）**</li>
+</ul>
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>栈</strong> <strong>两</strong>个 ** <strong>路</strong>径 **—— <strong>云</strong>端 ** <strong>栈</strong> ** “<strong>15-18</strong> <strong> 个</strong> “** + ** <strong>本</strong>地 ** <strong>栈</strong> ** “<strong>5</strong> <strong> 个</strong> “<strong>—— <strong>之</strong>前</strong>发<strong>过</strong>的 ** <strong>全</strong>部<strong>项</strong>目 **。</p>
+<p><strong>5</strong> <strong> 年</strong>后 **—— <strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>会</strong> <strong>是</strong> “<strong>个</strong>人 ** <strong>AI</strong> <strong> 工</strong>具 ** ** “<strong>的</strong> <strong>标</strong>配 **。</p>
+<p><strong>如</strong>果 ** <strong>你</strong> <strong>是</strong> <strong> 2026 <strong>年</strong>开</strong>始<strong>搭</strong> “<strong>个</strong>人 ** <strong>AI</strong> <strong> 工</strong>具 ** ** “<strong>—— <strong>之</strong>前</strong>发<strong>过</strong>的 ** <strong>所</strong>有 ** <strong>项</strong>目 ** <strong>都</strong> <strong>值</strong> <strong>装</strong>。</p>
+<p><strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>各</strong>自 ** <strong>覆</strong>盖 ** ** “<strong>云</strong> <strong>与</strong> “<strong>本</strong>地 ** “<strong>的</strong> <strong>不</strong>同 ** <strong>层</strong> —— <strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>合</strong>在<strong>一</strong>起 ** ** = ** ** ** “<strong>完</strong>整<strong>的</strong> <strong>个</strong>人 ** <strong>AI</strong> <strong> 工</strong>具 ** <strong>栈</strong> “**。</p>
+<h2 id="十六-、几个-之前-发过的-项目-的-“互补-“-场景-演示"><a href="#十六-、几个-之前-发过的-项目-的-“互补-“-场景-演示" class="headerlink" title="十六**、几个** 之前** 发过的 项目** 的 ** “互补** “** 场景** 演示**"></a>十六 **、<strong>几</strong>个 ** <strong>之</strong>前 ** <strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>的</strong> ** “<strong>互</strong>补 ** “** <strong>场</strong>景 ** <strong>演</strong>示 **</h2><p><strong>演</strong>示<strong>一</strong>个 ** <strong>具</strong>体<strong>的</strong> <strong>工</strong>作<strong>日</strong> <strong>流</strong>程 **，<strong>说</strong>明 ** <strong>之</strong>前<strong>发</strong>过<strong>的</strong> <strong>项</strong>目 ** <strong>叠</strong>加<strong>用</strong>是<strong>什</strong>么<strong>样</strong>：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">09:00</span><br><span class="line">输**入**（**OpenWhispr**）——**开** **会议**、**录**音**。</span><br><span class="line">沉**淀**（**llm_wiki**）——**会**议** **结**束**后** Whisper **本**地**转**文**字**，**存**进** llm_wiki** **的** ** "**会**议**记**录** "**项**目**。</span><br><span class="line">沉**淀**（**NOMAD** **）——**会**议**中**提**到** **的** **概**念**（**例**如** ** "**供**应**链**优**化** "**）**——**Kiwix** **查** **Wikipedia** **理**论**背**景**。</span><br><span class="line"></span><br><span class="line">10:00  </span><br><span class="line">离**线** **知**识** **中**心**（**NOMAD**）——**查** **Khan Academy** **的** **相**关**课**程**（**例**如** "**供**应**链**管**理** 101** "**），**学** **30** **分**钟**。</span><br><span class="line"></span><br><span class="line">11:00  </span><br><span class="line">行**为**层**（**ponytail**）——**下**午**要** **写**代**码**，**先**装** "**别** **过**度**设**计** "** skill**。</span><br><span class="line">AI** **编**码**（**PI-Desktop**）——**搭** **一**个** **本**地** **Rust** ** + ** **本**地** **LLM** **服**务**器**。</span><br><span class="line">长**期**记**忆**（**ai-memory**）——**装**上** **hooks**，**自**动** **capture** session**。</span><br><span class="line"></span><br><span class="line">14:00</span><br><span class="line">AI** **编**码**（**Claude Code**）——**写**应**用**。</span><br><span class="line">Context** **优**化**（**context-mode**）——**装**上** **hook**，**工**具**输**出** **98%** **沙**箱**。</span><br><span class="line">行**为**层**（**ECC**）——**装**上** "**agent** **harness** ** "** **skill**。</span><br><span class="line"></span><br><span class="line">17:00</span><br><span class="line">沉**淀**（**llm_wiki**）——**代码** **commit** **后**，**让** LLM** **生**成** "**今**天**做**了**什**么** "** **摘**要**，**存**进** llm_wiki** **的** ** "**日**报** "**项**目**。</span><br><span class="line">沉**淀**（**NOMAD**）——**下**载** **一**份** **供**应**链** **领**域** **的**ZIM** **文**件**——**下** **面** **要** **查**。</span><br><span class="line"></span><br><span class="line">20:00  </span><br><span class="line">应**用**层**（**agent-native**）——**打**开** **企**业** **内**部** CRM**——**查** **今**天**的** **客**户** **消**费**。</span><br><span class="line">可**视**化**（**gods-eye-view**）——**打**开** **看** **客**户** **分**布**（** **离**线** **地**图** + ** **本**地** AI** **问** "**有**几**个**客**户**在** **城**区** "**）。</span><br><span class="line"></span><br><span class="line">22:00</span><br><span class="line">离**线** **AI** **工**具** **栈** **的** ** "**总**和** "**——**你**的** **本**地** **AI** **工**具** **链** **完**整**地** **记**录**了**这**一**天**。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">## 十七**、**几**条** **对** ** "**之**前** **发**过**的** **项**目** **栈** ** **补**充** **实**践** "** **的** **思**考**</span><br><span class="line"></span><br><span class="line">**之**前**发**过**的** **项**目** **栈** ** + ** NOMAD** **让** **我** **重**新** **思**考**了**几**条**：</span><br><span class="line"></span><br><span class="line">### **思**考** 1：** "**云**端** + ** **本**地** "**双**栈** **是** **个**人** **AI** **工**具** **的** **新**范**式**</span><br><span class="line"></span><br><span class="line">**之**前** ** "**个**人** **AI** **工**具** "** = ** ** "**云** ** "**（**单**栈**）**。 **2026 **年** ** "**个**人** **AI** **工**具** "** = ** ** "**云** ** + ** **本**地** "**（**双**栈**）**。 </span><br><span class="line"></span><br><span class="line">**云** **栈** **的** **强**项**：</span><br><span class="line">- **最**强**的** AI** **模**型**（**Claude**、**GPT**、**Gemini**）</span><br><span class="line">- **最**大**的** **知**识** **库**（** **云** **上** **的** **维**基**百**科** + ** **大**型** **RAG** **库**）</span><br><span class="line">- **最**新**的** **工**具**（** **云**端** **工**具** **一**般** **领**先** **本**地** **半**年**）</span><br><span class="line"></span><br><span class="line">**本**地** **栈** **的** **强**项**：</span><br><span class="line">- **不** **依**赖** **网**络**</span><br><span class="line">- **隐**私** + ** **数**据**主**权**（**不** **出**本**机**）</span><br><span class="line">- **成**本**低**（**不** **按** token **计**费**）</span><br><span class="line">- **长**期** **所**有**（** **不** **受** **厂**商** **涨**价** / **关**停** **影**响**）</span><br><span class="line"></span><br><span class="line">**两**个** **栈** **叠**加**用**——** "**强**项** **互**补** "**。</span><br><span class="line"></span><br><span class="line">### **思**考** 2：** "**云**端** **工**具** **的** ** "**垄**断** "**问**题** </span><br><span class="line"></span><br><span class="line">**云**端** **AI** **工**具** **垄**断** **个**人** **数**据**：</span><br><span class="line"></span><br><span class="line">- **OpenAI** **存** **你** **的** **对**话**（** **即**使** opt-out** **也** **部**分** **存**）**</span><br><span class="line">- **Notion** **存** **你** **的** **笔**记**（** **Notion** **AI** **审**查** **内**容**）</span><br><span class="line">- **Linear** **存** **你** **的** **项**目**（** **Linear** **AI** **分**析** **项**目**）</span><br><span class="line">- **Cursor** **存** **你** **的** **代**码**（** **Privacy** ** Mode** **存**在**本**机**，** **但** **AI** **对**话** **存** **在** **云**）</span><br><span class="line"></span><br><span class="line">**垄**断** **的** **问**题**：</span><br><span class="line">- **你** **的** **数**据** **被** **云**厂** "**拥**有** "**</span><br><span class="line">- **你** **换** **厂**商** **的** **迁**移** **成**本** **高**（** **导**出** / **重**新** **设**置**）</span><br><span class="line">- **厂**商** **涨**价** / **关**停** **时**你** ** "**被**锁** "**</span><br><span class="line"></span><br><span class="line">**本**地** **AI** **工**具** **栈**（**OpenWhispr** ** + ** **PI-Desktop** ** + ** **llm_wiki** ** + ** **ai-memory** ** + ** **NOMAD**）**给** ** "**垄**断** "**问**题** **一**个** **解**决**方**案**——**你**的** **数**据** **在** **本**机**，**你** **换** **厂**商** **不**用** **迁**移**。</span><br><span class="line"></span><br><span class="line">### **思**考** 3：** "**本**地** **AI** **工**具** **的** ** "** **准**入**门**槛** ** "**</span><br><span class="line"></span><br><span class="line">**之**前** ** "**云**端** **AI** **工**具** ** "**准**入** "**低**——**装** **个** **Claude Code** **就** **能**用**。</span><br><span class="line"></span><br><span class="line">**之**前** ** "**本**地** **AI** **工**具** "**准**入** **高**——**装** **PI-Desktop** **要** **Rust** **，**装** **ai-memory** **要** **Rust** **toolchain**，**装** **NOMAD** **要** **Docker**。</span><br><span class="line"></span><br><span class="line">**之**前** **发**过**的** **项**目** **里**有** **不**同**的** **准**入**门**槛**：</span><br><span class="line"></span><br><span class="line">- **OpenWhispr**：**装** Electron **应**用**——**简**单**。</span><br><span class="line">- **PI-Desktop**：**装** **Rust** + ** Electron**——**中**等**。</span><br><span class="line">- **llm_wiki**：**装** **npm** ** + ** LanceDB**——**中**等**。</span><br><span class="line">- **ai-memory**：**装** **Rust** **toolchain**——**高**。</span><br><span class="line">- **NOMAD**：**装** **Docker** ** + ** **100 GB** **硬**盘**——**高**。</span><br><span class="line"></span><br><span class="line">** "**准**入**高** "**意**味**着** "**更**多** **功**能** + ** **更**稳** **的** ** "**。</span><br><span class="line"></span><br><span class="line">**之**前**发**过**的** **项**目** **栈** **是** ** "**简**单** = ** OpenWhispr** **，** 中**等** = ** llm_wiki** + ** **PI-Desktop**，**复**杂** = ** **ai-memory** ** + ** **NOMAD** "**——**这** **是** ** "**本**地** **AI** **工**具** **栈** **的** **准**入**门**槛** **梯**度**。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">## 十八**、**几**条** **对** ** "**之**前** **发**过**的** **项**目** **的** ** "**之**前** **评**估** "** </span><br><span class="line"></span><br><span class="line">**之**前**发**过**的** **项**目** **栈**——**我** **之**前** **的** **评**估**：</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+<p>2024 Q4：Claude Code**（<strong>闭</strong>源<strong>商</strong>业 **）—— <strong>云</strong> <strong> AI</strong> <strong> 工</strong>具 ** <strong>代</strong>表 **。<br>2025 Q1：opencode**、<strong>PI-Desktop</strong>、<strong>agent-native</strong>—— <strong>本</strong>地 ** <strong>AI</strong> <strong> 工</strong>具 ** <strong>开</strong>始 **。<br>2025 Q2：ponytail**、<strong>ECC</strong>、<strong>mattpocock/skills</strong>——<strong>Skill</strong> <strong> 库</strong> <strong>成</strong>熟 **。<br>2025 Q3：context-mode**、<strong>teamai-cli</strong>——<strong>Context</strong> ** + ** <strong>Coord</strong>ination** <strong>层</strong> <strong>成</strong>熟 **。<br>2025 Q4：OpenWhispr**、<strong>gods-eye-view</strong>、<strong>HyperFrames</strong>—— <strong>输</strong>入 ** + ** <strong>可</strong>视<strong>化</strong>层 ** <strong>成</strong>熟 **。<br>2026 Q1：MathModelAgent**—— <strong>垂</strong>直 ** <strong>工</strong>具 ** <strong>成</strong>熟 **。<br>2026 Q2：llm_wiki**、<strong>ai-memory</strong>—— <strong>沉</strong>淀 ** + ** <strong>长</strong>期<strong>记</strong>忆<strong>层</strong> <strong>成</strong>熟 **。<br>2026 Q3：** <strong>Cua</strong>、<strong>BrowserSkill</strong>—— <strong>真</strong>实 ** <strong>世</strong>界 ** ** + ** <strong>真</strong>实 ** <strong>浏</strong>览<strong>器</strong>层 ** <strong>成</strong>熟 **。<br>2026 Q4（<strong>之</strong>前 ** <strong>在</strong>这<strong>里</strong>）：** NOMAD**—— <strong>离</strong>线 ** <strong>知</strong>识<strong>中</strong>心 ** <strong>层</strong> <strong>成</strong>熟 **。</p>
+<pre><code>
+**之**前**发**过**的** **项**目** **栈** **走**到** **了** 2026 Q4**——** **5** **个** **季度** **填**齐**了** **大**部**分** **层**。
+
+**之**前** **没**有**的** **层**：
+
+- **物**理** **AI** **工**具** **（** **让** AI **操**控** **机**械** **臂**、** 无人机**、** IoT** **设**备**）**——**还** **没**有**项**目**
+- **情**感** **AI** **工**具**（** **情**绪**识**别**、** 个**性**化** **陪**伴**）——**还** **没**有**项**目**
+
+**之**前** **未**来** **3 **个** **季**度**——**可**能** **补**齐**。
+
+---
+
+## 十九**、**几**条** **最**后**的** ** "**个**人** **AI** **工**具** ** "** **搭**建** "**建**议**
+
+**之**前**发**过**的** **所**有** **项**目**——**如**果** **你** **2026 **年**开**始**搭** ** "**个**人** **AI** **工**具** "**，**我**的** **建**议**：
+
+### **1. **先** **装** **入**门**级** **的**
+
+- **OpenWhispr**——**装** **Electron** **应**用**。
+- **本**地** **Ollama**——**装** **Ollama** ** + ** **跑** **Llama 3.2 3B** **试**。
+
+**入**门**级** **的** ** "**快**速** **见**效** "**。
+
+### **2. **中**等** **加** **长**期**记**忆**
+
+- **llm_wiki**——**装** **npm** ** + ** LanceDB** ** + ** **Obsidian** **同**步**。
+- **ai-memory**——**装** **Rust** **toolchain** ** + ** **跑** **ai-memory** **服**务**器**。
+
+**中**等** **的** ** "**知**识** **沉**淀** "**。
+
+### **3. **高**级** **加** **本**地** AI** **栈**
+
+- **PI-Desktop**——**装** **Rust** ** + ** Electron** ** + ** **本**地** **Ollama**。
+- **NOMAD**——**装** **Docker** ** + ** **100 GB** **硬**盘**。
+- **agent-native**——**用** **pnpm** ** + ** **本**地** **Ollama**。
+
+**高**级** **的** ** "**完**整** **工**具** **栈** "**。
+
+**之**前**发**过**的** **项**目** **走** **之**前**的** ** "**梯**度** "**——**你** **按** **自**己** **的** **准**入** ** + ** **需**求** **选**。
+
+---
+
+## 二十**、**最**后**一**段**
+
+**写**到**这**里**做** **完**整**收**尾**。
+
+**之**前**发**过**的** **所**有** **项**目**——**之**前** **是** ** "**云** ** + ** **本**地** "**双**栈**的** **个**人** **AI** **工**具** **栈**。 **之**前** **发**过**的** **项**目** **覆**盖** **了** **大**部**分** **层**。
+
+**之**前** **未**来** **的** **3 **个** **季**度**——** **可**会** **补**齐**：
+
+- **物**理** **AI** **工**具**（** **机**械** **臂**、** 无人机**、** IoT** **）**
+- **情**感** **AI** **工**具**（** **情**绪**识**别**、** 个**性**化** **陪**伴**）
+
+**之**前**发**过**的** **项**目** **都** **是** ** "**个**人** **AI** **工**具** "**——**之**前**发**过**的** **项**目** **是** "**之**前** **在** ** "** "** 个**人** **AI** **工**具** ** "**这**个** **赛**道**的** **代**表** **作**品**。
+
+**之**前**发**过**的** **项**目** ** + ** **之**前** **未**来** **3 **个** **季**度**——** ** "**个**人** **AI** **工**具** ** "**这**个** **赛**道**——** 之**前**发**过**的** **项**目** **是** **之**前** **赛**道**上** **的** **代**表**。
+
+**之**前**发**过**的** **项**目** **值** **装**——**之**前**发**过**的** **项**目** **是** ** "**个**人** **AI** **工**具** ** "**这**个** **赛**道**的** **代**表** **作**品**。
+
+项目**地**址**：**https**://**github**.**com**/Crosstalk-Solutions/**project-nomad**
+*
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/09/22/crosstalk-project-nomad-offline-first-knowledge-server/" title="Crosstalk-Solutions&#x2F;project-nomad：37.9k stars 的 &quot;离线优先知识 + 教育服务器&quot;，Wikipedia + Khan Academy + Ollama AI + 离线地图全套打包 Docker">https://www.daishengli.top/2026/09/22/crosstalk-project-nomad-offline-first-knowledge-server/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/project-nomad/" rel="tag"># project-nomad</a>
+              <a href="/tags/Crosstalk/" rel="tag"># Crosstalk</a>
+              <a href="/tags/Offline-First/" rel="tag"># Offline-First</a>
+              <a href="/tags/Knowledge/" rel="tag"># Knowledge</a>
+              <a href="/tags/Education/" rel="tag"># Education</a>
+              <a href="/tags/Wikipedia/" rel="tag"># Wikipedia</a>
+              <a href="/tags/Ollama/" rel="tag"># Ollama</a>
+              <a href="/tags/Self-Hosted/" rel="tag"># Self-Hosted</a>
+              <a href="/tags/Docker/" rel="tag"># Docker</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/21/akitaonrails-ai-memory-cross-agent-memory/" rel="prev" title="akitaonrails&#x2F;ai-memory：7.7k stars 的 AI 编码 agent 跨 harness 长期记忆，Rust 单 binary + git-backed markdown wiki + 零 LLM 默认 + 22 个 agent harness 共享">
+                  <i class="fa fa-angle-left"></i> akitaonrails/ai-memory：7.7k stars 的 AI 编码 agent 跨 harness 长期记忆，Rust 单 binary + git-backed markdown wiki + 零 LLM 默认 + 22 个 agent harness 共享
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

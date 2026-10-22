@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="腾讯云开源的本地化 Agent 记忆框架，用符号化短期记忆 + 分层长期记忆的 4 层渐进式流水线，把 token 用量砍掉 61%、长任务成功率提升 52%，且零外部 API 依赖。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TencentDB Agent Memory：用 4 层渐进式流水线，给 AI Agent 装上 &quot;会分层的大脑&quot;">
+<meta property="og:url" content="https://www.daishengli.top/2026/07/12/tencentdb-agent-memory-4-tier-progressive-pipeline/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="腾讯云开源的本地化 Agent 记忆框架，用符号化短期记忆 + 分层长期记忆的 4 层渐进式流水线，把 token 用量砍掉 61%、长任务成功率提升 52%，且零外部 API 依赖。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-12T02:03:47.000Z">
+<meta property="article:modified_time" content="2026-10-22T06:56:22.932Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="开源工具">
+<meta property="article:tag" content="长期记忆">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="TencentDB">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/07/12/tencentdb-agent-memory-4-tier-progressive-pipeline/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/07/12/tencentdb-agent-memory-4-tier-progressive-pipeline/","path":"2026/07/12/tencentdb-agent-memory-4-tier-progressive-pipeline/","title":"TencentDB Agent Memory：用 4 层渐进式流水线，给 AI Agent 装上 \"会分层的大脑\""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>TencentDB Agent Memory：用 4 层渐进式流水线，给 AI Agent 装上 "会分层的大脑" | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">394</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">122</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TencentDB-Agent-Memory%EF%BC%9A%E7%94%A8-4-%E5%B1%82%E6%B8%90%E8%BF%9B%E5%BC%8F%E6%B5%81%E6%B0%B4%E7%BA%BF%EF%BC%8C%E7%BB%99-AI-Agent-%E8%A3%85%E4%B8%8A%E2%80%9D%E4%BC%9A%E5%88%86%E5%B1%82%E7%9A%84%E5%A4%A7%E8%84%91%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">TencentDB Agent Memory：用 4 层渐进式流水线，给 AI Agent 装上” 会分层的大脑”</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98%EF%BC%9A%E4%BD%A0%E7%9A%84-Agent-%E4%B8%BA%E4%BB%80%E4%B9%88%E2%80%9D%E8%AE%B0%E4%B8%8D%E4%BD%8F%E2%80%9D%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">一、一个问题：你的 Agent 为什么” 记不住”？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%EF%BC%9A%E8%85%BE%E8%AE%AF%E4%BA%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%81%9A%E8%BF%99%E4%B8%AA%EF%BC%9F"><span class="nav-number">1.2.</span> <span class="nav-text">二、项目背景：腾讯云为什么做这个？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%EF%BC%9A4-%E5%B1%82%E6%B8%90%E8%BF%9B%E5%BC%8F%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="nav-number">1.3.</span> <span class="nav-text">三、核心功能：4 层渐进式流水线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%9F%AD%E6%9C%9F%E8%AE%B0%E5%BF%86%E5%88%86%E5%B1%82%EF%BC%9Araw-%E2%86%92-summary-%E2%86%92-mermaid-canvas"><span class="nav-number">1.3.1.</span> <span class="nav-text">1. 短期记忆分层：raw → summary → mermaid canvas</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E5%88%86%E5%B1%82%EF%BC%9AL0-%E2%86%92-L1-%E2%86%92-L2-%E2%86%92-L3-%E8%AF%AD%E4%B9%89%E9%87%91%E5%AD%97%E5%A1%94"><span class="nav-number">1.3.2.</span> <span class="nav-text">2. 长期记忆分层：L0 → L1 → L2 → L3 语义金字塔</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%AC%A6%E5%8F%B7%E5%8C%96%E8%AE%B0%E5%BF%86%EF%BC%9AMermaid-Canvas"><span class="nav-number">1.3.3.</span> <span class="nav-text">3. 符号化记忆：Mermaid Canvas</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%BC%82%E6%9E%84%E5%AD%98%E5%82%A8%EF%BC%9A%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%8C%E9%A1%B6%E5%B1%82-Markdown"><span class="nav-number">1.3.4.</span> <span class="nav-text">4. 异构存储：底层数据库，顶层 Markdown</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E4%BB%8E-0-%E8%B7%91%E8%B5%B7%E6%9D%A5"><span class="nav-number">1.4.</span> <span class="nav-text">四、实战示例：从 0 跑起来</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC-1-%E6%AD%A5%EF%BC%9A%E8%A3%85%E6%8F%92%E4%BB%B6"><span class="nav-number">1.4.1.</span> <span class="nav-text">第 1 步：装插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC-2-%E6%AD%A5%EF%BC%9A%E5%90%AF%E7%94%A8%EF%BC%88%E9%9B%B6%E9%85%8D%E7%BD%AE%EF%BC%89"><span class="nav-number">1.4.2.</span> <span class="nav-text">第 2 步：启用（零配置）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC-3-%E6%AD%A5%EF%BC%9A%E5%BC%80%E5%90%AF%E7%9F%AD%E6%9C%9F%E5%8E%8B%E7%BC%A9%EF%BC%88v0-3-4-%EF%BC%89"><span class="nav-number">1.4.3.</span> <span class="nav-text">第 3 步：开启短期压缩（v0.3.4+）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC-4-%E6%AD%A5%EF%BC%9A%E6%B3%A8%E5%86%8C-slot-%E5%BA%94%E7%94%A8-runtime-patch"><span class="nav-number">1.4.4.</span> <span class="nav-text">第 4 步：注册 slot + 应用 runtime patch</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81Benchmark-%E6%95%B0%E5%AD%97%EF%BC%9A%E6%98%AF%E7%9C%9F%E7%9A%84%E8%BF%98%E6%98%AF%E5%90%B9%E7%9A%84%EF%BC%9F"><span class="nav-number">1.5.</span> <span class="nav-text">五、Benchmark 数字：是真的还是吹的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E9%99%90%E5%88%B6"><span class="nav-number">1.6.</span> <span class="nav-text">六、适用场景与限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88%E7%94%A8"><span class="nav-number">1.6.1.</span> <span class="nav-text">适合用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88%E7%94%A8"><span class="nav-number">1.6.2.</span> <span class="nav-text">不适合用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%B2%E7%9F%A5%E8%BE%B9%E7%95%8C"><span class="nav-number">1.6.3.</span> <span class="nav-text">已知边界</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%BB%E7%BB%93%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%BB%B6%E4%BA%8B%E9%87%8D%E8%A6%81%EF%BC%9F"><span class="nav-number">1.7.</span> <span class="nav-text">七、总结：为什么这件事重要？</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">122</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">394</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/07/12/tencentdb-agent-memory-4-tier-progressive-pipeline/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="TencentDB Agent Memory：用 4 层渐进式流水线，给 AI Agent 装上 &quot;会分层的大脑&quot; | 小戴的网络日志">
+      <meta itemprop="description" content="腾讯云开源的本地化 Agent 记忆框架，用符号化短期记忆 + 分层长期记忆的 4 层渐进式流水线，把 token 用量砍掉 61%、长任务成功率提升 52%，且零外部 API 依赖。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          TencentDB Agent Memory：用 4 层渐进式流水线，给 AI Agent 装上 "会分层的大脑"
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-12 10:03:47" itemprop="dateCreated datePublished" datetime="2026-07-12T10:03:47+08:00">2026-07-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">腾讯云开源的本地化 Agent 记忆框架，用符号化短期记忆 + 分层长期记忆的 4 层渐进式流水线，把 token 用量砍掉 61%、长任务成功率提升 52%，且零外部 API 依赖。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="TencentDB-Agent-Memory：用-4-层渐进式流水线，给-AI-Agent-装上”会分层的大脑”"><a href="#TencentDB-Agent-Memory：用-4-层渐进式流水线，给-AI-Agent-装上”会分层的大脑”" class="headerlink" title="TencentDB Agent Memory：用 4 层渐进式流水线，给 AI Agent 装上”会分层的大脑”"></a>TencentDB Agent Memory：用 4 层渐进式流水线，给 AI Agent 装上” 会分层的大脑”</h1><blockquote>
+<p><strong>本文 GitHub 项目地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/TencentCloud/TencentDB-Agent-Memory">TencentCloud/TencentDB-Agent-Memory</a><br>今日 stars：8.3k・最新版本 v0.3.6（2026-05-28）・License: MIT<br>今日推荐理由：在大模型 token 成本高企、Agent 长任务跑不动的当下，它用一套” 符号化 + 分层” 的极简设计，把 token 用量打到原来的 39%，并把长任务通过率拉到 1.5 倍，且完全本地化。</p>
+</blockquote>
+<h2 id="一、一个问题：你的-Agent-为什么”记不住”？"><a href="#一、一个问题：你的-Agent-为什么”记不住”？" class="headerlink" title="一、一个问题：你的 Agent 为什么”记不住”？"></a>一、一个问题：你的 Agent 为什么” 记不住”？</h2><p>你肯定碰到过这种场景：</p>
+<p>让 Agent 帮你做”50 个连续 SWE-bench 任务”，它跑到第 30 个时，已经完全忘了第 5 个任务里你告诉过它的” 不要改这一行”；或者它在第 10 轮的工具调用里，把前面 9 轮的原始日志原封不动塞进上下文，结果单次调用光日志就消耗了 1 万 token，推理时延飙到 8 秒，账单爆炸；再或者你想让它记住” 我是 Go 后端，习惯用 clean architecture，测试用 testify”，它只在第 1 轮记住了，到第 5 轮又问” 你用什么技术栈”。</p>
+<p>这些问题的本质，是<strong>当前主流 Agent 框架的” 记忆” 都太原始了</strong> —— 要么把历史日志暴力塞进 context（成本爆炸、命中靠运气），要么用一个扁平向量库做语义检索（召回质量差、无法处理” 我要的是那一轮的那一行” 这种精确问题）。一句话：<strong>它们都在用” 图书馆索引” 的方式去管 Agent 的记忆，而不是用” 人脑分层记忆” 的方式</strong>。</p>
+<p>腾讯云开源的 <strong>TencentDB Agent Memory</strong> 给出了一个截然不同的解法：<strong>用 4 层渐进式流水线（4-tier progressive pipeline）让 Agent 拥有” 会分层的大脑”</strong>。本文就把它拆开讲清楚。</p>
+<h2 id="二、项目背景：腾讯云为什么做这个？"><a href="#二、项目背景：腾讯云为什么做这个？" class="headerlink" title="二、项目背景：腾讯云为什么做这个？"></a>二、项目背景：腾讯云为什么做这个？</h2><p><strong>TencentDB Agent Memory</strong> 最早是为了解决 <strong>OpenClaw</strong>（腾讯内部一个长程任务执行框架）上的” 上下文膨胀 + 长期偏好丢失” 问题。它的设计目标写得很直白：</p>
+<blockquote>
+<p><strong>Memory is not about hoarding everything in the AI — it is about sparing humans from having to repeat themselves.</strong><br><strong>Let the Agent remember what should be remembered, so people can focus on judgment, creation, and work that truly matters.</strong></p>
+</blockquote>
+<p>翻译过来：记忆的目的不是把一切塞进 AI 上下文，而是<strong>让人类不用反复说同一句话</strong>。它同时拒绝两个极端：</p>
+<ol>
+<li><strong>暴力堆历史</strong>：把每一轮工具调用的完整日志都喂进 prompt；</li>
+<li><strong>不可逆的总结压缩</strong>：用 LLM 把 100 轮对话总结成 1 段，丢掉细节。</li>
+</ol>
+<p>它要的是<strong>第三种方案：分层 + 符号化</strong> —— 把” 原文” 和” 结构” 分开存，把” 细节” 和” 摘要” 分层管理，Agent 既能用几百 token 把握全局，又能用 <code>node_id</code> 在毫秒内钻回原始证据。</p>
+<h2 id="三、核心功能：4-层渐进式流水线"><a href="#三、核心功能：4-层渐进式流水线" class="headerlink" title="三、核心功能：4 层渐进式流水线"></a>三、核心功能：4 层渐进式流水线</h2><p>整个系统由两大支柱构成 ——<strong>Memory Layering（分层）</strong> 和 <strong>Symbolic Memory（符号化）</strong>—— 共同形成 4 层结构。</p>
+<h3 id="1-短期记忆分层：raw-→-summary-→-mermaid-canvas"><a href="#1-短期记忆分层：raw-→-summary-→-mermaid-canvas" class="headerlink" title="1. 短期记忆分层：raw → summary → mermaid canvas"></a>1. 短期记忆分层：raw → summary → mermaid canvas</h3><p>Agent 的工作记忆（working memory）按三层切：</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>形态</th>
+<th>作用</th>
+<th>存储位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>底层</strong></td>
+<td>原始工具输出（<code>refs/*.md</code>）</td>
+<td>保留完整证据</td>
+<td>数据库 / 文件系统</td>
+</tr>
+<tr>
+<td><strong>中层</strong></td>
+<td>步骤级摘要（<code>jsonl</code>）</td>
+<td>压缩冗余、保留时序</td>
+<td>数据库</td>
+</tr>
+<tr>
+<td><strong>顶层</strong></td>
+<td> Mermaid 状态图（state machine）</td>
+<td>几百 token 把握全局</td>
+<td> Markdown 文件</td>
+</tr>
+</tbody></table>
+<p>Agent 推理时<strong>只看顶层 Mermaid 图</strong>（几百 token），出错时通过 <code>node_id</code> 一键钻回底层原始日志。这就是论文里常说的 <strong>“Progressive Disclosure”（渐进式披露）</strong> —— 上下文按需展开，不一次性倾倒。</p>
+<h3 id="2-长期记忆分层：L0-→-L1-→-L2-→-L3-语义金字塔"><a href="#2-长期记忆分层：L0-→-L1-→-L2-→-L3-语义金字塔" class="headerlink" title="2. 长期记忆分层：L0 → L1 → L2 → L3 语义金字塔"></a>2. 长期记忆分层：L0 → L1 → L2 → L3 语义金字塔</h3><p>长期偏好按语义粒度分为 4 层（<strong>Semantic Pyramid</strong>）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">L3 Persona   ←  用户画像：技术栈、风格、习惯（每天都会用）</span><br><span class="line">L2 Scenario  ←  场景块：某个具体任务的处理流程</span><br><span class="line">L1 Atom      ←  原子事实：一条独立的知识点</span><br><span class="line">L0 Conversation ← 原始对话</span><br></pre></td></tr></tbody></table></figure>
+
+<p>日常推荐走 L3（” 你是 Go 后端”），需要细节时钻 L1（” 上次那个 webhook 重试逻辑是怎么写的”），可追溯到 L0 原文。<strong>这是一个完全可审计的金字塔，每一层都保留通往下一层的精确指针</strong>。</p>
+<h3 id="3-符号化记忆：Mermaid-Canvas"><a href="#3-符号化记忆：Mermaid-Canvas" class="headerlink" title="3. 符号化记忆：Mermaid Canvas"></a>3. 符号化记忆：Mermaid Canvas</h3><p>这是整个系统最具特色的设计。<strong>Mermaid 状态图</strong> 是一种” 对 LLM 极友好” 的高密度符号语言：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">  A[用户提问] --&gt; B{是否需要工具?}</span><br><span class="line">  B --&gt;|是| C[调用搜索]</span><br><span class="line">  B --&gt;|否| D[直接回答]</span><br><span class="line">  C --&gt; E[解析结果]</span><br><span class="line">  E --&gt; F{信息够?}</span><br><span class="line">  F --&gt;|否| C</span><br><span class="line">  F --&gt;|是| G[生成答案]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>相比自然语言，Mermaid 在表达<strong>状态转移、流程分支、节点关系</strong>时<strong>密度高 5-10 倍</strong>。把 Agent 任务流画成 Mermaid 后，几十个 token 就能装下原本需要几千 token 描述的流程。配合 <code>node_id</code> 定位，Agent 能用极小成本保持” 我刚才在哪个状态、接下来该跳到哪个状态”。</p>
+<h3 id="4-异构存储：底层数据库，顶层-Markdown"><a href="#4-异构存储：底层数据库，顶层-Markdown" class="headerlink" title="4. 异构存储：底层数据库，顶层 Markdown"></a>4. 异构存储：底层数据库，顶层 Markdown</h3><ul>
+<li><strong>底层</strong>（事实、日志、追踪）→ SQLite + sqlite-vec 等数据库，支持全文检索；</li>
+<li><strong>顶层</strong>（人设、场景、Canvas）→ 人读得懂的 Markdown 文件，方便人工审查和二次编辑。</li>
+</ul>
+<p>设计哲学很清晰：<strong>下层保证据，上层保结构</strong>。</p>
+<h2 id="四、实战示例：从-0-跑起来"><a href="#四、实战示例：从-0-跑起来" class="headerlink" title="四、实战示例：从 0 跑起来"></a>四、实战示例：从 0 跑起来</h2><p>下面用 <strong>OpenClaw</strong> 跑一遍最简单的 demo（<strong>默认走本地 SQLite + sqlite-vec，零外部 API 依赖</strong>）。</p>
+<h3 id="第-1-步：装插件"><a href="#第-1-步：装插件" class="headerlink" title="第 1 步：装插件"></a>第 1 步：装插件</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openclaw plugins install @tencentdb-agent-memory/memory-tencentdb</span><br><span class="line">openclaw gateway restart</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="第-2-步：启用（零配置）"><a href="#第-2-步：启用（零配置）" class="headerlink" title="第 2 步：启用（零配置）"></a>第 2 步：启用（零配置）</h3><p>编辑 <code>~/.openclaw/openclaw.json</code>：</p>
+<figure class="highlight jsonc"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"plugins"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"memory-tencentdb"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"enabled"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="第-3-步：开启短期压缩（v0-3-4-）"><a href="#第-3-步：开启短期压缩（v0-3-4-）" class="headerlink" title="第 3 步：开启短期压缩（v0.3.4+）"></a>第 3 步：开启短期压缩（v0.3.4+）</h3><figure class="highlight jsonc"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"plugins"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"memory-tencentdb"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"config"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">        <span class="attr">"offload"</span><span class="punctuation">:</span> <span class="punctuation">{</span> <span class="attr">"enabled"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span> <span class="punctuation">}</span></span><br><span class="line">      <span class="punctuation">}</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="第-4-步：注册-slot-应用-runtime-patch"><a href="#第-4-步：注册-slot-应用-runtime-patch" class="headerlink" title="第 4 步：注册 slot + 应用 runtime patch"></a>第 4 步：注册 slot + 应用 runtime patch</h3><figure class="highlight jsonc"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"plugins"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"slots"</span><span class="punctuation">:</span> <span class="punctuation">{</span> <span class="attr">"contextEngine"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"memory-tencentdb"</span><span class="punctuation">]</span> <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash scripts/openclaw-after-tool-call-messages.patch.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>至此 Agent 已经具备 4 层记忆。<strong>全部数据存本地，不发任何外部 API</strong>—— 这点对企业内网部署至关重要。</p>
+<p>如果你用 Hermes，可以直接跑官方 Docker 镜像（<code>hermes-agent + memory_tencentdb</code> 一体化打包，默认 8420 端口），named volume 持久化数据。</p>
+<h2 id="五、Benchmark-数字：是真的还是吹的？"><a href="#五、Benchmark-数字：是真的还是吹的？" class="headerlink" title="五、Benchmark 数字：是真的还是吹的？"></a>五、Benchmark 数字：是真的还是吹的？</h2><p>这是最硬核的部分 —— 腾讯在多个长程任务基准上跑了对比，<strong>结果非常显著</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>记忆能力</th>
+<th>基准</th>
+<th> OpenClaw 原生</th>
+<th>接入本插件后</th>
+<th>成功率 Δ</th>
+<th>Token 用量 Δ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 短期</td>
+<td> WideSearch</td>
+<td>33%</td>
+<td><strong>50%</strong></td>
+<td><strong>+51.52%</strong></td>
+<td><strong>−61.38%</strong></td>
+</tr>
+<tr>
+<td> 短期</td>
+<td> SWE-bench（50 连续任务）</td>
+<td>58.4%</td>
+<td><strong>64.2%</strong></td>
+<td><strong>+9.93%</strong></td>
+<td><strong>−33.09%</strong></td>
+</tr>
+<tr>
+<td> 短期</td>
+<td> AA-LCR</td>
+<td>44.0%</td>
+<td><strong>47.5%</strong></td>
+<td><strong>+7.95%</strong></td>
+<td><strong>−30.98%</strong></td>
+</tr>
+<tr>
+<td> 长期</td>
+<td> PersonaMem</td>
+<td>48%</td>
+<td><strong>76%</strong></td>
+<td><strong>+59%</strong></td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p><strong>两个亮点</strong>：</p>
+<ol>
+<li><strong>WideSearch 上 token 用量从 2.2 亿砍到 8564 万（−61%），成功率从 33% 拉到 50%（+52%）</strong>—— 这是非常戏剧性的提升，因为它证明” 分层 + 符号化” 在复杂多步搜索任务上同时解决了<strong>成本</strong>和<strong>质量</strong>两个问题。</li>
+<li><strong>PersonaMem 从 48% 拉到 76%（+59%）</strong>—— 长期个性化记忆一直是 Agent 的痛点，能在标准基准上拿到这个数字，说明 4 层金字塔的人设提取是真实有效的。</li>
+</ol>
+<p>注意：这些数据是在<strong>连续 50 轮长程会话</strong>下测的，不是单轮隔离开来测 —— 这才是真实生产场景。</p>
+<h2 id="六、适用场景与限制"><a href="#六、适用场景与限制" class="headerlink" title="六、适用场景与限制"></a>六、适用场景与限制</h2><h3 id="适合用"><a href="#适合用" class="headerlink" title="适合用"></a>适合用</h3><ul>
+<li><strong>长程任务执行</strong>：连续 10 轮以上的代码生成、运维操作、数据分析；</li>
+<li><strong>多轮个性化助手</strong>：每天会用的写作助手、编程助手、客服机器人，需要记住用户偏好；</li>
+<li><strong>企业内网 / 数据敏感场景</strong>：完全本地化，没有 token 外发风险；</li>
+<li><strong>成本敏感场景</strong>：WideSearch 这类高 token 任务用本插件能直接砍掉一半以上费用。</li>
+</ul>
+<h3 id="不适合用"><a href="#不适合用" class="headerlink" title="不适合用"></a>不适合用</h3><ul>
+<li><strong>单轮问答 / 一次性 RAG</strong>：用本插件属于杀鸡用牛刀，普通 RAG 即可；</li>
+<li><strong>非 LLM 的纯规则系统</strong>：用不到记忆能力；</li>
+<li><strong>超大规模分布式协作</strong>（100+ Agent）：当前实现更偏向单 Agent 长期记忆，多 Agent 共享记忆需要扩展。</li>
+</ul>
+<h3 id="已知边界"><a href="#已知边界" class="headerlink" title="已知边界"></a>已知边界</h3><ul>
+<li>当前依赖 OpenClaw / Hermes 框架（v0.3.6），其他框架接入需要自己写适配层；</li>
+<li>短期压缩对<strong>结构化任务</strong>（代码、表格）效果好，对<strong>长篇自然语言对话</strong>压缩率略低；</li>
+<li>4 层之间的指针维护需要保证一致性，目前靠文件系统 + 数据库联合约束。</li>
+</ul>
+<h2 id="七、总结：为什么这件事重要？"><a href="#七、总结：为什么这件事重要？" class="headerlink" title="七、总结：为什么这件事重要？"></a>七、总结：为什么这件事重要？</h2><p><strong>TencentDB Agent Memory 不是又一套” 向量记忆 + RAG”—— 它重新定义了 Agent 记忆的物理结构。</strong></p>
+<p>它做的最关键的一步，是<strong>把” 原文” 和” 结构” 分开存，把” 细节” 和” 摘要” 分层管</strong>。这其实和人脑的记忆机制是高度同构的：人不会把 10 年前的所有对话原封不动塞进工作记忆，而是记住” 那张图、那个流程、那个人说过的那句话”——TencentDB 在做的事情，本质上是在工程上<strong>复刻了人脑的分层记忆</strong>。</p>
+<p>从更宏观的角度看，这是 Agent 基础设施层的关键进化。<strong>未来 12 个月里，所有严肃的 Agent 框架都会引入某种形式的” 分层 + 符号化” 记忆</strong> —— 因为大家都会撞上 token 成本墙和长任务可靠性墙。腾讯云这次把方案直接开源 + MIT 协议，相当于给整个行业打了个样板。</p>
+<p>如果你正在做 Agent 产品，强烈建议花 1 小时把 <a target="_blank" rel="noopener" href="https://github.com/TencentCloud/TencentDB-Agent-Memory">README</a> 读一遍 —— <strong>它可能帮你省下未来 6 个月的探索时间</strong>。</p>
+<hr>
+<p><em>延伸阅读</em>：</p>
+<ul>
+<li>仓库地址：<a target="_blank" rel="noopener" href="https://github.com/TencentCloud/TencentDB-Agent-Memory">github.com/TencentCloud/TencentDB-Agent-Memory</a></li>
+<li> 配套论文：Mermaid Canvas 符号化 + Semantic Pyramid 4 层架构</li>
+<li>相关项目：<a target="_blank" rel="noopener" href="https://github.com/topoteretes/cognee">Cognee</a>、<a target="_blank" rel="noopener" href="https://github.com/letta-ai/letta">Letta</a>、<a target="_blank" rel="noopener" href="https://github.com/mem0ai/mem0">Mem0</a> —— 横向对比可看记忆层架构差异</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/07/12/tencentdb-agent-memory-4-tier-progressive-pipeline/" title="TencentDB Agent Memory：用 4 层渐进式流水线，给 AI Agent 装上 &quot;会分层的大脑&quot;">https://www.daishengli.top/2026/07/12/tencentdb-agent-memory-4-tier-progressive-pipeline/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/" rel="tag"># 开源工具</a>
+              <a href="/tags/%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86/" rel="tag"># 长期记忆</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/TencentDB/" rel="tag"># TencentDB</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/11/ag-ui-protocol-agent-user-interaction-frontend-bridge/" rel="prev" title="AG-UI 协议：把 AI Agent 接进前端应用的 &quot;最后一公里&quot;">
+                  <i class="fa fa-angle-left"></i> AG-UI 协议：把 AI Agent 接进前端应用的 "最后一公里"
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/13/alibaba-page-agent-embedded-js-gui-agent/" rel="next" title="alibaba&#x2F;page-agent：把 AI 操盘手塞进网页里，一段 JS 就能让用户「说人话」操作 UI">
+                  alibaba/page-agent：把 AI 操盘手塞进网页里，一段 JS 就能让用户「说人话」操作 UI <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
