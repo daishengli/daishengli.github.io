@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="deepseek-ai&#x2F;dsh-superagent-prototype 是 DeepSeek Harness 团队 2026 年 10 月 31 日开源的研究原型，两天半冲到 7,182 stars、730 forks，MIT 协议，主语言 TypeScript。它不是又一个「你说一句它答一句」的聊天式编程代理，而是一个面向单个 GitHub 仓库的主动型代理：监听 GitHub 与可选的飞书事">
+<meta property="og:type" content="article">
+<meta property="og:title" content="deepseek-ai&#x2F;dsh-superagent-prototype：7,182 stars 的主动型 GitHub 代理，把「注意力」当成唯一预算">
+<meta property="og:url" content="https://www.daishengli.top/2026/11/02/deepseek-dsh-superagent-proactive-github-agent/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="deepseek-ai&#x2F;dsh-superagent-prototype 是 DeepSeek Harness 团队 2026 年 10 月 31 日开源的研究原型，两天半冲到 7,182 stars、730 forks，MIT 协议，主语言 TypeScript。它不是又一个「你说一句它答一句」的聊天式编程代理，而是一个面向单个 GitHub 仓库的主动型代理：监听 GitHub 与可选的飞书事">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-02T01:30:00.000Z">
+<meta property="article:modified_time" content="2026-11-04T00:05:40.848Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="自动化">
+<meta property="article:tag" content="TypeScript">
+<meta property="article:tag" content="dsh-superagent-prototype">
+<meta property="article:tag" content="deepseek-ai">
+<meta property="article:tag" content="Proactive Agent">
+<meta property="article:tag" content="GitHub">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/11/02/deepseek-dsh-superagent-proactive-github-agent/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/11/02/deepseek-dsh-superagent-proactive-github-agent/","path":"2026/11/02/deepseek-dsh-superagent-proactive-github-agent/","title":"deepseek-ai/dsh-superagent-prototype：7,182 stars 的主动型 GitHub 代理，把「注意力」当成唯一预算"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>deepseek-ai/dsh-superagent-prototype：7,182 stars 的主动型 GitHub 代理，把「注意力」当成唯一预算 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">419</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">128</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%88%91%E6%83%B3%E8%A7%A3%E5%86%B3%E7%9A%84%E5%85%B6%E5%AE%9E%E6%98%AF%E3%80%8C%E6%B3%A8%E6%84%8F%E5%8A%9B%E3%80%8D%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">一、我想解决的其实是「注意力」问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">二、它是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%9A%E6%8A%8A%E3%80%8C%E8%81%8A%E5%A4%A9%E3%80%8D%E9%87%8D%E6%9E%84%E6%88%90%E3%80%8C%E5%B7%A5%E5%8D%95%E6%B5%81%E3%80%8D"><span class="nav-number">3.</span> <span class="nav-text">三、核心概念：把「聊天」重构成「工单流」</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%A0%E4%B8%AA%E8%AE%BE%E8%AE%A1%E4%B8%8A%E5%BE%88%E8%AE%B2%E7%A9%B6%E7%9A%84%E7%82%B9"><span class="nav-number">3.1.</span> <span class="nav-text">几个设计上很讲究的点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%8E%88%E6%9D%83%E6%A8%A1%E5%9E%8B%EF%BC%9A%E8%B0%81%E8%83%BD%E6%B4%BE%E6%B4%BB%EF%BC%8C%E8%83%BD%E6%B4%BE%E5%88%B0%E4%BB%80%E4%B9%88%E7%A8%8B%E5%BA%A6"><span class="nav-number">4.</span> <span class="nav-text">四、授权模型：谁能派活，能派到什么程度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E6%9D%A1%E8%B7%AF%E5%BE%84"><span class="nav-number">4.1.</span> <span class="nav-text">两条路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%BA%E5%BA%A6%E5%88%86%E7%BA%A7"><span class="nav-number">4.2.</span> <span class="nav-text">强度分级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%85%A5%E8%A1%A8"><span class="nav-number">4.3.</span> <span class="nav-text">准入表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E6%94%B6%E6%A8%A1%E5%BC%8F%EF%BC%9Aoff-observe-auto"><span class="nav-number">4.4.</span> <span class="nav-text">接收模式：off &#x2F;observe&#x2F;auto</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%96%E7%95%A5%E7%89%88%E6%9C%AC"><span class="nav-number">4.5.</span> <span class="nav-text">策略版本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%89%A7%E8%A1%8C%E6%A8%A1%E5%9E%8B%EF%BC%9A%E6%AF%8F%E4%B8%AA%E5%B7%A5%E5%8D%95%E4%B8%80%E4%B8%AA-Session%E3%80%81%E4%B8%80%E4%B8%AA%E7%9B%AE%E5%BD%95%E3%80%81%E4%B8%80%E6%9D%A1%E5%88%86%E6%94%AF"><span class="nav-number">5.</span> <span class="nav-text">五、执行模型：每个工单一个 Session、一个目录、一条分支</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%8D%95%E9%98%B6%E6%AE%B5"><span class="nav-number">5.1.</span> <span class="nav-text">工单阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E5%99%A8"><span class="nav-number">5.2.</span> <span class="nav-text">执行器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E4%BD%9C%E4%B8%9A%E5%92%8C-30-%E5%88%86%E9%92%9F%E4%B8%8A%E9%99%90"><span class="nav-number">5.3.</span> <span class="nav-text">后台作业和 30 分钟上限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91"><span class="nav-number">5.4.</span> <span class="nav-text">并发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E5%8F%98%E9%87%8F"><span class="nav-number">5.5.</span> <span class="nav-text">执行变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E8%BE%B9%E7%95%8C%EF%BC%9A%E8%AF%B4%E5%AE%9E%E8%AF%9D%E7%9A%84%E9%82%A3%E7%A7%8D"><span class="nav-number">5.6.</span> <span class="nav-text">安全边界：说实话的那种</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%88%E5%B9%B6%E7%AD%96%E7%95%A5"><span class="nav-number">5.7.</span> <span class="nav-text">合并策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ticket-%E6%80%8E%E4%B9%88%E7%BB%93%E6%9D%9F"><span class="nav-number">5.8.</span> <span class="nav-text">Ticket 怎么结束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%B1%E8%B4%A5%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="nav-number">5.9.</span> <span class="nav-text">失败与恢复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%90%AF%E6%81%A2%E5%A4%8D"><span class="nav-number">5.10.</span> <span class="nav-text">重启恢复</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BF%EF%BC%9A%E5%8F%AA%E6%98%BE%E7%A4%BA%E9%9C%80%E8%A6%81%E4%BA%BA%E5%A4%84%E7%90%86%E7%9A%84%E4%BA%8B"><span class="nav-number">6.</span> <span class="nav-text">六、控制面板：只显示需要人处理的事</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AD%E4%B8%AA%E6%A0%87%E7%AD%BE%E9%A1%B5"><span class="nav-number">6.1.</span> <span class="nav-text">六个标签页</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E5%A4%84%E7%BB%86%E8%8A%82%EF%BC%9A%E5%8C%BA%E5%88%86%E3%80%8C%E4%BA%BA%E8%AF%9D%E3%80%8D%E5%92%8C%E3%80%8C%E5%86%85%E9%83%A8%E7%8A%B6%E6%80%81%E7%A0%81%E3%80%8D"><span class="nav-number">6.2.</span> <span class="nav-text">一处细节：区分「人话」和「内部状态码」</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">7.</span> <span class="nav-text">七、快速上手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6"><span class="nav-number">7.1.</span> <span class="nav-text">前置条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">7.2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">7.3.</span> <span class="nav-text">机器配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%81%9C"><span class="nav-number">7.4.</span> <span class="nav-text">启停</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%99%E6%AF%8F%E4%B8%AA-Ticket-%E5%87%86%E5%A4%87-checkout"><span class="nav-number">7.5.</span> <span class="nav-text">给每个 Ticket 准备 checkout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%95%E4%B8%80%E4%B8%8B"><span class="nav-number">7.6.</span> <span class="nav-text">试一下</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E6%95%B4%E4%B8%AA%E5%AE%89%E8%A3%85%E6%B5%81%E7%A8%8B%E6%98%AF%E3%80%8C%E8%AE%A9-agent-%E5%B8%AE%E4%BD%A0%E8%A3%85%E3%80%8D"><span class="nav-number">8.</span> <span class="nav-text">八、整个安装流程是「让 agent 帮你装」</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E6%BA%90%E7%A0%81%E7%BB%93%E6%9E%84"><span class="nav-number">9.</span> <span class="nav-text">九、源码结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Engine-%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">9.1.</span> <span class="nav-text">Engine 的设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E6%96%B9%E5%90%91"><span class="nav-number">9.2.</span> <span class="nav-text">依赖方向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%9A%E8%AF%9D%E5%B7%A5%E5%85%B7"><span class="nav-number">9.3.</span> <span class="nav-text">会话工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%98%AF%E6%96%87%E4%BB%B6%EF%BC%8C%E4%B8%8D%E6%98%AF%E4%BB%A3%E7%A0%81"><span class="nav-number">9.4.</span> <span class="nav-text">提示词是文件，不是代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81Skills%EF%BC%9A%E8%AE%A9-worker-%E7%9F%A5%E9%81%93%E6%80%8E%E4%B9%88%E8%AF%BB-GitHub"><span class="nav-number">10.</span> <span class="nav-text">十、Skills：让 worker 知道怎么读 GitHub</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%92%8C%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E6%AF%94"><span class="nav-number">11.</span> <span class="nav-text">十一、和同类项目比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94-Devin-Cursor-Background-Agent"><span class="nav-number">11.1.</span> <span class="nav-text">对比 Devin &#x2F; Cursor Background Agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94-OpenHands-SWE-agent-%E8%BF%99%E7%B1%BB%E7%A0%94%E7%A9%B6%E5%9E%8B%E6%A1%86%E6%9E%B6"><span class="nav-number">11.2.</span> <span class="nav-text">对比 OpenHands &#x2F; SWE-agent 这类研究型框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94-GitHub-%E8%87%AA%E5%B7%B1%E7%9A%84-Copilot-Workspace-Coding-Agent"><span class="nav-number">11.3.</span> <span class="nav-text">对比 GitHub 自己的 Copilot Workspace &#x2F; Coding Agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E5%90%84%E7%B1%BB%E3%80%8C%E8%87%AA%E6%89%98%E7%AE%A1-Claude-Code-Codex%E3%80%8D%E5%B0%81%E8%A3%85"><span class="nav-number">11.4.</span> <span class="nav-text">对比各类「自托管 Claude Code &#x2F; Codex」封装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94-n8n-Zapier-%E8%BF%99%E7%B1%BB%E5%B7%A5%E4%BD%9C%E6%B5%81%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="nav-number">11.5.</span> <span class="nav-text">对比 n8n &#x2F; Zapier 这类工作流自动化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94-%E5%90%84%E7%B1%BB-multi-agent-%E7%BC%96%E6%8E%92%E6%A1%86%E6%9E%B6%EF%BC%88LangGraph%E3%80%81AutoGen%E3%80%81CrewAI%EF%BC%89"><span class="nav-number">11.6.</span> <span class="nav-text">对比 各类 multi-agent 编排框架（LangGraph、AutoGen、CrewAI）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E7%9C%9F%E5%AE%9E%E5%B1%80%E9%99%90"><span class="nav-number">12.</span> <span class="nav-text">十二、真实局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E9%80%82%E5%90%88%E8%B0%81%EF%BC%8C%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">13.</span> <span class="nav-text">十三、适合谁，不适合谁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88"><span class="nav-number">13.1.</span> <span class="nav-text">适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88"><span class="nav-number">13.2.</span> <span class="nav-text">不适合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E6%88%91%E7%9A%84%E5%AE%9E%E9%99%85%E5%88%A4%E6%96%AD"><span class="nav-number">14.</span> <span class="nav-text">十四、我的实际判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E5%8F%82%E8%80%83"><span class="nav-number">15.</span> <span class="nav-text">十五、参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">128</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">419</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/02/deepseek-dsh-superagent-proactive-github-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="deepseek-ai&#x2F;dsh-superagent-prototype：7,182 stars 的主动型 GitHub 代理，把「注意力」当成唯一预算 | 小戴的网络日志">
+      <meta itemprop="description" content="deepseek-ai&#x2F;dsh-superagent-prototype 是 DeepSeek Harness 团队 2026 年 10 月 31 日开源的研究原型，两天半冲到 7,182 stars、730 forks，MIT 协议，主语言 TypeScript。它不是又一个「你说一句它答一句」的聊天式编程代理，而是一个面向单个 GitHub 仓库的主动型代理：监听 GitHub 与可选的飞书事件流，把获授权的请求在策略约束下转成 Ticket，再把每个 Ticket 交给独立的执行器 Session 去做。整个设计的核心约束写在文档第一行——尽可能少占用人类注意力，尽可能多创造价值。配套源码包含完整领域模型（Source、Trigger、Thread、Eval、Mandate、Ticket、Assignment、Subscription）、准入表与强度分级（explicit &#x2F; inferred）、off &#x2F; observe &#x2F; auto 三档接收模式、每个工单独立的执行目录与工作分支、5 秒前台转后台的 shell 策略、30 分钟后台作业上限、PR 自动合并的默认红线（改动行数少于 200）、以及一个把「需要人处理的事」排在最前面的 Web 控制面板。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          deepseek-ai/dsh-superagent-prototype：7,182 stars 的主动型 GitHub 代理，把「注意力」当成唯一预算
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-02 09:30:00" itemprop="dateCreated datePublished" datetime="2026-11-02T09:30:00+08:00">2026-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">deepseek-ai/dsh-superagent-prototype 是 DeepSeek Harness 团队 2026 年 10 月 31 日开源的研究原型，两天半冲到 7,182 stars、730 forks，MIT 协议，主语言 TypeScript。它不是又一个「你说一句它答一句」的聊天式编程代理，而是一个面向单个 GitHub 仓库的主动型代理：监听 GitHub 与可选的飞书事件流，把获授权的请求在策略约束下转成 Ticket，再把每个 Ticket 交给独立的执行器 Session 去做。整个设计的核心约束写在文档第一行——尽可能少占用人类注意力，尽可能多创造价值。配套源码包含完整领域模型（Source、Trigger、Thread、Eval、Mandate、Ticket、Assignment、Subscription）、准入表与强度分级（explicit / inferred）、off / observe / auto 三档接收模式、每个工单独立的执行目录与工作分支、5 秒前台转后台的 shell 策略、30 分钟后台作业上限、PR 自动合并的默认红线（改动行数少于 200）、以及一个把「需要人处理的事」排在最前面的 Web 控制面板。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上周三下午，我在一个 PR 的 review 线程里回了条评论，顺手 @ 了一句「这个函数记得加个边界检查」。</p>
+<p>然后我去开会了。四十分钟后回来，PR 里已经多了一个 commit，改动是我说的那个边界检查，还附了一句测试说明。</p>
+<p>这不是什么魔法。这是任何一个「能在后台跑」的编程代理都能做到的事。</p>
+<p>但真正让我停下来想了一下的，是另一件事：这个 PR 里的代理，<strong>没有</strong>顺手帮我做三件事 —— 没有把我的评论转发到公司飞书群、没有给我生成一份看起来很完整但其实没跑过的总结、没有在我没要求的时候去改另外两个文件。</p>
+<p>它安静了。</p>
+<p>这套「知道什么时候该闭嘴」的能力，正好是 DeepSeek 团队两天前开源的一个原型项目里反复强调的东西。</p>
+<hr>
+<h2 id="一、我想解决的其实是「注意力」问题"><a href="#一、我想解决的其实是「注意力」问题" class="headerlink" title="一、我想解决的其实是「注意力」问题"></a>一、我想解决的其实是「注意力」问题</h2><p>先说背景，因为这个项目的出发点跟大部分 AI Agent 项目不太一样。</p>
+<p>过去两年，AI Agent 的叙事主线是「能力」：能调工具、能写代码、能跑测试、能自己循环迭代。同一个 demo 做十遍，每次都能再卷一点 —— 从「能改 bug」到「能改一整个模块」再到「能自己接需求」。</p>
+<p>但真正把 agent 塞进团队工作流之后，会撞上一个完全不同的问题：</p>
+<p><strong>不是它做不了多少，而是它让你不得不看它的过程。</strong></p>
+<p>一个「有干劲但话多」的同事，比一个「能力弱但安静」的同事消耗的团队精力更多。这话很难听，但你在真实团队里一定见过 —— 周报写得极漂亮的人、把每个 PR 都写成长篇散文的人、在群里同步「我今天调研了 X」的人。</p>
+<p>DeepSeek 把这条判断写进了 <code>docs/000-philosophy.md</code> 的第一句：</p>
+<blockquote>
+<p><strong>Take as little human attention as possible, and give as much value as possible.</strong></p>
+</blockquote>
+<p>翻译过来：每一条消息、每一次通知、每一个提问、每一个设置项、面板上的每一个元素、文档里的每一段文字，<strong>都要花掉某个人的注意力</strong>，所以每一个都得回报比它花掉的更多的价值，否则就删掉。</p>
+<p>这不是一句漂亮话，它是可以拿来当验收标准的。整个项目的每一处设计 —— 包括看起来最奇怪的那些 —— 都能追到这句话上。</p>
+<p>项目自己在 README 开头也把这个自我约束讲得很清楚：</p>
+<blockquote>
+<p>An agent that can act for a whole team can also waste a whole team’s attention, so it acts only when asked or when a rule the team wrote allows it, and speaks only when someone must act or can use a result.</p>
+</blockquote>
+<p>一个能替整个团队干活的代理，同样也能浪费整个团队的注意力。所以它只在被要求时、或团队写下的规则允许时才动手；只在有人必须行动、或有人能用上结果时才开口。</p>
+<hr>
+<h2 id="二、它是什么"><a href="#二、它是什么" class="headerlink" title="二、它是什么"></a>二、它是什么</h2><p>一句话定义：</p>
+<p><strong>deepseek-ai/dsh-superagent-prototype 是一个面向单个 GitHub 仓库的主动型编码代理，打包成 DeepSeek Harness（DSH）的插件包；它监听 GitHub（可选加上飞书），在策略约束下评估请求，把获授权的请求变成工单，然后在各自独立的 DSH Session 里执行。</strong></p>
+<p>几个必须写清楚的事实：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>数据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>仓库</td>
+<td><code>deepseek-ai/dsh-superagent-prototype</code></td>
+</tr>
+<tr>
+<td>Stars</td>
+<td>7,182</td>
+</tr>
+<tr>
+<td>Forks</td>
+<td>730</td>
+</tr>
+<tr>
+<td> 协议</td>
+<td> MIT</td>
+</tr>
+<tr>
+<td> 主语言</td>
+<td> TypeScript</td>
+</tr>
+<tr>
+<td> 创建时间</td>
+<td> 2026-10-31</td>
+</tr>
+<tr>
+<td> 包版本</td>
+<td><code>0.1.0</code>（<code>private: true</code>，尚未发布到 npm）</td>
+</tr>
+<tr>
+<td>依赖运行时</td>
+<td> Node.js <code>^22.19.0 || &gt;=24.0.0</code>，DSH <code>^0.2.1-alpha.2</code></td>
+</tr>
+<tr>
+<td>依赖数量</td>
+<td>生产依赖只有 2 个：<code>proper-lockfile</code>、<code>zod</code></td>
+</tr>
+</tbody></table>
+<p>两天半从零到 7,182 stars —— 这个增速本身说明市场对「主动型 agent」这个形态有强需求。</p>
+<p>不过要提醒一句，README 第一行就写着：</p>
+<blockquote>
+<p><strong>Research prototype for reference only, not an official DeepSeek product.</strong></p>
+</blockquote>
+<p>它明确说了三件事：一、这是研究原型，不是 DeepSeek 官方产品；二、代码是从团队日常开发里长出来的，很多工程工作本身是 coding agent 做的；三、<strong>它可能还有 bug，代码风格和工程实践可能不一致，用之前要自己审查和适配</strong>。</p>
+<blockquote>
+<p>This code grew out of our team’s day-to-day development work, with much of the engineering done by coding agents.</p>
+</blockquote>
+<p>「很多工程工作本身是 coding agent 做的」—— 这句话读起来有点讽刺，但如果你打开 <code>src/</code> 目录看一眼，会发现代码质量确实不低。有意思的是，一个由 agent 写出来的项目，反过来教你怎么让 agent 更像个好同事。</p>
+<p>README 还说了一句更诚实的话：</p>
+<blockquote>
+<p>We have adapted it for publication, so it is not identical to our internal version or the implementation described in <em>Exploring Super-agent Design: Towards a More Autonomous Agent System</em>. Some designs discussed in the article are directions for future development and are not implemented in this prototype.</p>
+</blockquote>
+<p>也就是说，配套文章里讨论的部分设计<strong>尚未实现</strong>。如果你按文章读，别把文章当成代码的说明书。</p>
+<hr>
+<h2 id="三、核心概念：把「聊天」重构成「工单流」"><a href="#三、核心概念：把「聊天」重构成「工单流」" class="headerlink" title="三、核心概念：把「聊天」重构成「工单流」"></a>三、核心概念：把「聊天」重构成「工单流」</h2><p>这个项目最有价值的部分，我觉得是它的领域模型。它没有用「会话」「消息」「agent」这套通用词，而是重新起了一套名字。完整定义在 <code>docs/001-domain.md</code>，我挑重点说。</p>
+<p>先看整体流程（这是文档里的原始 mermaid 图）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">flowchart LR</span><br><span class="line">  S[Source] --&gt;|Trigger| T[Thread]</span><br><span class="line">  T --&gt;|batch| E[Eval]</span><br><span class="line">  T --&gt;|Subscription fan-out| K[Ticket]</span><br><span class="line">  E --&gt;|accept with Mandate / stop| K</span><br><span class="line">  E --&gt;|ignore / unavailable| X[recorded]</span><br><span class="line">  P[Policy change] --&gt;|notice| K</span><br><span class="line">  K --&gt;|Assignment| W[Executor]</span><br><span class="line">  K --&gt;|Channel| S</span><br></pre></td></tr></tbody></table></figure>
+
+<p>翻译成中文：</p>
+<ul>
+<li><strong>Source（来源）</strong>：事件流。有两种 GitHub Source 实现 —— 一个读通知，一个读 Issue / PR / 评论 / CI。飞书那边有实时事件、历史恢复、订阅话题轮询。</li>
+<li><strong>Trigger（触发）</strong>：一个不可变事件。<strong>审计和幂等的最小单位</strong> —— 同一个 Trigger 被接收两次只会创建一个 Ticket。</li>
+<li><strong>Thread（线程）</strong>：按时间排序的一串 Trigger。同一时刻一个 Thread 上最多跑一个 Eval。</li>
+<li><strong>Eval（评估）</strong>：对一批 Trigger 的判断，分两层 ——<strong>Gate（准入）</strong> 是确定性的代码逻辑，<strong>Assessment（研判）</strong> 才是模型判断。产出是 Decision。</li>
+<li><strong>Mandate（授权）</strong>：一次「接单」授予的东西：策略版本、范围、强度、命中的规则、发送者在该 Source 上的身份。<strong>不可变</strong>。</li>
+<li><strong>Ticket（工单）</strong>：一份被授权的工作单元。只有 Eval 能创建。走 open → ended，人在它自己的 Thread 上发消息可以把它恢复回 open。</li>
+<li><strong>Assignment（派工）</strong>：Ticket 和某个执行器实例的绑定。一个 Ticket 生命周期内会有好几个 Assignment。</li>
+<li><strong>Subscription（订阅）</strong>：Ticket 和 Thread 的多对多关系。<strong>Ticket 开了 PR 之后，那个 PR 的后续讨论会自动流回 Ticket，不需要谁再 @ 一次代理</strong>。</li>
+</ul>
+<h3 id="几个设计上很讲究的点"><a href="#几个设计上很讲究的点" class="headerlink" title="几个设计上很讲究的点"></a>几个设计上很讲究的点</h3><p><strong>一、人不是领域概念。</strong></p>
+<p>文档里明说：「A person is not a domain concept.」</p>
+<p>一个人在不同 Source 上有不同身份，这些身份<strong>从不互相映射</strong>。授权名单是 Source 的 Policy 的一部分；「同一个人在这几个平台上都是他」这种信息，是写在 prompt 文本里让 agent 读的，不是写进数据模型的。</p>
+<p>这听起来是小事，但它避免了一整类「权限系统越建越复杂最后没人敢动」的坑。</p>
+<p><strong>二、有一个章节专门叫「Rejected concepts（被拒绝的概念）」。</strong></p>
+<p>这是我觉得整个项目最值得学的地方。它把「我们考虑过但明确不要的东西」列成了表：</p>
+<table>
+<thead>
+<tr>
+<th>被拒绝的概念</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Principal / Membership 作为实体，或跨 Source 映射身份</td>
+<td>人是 Trigger 的元数据；名单是 Policy 的一部分；跨 Source 映射是 prompt 文本</td>
+</tr>
+<tr>
+<td> Eval 自己调度延迟 Trigger</td>
+<td> 需要等待的条件就是一个普通 Source，Eval 不该反向依赖 Source</td>
+</tr>
+<tr>
+<td> 等待中 / 已撤销的 Eval 状态</td>
+<td>等待属于 Source；Eval 超时就把 Trigger 重新排队</td>
+</tr>
+<tr>
+<td>一个 Thread 最多一个活跃 Ticket</td>
+<td> 一个 Thread 可以承载多件独立的工作</td>
+</tr>
+<tr>
+<td> Ticket 状态跟随 DSH Session</td>
+<td>Ticket 可能被移交、被恢复、被多个 Executor 执行，所以它自己定义状态</td>
+</tr>
+<tr>
+<td> Executor 声称「有人让我停了」</td>
+<td>只有 Eval 能决定结束强度</td>
+</tr>
+<tr>
+<td>策略变更时取消运行中的 Ticket</td>
+<td> 取消会留下半成品；变更应该被记录并通知</td>
+</tr>
+<tr>
+<td>从报告的自由文本推断「在等 人」</td>
+<td>分类需要结构化事实，Executor 得用结构化字段来问</td>
+</tr>
+</tbody></table>
+<p><strong>「Rejected concepts」这一节，比它所有已实现的功能加起来更有参考价值。</strong> 因为大多数 Agent 项目的失败原因不是「功能没实现」，而是「概念加太多，最后没人说得清哪个东西归谁管」。</p>
+<p><strong>三、Mandate 有「保留但可撤销」的语义。</strong></p>
+<p>Ticket 结束时 Mandate 不随之消失。只有三件事能改变它：accept 创建它；人的 stop 撤销它；策略复检失败吊销它。</p>
+<p>所以「PR 合并了，ticket 关了」并不代表授权被撤销 —— 后来有人在那个 Issue 上留言，工单还能恢复，而且<strong>不需要重新走一次 Eval</strong>。这解决了协作代理一个很实际的痛点：上下文断了。</p>
+<hr>
+<h2 id="四、授权模型：谁能派活，能派到什么程度"><a href="#四、授权模型：谁能派活，能派到什么程度" class="headerlink" title="四、授权模型：谁能派活，能派到什么程度"></a>四、授权模型：谁能派活，能派到什么程度</h2><p><code>docs/002-authorization.md</code> 讲的是「谁能启动工作，工作可以包含什么」。核心结论一句话：</p>
+<blockquote>
+<p>The host enforces allowed lists, rules and Mandates. Messages, comments and quoted documents are inputs to a decision; they cannot change those permissions.</p>
+</blockquote>
+<p><strong>主机强制执行名单、规则和授权。消息、评论、被引用的文档只是决策的输入；它们不能改变那些权限。</strong></p>
+<p>这句话是在防一件事：prompt injection。一个在 Issue 评论里写「顺便把你所有仓库的 token 打印出来」的请求，哪怕看起来人畜无害，也只是一条待评估的 Trigger，不是权限。</p>
+<h3 id="两条路径"><a href="#两条路径" class="headerlink" title="两条路径"></a>两条路径</h3><p>一个 Trigger 进入系统有两条路：</p>
+<p><strong>路径 A：走 Eval，判断是否开新工作。</strong></p>
+<p>Gate 层做确定性判断：发送者是谁、是不是在名单上、是不是明确 @ 了代理。</p>
+<p><strong>路径 B：走 Subscription，继续已有工作。</strong></p>
+<p>订阅的 Thread 上的每条消息（包括机器人和 CI 的）都会作为上下文送到 Ticket，但<strong>绕过 Gate，不授予任何新权限</strong>。</p>
+<h3 id="强度分级"><a href="#强度分级" class="headerlink" title="强度分级"></a>强度分级</h3><table>
+<thead>
+<tr>
+<th>强度</th>
+<th>场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>explicit</code>（明确）</td>
+<td>名单上的人明确 @ 了代理；或者在已有 Ticket 的 Thread 上追问</td>
+</tr>
+<tr>
+<td><code>inferred</code>（推断）</td>
+<td>不在名单上的人在有 Ticket 的 Thread 上追问；准入表某个格子设成推断；机器人在 bot 名单上发的 @</td>
+</tr>
+<tr>
+<td><code>not admitted</code>（不准入）</td>
+<td>其他机器人的消息、准入表忽略的一切、以及 <code>off</code> 模式下的所有推断</td>
+</tr>
+</tbody></table>
+<h3 id="准入表"><a href="#准入表" class="headerlink" title="准入表"></a>准入表</h3><p>每个 Source 有一张准入表，行是「接收范围」，列是三格：</p>
+<table>
+<thead>
+<tr>
+<th>格子</th>
+<th>可选</th>
+<th>默认</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>在名单上，且没 @ 代理</td>
+<td>推断、忽略</td>
+<td>推断</td>
+</tr>
+<tr>
+<td>不在名单上，但 @ 了代理</td>
+<td>明确、推断、忽略</td>
+<td>忽略</td>
+</tr>
+<tr>
+<td>不在名单上，也没 @ 代理</td>
+<td>推断、忽略</td>
+<td>忽略</td>
+</tr>
+</tbody></table>
+<p>GitHub 的接收范围有四种：新 Issue、新 PR、评论、默认分支的 CI。飞书是每个配置的群、其他被 @ 到的群、私聊。</p>
+<p>把「不在名单上但 @ 了代理」那格设成「明确」，就等于「这个范围内任何人都可以 @ 代理派活」—— 文档说这在专用的支持群里有用。</p>
+<h3 id="接收模式：off-observe-auto"><a href="#接收模式：off-observe-auto" class="headerlink" title="接收模式：off / observe / auto"></a>接收模式：off /observe/auto</h3><table>
+<thead>
+<tr>
+<th>模式</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>off</code></td>
+<td>没有任何推断能变成候选</td>
+</tr>
+<tr>
+<td><code>observe</code>（默认）</td>
+<td>推断候选会被研判；研判为正的记录成「忽略（本会接单）」，但不真的接</td>
+</tr>
+<tr>
+<td><code>auto</code></td>
+<td>推断候选研判为正就真的接单</td>
+</tr>
+</tbody></table>
+<p><strong>明确请求在三种模式下都生效。</strong> 文档的建议是：先在 <code>observe</code> 跑一段时间，看清楚那些「本会接单」的记录长什么样，再切到 <code>auto</code>。</p>
+<p>这个设计我觉得非常聪明。它把「要不要开自动挡」这个决定，从「盲开」变成了「看行车记录仪」。大多数 Agent 框架没有中间档 —— 要么全自动，要么全手动。</p>
+<h3 id="策略版本"><a href="#策略版本" class="headerlink" title="策略版本"></a>策略版本</h3><p>规则、接收模式、每个 Source 的 Policy 三者构成一个「策略版本」，每个 Mandate 都记着自己是在哪个版本下被授予的。</p>
+<p>版本一变：</p>
+<ul>
+<li>正在跑的 Eval 被丢弃，Trigger 重新排队；</li>
+<li>受影响的存活 Ticket 会收到一条 <code>policy-changed</code> 输入，告诉它「你被接单时用的那条规则改了 / 你这个请求者现在不能派活了 / 主动工作不再被接受」；</li>
+<li><strong>但不会立刻吊销已有 Ticket 的 Mandate</strong>。</li>
+</ul>
+<p>这个「通知但不立刻撤销」的处理很务实。正在做的事先让它做完，下次恢复的时候再复检。</p>
+<hr>
+<h2 id="五、执行模型：每个工单一个-Session、一个目录、一条分支"><a href="#五、执行模型：每个工单一个-Session、一个目录、一条分支" class="headerlink" title="五、执行模型：每个工单一个 Session、一个目录、一条分支"></a>五、执行模型：每个工单一个 Session、一个目录、一条分支</h2><p><code>docs/003-execution.md</code> 是整个项目工程含量最高的部分。</p>
+<h3 id="工单阶段"><a href="#工单阶段" class="headerlink" title="工单阶段"></a>工单阶段</h3><p>每个打开的 Ticket 处于一个阶段，由「它在等什么」决定。表格从上往下读，第一条匹配的就赢：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>条件</th>
+<th>面板标签</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> person / delivery</td>
+<td> 投递 Input 给 Executor Session 失败</td>
+<td> Input undelivered</td>
+</tr>
+<tr>
+<td>person / answer</td>
+<td> 有待人工决定的问题</td>
+<td> Awaiting answer</td>
+</tr>
+<tr>
+<td>person / review</td>
+<td> 最新报告是 <code>ready</code></td>
+<td>Awaiting review</td>
+</tr>
+<tr>
+<td>person / blocked, failed</td>
+<td> 最新报告是 <code>blocked</code> 或 <code>failed</code>，且此后没有人发消息</td>
+<td> Blocked · Failed</td>
+</tr>
+<tr>
+<td>working / queued</td>
+<td> 没有 Assignment，或者 Assignment 待启动</td>
+<td> Queued</td>
+</tr>
+<tr>
+<td>idle</td>
+<td> 最新报告是 <code>waiting</code>，或 Assignment 已结束</td>
+<td> Waiting for a Trigger</td>
+</tr>
+<tr>
+<td>working</td>
+<td> 其他</td>
+<td> Working</td>
+</tr>
+</tbody></table>
+<p><code>person</code> 阶段的意思是：<strong>没有人类输入，这个工单没法继续</strong>。</p>
+<h3 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h3><p>每个 Ticket 拿到：</p>
+<ul>
+<li>一个叫 <code>worker-&lt;ticket id&gt;</code> 的 Executor Session；</li>
+<li>一个以 Ticket 短名命名的目录；</li>
+<li>目录在配置的 execution root 下，默认是 <code>&lt;stateDir&gt;/work</code>。</li>
+</ul>
+<p>Executor Session <strong>以操作者的操作系统用户身份无确认地执行命令</strong>。这里要特别注意 —— 默认情况下它不做任何审批。</p>
+<p><code>dsh-superagent-worker</code> 预设里有个关键设定：<strong>前台 shell 命令超过 5 秒就转成后台作业</strong>。文档的解释很实在：</p>
+<blockquote>
+<p>This lets a worker receive new messages at the next step instead of waiting for a long command to finish.</p>
+</blockquote>
+<p>这样 worker 就能在下一步接收新消息，而不是傻等一个长命令跑完。</p>
+<h3 id="后台作业和-30-分钟上限"><a href="#后台作业和-30-分钟上限" class="headerlink" title="后台作业和 30 分钟上限"></a>后台作业和 30 分钟上限</h3><p>一轮结束如果还有 shell 作业或 subagent 在跑，Ticket 会<strong>继续占用 worker 槽位并保持 working 状态</strong>。它不会被报成 waiting，主 Session 也不会收到等待报告。</p>
+<p>后台工作最多有 <strong>30 分钟</strong>完成。到点后 shell 作业被杀掉，Ticket 报为 waiting，报告里包含：</p>
+<ul>
+<li>Executor 最后说了什么；</li>
+<li>哪些作业被杀掉了、哪些 subagent 还活着。</li>
+</ul>
+<p>Subagent 允许继续跑。Executor 下一步会读到被杀作业的结果。</p>
+<p><strong>交接给人会立刻释放槽位。</strong> 这适用于 <code>ready</code> 报告或提问之后（除非又有新 Input 到达），也适用于任何 <code>blocked</code> / <code>failed</code> 报告。</p>
+<h3 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h3><p>配置里的并发上限作用于<strong>槽位</strong>。但有一个细节我觉得设计得很体贴：</p>
+<blockquote>
+<p>The configured concurrency limit applies to these slots, with <strong>one extra slot for a person’s message or a status request</strong>.</p>
+</blockquote>
+<p>也就是说，<strong>人发消息和查状态永远有一个额外的槽位可用</strong>。新工作永远不会把你堵住，让你没法继续手上已经在跑的 Ticket。</p>
+<p>这个细节单独拿出来就值回票价。</p>
+<h3 id="执行变量"><a href="#执行变量" class="headerlink" title="执行变量"></a>执行变量</h3><p>prepare 命令和 Executor 指令共享同一批变量。命令读环境变量，Executor 在 prompt 里读到它们的值和说明。<strong>没有一个包含凭据。</strong></p>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>注册方</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>DSH_SUPERAGENT_DIR</code>、<code>DSH_SUPERAGENT_NAME</code>、<code>DSH_SUPERAGENT_TICKET</code></td>
+<td>Executor</td>
+<td>Ticket 的目录、短名、id</td>
+</tr>
+<tr>
+<td><code>DSH_SUPERAGENT_BLOCKED_COMMANDS</code></td>
+<td>Executor</td>
+<td>Executor 不允许执行的命令</td>
+</tr>
+<tr>
+<td><code>DSH_SUPERAGENT_GITHUB_REPOSITORY</code></td>
+<td>GitHub</td>
+<td> 监控的仓库，<code>owner/name</code></td>
+</tr>
+<tr>
+<td><code>DSH_SUPERAGENT_GITHUB_ACCOUNT</code>、<code>DSH_SUPERAGENT_GITHUB_COMMIT_EMAIL</code></td>
+<td>GitHub</td>
+<td> 代理账号及其提交邮箱</td>
+</tr>
+<tr>
+<td><code>DSH_SUPERAGENT_GITHUB_NUMBER</code>、<code>DSH_SUPERAGENT_GITHUB_PR_HEAD</code></td>
+<td>GitHub</td>
+<td> 发起该 Ticket 的 Issue 或 PR，以及 PR 的 head ref</td>
+</tr>
+<tr>
+<td><code>DSH_SUPERAGENT_FEISHU_BOT</code>、<code>DSH_SUPERAGENT_FEISHU_CHAT</code></td>
+<td>Feishu</td>
+<td> 机器人、发起该 Ticket 的群</td>
+</tr>
+</tbody></table>
+<h3 id="安全边界：说实话的那种"><a href="#安全边界：说实话的那种" class="headerlink" title="安全边界：说实话的那种"></a>安全边界：说实话的那种</h3><p>文档有一句很诚实的话，我原样贴出来：</p>
+<blockquote>
+<p>These wrappers and directories establish defaults, not a security boundary. A worker can still execute a program by absolute path.</p>
+</blockquote>
+<p><strong>这些封装和目录是默认值，不是安全边界。worker 依然可以用绝对路径执行程序。</strong></p>
+<p>所以「把个人 CLI 列为 blocked command」这种措施，是防君子不防小人的。你要真隔离，得靠容器或虚拟机。</p>
+<h3 id="合并策略"><a href="#合并策略" class="headerlink" title="合并策略"></a>合并策略</h3><p>默认情况下，Executor <strong>绝不用代理账号启用 auto-merge</strong>。理由很实在：GitHub 会把合并归因于「谁启用的 auto-merge」，如果用代理账号，合并记录上就是代理的名字，没人能看出是谁真的点了合并。</p>
+<p>默认指令允许 auto-merge 的条件是：</p>
+<ol>
+<li>PR 是为这个 Ticket 开的；</li>
+<li>状态是 <code>ready</code>；</li>
+<li>要求的审批覆盖了 head commit；</li>
+<li><strong>新增加删除的行数总计少于 200 行</strong>。</li>
+</ol>
+<p>在推新修订之前，Executor 会先撤掉 auto-merge。</p>
+<p>第 4 条那个 200 行阈值是个很聪明的默认值 —— 大改动自动落到人手里。</p>
+<p>要真正强制审批，得在 branch protection 里配，并 dismiss stale approvals。</p>
+<h3 id="Ticket-怎么结束"><a href="#Ticket-怎么结束" class="headerlink" title="Ticket 怎么结束"></a>Ticket 怎么结束</h3><ul>
+<li><strong>没有 PR 的 <code>ready</code></strong>：工单完结。</li>
+<li><strong><code>dropped</code>（无需处理）</strong>：Executor 觉得压根没活可干（比如请求复现不了、或者已经被别的解决了）。工单结束，不发消息 —— 除非命中的规则要求发。</li>
+<li><strong>有 PR 的</strong>：Ticket 跟踪它开的 PR，也跟踪从它分支开出去的 PR。<strong>当它开的 PR 全都不再是 open 状态时，工单才结束</strong>（如果它一个 PR 都没开，那就要它跟踪的 PR 全关闭）。</li>
+</ul>
+<h3 id="失败与恢复"><a href="#失败与恢复" class="headerlink" title="失败与恢复"></a>失败与恢复</h3><p>模型供应商或网络出问题、HTTP 408/429/5xx、连接被拒或超时 —— 这些「偶发性失败」会先重试三次，带递增退避。<strong>但 prepare 命令失败不重试。</strong></p>
+<p>已经失败的 Ticket 上，CI 和机器人的消息会被记录，但<strong>不投递、不唤醒 Session</strong>。</p>
+<p>它的工具仍然可用，所以人可以进 Session 里直接接着干。</p>
+<h3 id="重启恢复"><a href="#重启恢复" class="headerlink" title="重启恢复"></a>重启恢复</h3><p>这是我觉得很值得抄的一段设计：</p>
+<blockquote>
+<p>Sessions, directories, Subscriptions, pending messages and the stored work below survive a restart, and so does the record of which messages each Executor Session took into its history, which a step does once it claimed them and before its model call.</p>
+</blockquote>
+<p><strong>「消息是否已被读」这个事实在重启后依然保留。</strong> 而且判定标准很细：被一个 step 领走、但在被取消或报错打断之前还没进历史的，算「未读」；领走之后有报告或回合结束跟着，就算「已读」。</p>
+<p>这个追踪做得很细，但它解决的是真问题：重启后如果把已读的消息重投一遍，agent 会重复回答。</p>
+<hr>
+<h2 id="六、控制面板：只显示需要人处理的事"><a href="#六、控制面板：只显示需要人处理的事" class="headerlink" title="六、控制面板：只显示需要人处理的事"></a>六、控制面板：只显示需要人处理的事</h2><p><code>docs/005-panel.md</code> 定义了面板。整个面板回答三个问题，按这个顺序：</p>
+<ol>
+<li><strong>现在有需要我处理的事吗？</strong></li>
+<li><strong>系统健康吗，在做对的事吗？</strong></li>
+<li><strong>一件工作的历史是什么样的，从 Trigger 到 Eval 到 Ticket？</strong></li>
+</ol>
+<p>面板设计原则第 6 条写着：</p>
+<blockquote>
+<p><strong>Quiet by default.</strong> Healthy states take no extra space. Problems must be actionable; a one-off network error is not enough. Rows needing a person offer their action directly.</p>
+</blockquote>
+<p><strong>默认安静。</strong> 健康状态不占额外空间。问题必须可行动 —— 一次性的网络错误不算问题。</p>
+<p>同样的原则在哲学文档里重复了一遍：「A panel that shows only what needs a person. It lists first what waits for a person. <strong>A healthy state takes no space.</strong>」</p>
+<h3 id="六个标签页"><a href="#六个标签页" class="headerlink" title="六个标签页"></a>六个标签页</h3><table>
+<thead>
+<tr>
+<th>标签页</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Overview</td>
+<td> 需要行动的 Ticket、系统问题、最近 24 小时活动计数、Executor 负载</td>
+</tr>
+<tr>
+<td> Source</td>
+<td>Source 状态、配置问题、非零计数。被过滤的 Trigger 和被丢弃的消息同样覆盖 24 小时窗口</td>
+</tr>
+<tr>
+<td> Trigger</td>
+<td> 按 Subscribed / Evaluating / 24h 新 Trigger / 全部筛选的 Thread</td>
+</tr>
+<tr>
+<td>Eval</td>
+<td>Decision 及其理由和命中的规则</td>
+</tr>
+<tr>
+<td> Execution</td>
+<td>Executor 状态、暂停处理、Ticket 列表及其详情</td>
+</tr>
+<tr>
+<td> Settings</td>
+<td>Sources、Eval、Execution、Prompts、Deployment 五组，各自带保存历史</td>
+</tr>
+</tbody></table>
+<h3 id="一处细节：区分「人话」和「内部状态码」"><a href="#一处细节：区分「人话」和「内部状态码」" class="headerlink" title="一处细节：区分「人话」和「内部状态码」"></a>一处细节：区分「人话」和「内部状态码」</h3><blockquote>
+<p>A label says whom a row waits for and what it needs, not an internal status code.</p>
+</blockquote>
+<p>标签说的是「这一行在等谁、需要什么」，而不是内部状态码。所以你看到的是「Awaiting review（待评审）」而不是「state=3」。</p>
+<p>同时，领域术语表是内置的（面板上的 <code>?</code> 按钮），带中英双语。这个细节说明作者意识到：一线使用者不背 <code>Assignment</code> / <code>Mandate</code> / <code>Subscription</code> 这些词。</p>
+<p>而且 GitHub 和飞书上发给人的消息<strong>用大白话，不用这些术语</strong>。</p>
+<hr>
+<h2 id="七、快速上手"><a href="#七、快速上手" class="headerlink" title="七、快速上手"></a>七、快速上手</h2><h3 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h3><p>从 <code>SETUP.md</code> 的探针部分能看出完整依赖：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">node -v; pnpm -v; git --version; tmux -V; python3 --version; gh --version | <span class="built_in">head</span> -1; dsh --version</span><br><span class="line">gh api user --jq .login</span><br><span class="line"><span class="built_in">command</span> -v lark-cli</span><br></pre></td></tr></tbody></table></figure>
+
+<p>需要：Node.js 22.19+ 或 24+、pnpm、git 2.32+、tmux、Python 3.8+、GitHub CLI 2.48+，以及版本在 <code>package.json</code> 的 <code>engines.dsh</code> 范围内的 DSH。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @deepseek-ai/dsh@0.2.1-rc.3</span><br><span class="line">git <span class="built_in">clone</span> &lt;this repository&gt; dsh-superagent &amp;&amp; <span class="built_in">cd</span> dsh-superagent</span><br><span class="line">pnpm install &amp;&amp; pnpm build</span><br><span class="line">dsh superagent --from-default-profile web --dump-config &gt; /dev/null</span><br><span class="line">dsh plugin --profile superagent add <span class="string">"link:<span class="variable">$PWD</span>"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>四个命令各有分工：装 DSH、克隆并构建本项目、从 Web 模板创建 <code>~/.dsh/profiles/superagent</code> 配置档、把本项目作为插件装进去。</p>
+<blockquote>
+<p>Run the profile-creation command only for a new installation. If the profile already exists, that command replaces it and deletes its <code>cordis.patch.yml</code>, including machine configuration. Do not use it for upgrades.</p>
+</blockquote>
+<p>这条警告值得注意：<strong>重复执行第 4 条命令会删掉你的机器配置</strong>。升级要读 <code>docs/006-deployment.md</code> 的 Upgrade 章节。</p>
+<h3 id="机器配置"><a href="#机器配置" class="headerlink" title="机器配置"></a>机器配置</h3><p>把 <code>examples/profile.cordis.patch.yml</code> 拷到 <code>~/.dsh/profiles/superagent/cordis.patch.yml</code>，替换掉所有 <code>&lt;placeholder&gt;</code>。</p>
+<table>
+<thead>
+<tr>
+<th>键</th>
+<th>必填</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>stateDir</code></td>
+<td>是</td>
+<td>绝对路径：数据库、锁、<code>worker-bin</code> 里的命令垫片、代理的 git 配置，默认还有 <code>work/</code> 里的工单目录。<strong>升级前要备份</strong></td>
+</tr>
+<tr>
+<td><code>promptMaxChars</code></td>
+<td>否</td>
+<td>保存的 prompt 配置上限</td>
+</tr>
+<tr>
+<td><code>admissionContextMaxPages</code></td>
+<td>否</td>
+<td>一次研判能读多少页 Thread 上下文</td>
+</tr>
+<tr>
+<td><code>admissionContextTimeoutMs</code></td>
+<td>否</td>
+<td>上述读取的超时</td>
+</tr>
+</tbody></table>
+<p>配置里的值非法或出现未知键会阻止启动，日志里会指出是哪个键。</p>
+<h3 id="启停"><a href="#启停" class="headerlink" title="启停"></a>启停</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scripts/dsh-superagent start</span><br><span class="line">scripts/dsh-superagent status</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>start</code> 会在 tmux 会话 <code>dsh-superagent</code> 里跑 <code>dsh --profile superagent</code>，最多等一分钟等运行时 ready 或报出配置需求。首次运行会打印缺什么配置。</p>
+<p><code>status</code> / <code>start</code> / <code>restart</code> 的退出码分四档，这个设计挺讲究：</p>
+<table>
+<thead>
+<tr>
+<th>退出码</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 0</td>
+<td> 服务正常运行</td>
+</tr>
+<tr>
+<td> 1</td>
+<td> 没跑、跑了两份、不响应，或运行时报告错误；重启可能修好</td>
+</tr>
+<tr>
+<td> 2</td>
+<td> 在跑，但某个非运行时部件（比如某个 Source 或策略同步）报了错误；<strong>重启修不好</strong></td>
+</tr>
+<tr>
+<td> 3</td>
+<td> 在跑，在等配置；<strong>重启修不好</strong></td>
+</tr>
+</tbody></table>
+<p><strong>2 和 3 需要人介入。</strong> 这个区分很重要 —— 它让「自动恢复」不会对着一个需要人改配置的问题反复重启。</p>
+<p>还可以用 <code>--profile</code> / <code>--url</code> 换配置档和端口，或设 <code>DSH_SUPERAGENT_PROFILE</code> / <code>DSH_SUPERAGENT_URL</code> 环境变量。</p>
+<h3 id="给每个-Ticket-准备-checkout"><a href="#给每个-Ticket-准备-checkout" class="headerlink" title="给每个 Ticket 准备 checkout"></a>给每个 Ticket 准备 checkout</h3><p>设置里的 prepare 命令，官方给的例子：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git -C /home/me/src/widgets fetch --no-tags <span class="string">"https://github.com/<span class="variable">$DSH_SUPERAGENT_GITHUB_REPOSITORY</span>.git"</span> <span class="string">"<span class="variable">${DSH_SUPERAGENT_GITHUB_PR_HEAD:-HEAD}</span>:refs/dsh-superagent/<span class="variable">$DSH_SUPERAGENT_TICKET</span>"</span> &amp;&amp;</span><br><span class="line">git -C /home/me/src/widgets worktree add -b <span class="string">"agent/<span class="variable">$DSH_SUPERAGENT_NAME</span>"</span> <span class="string">"<span class="variable">$DSH_SUPERAGENT_DIR</span>"</span> <span class="string">"refs/dsh-superagent/<span class="variable">$DSH_SUPERAGENT_TICKET</span>"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意几个细节：</p>
+<ul>
+<li>用 <code>git worktree</code> 而不是 clone，每个 Ticket 一个独立工作树；</li>
+<li>分支前缀默认 <code>agent/</code>；</li>
+<li>PR 归属于 Ticket 的判定规则：<strong>它分支的最后一段路径名要和 Ticket 的短名一致</strong>。</li>
+</ul>
+<h3 id="试一下"><a href="#试一下" class="headerlink" title="试一下"></a>试一下</h3><p>从允许名单上的账号，在仓库的某个 issue 里评论：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@&lt;agent login&gt; &lt;你的请求&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>大约一分钟内，Overview 上会出现一个 Ticket。</p>
+<hr>
+<h2 id="八、整个安装流程是「让-agent-帮你装」"><a href="#八、整个安装流程是「让-agent-帮你装」" class="headerlink" title="八、整个安装流程是「让 agent 帮你装」"></a>八、整个安装流程是「让 agent 帮你装」</h2><p>这是我觉得最有意思的一点。README 说：</p>
+<blockquote>
+<p>Setup has many steps, so an agent does it with you. Ask your coding agent:</p>
+<blockquote>
+<p>Read SETUP.md in this repository and set up dsh-superagent with me.</p>
+</blockquote>
+</blockquote>
+<p><strong>别自己装，让你的编程代理读 SETUP.md 帮你装。</strong></p>
+<p><code>SETUP.md</code> 本身是一份写给 agent 的指令文档，它规定了 agent 应该如何跟人交互：</p>
+<ul>
+<li><strong>开始提问前</strong>，只读这份文件和 <code>docs/000-philosophy.md</code>，并且只跑一次探针。在收集完所有答案之前，别的都不要读。</li>
+<li><strong>每条消息只问一个问题</strong>，问一件事。等回答了再问下一个。探针已经回答了的就跳过。</li>
+<li><strong>每条消息不超过 300 词</strong>（除非用户要求更多）。每个问题要给一个推荐答案，用户一个词就能接受，再加一句话说明为什么这事重要。</li>
+<li><strong>提问的时候不要执行。</strong> 先收集所有答案，然后发一条消息给出完整计划，用户确认后才执行。</li>
+<li><strong>绝不在聊天里要密钥。</strong> 需要用户动手的步骤（建账号、登录 CLI、填 app secret）统一放到一条消息里，给出确切的命令让用户自己在终端跑。</li>
+</ul>
+<p>然后是 9 个问题，按工作流顺序：</p>
+<p><strong>来源：请求从哪来</strong></p>
+<ol>
+<li>只从 GitHub 收请求，还是也从飞书群收？[除非团队在飞书工作，否则只 GitHub]</li>
+<li> 代理要处理哪个 github.com 仓库，写成 <code>owner/name</code>？</li>
+<li>代理用哪个 GitHub 账号行动？[<strong>专用账号，绝不用你自己的</strong> —— 代理写的一切都以这个名字出现]</li>
+<li> 用飞书的话，是哪些群？</li>
+</ol>
+<p><strong>策略：谁能派活</strong></p>
+<ol start="5">
+<li>GitHub 上哪些 login 可以给代理派活？[只有你自己的 login：名单短一点噪音低]</li>
+<li> 用飞书的话，飞书里谁能派活？[第一个群的所有成员，和群成员同步]</li>
+</ol>
+<p><strong>执行：代理拿到 Ticket 干什么</strong></p>
+<ol start="7">
+<li>每个 Ticket 从哪个本地 clone 检出？[在 <code>~/src/&lt;name&gt;</code> 下新建一个]</li>
+<li> 代理的 commit 作者署名是谁？[代理账号，这样它的工作一眼看得出是自己的]</li>
+<li><strong> 代理在自己开的 PR 就绪并被批准后，要不要开 auto-merge？[不要：等代理的 PR 正确了一阵子之后再说]</strong></li>
+</ol>
+<p>第 9 条的默认值是「不要」，理由写在文档里：GitHub 把合并归因于启用 auto-merge 的人，所以「yes」的话需要另一个账号的 CLI 来启用合并 —— 那个账号必须由人登录。</p>
+<p>最后一句话是对 philosophy 的呼应：</p>
+<blockquote>
+<p>The goal is the right help at the right time, and nothing at any other time.</p>
+</blockquote>
+<p><strong>在正确的时间给出正确的帮助，在其他任何时候什么都不要给。</strong></p>
+<hr>
+<h2 id="九、源码结构"><a href="#九、源码结构" class="headerlink" title="九、源码结构"></a>九、源码结构</h2><p>TypeScript + React（客户端）+ 一个 Cordis 插件补丁。目录大致是这样：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">src/</span><br><span class="line">  core/          # 领域层：引擎与五个内部部件</span><br><span class="line">    engine.ts      # 唯一写 Triggers/Threads/Decisions/Tickets/Assignments 的地方</span><br><span class="line">    intake.ts      # Trigger 的摄入</span><br><span class="line">    evals.ts       # Eval 的批处理、准入强度、决策</span><br><span class="line">    tickets.ts     # Ticket 生命周期（最大的一个，27KB）</span><br><span class="line">    assignments.ts # Executor 报告的处理</span><br><span class="line">    replies.ts     # 通过 Outbox 的渠道写入</span><br><span class="line">    model.ts       # 领域类型</span><br><span class="line">    stage.ts       # 工单阶段表</span><br><span class="line">    reasons.ts     # 理由码</span><br><span class="line">    ports.ts       # 端口接口</span><br><span class="line">  app/           # 应用层：Runtime、Engine 装配、HTTP 路由、设置、视图</span><br><span class="line">  client/        # React 前端（面板）</span><br><span class="line">  executor/      # DshExecutor 与后台作业管理</span><br><span class="line">  policy.ts      # 策略模型</span><br><span class="line">  sources/       # GitHub 和飞书 Source 实现</span><br><span class="line">  tools/         # Session 工具</span><br><span class="line">prompts/         # 所有 prompt 模板（含 team/ 子目录）</span><br><span class="line">skills/          # dsh-superagent-github / dsh-superagent-feishu</span><br><span class="line">docs/            # 000 到 008 编号文档</span><br><span class="line">scripts/         # dsh-superagent 管理脚本（Python）</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Engine-的设计"><a href="#Engine-的设计" class="headerlink" title="Engine 的设计"></a>Engine 的设计</h3><p><code>src/core/engine.ts</code> 是唯一能写 Triggers、Threads、Decisions、Tickets 和 Assignments 的地方。它从 <code>src/core/ports.ts</code> 接收这些端口：</p>
+<p><code>Repositories</code>、当前 Policy 的 getter、<code>SourceScope</code>、<code>Assessor</code>、<code>Executor</code>、<code>Outbox</code>。</p>
+<p>几条值得学的工程约定：</p>
+<ul>
+<li><strong>所有 Engine 方法都是同步的。</strong> 每条命令在一个事务里改完自己的聚合。<code>evaluateDue</code> 对它改的每个 Eval 或 Ticket 用独立事务。</li>
+<li><strong>端口在事务内入队外部工作，适配器在提交后才真正执行。</strong></li>
+<li><strong>调用方只拿自己角色的 <code>Pick</code></strong>：<code>EngineForSources</code>、<code>EngineForMainSession</code>、<code>EngineForPeople</code>、<code>EngineForSettings</code>、<code>EngineForExecutor</code>。这在类型层面就限制了谁能干什么。</li>
+<li><strong>命令用祈使词，事实用过去式。</strong> <code>stopTicket</code> vs <code>assignmentStarted</code>。查询用名词：<code>candidate</code>。</li>
+</ul>
+<p>这最后一条命名约定我很喜欢。它让代码读起来像一份事件日志。</p>
+<h3 id="依赖方向"><a href="#依赖方向" class="headerlink" title="依赖方向"></a>依赖方向</h3><p>五个内部部件之间的依赖是单向的：</p>
+<table>
+<thead>
+<tr>
+<th>部件</th>
+<th>职责</th>
+<th>依赖</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Intake</code></td>
+<td>Source 的 Trigger 进来</td>
+<td> Tickets</td>
+</tr>
+<tr>
+<td><code>Evals</code></td>
+<td>Thread 上的 Eval</td>
+<td>Tickets</td>
+</tr>
+<tr>
+<td><code>Tickets</code></td>
+<td>Ticket 生命周期</td>
+<td> Replies</td>
+</tr>
+<tr>
+<td><code>Assignments</code></td>
+<td>Executor 报告</td>
+<td> Tickets, Replies</td>
+</tr>
+<tr>
+<td><code>Replies</code></td>
+<td>通过 Outbox 的渠道写入</td>
+<td>无</td>
+</tr>
+</tbody></table>
+<p><strong>零环。</strong> 这在 Agent 项目里不常见 —— 大多数 Agent 框架的依赖图是一团毛线。</p>
+<h3 id="会话工具"><a href="#会话工具" class="headerlink" title="会话工具"></a>会话工具</h3><p>Executor 和主 Session 用的工具集不一样。主 Session 用 <code>dsh-superagent-router</code> 预设，工具集更小，专门用来路由。Executor 用 <code>dsh-superagent-worker</code>，工具更多，能干活。两者都有 5 秒的 shell 和作业等待上限。</p>
+<p>Worker 的 subagent 用 DSH 的 <code>standard</code> 预设，权限继承 worker，只保留 worker 允许的工作工具，<strong>Ticket 结束时这些工具就消失了</strong>。</p>
+<h3 id="提示词是文件，不是代码"><a href="#提示词是文件，不是代码" class="headerlink" title="提示词是文件，不是代码"></a>提示词是文件，不是代码</h3><p><code>prompts/</code> 目录下有十来个 markdown 模板：<code>admission.md</code>、<code>dispatch.md</code>、<code>orchestrator.md</code>、<code>worker.md</code>、<code>handoff.md</code>、<code>replies.md</code>、<code>subscriptions.md</code>、<code>shared.md</code>，外加 <code>prompts/team/</code> 下的 <code>communication.md</code>、<code>delivery.md</code>、<code>scope.md</code>、<code>work.md</code>。</p>
+<p>团队要改的东西（GitHub 披露行、review 机器人、commit 作者、auto-merge 条件）全在 <code>team/</code> 目录里。</p>
+<p>面板上改完还能看 <strong>Full prompt</strong>（组装后的完整文本）、和已保存文本或默认值做对比、以及 <strong>History</strong>（历史版本）。升级时如果内置默认值变了而你覆盖过，界面会标记 <strong>Default updated（默认内容已更新）</strong>，让你选「保留我的文本」还是「用新默认值」。</p>
+<hr>
+<h2 id="十、Skills：让-worker-知道怎么读-GitHub"><a href="#十、Skills：让-worker-知道怎么读-GitHub" class="headerlink" title="十、Skills：让 worker 知道怎么读 GitHub"></a>十、Skills：让 worker 知道怎么读 GitHub</h2><p><code>skills/dsh-superagent-github/SKILL.md</code> 是给 worker 看的操作手册。摘几段：</p>
+<p>worker 用 <code>orchestrator_read</code> 读仓库上下文：</p>
+<ul>
+<li><code>github/issues/&lt;number&gt;</code>、<code>github/pulls/&lt;number&gt;</code> — 描述</li>
+<li><code>github/issues/&lt;number&gt;/comments/1</code> — 对话评论</li>
+<li><code>github/pulls/&lt;number&gt;/comments/1</code> — review 评论</li>
+<li><code>github/pulls/&lt;number&gt;/thread/&lt;comment-id&gt;</code> — 任意评论所在的 review thread</li>
+<li><code>github/pulls/&lt;number&gt;/reviews/1</code> — review</li>
+<li><code>github/pulls/&lt;number&gt;/checks</code> — CI</li>
+</ul>
+<p>一页放 20 条，有下一页时会给出 <code>next_resource</code>。评论或 review 的结构是 <code>{ id, from, at, text, reply_to?, path?, line?, url }</code>，其中 <code>bot: true</code> 标记机器人和 GitHub App。</p>
+<p>这一句是关键：</p>
+<blockquote>
+<p><strong>Reading does not create tickets or send replies.</strong></p>
+</blockquote>
+<p>读不建单，不发消息。避免了「worker 读着读着把上下文当请求执行了」这类事故。</p>
+<p>回复 review thread 必须用 GraphQL 的 <code>resolveReviewThread</code>，而且明确禁止用 <code>gh pr comment</code> 或 issue-comment 端点来解释 review thread：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gh api repos/&lt;OWNER&gt;/&lt;REPO&gt;/pulls/&lt;PR&gt;/comments/&lt;ROOT&gt;/replies --method POST -f body=&lt;text&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>还有一条我觉得值得抄的规矩：</p>
+<blockquote>
+<p>Before substantial work on a new human request or review comment, call <code>orchestrator_ack</code> with its original trigger ID and a brief request-specific <code>text</code>, even within an existing ticket; the host replies once in that source thread.</p>
+</blockquote>
+<p><strong>在开始实质工作前先 ack 一次</strong>，哪怕是在一个已有的工单里。宿主只回一次。之后干活过程中就安静了。</p>
+<p>而「什么时候该说话」也是有规范的：创建或接管 PR 之后立刻报 <code>progress</code> 并带上 PR 号，<strong>不要等 CI、不要等交接</strong>。</p>
+<hr>
+<h2 id="十一、和同类项目比"><a href="#十一、和同类项目比" class="headerlink" title="十一、和同类项目比"></a>十一、和同类项目比</h2><h3 id="对比-Devin-Cursor-Background-Agent"><a href="#对比-Devin-Cursor-Background-Agent" class="headerlink" title="对比 Devin / Cursor Background Agent"></a>对比 Devin / Cursor Background Agent</h3><p>这类产品的重心是「完成一个工单」，交互模式是人主动发起、agent 交付结果。</p>
+<p>dsh-superagent 的重心是<strong>事件驱动的常驻代理</strong>：它一直在听 GitHub 通知，按你的策略决定接不接单，然后在独立 Session 里干活。人的角色从「下指令的人」变成「写规则的人 + 偶尔被问的人」。</p>
+<p>差别在架构上体现得很清楚：它有完整的 Policy / Eval / Mandate / Subscription 这套授权与路由层，而大多数产品只有「谁能用这个功能」这一层。</p>
+<h3 id="对比-OpenHands-SWE-agent-这类研究型框架"><a href="#对比-OpenHands-SWE-agent-这类研究型框架" class="headerlink" title="对比 OpenHands / SWE-agent 这类研究型框架"></a>对比 OpenHands / SWE-agent 这类研究型框架</h3><p>SWE-agent 是<strong>单个任务、单个 episode</strong>：给定 issue，产生 patch，结束。评测友好。</p>
+<p>dsh-superagent 是<strong>长期运行、多任务、有状态</strong>的系统：状态存在 Store 里（SQLite 之类），有跨重启的恢复，有策略版本，有订阅关系。它更像一个运维系统而不是一个 benchmark harness。</p>
+<p>代价是：SWE-agent 那种「一条命令跑完 100 个 issue」的评测方式在这里很难写，因为它的行为依赖于团队写下的策略。</p>
+<h3 id="对比-GitHub-自己的-Copilot-Workspace-Coding-Agent"><a href="#对比-GitHub-自己的-Copilot-Workspace-Coding-Agent" class="headerlink" title="对比 GitHub 自己的 Copilot Workspace / Coding Agent"></a>对比 GitHub 自己的 Copilot Workspace / Coding Agent</h3><p>GitHub 官方的 coding agent 也在 PR 里干活、也发评论。但它是<strong>平台内置</strong>的，行为策略由平台定死。</p>
+<p>dsh-superagent 的关键差异是<strong>策略可写</strong>：你能写规则说「什么情况下允许主动工作」，准入表能精细到「某类范围内、没 @ 代理但发言的人算不算候选」。</p>
+<h3 id="对比各类「自托管-Claude-Code-Codex」封装"><a href="#对比各类「自托管-Claude-Code-Codex」封装" class="headerlink" title="对比各类「自托管 Claude Code / Codex」封装"></a>对比各类「自托管 Claude Code / Codex」封装</h3><p>这类工具本质上是给 CLI 套个壳 + 加个网页面板。dsh-superagent 的独特之处是它<strong>不实现模型调用</strong>，只做编排 —— 模型能力来自 DeepSeek Harness。</p>
+<p>这既是它的优点（不重复造轮子，模型随便换）也是它的硬伤（绑死 DSH）。</p>
+<h3 id="对比-n8n-Zapier-这类工作流自动化"><a href="#对比-n8n-Zapier-这类工作流自动化" class="headerlink" title="对比 n8n / Zapier 这类工作流自动化"></a>对比 n8n / Zapier 这类工作流自动化</h3><p>n8n 的路子是「你画好流程，机器按图执行」。dsh-superagent 是「你写策略，模型判断意图，机器执行判断」。</p>
+<p>前者确定性高、可预测；后者灵活、能处理开放式请求，但要求前面那套授权模型来兜住。</p>
+<h3 id="对比-各类-multi-agent-编排框架（LangGraph、AutoGen、CrewAI）"><a href="#对比-各类-multi-agent-编排框架（LangGraph、AutoGen、CrewAI）" class="headerlink" title="对比 各类 multi-agent 编排框架（LangGraph、AutoGen、CrewAI）"></a>对比 各类 multi-agent 编排框架（LangGraph、AutoGen、CrewAI）</h3><p>那些框架提供的是<strong>编排原语</strong>（状态图、角色、任务路由），你得自己往上搭业务。</p>
+<p>dsh-superagent 是<strong>一个具体的业务</strong>（GitHub 仓库工单流），但把领域模型、授权、执行、面板全都做完了。</p>
+<p>我觉得这两条路都合理。dsh-superagent 的价值在于它是一个<strong>完整可抄的样板</strong>。</p>
+<hr>
+<h2 id="十二、真实局限"><a href="#十二、真实局限" class="headerlink" title="十二、真实局限"></a>十二、真实局限</h2><p>这是研究原型，下面这些是文档里明说或者代码里能看出来的：</p>
+<p><strong>1. 它不是官方产品，README 自己说的。</strong></p>
+<blockquote>
+<p>It may still contain bugs, and its coding style and engineering practices may be inconsistent.</p>
+</blockquote>
+<p><strong>2. 配套文章里的部分设计没实现。</strong></p>
+<p>「Some designs discussed in the article are directions for future development and are not implemented in this prototype.」—— 别拿文章当实现说明。</p>
+<p><strong>3. 依赖 DeepSeek Harness 生态，而且 DSH 本身是 alpha。</strong></p>
+<p><code>engines.dsh</code> 是 <code>^0.2.1-alpha.2</code>。所有 peerDependencies 都是 <code>^0.2.1-alpha.2</code>。安装文档里钉的是 <code>@deepseek-ai/dsh@0.2.1-rc.3</code>。</p>
+<p><strong>alpha 阶段的接口不稳定性，你懂的。</strong></p>
+<p><strong>4. 没有发布版本，没有 tag，没有 release。</strong></p>
+<p><code>package.json</code> 里是 <code>"private": true</code>、<code>"version": "0.1.0"</code>。GitHub 上 releases 和 tags 都是空的。所以只能用 <code>link:$PWD</code> 本地装，不能 <code>npm i</code>。</p>
+<p><strong>5. 默认情况下执行器无确认地跑命令。</strong></p>
+<blockquote>
+<p>Executor Sessions run commands without approval as the operator’s OS user.</p>
+</blockquote>
+<p>而且文档明确说这不是安全边界。需要真隔离得自己套容器。</p>
+<p><strong>6. 只支持单个仓库。</strong></p>
+<p>README 第一句就是「for one GitHub repository」。多仓库要么多部署实例，要么自己照着 <code>docs/008-cookbook.md</code> 写 Source。</p>
+<p><strong>7. 面板和概念表对非工程角色有门槛。</strong></p>
+<p>虽有中英术语表和 <code>?</code> 按钮，但「Mandate」「Assignment」「Subscription」这套词汇量不小。飞书和 GitHub 上的消息已经特意不用术语了，面板这块还是工程师视角。</p>
+<p><strong>8. 那 200 行的 auto-merge 阈值是硬编码默认值，不是策略。</strong></p>
+<p>在 prompt 里，不是配置项。要改得改 prompt 文本。</p>
+<p><strong>9. <code>observe</code> 模式的意义被低估了。</strong></p>
+<p>默认模式只记录不执行，这意味着<strong>你装好它之后的第一周，它什么也不会干</strong>。这个设计是对的（先看清楚再开自动挡），但要有心理准备。</p>
+<p><strong>10. 文档语言是英文，界面是中文。</strong></p>
+<p><code>locale/zh.json</code> 里目前只有 <code>meta.title</code> 和 <code>meta.description</code> 两条翻译。完整的界面文案在 <code>src/client/locales.ts</code>（73KB）里。</p>
+<p><strong>11. 需要 tmux。</strong></p>
+<p><code>scripts/dsh-superagent</code> 靠 tmux 会话跑 DSH 服务。这在容器和 CI 环境里会绕路。</p>
+<hr>
+<h2 id="十三、适合谁，不适合谁"><a href="#十三、适合谁，不适合谁" class="headerlink" title="十三、适合谁，不适合谁"></a>十三、适合谁，不适合谁</h2><h3 id="适合"><a href="#适合" class="headerlink" title="适合"></a>适合</h3><p><strong>维护单个活跃仓库的小团队。</strong> 尤其是一两个维护者、Issue 和 PR 来回讨论的那种。你的痛点是「回复之后忘了跟进」。</p>
+<p><strong>已经有 GitHub 工作流纪律的团队。</strong> 你有 review 流程、有分支保护、有 commit 规范 —— 这个项目会尊重它们。</p>
+<p><strong>愿意先花一周看「observe」记录的人。</strong> 它要求你先建立信任再放手。</p>
+<p><strong>想学「怎么设计 agent 权限模型」的人。</strong> 单看 <code>docs/001-domain.md</code> 的领域模型和「Rejected concepts」表，就值回票价。</p>
+<p><strong>想做平台而不是用平台的人。</strong> <code>docs/008-cookbook.md</code> 讲怎么加一个 Source。把它当模板做自己的内部工单代理。</p>
+<h3 id="不适合"><a href="#不适合" class="headerlink" title="不适合"></a>不适合</h3><p><strong>个人玩具项目。</strong> 你自己就有空处理 Issue，多一个代理只是多一份要 review 的 PR。</p>
+<p><strong>多仓库场景。</strong> 一个实例一个仓库，仓库一多就管理不过来了。</p>
+<p><strong>流程不成熟的团队。</strong> 如果你们连 PR 都不怎么 review，开一个会自己提交 PR 的代理只会制造混乱。</p>
+<p><strong>需要强隔离的场景。</strong> 默认没有沙箱、没有审批、执行器以你的身份跑命令。</p>
+<p><strong>完全不想配 DSH 的人。</strong> 装它要 Node 22+、pnpm、tmux、Python 3.8+、gh CLI 2.48+、还有一个 DSH 本体。对纯 Python 团队来说这个栈有点重。</p>
+<p><strong>指望它开箱即用的人。</strong> 配置步骤有 9 个问题 + 机器配置 + 策略 + prompt 定制。<strong>至少要花一个下午。</strong></p>
+<hr>
+<h2 id="十四、我的实际判断"><a href="#十四、我的实际判断" class="headerlink" title="十四、我的实际判断"></a>十四、我的实际判断</h2><p>说点我的个人看法。</p>
+<p>这个项目最被低估的东西不是那 7,182 stars，也不是主动型 agent 这个形态，而是<strong>它把「注意力」变成了一个可度量的工程约束</strong>。</p>
+<p>文档里有一句：</p>
+<blockquote>
+<p>Every part of the project is judged by the attention it costs.</p>
+</blockquote>
+<p>这句话让「安静」从一个偏好变成了一个可以被 review 的标准。你 review 别人的 Agent 框架时，可以直接问：这条消息花掉了谁的注意力？它回报得更多吗？</p>
+<p>同理，<strong>「Rejected concepts」这一节应该成为所有 Agent 框架文档的标配</strong>。写「我们不做什么」比写「我们做什么」更能约束复杂度。</p>
+<p>至于技术本身，我最欣赏的是三处：</p>
+<ol>
+<li><strong>Gate（确定性准入）和 Assessment（模型研判）分层。</strong> 权限判断不交给模型。这是很多框架跳过的一步，但这恰恰是最不能交给模型的一步。</li>
+<li><strong>Subscription 让后续讨论自动回到 Ticket。</strong> 「PR 合并后上下文就断了」这个经典问题，被「工单结束后 Mandate 保留」这个设计干净地解决了。</li>
+<li><strong>多留一个给人用的槽位。</strong> 一个这么小的设计决策，暴露了作者是真的在脑子里跑过这个系统的。</li>
+</ol>
+<p>需要清醒的地方也有：<strong>它现在的成熟度，配不上它传播的速度。</strong> 7,182 stars 的项目，0 个 release、0 个 tag、<code>private: true</code>、DSH 依赖还是 alpha。这个组合意味着 —— 现在动手的人会成为试错的人。</p>
+<p>我的建议是：<strong>先读文档，再决定要不要装。</strong> <code>docs/000-philosophy.md</code> 只有 3KB，<code>docs/001-domain.md</code> 12KB，两个加起来 15 分钟。读完你就知道这套设计值不值得你花一个下午去配。</p>
+<p>如果它值得 —— 用 <code>observe</code> 模式起步，配一份短名单，先让它只做「明确的请求」，等你看清楚它的行为之后再放宽。</p>
+<p><strong>最后一句，也是它自己文档里的那句：</strong></p>
+<blockquote>
+<p>The goal is the right help at the right time, and nothing at any other time.</p>
+</blockquote>
+<p>正确的帮助，在正确的时间，仅此而已。</p>
+<hr>
+<h2 id="十五、参考"><a href="#十五、参考" class="headerlink" title="十五、参考"></a>十五、参考</h2><ul>
+<li>仓库：<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/dsh-superagent-prototype">https://github.com/deepseek-ai/dsh-superagent-prototype</a></li>
+<li> 文档目录 <code>docs/</code>：<ul>
+<li><code>000-philosophy.md</code> — 核心原则（3KB）</li>
+<li><code>001-domain.md</code> — 领域模型（12KB）</li>
+<li><code>002-authorization.md</code> — 授权与准入（13KB）</li>
+<li><code>003-execution.md</code> — 执行、交付与恢复（17KB）</li>
+<li><code>004-prompts.md</code> — 提示词设计（9KB）</li>
+<li><code>005-panel.md</code> — 控制面板（6KB）</li>
+<li><code>006-deployment.md</code> — 部署与排错（23KB）</li>
+<li><code>007-architecture.md</code> — 架构实现指南（70KB）</li>
+<li><code>008-cookbook.md</code> — 扩展 Source 的 cookbook（29KB）</li>
+</ul>
+</li>
+<li><code>SETUP.md</code> — 安装向导（写给 agent 的）</li>
+<li><code>scripts/dsh-superagent</code> — 服务管理脚本（Python）</li>
+<li>配套文章：<em>Exploring Super-agent Design: Towards a More Autonomous Agent System</em></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/11/02/deepseek-dsh-superagent-proactive-github-agent/" title="deepseek-ai&#x2F;dsh-superagent-prototype：7,182 stars 的主动型 GitHub 代理，把「注意力」当成唯一预算">https://www.daishengli.top/2026/11/02/deepseek-dsh-superagent-proactive-github-agent/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag"># 自动化</a>
+              <a href="/tags/TypeScript/" rel="tag"># TypeScript</a>
+              <a href="/tags/dsh-superagent-prototype/" rel="tag"># dsh-superagent-prototype</a>
+              <a href="/tags/deepseek-ai/" rel="tag"># deepseek-ai</a>
+              <a href="/tags/Proactive-Agent/" rel="tag"># Proactive Agent</a>
+              <a href="/tags/GitHub/" rel="tag"># GitHub</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/01/wangzan101-mika-android-local-ai-agent/" rel="prev" title="wangzan101&#x2F;Mika：2.7k stars 的安卓本地 AI 助理，把后台虚拟屏玩成了主力">
+                  <i class="fa fa-angle-left"></i> wangzan101/Mika：2.7k stars 的安卓本地 AI 助理，把后台虚拟屏玩成了主力
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/03/vercel-labs-agent-desktop-accessibility-tree-computer-use/" rel="next" title="vercel-labs&#x2F;agent-desktop：9,569 stars 的无像素匹配桌面 Agent 工具，把可访问性树变成了 Agent 的眼睛">
+                  vercel-labs/agent-desktop：9,569 stars 的无像素匹配桌面 Agent 工具，把可访问性树变成了 Agent 的眼睛 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

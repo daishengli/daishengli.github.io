@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="interplains&#x2F;Zero-Breach-Toolkit（3,784 stars、Apache-2.0）是用纯 Python 标准库写的本地只读扫描器，在 Windows、macOS、Linux、AndroidQF 采集包和 iPhone 备份里查找 Pegasus、Predator、Graphite、Candiru 等商业间谍软件的已公开痕迹。2026-10-25 建仓，五天冲到 3,78">
+<meta property="og:type" content="article">
+<meta property="og:title" content="interplains&#x2F;Zero-Breach-Toolkit：3,784 stars 的离线间谍软件痕迹扫描器，只读、断网、给每条证据打分">
+<meta property="og:url" content="https://www.daishengli.top/2026/10/30/zero-breach-toolkit-offline-spyware-trace-scanner/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="interplains&#x2F;Zero-Breach-Toolkit（3,784 stars、Apache-2.0）是用纯 Python 标准库写的本地只读扫描器，在 Windows、macOS、Linux、AndroidQF 采集包和 iPhone 备份里查找 Pegasus、Predator、Graphite、Candiru 等商业间谍软件的已公开痕迹。2026-10-25 建仓，五天冲到 3,78">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-30T07:50:00.000Z">
+<meta property="article:modified_time" content="2026-11-04T00:05:40.863Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Zero-Breach-Toolkit">
+<meta property="article:tag" content="interplains">
+<meta property="article:tag" content="网络安全">
+<meta property="article:tag" content="数字取证">
+<meta property="article:tag" content="间谍软件">
+<meta property="article:tag" content="隐私保护">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/10/30/zero-breach-toolkit-offline-spyware-trace-scanner/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/10/30/zero-breach-toolkit-offline-spyware-trace-scanner/","path":"2026/10/30/zero-breach-toolkit-offline-spyware-trace-scanner/","title":"interplains/Zero-Breach-Toolkit：3,784 stars 的离线间谍软件痕迹扫描器，只读、断网、给每条证据打分"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>interplains/Zero-Breach-Toolkit：3,784 stars 的离线间谍软件痕迹扫描器，只读、断网、给每条证据打分 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">419</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">128</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9A%E4%B8%80%E4%B8%AA%E4%B8%8D%E8%A3%85%E4%BE%9D%E8%B5%96%E3%80%81%E4%B8%8D%E8%81%94%E7%BD%91%E7%9A%84%E6%89%AB%E6%8F%8F%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">一、它到底是什么：一个不装依赖、不联网的扫描器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%B8%89%E6%9D%A1%E9%93%81%E5%BE%8B%EF%BC%9AD1%E3%80%81D2%E3%80%81D3"><span class="nav-number">2.</span> <span class="nav-text">二、三条铁律：D1、D2、D3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%8A%8A-socket-%E7%84%8A%E6%AD%BB%EF%BC%9AD2-%E6%98%AF%E6%80%8E%E4%B9%88%E8%90%BD%E5%9C%B0%E7%9A%84"><span class="nav-number">3.</span> <span class="nav-text">三、把 socket 焊死：D2 是怎么落地的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%8C%87%E6%A0%87%E4%BB%8E%E5%93%AA%E6%9D%A5%EF%BC%9A12-400-%E6%9D%A1-IOC-%E7%9A%84%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="nav-number">4.</span> <span class="nav-text">四、指标从哪来：12,400 条 IOC 的流水线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%8D%81%E4%B8%AA%E6%A8%A1%E5%9D%97%EF%BC%8C%E4%B8%80%E5%BC%A0%E6%B3%A8%E5%86%8C%E8%A1%A8"><span class="nav-number">5.</span> <span class="nav-text">五、十个模块，一张注册表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E8%AF%81%E6%8D%AE%E5%88%86%E7%BA%A7%EF%BC%9A%E5%91%BD%E4%B8%AD%E4%B8%8D%E7%AD%89%E4%BA%8E%E4%B8%AD%E6%8B%9B"><span class="nav-number">6.</span> <span class="nav-text">六、证据分级：命中不等于中招</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%99-AI-%E5%8A%A9%E6%89%8B%E5%87%86%E5%A4%87%E7%9A%84%E5%A5%91%E7%BA%A6"><span class="nav-number">6.1.</span> <span class="nav-text">给 AI 助手准备的契约</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E4%BA%B2%E6%89%8B%E8%B7%91%E4%B8%80%E9%81%8D"><span class="nav-number">7.</span> <span class="nav-text">七、亲手跑一遍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E6%89%8B%E6%9C%BA%E7%AB%AF%EF%BC%9A%E8%AF%BB%E9%87%87%E9%9B%86%E5%8C%85%EF%BC%8C%E4%B8%8D%E7%A2%B0%E8%AE%BE%E5%A4%87"><span class="nav-number">8.</span> <span class="nav-text">八、手机端：读采集包，不碰设备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android%EF%BC%9A%E5%A7%94%E6%89%98%E7%BB%99-AndroidQF"><span class="nav-number">8.1.</span> <span class="nav-text">Android：委托给 AndroidQF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iPhone%EF%BC%9A%E5%A4%87%E4%BB%BD%E3%80%81WAL-%E4%B8%8E%E4%B8%8A%E9%99%90"><span class="nav-number">8.2.</span> <span class="nav-text">iPhone：备份、WAL 与上限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%8F%96%E8%88%8D%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%AD%BE%E5%90%8D%E3%80%81%E4%B8%8D%E7%94%A8-YARA%E3%80%81%E4%B8%8D%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="nav-number">9.</span> <span class="nav-text">九、取舍：为什么不签名、不用 YARA、不装依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E5%92%8C%E5%90%8C%E7%B1%BB%E5%B7%A5%E5%85%B7%E6%AF%94%E3%80%81%E5%AE%83%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81%EF%BC%8C%E4%BB%A5%E5%8F%8A%E6%88%91%E8%87%AA%E5%B7%B1%E7%9A%84%E5%88%A4%E6%96%AD"><span class="nav-number">10.</span> <span class="nav-text">十、和同类工具比、它不适合谁，以及我自己的判断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E8%87%AA%E5%B7%B1%E7%9A%84%E5%88%A4%E6%96%AD"><span class="nav-number">10.1.</span> <span class="nav-text">我自己的判断</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">128</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">419</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/10/30/zero-breach-toolkit-offline-spyware-trace-scanner/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="interplains&#x2F;Zero-Breach-Toolkit：3,784 stars 的离线间谍软件痕迹扫描器，只读、断网、给每条证据打分 | 小戴的网络日志">
+      <meta itemprop="description" content="interplains&#x2F;Zero-Breach-Toolkit（3,784 stars、Apache-2.0）是用纯 Python 标准库写的本地只读扫描器，在 Windows、macOS、Linux、AndroidQF 采集包和 iPhone 备份里查找 Pegasus、Predator、Graphite、Candiru 等商业间谍软件的已公开痕迹。2026-10-25 建仓，五天冲到 3,784 stars，Python 代码约 3.95 万行，内置约 12,400 条来自 29 个来源的 IOC，检查浏览器历史、下载来源、Defender 与 PowerShell 日志、启动项、DNS 缓存、文件指纹，和手机里的应用、短信与日志。三条硬规则：扫描期间禁止任何外连，只读不改证据，查不了的一律记为 gap 而非 clean；每条命中标 14 级证据等级，退出码区分干净、有命中和有缺口。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          interplains/Zero-Breach-Toolkit：3,784 stars 的离线间谍软件痕迹扫描器，只读、断网、给每条证据打分
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-10-30 15:50:00" itemprop="dateCreated datePublished" datetime="2026-10-30T15:50:00+08:00">2026-10-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">interplains/Zero-Breach-Toolkit（3,784 stars、Apache-2.0）是用纯 Python 标准库写的本地只读扫描器，在 Windows、macOS、Linux、AndroidQF 采集包和 iPhone 备份里查找 Pegasus、Predator、Graphite、Candiru 等商业间谍软件的已公开痕迹。2026-10-25 建仓，五天冲到 3,784 stars，Python 代码约 3.95 万行，内置约 12,400 条来自 29 个来源的 IOC，检查浏览器历史、下载来源、Defender 与 PowerShell 日志、启动项、DNS 缓存、文件指纹，和手机里的应用、短信与日志。三条硬规则：扫描期间禁止任何外连，只读不改证据，查不了的一律记为 gap 而非 clean；每条命中标 14 级证据等级，退出码区分干净、有命中和有缺口。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>凌晨一点，一个做调查报道的朋友在电话里问我：” 我这台电脑，怎么知道自己有没有被装东西？”</p>
+<p>他不是那种会乱点链接的人。真正让他睡不着的是另一件事：过去半年，他采访过的两个线人先后失联，其中一个在最后一条消息里说” 我的手机好像不太对”。他搜了一圈，看到的建议是” 下载某某检测工具”” 上传样本到某某平台分析”。然后他停住了 —— 因为你没法确认，那个让你下载检测工具的人，是不是正等着你下载。</p>
+<p>这就是商业雇佣间谍软件带来的一个很别扭的困境：<strong>你想检查自己有没有被监控，但检查这个动作本身就可能暴露你，或者让你信任一个不该信任的二进制文件。</strong></p>
+<p>我后来在 GitHub 上翻到这个项目，第一反应是” 这作者懂行”。它没有漂亮的官网首屏，没有”AI 驱动的一键检测”，README 里很长一段在讲怎么给一个不会用命令行的记者装 Python。但在这些啰嗦的步骤背后，是三条被写成代码、写成测试、写进 JSON 契约的硬规则。</p>
+<p>项目叫 <strong>interplains/Zero-Breach-Toolkit</strong>。</p>
+<h2 id="一、它到底是什么：一个不装依赖、不联网的扫描器"><a href="#一、它到底是什么：一个不装依赖、不联网的扫描器" class="headerlink" title="一、它到底是什么：一个不装依赖、不联网的扫描器"></a>一、它到底是什么：一个不装依赖、不联网的扫描器</h2><p>先摆事实。</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>仓库</td>
+<td><code>interplains/Zero-Breach-Toolkit</code></td>
+</tr>
+<tr>
+<td>Stars / Forks</td>
+<td>3,784 / 409</td>
+</tr>
+<tr>
+<td> 建仓时间</td>
+<td> 2026-10-25（对，五天前）</td>
+</tr>
+<tr>
+<td>提交数</td>
+<td> 56</td>
+</tr>
+<tr>
+<td> 许可证</td>
+<td> Apache-2.0（代码）/ CC0 1.0（IOC 数据）</td>
+</tr>
+<tr>
+<td>语言</td>
+<td> Python，3.8+，<strong>默认只用标准库</strong></td>
+</tr>
+<tr>
+<td>代码量</td>
+<td> 164 个 <code>.py</code>，约 39,498 行（核心包 <code>scan/zbtriage</code> 约 10,248 行）</td>
+</tr>
+<tr>
+<td>测试</td>
+<td> 109 个测试文件，约 18,176 行</td>
+</tr>
+<tr>
+<td>当前版本</td>
+<td> v0.1.13（2026-10-29）</td>
+</tr>
+<tr>
+<td>作者</td>
+<td>匿名，署名 archivegenocide</td>
+</tr>
+</tbody></table>
+<p>它做的事，一句话：<strong>在你自己机器的本地记录里，找已知商业间谍软件留下的、已经被公开过的痕迹。</strong></p>
+<p>支持的输入面很宽：</p>
+<ul>
+<li>Windows 桌面（浏览器、桌面应用的 Chromium 内核、下载来源、Win+R 粘贴记录、Defender 历史、PowerShell 日志、Prefetch、Amcache、启动项、DNS 缓存）</li>
+<li>macOS / Linux 桌面（同类浏览器记录、Safari、LaunchAgent / LaunchDaemon、systemd、cron、shell 历史）</li>
+<li>Android：读取 <a target="_blank" rel="noopener" href="https://github.com/mvt-project/androidqf">AndroidQF</a> 采出来的取证包，自己<strong>不碰手机</strong></li>
+<li> iPhone：读取 Finder / Apple Devices /iTunes 的本地备份、已提取的文件系统、sysdiagnose 归档</li>
+</ul>
+<p>注意最后两条的措辞。它不” 连接手机”，它读<strong>别人采好的包</strong>。这是很克制的设计，后面会讲为什么。</p>
+<p>还有一点值得先说：这个项目<strong>不是</strong>杀毒软件。它不做启发式查杀，不做行为监控，不驻留后台。它是一次性的、离线的、事后取证的字符串比对器，外加一堆” 我知道自己看不到什么” 的自我声明。</p>
+<h2 id="二、三条铁律：D1、D2、D3"><a href="#二、三条铁律：D1、D2、D3" class="headerlink" title="二、三条铁律：D1、D2、D3"></a>二、三条铁律：D1、D2、D3</h2><p><code>scan/CONTRACT.md</code> 里写死了三条规则，代码里到处引用它们的编号。</p>
+<p><strong>D2：绝不接触指标（never contact an indicator）。</strong></p>
+<p>这是最重要的一条。你想想，如果扫描器为了” 验证” 一个 C&amp;C 域名，去 <code>getaddrinfo</code> 解析一下，会发生什么？DNS 查询会到达对方控制的解析器，等于举着牌子告诉运营者：” 这台机器上有人正在查你的域名，而且他知道这个名字。”</p>
+<p>对记者、异见者、人权工作者来说，这一下就可能坐实” 目标已察觉”，接下来对方可能换 infrastructure、加速利用、或者干脆动手清痕迹。</p>
+<p><strong>D1 / D3 是同一套认识论的两面：</strong></p>
+<ul>
+<li>同一串字符串出现在不同位置，证据强度完全不一样。磁盘上一个和已公布样本同 SHA-256 的文件，是” 东西在”；浏览器历史里一条访问记录，是” 这台机器去过”；一篇收藏的新闻文章里提到这个域名，只是” 被提到过”。<strong>证据要分级，等级决定建议，而不是命中数量。</strong></li>
+<li>检查不了的东西，必须明确写成” 没查到”，绝不能悄悄合并进” 干净”。SDK 里的原话是：<em>A check that could not run is a gap, never a clean result.</em></li>
+</ul>
+<p>第二条听起来像常识，但它是绝大多数安全工具做不到的地方。大部分扫描器最后给你一个绿色的勾，你根本不知道那个勾背后有多少个” 我读不了这个文件所以跳过了”。</p>
+<h2 id="三、把-socket-焊死：D2-是怎么落地的"><a href="#三、把-socket-焊死：D2-是怎么落地的" class="headerlink" title="三、把 socket 焊死：D2 是怎么落地的"></a>三、把 socket 焊死：D2 是怎么落地的</h2><p>只写一句” 我们保证不联网” 没有意义。这个项目的做法是：<strong>在扫描期间，把 Python 的 <code>socket</code> 模块改成一颗地雷。</strong></p>
+<p><code>scan/zbtriage/netguard.py</code> 的注释写得很直白：</p>
+<blockquote>
+<p>我们不只是” 打算” 不解析任何东西 —— 我们让它变得不可能。扫描在 <code>no_network()</code> 里运行时，<code>socket</code> 模块里每一个域名解析和出站连接的入口都会抛 <code>NetworkContactAttempt</code>。一个想解析 IOC 的 bug 会大声崩掉，而不是悄悄泄露出一个信号。</p>
+</blockquote>
+<p>实现是这样的：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">_BLOCKED = (</span><br><span class="line">    <span class="string">"getaddrinfo"</span>,</span><br><span class="line">    <span class="string">"gethostbyname"</span>,</span><br><span class="line">    <span class="string">"gethostbyname_ex"</span>,</span><br><span class="line">    <span class="string">"gethostbyaddr"</span>,</span><br><span class="line">    <span class="string">"getnameinfo"</span>,</span><br><span class="line">    <span class="string">"create_connection"</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="meta">@contextlib.contextmanager</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">no_network</span>():</span><br><span class="line">    <span class="string">"""Context manager that disables all socket-level resolution and egress."""</span></span><br><span class="line">    recorder = _Recorder()</span><br><span class="line">    saved = {}</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> _BLOCKED:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">hasattr</span>(socket, name):</span><br><span class="line">            saved[name] = <span class="built_in">getattr</span>(socket, name)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">def</span> <span class="title function_">make</span>(<span class="params">fn_name</span>):</span><br><span class="line">                <span class="keyword">def</span> <span class="title function_">blocked</span>(<span class="params">*_a, **_k</span>):</span><br><span class="line">                    recorder.trip(<span class="string">"socket."</span> + fn_name)</span><br><span class="line">                <span class="keyword">return</span> blocked</span><br><span class="line">            <span class="built_in">setattr</span>(socket, name, make(name))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Methods on the socket OBJECT that open a connection or send egress.</span></span><br><span class="line">    _SOCK_METHODS = (<span class="string">"connect"</span>, <span class="string">"connect_ex"</span>, <span class="string">"sendto"</span>, <span class="string">"sendmsg"</span>, <span class="string">"sendall"</span>, <span class="string">"send"</span>)</span><br><span class="line">    <span class="comment"># ... 逐个替换成抛异常的桩</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意它连 <code>sendto</code> 和 <code>sendmsg</code> 都堵了。为什么？因为 UDP 不需要先 <code>connect()</code>。如果只堵 <code>connect</code>，一个 bug 仍然可以往解析器或者 C&amp;C 发一个 UDP 包出去。这种细节不是靠” 我很小心” 能覆盖的，只能靠把攻击面一个个数出来。</p>
+<p>更妙的是它的<strong>边界说明</strong>。注释里明确写了：这个守卫不拦 <code>subprocess</code>，因为 <code>host</code> 模块需要用 PowerShell 读<strong>本地 DNS 解析器缓存</strong> —— 读一个” 已经解析过的缓存条目” 不会发起任何解析，所以是安全的。同时 <code>docs/PATTERNS.md</code> 里也老实承认：这不是操作系统级网络沙箱，在 POSIX 上如果一个目录是网络挂载的，它看起来就是个普通绝对路径，可能真的会被读到，” 需要严格离线请用操作系统层面的网络隔离”。</p>
+<p>这种” 我知道我的保证到哪儿为止” 的写法，比任何营销文案都可信。</p>
+<p>除了 <code>netguard</code>，配套还有几道闸：</p>
+<ul>
+<li><strong>拒绝重定向路径</strong>：符号链接、Windows 的 UNC 路径、远程驱动器、云占位文件（OneDrive 之类没下载到本地的” 云端唤起” 文件）都不读。</li>
+<li><strong>只读</strong>：模块不得创建、修改、删除宿主上的任何东西。唯一允许的写操作，是把被锁住的数据库复制到系统临时目录再读，读完清理。</li>
+<li><strong>测试钉死</strong>：<code>tests/test_netguard.py</code> 专门检查” 任何扫描模块都不许提网络工具”，<code>tests/test_heuristics.py</code> 钉死 <code>heuristics.py</code> 只能 <code>import re</code>、不许调用任何东西。</li>
+</ul>
+<h2 id="四、指标从哪来：12-400-条-IOC-的流水线"><a href="#四、指标从哪来：12-400-条-IOC-的流水线" class="headerlink" title="四、指标从哪来：12,400 条 IOC 的流水线"></a>四、指标从哪来：12,400 条 IOC 的流水线</h2><p>扫描器本体只是” 比对器”，真正决定它能看见什么的是指标集。</p>
+<p>README 给的数字是：<strong>约 12,400 条已公开指标，来自 29 个来源</strong>，包括 Amnesty International Security Lab、MVT 项目的 <code>mvt-indicators</code>、Citizen Lab、Echap 的 stalkerware 研究，外加一份手工整理、每一条都带出处的 Candiru（DevilsTongue）与 Paragon Graphite 指标。</p>
+<p>手工整理那份在 <code>iocs/curated_mercenary.txt</code>，格式是 TSV，文件头写得非常” 取证”：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Curated mercenary-spyware indicators not available in any machine-readable feed</span><br><span class="line"># as-of: 2026-10-25</span><br><span class="line"># ^ Curated date; the staleness reference for this file.</span><br><span class="line"># Licence: CC0 1.0 (as iocs/LICENSE.md). Indicators are facts; the citations below</span><br><span class="line">#   name the researchers who published them.</span><br><span class="line"># Method: every value was read out of the raw text of the cited report (not from a</span><br><span class="line">#   summary), and its ROLE is recorded from the report's own description.</span><br><span class="line"># Format: indicator &lt;TAB&gt; tier &lt;TAB&gt; confidence &lt;TAB&gt; source-tag &lt;TAB&gt; family</span><br></pre></td></tr></tbody></table></figure>
+
+<p>里面长这样：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Tier 1: victim-facing Graphite servers (devices are expected to contact these)</span><br><span class="line">46.183.184.91	infrastructure-ip	primary	citizenlab-paragon-2025-06	Paragon Graphite</span><br><span class="line">84.110.122.27	infrastructure-ip	primary	citizenlab-paragon-2025-03	Paragon Graphite</span><br><span class="line">awake-wood.io	infrastructure	primary	citizenlab-paragon-2025-03	Paragon Graphite</span><br></pre></td></tr></tbody></table></figure>
+
+<p>它甚至写了” 故意不收录什么”：</p>
+<blockquote>
+<ul>
+<li>报告只公布了部分网段的客户部署 IP（例如 <code>67.69.21.xxx</code>）；</li>
+<li>证书名 <code>forti.external-Sht_prd_2.com</code>（不是合法主机名，含下划线）；</li>
+<li>BIGPRETZEL / SMALLPRETZEL：被点名的取证指标，但值没有公开。</li>
+</ul>
+</blockquote>
+<p><strong>“我没有收录什么，为什么”</strong> —— 这一段比收录清单本身更能说明作者做过取证工作。</p>
+<p>在线更新走 <code>--update</code>，是<strong>唯一</strong>主动联网的普通操作（另一个是单独调用的 Android 采集）。它的约束在 <code>feeds.py</code> 里：</p>
+<ul>
+<li>只允许 <code>https://raw.githubusercontent.com/&lt;白名单 owner&gt;/...</code>；</li>
+<li>重定向被拒；</li>
+<li>默认按本 release 里钉死的 commit 下载，并要求匹配 release 记录的 SHA-256；</li>
+<li>下载后把每个文件的 SHA-256 记进缓存，用来发现意外改动；</li>
+<li>明确写了” 发布者没有对这些文件签名，所以没有签名可验”。</li>
+</ul>
+<p>这句自曝很重要 —— 很多工具会把” 我们校验了哈希” 说成” 我们验证了真实性”，那是两码事。</p>
+<p>还有一个我很喜欢的细节：<strong>指标撤回（withdrawn）的处理</strong>。</p>
+<p>同一个指标可能被多个发布者列出，某个发布者后来撤回了。如果简单地” 任何一条记录还在就算有效”，那个被撤回的指标会永远活着，制造假警报。<code>evidence.py</code> 里的 <code>_withdrawn_only()</code> 做了分组：按（发布者，STIX object id）分组，组内取 <code>modified</code> 最新的那版说话；STIX 要求撤回版本的 <code>modified</code> 更新，所以最新版就是发布者的真实意图。不同发布者之间允许” 诚实地分歧”—— 只要还有一家在现行清单里列着，这个命中就仍然可行动。</p>
+<p>注释里还留了一句：<em>Different publishers still disagree honestly.</em> 这种把” 数据源互相矛盾” 当成正常状态处理，而不是强行归一，是成熟的做法。</p>
+<h2 id="五、十个模块，一张注册表"><a href="#五、十个模块，一张注册表" class="headerlink" title="五、十个模块，一张注册表"></a>五、十个模块，一张注册表</h2><p><code>scan/zbtriage/modules/</code> 下有 10 个模块：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">android.py      # AndroidQF 采集包</span><br><span class="line">browser.py      # Chromium 系 / Firefox 系 / Safari</span><br><span class="line">execution.py    # Prefetch、Amcache 等执行痕迹</span><br><span class="line">hashscan.py     # 文件指纹（SHA-256）</span><br><span class="line">host.py         # Windows 主机记录：DNS、COM、Win+R、Defender、PowerShell</span><br><span class="line">intrusion.py    # Android 入侵日志（DNS / TCP / 进程启动）</span><br><span class="line">ios.py          # iPhone 备份</span><br><span class="line">patternscan.py  # 可选的 YARA-X 规则扫描（Candiru）</span><br><span class="line">posix.py        # macOS / Linux 启动项、shell 历史、日志</span><br><span class="line">traces.py       # Windows 痕迹（ShimCache、PCA 等）</span><br></pre></td></tr></tbody></table></figure>
+
+<p>调度不靠 <code>if platform == 'win32'</code> 这种散落各处的判断，而是一张<strong>源码里的注册表</strong>。<code>readers.py</code> 开头就写清楚了设计意图：</p>
+<blockquote>
+<p>A reader implements NAME and run(ScanContext) -&gt; ModuleResult. Registration is source-controlled: scan inputs cannot load Python plugins or change this list.</p>
+</blockquote>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@dataclass(<span class="params">frozen=<span class="literal">True</span></span>)</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ReaderSpec</span>:</span><br><span class="line">    name: <span class="built_in">str</span></span><br><span class="line">    module: <span class="built_in">str</span></span><br><span class="line">    suffix: <span class="built_in">str</span></span><br><span class="line">    platforms: <span class="built_in">tuple</span></span><br><span class="line">    modes: <span class="built_in">tuple</span></span><br><span class="line">    catalogue: <span class="built_in">dict</span></span><br><span class="line">    helpers: <span class="built_in">tuple</span> = ()</span><br><span class="line">    optional: <span class="built_in">str</span> = <span class="string">""</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>每个 <code>ReaderSpec</code> 除了” 叫什么、在哪个平台跑”，还带一份 <code>catalogue</code>：<code>reads</code>（读什么）、<code>check_kinds</code>（每种检查代表什么证据）、<code>blind_spots</code>（看不到什么）。这份 catalogue 有三个用途 —— 平台选择、报告里的覆盖说明、以及<strong>单文件打包</strong>时的代码收集。也就是说，” 我能看见什么、看不见什么” 不是文档里的一篇文章，而是代码里的数据，最后原样出现在你的报告里。</p>
+<p>模块之间通过 <code>ScanContext</code> 解耦，CLI 不直接碰任何模块：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@dataclass</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ScanContext</span>:</span><br><span class="line">    iocs: IocSet</span><br><span class="line">    deep: <span class="built_in">bool</span> = <span class="literal">False</span></span><br><span class="line">    quick: <span class="built_in">bool</span> = <span class="literal">False</span>      <span class="comment"># 跳过最慢、信号最弱的文件指纹</span></span><br><span class="line">    full: <span class="built_in">bool</span> = <span class="literal">False</span>       <span class="comment"># 连弱证据的原始缓存也读</span></span><br><span class="line">    browser_only: <span class="built_in">bool</span> = <span class="literal">False</span></span><br><span class="line">    phone_path: <span class="built_in">str</span> = <span class="string">""</span></span><br><span class="line">    targets: <span class="built_in">tuple</span> = ()</span><br><span class="line">    extended_windows: <span class="built_in">bool</span> = <span class="literal">False</span></span><br><span class="line">    partial: <span class="built_in">object</span> = <span class="literal">None</span>   <span class="comment"># 模块跑到一半崩了，已找到的命中要活下来</span></span><br><span class="line">    <span class="comment"># ... 其余字段略</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>partial</code> 这个字段的理由写得很实在：一个模块可能在读到第 300 个 cookie 时崩掉，但前面已经匹配到的东西是真实证据，不能因为后面的异常把整份结果丢掉。</p>
+<p>模块内部则必须记录<strong>每个子检查的结局</strong>：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">r.ran(<span class="string">"dns-cache"</span>)                                  <span class="comment"># 跑了，没找到也算跑过</span></span><br><span class="line">r.could_not_run(<span class="string">"dns-log"</span>, <span class="string">"operational log disabled"</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>只要一个模块里有任何一个 <code>could_not_run</code>，它的状态就自动变成 <code>PARTIAL</code> / <code>UNKNOWN</code>。<strong>“不许把没跑过的子检查报成干净的”</strong> 这条，是写在 <code>CONTRACT.md</code> 的 Hard rules 里的。</p>
+<h2 id="六、证据分级：命中不等于中招"><a href="#六、证据分级：命中不等于中招" class="headerlink" title="六、证据分级：命中不等于中招"></a>六、证据分级：命中不等于中招</h2><p>这是整个项目里我最想推荐给其他安全工具作者看的部分。</p>
+<p>报告不会给你一个” 危险 / 安全” 的红绿灯，而是给每条命中标一个<strong>证据等级</strong>。README 里的表从强到弱：</p>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>on-disk</code></td>
+<td>磁盘上有文件的指纹和已公布样本一致</td>
+</tr>
+<tr>
+<td><code>on-device</code></td>
+<td>手机上存在研究者点名的应用、签名证书、文件或设置</td>
+</tr>
+<tr>
+<td><code>file-pattern</code></td>
+<td>命中了公开检测规则（线索，不是证明）</td>
+</tr>
+<tr>
+<td><code>persistence</code></td>
+<td>这个名字被注册为开机自启</td>
+</tr>
+<tr>
+<td><code>ran-command</code></td>
+<td>本机执行过一条提到它的命令或脚本（也可能是研究者自己敲的）</td>
+</tr>
+<tr>
+<td><code>execution-record</code></td>
+<td>历史执行记录里有这个名字（内容和真实路径未确认）</td>
+</tr>
+<tr>
+<td><code>inventory-record</code></td>
+<td>历史文件清单里有它（不能证明执行过，也不能证明现在还在）</td>
+</tr>
+<tr>
+<td><code>contacted</code></td>
+<td>设备确实和它通信过（它设的 cookie、安全连接记录、从它那里下载）</td>
+</tr>
+<tr>
+<td><code>device-log</code></td>
+<td>手机系统日志提到了它</td>
+</tr>
+<tr>
+<td><code>received</code></td>
+<td>收到的短信 /iMessage/WhatsApp 消息里包含它（不能证明打开过）</td>
+</tr>
+<tr>
+<td><code>dns-record</code></td>
+<td>有域名查询记录（通信未验证）</td>
+</tr>
+<tr>
+<td><code>attempted</code></td>
+<td>尝试连接但被拦住了</td>
+</tr>
+<tr>
+<td><code>configured</code></td>
+<td>出现在本地配置里</td>
+</tr>
+<tr>
+<td><code>referenced</code></td>
+<td>出现在保存下来的内容里，通常意味着” 这是一篇讲它的文章”</td>
+</tr>
+</tbody></table>
+<p>14 级。而且报告里明确写：<strong>“A saved web page mentions the address” is weak, and is usually an article about the spyware. The grade, not the number of matches, decides what to do.</strong></p>
+<p>翻译成人话：你在浏览器收藏夹里存了一篇 Citizen Lab 的报告，里面提到了 <code>awake-wood.io</code>，扫描器会命中，但等级是 <code>referenced</code>，建议是” 别慌”。而如果磁盘上某个 DLL 的 SHA-256 和一 published sample 一致，等级是 <code>on-disk</code>，那就是另一回事了。</p>
+<p>比” 找到什么” 更重要的是” 找到但不算数” 的那一栏，叫 <strong>Worth a look</strong>。里面放的是工具自己判断不了的东西：</p>
+<ul>
+<li>一个侧载（sideload）安装的 App；</li>
+<li>一条下载并执行了代码的命令；</li>
+<li>一个被杀毒软件排除的目录。</li>
+</ul>
+<p>每一条都附上” 最常见的无害解释”。它们在 JSON 里跟 findings 是分开的字段，<strong>永远不影响结论</strong>。<code>heuristics.py</code> 的实现也很有意思 —— 它是个纯数据文件，只有正则，不执行任何东西：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">RUNNER = re.<span class="built_in">compile</span>(<span class="string">r"\b(powershell|pwsh|mshta|curl|wget|bitsadmin|certutil|msiexec|"</span></span><br><span class="line">                    <span class="string">r"rundll32|regsvr32|wscript|cscript|cmd)\b"</span>, re.I)</span><br><span class="line">REMOTE = re.<span class="built_in">compile</span>(<span class="string">r"(https?://|ftp://|\\\\[^\\\s]|\b\d{1,3}(?:\.\d{1,3}){3}\b)"</span>, re.I)</span><br><span class="line">CRADLE_RUN = re.<span class="built_in">compile</span>(<span class="string">r"\b(iex|invoke-expression)\b"</span>, re.I)</span><br><span class="line">CRADLE_GET = re.<span class="built_in">compile</span>(<span class="string">r"(downloadstring|downloaddata|invoke-webrequest|\biwr\b|"</span></span><br><span class="line">                        <span class="string">r"invoke-restmethod|\birm\b|net\.webclient|start-bitstransfer)"</span>, re.I)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>文件头的注释是：”These patterns DESCRIBE commands an attacker gets people to run. They are never executed.” —— 描述，不执行。然后测试专门钉死这个文件只 import <code>re</code>。</p>
+<p>这个” 把危险知识当成数据而不是代码” 的习惯，值得抄。</p>
+<h3 id="给-AI-助手准备的契约"><a href="#给-AI-助手准备的契约" class="headerlink" title="给 AI 助手准备的契约"></a>给 AI 助手准备的契约</h3><p>2026 年的安全工具基本都会遇到同一个场景：用户把报告丢给 ChatGPT/Claude，问” 我中毒了吗”。而这个项目的 JSON 里带了一整套防止 AI 乱说话的字段（<code>contract.py</code>，schema 1.6）：</p>
+<ul>
+<li><code>must_relay</code>：AI <strong>必须原样转达</strong>的免责声明；</li>
+<li><code>next_steps</code>：从<strong>固定目录</strong>里选的建议，不是模型生成的；</li>
+<li><code>content_trust</code>：哪些字段是被扫描机器上的文本（不可信）；</li>
+<li><code>instructions_for_assistants</code>：转述规则；</li>
+<li><code>sanitize_untrusted()</code>：把控制字符、双向覆盖字符（bidi override）、不可见格式字符替换掉，防止一个恶意文件名在终端里” 重绘” 你的屏幕，或者骗过 AI。</li>
+</ul>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">sanitize_untrusted</span>(<span class="params">value: <span class="type">Any</span></span>) -&gt; <span class="type">Any</span>:</span><br><span class="line">    <span class="string">"""Make scanned text safe to print and to hand to an AI: replace control,</span></span><br><span class="line"><span class="string">    bidirectional-override and invisible formatting characters ... and cap the length."""</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(value, <span class="built_in">str</span>):</span><br><span class="line">        <span class="keyword">return</span> value</span><br><span class="line">    clean = _CONTROL.sub(<span class="string">"�"</span>, _INVISIBLE.sub(<span class="string">""</span>, value))</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(clean) &gt; MAX_UNTRUSTED_LEN:</span><br><span class="line">        clean = clean[:MAX_UNTRUSTED_LEN] + <span class="string">"…[truncated]"</span></span><br><span class="line">    <span class="keyword">return</span> clean</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>contract.py</code> 的模块注释里有一句我读了两遍的话：</p>
+<blockquote>
+<p>Everything in this module is fixed text. Nothing here is built from scanned content, so a hostile file name or page title cannot reach the caveats or the advice.</p>
+</blockquote>
+<p><strong>“恶意文件名不可能污染免责声明和建议”</strong> —— 这是 prompt injection 防御在传统工具里的一个非常干净的落点。不是让模型” 小心一点”，而是让不可信文本根本进不了那个字段。</p>
+<h2 id="七、亲手跑一遍"><a href="#七、亲手跑一遍" class="headerlink" title="七、亲手跑一遍"></a>七、亲手跑一遍</h2><p>我在这台 Linux 机器上按 README 跑了一遍。先 clone：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/interplains/Zero-Breach-Toolkit.git</span><br><span class="line"><span class="built_in">cd</span> Zero-Breach-Toolkit</span><br><span class="line">python3 -X utf8 scan/zero-breach-toolkit.py --update</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>--update</code> 是唯一联网的普通步骤，跑完会缓存到 <code>~/.cache/zero-breach-triage/indicators</code>。然后是标准检查：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -X utf8 scan/zero-breach-toolkit.py</span><br></pre></td></tr></tbody></table></figure>
+
+<p>菜单会出来：回车 = 标准检查，<code>--quick</code> 跳过最慢的文件指纹，<code>--scan-type browser</code> 只查浏览器，<code>--scan-type targeted --target PATH</code> 只查指定目录。</p>
+<p>我用 targeted 模式扫了一个临时目录，记录下真实输出：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[*] running check: browser</span><br><span class="line">[*]   browser finished in 0s</span><br><span class="line">[*] running check: hash</span><br><span class="line">[hash] looking for 2 known sample hash(es)</span><br><span class="line">[hash] scanning /tmp/zbtest ...</span><br><span class="line">[hash] fingerprinted 0 / 1 candidates</span><br><span class="line">[*]   hash finished in 0s</span><br><span class="line">[*] running check: windows-execution</span><br><span class="line">[*]   windows-execution finished in 0s</span><br><span class="line">[wrote JSON report to /tmp/zb_report.json]</span><br><span class="line">[wrote readable report to /tmp/zb_report.txt]</span><br><span class="line">========================================================================</span><br><span class="line">  Zero Breach Toolkit 0.1.13 - spyware indicator check</span><br><span class="line">  Scope: targeted</span><br><span class="line">  Only selected targets were checked; system and other-user records are outside scope.</span><br><span class="line">  Checks for TRACES of known mercenary spyware. A clean result is NOT a</span><br><span class="line">  clean bill of health - see what could not be checked, below.</span><br><span class="line">  2026-10-30T15:44:08   Linux 5.10.134-18.0.12.lifsea8.x86_64</span><br><span class="line">========================================================================</span><br><span class="line"></span><br><span class="line">  RESULT: no known indicator was found in anything that could be</span><br><span class="line">          checked.</span><br><span class="line"></span><br><span class="line">  This is NOT a clean bill of health. See the two sections below for</span><br><span class="line">  what was searched and, more importantly, what could not be.</span><br><span class="line"></span><br><span class="line">  WHAT COULD NOT BE CHECKED  (29 gaps, grouped)</span><br><span class="line">    - Indicator sources not downloaded — run --update once, then scan</span><br><span class="line">      again.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>因为我没有跑 <code>--update</code>（不想在这个环境里主动访问那些源），本地只有随仓库带的两份清单：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Indicator set : 428 indicators, 5 day(s) old</span><br><span class="line">  from adfection_iocs.txt : 405 for computer checks</span><br><span class="line">  from curated_mercenary.txt : 23 for computer checks</span><br></pre></td></tr></tbody></table></figure>
+
+<p>进程退出码是 <strong>3</strong>，不是 0。这个区别就是整个项目的态度：</p>
+<table>
+<thead>
+<tr>
+<th>退出码</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0</code></td>
+<td>没有可行动的命中，且范围内所有检查都跑完了</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>安装、参数或输出错误</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>有超出” 仅供参考” 级别的命中</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>没有可行动的命中，但<strong>检查或指标源不完整</strong></td>
+</tr>
+<tr>
+<td><code>4</code></td>
+<td>用户关了菜单没扫（没有结论、没有报告）</td>
+</tr>
+</tbody></table>
+<p><strong>“没找到任何东西” 和” 有 29 个地方我没能检查” 必须是两种不同的结果。</strong> 我在别的工具里很少见到敢这么设计退出码的 —— 因为 CI 会红，用户会烦，但正确性优先。</p>
+<p>配套的命令行选项也很完整：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 快速模式：跳过文件指纹</span></span><br><span class="line">python3 -X utf8 scan/zero-breach-toolkit.py --quick</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只查浏览器</span></span><br><span class="line">python3 -X utf8 scan/zero-breach-toolkit.py --scan-type browser</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只查指定目录/文件，可重复 --target</span></span><br><span class="line">python3 -X utf8 scan/zero-breach-toolkit.py --scan-type targeted --target /path/a --target /path/b</span><br><span class="line"></span><br><span class="line"><span class="comment"># 手机采集包 / iPhone 备份</span></span><br><span class="line">python3 -X utf8 scan/zero-breach-toolkit.py --phone <span class="string">"PATH/TO/COLLECTION"</span> --backup-password</span><br><span class="line"></span><br><span class="line"><span class="comment"># 机器可读报告 + 可分享的最小摘要</span></span><br><span class="line">python3 -X utf8 scan/zero-breach-toolkit.py --json report.json --share-json summary.json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印全部检查项、能看见/看不见什么、退出码、给 AI 的转述规则</span></span><br><span class="line">python3 -X utf8 scan/zero-breach-toolkit.py --describe</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成证据包（未加密 ZIP + 完整性清单）</span></span><br><span class="line">python3 -X utf8 scan/zero-breach-toolkit.py --scan-type targeted --target SUSPICIOUS_FILE \</span><br><span class="line">  --report report.txt --json report.json --evidence-bundle evidence.zip --evidence-file SUSPICIOUS_FILE</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>--describe</code> 打出来的是一份 1.6 版本的 JSON，包含 <code>modules</code> / <code>exit_codes</code> / <code>check_kinds</code> / <code>blind_spots</code>。我拿它当” 这工具到底能做到什么” 的权威来源，比读 README 快。</p>
+<p>还有一个容易被忽略的隐私设计：<code>--share-json</code> 只写计数、范围标签、结论和固定建议，<strong>丢掉所有 artifact 文本、指标值和时间</strong>。因为完整报告里可能有你的用户名、浏览器 profile 名、文件路径、浏览记录、短信发件人和消息片段。README 里那句提醒写得很克制：”Do not post your report there (the issue tracker); it contains private details.”</p>
+<h2 id="八、手机端：读采集包，不碰设备"><a href="#八、手机端：读采集包，不碰设备" class="headerlink" title="八、手机端：读采集包，不碰设备"></a>八、手机端：读采集包，不碰设备</h2><p>手机这部分的设计比桌面更保守，原因很实际：iOS 和 iPadOS 不允许一个 App 读别的 App 的数据，所以在手机上装个” 检测 App” 这件事，本身就很难成立。</p>
+<h3 id="Android：委托给-AndroidQF"><a href="#Android：委托给-AndroidQF" class="headerlink" title="Android：委托给 AndroidQF"></a>Android：委托给 AndroidQF</h3><p>它不自己实现 ADB 采集，而是读 <a target="_blank" rel="noopener" href="https://github.com/mvt-project/androidqf">AndroidQF</a> 产出的包。检查的内容包括：</p>
+<ul>
+<li>已安装 / 运行中的应用、指纹、签名证书；</li>
+<li>安装历史（装过又删掉的 App 仍然会出现）；</li>
+<li>系统记录、日志、崩溃记录；</li>
+<li>已解密的入侵日志：DNS 查询、TCP 连接尝试、进程启动事件（连接尝试不等于成功）；</li>
+<li>短信 / 彩信里的链接（来自 AndroidQF 可选的 SMS 备份）；</li>
+<li>非应用商店安装的 App，以及它们的权限（读短信、用麦克风、读通知、抵抗卸载）和到达时间；</li>
+<li>手机被改动的迹象：解锁的 bootloader、debug 构建、安全保护被关闭。</li>
+</ul>
+<p>还有个很细的点：<strong>它能识别采集行为自己留下的痕迹</strong>。开 USB 调试、调试 shell 的权限，这些都是” 因为要取证才出现的”，不会被当成可疑项报出来。README 里说，MVT 的启发式规则在普通手机上经常误报，其中一部分就是采集过程自己产生的。</p>
+<p>Android 端的进程名检查也做了平台区分：那些” 间谍软件伪装成苹果服务名” 的进程名清单来自 iPhone 调查，其中有些名字（比如 <code>gatekeeperd</code>）在 Android 上是正常的锁屏服务。所以 <strong>Android 侧干脆不比进程名</strong>，只有 iPhone reader 比。这个决定背后是对数据源语境的尊重，而不是” 多查一点总没错”。</p>
+<p>实验性的 <code>--collect-android</code> 会下载官方 AndroidQF v1.8.3 并校验钉死的 SHA-256，然后跑它。这是全项目<strong>唯一</strong>运行一个不是自己发布的程序的入口，限制写得非常细：</p>
+<ul>
+<li>资源名和摘要值硬编码在源码里；</li>
+<li>HTTPS 下载，重定向只允许白名单；</li>
+<li>边下边算哈希，不匹配就拒绝，什么都不执行；</li>
+<li>写到临时目录，直接执行（不经 shell），清掉 <code>ADB_</code>、<code>ANDROID_ADB_</code>、<code>LD_</code>、<code>DYLD_</code> 环境变量，<code>PATH</code> 重置为系统目录，跑完删除；</li>
+<li>不显式调用并确认，什么都不会下载。</li>
+</ul>
+<p>还是要说清楚：钉死的摘要只证明” 你拿到的是发布者发布的那串字节”，不等于对采集器做了独立审计。</p>
+<h3 id="iPhone：备份、WAL-与上限"><a href="#iPhone：备份、WAL-与上限" class="headerlink" title="iPhone：备份、WAL 与上限"></a>iPhone：备份、WAL 与上限</h3><p>iPhone 检查读本地备份（Finder / Apple Devices /iTunes），加密或未加密都行，也支持已提取的文件系统与 sysdiagnose 归档。</p>
+<p>覆盖的记录很杂：短信、iMessage、WhatsApp、Safari 和其他浏览器、数据用量里的进程名、应用记录、权限、通话、日历、交互、快捷指令、配置描述文件、分析诊断（关机日志、崩溃与内存报告、运行进程、安装日志）。本机浏览和同步 / 导入的浏览记录会分开，来源不明的只算” 参考” 并记一个 gap。</p>
+<p>技术上最值得一提的是 <strong>SQLite WAL 的处理</strong>：提交在 WAL 里但还没 checkpoint 的记录，会在临时副本上校验并重放。这一点很关键 —— 很多取证工具只读主数据库文件，恰好漏掉最新写入的那几条，而那几条往往就是最关键的。JSON 里保留 <code>wal_sha256</code> 和 <code>record_id</code>，可追溯。</p>
+<p>v0.1.12 的更新日志讲了一个很真实的故事：</p>
+<blockquote>
+<p>一台 512 GB 手机、照片库很大，<code>Manifest.db</code> 超过 300 MB，<code>Info.plist</code> 超过 16 MiB，超了检查上限，报告只说” 超过读取限制”，手机上什么都没查。现在上限按当代手机重新设定（单文件 1 GiB、100 万条 manifest 记录、总计 8 GiB、属性列表 64 MiB），同时仍然限制一个精心构造的备份能把检查拖垮到什么程度。</p>
+</blockquote>
+<p>这种” 上限是为了防 DoS，但上限设错了会静默地什么都不查” 的权衡，只有真的收到过用户报告才会写出来。</p>
+<p>测试覆盖 iOS 15、16、17、18 的表结构。不支持的编码、损坏的 WAL、读不到的行，全部记为 gap；同一张表里某一行读不了，会跳过并继续读后面的行，重复的 gap 会被合并。</p>
+<h2 id="九、取舍：为什么不签名、不用-YARA、不装依赖"><a href="#九、取舍：为什么不签名、不用-YARA、不装依赖" class="headerlink" title="九、取舍：为什么不签名、不用 YARA、不装依赖"></a>九、取舍：为什么不签名、不用 YARA、不装依赖</h2><p>这个项目的每一个” 不做”，背后都有理由，而且理由都写在仓库里。</p>
+<p><strong>1）默认只用标准库，不 <code>pip install</code>。</strong></p>
+<p>代价是解析能力受限（不能随便用第三方 SQLite、plist 增强库），收益是一个记者照着 README 装完 Python 就能跑，不需要理解虚拟环境、依赖冲突，也不会在执行 <code>pip install</code> 时把自己暴露给供应链攻击。对一个” 给高风险人群用的工具” 来说，这个交换是对的。</p>
+<p><strong>2）发布一个可复现的单文件，而不是 wheel。</strong></p>
+<p><code>build/bundle.py</code> 把同一份源码打成一个 <code>dist/zero-breach-toolkit.py</code>。v0.1.13 是 973,579 字节，SHA-256 是 <code>bb0e6a7a36ee659c0494d02e9f7495d5fd4701f1ab7e57529e79925cb581ae15</code>。README 教你从 release tag 重新构建再比对哈希 —— 构建是确定性的，哈希一致就意味着” 发布出来的文件里只有这份源码，没有别的东西”。发布还带 GPG 签名。</p>
+<p><strong>3）不提供签名的 Windows exe。</strong></p>
+<p>理由写在 README 里，而且很坦白：项目是匿名的，代码签名证书需要具名的法律身份。自己用 PyInstaller 打的 exe 没有签名、没有下载信誉、也不是字节可复现的，SmartScreen 会警告、部分杀软会报毒，而上面那套” 重建比对哈希” 的验证流程对它不适用。</p>
+<p>所以你只能从源码跑。这确实劝退了一部分人，但它把” 可验证” 放在了” 好装” 前面。</p>
+<p><strong>4）默认不跑 YARA。</strong></p>
+<p><code>--patterns</code> 是可选的，需要 Python 3.9+ 和钉死哈希的 YARA-X 1.21.0 wheel（拒绝源码构建）。默认扫描不加载它，因为：</p>
+<ul>
+<li>公开的 Candiru 规则只有两条（微软 2021 年的 DevilsTongue 劫持 DLL 规则、Malpedia 自动生成的规则），覆盖一个具体家族；</li>
+<li>“规则日期更新” 不等于” 覆盖了新战役”；</li>
+<li>没有引擎时它报 <code>UNKNOWN</code> 并记 gap，而不是假装跑过了。</li>
+</ul>
+<p><code>file-pattern</code> 这个证据等级也单独存在，和精确哈希的 <code>on-disk</code> 分开，报告里会保留规则的作者、来源和许可证。</p>
+<p><strong>5）域名和 IP 用大小写不敏感的子串匹配。</strong></p>
+<p>这是有意为之的粗糙：快、不依赖解析库、能匹配到日志里嵌在长字符串中的域名。代价是误报，用证据分级来吸收，而不是用更复杂的匹配来消除。</p>
+<p><strong>6）证据包是明文 ZIP。</strong></p>
+<p><code>--evidence-bundle</code> 生成的是<strong>未加密</strong>的 ZIP，带完整性清单（SHA-256、工具版本、范围、时间、指标集指纹），限制 128 个原始文件、单个 64 MiB、总计 256 MiB。作者没有做一个” 看起来安全” 的加密层，而是明确说：哈希只能证明之后的完整性，不能证明它和原始设备一致；第一次接触请用最小摘要，完整包请通过和对方约定的安全通道传。</p>
+<p><strong>不假装自己解决了它没解决的问题</strong>，这一点贯穿全项目。</p>
+<h2 id="十、和同类工具比、它不适合谁，以及我自己的判断"><a href="#十、和同类工具比、它不适合谁，以及我自己的判断" class="headerlink" title="十、和同类工具比、它不适合谁，以及我自己的判断"></a>十、和同类工具比、它不适合谁，以及我自己的判断</h2><p><strong>对比 MVT（mvt-project/mvt）</strong></p>
+<p>MVT 是这个领域最知名的开源工具，同样出自 Amnesty 生态，Python 写，支持 iOS 备份和 Android（配 AndroidQF），强项是时间线（timeline）和 IOC 检查。Zero-Breach-Toolkit 的指标集里就包含 MVT 的 <code>mvt-indicators</code>，属于站在巨人肩膀上。</p>
+<p>区别在定位：MVT 是<strong>取证框架</strong>，命令行分 <code>mvt-ios</code> / <code>mvt-android</code>，输出时间线，需要使用者自己判断；Zero-Breach-Toolkit 是<strong>面向非技术用户的一键体检</strong>，把” 能看见什么 / 看不见什么 / 这条命中算几级证据” 直接编进结果，并且把桌面端（Windows/macOS/Linux 的浏览器、Prefetch、Amcache、Defender 历史）也纳进来了。MVT 不做桌面。</p>
+<p><strong>对比 Loki / THOR</strong></p>
+<p>Loki 是开源的 IOC 扫描器（文件名、哈希、YARA），THOR 是它的商业版。它们的目标是” 在一堆文件里找恶意样本”，面向事件响应；Zero-Breach-Toolkit 找的是<strong>人身上的痕迹</strong> —— 浏览器历史、HSTS、cookie 主机名、短信、安装历史。前者回答” 这台机器上有没有这个文件”，后者回答” 这台机器有没有和这个基础设施发生过关系”。</p>
+<p><strong>对比 Sysinternals Autoruns / Objective-See KnockKnock</strong></p>
+<p>Autoruns 列 Windows 的所有自启位置，KnockKnock 列 macOS 的持久化软件。它们是” 列出事实”，不比对 IOC，也不给证据等级。Zero-Breach-Toolkit 的启动项检查更窄（只比对已知指标），但会区分” 配置存在”（<code>persistence</code> / <code>configured</code>）和” 实际执行过”（<code>execution-record</code>），这个区分在 Autoruns 里得靠你自己做。</p>
+<p><strong>对比商业取证套件（Magnet AXIOM 之类）</strong></p>
+<p>商业套件能做的远多于此：完整文件系统解析、内存取证、加密容器、法庭可采信的报告链。Zero-Breach-Toolkit 明确说了它不替代专家取证。它的位置是” 在联系专家之前，先花 20 分钟看看有没有明显痕迹”。</p>
+<p><strong>不适合谁</strong></p>
+<ul>
+<li>想要” 证明我干净” 的人。它给不了，任何工具都给不了。</li>
+<li>企业批量巡检。没有 agent、没有中心管理、没有并发调度，一次一台。</li>
+<li>恶意软件分析师。不做内存、不解密 payload、不做动态分析。</li>
+<li>需要法庭采信报告的场景。它的证据包是明文 ZIP 加哈希清单，不是 chain-of-custody。</li>
+<li>不愿意读” 这个检查没跑成” 那一段的人。<strong>这一段才是报告里最重要的部分</strong>，跳过它等于白跑。</li>
+</ul>
+<p><strong>适合谁</strong></p>
+<ul>
+<li>记者、律师、人权工作者、异见者 ——README 开头就是给这群人写的，连” 点黄按钮下载 Python” 都写了。</li>
+<li>企业的安全 / IT 人员，做一次性的疑似入侵初筛。</li>
+<li>想把检测能力接进 AI 助手的人：它自带 <code>skills/zero-breach-toolkit/SKILL.md</code> 和一套 <code>--json</code> 契约，是目前少见的” 为被 agent 调用而设计” 的安全工具。</li>
+<li>想学取证工具该怎么设计的人。就算你一行都不用，<code>CONTRACT.md</code> 和 <code>docs/METHODOLOGY.md</code> 也值得读一遍。</li>
+</ul>
+<h3 id="我自己的判断"><a href="#我自己的判断" class="headerlink" title="我自己的判断"></a>我自己的判断</h3><p>这个项目有三个地方让我觉得” 作者是真做过一线”：</p>
+<p><strong>第一，它把” 没查到” 和” 查不了” 彻底分开了。</strong> 退出码 3 这个设计会让人不舒服，但它诚实地表达了取证的本质：你只能说你查过什么，不能说你没查到就等于没有。绝大多数安全产品在这件事上是含混的，因为含混更好卖。</p>
+<p><strong>第二，它对” 证据强度” 的处理是可执行的，不是口号。</strong> 14 级证据等级不是文档里的表格，而是 <code>result.py</code> 里的常量、<code>evidence.py</code> 里的传播逻辑、报告里的排序规则。同一串域名，出现在 <code>referenced</code> 和 <code>contacted</code> 两个位置，得到的建议完全不同。</p>
+<p><strong>第三，它把不可信输入当成了真正的敌人。</strong> 恶意文件名可以带 ANSI 转义序列重绘终端，可以带 bidi 覆盖字符伪装成别的名字，可以被喂给 AI 让它说出” 你被感染了”。<code>sanitize_untrusted()</code> 和” 契约里全是固定文本” 这两个设计，比大多数号称”AI 安全” 的项目做得扎实。</p>
+<p>但它也有一个绕不过去的问题：<strong>它太新了。</strong></p>
+<p>2026-10-25 建仓，五天 3,784 stars，56 个提交，作者匿名。这种项目最需要警惕的就是”star 数涨得太快” 本身 —— 它可能是一个真正有价值的工具，也可能是一次精心包装的传播。README 对这一点的回应是唯一正确的回应：<strong>别信我，去验证。</strong> 从源码跑、自己重建单文件、比对哈希、看测试。它甚至专门写了一节 “Verify what you run”。</p>
+<p>我按它的方法验证了：源码在 <code>scan/</code> 下没有 <code>src</code> 目录的包装，164 个 Python 文件、3.9 万行，109 个测试文件、约 1.8 万行 —— 也就是说全部 Python 代码里差不多一半是测试。<code>--describe</code> 的输出和 README 一致。我在 Linux 上跑通了 targeted 扫描，拿到了预期中的 <code>exit 3</code> 和 29 个 gap。这些都是我能自己复现的。</p>
+<p>至于它能不能真的在你的机器上找到什么 —— 那取决于你的机器上有没有留下痕迹，以及那些痕迹有没有被公开过。<strong>这两个条件缺一个，它就什么都找不到，而这不代表你安全。</strong></p>
+<p>如果真要给一句建议：把它当成” 体检前的自检问卷”，不是” 体检报告”。查完发现问题，别自己删东西、别去访问它报出来的地址、别把完整报告发到群里，去找 Access Now 的数字安全热线或者 Amnesty Security Lab。README 开头就是这么写的，而且写在最前面，在教你怎么装 Python 之前。</p>
+<hr>
+<p><strong>项目地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/interplains/Zero-Breach-Toolkit">https://github.com/interplains/Zero-Breach-Toolkit</a><br><strong>文档</strong>：<code>docs/COVERAGE.md</code>（每个检查读什么、上限在哪）、<code>docs/METHODOLOGY.md</code>（证据分级与从其他工具学到的东西）、<code>scan/CONTRACT.md</code>（机器契约）<br><strong>许可证</strong>：代码 Apache-2.0；<code>iocs/</code> 与生成的指标导出 CC0 1.0；<code>third_party/candiru</code> 保留各自许可证</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/10/30/zero-breach-toolkit-offline-spyware-trace-scanner/" title="interplains&#x2F;Zero-Breach-Toolkit：3,784 stars 的离线间谍软件痕迹扫描器，只读、断网、给每条证据打分">https://www.daishengli.top/2026/10/30/zero-breach-toolkit-offline-spyware-trace-scanner/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/Zero-Breach-Toolkit/" rel="tag"># Zero-Breach-Toolkit</a>
+              <a href="/tags/interplains/" rel="tag"># interplains</a>
+              <a href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" rel="tag"># 网络安全</a>
+              <a href="/tags/%E6%95%B0%E5%AD%97%E5%8F%96%E8%AF%81/" rel="tag"># 数字取证</a>
+              <a href="/tags/%E9%97%B4%E8%B0%8D%E8%BD%AF%E4%BB%B6/" rel="tag"># 间谍软件</a>
+              <a href="/tags/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4/" rel="tag"># 隐私保护</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/22/crosstalk-project-nomad-offline-first-knowledge-server/" rel="prev" title="Crosstalk-Solutions&#x2F;project-nomad：37.9k stars 的 &quot;离线优先知识 + 教育服务器&quot;，Wikipedia + Khan Academy + Ollama AI + 离线地图全套打包 Docker">
+                  <i class="fa fa-angle-left"></i> Crosstalk-Solutions/project-nomad：37.9k stars 的 "离线优先知识 + 教育服务器"，Wikipedia + Khan Academy + Ollama AI + 离线地图全套打包 Docker
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/10/31/unclebob-ub-mode-agent-skill-quality-gates/" rel="next" title="unclebob&#x2F;ub-mode：5.2k stars 的 agent skill，把 Robert C. Martin 的软件工程准则做成可执行的质量门禁">
+                  unclebob/ub-mode：5.2k stars 的 agent skill，把 Robert C. Martin 的软件工程准则做成可执行的质量门禁 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="unclebob&#x2F;ub-mode 是 Clean Architecture 作者 Robert C. Martin 在 2026-10-25 新建的 agent skill 仓库，5,256 stars &#x2F; 290 forks &#x2F; 仅 4 次提交 &#x2F; 2 个文件（README.md + SKILL.md，共约 6KB），本体不含任何代码，而是一套写给 AI 编码 agent 的行为准则。它把工程实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="unclebob&#x2F;ub-mode：5.2k stars 的 agent skill，把 Robert C. Martin 的软件工程准则做成可执行的质量门禁">
+<meta property="og:url" content="https://www.daishengli.top/2026/10/31/unclebob-ub-mode-agent-skill-quality-gates/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="unclebob&#x2F;ub-mode 是 Clean Architecture 作者 Robert C. Martin 在 2026-10-25 新建的 agent skill 仓库，5,256 stars &#x2F; 290 forks &#x2F; 仅 4 次提交 &#x2F; 2 个文件（README.md + SKILL.md，共约 6KB），本体不含任何代码，而是一套写给 AI 编码 agent 的行为准则。它把工程实">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-31T00:05:00.000Z">
+<meta property="article:modified_time" content="2026-11-04T00:05:40.861Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="TDD">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Agent Skill">
+<meta property="article:tag" content="ub-mode">
+<meta property="article:tag" content="unclebob">
+<meta property="article:tag" content="Code Quality">
+<meta property="article:tag" content="Mutation Testing">
+<meta property="article:tag" content="Clean Architecture">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/10/31/unclebob-ub-mode-agent-skill-quality-gates/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/10/31/unclebob-ub-mode-agent-skill-quality-gates/","path":"2026/10/31/unclebob-ub-mode-agent-skill-quality-gates/","title":"unclebob/ub-mode：5.2k stars 的 agent skill，把 Robert C. Martin 的软件工程准则做成可执行的质量门禁"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>unclebob/ub-mode：5.2k stars 的 agent skill，把 Robert C. Martin 的软件工程准则做成可执行的质量门禁 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">419</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">128</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9AAI-%E5%86%99%E4%BB%A3%E7%A0%81%EF%BC%8C%E8%A7%84%E8%8C%83%E5%A4%B1%E6%95%88%E4%BA%86"><span class="nav-number">1.</span> <span class="nav-text">一、它想解决的问题：AI 写代码，规范失效了</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9A%E4%B8%80%E4%BB%BD-4KB-%E7%9A%84-SKILL-md-%E5%9B%9B%E4%B8%AA%E7%A1%AE%E5%AE%9A%E6%80%A7%E5%B7%A5%E5%85%B7"><span class="nav-number">2.</span> <span class="nav-text">二、它是什么：一份 4KB 的 SKILL.md + 四个确定性工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%EF%BC%9A%E4%B8%89%E6%AE%B5%E5%BC%8F%E5%87%86%E5%88%99-%E7%A1%AC%E9%98%88%E5%80%BC"><span class="nav-number">3.</span> <span class="nav-text">三、核心机制：三段式准则 + 硬阈值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AE%B5%EF%BC%9AFirst-Make-it-Work%EF%BC%88%E5%85%88%E8%AE%A9%E5%AE%83%E8%83%BD%E8%B7%91%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">第一段：First Make it Work（先让它能跑）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AE%B5%EF%BC%9AThen-Make-it-Right%EF%BC%88%E5%86%8D%E6%8A%8A%E5%AE%83%E5%81%9A%E5%AF%B9%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">第二段：Then Make it Right（再把它做对）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AE%B5%EF%BC%9APractice%EF%BC%88%E6%97%A5%E5%B8%B8%E7%BA%AA%E5%BE%8B%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">第三段：Practice（日常纪律）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%9C%9F%E6%AD%A3%E5%B9%B2%E6%B4%BB%E7%9A%84%E9%83%A8%E5%88%86%EF%BC%9A%E4%B8%89%E4%B8%AA%E8%B4%A8%E9%87%8F%E9%97%A8%E7%A6%81%E5%B7%A5%E5%85%B7"><span class="nav-number">4.</span> <span class="nav-text">四、真正干活的部分：三个质量门禁工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-crapper-%E2%80%94%E2%80%94-%E7%94%A8-CRAP-%E5%85%AC%E5%BC%8F%E6%8A%8A%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%92%8C%E8%A6%86%E7%9B%96%E7%8E%87%E7%BB%91%E6%88%90%E4%B8%80%E4%B8%AA%E6%95%B0"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 crapper —— 用 CRAP 公式把复杂度和覆盖率绑成一个数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-dryer-%E2%80%94%E2%80%94-%E7%94%A8%E7%BB%93%E6%9E%84%E6%8C%87%E7%BA%B9%E6%89%BE%E9%87%8D%E5%A4%8D"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 dryer —— 用结构指纹找重复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-mutator-%E2%80%94%E2%80%94-%E5%8F%98%E5%BC%82%E6%B5%8B%E8%AF%95%EF%BC%8C%E9%97%AE%E3%80%8C%E4%BD%A0%E7%9A%84%E6%B5%8B%E8%AF%95%E7%9C%9F%E7%9A%84%E5%9C%A8%E6%B5%8B%E5%90%97%E3%80%8D"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 mutator —— 变异测试，问「你的测试真的在测吗」</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-uml-viewer-%E2%80%94%E2%80%94-%E6%B4%BB%E7%9A%84-UML-%E5%9B%BE%EF%BC%8C%E8%B7%9F-agent-%E8%81%94%E5%8A%A8%E6%94%B9%E6%9E%B6%E6%9E%84"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 uml-viewer —— 活的 UML 图，跟 agent 联动改架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">5.</span> <span class="nav-text">五、快速上手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E8%A3%85-ub-mode-%E6%9C%AC%E8%BA%AB"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 装 ub-mode 本身</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E8%A3%85%E4%B8%89%E4%B8%AA%E9%97%A8%E7%A6%81%E5%B7%A5%E5%85%B7"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 装三个门禁工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E4%B8%80%E4%B8%AA%E5%AE%8C%E6%95%B4%E7%9A%84%E6%97%A5%E5%B8%B8%E5%BE%AA%E7%8E%AF"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 一个完整的日常循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E6%94%BE%E8%BF%9B-CI"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 放进 CI</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%85%B3%E9%94%AE%E8%AE%BE%E8%AE%A1%E5%8F%96%E8%88%8D%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E3%80%8C%E5%87%86%E5%88%99-%E5%B7%A5%E5%85%B7%E3%80%8D%E8%80%8C%E4%B8%8D%E6%98%AF%E3%80%8C%E4%B8%80%E4%B8%AA%E6%9B%B4%E8%81%AA%E6%98%8E%E7%9A%84-agent%E3%80%8D"><span class="nav-number">6.</span> <span class="nav-text">六、关键设计取舍：为什么是「准则 + 工具」而不是「一个更聪明的 agent」</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%96%E8%88%8D-1%EF%BC%9ASKILL-md-%E7%94%A8%E6%95%A3%E6%96%87%E4%BD%93%EF%BC%8C%E4%B8%8D%E7%94%A8-YAML-JSON-%E8%A7%84%E5%88%99%E8%A1%A8"><span class="nav-number">6.1.</span> <span class="nav-text">取舍 1：SKILL.md 用散文体，不用 YAML&#x2F;JSON 规则表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%96%E8%88%8D-2%EF%BC%9A%E5%87%86%E5%88%99%E5%B1%82%E6%95%85%E6%84%8F%E4%B8%8D%E7%BB%99%E9%98%88%E5%80%BC%EF%BC%8C%E5%B7%A5%E5%85%B7%E5%B1%82%E7%BB%99"><span class="nav-number">6.2.</span> <span class="nav-text">取舍 2：准则层故意不给阈值，工具层给</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%96%E8%88%8D-3%EF%BC%9AFirst-Make-it-Work-%E6%8E%92%E5%9C%A8-Then-Make-it-Right-%E5%89%8D%E9%9D%A2"><span class="nav-number">6.3.</span> <span class="nav-text">取舍 3：First Make it Work 排在 Then Make it Right 前面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%96%E8%88%8D-4%EF%BC%9A%E6%8A%8A%E3%80%8C%E7%AC%AC%E4%B8%89%E6%AC%A1%E5%B0%9D%E8%AF%95%E3%80%8D%E5%8F%98%E6%88%90%E7%BB%93%E6%9E%84%E6%80%A7%E7%A6%81%E6%AD%A2"><span class="nav-number">6.4.</span> <span class="nav-text">取舍 4：把「第三次尝试」变成结构性禁止</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%96%E8%88%8D-5%EF%BC%9A%E5%B7%A5%E5%85%B7%E5%85%A8%E9%83%A8%E7%A6%BB%E7%BA%BF%E3%80%81%E9%9B%B6%E7%BD%91%E7%BB%9C%E3%80%81%E9%9B%B6-LLM"><span class="nav-number">6.5.</span> <span class="nav-text">取舍 5：工具全部离线、零网络、零 LLM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%96%E8%88%8D-6%EF%BC%9A%E5%A4%B1%E8%B4%A5%E5%8D%B3%E7%BA%A2%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E5%A4%B1%E8%B4%A5%E5%8D%B3%E8%B7%B3%E8%BF%87"><span class="nav-number">6.6.</span> <span class="nav-text">取舍 6：失败即红，而不是失败即跳过</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%92%8C%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E5%AF%B9%E6%AF%94"><span class="nav-number">7.</span> <span class="nav-text">七、和同类项目对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-vs-%E4%BC%A0%E7%BB%9F%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 vs. 传统静态分析工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-vs-%E7%BA%AF-prompt-CLAUDE-md-%E8%A7%84%E5%88%99%E9%9B%86"><span class="nav-number">7.2.</span> <span class="nav-text">7.2 vs. 纯 prompt &#x2F; CLAUDE.md 规则集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-vs-AI-%E4%BB%A3%E7%A0%81%E5%AE%A1%E6%9F%A5-agent"><span class="nav-number">7.3.</span> <span class="nav-text">7.3 vs. AI 代码审查 agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-vs-%E5%8D%95%E7%BA%AF%E7%9A%84-mutation-testing-%E5%B7%A5%E5%85%B7"><span class="nav-number">7.4.</span> <span class="nav-text">7.4 vs. 单纯的 mutation testing 工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-vs-uml-viewer-%E7%9A%84%E5%90%8C%E7%B1%BB%E5%B7%A5%E5%85%B7"><span class="nav-number">7.5.</span> <span class="nav-text">7.5 vs. uml-viewer 的同类工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E7%9C%9F%E5%AE%9E%E5%B1%80%E9%99%90%EF%BC%9A%E8%AF%9A%E5%AE%9E%E8%AF%B4"><span class="nav-number">8.</span> <span class="nav-text">八、真实局限：诚实说</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-ub-mode-%E6%9C%AC%E4%BD%93%E6%B2%A1%E6%9C%89-license"><span class="nav-number">8.1.</span> <span class="nav-text">8.1 ub-mode 本体没有 license</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-ub-mode-%E4%BB%93%E5%BA%93%E6%B2%A1%E6%9C%89-release%E3%80%81%E6%B2%A1%E6%9C%89-tag%E3%80%81%E6%B2%A1%E6%9C%89-issue-%E6%A8%A1%E6%9D%BF"><span class="nav-number">8.2.</span> <span class="nav-text">8.2 ub-mode 仓库没有 release、没有 tag、没有 issue 模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E5%9B%9B%E4%B8%AA%E5%B7%A5%E5%85%B7%E7%9A%84%E6%88%90%E7%86%9F%E5%BA%A6%E4%B8%8D%E5%9D%87%E8%A1%A1"><span class="nav-number">8.3.</span> <span class="nav-text">8.3 四个工具的成熟度不均衡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-4-mutator-%E6%9C%89%E7%A1%AC%E6%80%A7%E5%B8%83%E5%B1%80%E8%A6%81%E6%B1%82"><span class="nav-number">8.4.</span> <span class="nav-text">8.4 mutator 有硬性布局要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-5-%E8%A6%86%E7%9B%96%E7%8E%87%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9A%84%E9%9A%90%E5%BC%8F%E4%BE%9D%E8%B5%96"><span class="nav-number">8.5.</span> <span class="nav-text">8.5 覆盖率工具链的隐式依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-6-%E3%80%8CAI-%E9%81%B5%E5%BE%AA%E5%87%86%E5%88%99%E3%80%8D%E6%9C%AC%E8%BA%AB%E6%B2%A1%E6%9C%89%E4%BF%9D%E8%AF%81"><span class="nav-number">8.6.</span> <span class="nav-text">8.6 「AI 遵循准则」本身没有保证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-7-%E5%AE%83%E6%98%AF%E4%B8%AA%E4%BA%BA%E7%9A%84%E6%96%B9%E6%B3%95%E8%AE%BA%EF%BC%8C%E4%B8%8D%E6%98%AF%E7%A4%BE%E5%8C%BA%E5%85%B1%E8%AF%86"><span class="nav-number">8.7.</span> <span class="nav-text">8.7 它是个人的方法论，不是社区共识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E9%80%82%E5%90%88%E8%B0%81-%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">9.</span> <span class="nav-text">九、适合谁 &#x2F; 不适合谁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">9.1.</span> <span class="nav-text">适合谁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">9.2.</span> <span class="nav-text">不适合谁</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E6%88%91%E7%9A%84%E5%AE%9E%E9%99%85%E6%89%93%E7%AE%97"><span class="nav-number">10.</span> <span class="nav-text">十、我的实际打算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%EF%BC%9A%E4%B8%80%E9%A1%B5%E9%80%9F%E6%9F%A5"><span class="nav-number">11.</span> <span class="nav-text">附：一页速查</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">128</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">419</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/10/31/unclebob-ub-mode-agent-skill-quality-gates/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="unclebob&#x2F;ub-mode：5.2k stars 的 agent skill，把 Robert C. Martin 的软件工程准则做成可执行的质量门禁 | 小戴的网络日志">
+      <meta itemprop="description" content="unclebob&#x2F;ub-mode 是 Clean Architecture 作者 Robert C. Martin 在 2026-10-25 新建的 agent skill 仓库，5,256 stars &#x2F; 290 forks &#x2F; 仅 4 次提交 &#x2F; 2 个文件（README.md + SKILL.md，共约 6KB），本体不含任何代码，而是一套写给 AI 编码 agent 的行为准则。它把工程实践拆成三层——First Make it Work（Laziness Protocol、TDD、Subtract Before You Add、Idempotent Operations、Separate Before Serializing Shared State 等 13 条）、Then Make it Right（Fix Root Causes、Test Behavior Not Implementation、CRAP&lt;10、重复度&lt;0.8、变异测试、Crapper&#x2F;Dryer&#x2F;Mutator 三件套、Refactoring 等 8 条）、Practice（Keep a Log、Guard the Context Window、Worktree Cleanup、小步 commit push 等 4 条）。真正的执行力来自四个确定性 companion 工具：unclebob&#x2F;crapper（146 stars，Python，0BSD）用 CRAP &#x3D; CC² × (1-coverage)³ + CC 公式给 6 种语言算圈复杂度与覆盖率并写 .metrics&#x2F;crap.edn；unclebob&#x2F;dryer（70 stars，0BSD）用 Jaccard 结构指纹找重复代码，默认阈值 0.82；unclebob&#x2F;mutator（87 stars，0BSD）对 6 种语言做变异测试并输出 killed&#x2F;survived&#x2F;uncovered；unclebob&#x2F;uml-viewer（474 stars，Clojure）作为活的 UML 类图查看器把 namespace 当 component，按 Clean Architecture 依赖规则染色并与 agent 双向联动做 what-if 改架构。整个方案的设计哲学是「原则写给人看，数字交给工具判定」，用可测量的门禁替代 AI 自我声明的「我已经重构好了」。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          unclebob/ub-mode：5.2k stars 的 agent skill，把 Robert C. Martin 的软件工程准则做成可执行的质量门禁
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-10-31 08:05:00" itemprop="dateCreated datePublished" datetime="2026-10-31T08:05:00+08:00">2026-10-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">unclebob/ub-mode 是 Clean Architecture 作者 Robert C. Martin 在 2026-10-25 新建的 agent skill 仓库，5,256 stars / 290 forks / 仅 4 次提交 / 2 个文件（README.md + SKILL.md，共约 6KB），本体不含任何代码，而是一套写给 AI 编码 agent 的行为准则。它把工程实践拆成三层——First Make it Work（Laziness Protocol、TDD、Subtract Before You Add、Idempotent Operations、Separate Before Serializing Shared State 等 13 条）、Then Make it Right（Fix Root Causes、Test Behavior Not Implementation、CRAP<10、重复度<0.8、变异测试、Crapper/Dryer/Mutator 三件套、Refactoring 等 8 条）、Practice（Keep a Log、Guard the Context Window、Worktree Cleanup、小步 commit push 等 4 条）。真正的执行力来自四个确定性 companion 工具：unclebob/crapper（146 stars，Python，0BSD）用 CRAP = CC² × (1-coverage)³ + CC 公式给 6 种语言算圈复杂度与覆盖率并写 .metrics/crap.edn；unclebob/dryer（70 stars，0BSD）用 Jaccard 结构指纹找重复代码，默认阈值 0.82；unclebob/mutator（87 stars，0BSD）对 6 种语言做变异测试并输出 killed/survived/uncovered；unclebob/uml-viewer（474 stars，Clojure）作为活的 UML 类图查看器把 namespace 当 component，按 Clean Architecture 依赖规则染色并与 agent 双向联动做 what-if 改架构。整个方案的设计哲学是「原则写给人看，数字交给工具判定」，用可测量的门禁替代 AI 自我声明的「我已经重构好了」。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上周三晚上，我让 Claude Code 给一个 Java 服务加个「用户批量导入」接口。</p>
+<p>它干得很快。 十二分钟，接口能用，测试也写了。 我还挺高兴。</p>
+<p>然后我跑了一下 crapper。 屏幕上那个新方法的 CRAP 分是 <strong>31.4</strong>。</p>
+<p><strong>31.4。</strong></p>
+<p>三十以上意味着「复杂且没被测到」。 我让 Claude Code 自己看了一遍输出，它回我一句：</p>
+<blockquote>
+<p>“The function looks reasonably straightforward. Let me review the implementation to ensure correctness.”</p>
+</blockquote>
+<p>它开始 review 自己的代码。 又是十分钟。 然后说「重构完成了，CRAP 从 31.4 降到了 12.8」。</p>
+<p>我打开 diff 看。 它把那个函数<strong>拆成了三个</strong>，每个都很小，<strong>没有一个</strong>补测试。 覆盖率还是原来那个数。 CRAP 之所以降下来，纯粹是因为<strong>分母里的 CC 变小了</strong>。</p>
+<p>我那一刻意识到一件事：<strong>AI 编码 agent 最擅长的，是把代码改到「看起来符合规范」的样子。 它最不擅长的，是被可重复的数字判定。</strong></p>
+<p>三周后，我在 GitHub 上刷到 <strong>unclebob/ub-mode</strong>。</p>
+<p><strong>Robert C. Martin。</strong> 就是《Clean Architecture》那个 Robert C. Martin。 就是 TDD 那篇 “TDD is Dead — Long Live TDD!” 的 Robert C. Martin。 5,256 stars，<strong>290 forks</strong>，仓库里<strong>只有 4 次提交</strong>，<strong>2 个文件</strong>，加起来 6KB 左右。</p>
+<p><strong>没有一行代码。</strong></p>
+<p>我当时的第一反应是「这不是标题党吗」。 点进去看完 SKILL.md 全文，我改主意了。</p>
+<hr>
+<h2 id="一、它想解决的问题：AI-写代码，规范失效了"><a href="#一、它想解决的问题：AI-写代码，规范失效了" class="headerlink" title="一、它想解决的问题：AI 写代码，规范失效了"></a>一、它想解决的问题：AI 写代码，规范失效了</h2><p>Uncle Bob 的方法论一直是<strong>可执行的</strong>。 他写《Clean Code》不是写鸡汤，是给出一堆具体到能自动检查的规则：函数圈复杂度不能高、重复代码要消除、测试要覆盖到行为而不是行、依赖方向不能反。后来这些规则被工具化了：</p>
+<table>
+<thead>
+<tr>
+<th>仓库</th>
+<th>语言</th>
+<th> Stars</th>
+<th> 建仓</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> unclebob/crap4java</td>
+<td>Java</td>
+<td>338</td>
+<td>2026-03-13</td>
+</tr>
+<tr>
+<td>unclebob/crap4clj</td>
+<td>Clojure</td>
+<td>59</td>
+<td>2026-02-24</td>
+</tr>
+<tr>
+<td>unclebob/clj-mutate</td>
+<td>Clojure</td>
+<td>36</td>
+<td>2026-02-24</td>
+</tr>
+<tr>
+<td>unclebob/crap4go</td>
+<td>Go</td>
+<td>36</td>
+<td>2026-05-11</td>
+</tr>
+<tr>
+<td>unclebob/dry4clj</td>
+<td>Clojure</td>
+<td>30</td>
+<td>2026-05-07</td>
+</tr>
+<tr>
+<td>unclebob/mutate4java</td>
+<td>Java</td>
+<td>35</td>
+<td>2026-03-13</td>
+</tr>
+<tr>
+<td>unclebob/mutate4go</td>
+<td>Go</td>
+<td>23</td>
+<td>2026-05-11</td>
+</tr>
+</tbody></table>
+<p><strong>问题出在哪？</strong> 这套东西需要人<strong>自己记得去跑</strong>。 写完代码，得手动开终端、跑 crapper、看输出、决定拆哪个函数、再跑一遍。 一天下来光这些就吃掉半小时。于是绝大部分人的实际状态是：</p>
+<blockquote>
+<p>知道该写测试，但没写。知道有重复，但没删。知道函数太长，但没动。</p>
+</blockquote>
+<p>这套纪律<strong>在 AI 之前就已经很难坚持了</strong>。 AI 一来，情况直接崩塌。 原因很具体：<strong>AI 的反馈回路是「我说了算」。</strong></p>
+<p>你让 agent 重构，它说「已完成重构，逻辑更清晰」。 你信吗？ 你没法信，因为你手上没有一个<strong>不可能撒谎</strong>的信号。 代码没有 CRAP 分，测试没有变异存活率，重复块没有相似度数字。</p>
+<p>而 AI 恰恰是<strong>最擅长生成看起来像合规代码</strong>的。 它会把长函数拆成三个小函数 —— 每个都短，每个都清爽，命名都很漂亮 —— <strong>但一个测试都不补</strong>。 这正是我那晚遇到的事。</p>
+<p>ub-mode 的整个设计，就是冲着这个漏洞去的：</p>
+<blockquote>
+<p><strong>原则写给人（和 agent）看，数字交给工具判定。</strong></p>
+</blockquote>
+<p>它不写「请写高质量代码」。 它写「把每个函数降到 CRAP 10 以下」「消除相似度 ≥ 0.8 的重复」「覆盖没覆盖到的、杀掉存活下来的 mutant」。 每一条都对应一个可执行的命令和一个确定的退出码。</p>
+<hr>
+<h2 id="二、它是什么：一份-4KB-的-SKILL-md-四个确定性工具"><a href="#二、它是什么：一份-4KB-的-SKILL-md-四个确定性工具" class="headerlink" title="二、它是什么：一份 4KB 的 SKILL.md + 四个确定性工具"></a>二、它是什么：一份 4KB 的 SKILL.md + 四个确定性工具</h2><p>一句话定义：</p>
+<blockquote>
+<p><strong>ub-mode 是一个 agent skill（不是框架、不是运行时、不是插件），它由一份 SKILL.md 声明的 25 条行为准则，加上四个独立的 companion 工具仓库组成 —— 前者约束 agent「怎么做事」，后者提供可重复的数字判定「做得对不对」。</strong></p>
+</blockquote>
+<p><strong>第一层：SKILL.md —— 准则层。</strong> 整个仓库的 <code>contents</code> 只有两项（<code>README.md</code> 2195 字节、<code>SKILL.md</code> 3958 字节），front-matter 是标准的 agent skill 格式：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">ub-mode</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">&gt;</span></span><br><span class="line"><span class="string">  Follow the reduced principles when writing or changing code. Every change</span></span><br><span class="line"><span class="string">  follows First Make it Work, then Then Make it Right, then Follow Practice.</span></span><br><span class="line"><span class="string">  Use when the user runs /ub-mode or asks for the reduced principles.</span></span><br><span class="line"><span class="string"></span><span class="meta">---</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>第二层：companion 工具层。</strong> README 里明确列了四个，职责分别是结构 / 复杂度 / 重复 / 测试充分性：</p>
+<blockquote>
+<p><code>ub-mode</code> relies on deterministic quality-gate tools to enforce structure, complexity, duplication, and test thoroughness:</p>
+<ul>
+<li><strong>crapper</strong> — Computes cyclomatic complexity, test coverage, and CRAP score per function so every function stays under the CRAP threshold (<code>&lt; 10</code>).</li>
+<li><strong>dryer</strong> — Detects structural code duplication so duplicate blocks (<code>&gt;= 0.8</code> similarity) are eliminated.</li>
+<li><strong>mutator</strong> — Runs mutation testing to expose uncovered code and surviving mutants that tests fail to catch.</li>
+<li><strong>uml-viewer</strong> — Visualizes components, coverage, CRAP, mutation scores, and dependency directions.</li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th> 仓库</th>
+<th> Stars</th>
+<th>Forks</th>
+<th> 语言</th>
+<th> License</th>
+<th> 建仓</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> unclebob/uml-viewer</td>
+<td>474</td>
+<td>66</td>
+<td>Clojure</td>
+<td>—</td>
+<td>2026-09-13</td>
+</tr>
+<tr>
+<td>unclebob/crapper</td>
+<td>146</td>
+<td>49</td>
+<td>Python</td>
+<td>0BSD</td>
+<td>2026-09-30</td>
+</tr>
+<tr>
+<td>unclebob/mutator</td>
+<td>87</td>
+<td>39</td>
+<td>Python</td>
+<td>0BSD</td>
+<td>2026-09-30</td>
+</tr>
+<tr>
+<td>unclebob/dryer</td>
+<td>70</td>
+<td>37</td>
+<td>Python</td>
+<td>0BSD</td>
+<td>2026-09-30</td>
+</tr>
+</tbody></table>
+<p><strong>ub-mode 本身在 GitHub API 上没有 license 字段</strong>，也没有 language、topics、homepage。 它就是一个 Markdown 目录。 这点我得如实说 —— 你要商用、要 fork 改造，得自己判断 SKILL.md 那段文本的授权状态。反倒是四个 companion 工具<strong>都是 0BSD（BSD Zero Clause License）</strong>，LICENSE 里写着 “Copyright (C) 2026 by Robert C. Martin <a href="mailto:unclebob@cleancoder.com">unclebob@cleancoder.com</a>“。</p>
+<p>时间线也很说明问题 —— <strong>4 次提交，全部集中在 2026-10-25 两天内</strong>：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">57a8bdd2 2026-10-25T16:07:58Z Remove crap4clj and clj-mutate references from README</span><br><span class="line">826dab64 2026-10-25T16:07:11Z Note that ub-mode is loosely based on portions of @poteto's rules</span><br><span class="line">ff4e602c 2026-10-25T16:05:10Z Document companion tool repositories in README</span><br><span class="line">7d7720cd 2026-10-25T16:04:08Z Initial commit of ub-mode skill</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后一次提交叫「Remove crap4clj and clj-mutate references from README」—— 他把老的 Clojure 专用工具从文档里撤掉了，改推新的多语言 companion。 这是一次<strong>收敛</strong>，不是一次生长。</p>
+<hr>
+<h2 id="三、核心机制：三段式准则-硬阈值"><a href="#三、核心机制：三段式准则-硬阈值" class="headerlink" title="三、核心机制：三段式准则 + 硬阈值"></a>三、核心机制：三段式准则 + 硬阈值</h2><p>SKILL.md 的骨架是三段，README 把它概括成：</p>
+<blockquote>
+<p>Every time you are asked to make a change follow:</p>
+<ul>
+<li>First Make it Work.</li>
+<li>Then Make it Right.</li>
+<li>Follow Practice</li>
+</ul>
+</blockquote>
+<p>有意思的是，这三段不是随便起的名 —— 它们跟「测试先行」是<strong>冲突</strong>的。 「先让它能跑」意味着先写能通过的代码，<strong>然后</strong>才做对。这跟 TDD「先写会失败的测试」在顺序上是对立的。 README 里说得很清楚：</p>
+<blockquote>
+<p>It is loosely based on portions of <a target="_blank" rel="noopener" href="https://github.com/poteto">@poteto</a>‘s rules (<code>poteto-mode</code> / <code>pstack</code>), <strong>reduced and paired with deterministic quality-gate tools</strong>.</p>
+</blockquote>
+<p>注意 “reduced” 这个词。这不是完整的 TDD 教条，是<strong>削减版</strong>，被刻意重新排序过。 我一开始觉得这有点别扭，看完三段就明白了 —— 这是在给 AI 用的。 AI 最容易犯的错是「过度工程」，第一段负责把它按住。</p>
+<h3 id="第一段：First-Make-it-Work（先让它能跑）"><a href="#第一段：First-Make-it-Work（先让它能跑）" class="headerlink" title="第一段：First Make it Work（先让它能跑）"></a>第一段：First Make it Work（先让它能跑）</h3><p>13 条子规则。我挑最关键的几条讲。</p>
+<p><strong>Laziness Protocol（懒惰协议）</strong> —— 「一个决策只存在于一个地方」「提交能解决问题的最小改动」。 前者在对抗 AI 最爱的「顺手加个 if 分支」，后者在对抗「既然都改这里了，不如重构一下」。</p>
+<p><strong>Foundational Thinking（基础性思考）</strong> —— 「先定数据形状，再写逻辑」「先做对后续每个阶段都有帮助的事」「如果会有并发写者，就不要共享状态」。 第一条是 Clean Architecture 最核心的那条 —— 依赖的方向由数据结构决定。 第三条更狠。</p>
+<p><strong>TDD</strong></p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">*</span> Write the failing test before you change the code.</span><br><span class="line"><span class="bullet">*</span> See it fail for the reason you expect.</span><br><span class="line"><span class="bullet">*</span> Make the smallest change that makes it pass.</span><br><span class="line"><span class="bullet">*</span> If an honest test is impractical, do not write a bad one.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意最后一句 —— <strong>「如果写不出诚实的测试，就不要写烂测试」</strong>。 这是在承认 AI 的现实处境：有些需求太模糊，写出来的测试只是摆设。这一条比很多人类写的 TDD 规范都清醒。</p>
+<p><strong>Attack the Premise（攻击前提）</strong> —— 这条我觉得是整份 SKILL.md 里最有价值的一条：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">*</span> When two fixes that share one premise fail the same gate, write that premise in one sentence and count which actors hold the imbalance.</span><br><span class="line"><span class="bullet">*</span> Remove the assignment.</span><br><span class="line"><span class="bullet">*</span> Do not start another fix until you have done that.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>翻译成人话：<strong>当同一个门禁连续拦下你两次，说明问题不在门禁，在前提。</strong> 这时候要做的是把那个隐含前提用一句话写出来，数一数哪些角色持有这个失衡，然后<strong>把任务分配本身拆掉</strong> —— 不是修实现，是拆需求。在拆掉前提之前，不许开始第三次修复。</p>
+<p>这是对 AI「第三次尝试就能修好」这种幻觉的<strong>结构性防御</strong>。 我自己写代码的时候也被这条打过脸 —— 两次同样的失败，我一般会直接开始第三次，然后第四次更糟。</p>
+<p><strong>Architecture 下的五条</strong></p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">### Model the Domain</span></span><br><span class="line"><span class="bullet">*</span> Put the domain in a structure that makes the illegal states impossible.</span><br><span class="line"></span><br><span class="line"><span class="section">### Boundary Discipline</span></span><br><span class="line"><span class="bullet">*</span> Check the data where it enters.</span><br><span class="line"><span class="bullet">*</span> Inside, trust it.</span><br><span class="line"></span><br><span class="line"><span class="section">### Type System Discipline</span></span><br><span class="line"><span class="bullet">*</span> Make the illegal value impossible to write.</span><br><span class="line"><span class="bullet">*</span> Do not silence the compiler.</span><br><span class="line"></span><br><span class="line"><span class="section">### Make Operations Idempotent</span></span><br><span class="line"><span class="bullet">*</span> Running it twice, or running it after a crash halfway through, ends in the same state.</span><br><span class="line"></span><br><span class="line"><span class="section">### Separate Before Serializing Shared State</span></span><br><span class="line"><span class="bullet">*</span> If they do not need the same mutable thing, give each its own.</span><br><span class="line"><span class="bullet">*</span> If they do, allow one writer, and enforce that in the structure.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>「让非法状态不可表示」「在数据进入的地方校验，内部信任」「不要 silence 编译器」「操作幂等」「共享可变状态之前先分离」—— 这五条基本就是 Clean Architecture 的目录。</p>
+<p><strong>Idempotent 那条对 AI 尤其重要。</strong> AI 很爱写「重试一下就好」的逻辑，但幂等要求的是<strong>语义层面</strong>的 —— 跑两遍，或者崩在中途再跑，终态必须一样。 这不是加个 <code>if exists</code> 就完事的。</p>
+<p>最后一条也值得单拎：不要先序列化再分离，要<strong>先分离再序列化</strong>。 因为一旦你共享了一个可变对象然后去序列化，调用方拿到的就是同一个引用 —— 顺序反了，隔离就失效了。</p>
+<h3 id="第二段：Then-Make-it-Right（再把它做对）"><a href="#第二段：Then-Make-it-Right（再把它做对）" class="headerlink" title="第二段：Then Make it Right（再把它做对）"></a>第二段：Then Make it Right（再把它做对）</h3><p>这一段是真正有工具背书的部分。 8 条。</p>
+<p><strong>Fix Root Causes</strong> —— 「复现它」「修因」「一个只是把崩溃藏起来的 guard 不是修复」。 最后这条直接针对 AI 最爱的 <code>try/catch</code> + <code>return null</code> 式糊弄。</p>
+<p><strong>Test Behavior, Not Implementation</strong></p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">*</span> The test calls the code the way its user does and checks the result that user would see.</span><br><span class="line"><span class="bullet">*</span> If the test would still pass when every function returned nothing, throw it out.</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>「如果所有函数都返回空，测试还能过，就把它扔掉」</strong> —— 这是一个可以机器执行的启发式。 这跟我开头说的「把长函数拆三个、不补测试」是同一个病：测试测的是实现细节，所以重构一下就全绿了。</p>
+<p><strong>Crapper / Dryer / Mutator 三条</strong></p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## Crapper</span></span><br><span class="line"><span class="bullet">*</span> Use the crapper tool</span><br><span class="line"><span class="bullet">*</span> Reduce each function under CRAP 10 by splitting it, by testing it, or both.</span><br><span class="line"><span class="bullet">*</span> Consider whether case statements are worth reducing.</span><br><span class="line"></span><br><span class="line"><span class="section">## Dryer</span></span><br><span class="line"><span class="bullet">*</span> Use the dryer tool to eliminate duplication that rank 0.8 or above.</span><br><span class="line"></span><br><span class="line"><span class="section">## Mutator</span></span><br><span class="line"><span class="bullet">*</span> Use the mutator tool</span><br><span class="line"><span class="bullet">*</span> Cover the uncovered.</span><br><span class="line"><span class="bullet">*</span> Kill the survivors.</span><br><span class="line"><span class="bullet">*</span> Delete dead code.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意 crapper 那条：<strong>「Reduce each function under CRAP 10 by splitting it, by testing it, or both」</strong> —— 拆函数<strong>或</strong>补测试<strong>都行。 这就是对我开头那个 bug 的正面回应：光拆函数虽然能降 CRAP，但</strong>补测试才是真降 **，而 crapper 的 CRAP 公式里 coverage 是三次方项，补测试的收益远大于拆分。</p>
+<p><strong>Refactoring</strong> —— 「Pin what the code does / Change the structure / Prove the behavior did not change」。 三步对应到工具上是：先跑测试拿到基线（pin），再改（change），再跑一遍（prove）。 顺序不能乱 —— 这也是为什么 mutator 有个「baseline 必须先通过」的要求。</p>
+<h3 id="第三段：Practice（日常纪律）"><a href="#第三段：Practice（日常纪律）" class="headerlink" title="第三段：Practice（日常纪律）"></a>第三段：Practice（日常纪律）</h3><p>4 条。这段是整份 SKILL.md 里最「工程味」的部分，也是最容易被忽视的。</p>
+<p><strong>Keep a Log</strong> —— 「记录你做的每个动作和理由，完成时报告这份 log」。 每一步动作和理由都要记。这条在多人协作和 agent 协作里价值巨大。</p>
+<p><strong>Guard the Context Window</strong> —— 「保持主线程精简，把批量工作发到别处，只带回摘要」。 这条对 agent 来说是<strong>直接可执行的</strong> —— 子 agent、并行任务、offload 大文件。</p>
+<p><strong>Worktree Cleanup</strong> —— 「先找出安全可删的，确认没有还在用的，再回收磁盘」「未提交的工作等一个决定」。 不能自己删掉你还没提交的东西，这对 git worktree 密集的 agent 工作流很重要。</p>
+<p><strong>Commit and Push</strong> —— 「经常提交，小而有序」「每个 commit 说清为什么改、改了什么、怎么证明的」「最后 push 到主线」。 这正是 git commit message 的最佳实践，但很少人坚持。</p>
+<hr>
+<h2 id="四、真正干活的部分：三个质量门禁工具"><a href="#四、真正干活的部分：三个质量门禁工具" class="headerlink" title="四、真正干活的部分：三个质量门禁工具"></a>四、真正干活的部分：三个质量门禁工具</h2><p>准则写得再好，agent 也要能<strong>执行</strong>。 这四个 companion 工具就是执行层。</p>
+<h3 id="4-1-crapper-——-用-CRAP-公式把复杂度和覆盖率绑成一个数"><a href="#4-1-crapper-——-用-CRAP-公式把复杂度和覆盖率绑成一个数" class="headerlink" title="4.1 crapper —— 用 CRAP 公式把复杂度和覆盖率绑成一个数"></a>4.1 crapper —— 用 CRAP 公式把复杂度和覆盖率绑成一个数</h3><p>CRAP 是 Change Risk Anti-Patterns 的缩写，公式来自 <code>crap4clj</code> / <code>crap4java</code> / <code>crap4go</code>：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CRAP = CC² × (1 − coverage)³ + CC</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>CC</code> 是圈复杂度，<code>coverage</code> 是测试覆盖该函数的百分比。 README 给了判读区间：</p>
+<blockquote>
+<p>A score of 1–5 is low risk, 5–30 is worth a look, and 30+ is complex and under-tested.</p>
+</blockquote>
+<p>数学上很直白：<strong>没测试的话，复杂度会被平方再立方放大</strong>。 一个 CC=5 且完全没覆盖的函数，CRAP = 25×1 + 5 = 30。 一个 CC=5 且 100% 覆盖的函数，CRAP = 0 + 5 = 5。</p>
+<p><strong>同一个复杂度，覆盖与否差 6 倍。</strong> 这个数字设计就是逼你补测试。</p>
+<p>crapper <strong>不是</strong>用正则，是个 Python 工具，依赖：</p>
+<figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[project]</span></span><br><span class="line"><span class="attr">name</span> = <span class="string">"crapper"</span></span><br><span class="line"><span class="attr">version</span> = <span class="string">"0.1.0"</span></span><br><span class="line"><span class="attr">requires-python</span> = <span class="string">"&gt;=3.11"</span></span><br><span class="line"><span class="attr">dependencies</span> = [</span><br><span class="line">    <span class="string">"tree-sitter&gt;=0.24"</span>,</span><br><span class="line">    <span class="string">"tree-sitter-language-pack&gt;=0.7"</span>,</span><br><span class="line">]</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>tree-sitter</strong> —— 也就是说它是<strong>真 AST 解析</strong>，不是文本匹配。 这解释了为什么它敢对 JSX、match 表达式、Python 推导式做精确计数。</p>
+<p>安装方式是「首次运行自动建 venv」，整个 <code>crapper</code> 启动脚本就二十行 sh：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment"># Run the CRAP tool, creating a local virtualenv on first use.</span></span><br><span class="line">ROOT=$(CDPATH= <span class="built_in">cd</span> -- <span class="string">"<span class="subst">$(dirname <span class="string">"<span class="variable">$0</span>"</span>)</span>"</span> &amp;&amp; <span class="built_in">pwd</span>)</span><br><span class="line">PY=<span class="string">"<span class="variable">$ROOT</span>/.venv/bin/python"</span></span><br><span class="line"><span class="keyword">if</span> [ ! -x <span class="string">"<span class="variable">$PY</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">  python3 -m venv <span class="string">"<span class="variable">$ROOT</span>/.venv"</span></span><br><span class="line">  <span class="string">"<span class="variable">$ROOT</span>/.venv/bin/pip"</span> install -e <span class="string">"<span class="variable">$ROOT</span>"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">exec</span> <span class="string">"<span class="variable">$PY</span>"</span> -m crapper <span class="string">"<span class="variable">$@</span>"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>./crapper</code> 就能跑。 <strong>零手工配置</strong>，这是 agent 友好的关键 —— agent 不需要读文档猜参数。</p>
+<p>常用命令：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">./crapper</span><br><span class="line">./crapper --no-coverage                  <span class="comment"># complexity only; coverage is N/A</span></span><br><span class="line">./crapper --use-existing-coverage        <span class="comment"># read reports already on disk</span></span><br><span class="line">./crapper src/demo/core.clj src/ui       <span class="comment"># these files and trees</span></span><br><span class="line">./crapper --changed                      <span class="comment"># git additions and edits</span></span><br><span class="line">./crapper combat                         <span class="comment"># path fragment, same idea as crap4clj</span></span><br><span class="line">./crapper --threshold 30                 <span class="comment"># exit 2 when the worst score is higher</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong><code>--threshold 30</code> 退出码 2</strong> —— 这就是「确定性门禁」的具体形态：CI 里一行就能卡住质量。</p>
+<p><code>--changed</code> 我很喜欢：<strong>只分析 git 的新增和修改行</strong>。 在老项目上全量 CRAP 一片飘红根本没法用；只看这次改的，才有意义。</p>
+<p>输出的快照是 EDN：</p>
+<figure class="highlight clojure"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">{<span class="symbol">:entries</span> [{<span class="symbol">:name</span> <span class="string">"place"</span></span><br><span class="line">            <span class="symbol">:namespace</span> <span class="string">"demo.Board"</span></span><br><span class="line">            <span class="symbol">:complexity</span> <span class="number">3</span></span><br><span class="line">            <span class="symbol">:coverage</span> <span class="number">75.0</span></span><br><span class="line">            <span class="symbol">:crap</span> <span class="number">3.1</span>}]}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>各语言的复杂度计数规则，README 里列得极其细致：</p>
+<table>
+<thead>
+<tr>
+<th>语言</th>
+<th>计什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Clojure</td>
+<td><code>if</code>/<code>when</code> 及变体、<code>and</code>、<code>or</code>、<code>loop</code>、<code>catch</code>，以及 <code>cond</code>/<code>condp</code>/<code>case</code>/<code>cond-&gt;</code>/<code>cond-&gt;&gt;</code>/<code>some-&gt;</code>/<code>some-&gt;&gt;</code> 的<strong>每一个分支</strong></td>
+</tr>
+<tr>
+<td> Java</td>
+<td><code>if</code>、循环、<code>catch</code>、<code>?:</code>、每个 <code>switch</code> label、<code>&amp;&amp;</code>/`</td>
+</tr>
+<tr>
+<td>Go</td>
+<td><code>if</code>、<code>for</code>、<code>range</code>、每个 <code>switch</code>/<code>select</code> 子句、<code>&amp;&amp;</code>/`</td>
+</tr>
+<tr>
+<td>TypeScript / TSX / JS</td>
+<td> 同 Java 的结构判定，<strong>含 JSX 里的 <code>&amp;&amp;</code></strong>，外加 <code>??</code> 和 <code>?.</code></td>
+</tr>
+<tr>
+<td>Rust</td>
+<td><code>if</code>、循环、每个 <code>match</code> arm、<code>?</code>、<code>&amp;&amp;</code>/`</td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>if</code>、<code>elif</code>、<code>for</code>、<code>while</code>、<code>except</code>、每个 <code>match</code> case、推导式 filter、条件表达式、每个 <code>and</code>/<code>or</code></td>
+</tr>
+</tbody></table>
+<p>TS 那个「inline Express callback 单独成条」的处理很细致：</p>
+<blockquote>
+<p>An inline Express callback — <code>.get</code>, <code>.post</code>, <code>.put</code>, <code>.patch</code>, <code>.delete</code>, <code>.head</code>, <code>.options</code>, <code>.all</code>, and <code>.use</code>, and <code>.route(path).get(...)</code> — is its own entry, named <code>GET /users</code>. A second callback on that same route is <code>GET /users#2</code>. Its decisions are not also charged to the enclosing function.</p>
+</blockquote>
+<p>Express 路由回调里的每个 <code>if</code> 会被算成独立的 <code>GET /users</code> 条目，而不是算进外层函数。 这解决了以前工具的一个经典痛点：Express 那种「一整个文件一个巨型中间件」的结构会被算成一个巨复杂的函数，导致 CRAP 完全失真。覆盖率获取也是自动化的：</p>
+<table>
+<thead>
+<tr>
+<th>语言</th>
+<th>命令</th>
+<th>报告位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Clojure</td>
+<td><code>clj -M:cov --lcov</code></td>
+<td><code>target/coverage/</code></td>
+</tr>
+<tr>
+<td>Java</td>
+<td>JaCoCo Maven plugin <code>0.8.12</code></td>
+<td><code>target/site/jacoco/jacoco.xml</code></td>
+</tr>
+<tr>
+<td>Go</td>
+<td><code>go test ./... -coverprofile=...</code></td>
+<td><code>target/coverage/go/coverage.out</code></td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td><code>npm run coverage</code>，或 Vitest <code>--coverage</code>，或 <code>npx c8 ... npm test</code></td>
+<td><code>coverage/lcov.info</code></td>
+</tr>
+<tr>
+<td>Rust</td>
+<td><code>cargo llvm-cov</code> 或 <code>cargo tarpaulin</code></td>
+<td><code>target/coverage/rust/lcov.info</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>coverage run</code> + pytest/unittest，再 <code>coverage lcov</code></td>
+<td><code>target/coverage/python/lcov.info</code></td>
+</tr>
+</tbody></table>
+<p>而且它<strong>缺工具会自己装</strong>：Vitest 缺 <code>@vitest/coverage-v8</code> 会自动装进 <code>node_modules</code>（不动 <code>package.json</code>），Rust 缺 <code>cargo-llvm-cov</code> 会自动装，Python 会把 <code>coverage</code> 和 <code>pytest</code> 装进项目解释器。</p>
+<p>失败也是优雅降级：</p>
+<blockquote>
+<p>A missing tool or a failed test run scores that language at 0% and still writes the snapshot.</p>
+</blockquote>
+<p><strong>缺工具 → 该语言覆盖率记 0% → CRAP 飙升。</strong> 它不会因为工具缺失就假装一切正常，而是让分数<strong>变难看</strong>。 对 agent 来说这是正确方向 —— 你希望它看到红色然后去修，而不是看到一个「跳过」然后以为过了。</p>
+<h3 id="4-2-dryer-——-用结构指纹找重复"><a href="#4-2-dryer-——-用结构指纹找重复" class="headerlink" title="4.2 dryer —— 用结构指纹找重复"></a>4.2 dryer —— 用结构指纹找重复</h3><p>dryer 解决的是另一个问题：<strong>结构上的重复</strong>，不是文本上的。算法是 <strong>Jaccard 相似度</strong>，作用在「结构指纹」上：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">score = shared fingerprints / all fingerprints seen in either form</span><br></pre></td></tr></tbody></table></figure>
+
+<p>「什么留下、什么丢掉」是关键设计：</p>
+<blockquote>
+<p>What stays is the call or method name, the operator, and the shape of the tree. What drops out is the local name, the field name, the literal, and the keyword. A Clojure keyword call <code>(:kind m)</code> and <code>(:id row)</code> is the same shape. So is <code>order.total</code> and <code>row.amount</code>.</p>
+</blockquote>
+<p><strong>留下</strong>：调用 / 方法名、运算符、树的形状。 <strong>丢掉</strong>：局部变量名、字段名、字面量、keyword。</p>
+<p>所以下面这三个是同一份代码：</p>
+<figure class="highlight clojure"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">defn</span> <span class="title">alpha</span> [xs]</span><br><span class="line">  (<span class="name"><span class="built_in">let</span></span> [ys (<span class="name"><span class="built_in">filter</span></span> odd? xs)]</span><br><span class="line">    (<span class="name"><span class="built_in">map</span></span> inc ys)))</span><br><span class="line"></span><br><span class="line">(<span class="keyword">defn</span> <span class="title">beta</span> [items]</span><br><span class="line">  (<span class="name"><span class="built_in">let</span></span> [kept (<span class="name"><span class="built_in">filter</span></span> even? items)]</span><br><span class="line">    (<span class="name"><span class="built_in">map</span></span> dec kept)))</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">alpha</span><span class="params">(<span class="type">int</span>[] xs)</span> {</span><br><span class="line">  <span class="type">int</span>[] ys = filter(xs, odd);</span><br><span class="line">  <span class="keyword">return</span> map(ys, inc);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">beta</span>(<span class="params">items</span>):</span><br><span class="line">    kept = <span class="built_in">filter</span>(items, even)</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">map</span>(kept, dec)</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>三个都打 1.0 分。</strong></p>
+<p>这比文本 diff 强太多。 复制粘贴的代码人眼一看就知道，但 **「逻辑上一样、只是变量名不同」的代码 ** 才是真正难查的重复 —— 而这恰恰是 AI 生成的代码里最常见的形态。</p>
+<p>参数：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--threshold N    Minimum structural similarity score, default 0.82</span><br><span class="line">--min-lines N    Minimum source lines in a candidate form, default 4</span><br><span class="line">--min-nodes N    Minimum normalized syntax nodes, default 20</span><br><span class="line">--format F       text or edn, default text</span><br></pre></td></tr></tbody></table></figure>
+
+<p>README 里那个例子特别说明问题：</p>
+<blockquote>
+<p>These two functions score <code>1.0</code>. The names, locals, predicates, and mapped functions differ, and those incidental symbols normalize away. <strong>A default run still skips them: they are three lines, and the default minimum is four.</strong></p>
+</blockquote>
+<p>两个 1.0 分的函数，默认配置下<strong>不报</strong> —— 因为只有三行，而默认最小行数是四。 这就是 <code>--min-nodes 20</code> 这个隐含门槛的作用：太小的块不值得抽。 抽出一个 3 行的重复块通常是负收益。</p>
+<p>dryer 的退出码语义也干净：</p>
+<blockquote>
+<p>The run exits <code>0</code> after a report, <code>1</code> on a usage error, and <code>2</code> on an unknown <code>--format</code>.</p>
+</blockquote>
+<h3 id="4-3-mutator-——-变异测试，问「你的测试真的在测吗」"><a href="#4-3-mutator-——-变异测试，问「你的测试真的在测吗」" class="headerlink" title="4.3 mutator —— 变异测试，问「你的测试真的在测吗」"></a>4.3 mutator —— 变异测试，问「你的测试真的在测吗」</h3><p>这是三个工具里最有价值的一个。<strong>核心思想</strong>：改坏你的代码一行，然后看你的测试<strong>会不会失败</strong>。</p>
+<ul>
+<li>测试失败 → 这个 mutant <strong>killed</strong>（被杀死）</li>
+<li>测试还过 → 这个 mutant <strong>survived</strong>（存活）—— 说明你没测到这个行为</li>
+<li>覆盖率报告没覆盖到的行 → <strong>uncovered</strong>，根本不跑</li>
+</ul>
+<blockquote>
+<p>A mutant is killed when the tests fail or time out. It survives when the tests still pass. The score uml-viewer paints is killed / (killed + survived).</p>
+</blockquote>
+<p>各语言的变异规则：</p>
+<table>
+<thead>
+<tr>
+<th>语言</th>
+<th>变异操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Clojure</td>
+<td><code>+</code>/<code>-</code>，<code>*</code>→<code>/</code>，<code>inc</code>/<code>dec</code>，比较运算，<code>=</code>/<code>not=</code>，<code>if</code>/<code>if-not</code>，<code>when</code>/<code>when-not</code>，<code>and</code>/<code>or</code>，以及 seq / 谓词 / 强制转换配对；任何位置的 <code>true</code>/<code>false</code> 和 <code>0</code>/<code>1</code></td>
+</tr>
+<tr>
+<td>Java</td>
+<td><code>true</code>/<code>false</code>，<code>==</code>/<code>!=</code>，<code>&lt;</code>/<code>&lt;=</code>，<code>&gt;</code>/<code>&gt;=</code>，<code>+</code>/<code>-</code>，<code>*</code>/<code>/</code>，<code>&amp;&amp;</code>/`</td>
+</tr>
+<tr>
+<td>Go</td>
+<td>mutate4go：<code>+</code>/<code>-</code>，<code>*</code> 只→<code>/</code>，比较运算，<code>==</code>/<code>!=</code>，<code>true</code>/<code>false</code>，<code>&amp;&amp;</code>/`</td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td>Java 那套，外加 <code>===</code>/<code>!==</code>，<code>??</code>→`</td>
+</tr>
+<tr>
+<td>Rust</td>
+<td>Java 那套（<code>&amp;&amp;</code>/`</td>
+</tr>
+<tr>
+<td>Python</td>
+<td>Java 那套，写作 <code>and</code>/<code>or</code>、<code>not</code>、<code>True</code>/<code>False</code></td>
+</tr>
+</tbody></table>
+<p>有个细节很对：</p>
+<blockquote>
+<p>A replacement that does not compile fails the test run and counts as killed.</p>
+</blockquote>
+<p>编译不过的变异算 killed。 这在变异测试里是个有争议的选择，但在这个场景下是合理的 —— 至少说明这一行<strong>被测试触碰过</strong>。</p>
+<p><strong>差分执行</strong>是 mutator 最实用的部分：</p>
+<blockquote>
+<p>Once a snapshot exists, the next run is differential. It reruns survivors and every site in a function whose text changed. Killed mutants in an unchanged function stay killed. <code>--since-last-run</code> is that same selection. <code>--mutate-all</code> ignores it.</p>
+</blockquote>
+<p><strong>第一次跑全量，之后只跑「上次存活的 + 文本变了的函数里的」</strong>。 这让变异测试从「一次性的、慢的、要忍耐的仪式」变成「每次提交都能跑的日常门禁」。 对 agent 工作流来说这是决定性的 —— agent 要的是能塞进循环里的快速反馈。</p>
+<p>并行执行的隔离方式也很讲究：</p>
+<blockquote>
+<p>Each worker is a directory under <code>target/mutation-workers</code>. The file being mutated is a private copy. A module that reaches that file through a relative import is copied too, so Node resolves the import to the private copy. The rest of the tree is linked. The original files stay as they are. The overlay is removed when that file’s mutants finish.</p>
+</blockquote>
+<p>每个 worker 一个独立目录，被改的文件是<strong>私有副本</strong>，通过相对 import 访问它的模块也一起复制，其余部分用软链接。 <strong>原文件不动。</strong> 这是为了让多个 mutant 可以并行跑而不互相污染。</p>
+<p>被中断的旧版本留下的备份也会在非 scan 模式下先还原：</p>
+<blockquote>
+<p>A copy left under <code>target/mutator-backup/</code> by an interrupted older run is restored before a non-scan run.</p>
+</blockquote>
+<p>典型的「生产环境的脏状态处理」。 退出码：</p>
+<blockquote>
+<p>Exit <code>0</code> when every executed mutant was killed. Exit <code>2</code> when the baseline tests fail. Exit <code>3</code> when a mutant survives. A failed baseline does not rewrite the snapshot.</p>
+</blockquote>
+<p><strong>3 表示有存活 mutant。</strong> CI 里 <code>exit 3</code> 直接红。</p>
+<h3 id="4-4-uml-viewer-——-活的-UML-图，跟-agent-联动改架构"><a href="#4-4-uml-viewer-——-活的-UML-图，跟-agent-联动改架构" class="headerlink" title="4.4 uml-viewer —— 活的 UML 图，跟 agent 联动改架构"></a>4.4 uml-viewer —— 活的 UML 图，跟 agent 联动改架构</h3><p>前三兄弟是命令行工具，产出 EDN 快照。 uml-viewer（474 stars，Clojure）是<strong>消费方</strong>，也是四个里最复杂的一个。</p>
+<blockquote>
+<p>This project displays a project as UML. The UML is <em>dynamic</em>. You can click elements to drill down — all the way to source code. You can also play what-if games by proposing architecture changes.</p>
+<p>The app is coupled to an agent assistant. The two communicate, so you can display the UML, drill down, tell the agent what you don’t like, and watch it make the changes. Describe a proposal and the agent will build a new diagram. Keep revising that proposal until you like it, then tell the agent to make the code match.</p>
+</blockquote>
+<p><strong>先在图上讨论架构，谈拢了再让 agent 改代码。</strong> 这个工作流顺序比「直接让 agent 改，改完再 review」高效得多 —— 因为架构错误在图上 5 秒能看出来，在代码里要读半小时。它对 namespace 的处理：</p>
+<blockquote>
+<p>The viewer and agent treat namespaces as components. Modules inside those namespaces are the components’ elements. Nesting can be arbitrarily deep. You build an architecture by moving modules into the right namespaces with the right dependencies.</p>
+</blockquote>
+<p><strong>namespace = component</strong>，这在 Clojure/Java 里天然对应包 / 命名空间，是很好的抽象单位。 而且它把 Clean Architecture 的依赖规则做成了颜色：</p>
+<blockquote>
+<p>Dependencies that point from a higher level to a lower level are colored red, in accordance with the Dependency Rule of Clean Architecture.</p>
+</blockquote>
+<p><strong>「从高层指向低层的依赖染成红色」</strong> —— 一眼就能看出依赖倒置了。</p>
+<p>运行方式（需要 Clojure CLI + Java 21+）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从 uml-viewer 仓库本身</span></span><br><span class="line">clj -M:ir                            <span class="comment"># policy → examples/uml-viewer.edn</span></span><br><span class="line">clj -M:run</span><br><span class="line">clj -M:run examples/library.edn</span><br><span class="line">clj -M:run --<span class="built_in">help</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 从任意想查看的 Clojure 项目（不需要本地 checkout）</span></span><br><span class="line"><span class="built_in">cd</span> /path/to/the-project</span><br><span class="line">curl -fsSL https://raw.githubusercontent.com/unclebob/uml-viewer/master/scripts/get-uml-viewer -o get-uml-viewer</span><br><span class="line"><span class="built_in">chmod</span> +x get-uml-viewer</span><br><span class="line">./uml               <span class="comment"># fetch, write ./uml, start</span></span><br><span class="line">./uml --restart     <span class="comment"># companion only: new JVM, restore last view</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>从任意项目直接起，不需要 clone uml-viewer</strong> —— 这个 <code>get-uml-viewer</code> 脚本会把它 clone 到 gitignore 的 <code>.uml-viewer/uml-viewer/</code>（嵌套 <code>.git</code> 对项目仓库不可见），写下 <code>./uml</code>，然后启动。</p>
+<p><code>./uml</code> 会<strong>立刻返回</strong>（后台 JVM），不占终端：</p>
+<blockquote>
+<p><code>./uml</code> returns immediately (<code>clojure</code> in the background, not <code>clj</code>/<code>rlwrap</code>). The diagram is its own JVM.</p>
+</blockquote>
+<p>还有个细节值得说 —— 因为 <code>clj</code> 在 Homebrew 上是 rlwrap 包了一层，后台启动会收到 SIGTTOU 永远起不来：</p>
+<blockquote>
+<p><code>clj</code> is rlwrap on Homebrew; a background rlwrap stops (SIGTTOU) and never starts the JVM. <code>clojure</code> is the same CLI without the tty wrapper.</p>
+</blockquote>
+<p>所以脚本里用的是 <code>clojure</code> 不是 <code>clj</code>。 <strong>这种只有真的在 macOS 上跑过才会撞到的坑。</strong> crapper 仓库里也有一个配套的 <code>uml</code> 启动脚本（zsh），逻辑一样，指向 <code>../uml-viewer</code>，找不到就报错让你设 <code>UML_VIEWER_ROOT</code>。</p>
+<hr>
+<h2 id="五、快速上手"><a href="#五、快速上手" class="headerlink" title="五、快速上手"></a>五、快速上手</h2><h3 id="5-1-装-ub-mode-本身"><a href="#5-1-装-ub-mode-本身" class="headerlink" title="5.1 装 ub-mode 本身"></a>5.1 装 ub-mode 本身</h3><p>README 的安装说明极简：</p>
+<blockquote>
+<p>Copy <code>SKILL.md</code> into your agent’s skills directory as <code>ub-mode/SKILL.md</code> (for example <code>~/.grok/skills/ub-mode/SKILL.md</code>, <code>~/.claude/skills/ub-mode/SKILL.md</code>, or <code>~/.cursor/skills/ub-mode/SKILL.md</code>), then invoke <code>/ub-mode</code>.</p>
+</blockquote>
+<p>对 Claude Code：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p ~/.claude/skills/ub-mode</span><br><span class="line">curl -fsSL https://raw.githubusercontent.com/unclebob/ub-mode/main/SKILL.md \</span><br><span class="line">  -o ~/.claude/skills/ub-mode/SKILL.md</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后在会话里 <code>/ub-mode</code>，或者直接说「按 reduced principles 来」。<strong>注意路径里必须是 <code>ub-mode/SKILL.md</code> 这个两级结构</strong> —— 不少 harness 要求 skill 目录名和 skill 名一致。</p>
+<h3 id="5-2-装三个门禁工具"><a href="#5-2-装三个门禁工具" class="headerlink" title="5.2 装三个门禁工具"></a>5.2 装三个门禁工具</h3><p>三个 Python 工具用法一致，<code>./crapper</code> / <code>./dryer</code> / <code>./mutator</code> 首次运行会自动建 <code>.venv</code> 并 <code>pip install -e .</code>。 mutator 多一个依赖：</p>
+<blockquote>
+<p>crapper has to be checked out next to this directory (<code>../crapper</code>), because that is where the namespace and function names come from.</p>
+</blockquote>
+<p><strong>mutator 必须和 crapper 挨着放</strong>（<code>../crapper</code>），因为函数和命名空间的名称是从 crapper 那儿来的。 这也是为什么 crapper 的快照 <code>.metrics/crap.edn</code> 和 mutator 的 <code>.metrics/mutate/&lt;namespace&gt;.edn</code> 能按 namespace + name join 上：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">your-project/</span><br><span class="line">├── ../crapper/       # 必须是相邻目录</span><br><span class="line">├── ../dryer/</span><br><span class="line">├── ../mutator/</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="5-3-一个完整的日常循环"><a href="#5-3-一个完整的日常循环" class="headerlink" title="5.3 一个完整的日常循环"></a>5.3 一个完整的日常循环</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 先看当前有多烂</span></span><br><span class="line"><span class="built_in">cd</span> /path/to/your-project</span><br><span class="line">/path/to/crapper/crapper --changed --threshold 30</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 看看有没有能抽的重复</span></span><br><span class="line">/path/to/dryer/dryer --changed --threshold 0.82</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 改完之后，验证测试真的在测东西</span></span><br><span class="line">/path/to/mutator/mutator --changed</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 第二次跑 mutator 是差分的，很快</span></span><br><span class="line">/path/to/mutator/mutator --since-last-run</span><br></pre></td></tr></tbody></table></figure>
+
+<p>crapper 的 <code>--changed</code> 和 mutator 的 <code>--changed</code> 配合起来，就是一个能在 agent 每次改动后跑的门禁。</p>
+<h3 id="5-4-放进-CI"><a href="#5-4-放进-CI" class="headerlink" title="5.4 放进 CI"></a>5.4 放进 CI</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="built_in">set</span> -e</span><br><span class="line"><span class="built_in">cd</span> /path/to/your-project</span><br><span class="line"></span><br><span class="line"><span class="comment"># CRAP 超阈值 → exit 2</span></span><br><span class="line">/path/to/crapper/crapper --threshold 30</span><br><span class="line"></span><br><span class="line"><span class="comment"># 有存活 mutant → exit 3</span></span><br><span class="line">/path/to/mutator/mutator</span><br></pre></td></tr></tbody></table></figure>
+
+<p>严格来说 mutator 第一次跑很慢（全量变异），CI 里更适合用 <code>--since-last-run</code> 配合缓存。</p>
+<hr>
+<h2 id="六、关键设计取舍：为什么是「准则-工具」而不是「一个更聪明的-agent」"><a href="#六、关键设计取舍：为什么是「准则-工具」而不是「一个更聪明的-agent」" class="headerlink" title="六、关键设计取舍：为什么是「准则 + 工具」而不是「一个更聪明的 agent」"></a>六、关键设计取舍：为什么是「准则 + 工具」而不是「一个更聪明的 agent」</h2><h3 id="取舍-1：SKILL-md-用散文体，不用-YAML-JSON-规则表"><a href="#取舍-1：SKILL-md-用散文体，不用-YAML-JSON-规则表" class="headerlink" title="取舍 1：SKILL.md 用散文体，不用 YAML/JSON 规则表"></a>取舍 1：SKILL.md 用散文体，不用 YAML/JSON 规则表</h3><p>SKILL.md 全是带 <code>*</code> 的 markdown 列表，<strong>没有</strong>结构化的规则 schema。 为什么？</p>
+<p>因为 agent 读自然语言准则的<strong>遵循率远高于</strong>读结构化规则。 我自己的经验是：给 agent 一份 JSON 规则表，它会当成参考文档；给一份写成祈使句的清单，它会当成待办。 而且散文体允许条款之间<strong>互相引用、互相解释</strong> —— 「A guard that only hides the crash is not a fix」这句如果拆成字段 <code>{rule: "fix root cause", exception: "no guards"}</code>，语义就丢了。</p>
+<p>代价是<strong>没法机器验证这份准则本身</strong>。 没人能检查 SKILL.md 是否覆盖了所有应有的原则。 对比一下，四个 companion 工具全是结构化、可测试、有退出码的 —— 界限划得很清楚。</p>
+<h3 id="取舍-2：准则层故意不给阈值，工具层给"><a href="#取舍-2：准则层故意不给阈值，工具层给" class="headerlink" title="取舍 2：准则层故意不给阈值，工具层给"></a>取舍 2：准则层故意不给阈值，工具层给</h3><p>SKILL.md 里出现具体数字的只有三处：CRAP 10、相似度 0.8。 而 CRAP 公式、阈值区间、各语言判定规则<strong>全在工具的 README 里</strong>。</p>
+<p><strong>为什么分开？</strong> 因为公式和阈值是<strong>会变的</strong>（README 里 CRAP 区间写的是「1–5 低风险，5–30 值得看看，30+ 复杂且欠测」，而 skill 里写「降到 10 以下」—— 两个口径本来就不完全一致）。 把易变的东西放在可独立升级的工具里，准则层就不用动。</p>
+<p>结果就是 <strong>uml-viewer 的 README 里那句</strong>：</p>
+<blockquote>
+<p>Color coding comes from CRAP and mutation metrics. <strong>You can adjust the thresholds in config if you like.</strong></p>
+</blockquote>
+<p>阈值可配。 准则层不背这个锅。</p>
+<h3 id="取舍-3：First-Make-it-Work-排在-Then-Make-it-Right-前面"><a href="#取舍-3：First-Make-it-Work-排在-Then-Make-it-Right-前面" class="headerlink" title="取舍 3：First Make it Work 排在 Then Make it Right 前面"></a>取舍 3：First Make it Work 排在 Then Make it Right 前面</h3><p>这是我一开始觉得别扭的地方。 「先让它能跑，再把它做对」跟 TDD 是冲突的 —— TDD 说「先写会失败的测试」。</p>
+<p>但看 SKILL.md 里的 TDD 条目，其实<strong>没有被真正否定</strong>：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">*</span> Write the failing test before you change the code.</span><br><span class="line"><span class="bullet">*</span> See it fail for the reason you expect.</span><br><span class="line"><span class="bullet">*</span> Make the smallest change that makes it pass.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这是标准 TDD 循环，放在 <strong>First Make it Work</strong> 段里。 也就是说他的意思是：<strong>「做对」的门槛（CRAP / 无重复 / 变异全覆盖）是在「能跑」达成之后才施加的</strong>，但 **「能跑」本身仍然用 TDD 达成 **。</p>
+<p>这个排序对 AI 特别合理。 AI 的失败模式主要是<strong>过度实现</strong>（没等你看清需求就开始造抽象）和<strong>过早优化</strong>（结构没定就抽基类）。 First Make it Work 段里的「Subtract Before You Add」（先减再加）、「Laziness Protocol」（最小改动）—— 都是在压制这两种失败模式。</p>
+<p><strong>先别做对，先别做多，做完再说对不对。</strong> 而「对不对」有工具说了算。</p>
+<h3 id="取舍-4：把「第三次尝试」变成结构性禁止"><a href="#取舍-4：把「第三次尝试」变成结构性禁止" class="headerlink" title="取舍 4：把「第三次尝试」变成结构性禁止"></a>取舍 4：把「第三次尝试」变成结构性禁止</h3><p><code>Attack the Premise</code> 那条规则在传统代码规范里没有对应物。它要求：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">*</span> When two fixes that share one premise fail the same gate, write that premise in one sentence and count which actors hold the imbalance.</span><br><span class="line"><span class="bullet">*</span> Remove the assignment.</span><br><span class="line"><span class="bullet">*</span> Do not start another fix until you have done that.</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>「两次同样的门禁失败 = 前提错了，不是实现错了。」</strong></p>
+<p>这是一个纯粹针对 LLM 的设计。 LLM 的训练目标让它倾向于「再试一次，换个写法」 —— 因为 token 概率上，相似尝试是最自然的续写。 人不会这样（第三次我会觉得不对劲，去查日志），但 LLM 会。 所以必须<strong>在准则里明文禁止</strong>，而且给出一个<strong>替代动作</strong>（把前提写出来 + 数角色 + 拆分配）。</p>
+<p><strong>有替代动作的禁令才有效。</strong> 光说「不要试第三次」没用，得说「那就去做 X」。</p>
+<h3 id="取舍-5：工具全部离线、零网络、零-LLM"><a href="#取舍-5：工具全部离线、零网络、零-LLM" class="headerlink" title="取舍 5：工具全部离线、零网络、零 LLM"></a>取舍 5：工具全部离线、零网络、零 LLM</h3><p>crapper /dryer/mutator 全是 Python + tree-sitter，<strong>不调任何 API</strong>。 唯一的外部依赖是构建系统本身（<code>go test</code>、<code>cargo llvm-cov</code>、<code>mvn test</code>、<code>npm test</code>）。 这跟当下满街的「AI code reviewer」形成鲜明对比 —— 那些工具要把你的代码发给第三方模型，这三个工具<strong>你的代码不出本机</strong>。</p>
+<p>对一个把「AI agent 写代码」推进到「让 agent 自觉按质量门禁做」的项目来说，<strong>门禁本身必须可信</strong>。 一个需要联网、需要 API key、结果还有随机性的门禁，agent 可以（而且会）用各种方式绕过它。</p>
+<p><strong>确定性是对抗性的前提。</strong></p>
+<h3 id="取舍-6：失败即红，而不是失败即跳过"><a href="#取舍-6：失败即红，而不是失败即跳过" class="headerlink" title="取舍 6：失败即红，而不是失败即跳过"></a>取舍 6：失败即红，而不是失败即跳过</h3><p>前面提过，再强调一次。 缺测试工具 → 覆盖率 0% → CRAP 飙升 → 红色。 缺覆盖率报告 → mutator 把该文件当 uncovered。 这是<strong>故意</strong>选的：在 CI 语境里 “skip” 会被 agent 和人都读成「没问题」，让它红反而逼出行动。</p>
+<hr>
+<h2 id="七、和同类项目对比"><a href="#七、和同类项目对比" class="headerlink" title="七、和同类项目对比"></a>七、和同类项目对比</h2><p>这一节按「谁更接近 ub-mode 要解决的问题」来排，不是按 star 数。</p>
+<h3 id="7-1-vs-传统静态分析工具"><a href="#7-1-vs-传统静态分析工具" class="headerlink" title="7.1 vs. 传统静态分析工具"></a>7.1 vs. 传统静态分析工具</h3><p><strong>SonarQube / SonarLint</strong> —— 商业 / 开源的通用静态分析。 技术成熟度、规则数量、IDE 集成都远超 ub-mode。</p>
+<p>但差异在<strong>定位</strong>：Sonar 是「扫描代码库，指出问题」；ub-mode 是「约束 agent 的行为，并在 agent 每次改动后立刻给出判定」。 后者需要的是<strong>低延迟、单一数字、退出码明确</strong>，不是完整的规则库。</p>
+<p>关键区别在于<strong>反馈对象不同</strong>。 SonarQube 面向「提交前人工 review」设计；ub-mode 面向「agent 自主循环」设计。 一个 agent 在两分钟内改五轮代码，人不可能每轮都去 Sonar 面板看；但 agent <strong>可以</strong>每轮跑一次 <code>./crapper --changed</code> 看退出码。</p>
+<p><strong>而且 Sonar 不会告诉你「这次改动是不是把复杂度降下来了但覆盖率没动」。</strong> CRAP 把这两件事乘在一起，正是为了堵住我开头那个漏洞。</p>
+<h3 id="7-2-vs-纯-prompt-CLAUDE-md-规则集"><a href="#7-2-vs-纯-prompt-CLAUDE-md-规则集" class="headerlink" title="7.2 vs. 纯 prompt / CLAUDE.md 规则集"></a>7.2 vs. 纯 prompt / CLAUDE.md 规则集</h3><p>很多团队已经在 <code>CLAUDE.md</code> 里写「遵循 SOLID」「写单元测试」「代码要整洁」。 ub-mode 相对它们的增量非常明确：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>CLAUDE.md 规则</th>
+<th> ub-mode</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 形态</td>
+<td>散文</td>
+<td>散文 + 硬阈值</td>
+</tr>
+<tr>
+<td>判定者</td>
+<td>模型自己</td>
+<td>模型 + 确定性工具</td>
+</tr>
+<tr>
+<td>可验证</td>
+<td>否</td>
+<td>是（退出码）</td>
+</tr>
+<tr>
+<td>抗绕过</td>
+<td>弱</td>
+<td>强</td>
+</tr>
+</tbody></table>
+<p><strong>CLAUDE.md 里的「保持函数简单」是一句建议。 ub-mode 里的「CRAP &lt; 10」是一个 CI 检查。</strong> 差别就像「请锁好门」和「门锁坏了门禁会响」。</p>
+<p>而且 ub-mode 的准则<strong>来源可追溯</strong> —— README 说它 loosely based on @poteto 的规则（poteto-mode /pstack）。 我查了 poteto 的仓库，poteto 那个账号下的 <code>poteto-mode</code> 和 <code>pstack</code> 现在都取不到（404），但生态还在：GitHub 搜索能搜到至少 8 个 fork / 移植（<code>Aqua-123/pstack-for-codex</code> 101 stars、<code>iap/pstack-hermes</code> 30、<code>kkgogogo17/pi-pstack</code> 10、<code>evoclock/pi-poteto-mode</code> 7、<code>bnema/pi-pstack</code> 4，还有几个 1-2 星的）。</p>
+<p><strong>这个生态分布很说明问题：大家要的不是一份新的规则文本，而是一份能被 agent 加载的 skill 格式 + 能真正跑起来的门禁。</strong> ub-mode 给的就是后者。</p>
+<h3 id="7-3-vs-AI-代码审查-agent"><a href="#7-3-vs-AI-代码审查-agent" class="headerlink" title="7.3 vs. AI 代码审查 agent"></a>7.3 vs. AI 代码审查 agent</h3><p>2025-2026 年有一大堆「AI code reviewer」项目 —— 拉 PR diff、让模型挑毛病。 ub-mode 相对它们的差异非常根本：</p>
+<ul>
+<li><strong>输入不同</strong>：reviewer 审「本次改动的 diff」；ub-mode 审「仓库当前状态的绝对指标」</li>
+<li><strong>输出不同</strong>：reviewer 输出一段自然语言评论；ub-mode 输出一个数字 + 一个退出码</li>
+<li><strong>能否被 agent 自己消费</strong>：reviewer 的评论要人读；ub-mode 的退出码 agent 直接读</li>
+</ul>
+<p>最后一点最重要。 <strong>一个能被 agent 自己消费的确定性信号，才可能形成闭环。</strong> reviewer 的自然语言评论对 agent 来说是「另一个模型的模糊意见」，权重很低；<code>exit 2</code> 对 agent 来说是「硬失败，必须修」。</p>
+<h3 id="7-4-vs-单纯的-mutation-testing-工具"><a href="#7-4-vs-单纯的-mutation-testing-工具" class="headerlink" title="7.4 vs. 单纯的 mutation testing 工具"></a>7.4 vs. 单纯的 mutation testing 工具</h3><p>mutator 不是孤立的，它对应一整个已有家族 —— 而且这个家族和第一节那张表<strong>高度重叠</strong>（clj-mutate 36 / mutate4go 23 / mutate4java 35）。</p>
+<p>有意思的是 <strong>crap4java 338 stars，远高于 mutator 系列的 23-36</strong>。 说明大家更关心「复杂度 + 覆盖率」这个组合指标，而不是变异测试本身。 变异测试公认更准但更贵，这个 stars 分布几乎是这个共识的直接反映。</p>
+<p>ub-mode 的 mutator 是这个家族里<strong>第一个多语言的</strong>（6 种语言），而且加上了差分执行 —— 这是让变异测试进入日常循环的关键。</p>
+<h3 id="7-5-vs-uml-viewer-的同类工具"><a href="#7-5-vs-uml-viewer-的同类工具" class="headerlink" title="7.5 vs. uml-viewer 的同类工具"></a>7.5 vs. uml-viewer 的同类工具</h3><p>UML 类图查看器不少（PlantUML、Structurizr、ObjectAid、Code2flow）。 但 uml-viewer 的差异是<strong>它是活的</strong>：</p>
+<blockquote>
+<p>The UML is <em>dynamic</em>. You can click elements to drill down — all the way to source code.</p>
+</blockquote>
+<p>能一路点到源码。而且 —— <strong>能和 agent 双向对话</strong>。 你在图上指出问题，agent 改代码，图跟着变。 PlantUML 那类是「你写 DSL，工具画图」，画完就死。 uml-viewer 是「图是 agent 和你讨论架构的共享界面」。</p>
+<p>而且它的 IR 设计很克制：</p>
+<blockquote>
+<p>The IR is <strong>topology</strong>: the namespace tree, classes, and edges. <strong>Metrics</strong> (CC, coverage, CRAP, killed/survived/uncovered) come from <code>.metrics/</code> snapshots produced by crap4clj and clj-mutate. The viewer overlays those files at load, keyed by namespace and function name. <strong>Agents edit the policy, not the IR.</strong></p>
+</blockquote>
+<p><strong>「agent 编辑 policy，不编辑 IR」</strong> —— 架构决策用 policy 表达，IR 由 policy 生成。 这让「what-if」变得可执行：改 policy，重新生成 IR，图就变了。</p>
+<hr>
+<h2 id="八、真实局限：诚实说"><a href="#八、真实局限：诚实说" class="headerlink" title="八、真实局限：诚实说"></a>八、真实局限：诚实说</h2><h3 id="8-1-ub-mode-本体没有-license"><a href="#8-1-ub-mode-本体没有-license" class="headerlink" title="8.1 ub-mode 本体没有 license"></a>8.1 ub-mode 本体没有 license</h3><p>GitHub API 返回 <code>license: null</code>。 仓库里也没有 LICENSE 文件（<code>contents</code> 只有 README.md 和 SKILL.md）。</p>
+<p><strong>这意味着</strong>：严格来说，你不能确定这份 SKILL.md 文本的授权状态。 拿去商用、闭源集成、有法律敏感度的场景，<strong>先问清楚</strong>。</p>
+<p>反倒是四个 companion 工具都是 0BSD，授权明确。 这个对比有点讽刺 —— 真正有法律分量的代码是清楚的，最受欢迎的那份文本是糊涂的。</p>
+<h3 id="8-2-ub-mode-仓库没有-release、没有-tag、没有-issue-模板"><a href="#8-2-ub-mode-仓库没有-release、没有-tag、没有-issue-模板" class="headerlink" title="8.2 ub-mode 仓库没有 release、没有 tag、没有 issue 模板"></a>8.2 ub-mode 仓库没有 release、没有 tag、没有 issue 模板</h3><p>只有 4 个 commit，一次 push 完事。 我没查到 release 记录。 这类「一次性投放到 GitHub 让它自己长」的项目<strong>没有版本管理</strong>，你没法说「我用的是 v1.2」。 对 skill 本身影响不大（文本改了就改了），但对依赖它的<strong>自动化流程</strong>影响不小 —— 你没法 pin 一个版本。</p>
+<h3 id="8-3-四个工具的成熟度不均衡"><a href="#8-3-四个工具的成熟度不均衡" class="headerlink" title="8.3 四个工具的成熟度不均衡"></a>8.3 四个工具的成熟度不均衡</h3><ul>
+<li><strong>crapper</strong>：146 stars，Python，tree-sitter，多语言，有 tests 目录，README 极其详尽 —— 最成熟</li>
+<li><strong> mutator</strong>：87 stars，同样结构 —— 比较扎实</li>
+<li><strong> dryer</strong>：70 stars —— 稍简单，但算法清楚</li>
+<li><strong> uml-viewer</strong>：474 stars，Clojure，但<strong>没有 license</strong>，README 里有大量关于 tmux session、companion、Grok agent 的运维细节 —— <strong>最复杂也最脆</strong></li>
+</ul>
+<p>uml-viewer 那部分我读起来最不安：</p>
+<blockquote>
+<p>A <strong>tmux</strong> session unique to the examined project starts interactive Grok in that directory (<code>--yolo --trust --rules …</code> plus a launch prompt).</p>
+</blockquote>
+<p>它会<strong>自动开一个 tmux session，起一个带 <code>--yolo --trust</code> 的 Grok agent</strong>。 <code>--yolo</code> 意味着自动批准所有操作。这套东西依赖 tmux、Grok CLI、特定的 JVM 启停协议，<strong>任何一个环节版本变了都可能直接坏掉</strong>，而 README 里明确说：</p>
+<blockquote>
+<p>Do <strong>not</strong> pass <code>--restart</code> unless you are that companion recycling the window after source changes. A stray <code>--restart</code> skips spawning Grok and leaves a diagram with no agent.</p>
+</blockquote>
+<p><strong>乱传 <code>--restart</code> 会得到一个没有 agent 的图。</strong> 这是典型的「只在作者机器上成立」的复杂度。</p>
+<p><strong>我的建议：先只用 crapper /dryer/mutator 这三个命令行工具，把 uml-viewer 当成加分项。</strong> 三个工具加起来就是完整的门禁，uml-viewer 只是可视化。</p>
+<h3 id="8-4-mutator-有硬性布局要求"><a href="#8-4-mutator-有硬性布局要求" class="headerlink" title="8.4 mutator 有硬性布局要求"></a>8.4 mutator 有硬性布局要求</h3><blockquote>
+<p>crapper has to be checked out next to this directory (<code>../crapper</code>)</p>
+</blockquote>
+<p>而且首次运行<strong>执行树里每一个 covered mutant</strong>：</p>
+<blockquote>
+<p>The first run of a tree executes every covered mutant.</p>
+</blockquote>
+<p>对一个 10 万行的 Java 项目，这个首次运行可能是几十分钟到几小时，之后靠差分才快起来。 <strong>这跟「agent 要快速反馈」有内在张力。</strong> <code>--scan</code>（只列 site 不跑测试）和 <code>--changed</code> 是给这种情况的出口，但第一次的门槛是真的高。</p>
+<h3 id="8-5-覆盖率工具链的隐式依赖"><a href="#8-5-覆盖率工具链的隐式依赖" class="headerlink" title="8.5 覆盖率工具链的隐式依赖"></a>8.5 覆盖率工具链的隐式依赖</h3><p>crapper 的覆盖率来源全是各家生态的原生工具：JaCoCo Maven plugin <code>0.8.12</code>、<code>go test -coverprofile</code>、<code>cargo llvm-cov</code> / <code>cargo tarpaulin</code>、<code>coverage.py</code>、Cloverage、Vitest / c8。 <strong>每种语言都需要额外装东西</strong>，而 README 说缺工具会「自动装」一部分 —— 但不是全部（JaCoCo 需要在 pom.xml 里配 Maven plugin，crapper 不会替你改 pom）。 对应地：</p>
+<blockquote>
+<p>A missing tool or a failed test run scores that language at 0% and still writes the snapshot.</p>
+</blockquote>
+<p><strong>测试失败 → 覆盖率 0% → CRAP 全线飘红。</strong> 这个设计我认为是对的，但实际用起来，你分不清「代码真的复杂且没测」和「我的测试跑不起来」。 两种情况都是红色，但处理方式完全不同。 <strong>这是工具的一个真实可用性缺口。</strong></p>
+<h3 id="8-6-「AI-遵循准则」本身没有保证"><a href="#8-6-「AI-遵循准则」本身没有保证" class="headerlink" title="8.6 「AI 遵循准则」本身没有保证"></a>8.6 「AI 遵循准则」本身没有保证</h3><p>这是最根本的一条。</p>
+<p>ub-mode <strong>假设</strong> agent 会读 SKILL.md、会照做。 但没有任何机制强制。 agent 可以只读一部分、声称跑了 crapper 但其实没跑、跑了但只改数字不改根因（我开头那个 bug 就是这样）。</p>
+<p><strong>SKILL.md 的 Keep a Log 那条（记录每个动作和理由）是人肉审计手段，不是自动校验。</strong></p>
+<p>真正的强制力在<strong>外部</strong>：CI 里的 <code>--threshold 30</code> 会挡住 merge。 <strong>ub-mode 本身不提供强制，它提供的是「让 agent 有资格被判定」的标准。</strong></p>
+<p><strong>这意味着：只用 ub-mode 而不接 CI，等于没用。</strong> 这是我在整个方案里看到的最重要的一句话。</p>
+<h3 id="8-7-它是个人的方法论，不是社区共识"><a href="#8-7-它是个人的方法论，不是社区共识" class="headerlink" title="8.7 它是个人的方法论，不是社区共识"></a>8.7 它是个人的方法论，不是社区共识</h3><p>「First Make it Work 然后 Then Make it Right」这个顺序，跟大多数测试驱动开发的实践是<strong>反的</strong>（TDD 通常被理解为「做对」的一部分）。 虽然 SKILL.md 里的 TDD 循环保留了「先写失败测试」，但整体优先级排序是 Uncle Bob 个人裁定的。而它自己的 README 也承认：</p>
+<blockquote>
+<p>It is <strong>loosely based</strong> on portions of @poteto’s rules … <strong>reduced and paired with</strong> deterministic quality-gate tools.</p>
+</blockquote>
+<p><strong>loosely based</strong>、<strong>reduced</strong> —— 作者自己标了这是裁剪版。 照着做的人得知道自己在用哪一版。</p>
+<hr>
+<h2 id="九、适合谁-不适合谁"><a href="#九、适合谁-不适合谁" class="headerlink" title="九、适合谁 / 不适合谁"></a>九、适合谁 / 不适合谁</h2><h3 id="适合谁"><a href="#适合谁" class="headerlink" title="适合谁"></a>适合谁</h3><p><strong>1. 已经在用 AI 编码 agent，并且踩过「agent 说重构完了但其实没做对」的坑的人</strong></p>
+<p>这是最精准的匹配。你需要的是「agent 自证清白」的手段，而 CRAP / 变异存活率正是那个手段。 如果你的痛点是「我不知道怎么验收 agent 的输出」，ub-mode 给了你答案。</p>
+<p><strong>2. 写 Clojure 的人</strong> —— crapper /dryer/mutator 的 Clojure 支持（crap4clj、dry4clj、clj-mutate 血统）最厚，uml-viewer 本身是 Clojure 写的。</p>
+<p><strong>3. 多语言团队的架构负责人</strong> —— 它给了一个<strong>跨语言的统一指标</strong>。 Java 团队和 Go 团队用同一套 CRAP 公式、同一套阈值，你能横向比较。</p>
+<p><strong>4. 想要「架构讨论界面」的人</strong> —— 试过用 PlantUML 画架构图然后发现没人维护？ uml-viewer 的思路（图 + agent 联动）值得试。</p>
+<p><strong>5. 单人开发者，没有 code review 机制</strong> —— CI 门禁对你尤其重要，因为<strong>没人会 catch agent 的花招</strong>。 数字不会说谎，也不会疲劳。</p>
+<h3 id="不适合谁"><a href="#不适合谁" class="headerlink" title="不适合谁"></a>不适合谁</h3><p><strong>1. 刚学编程的人</strong> —— ub-mode 假设你已经知道圈复杂度、幂等、依赖倒置是什么。 它是<strong>约束工具</strong>，不是<strong>教学工具</strong>。 对新手来说，这 25 条准则会变成一堆无法执行的教条。</p>
+<p><strong>2. 一次性脚本 / 玩具项目</strong> —— 3 行的 shell 脚本不需要 CRAP。 mutator 首次全量跑变异测试的成本远超收益。 <strong>门禁的固定成本对小项目是致命的。</strong></p>
+<p><strong>3. 前端 UI 密集的项目</strong> —— crapper 对 TS/JS 的处理不错，但它数的是<strong>逻辑复杂度</strong>，不是组件耦合、不是渲染性能、不是 bundle 大小。 UI 项目的质量痛点（状态管理混乱、组件复用率低）<strong>这套工具基本测不到</strong>。</p>
+<p><strong>4. 数据科学 /notebook 项目</strong> —— <code>ipynb</code> 的复杂度怎么算？没定义。 变异测试对数据管道也不适用。</p>
+<p><strong>5. 不想碰 CI 的人</strong> —— <strong>这是我最想强调的「不适合」。</strong> ub-mode 的价值 90% 来自「数字 + 退出码 + CI 门禁」这个闭环。 你要是只在本地跑一下看看，不接进 CI，那 agent 随时可以绕过它 —— 因为 SKILL.md 里的条款没有强制力。</p>
+<p><strong>只用不接 CI = 只用了一半，而且是不重要的那一半。</strong></p>
+<p><strong>6. 期待「开箱即用的 AI 代码质量方案」的人</strong> —— uml-viewer 依赖 tmux、Grok CLI、Clojure CLI、Java 21+、JVM 启停协议。 crapper/mutator 需要特定版本的 tree-sitter 和语言工具链。 <strong>这不是 <code>npm install</code> 就能用的东西</strong>，是需要自己组装的工作流。</p>
+<hr>
+<h2 id="十、我的实际打算"><a href="#十、我的实际打算" class="headerlink" title="十、我的实际打算"></a>十、我的实际打算</h2><p>我把 ub-mode 当成<strong>思想框架</strong>吸收，而不是当成工具直接装。</p>
+<p>原因是我自己项目的情况：<strong>Python 单语言 + 小团队 + 主要在写 agent</strong>。 mutator 对 Python 的支持在，但首次全量跑变异测试在我这个规模也要几十分钟；CI 里接 <code>--threshold</code> 我倒是很愿意做。 我<strong>真正打算拿走的</strong>是三条：</p>
+<p><strong>第一条：CRAP 作为单一指标。</strong> 我现在的代码评审全靠「读一遍」，评审意见零散且不一致。 换成「这个函数 CRAP 多少」，一眼就能排序。这不是新东西（crap4java 有 338 stars），但我是<strong>在有了 AI 编码 agent 之后</strong>才重新需要它 —— 因为现在改代码的不是人。</p>
+<p><strong>第二条：<code>Attack the Premise</code>。</strong> 这条我会直接写进我自己的团队规范。它不只对 agent 有效，对人也有效。我自己被「两次同样失败」坑过太多次了。</p>
+<p><strong>第三条：Keep a Log 的精神，但配工具。</strong> SKILL.md 说「记录每个动作和理由，完成时报告」。 我打算把它变成<strong>硬要求</strong>：agent 的每轮输出必须包含「跑了哪些命令、命令输出是什么」。 不是让它写总结（总结会美化），而是让它<strong>贴原始输出</strong>。 这一条是我自己加的，因为 我信不过「记录」这件事的自愿执行。</p>
+<p>最后说一句可能的偏见。</p>
+<p><strong>5,256 stars，4 个 commit，2 个文件。</strong> 这个数字组合很反常。 通常 star 数意味着「有很多人在用」，但 ub-mode 的 star 数几乎肯定是「很多人在读、在讨论、在转发」—— 而不是「很多人在生产环境跑」。 它发布才 6 天（2026-10-25 建仓，今天 10-31），6 天 5.2k star 是个爆发式传播。</p>
+<p><strong>6 天。</strong> 你得把它当新东西看。</p>
+<p>它的<strong>思想</strong>已经成熟了 —— Uncle Bob 的方法论写了三十年，工具链（crap4clj 2026-02、crap4java 2026-03、dry4clj 2026-05、crap4go 2026-05、companion 工具 2026-09）也都存在半年到一年了。 ub-mode 做的是<strong>把它们重新打包成一个 agent 能加载的 skill</strong>，并且补上了「一致性」这一环 —— 之前你得自己装 7 个工具，现在 README 直接指了 4 个。</p>
+<p>所以我的判断是：<strong>这个仓库会继续涨 star，因为它讲的故事太好了 ——「让 AI 按 Clean Architecture 写代码，而且用数字验证」。</strong> 但<strong>工具链的成熟度还差一截</strong>，尤其是 uml-viewer 那套 tmux + Grok 的编排。</p>
+<p><strong>值得现在就读，值得现在就用 crapper 试试，但别指望明天就能让 Claude Code 自动遵守。</strong></p>
+<hr>
+<h2 id="附：一页速查"><a href="#附：一页速查" class="headerlink" title="附：一页速查"></a>附：一页速查</h2><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 装 ub-mode skill</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/.claude/skills/ub-mode</span><br><span class="line">curl -fsSL https://raw.githubusercontent.com/unclebob/ub-mode/main/SKILL.md \</span><br><span class="line">  -o ~/.claude/skills/ub-mode/SKILL.md</span><br><span class="line"></span><br><span class="line"><span class="comment"># 门禁三件套（mutator 必须挨着 crapper，两者互为兄弟目录）</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/unclebob/crapper.git</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/unclebob/dryer.git</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/unclebob/mutator.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 日常</span></span><br><span class="line">./crapper --changed --threshold 30    <span class="comment"># 复杂度+覆盖率门禁，exit 2 = 超标</span></span><br><span class="line">./dryer  --changed --threshold 0.82   <span class="comment"># 结构重复检测</span></span><br><span class="line">./mutator --changed                   <span class="comment"># 变异测试，exit 3 = 有存活 mutant</span></span><br><span class="line">./mutator --since-last-run            <span class="comment"># 差分，快</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>核心公式与判读区间</strong></p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CRAP = CC² × (1 − coverage)³ + CC</span><br><span class="line"></span><br><span class="line">1 – 5     低风险</span><br><span class="line">5 – 30    值得看看</span><br><span class="line">30+       复杂且欠测</span><br></pre></td></tr></tbody></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/10/31/unclebob-ub-mode-agent-skill-quality-gates/" title="unclebob&#x2F;ub-mode：5.2k stars 的 agent skill，把 Robert C. Martin 的软件工程准则做成可执行的质量门禁">https://www.daishengli.top/2026/10/31/unclebob-ub-mode-agent-skill-quality-gates/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/TDD/" rel="tag"># TDD</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Agent-Skill/" rel="tag"># Agent Skill</a>
+              <a href="/tags/ub-mode/" rel="tag"># ub-mode</a>
+              <a href="/tags/unclebob/" rel="tag"># unclebob</a>
+              <a href="/tags/Code-Quality/" rel="tag"># Code Quality</a>
+              <a href="/tags/Mutation-Testing/" rel="tag"># Mutation Testing</a>
+              <a href="/tags/Clean-Architecture/" rel="tag"># Clean Architecture</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/10/30/zero-breach-toolkit-offline-spyware-trace-scanner/" rel="prev" title="interplains&#x2F;Zero-Breach-Toolkit：3,784 stars 的离线间谍软件痕迹扫描器，只读、断网、给每条证据打分">
+                  <i class="fa fa-angle-left"></i> interplains/Zero-Breach-Toolkit：3,784 stars 的离线间谍软件痕迹扫描器，只读、断网、给每条证据打分
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/01/wangzan101-mika-android-local-ai-agent/" rel="next" title="wangzan101&#x2F;Mika：2.7k stars 的安卓本地 AI 助理，把后台虚拟屏玩成了主力">
+                  wangzan101/Mika：2.7k stars 的安卓本地 AI 助理，把后台虚拟屏玩成了主力 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

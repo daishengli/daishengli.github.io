@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="wangzan101&#x2F;Mika 是 2026 年 10 月 29 日新建的安卓端本地 AI 助理项目，两天半冲到 2,706 stars、436 forks，Apache-2.0 协议，主语言 Kotlin。它把一整套手机 GUI Agent 工程化了：自研 ADB 协议、以 shell 身份运行的内置手机助手、一块后台虚拟屏让操作不占主屏、无障碍控件树加 OCR 双通道读屏、唯一执行入口 Act">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wangzan101&#x2F;Mika：2.7k stars 的安卓本地 AI 助理，把后台虚拟屏玩成了主力">
+<meta property="og:url" content="https://www.daishengli.top/2026/11/01/wangzan101-mika-android-local-ai-agent/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="wangzan101&#x2F;Mika 是 2026 年 10 月 29 日新建的安卓端本地 AI 助理项目，两天半冲到 2,706 stars、436 forks，Apache-2.0 协议，主语言 Kotlin。它把一整套手机 GUI Agent 工程化了：自研 ADB 协议、以 shell 身份运行的内置手机助手、一块后台虚拟屏让操作不占主屏、无障碍控件树加 OCR 双通道读屏、唯一执行入口 Act">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-01T00:05:00.000Z">
+<meta property="article:modified_time" content="2026-11-04T00:05:40.863Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="GUI Agent">
+<meta property="article:tag" content="Accessibility">
+<meta property="article:tag" content="Mika">
+<meta property="article:tag" content="wangzan101">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/11/01/wangzan101-mika-android-local-ai-agent/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/11/01/wangzan101-mika-android-local-ai-agent/","path":"2026/11/01/wangzan101-mika-android-local-ai-agent/","title":"wangzan101/Mika：2.7k stars 的安卓本地 AI 助理，把后台虚拟屏玩成了主力"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>wangzan101/Mika：2.7k stars 的安卓本地 AI 助理，把后台虚拟屏玩成了主力 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">419</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">128</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%80%E4%B8%AA%E5%85%B7%E4%BD%93%E7%9A%84%E7%97%9B%E7%82%B9%EF%BC%9A%E6%89%8B%E6%9C%BA-GUI-Agent-%E9%83%BD%E5%9C%A8%E8%B7%9F%E3%80%8C%E6%88%91%E7%9A%84%E5%B1%8F%E5%B9%95%E3%80%8D%E6%8A%A2%E5%9C%B0%E7%9B%98"><span class="nav-number">1.</span> <span class="nav-text">一、一个具体的痛点：手机 GUI Agent 都在跟「我的屏幕」抢地盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9A%E4%B8%80%E5%8F%A5%E8%AF%9D%E5%AE%9A%E4%B9%89-%E5%87%A0%E4%B8%AA%E5%BF%85%E9%A1%BB%E8%AE%B0%E4%B8%8B%E6%9D%A5%E7%9A%84%E6%95%B0%E5%AD%97"><span class="nav-number">2.</span> <span class="nav-text">二、它是什么：一句话定义 + 几个必须记下来的数字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%B9%8B%E4%B8%80%EF%BC%9A%E5%86%85%E7%BD%AE%E6%89%8B%E6%9C%BA%E5%8A%A9%E6%89%8B%EF%BC%8C%E5%92%8C%E8%87%AA%E5%B7%B1%E5%AE%9E%E7%8E%B0%E7%9A%84-ADB-%E5%8D%8F%E8%AE%AE"><span class="nav-number">3.</span> <span class="nav-text">三、核心机制之一：内置手机助手，和自己实现的 ADB 协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A9%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8-shell-%E8%BA%AB%E4%BB%BD"><span class="nav-number">3.1.</span> <span class="nav-text">助手为什么用 shell 身份</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#USB-%E5%85%9C%E5%BA%95%E8%B7%AF%E5%BE%84"><span class="nav-number">3.2.</span> <span class="nav-text">USB 兜底路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A9%E6%89%8B%E8%BF%98%E8%83%BD%E6%8A%8A-Mika-%E6%8B%89%E5%9B%9E%E6%9D%A5"><span class="nav-number">3.3.</span> <span class="nav-text">助手还能把 Mika 拉回来</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%B9%8B%E4%BA%8C%EF%BC%9A%E5%94%AF%E4%B8%80%E6%89%A7%E8%A1%8C%E5%85%A5%E5%8F%A3%EF%BC%8CActionExecutor"><span class="nav-number">4.</span> <span class="nav-text">四、核心机制之二：唯一执行入口，ActionExecutor</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AA%E6%9C%89%E8%8A%B1%E9%92%B1%E6%89%8D%E9%97%AE"><span class="nav-number">4.1.</span> <span class="nav-text">只有花钱才问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E5%BC%80%E5%85%B3%EF%BC%8C%E4%BD%86%E4%B8%8D%E5%BD%B1%E5%93%8D%E6%AD%A3%E5%9C%A8%E8%B7%91%E7%9A%84%E4%BB%BB%E5%8A%A1"><span class="nav-number">4.2.</span> <span class="nav-text">全局开关，但不影响正在跑的任务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%B9%8B%E4%B8%89%EF%BC%9A%E6%8A%8A%E3%80%8C%E5%83%8F%E4%BA%BA%E4%B8%80%E6%A0%B7%E6%93%8D%E4%BD%9C%E3%80%8D%E5%81%9A%E6%88%90%E5%8F%AF%E6%B5%8B%E8%AF%95%E7%9A%84%E7%BA%AF%E9%80%BB%E8%BE%91"><span class="nav-number">5.</span> <span class="nav-text">五、核心机制之三：把「像人一样操作」做成可测试的纯逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%8A%BF%E7%9A%84%E8%8A%82%E5%A5%8F%EF%BC%88core-cap-phone-GesturePacing-kt%EF%BC%89"><span class="nav-number">5.1.</span> <span class="nav-text">手势的节奏（core&#x2F;cap&#x2F;phone&#x2F;GesturePacing.kt）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%AD%97%E8%8A%82%E5%A5%8F%EF%BC%88core-cap-phone-TypingPacing-kt%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">打字节奏（core&#x2F;cap&#x2F;phone&#x2F;TypingPacing.kt）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9C%E7%95%99%E8%8A%82%E5%A5%8F%EF%BC%88AppDwell-PageDwell%EF%BC%89"><span class="nav-number">5.3.</span> <span class="nav-text">停留节奏（AppDwell &#x2F; PageDwell）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E5%A4%96%E5%8A%A8%E4%BD%9C%E7%9A%84%E9%97%B4%E9%9A%94%EF%BC%88core-action-OutwardPacing-kt%EF%BC%89"><span class="nav-number">5.4.</span> <span class="nav-text">对外动作的间隔（core&#x2F;action&#x2F;OutwardPacing.kt）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%81%9A%E8%BF%99%E4%BA%9B%EF%BC%9F"><span class="nav-number">5.5.</span> <span class="nav-text">为什么要做这些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8A%82%E5%A5%8F%E6%9C%AC%E8%BA%AB%E4%B9%9F%E5%88%86%E6%A1%A3"><span class="nav-number">5.6.</span> <span class="nav-text">节奏本身也分档</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%B9%8B%E5%9B%9B%EF%BC%9A%E8%AF%BB%E5%B1%8F%E7%9A%84%E5%8F%8C%E9%80%9A%E9%81%93%EF%BC%8C%E5%92%8C%E3%80%8C%E6%96%87%E5%AD%97%E8%AF%86%E5%88%AB%E8%A1%A5%E8%AF%BB%E3%80%8D"><span class="nav-number">6.</span> <span class="nav-text">六、核心机制之四：读屏的双通道，和「文字识别补读」</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A1%86%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="nav-number">6.1.</span> <span class="nav-text">输入框的可靠性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B2%E6%88%AA%E5%B1%8F%E9%A1%B5%E9%9D%A2"><span class="nav-number">6.2.</span> <span class="nav-text">防截屏页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96%E4%BD%9C%E4%B8%BA%E8%A1%A5%E5%85%85"><span class="nav-number">6.3.</span> <span class="nav-text">可视化作为补充</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E4%BD%9C%E6%95%88%E6%9E%9C%E7%9A%84%E5%88%A4%E5%AE%9A"><span class="nav-number">6.4.</span> <span class="nav-text">动作效果的判定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%B9%8B%E4%BA%94%EF%BC%9A%E7%9F%A5%E8%AF%86%E4%B8%8E%E6%8A%80%E8%83%BD%E2%80%94%E2%80%94%E7%BA%AF%E6%96%87%E6%9C%AC%E7%9A%84%E3%80%8CApp-%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C%E3%80%8D"><span class="nav-number">7.</span> <span class="nav-text">七、核心机制之五：知识与技能 —— 纯文本的「App 使用手册」</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E7%9A%84%E4%B8%89%E5%B1%82%E5%88%92%E5%88%86"><span class="nav-number">7.1.</span> <span class="nav-text">知识的三层划分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E6%80%8E%E4%B9%88%E8%A2%AB%E7%94%A8%E5%88%B0"><span class="nav-number">7.2.</span> <span class="nav-text">知识怎么被用到</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%98%E8%83%BD%E8%87%AA%E5%B7%B1%E5%AD%A6"><span class="nav-number">7.3.</span> <span class="nav-text">还能自己学</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E4%B8%8A%E4%B8%8B%E6%96%87%E3%80%81%E8%AE%B0%E5%BF%86%E5%92%8C%E3%80%8C%E5%B0%91%E8%80%8C%E7%B2%BE%E3%80%8D"><span class="nav-number">8.</span> <span class="nav-text">八、上下文、记忆和「少而精」</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B0%E5%BF%86%E5%88%86%E4%B8%89%E7%B1%BB"><span class="nav-number">8.1.</span> <span class="nav-text">记忆分三类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E4%B9%9F%E6%98%AF%E5%88%86%E7%BB%84%E7%9A%84"><span class="nav-number">8.2.</span> <span class="nav-text">工具也是分组的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%86%85%E7%BD%AE%E6%B5%8F%E8%A7%88%E5%99%A8%E3%80%81Linux-%E6%B2%99%E7%AE%B1%EF%BC%8C%E5%92%8C%E4%BB%8E%E7%94%B5%E8%84%91%E6%B4%BE%E6%B4%BB"><span class="nav-number">9.</span> <span class="nav-text">九、内置浏览器、Linux 沙箱，和从电脑派活</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E7%BD%AE%E6%B5%8F%E8%A7%88%E5%99%A8%EF%BC%88WebView-DevTools-%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="nav-number">9.1.</span> <span class="nav-text">内置浏览器（WebView + DevTools 协议）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux-%E6%B2%99%E7%AE%B1%EF%BC%88PRoot-Alpine-3-22%EF%BC%89"><span class="nav-number">9.2.</span> <span class="nav-text">Linux 沙箱（PRoot + Alpine 3.22）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E7%94%B5%E8%84%91%E6%B4%BE%E6%B4%BB%EF%BC%9ACLI-%E5%92%8C-MCP"><span class="nav-number">9.3.</span> <span class="nav-text">从电脑派活：CLI 和 MCP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">10.</span> <span class="nav-text">十、快速上手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E6%9C%BA%E4%B8%8A%EF%BC%88%E4%B8%BB%E8%A6%81%E8%B7%AF%E5%BE%84%EF%BC%89"><span class="nav-number">10.1.</span> <span class="nav-text">手机上（主要路径）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E8%84%91%E4%B8%8A"><span class="nav-number">10.2.</span> <span class="nav-text">电脑上</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%91%E8%AF%84%E6%B5%8B"><span class="nav-number">10.3.</span> <span class="nav-text">跑评测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91"><span class="nav-number">10.4.</span> <span class="nav-text">开发</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%92%8C%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E6%94%BE%E5%9C%A8%E4%B8%80%E8%B5%B7%E7%9C%8B"><span class="nav-number">11.</span> <span class="nav-text">十一、和同类项目放在一起看</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E7%9C%9F%E5%AE%9E%E5%B1%80%E9%99%90"><span class="nav-number">12.</span> <span class="nav-text">十二、真实局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E9%80%82%E5%90%88%E8%B0%81%EF%BC%8C%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">13.</span> <span class="nav-text">十三、适合谁，不适合谁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">14.</span> <span class="nav-text">最后</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">128</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">419</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/01/wangzan101-mika-android-local-ai-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="wangzan101&#x2F;Mika：2.7k stars 的安卓本地 AI 助理，把后台虚拟屏玩成了主力 | 小戴的网络日志">
+      <meta itemprop="description" content="wangzan101&#x2F;Mika 是 2026 年 10 月 29 日新建的安卓端本地 AI 助理项目，两天半冲到 2,706 stars、436 forks，Apache-2.0 协议，主语言 Kotlin。它把一整套手机 GUI Agent 工程化了：自研 ADB 协议、以 shell 身份运行的内置手机助手、一块后台虚拟屏让操作不占主屏、无障碍控件树加 OCR 双通道读屏、唯一执行入口 ActionExecutor 把守卫、不可逆判定、付款审批、对外动作间隔和运行记录串成一条线，外加内置 WebView 浏览器、PRoot 加 Alpine 3.22 的 arm64 Linux 沙箱、纯文本的 App 与网站知识体系、上下文压缩、记忆与经验回放，以及一套能从电脑派活的 CLI 与 MCP 服务端。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          wangzan101/Mika：2.7k stars 的安卓本地 AI 助理，把后台虚拟屏玩成了主力
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-01 08:05:00" itemprop="dateCreated datePublished" datetime="2026-11-01T08:05:00+08:00">2026-11-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">wangzan101/Mika 是 2026 年 10 月 29 日新建的安卓端本地 AI 助理项目，两天半冲到 2,706 stars、436 forks，Apache-2.0 协议，主语言 Kotlin。它把一整套手机 GUI Agent 工程化了：自研 ADB 协议、以 shell 身份运行的内置手机助手、一块后台虚拟屏让操作不占主屏、无障碍控件树加 OCR 双通道读屏、唯一执行入口 ActionExecutor 把守卫、不可逆判定、付款审批、对外动作间隔和运行记录串成一条线，外加内置 WebView 浏览器、PRoot 加 Alpine 3.22 的 arm64 Linux 沙箱、纯文本的 App 与网站知识体系、上下文压缩、记忆与经验回放，以及一套能从电脑派活的 CLI 与 MCP 服务端。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上周我在通勤地铁上，突然想起来一件事：冰箱里那盒牛奶该在周五前吃完。</p>
+<p>我打开手机想设个闹钟提醒自己。<strong>结果我在手机上点了整整四分钟。</strong> 闹钟 App 的图标藏在一个要横向滑动才能看到的第二屏里，滑到之后是一个要滚动才能看到的列表，列表里的「+」是个只有 24dp 的圆形图标，我点了三次没点中，第四次终于按对了 —— 然后弹出一个时间选择器，那玩意儿是个滚轮。</p>
+<p>我把手机锁屏，越想越气。</p>
+<p>那天晚上我逛 GitHub，撞见一个 2026 年 10 月 29 日才建仓的项目，两天半冲到 <strong>2,706 stars</strong>。</p>
+<p>它叫 <strong>Mika</strong>。</p>
+<p>我点进去看 README 第一句话：</p>
+<blockquote>
+<p><strong>你手机上的 AI 助理：说一句话，它替你操作 App、上网，把事办成。</strong></p>
+</blockquote>
+<p>然后是这一句：</p>
+<blockquote>
+<p>它在一块看不见的后台屏上干活，你照样刷你的手机。</p>
+</blockquote>
+<p>我盯着这句话看了大概十秒钟。</p>
+<p>因为那正是我刚才那四分钟里最想要的东西 —— <strong>别占我的屏幕</strong>。</p>
+<hr>
+<h2 id="一、一个具体的痛点：手机-GUI-Agent-都在跟「我的屏幕」抢地盘"><a href="#一、一个具体的痛点：手机-GUI-Agent-都在跟「我的屏幕」抢地盘" class="headerlink" title="一、一个具体的痛点：手机 GUI Agent 都在跟「我的屏幕」抢地盘"></a>一、一个具体的痛点：手机 GUI Agent 都在跟「我的屏幕」抢地盘</h2><p>先说清楚我想解决什么，因为这是所有手机 Agent 项目绕不开的起点。</p>
+<p>大模型现在能看图（vision）也能点屏幕（GUI grounding），所以「让 AI 操作手机」这件事在原理上已经不难了。难的是工程落地，而工程落地的第一道坎不是模型，是<strong>物理约束</strong>。</p>
+<p>你让一个 Agent 去操作手机，只有两种物理现实：</p>
+<p><strong>第一种，它就操作你正在用的那块屏。</strong></p>
+<p>结果就是：Agent 打开微信找联系人，你的屏幕上微信自己动起来了；Agent 滚列表，你的手指刚要划拉就被抢走；Agent 卡在某个登录框上等你处理，你发现你的手机已经被导航到登录页了，干不了别的。</p>
+<p>这个体验是没法接受的。你的手机在 Agent 手里就变成了一个<strong>专机</strong>。</p>
+<p><strong>第二种，它用某种远程控制协议（Appium、uiautomator2 那套）连着一台真机或模拟器。</strong></p>
+<p>这是学界和工业界的主流做法，效果确实好 —— 阿里 Open-AutoGLM、字节 UI-TARS、各家的 MobileAgent，全是这个路子。但它有另一道墙：<strong>你得有一台专门的手机或一台模拟器</strong>。</p>
+<p>于是「AI 操作我的手机」这件事，通常发生在<strong>别人的设备</strong>或者<strong>第二台设备</strong>上。</p>
+<p>Mika 的解法是第三种：<strong>它把 Android 的 VirtualDisplay 真正用起来了。</strong></p>
+<p>在 Android 上，App 可以创建一个虚拟显示（<code>VirtualDisplay</code>），把它挂到系统里，让另一个 App 的窗口渲染上去。这个能力本来是给投屏、录屏、无障碍测试用的。安卓 14 开始，虚拟屏还有自己的<strong>焦点（focus）</strong>—— 这意味着虚拟屏上有个输入框正等着打字，你主屏上照样能打字，两边互不干扰。</p>
+<p>Mika 就建了这么一块屏：</p>
+<blockquote>
+<p><strong>在一块单独的虚拟屏上打开 App、点、打字、翻页，你照常用手机；想看就点开小画面。</strong></p>
+</blockquote>
+<p>屏幕上有一个可以拖动的小窗（PiP）实时显示 Agent 在干什么，你也可以完全不管它。它在这块屏上装微信、翻聊天记录、找联系人、点发送 —— <strong>你的主屏上一秒钟都没被占过。</strong></p>
+<p>这一条就足以让我把整个仓库翻了一遍。</p>
+<p>然后我发现它远不止这一招。</p>
+<hr>
+<h2 id="二、它是什么：一句话定义-几个必须记下来的数字"><a href="#二、它是什么：一句话定义-几个必须记下来的数字" class="headerlink" title="二、它是什么：一句话定义 + 几个必须记下来的数字"></a>二、它是什么：一句话定义 + 几个必须记下来的数字</h2><p>先把事实摆出来：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>仓库</td>
+<td><code>wangzan101/Mika</code></td>
+</tr>
+<tr>
+<td>Stars</td>
+<td>2,706</td>
+</tr>
+<tr>
+<td>Forks</td>
+<td>436</td>
+</tr>
+<tr>
+<td>License</td>
+<td>Apache-2.0</td>
+</tr>
+<tr>
+<td> 主语言</td>
+<td> Kotlin（8.78 MB，1,171 个 .kt 文件）</td>
+</tr>
+<tr>
+<td>建仓</td>
+<td> 2026-10-29</td>
+</tr>
+<tr>
+<td> 最后推送</td>
+<td> 2026-10-31</td>
+</tr>
+<tr>
+<td> 提交数</td>
+<td> 226</td>
+</tr>
+<tr>
+<td> 贡献者</td>
+<td> 19</td>
+</tr>
+<tr>
+<td>PR</td>
+<td>55</td>
+</tr>
+<tr>
+<td> 最新版本</td>
+<td> v0.1.27（2026-10-31 发布，APK 88.7 MB，285 次下载）</td>
+</tr>
+<tr>
+<td>话题标签</td>
+<td> accessibility / ai-agent / android / automation / jetpack-compose / kotlin / llm / mobile-agent</td>
+</tr>
+</tbody></table>
+<p><strong>一句话定义：</strong></p>
+<blockquote>
+<p>Mika 是一个完全跑在你自己手机上的 AI 助理。它用自己实现的 ADB 协议驱动一个以 shell 身份运行的「内置手机助手」，在一块后台虚拟屏上用无障碍服务读屏和操作 App，用内置 WebView 浏览器处理网页，用 PRoot 沙箱跑 Python/Node/shell 处理文件；所有会改变外部世界的动作，都必须经过一个唯一的执行入口。</p>
+</blockquote>
+<p>几个数字值得单独强调：</p>
+<ul>
+<li><strong>代码规模 8.78 MB 的 Kotlin，1,171 个 .kt 文件</strong>。这个体量在「两天半涨到 2.7k star」的项目里非常不寻常。它不是几周写出来的 demo，是有历史的工程 —— 只是历史被压缩在了两天半里。</li>
+<li><strong>两个 Gradle 模块</strong>：<code>core</code> 是纯 Kotlin/JVM，不依赖 Android，主循环、工具、上下文、记忆、知识、触发器全在这里，可以在电脑上跑单测；<code>app</code> 是安卓宿主，负责界面、前台服务、虚拟屏、无障碍、WebView、沙箱。</li>
+<li><strong>128 道真机评测题</strong>（<code>eval/tasks/</code>），分成 <code>read/system</code>、<code>read/content</code>、<code>read/shopping</code>、<code>write</code>、<code>irreversible</code>、<code>impossible</code>、<code>barrier</code>、<code>web</code> 等类别，还有 <code>skills</code>、<code>memory</code> 专项题集。</li>
+<li><strong>292 个 core 测试文件 + 248 个 app 测试文件</strong>（<code>core/src/test/</code> 与 <code>app/src/test/</code>、<code>app/src/androidTest/</code>）。</li>
+</ul>
+<p>我做了去重检查：<code>wangzan101</code>、<code>Mika</code>、<code>mika</code> 在已有的 123 篇文章里都没有命中，可以放心写。</p>
+<hr>
+<h2 id="三、核心机制之一：内置手机助手，和自己实现的-ADB-协议"><a href="#三、核心机制之一：内置手机助手，和自己实现的-ADB-协议" class="headerlink" title="三、核心机制之一：内置手机助手，和自己实现的 ADB 协议"></a>三、核心机制之一：内置手机助手，和自己实现的 ADB 协议</h2><p>先讲清楚一件容易被忽略的事：<strong>Android 从来不给你「以 shell 身份执行命令」这个能力给普通 App。</strong></p>
+<p>adb shell 是系统级工具，普通 App 拿不到 <code>INTERACT_ACROSS_USERS_FULL</code> 这种权限，也没有 adbd 协议的服务端。</p>
+<p>Mika 的做法非常直接：<strong>它自己实现了一套 ADB 协议</strong>（<code>core/adb/</code>），然后借助安卓系统自带的那个「无线调试」功能 ——</p>
+<blockquote>
+<p>安卓原版的无线调试（Wireless debugging）正是把 adbd 暴露到局域网上，配对一次之后就能连。Mika 借用的是这个已经存在的、官方设计给开发者用的口子。</p>
+</blockquote>
+<p>配对码还能<strong>自动读取</strong>：Mika 用无障碍服务从系统设置页把配对码读出来，发一条带 <code>RemoteInput</code> 的高优先级通知直接填进去。整套流程在向导页上是这样收尾的：</p>
+<blockquote>
+<p>「无线调试自己关掉了？安卓在换 Wi-Fi、重启后会关掉它。Mika 会在你允许的前提下自己打开；连不上就回到「设置手机操作」重新配对。」</p>
+</blockquote>
+<p>这句「在允许的前提下自己打开」对应的是 <code>WirelessDebuggingAutoOn</code>：它直接往系统设置里写 <code>adb_wifi_enabled = 1</code>，只开不关，不碰 USB 调试和开发者选项。</p>
+<h3 id="助手为什么用-shell-身份"><a href="#助手为什么用-shell-身份" class="headerlink" title="助手为什么用 shell 身份"></a>助手为什么用 shell 身份</h3><p>因为 <code>shell</code> 身份能拿到普通 App 拿不到的东西：</p>
+<ul>
+<li>跨用户启动 Activity（<code>INTERACT_ACROSS_USERS_FULL</code>）—— <strong>这是它能打开「分身 / 工作资料」里那个 App 的前提</strong>；</li>
+<li>往虚拟屏上启动 Activity（<code>am start --display D</code>）；</li>
+<li>注入定向按键到指定窗口（<code>injectTo</code>，只投给焦点窗口）；</li>
+<li>读取任务栈（<code>ITaskStackListener</code>）判断「用户主屏上是不是弹出了什么」。</li>
+</ul>
+<p>Mika 还做了<strong>接口握手</strong>：交接时核对 shell 身份、APK、Binder 所在进程、<strong>一次性口令</strong>和<strong>签名指纹</strong>。口令用完即作废，24 小时过期，磁盘上不留能用的口令。</p>
+<h3 id="USB-兜底路径"><a href="#USB-兜底路径" class="headerlink" title="USB 兜底路径"></a>USB 兜底路径</h3><p>无线调试在很多国产 ROM 上会被阉割。Mika 为此准备了一条完整的备用链路：电脑经 USB 跑一条命令就能启动同一个助手。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell sh /sdcard/Android/data/com.wangzan101.mika/files/usb-start.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这个脚本是 App 自己写到 <code>getExternalFilesDir(null)</code> 里的（App 自己写不用权限，shell 读得到，别的 App 读不到）。脚本里的助手用 <code>setsid</code> 另起会话、放进后台子 shell，<strong>父 shell 退出后归 init</strong>—— 所以你拔线、adb 会话结束，助手照样活着。</p>
+<p>脚本还贴心地做了两件事：只在 <code>id -u</code> 是 2000（shell）时才启动；启动后等 2 秒用 <code>pidof</code> 确认进程活着，再告诉你「正在启动，打开 Mika 确认」。</p>
+<h3 id="助手还能把-Mika-拉回来"><a href="#助手还能把-Mika-拉回来" class="headerlink" title="助手还能把 Mika 拉回来"></a>助手还能把 Mika 拉回来</h3><p>Mika 被系统杀了怎么办？助手不死（它是 shell 进程），它知道 Mika 的死亡通知（<code>HelperProcess.onAppDied</code>），会等 8 秒（<code>GRACE_MS</code>）—— 如果 Mika 这期间自己回来了就不动手。</p>
+<p>真没回来，助手按 Mika 最后交来的「心愿」决定要不要拉起它：</p>
+<blockquote>
+<p>拉的时候先把 Mika 的无障碍服务追加回列表、打开 <code>accessibility_enabled</code>（别的服务一个不动），再照常重新交接。</p>
+</blockquote>
+<p>10 分钟里至多拉 3 次，一拉起来又死的就停手。</p>
+<p>这一整套东西合起来的意思是：<strong>Mika 不是「装了个 App 就完事」，而是在你的手机上给自己搭了一套常驻的、带权限的运行环境。</strong></p>
+<hr>
+<h2 id="四、核心机制之二：唯一执行入口，ActionExecutor"><a href="#四、核心机制之二：唯一执行入口，ActionExecutor" class="headerlink" title="四、核心机制之二：唯一执行入口，ActionExecutor"></a>四、核心机制之二：唯一执行入口，<code>ActionExecutor</code></h2><p>这是我读完整个 <code>architecture.md</code> 之后，觉得<strong>最值得抄的一条设计</strong>。</p>
+<p>Mika 有一条铁律：</p>
+<blockquote>
+<p><strong>所有改变外部世界的动作都经 <code>ActionExecutor</code>（<code>core/action/ActionExecutor.kt</code>）。<code>ToolDispatcher.execute</code> 要一个 <code>ActionPass</code>（<code>core/tool/ActionPass.kt</code>），它的构造函数是 internal，只有 <code>ActionExecutor</code> 能造，从编译层面杜绝绕过。</strong></p>
+</blockquote>
+<p>不是靠 code review 保证的，不是靠「大家记得调用」，是<strong>靠 Kotlin 的 internal 可见性在编译期堵死的</strong>。</p>
+<p>然后这个入口里有一个固定顺序，每个来源都一样：</p>
+<blockquote>
+<p>执行顺序固定：守卫 → 锁屏检查 → 不可逆动作检查与同意 → 执行 → 动作后核对 → 记录。</p>
+</blockquote>
+<p>我把 <code>aimed()</code> 的骨架摘出来（源码 <code>core/action/ActionExecutor.kt</code>，下面代码为节选，注释里带「//」的是我加的说明，源码原本没有）：</p>
+<figure class="highlight kotlin"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 之后的关卡、判定都按这次调用的那块屏(到这次调用结束)</span></span><br><span class="line">tools.aim(call.name, args)</span><br><span class="line"><span class="keyword">try</span> {</span><br><span class="line">    <span class="keyword">return</span> aimed(call, origin, followUp, reads, args, offScreen, verb)</span><br><span class="line">} <span class="keyword">finally</span> {</span><br><span class="line">    <span class="comment">// 成功与否由分发器记;这里只结束这一层</span></span><br><span class="line">    tools.release(<span class="literal">false</span>)</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight kotlin"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 操作守卫:重复同一动作、没有进展、反复读、失败太多</span></span><br><span class="line"><span class="keyword">val</span> before = guards.beforeAction(call.name, args, verb <span class="keyword">in</span> DIAGNOSTIC_VERBS)</span><br><span class="line"><span class="keyword">if</span> (guards.stop != <span class="literal">null</span>) <span class="keyword">return</span> refuse(<span class="string">"guard_stopped"</span>, origin, before)</span><br><span class="line"><span class="keyword">if</span> (policy.stopOnGuardWarning &amp;&amp; before.isNotEmpty()) <span class="keyword">return</span> refuse(<span class="string">"guard_warning"</span>, origin, before)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写操作要过锁屏/被拿走的关卡</span></span><br><span class="line"><span class="keyword">val</span> writing = tools.writesScreen(call.name)</span><br><span class="line"><span class="keyword">if</span> (writing &amp;&amp; !policy.gatedByCaller) gate()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不可逆判定与同意核对(按过关卡之后此刻的屏幕)</span></span><br><span class="line"><span class="keyword">val</span> d = decision.judge(call.name, args, origin)</span><br><span class="line"><span class="keyword">when</span> (d) {</span><br><span class="line">    <span class="keyword">is</span> Decision.Required   -&gt; <span class="keyword">return</span> blocked(call, args, origin, before, d.hit, <span class="literal">null</span>, followUp)</span><br><span class="line">    <span class="keyword">is</span> Decision.Mismatch   -&gt; <span class="keyword">return</span> blocked(call, args, origin, before, d.hit, d.reason, followUp)</span><br><span class="line">    Decision.Denied        -&gt; <span class="keyword">return</span> refuse(<span class="string">"approval_unavailable"</span>, origin, before)</span><br><span class="line">    Decision.Unresolved    -&gt; <span class="keyword">return</span> refuse(<span class="string">"target_unresolved"</span>, origin, before)</span><br><span class="line">    Decision.OwnApp        -&gt; <span class="keyword">return</span> ownApp(call, args, origin, before, followUp)</span><br><span class="line">    <span class="keyword">else</span> -&gt; <span class="built_in">Unit</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意这个 <code>when</code> 分支的顺序</strong>：<code>Required</code>（需要用户同意）→ <code>Mismatch</code>（申报的对象对不上）→ <code>Denied</code>（没人能问）→ <code>Unresolved</code>（目标没解析出来）→ <code>OwnApp</code>（要操作 Mika 自己的界面）。</p>
+<p>每一个都是<strong>明确的失败码</strong>，不是「静默跳过」。这个设计的好处是：任何一次「Agent 明明该做但没做」，在运行记录里都有一个可查的原因。</p>
+<h3 id="只有花钱才问"><a href="#只有花钱才问" class="headerlink" title="只有花钱才问"></a>只有花钱才问</h3><p>审批策略非常克制：</p>
+<blockquote>
+<p><strong>别的一律直接做：发送、发帖、提交、删除、联系别人、改账号或安全设置、往密码框里打字、看图找到却看不出是什么的点、读不出目标的点击，都不问。</strong></p>
+</blockquote>
+<p>只有一件事要问：<strong>付款</strong>。</p>
+<p>而付款本身也不交给 Agent：</p>
+<blockquote>
+<p>付款本身 (判定是 pay) 不经同意，交给用户亲手付 (<code>hand_to_user</code>,reason=payment)。</p>
+</blockquote>
+<p>这个取舍很聪明。大多数 Agent 框架的做法是「所有不可逆操作都要确认」，结果就是 Agent 每点一下发消息都要弹窗，用户烦到关掉。<strong>Mika 只在真正花钱的那一步拦一次</strong>，其他全放行。</p>
+<p>而且它还区分了「有人在场」和「无人在场」：</p>
+<blockquote>
+<p>渠道、定时、MCP 发起的运行、子任务和无人在场的运行问不到人，一律拒绝 (<code>approval_unavailable</code>)。</p>
+</blockquote>
+<p>定时任务在询问模式下遇到要花钱的一步，不暂停等人，直接不做，模型照实说哪一步没做成。</p>
+<h3 id="全局开关，但不影响正在跑的任务"><a href="#全局开关，但不影响正在跑的任务" class="headerlink" title="全局开关，但不影响正在跑的任务"></a>全局开关，但不影响正在跑的任务</h3><p>开发者选项里有一个「自主模式」。开了之后连付款也不问。</p>
+<p>设计上有个细节挺讲究：</p>
+<blockquote>
+<p>换开关管之后的所有任务；正在做的任务从询问换成自主，下一步起付款也不再问。</p>
+</blockquote>
+<p>也就是<strong>切换立刻生效于下一步</strong>，不用等任务结束。但工具和提示词在一个任务内不变。</p>
+<p>不过这里有个<strong>必须诚实说明的坑</strong>，Mika 自己的 roadmap 里写着：</p>
+<blockquote>
+<p>自主时 <code>ConfirmationGate</code> 不存在，<code>ConfirmDecision.judge</code> 里自主的提前返回排在「不对 Mika 自己动手」(<code>ownApp</code>) 检查之前，所以这层保护在自主模式下也不生效。</p>
+</blockquote>
+<p>也就是说，<strong>自主模式下 Agent 可以去操作 Mika 自己的界面</strong>。作者的解释是「Agent 操作 Mika 自己的界面也可能是在帮用户办事，以后再定」。这在我看是个真实的、目前没解的风险。</p>
+<hr>
+<h2 id="五、核心机制之三：把「像人一样操作」做成可测试的纯逻辑"><a href="#五、核心机制之三：把「像人一样操作」做成可测试的纯逻辑" class="headerlink" title="五、核心机制之三：把「像人一样操作」做成可测试的纯逻辑"></a>五、核心机制之三：把「像人一样操作」做成可测试的纯逻辑</h2><p>这是我读源码时最震惊的一段。</p>
+<p>Mika 对「操作节奏」这件事做了<strong>极其精细的工程化</strong>。它不是简单地 sleep 一下，而是把每一个参数都变成独立的纯逻辑类，可以单测、可以用固定随机种子复现。</p>
+<h3 id="手势的节奏（core-cap-phone-GesturePacing-kt）"><a href="#手势的节奏（core-cap-phone-GesturePacing-kt）" class="headerlink" title="手势的节奏（core/cap/phone/GesturePacing.kt）"></a>手势的节奏（<code>core/cap/phone/GesturePacing.kt</code>）</h3><blockquote>
+<p>每次落指前停 30–120 毫秒；点按按住 50–120 毫秒，双击每下 40–90、两下之间 80–140 (在系统认双击的时限里); 点元素时落点在中心附近偏一点 (不超过宽高的五分之一、至多 12 像素，窄于 24 像素的方向不偏，总在元素里), 按坐标点至多偏 3 像素。</p>
+</blockquote>
+<p>滑动走弧线：</p>
+<blockquote>
+<p>两点之间走一小段弧线 (偏离不超过距离的 6%、至多 30 像素), 时长在给定值上下浮动 8%, 起步慢：短于 800 毫秒的快滑松手时的速度和以前匀速滑动相当 (甩出去的远近不变), 不短于 800 毫秒的慢拖收尾停稳再抬手、不甩。</p>
+</blockquote>
+<p>「甩出去的远近不变」这种描述，说明作者是在<strong>用真人操作录像反复对比</strong>。</p>
+<h3 id="打字节奏（core-cap-phone-TypingPacing-kt）"><a href="#打字节奏（core-cap-phone-TypingPacing-kt）" class="headerlink" title="打字节奏（core/cap/phone/TypingPacing.kt）"></a>打字节奏（<code>core/cap/phone/TypingPacing.kt</code>）</h3><blockquote>
+<p>拉丁字母每个字 60–170 毫秒，中日韩文字每个字 160–380 毫秒、连着的 1–3 个一起上屏 (像输入法选词), 标点、空格之后偶尔多停 0.3–0.9 秒；字多时几个字一段、至多 40 段，总时长至多 6 秒。</p>
+</blockquote>
+<p>而且它<strong>分段落写入</strong>：</p>
+<blockquote>
+<p><code>AndroidScreen.typeText</code> 找到输入框后先按节奏一段一段写进越来越长的前缀 (<code>ACTION_SET_TEXT</code>, 对任何原生输入框都管用，中日韩文字照样), 最后一段全文照旧交给 <code>typeAndVerify</code> 整段写入、读回核对、重试。</p>
+</blockquote>
+<p>写第一段后立刻读回：框不接受半截字就停下改用整段写入。</p>
+<p>这解释了我开头那个闹钟滚轮为什么能过 —— 它甚至有专门处理滚轮的工具 <code>phone_set_wheel</code>：</p>
+<blockquote>
+<p>按控件能做什么依次试：滚轮里有输入框 (原版的数字滚轮有) 就把值写进去… 能无障碍「往前 / 往后滚」(原版数字滚轮一下一格) 就读出当前值，按 <code>WheelSteps</code> 一批至多 5 下地滚、每批读回重算… 都不行 (App 自己画的滚轮) 就读这一列看得到的几项… 按格数慢拖 (不短于 1 秒，按节奏走时末尾停稳再抬手、不甩，免得转过头)</p>
+</blockquote>
+<p>「慢拖、停稳再抬手、不甩，免得转过头」—— 这是我今天看到的最有人味的一句代码注释。</p>
+<h3 id="停留节奏（AppDwell-PageDwell）"><a href="#停留节奏（AppDwell-PageDwell）" class="headerlink" title="停留节奏（AppDwell / PageDwell）"></a>停留节奏（<code>AppDwell</code> / <code>PageDwell</code>）</h3><p>同一个网站连着换页不会秒开：</p>
+<blockquote>
+<p>这个网站在最近 10 分钟里的第一页不停留，第二页起停留 4–7 秒，之后每多一页上下限各加 0.6 / 1 秒，最长 12 秒。</p>
+</blockquote>
+<p>限制操作快慢的网站（<code>pace: careful</code>）停得更久：10–16 秒起，最长 30 秒。</p>
+<h3 id="对外动作的间隔（core-action-OutwardPacing-kt）"><a href="#对外动作的间隔（core-action-OutwardPacing-kt）" class="headerlink" title="对外动作的间隔（core/action/OutwardPacing.kt）"></a>对外动作的间隔（<code>core/action/OutwardPacing.kt</code>）</h3><p>这个类的注释写得非常清楚，而且<strong>完全是可以直接抄走的代码</strong>：</p>
+<figure class="highlight kotlin"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 对外动作之间的间隔(纯逻辑,不碰时钟和界面):不可逆判定认出的发送、提交(联系别人、投申请)、删除、下单,</span></span><br><span class="line"><span class="comment"> * 在同一个网站或 App 里连着做时,两次之间隔一段随机的时间,像人一条条处理,不连着秒点。</span></span><br><span class="line"><span class="comment"> * 不管中间有没有换页:换页的停留另由网页的节奏管。手机和网页同一套,因为判定是同一个。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">OutwardPacing</span>(<span class="keyword">private</span> <span class="keyword">val</span> random: Random?, <span class="keyword">val</span> limits: Limits = Limits()) {</span><br><span class="line">    <span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Limits</span>(</span><br><span class="line">        <span class="keyword">val</span> firstGapMs: LongRange = <span class="number">8_000L</span>..<span class="number">20_000L</span>,   <span class="comment">// 第二次和第一次之间的间隔</span></span><br><span class="line">        <span class="keyword">val</span> perActionMs: Pair&lt;<span class="built_in">Long</span>, <span class="built_in">Long</span>&gt; = <span class="number">500L</span> to <span class="number">1_000L</span>, <span class="comment">// 之后每多做一次,上下限各加多少</span></span><br><span class="line">        <span class="keyword">val</span> maxGapMs: <span class="built_in">Long</span> = <span class="number">30_000L</span>,</span><br><span class="line">        <span class="keyword">val</span> windowMs: <span class="built_in">Long</span> = <span class="number">30</span> * <span class="number">60_000L</span>,             <span class="comment">// 算「最近做过几次」的时间窗</span></span><br><span class="line">    )</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>逻辑是：</p>
+<blockquote>
+<p>一个网站 (App) 里的第一次不等；之后每次和上一次至少隔 8–20 秒随机取的一段，这个窗口里做得越多，上下限各加一截，都不超过 30 秒；间隔从上一次做完算起，中间读页面、想下一步花掉的时间都算在内，只补不够的部分。</p>
+</blockquote>
+<p><strong>「间隔从上一次做完算起，中间读页面、想下一步的时间都算在内，只补不够的部分」</strong> —— 这句话说明作者想清楚了：Agent 思考再慢也算它自己的节奏的一部分，不需要额外补偿。这个细节一般人是想不到的。</p>
+<h3 id="为什么要做这些？"><a href="#为什么要做这些？" class="headerlink" title="为什么要做这些？"></a>为什么要做这些？</h3><p>答案写在 <code>knowledge-format.md</code> 里：</p>
+<blockquote>
+<p><code>pace</code> 是这个网站的一条事实，不是给模型的规定：只能写 <code>careful</code>, 表示这个网站限制一个访客浏览的快慢 (翻页、点开详情太快或太多会被拦、要验证)。</p>
+</blockquote>
+<p><strong>风控识别的是「机器行为特征」</strong>。100 毫秒点 50 次、每一页停留时间一模一样，这在一堆真实用户里非常显眼。Mika 的做法是把节奏做成可配置的策略表，让 Agent 的行为分布更接近真人。</p>
+<p>我认为这是这个项目最有价值、也最少被同类项目认真做的部分。</p>
+<h3 id="节奏本身也分档"><a href="#节奏本身也分档" class="headerlink" title="节奏本身也分档"></a>节奏本身也分档</h3><p>设置里能选「快 / 标准 / 像人」三档：</p>
+<blockquote>
+<p>「快」(<code>FAST</code>: 动作之间不另停、打字一次写入、不设屏数上限，即以前的做法)、「标准」(<code>STANDARD</code>, 默认)、「像人」(<code>HUMAN</code>: 所有 App 都按慢的那一套停留和打字)。</p>
+</blockquote>
+<p>而且还有<strong>屏数上限</strong>：</p>
+<blockquote>
+<p>限制操作快慢的 App 一个任务里换到新的一屏至多 24 次；到了之后在 App 里换屏的动作不做，报 <code>page_limit</code>。</p>
+</blockquote>
+<p>网站那边是普通 20 页、<code>careful</code> 12 页。</p>
+<p><strong>这个设计我认为值得单独表扬。</strong> 很多 Agent 是「能做就做」，Mika 是「知道自己该适可而止，并且明明白白告诉模型「到此为止了，你去问用户」**。这比默默失败或者无限重试高级得多。</p>
+<hr>
+<h2 id="六、核心机制之四：读屏的双通道，和「文字识别补读」"><a href="#六、核心机制之四：读屏的双通道，和「文字识别补读」" class="headerlink" title="六、核心机制之四：读屏的双通道，和「文字识别补读」"></a>六、核心机制之四：读屏的双通道，和「文字识别补读」</h2><p>一个 GUI Agent 要能操作，前提是<strong>看得懂</strong>。</p>
+<p>Mika 的读屏是双通道：</p>
+<ol>
+<li><strong>无障碍控件树</strong>（<code>app/a11y/MikaAccessibilityService.kt</code> → <code>ScreenAccessibility.kt</code>）—— 按屏读控件树、在指定屏上做手势。</li>
+<li><strong>OCR 文字识别</strong>（<code>app/cap/phone/a11y/PhoneOcr.kt</code>，ML Kit）—— 控件树读不出来时补。</li>
+</ol>
+<p>关键在<strong>什么时候决定用 OCR</strong>：</p>
+<blockquote>
+<p>每次读屏先按控件树判它够不够用 (<code>core/uistate/TreeQuality.kt</code>): 有名字的元素够多、控件大多有名字、App 窗口里没有一大块一个字也没有的区域，才算明显够用，不识别文字；拿不准时用随 APK 自带的文字识别读一次，树里没有的字补出三行以上就算缺了一块 (partial); 树缺了一块或读不到 (unusable) 时一定识别文字。</p>
+</blockquote>
+<p>这个判定标准很实在：<strong>不是「树里没字就 OCR」，而是「树里有一大片空白才 OCR」</strong>。因为 OCR 慢且不准，能用树就用树。</p>
+<p>OCR 的结果还要清洗：</p>
+<blockquote>
+<p>补上的字 (<code>core/uistate/VisibleText.kt</code>) 先去掉认错的行 (置信度低、全是符号、以中文为主的屏上零碎的西文数字串), 每行带 0–999 的位置和点击中心。</p>
+</blockquote>
+<p>「以中文为主的屏上零碎的西文数字串」—— 这是真实的 OCR 误报模式，作者显然踩过。</p>
+<h3 id="输入框的可靠性"><a href="#输入框的可靠性" class="headerlink" title="输入框的可靠性"></a>输入框的可靠性</h3><p>往输入框打字是这个领域最难的部分之一，因为<strong>你不知道打进去了没有</strong>。Mika 的做法是打完立刻读回核对：</p>
+<blockquote>
+<p>输入、清空也接受一个点 (坐标，或看图找到的 <code>@vN</code>)… 之后比打字前后屏上识别到的文字核对 (<code>core/uistate/UnseenField.kt</code>): 多出现一次为一致，前后完全没变为没打进去，其余为核实不了；弹着输入法时键盘上的字不算。</p>
+</blockquote>
+<p>「弹着输入法时键盘上的字不算」—— 这个细节太实用了。中文输入法在候选框里显示的候选字，会让「前后对比」失效。</p>
+<p>而当焦点根本不在框上时，它选择<strong>不猜</strong>：</p>
+<blockquote>
+<p>屏上什么都没拿着输入焦点、也没弹输入法时根本不粘，直接报 <code>no_focus</code>… 因为粘了界面别处一动反而会被当成「可能打进去了」。</p>
+</blockquote>
+<p>以及一个很实在的判断：</p>
+<blockquote>
+<p>没弹输入法而前后完全没变，多半是焦点不在框上，报 <code>no_focus</code> 请模型先点输入框，不再盲目重粘。</p>
+</blockquote>
+<h3 id="防截屏页面"><a href="#防截屏页面" class="headerlink" title="防截屏页面"></a>防截屏页面</h3><blockquote>
+<p>付款、输密码这类页面禁止截屏，Mika 会请你接管。</p>
+</blockquote>
+<p>遇到这种页面，它<strong>明确不尝试</strong>，而不是瞎点。</p>
+<h3 id="可视化作为补充"><a href="#可视化作为补充" class="headerlink" title="可视化作为补充"></a>可视化作为补充</h3><p>配了「看图模型」时，它还能看图找按钮。但作者对看图的成本有清醒认识：</p>
+<blockquote>
+<p>描述界面一次要读整屏、写一大段，比定位慢好几倍：提示词里只让它在看不懂是什么页面时用。</p>
+</blockquote>
+<p>而且看图定位的结果<strong>会被标注可信度</strong>：</p>
+<blockquote>
+<p>定位准度没验证过的模型要有佐证，但这一屏的树不能用、或缺了一块而要找的不在树里时没东西可对照，框照样交出去，标 <code>unverified</code>, 点完由效果说话。</p>
+</blockquote>
+<p>「点完由效果说话」—— 它不看模型说得准不准，看<strong>点下去之后界面变没变</strong>。</p>
+<h3 id="动作效果的判定"><a href="#动作效果的判定" class="headerlink" title="动作效果的判定"></a>动作效果的判定</h3><blockquote>
+<p>手机上点、手势看不出变化而这一屏的树读不出那一处 —— 树不能用，或缺了一块而点不在任何元素上 —— 种类照旧是 <code>no_effect</code>, 另标 <code>treeBlind</code>, 提示改说「看不出变化不等于没点上」, 不说多半没点上。</p>
+</blockquote>
+<p>这个区分太重要了。普通 Agent 会把「我没读出来」直接当成「我点失败了」，然后重试 —— 结果就是在一个已经成功的界面上再点一遍（再点一遍「发送」）。</p>
+<hr>
+<h2 id="七、核心机制之五：知识与技能——纯文本的「App-使用手册」"><a href="#七、核心机制之五：知识与技能——纯文本的「App-使用手册」" class="headerlink" title="七、核心机制之五：知识与技能——纯文本的「App 使用手册」"></a>七、核心机制之五：知识与技能 —— 纯文本的「App 使用手册」</h2><p>Mika 有一个我觉得非常聪明的设计：<strong>它把「怎么用某个 App」写成纯文本 Markdown，放进 APK 里。</strong></p>
+<p>仓库里现在有 <strong>23 个 App 知识</strong>（<code>knowledge/apps/&lt;id&gt;/APP.md</code>）和 <strong>18 个网站知识</strong>（<code>knowledge/sites/&lt;域名&gt;/SITE.md</code>）。</p>
+<p>微信那个文件长这样（<code>core/src/main/resources/knowledge/apps/wechat/APP.md</code>）：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">name: wechat</span><br><span class="line">display: 微信</span><br><span class="line">packages: ["com.tencent.mm"]</span><br><span class="line">aliases: ["WeChat", "weixin", "微信", "wechat"]</span><br><span class="line">sites: []</span><br><span class="line">open: 微信</span><br><span class="line">pace: careful</span><br><span class="line"><span class="section">description: 聊天、公众号与社交</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"><span class="section">## 是什么</span></span><br><span class="line">微信是聊天与社交 App,包名 <span class="code">`com.tencent.mm`</span>。</span><br><span class="line"></span><br><span class="line"><span class="section">## 界面</span></span><br><span class="line">主要结构通常是聊天列表、通讯录、发现和个人页,具体布局随版本、账号状态和字体设置而不同。顶部搜索会同时返回联系人、群聊、聊天记录、小程序和公众号,结果按分组显示。</span><br><span class="line"></span><br><span class="line"><span class="section">## 功能</span></span><br><span class="line"><span class="bullet">-</span> <span class="strong">**会话**</span>:未读标记、置顶、草稿、服务通知和普通消息都在列表里,容易混淆。联系人显示名、备注名、群名和头像可能相似,进入会话后标题才是实际对象。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意 <code>pace: careful</code> 那一行 —— 微信被标成了「限制操作快慢」。这直接决定了 Agent 在微信里的停留时间和打字节奏。</p>
+<h3 id="知识的三层划分"><a href="#知识的三层划分" class="headerlink" title="知识的三层划分"></a>知识的三层划分</h3><table>
+<thead>
+<tr>
+<th>文件</th>
+<th>管什么</th>
+<th>不管什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>knowledge/apps/&lt;id&gt;/APP.md</code></td>
+<td>这个 App 是什么、界面怎么组织、有哪些功能</td>
+<td>行为规定、做事方法</td>
+</tr>
+<tr>
+<td><code>knowledge/sites/&lt;域名&gt;/SITE.md</code></td>
+<td>这个网站是什么、页面和网址怎么组织</td>
+<td>行为规定、做事方法</td>
+</tr>
+<tr>
+<td><code>skills/&lt;id&gt;/SKILL.md</code></td>
+<td>一类事怎么做（可跨 App / 网站）</td>
+<td>某个行业、某个品类的专门做法</td>
+</tr>
+</tbody></table>
+<p>而且<strong>规定不许写进知识文件</strong>：</p>
+<blockquote>
+<p><strong>只写事实</strong>。授权、确认、停止条件、「不要编造」「交给用户」这类规定归通用准则和审批层，知识里不写。</p>
+</blockquote>
+<blockquote>
+<p>讲界面时说「界面」「页面」「入口」「按钮」, 不说「看屏幕」。</p>
+</blockquote>
+<blockquote>
+<p>现象写成现象。「首页网格里的『外卖』和底部标签里的『外卖』是两个入口，前者进外卖频道」, 而不是「勿点底部标签」。</p>
+</blockquote>
+<p>这种「只描述现象，不下指令」的写法很专业。它把「App 的知识」和「Agent 的行为准则」解耦了 —— 前者是数据，后者是代码里的审批层和守卫。</p>
+<h3 id="知识怎么被用到"><a href="#知识怎么被用到" class="headerlink" title="知识怎么被用到"></a>知识怎么被用到</h3><blockquote>
+<p>开局按任务文字匹配；进入某个 App (读过它的界面) 或某个网站 (第一次成功打开或读取) 时补上它的知识正文。每份只给一次，每个任务最多 3 份。</p>
+</blockquote>
+<p>不多给，也不不给。模型自己去查：</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>查什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>knowledge_search</code></td>
+<td>App 与网站知识，最多 10 条</td>
+</tr>
+<tr>
+<td><code>knowledge_read</code></td>
+<td>读一份 App 或网站知识，或它的附件</td>
+</tr>
+<tr>
+<td><code>skill_search</code></td>
+<td>技能（内置的 + 用户的个人技能）</td>
+</tr>
+<tr>
+<td><code>skill_read</code></td>
+<td>读技能全文，或它的附件</td>
+</tr>
+</tbody></table>
+<h3 id="还能自己学"><a href="#还能自己学" class="headerlink" title="还能自己学"></a>还能自己学</h3><blockquote>
+<p><strong>App 知识自学</strong>… 值得学的有三种：办成了、这个 App 里生效的动作够多；办成了但磕绊 (出错或界面没变的动作两次以上，或返回两次以上); 没办成或只办成一部分… 要回补充改完以后的全文：只有「- 」开头的事实行，至多 12 条；没有值得补的回 NONE。</p>
+</blockquote>
+<p>用户个人技能也有类似流程：起草 → 用户在「记忆与技能」里收下 → 试用 → 办成一次转正式 → 正式技能近 3 次里有 2 次不好也停用。</p>
+<p><strong>这个「学 → 试 → 转正 → 退役」的闭环，是我见过的对「AI 越用越懂你」这个承诺最认真的实现。</strong></p>
+<hr>
+<h2 id="八、上下文、记忆和「少而精」"><a href="#八、上下文、记忆和「少而精」" class="headerlink" title="八、上下文、记忆和「少而精」"></a>八、上下文、记忆和「少而精」</h2><p>对长任务来说，上下文管理比模型能力更决定成败。</p>
+<p>Mika 的上下文分四个区（<code>core/agent/ContextBuilder.kt</code>）：</p>
+<blockquote>
+<p>区 0 是系统提示词和工具定义，一个任务内只在展开一组工具时变；区 1 是开局上下文，写一次不改；区 2 是历史，只追加；区 3 是本步的结果、画面和运行时状态。</p>
+</blockquote>
+<p>压缩策略：</p>
+<blockquote>
+<p>估算的输入量超过模型上下文的 0.6 (扣掉固定部分) 时… 压缩后降到触发线的一半以下，有回差避免连着压，但不会拖过上下文的 0.9。</p>
+</blockquote>
+<blockquote>
+<p><strong>怎么压 (不调模型)</strong>: 先缩短最近 12 轮之前的旧结果… 再把旧轮次折叠成「Earlier steps (compressed)」; 不够再逐档收紧。</p>
+</blockquote>
+<p><strong>压缩不调模型</strong>，纯规则。这在成本和延迟上是巨大优势。</p>
+<p>还有一条我觉得是整个项目里最值得抄的原则：</p>
+<blockquote>
+<p><strong>永不裁剪</strong>: 用户说的话 (任务原话、插话、回答) 从不裁剪；追问、确认、接管那几轮不折叠。</p>
+</blockquote>
+<p>用户在任务进行中插话（「其实我要的是那个蓝色的」），这句话永远不会被压缩掉。</p>
+<h3 id="记忆分三类"><a href="#记忆分三类" class="headerlink" title="记忆分三类"></a>记忆分三类</h3><p><code>core/memory/</code> 里：</p>
+<blockquote>
+<p>三类 <code>MemoryKind</code>—— 事实、偏好、做法。事实和偏好记下即用、可撤销，做法要用户批准。</p>
+</blockquote>
+<p>而且：</p>
+<blockquote>
+<p>只从用户自己说的话里记 (<code>UserUtterances</code>, 带着屏幕、浏览器页的页面说明时只收用户打的字), 不从屏幕和网页内容里记；密码、验证码、卡号、证件号等由 <code>SensitiveFilter</code> 挡掉。</p>
+</blockquote>
+<p>记忆加密存在手机本地（<code>app/memory/EncryptedMemoryFile.kt</code>，走 Android Keystore）。</p>
+<p><strong>云同步和导出明确不做</strong>：</p>
+<blockquote>
+<p>记忆不做云同步与导出；以后要做，需要单独设计加密导出。</p>
+</blockquote>
+<p>这个「知道自己不做什么」的态度，比什么都稀缺。</p>
+<h3 id="工具也是分组的"><a href="#工具也是分组的" class="headerlink" title="工具也是分组的"></a>工具也是分组的</h3><p>另一个减少 token 的手段 —— 工具<strong>两层折叠</strong>：</p>
+<blockquote>
+<p>手机、网页、沙箱各是一组，开局只给入口工具，调用后展开它那一组；展开后下一次请求起给整组全文，入口换回全文。</p>
+</blockquote>
+<p>而且展开是有顺序的：一直都在的 → <code>screens</code> → 手机 → 网页 → 沙箱。</p>
+<p>「开局只给入口工具」这个设计，直接把初始 prompt 的工具定义量砍掉了大半。</p>
+<hr>
+<h2 id="九、内置浏览器、Linux-沙箱，和从电脑派活"><a href="#九、内置浏览器、Linux-沙箱，和从电脑派活" class="headerlink" title="九、内置浏览器、Linux 沙箱，和从电脑派活"></a>九、内置浏览器、Linux 沙箱，和从电脑派活</h2><h3 id="内置浏览器（WebView-DevTools-协议）"><a href="#内置浏览器（WebView-DevTools-协议）" class="headerlink" title="内置浏览器（WebView + DevTools 协议）"></a>内置浏览器（WebView + DevTools 协议）</h3><p>WebView 跑在 App 自己建的<strong>私有虚拟显示</strong>上，不占手机屏幕，也不需要内置助手。</p>
+<p>操作方式是走 DevTools 协议，<strong>真实输入事件</strong>：</p>
+<blockquote>
+<p>通过 WebView 的 DevTools 协议操作页面，点击和输入是真实输入事件；连不上时退回注入的页面脚本。</p>
+</blockquote>
+<p>有一个细节我很在意：</p>
+<blockquote>
+<p><strong>从不打开 Runtime 这一组</strong> (<code>Runtime.enable</code>): 开着它时页面察觉得到挂着调试器，真机上有的网站因此一直重载。</p>
+</blockquote>
+<p>也就是说它为了<strong>不被网站检测</strong>，宁可放弃一整套调试能力。读脚本只用隔离世界和求值。</p>
+<p>登录状态是共享的：</p>
+<blockquote>
+<p>用户自己用的浏览器… 和 Agent 的标签同一个网页配置 (Cookie、网页存储), 在这里登录了 Mika 办事时也是登录的。</p>
+</blockquote>
+<p>还能在网页上直接问它：</p>
+<blockquote>
+<p>网页 (不是起始页) 底下多一条「✦ 问问 Mika，或让它在这页做点什么…」</p>
+</blockquote>
+<p>而且它会<strong>借</strong>用户的标签页，而不是自己开一个新的：</p>
+<blockquote>
+<p>借到了就当场建好网页这一套、把这个标签借进任务的标签池；它成为任务的当前标签… 但不挂到任务的网页显示上 (它在浏览器页里)、不算每任务和全局上限。</p>
+</blockquote>
+<p>用户一摸页面，Agent 立刻暂停：</p>
+<blockquote>
+<p>手指按下 → <code>UserBrowser.userTouched</code> → 此刻正在干活、借来的页面是当前标签… 当场显示暂停… 下一个会改动屏幕的工具之前停在关卡。</p>
+</blockquote>
+<h3 id="Linux-沙箱（PRoot-Alpine-3-22）"><a href="#Linux-沙箱（PRoot-Alpine-3-22）" class="headerlink" title="Linux 沙箱（PRoot + Alpine 3.22）"></a>Linux 沙箱（PRoot + Alpine 3.22）</h3><p>每个对话一个工作区，跑 Python、Node、shell。默认断网。</p>
+<p>沙箱的三个原生程序随 APK 走（<code>tools/sandbox/README.md</code>）：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>是什么</th>
+<th>许可证</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>libproot.so</code></td>
+<td>PRoot 本体，静态链接 talloc</td>
+<td>GPL-2.0-or-later / LGPL-3.0-or-later</td>
+</tr>
+<tr>
+<td><code>libproot_loader.so</code></td>
+<td>PRoot 载入器</td>
+<td> GPL-2.0-or-later</td>
+</tr>
+<tr>
+<td><code>libmikarun.so</code></td>
+<td>沙箱启动器（超时、断网、清场）</td>
+<td>MIT</td>
+</tr>
+</tbody></table>
+<p>Mika 只以<strong>子进程</strong>方式运行它们，不链接它们 —— 所以 GPL 不会传染到主工程。</p>
+<p>而且作者给 PRoot 打了 4 个补丁，修的都是真问题：</p>
+<blockquote>
+<p><code>proot-0002-seccomp-trap-enosys.patch</code>: 安卓给 App 装的 seccomp 策略对新系统调用 (io_uring、clone3、faccessat2、epoll_pwait2、rseq 等) 发 SIGSYS…PRoot 在这种 SIGSYS 的信号停止处把返回值改成 <code>-ENOSYS</code> 并取消信号。</p>
+</blockquote>
+<blockquote>
+<p><code>proot-0003-arm64-new-path-syscalls.patch</code>:PRoot 5.4.0 的 arm64 调用号表只到 statx (291), 之后新增的调用 PRoot 认不出，平台放行时它们带着没转换的路径直达内核，按宿主路径执行。</p>
+</blockquote>
+<p>这已经不是「做个 demo」的水平了，是<strong>真的在 Android 上跑 Linux 用户态</strong>。</p>
+<h3 id="从电脑派活：CLI-和-MCP"><a href="#从电脑派活：CLI-和-MCP" class="headerlink" title="从电脑派活：CLI 和 MCP"></a>从电脑派活：CLI 和 MCP</h3><p>Mika 可以作为一个 <strong>MCP 服务器</strong>，让电脑上的 AI 工具把活派给手机。</p>
+<p>USB 连接（推荐）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell sh /sdcard/Android/data/com.wangzan101.mika/files/connect-computer.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"transport"</span><span class="punctuation">:</span> <span class="string">"streamable-http"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"url"</span><span class="punctuation">:</span> <span class="string">"http://127.0.0.1:8765/mcp"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"headers"</span><span class="punctuation">:</span> <span class="punctuation">{</span> <span class="attr">"Authorization"</span><span class="punctuation">:</span> <span class="string">"Bearer &lt;令牌&gt;"</span> <span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"token"</span><span class="punctuation">:</span> <span class="string">"&lt;令牌&gt;"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"port"</span><span class="punctuation">:</span> <span class="number">8765</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"forward"</span><span class="punctuation">:</span> <span class="string">"adb forward tcp:8765 tcp:8765"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"boot"</span><span class="punctuation">:</span> <span class="string">"17"</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>MCP 工具：</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>做什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mika_run_task</code></td>
+<td>把一件事交给 Mika，返回 task_id</td>
+</tr>
+<tr>
+<td><code>mika_task_status</code></td>
+<td>任务状态、最近进度、在等什么</td>
+</tr>
+<tr>
+<td><code>mika_wait_task</code></td>
+<td>等到状态变了或到时间</td>
+</tr>
+<tr>
+<td><code>mika_answer</code></td>
+<td>回答 Mika 的问题</td>
+</tr>
+<tr>
+<td><code>mika_steer_task</code></td>
+<td>向 running 任务追加要求（最多 4000 字符）</td>
+</tr>
+<tr>
+<td><code>mika_cancel_task</code></td>
+<td>停下这个任务</td>
+</tr>
+<tr>
+<td><code>mika_list_tasks</code></td>
+<td>电脑交来的最近几个任务</td>
+</tr>
+</tbody></table>
+<p>CLI 是并列的另一个入口，走普通 HTTP：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mika devices --json</span><br><span class="line">mika connect --device SERIAL --json</span><br><span class="line">mika doctor --device SERIAL --json</span><br><span class="line"></span><br><span class="line">mika --device SERIAL task run --goal-file task.txt --json</span><br><span class="line">mika --device SERIAL task <span class="built_in">wait</span> TASK_ID --<span class="built_in">timeout</span> 45 --json</span><br><span class="line">mika --device SERIAL task steer TASK_ID --text <span class="string">"补充一下，只整理今天的消息"</span> --json</span><br></pre></td></tr></tbody></table></figure>
+
+<p>安全设计的几条硬规矩：</p>
+<blockquote>
+<p><strong>只接受私有网络</strong>: 两端都必须是局域网、私有 VPN 网络或本机的地址，公网地址来的连接当场断开。</p>
+</blockquote>
+<blockquote>
+<p><strong>不接受浏览器的请求</strong>: 带 <code>Origin</code> 请求头的一律拒绝。</p>
+</blockquote>
+<blockquote>
+<p><strong>花钱和确认只能在手机上</strong>: 电脑交来的任务里，付款、需要你同意的操作永远不会执行，不管「自主模式」开没开。</p>
+</blockquote>
+<blockquote>
+<p><strong>只碰电脑自己交来的任务</strong>: 电脑看不到、也停不了你在手机上发起的任务。</p>
+</blockquote>
+<p>令牌是 32 字节随机数，常量时间比较，同一地址一分钟内错 5 次封一分钟。</p>
+<p>还有远程亮屏解锁（默认关闭），凭据加密存在本机，只定向输入到系统锁屏界面，失败一次即暂停。</p>
+<hr>
+<h2 id="十、快速上手"><a href="#十、快速上手" class="headerlink" title="十、快速上手"></a>十、快速上手</h2><h3 id="手机上（主要路径）"><a href="#手机上（主要路径）" class="headerlink" title="手机上（主要路径）"></a>手机上（主要路径）</h3><p><strong>第 1 步</strong>：从 <a target="_blank" rel="noopener" href="https://github.com/wangzan101/Mika/releases/latest">Releases</a> 下载 APK（安卓 11+）。</p>
+<p><strong>第 2 步</strong>：设置 › 模型，选一家服务商填 API Key，或直接用 ChatGPT /xAI/ OpenRouter 账号登录。</p>
+<p>内置预设：DeepSeek、通义千问、Kimi、智谱、硅基流动、火山方舟、MiniMax、阶跃星辰、腾讯混元、百度千帆、OpenRouter、OpenCode Go、Anthropic、Gemini、OpenAI、xAI、Mistral、Groq、Ollama、LM Studio。</p>
+<p><strong>第 3 步</strong>（只有要操作手机 App 才需要）：设置 › 设置手机操作，按向导配对一次无线调试。六步：</p>
+<ol>
+<li>打开开发者选项（连点「版本号」7 次）</li>
+<li>打开 USB 调试</li>
+<li>打开 Mika 的无障碍（<strong>建议跳过</strong>，配对后它会自己开）</li>
+<li>打开无线调试</li>
+<li>配对（配对码自动读取，直接填进通知）</li>
+<li>连上</li>
+</ol>
+<p>向导的设计有个好细节：</p>
+<blockquote>
+<p>读到开着就自动打勾、往下走；读到关着就停在那一步，但读开关的三步都有「我已经打开了，下一步」… 所以哪一步都不会卡死。</p>
+</blockquote>
+<h3 id="电脑上"><a href="#电脑上" class="headerlink" title="电脑上"></a>电脑上</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mika connect --device SERIAL --json</span><br><span class="line">mika --device SERIAL task run --goal <span class="string">"帮我总结一下微信群今天都聊了些啥"</span> --json</span><br></pre></td></tr></tbody></table></figure>
+
+<p>或者用 MCP：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"mcpServers"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"mika"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"type"</span><span class="punctuation">:</span> <span class="string">"http"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"url"</span><span class="punctuation">:</span> <span class="string">"http://192.168.1.23:8765/mcp"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"headers"</span><span class="punctuation">:</span> <span class="punctuation">{</span> <span class="attr">"Authorization"</span><span class="punctuation">:</span> <span class="string">"Bearer &lt;令牌&gt;"</span> <span class="punctuation">}</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="跑评测"><a href="#跑评测" class="headerlink" title="跑评测"></a>跑评测</h3><figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">adb -s &lt;设备&gt; shell am instrument -w \</span><br><span class="line">  -e class com.wangzan101.mika.eval.EvalRunTest \</span><br><span class="line">  -e evalRun &lt;运行名&gt; -e evalSet <span class="built_in">read</span>/content \</span><br><span class="line">  com.wangzan101.mika.test/androidx.test.runner.AndroidJUnitRunner</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./gradlew :core:<span class="built_in">test</span> :core:cliTest :app:testDebugUnitTest :app:assembleDebug</span><br><span class="line">python3 -m unittest discover -s tools/mika/tests -v</span><br></pre></td></tr></tbody></table></figure>
+
+<p>沙箱运行环境可复现校验：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 tools/sandbox/build-runtime.py --check</span><br></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h2 id="十一、和同类项目放在一起看"><a href="#十一、和同类项目放在一起看" class="headerlink" title="十一、和同类项目放在一起看"></a>十一、和同类项目放在一起看</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>形态</th>
+<th>和 Mika 的差别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> Appium / uiautomator2</strong></td>
+<td>PC 端连真机 / 模拟器的自动化框架</td>
+<td>它们是<strong>给人写脚本</strong>的；Mika 是给模型用的，且跑在手机本地，不需要 PC 常驻</td>
+</tr>
+<tr>
+<td><strong>阿里 Open-AutoGLM / 字节 UI-TARS</strong></td>
+<td> 手机 GUI grounding 模型 + 控制系统</td>
+<td>它们提供的是<strong>能力</strong>（能不能点对）；Mika 提供的是<strong>工程骨架</strong>（点了之后谁来记、谁来审、谁来兜底）</td>
+</tr>
+<tr>
+<td><strong>Claude Computer Use / 各类 CUA</strong></td>
+<td> 云端模型 + 远程桌面</td>
+<td>那是<strong>桌面</strong>；Mika 是<strong>手机</strong>，且利用了 Android 特有的 VirtualDisplay 和无障碍这两个能力</td>
+</tr>
+<tr>
+<td><strong> Open-AutoGLM 桌面版 / 各类 RPA</strong></td>
+<td> 桌面 RPA</td>
+<td> 同上，加上 Android 的 shell 权限和虚拟屏是手机独有的</td>
+</tr>
+<tr>
+<td><strong> Claude Code / Codex CLI 等终端 Agent</strong></td>
+<td> 命令行</td>
+<td>它们在<strong>你的终端</strong>里；Mika 在你的<strong>手机</strong>里，能碰你的 App、你的登录态、你的相册</td>
+</tr>
+</tbody></table>
+<p><strong>最接近的其实是 Anthropic 自己的 computer use + Android 模拟器方案</strong>，但那需要一台模拟器。</p>
+<p>Mika 的差异化很清楚：<strong>它假设你只有一部手机，你想让它操作的就是这部手机，而且你还得能同时用这部手机。</strong></p>
+<hr>
+<h2 id="十二、真实局限"><a href="#十二、真实局限" class="headerlink" title="十二、真实局限"></a>十二、真实局限</h2><p>这个项目很新（两天半，226 个提交），作者自己在 roadmap 里列了一堆。我把关键的几条摘出来，加上我自己看到的：</p>
+<p><strong>1. 最终核查被关掉了。</strong></p>
+<blockquote>
+<p>开发阶段关掉了最终核查 (用户决定：开发阶段保持关闭)。<code>TaskRun</code> 里 <code>reviewFinalAnswer = false</code>: 回答一律记为「未核实」。</p>
+</blockquote>
+<p>这意味着<strong>你现在跑出来的所有回答，Mika 自己都不确定是不是对的</strong>。学习流程看的是结局判定（Done / Partial / NotPossible），不是核查。</p>
+<p><strong>2. 自主模式下，<code>ownApp</code> 保护失效。</strong> 前面说过了，Agent 可能去操作 Mika 自己的界面。</p>
+<p><strong>3. 中断不续跑。</strong></p>
+<blockquote>
+<p><strong>从不从中间续跑</strong>: 屏幕状态回不去。</p>
+</blockquote>
+<p>进程被杀，任务就断了，只能「中断 → 告知 → 用户重新发起」。</p>
+<p><strong>4. 真机验证还不充分。</strong></p>
+<blockquote>
+<p>内置助手的各项系统操作、助手被杀或无线调试关闭后的自动恢复、重启后的自动恢复、长时间不用后授权失效的引导、网页渲染进程崩溃、Android 13–15 上精确闹钟授权与撤权、锁屏期间的定时任务，目前主要由单测和设备测试覆盖，还需要在真机上逐项跑过。</p>
+</blockquote>
+<p><strong>5. 剪贴板会漏。</strong></p>
+<blockquote>
+<p>网页类编辑区靠粘贴输入，安卓 12 起主屏会短暂提示「正在访问剪贴板」; 验证码、证件号这类敏感文字粘贴时会在剪贴板里停留约一秒。</p>
+</blockquote>
+<p><strong>6. 安卓版本要求不低。</strong> 操作 App 要安卓 12+，<strong>推荐安卓 14+</strong>（因为虚拟屏要有自己的焦点）。安卓 12/13 上「操作后台屏可能影响主屏焦点」。</p>
+<p><strong>7. 沙箱只有 arm64。</strong> 非 arm64 设备装得上，但沙箱那一整组工具直接不可用。</p>
+<p><strong>8. APK 88.7 MB。</strong> 因为内置了 Alpine 根文件系统、PRoot 三个原生库、ML Kit 中文文字识别模型。</p>
+<p><strong>9. 迭代快到有点吓人。</strong> 从 v0.1.18 到 v0.1.27，10 个版本集中在 2026-10-31 一天内发布。功能确实猛，但也意味着<strong>你今天装的版本和明天的可能行为不同</strong>。README 里写着「Beta 说明… 升级时可能有不兼容的改动」。</p>
+<p><strong>10. 没有云端，纯本地 = 没有服务端兜底。</strong> 这是优点也是缺点：没有账号体系，没有跨设备同步，没有远程诊断。你只能靠自己。</p>
+<hr>
+<h2 id="十三、适合谁，不适合谁"><a href="#十三、适合谁，不适合谁" class="headerlink" title="十三、适合谁，不适合谁"></a>十三、适合谁，不适合谁</h2><p><strong>适合：</strong></p>
+<ul>
+<li><strong>重度 App 用户</strong>，尤其是那些「手机上的操作比电脑还重要」的人 —— 每天在微信、淘宝、小红书、飞书里办几十件事的人。</li>
+<li><strong>想在自己手机上跑 Agent 又不想被 Agent 霸占手机</strong>的人。后台虚拟屏这个点解决的是真痛点。</li>
+<li><strong>愿意折腾开发者选项的人</strong>。Mika 需要无线调试 + USB 调试 + 无障碍，这些在国产 ROM 上都不算无门槛。</li>
+<li><strong>在意数据不出手机的人</strong>。没有 Mika 服务器，API Key 走你自己的服务商，记忆加密存本地。</li>
+<li><strong>想做手机 Agent 工程的人</strong>。那份 338 行的 <code>architecture.md</code> 和 1,171 个 Kotlin 文件，是目前公开可见的、把手机 GUI Agent 工程化做得最细的项目之一。</li>
+</ul>
+<p><strong>不适合：</strong></p>
+<ul>
+<li><strong>只有 iPhone 的人</strong>。整个项目是 Android 独占（用了 VirtualDisplay、无障碍、shell 权限、PRoot 这些 Android 特有的东西），iOS 上没有对应物，短期内也不会有。</li>
+<li><strong>要「完全自动、绝不打扰」的人</strong>。默认询问模式会在付款时停下来问你；而且真机验证还不充分，复杂任务翻车概率不低。</li>
+<li><strong>需要开箱即用稳定生产环境的人</strong>。226 个提交、两天的迭代节奏、关掉的最终核查、Beta 声明 —— 这是个<strong>高速迭代中的工程项目</strong>，不是产品。</li>
+<li><strong>有合规顾虑的企业环境</strong>。用自动化操作第三方 App 可能违反其用户协议，作者自己在免责声明里写了「有被限制功能、封号的风险」。这个风险是真实的。</li>
+</ul>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>回到我开头那个牛奶。</p>
+<p>如果那天晚上我就装上 Mika，我大概会说一句：「明天下班前提醒我冰箱里的牛奶还没喝」。</p>
+<p>它会建一块后台屏，打开时钟 App，找到那个藏起来的「+」，用 <code>ACTION_SET_TEXT</code> 往输入框里分段写入 9 点 40 分，读回核对，然后设好。<strong>我的手机全程在我手里。</strong></p>
+<p>这听起来没什么。但如果你知道过去两年所有 GUI Agent 演示里，<strong>没有一个能在 Agent 操作时让你继续用手机</strong>，你就会明白这件事有多难得。</p>
+<p>Mika 里我最欣赏的不是那个虚拟屏（虽然它是核心），而是<strong>它在每一个环节都把「判断」写成了纯逻辑</strong>：</p>
+<ul>
+<li>间隔 8–20 秒是 <code>OutwardPacing</code> 里一个 <code>LongRange</code>；</li>
+<li>打字 60–170 毫秒是 <code>TypingPacing</code> 里一个随机区间；</li>
+<li>「点没点中」是 <code>UnseenField</code> 里的一个 <code>when</code>；</li>
+<li>「该不该问用户」是 <code>ConfirmDecision.judge</code> 里一个 <code>when</code> 分支。</li>
+</ul>
+<p>这些全是可以在电脑上跑单测的纯函数。作者甚至给节奏类做了固定随机种子的构造器。</p>
+<p><strong>AI Agent 的可靠性从来不来自更聪明的模型，而来自更刻意的工程。</strong> Mika 用 8.78 MB 的 Kotlin 把这句话写在了屏幕上。</p>
+<p>如果你也想看，去 <a target="_blank" rel="noopener" href="https://github.com/wangzan101/Mika">github.com/wangzan101/Mika</a>。记得先看 <code>docs/dev/architecture.md</code>—— 那 338 行，比 README 好看。</p>
+<hr>
+<p><em>本文所有数据来自 2026-11-01 抓取的 GitHub REST API 与仓库源码（<code>wangzan101/Mika</code>，main 分支）。Star 数会变，其他数字以仓库为准。</em></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/11/01/wangzan101-mika-android-local-ai-agent/" title="wangzan101&#x2F;Mika：2.7k stars 的安卓本地 AI 助理，把后台虚拟屏玩成了主力">https://www.daishengli.top/2026/11/01/wangzan101-mika-android-local-ai-agent/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/GUI-Agent/" rel="tag"># GUI Agent</a>
+              <a href="/tags/Accessibility/" rel="tag"># Accessibility</a>
+              <a href="/tags/Mika/" rel="tag"># Mika</a>
+              <a href="/tags/wangzan101/" rel="tag"># wangzan101</a>
+              <a href="/tags/Android/" rel="tag"># Android</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/10/31/unclebob-ub-mode-agent-skill-quality-gates/" rel="prev" title="unclebob&#x2F;ub-mode：5.2k stars 的 agent skill，把 Robert C. Martin 的软件工程准则做成可执行的质量门禁">
+                  <i class="fa fa-angle-left"></i> unclebob/ub-mode：5.2k stars 的 agent skill，把 Robert C. Martin 的软件工程准则做成可执行的质量门禁
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/02/deepseek-dsh-superagent-proactive-github-agent/" rel="next" title="deepseek-ai&#x2F;dsh-superagent-prototype：7,182 stars 的主动型 GitHub 代理，把「注意力」当成唯一预算">
+                  deepseek-ai/dsh-superagent-prototype：7,182 stars 的主动型 GitHub 代理，把「注意力」当成唯一预算 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

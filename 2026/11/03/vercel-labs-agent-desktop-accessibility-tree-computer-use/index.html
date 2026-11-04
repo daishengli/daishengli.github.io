@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="vercel-labs&#x2F;agent-desktop 是 Vercel Labs 推出的桌面 computer-use CLI 与 C 库，9,569 stars、647 forks、Apache-2.0，主语言 Rust，2026 年 10 月发布 1.0.0 并补上 Linux 支持。它不看截图、不做像素匹配，直接读操作系统可访问性树（macOS AX &#x2F; Windows UIA &#x2F; Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vercel-labs&#x2F;agent-desktop：9,569 stars 的无像素匹配桌面 Agent 工具，把可访问性树变成了 Agent 的眼睛">
+<meta property="og:url" content="https://www.daishengli.top/2026/11/03/vercel-labs-agent-desktop-accessibility-tree-computer-use/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="vercel-labs&#x2F;agent-desktop 是 Vercel Labs 推出的桌面 computer-use CLI 与 C 库，9,569 stars、647 forks、Apache-2.0，主语言 Rust，2026 年 10 月发布 1.0.0 并补上 Linux 支持。它不看截图、不做像素匹配，直接读操作系统可访问性树（macOS AX &#x2F; Windows UIA &#x2F; Linux">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-03T00:05:00.000Z">
+<meta property="article:modified_time" content="2026-11-04T00:05:40.862Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="GUI Agent">
+<meta property="article:tag" content="agent-desktop">
+<meta property="article:tag" content="vercel-labs">
+<meta property="article:tag" content="Accessibility">
+<meta property="article:tag" content="Computer Use">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/11/03/vercel-labs-agent-desktop-accessibility-tree-computer-use/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/11/03/vercel-labs-agent-desktop-accessibility-tree-computer-use/","path":"2026/11/03/vercel-labs-agent-desktop-accessibility-tree-computer-use/","title":"vercel-labs/agent-desktop：9,569 stars 的无像素匹配桌面 Agent 工具，把可访问性树变成了 Agent 的眼睛"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>vercel-labs/agent-desktop：9,569 stars 的无像素匹配桌面 Agent 工具，把可访问性树变成了 Agent 的眼睛 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">419</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">128</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%80%E7%BB%88%E9%80%89%E4%BA%86%E5%AE%83%E8%80%8C%E4%B8%8D%E6%98%AF%E8%87%AA%E5%B7%B1%E5%86%99"><span class="nav-number">1.</span> <span class="nav-text">一、我为什么最终选了它而不是自己写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7%EF%BC%9A%E4%B8%89%E4%B8%AA%E9%83%A8%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">二、它长什么样：三个部件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E5%BE%AA%E7%8E%AF%EF%BC%9A%E8%A7%82%E5%AF%9F%E3%80%81%E8%A1%8C%E5%8A%A8%E3%80%81%E5%86%8D%E8%A7%82%E5%AF%9F"><span class="nav-number">3.</span> <span class="nav-text">三、核心循环：观察、行动、再观察</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%90%E8%BF%9B%E5%BC%8F%E9%92%BB%E5%8F%96"><span class="nav-number">3.1.</span> <span class="nav-text">渐进式钻取</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%9C%80%E6%A0%B8%E5%BF%83%E7%9A%84%E8%AE%BE%E8%AE%A1%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%83%E8%BF%99%E4%B9%88%E2%80%9D%E8%BE%83%E7%9C%9F%E2%80%9D"><span class="nav-number">4.</span> <span class="nav-text">四、最核心的设计：为什么它这么” 较真”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Evidence-Tri-State%EF%BC%9A%E4%B8%89%E6%80%81%E8%AF%81%E6%8D%AE%E4%B8%8D%E6%98%AF%E4%BA%8C%E6%80%81"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 Evidence Tri-State：三态证据不是二态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Strict-Ref-Resolution%EF%BC%9Aref-%E5%88%B0%E5%BA%95%E6%80%8E%E4%B9%88%E7%A1%AE%E8%AE%A4%E8%BF%98%E6%98%AF%E5%8E%9F%E6%9D%A5%E9%82%A3%E4%B8%AA%E5%85%83%E7%B4%A0"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 Strict Ref Resolution：ref 到底怎么确认还是原来那个元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%BF%AB%E7%85%A7%E4%B8%8D%E5%AE%8C%E6%95%B4-ref-%E5%85%A8%E9%83%A8%E4%BD%9C%E5%BA%9F"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 快照不完整 &#x3D; ref 全部作废</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-Partial-Observation%EF%BC%9A%E8%B6%85%E9%A2%84%E7%AE%97%E4%B8%8D%E6%8A%A5%E9%94%99%EF%BC%8C%E6%8A%A5%E2%80%9D%E4%B8%8D%E5%AE%8C%E6%95%B4%E2%80%9D"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 Partial Observation：超预算不报错，报” 不完整”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-%E8%BA%AB%E4%BB%BD%E5%9B%9E%E6%94%B6%EF%BC%9A%E7%AA%97%E5%8F%A3%E5%8F%A5%E6%9F%84%E4%BC%9A%E8%A2%AB%E5%A4%8D%E7%94%A8"><span class="nav-number">4.5.</span> <span class="nav-text">4.5 身份回收：窗口句柄会被复用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-Secure-Field%EF%BC%9A%E5%AF%86%E7%A0%81%E6%A1%86%E7%9A%84%E5%A5%91%E7%BA%A6%E6%98%AF%E5%8F%8C%E5%90%91%E7%9A%84"><span class="nav-number">4.6.</span> <span class="nav-text">4.6 Secure Field：密码框的契约是双向的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%8A%A8%E4%BD%9C%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7%EF%BC%9Adelivered-%E5%92%8C-verified-%E6%98%AF%E4%B8%A4%E4%BB%B6%E4%BA%8B"><span class="nav-number">5.</span> <span class="nav-text">五、动作的可靠性：delivered 和 verified 是两件事</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-Mutation-Classifier%EF%BC%9A%E5%86%99%E6%93%8D%E4%BD%9C%E4%B8%8D%E8%83%BD%E5%A4%8D%E7%94%A8%E8%AF%BB%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 Mutation Classifier：写操作不能复用读的分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-Read-Outcomes%EF%BC%9A%E8%AF%BB%E5%A4%B1%E8%B4%A5%E7%9A%84%E5%9B%9B%E7%A7%8D%E5%BD%92%E5%AE%BF"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 Read Outcomes：读失败的四种归宿</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81headless-%E9%BB%98%E8%AE%A4%EF%BC%8C%E4%BB%A5%E5%8F%8A%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E5%BE%88%E9%87%8D%E8%A6%81"><span class="nav-number">6.</span> <span class="nav-text">六、headless 默认，以及为什么这很重要</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-Action-Chain%EF%BC%9A%E5%8A%A8%E4%BD%9C%E9%98%B6%E6%A2%AF"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 Action Chain：动作阶梯</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-Actionability-Battery%EF%BC%9A%E5%8A%A8%E6%89%8B%E5%89%8D%E7%9A%84%E4%BD%93%E6%A3%80"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 Actionability Battery：动手前的体检</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-Auto-Wait%EF%BC%9A%E9%BB%98%E8%AE%A4%E7%AD%89-5-%E7%A7%92"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 Auto-Wait：默认等 5 秒</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%B9%B6%E5%8F%91%E3%80%81%E7%A7%9F%E7%BA%A6%E5%92%8C%E5%A4%9A-Agent"><span class="nav-number">7.</span> <span class="nav-text">七、并发、租约和多 Agent</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A-Agent-%E9%BC%A0%E6%A0%87%E5%85%89%E6%A0%87"><span class="nav-number">7.1.</span> <span class="nav-text">多 Agent 鼠标光标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-Release-Guard%EF%BC%9A%E5%A4%9A%E6%AD%A5%E7%89%A9%E7%90%86%E5%BA%8F%E5%88%97%E7%9A%84%E4%BF%9D%E9%99%A9%E4%B8%9D"><span class="nav-number">7.2.</span> <span class="nav-text">7.1 Release Guard：多步物理序列的保险丝</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%91%BD%E4%BB%A4%E6%B8%85%E5%8D%95"><span class="nav-number">8.</span> <span class="nav-text">八、命令清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%B9%B3%E5%8F%B0%E6%94%AF%E6%8C%81%EF%BC%9A%E4%B8%89%E5%A5%97%E5%AE%8C%E5%85%A8%E4%B8%8D%E5%90%8C%E7%9A%84%E5%BA%95%E5%B1%82"><span class="nav-number">9.</span> <span class="nav-text">九、平台支持：三套完全不同的底层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%83%E9%99%90"><span class="nav-number">9.1.</span> <span class="nav-text">权限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E5%AE%83%E6%80%8E%E4%B9%88%E8%AF%81%E6%98%8E%E8%87%AA%E5%B7%B1%E6%98%AF%E5%AF%B9%E7%9A%84%EF%BC%9Aprobe-%E8%AF%AD%E6%96%99%E5%92%8C-dogfood"><span class="nav-number">10.</span> <span class="nav-text">十、它怎么证明自己是对的：probe 语料和 dogfood</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E8%B7%9F%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E6%AF%94%EF%BC%8C%E5%B7%AE%E5%88%AB%E5%9C%A8%E5%93%AA%E5%84%BF"><span class="nav-number">11.</span> <span class="nav-text">十一、跟同类项目比，差别在哪儿</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E5%B1%80%E9%99%90%EF%BC%9A%E8%AF%B4%E7%82%B9%E4%B8%8D%E5%A5%BD%E5%90%AC%E7%9A%84"><span class="nav-number">12.</span> <span class="nav-text">十二、局限：说点不好听的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#12-1-Linux-%E6%98%AF%E4%BA%8C%E7%AD%89%E5%85%AC%E6%B0%91"><span class="nav-number">12.1.</span> <span class="nav-text">12.1 Linux 是二等公民</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-2-Windows-%E4%B8%8A-type-%E6%B2%A1%E6%9C%89%E6%97%A0%E5%A4%B4%E8%B7%AF%E5%BE%84"><span class="nav-number">12.2.</span> <span class="nav-text">12.2 Windows 上 type 没有无头路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-3-%E4%B8%A5%E6%A0%BC%E6%80%A7%E5%B8%A6%E6%9D%A5%E7%9A%84%E2%80%9D%E5%8A%9F%E8%83%BD%E7%BC%BA%E5%A4%B1%E2%80%9D"><span class="nav-number">12.3.</span> <span class="nav-text">12.3 严格性带来的” 功能缺失”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-4-%E6%AF%8F%E4%B8%AA-CLI-%E8%B0%83%E7%94%A8%E4%B8%80%E4%B8%AA%E8%BF%9B%E7%A8%8B"><span class="nav-number">12.4.</span> <span class="nav-text">12.4 每个 CLI 调用一个进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-5-%E6%9D%83%E9%99%90%E5%92%8C%E4%BF%A1%E4%BB%BB%E8%BE%B9%E7%95%8C"><span class="nav-number">12.5.</span> <span class="nav-text">12.5 权限和信任边界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-6-%E9%9A%90%E7%A7%81%EF%BC%9A%E6%88%AA%E5%9B%BE%E5%92%8C%E5%BF%AB%E7%85%A7%E5%B0%B1%E6%98%AF%E6%A1%8C%E9%9D%A2%E5%86%85%E5%AE%B9"><span class="nav-number">12.6.</span> <span class="nav-text">12.6 隐私：截图和快照就是桌面内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-7-%E7%89%88%E6%9C%AC%E5%8F%A3%E5%BE%84%E5%AE%B9%E6%98%93%E7%9C%8B%E9%94%99"><span class="nav-number">12.7.</span> <span class="nav-text">12.7 版本口径容易看错</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-8-open-issues-122-%E4%B8%AA"><span class="nav-number">12.8.</span> <span class="nav-text">12.8 open issues 122 个</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E9%80%82%E5%90%88%E8%B0%81%EF%BC%8C%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">13.</span> <span class="nav-text">十三、适合谁，不适合谁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88"><span class="nav-number">13.1.</span> <span class="nav-text">适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88"><span class="nav-number">13.2.</span> <span class="nav-text">不适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%98%E4%B8%AD%E6%96%B9%E6%A1%88"><span class="nav-number">13.3.</span> <span class="nav-text">折中方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E9%80%9F%E6%9F%A5"><span class="nav-number">14.</span> <span class="nav-text">十四、速查</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">14.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%96%E6%AC%A1%E4%BD%BF%E7%94%A8"><span class="nav-number">14.2.</span> <span class="nav-text">首次使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E5%BE%AA%E7%8E%AF"><span class="nav-number">14.3.</span> <span class="nav-text">典型循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="nav-number">14.4.</span> <span class="nav-text">错误处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%88%86%E7%B1%BB"><span class="nav-number">14.5.</span> <span class="nav-text">常用命令分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%A1%A3%E5%9C%B0%E5%9B%BE"><span class="nav-number">14.6.</span> <span class="nav-text">文档地图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E5%8F%82%E8%80%83"><span class="nav-number">14.7.</span> <span class="nav-text">版本参考</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E6%9C%80%E5%90%8E"><span class="nav-number">15.</span> <span class="nav-text">十五、最后</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">128</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">419</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/03/vercel-labs-agent-desktop-accessibility-tree-computer-use/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="vercel-labs&#x2F;agent-desktop：9,569 stars 的无像素匹配桌面 Agent 工具，把可访问性树变成了 Agent 的眼睛 | 小戴的网络日志">
+      <meta itemprop="description" content="vercel-labs&#x2F;agent-desktop 是 Vercel Labs 推出的桌面 computer-use CLI 与 C 库，9,569 stars、647 forks、Apache-2.0，主语言 Rust，2026 年 10 月发布 1.0.0 并补上 Linux 支持。它不看截图、不做像素匹配，直接读操作系统可访问性树（macOS AX &#x2F; Windows UIA &#x2F; Linux AT-SPI），给可交互元素分配带快照 ID 的确定性 ref。60 个命令覆盖观察、交互、窗口、会话与 trace，每条输出统一 JSON 信封，带 error.code、recovery 与 disposition.delivery&#x2F;retry。默认 headless 不抢焦点，设计上重 fail-closed：Evidence Tri-State、Strict Ref Resolution、Mutation Classifier、Release Guard，另有 probe 语料与 findings ledger 验证体系。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          vercel-labs/agent-desktop：9,569 stars 的无像素匹配桌面 Agent 工具，把可访问性树变成了 Agent 的眼睛
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-03 08:05:00" itemprop="dateCreated datePublished" datetime="2026-11-03T08:05:00+08:00">2026-11-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">vercel-labs/agent-desktop 是 Vercel Labs 推出的桌面 computer-use CLI 与 C 库，9,569 stars、647 forks、Apache-2.0，主语言 Rust，2026 年 10 月发布 1.0.0 并补上 Linux 支持。它不看截图、不做像素匹配，直接读操作系统可访问性树（macOS AX / Windows UIA / Linux AT-SPI），给可交互元素分配带快照 ID 的确定性 ref。60 个命令覆盖观察、交互、窗口、会话与 trace，每条输出统一 JSON 信封，带 error.code、recovery 与 disposition.delivery/retry。默认 headless 不抢焦点，设计上重 fail-closed：Evidence Tri-State、Strict Ref Resolution、Mutation Classifier、Release Guard，另有 probe 语料与 findings ledger 验证体系。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上周有个活儿卡住我了。</p>
+<p>不是代码写不出来，是有一家客户的内部系统压根没有 API，也没有自动化测试入口，唯一能操作它的方式就是” 像个用户一样点”。我试了几条路：Playwright 不行，那是网页；Appium 要重写一堆 XPath，而且那个应用用了自绘控件，很多东西在无障碍树里是空的；截图喂给多模态模型倒是能看懂，但模型每次都在同一个” 保存” 按钮上犹豫 —— 不是它笨，是它只能靠像素猜，而像素本身不告诉你” 这个按钮现在是禁用的”。</p>
+<p>最后我手写了一个 Python 脚本，用 pyobjc 调 macOS 的 AX API，勉强把流程跑通了。但那脚本非常脆：窗口一换位置就废，重启一次就得改一次，错误处理基本靠 print。</p>
+<p>然后我看到了 <code>vercel-labs/agent-desktop</code>。</p>
+<hr>
+<h2 id="一、我为什么最终选了它而不是自己写"><a href="#一、我为什么最终选了它而不是自己写" class="headerlink" title="一、我为什么最终选了它而不是自己写"></a>一、我为什么最终选了它而不是自己写</h2><p>先说结论，因为它解决的就是我上面那个具体问题，而且解法出乎意料地克制。</p>
+<p>这个项目现在是 <strong>9,569 stars、647 forks、Apache-2.0</strong>，主语言 <strong>Rust</strong>，2026 年 2 月 19 日建的仓，2026 年 10 月 28 日发 1.0.0，10 月 30 日发到 1.0.2。仓库首页写着 <code>Vercel Labs Product</code> 徽章，npm 包 <code>agent-desktop</code> 最近一个月下载量 14,843 次。</p>
+<p>它一句话的自我定位是：</p>
+<blockquote>
+<p>Computer use for AI agents: read and operate desktop apps through the OS accessibility tree.</p>
+</blockquote>
+<p>注意它说的是 “read and operate”，不是 “look at”。这个区别是整个项目的立足点。</p>
+<p>我把它和其他方案放一起对比时的判断是这样的：</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>输入通道</th>
+<th>定位问题的方式</th>
+<th>适合场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>我自己写的 pyobjc 脚本</td>
+<td> AX API</td>
+<td> 语义 ref，但没做生命周期管理</td>
+<td>一次性任务</td>
+</tr>
+<tr>
+<td> OmniParser（25,602 stars）</td>
+<td>截图 → 结构化</td>
+<td>纯视觉解析</td>
+<td>应用没有无障碍树</td>
+</tr>
+<tr>
+<td> browser-use / Skyvern</td>
+<td>DOM</td>
+<td> 网页语义</td>
+<td>浏览器内</td>
+</tr>
+<tr>
+<td><strong> agent-desktop</strong></td>
+<td><strong>AX / UIA / AT-SPI</strong></td>
+<td><strong> 语义 ref + 严格重识别</strong></td>
+<td><strong>桌面原生应用</strong></td>
+</tr>
+</tbody></table>
+<p>OmniParser 那条路我也想过，它用视觉模型把截图转成结构化元素，好处是不依赖应用配合无障碍 API，坏处是 —— 它还是从像素来的。” 这个按钮是灰的还是亮的” 这种问题，它只能靠训练数据和模型直觉去猜；而 AX API 直接告诉你 <code>enabled: false</code>。</p>
+<p>这也是我认为这个项目最值得写的地方：<strong>它没有在” 给 Agent 更好用的截图”，而是在” 把操作系统已经知道的真相结构化地交出来”。</strong></p>
+<hr>
+<h2 id="二、它长什么样：三个部件"><a href="#二、它长什么样：三个部件" class="headerlink" title="二、它长什么样：三个部件"></a>二、它长什么样：三个部件</h2><p>FAQ 里对整个项目的组成给了一张表，抄在这里当骨架：</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Native Rust CLI</strong></td>
+<td>Fast, single binary, no runtime dependencies</td>
+</tr>
+<tr>
+<td><strong>C-ABI cdylib</strong></td>
+<td>Load once from Python, Swift, Go, Ruby, Node, or C instead of forking</td>
+</tr>
+<tr>
+<td><strong>60 Commands</strong></td>
+<td>Observation, interaction, keyboard, mouse, notifications, clipboard, window management, session lifecycle, trace read/export, and bundled <code>skills</code> docs</td>
+</tr>
+<tr>
+<td><strong>Snapshot &amp; Refs</strong></td>
+<td>Compact snapshot IDs and deterministic element refs like <code>@s8f3k2p9:e1</code></td>
+</tr>
+<tr>
+<td><strong>Structured JSON</strong></td>
+<td>Machine-readable responses with error codes and recovery hints</td>
+</tr>
+</tbody></table>
+<p>三个部件对应三种用法。<br><strong>1. CLI</strong>—— 给 Agent 用。每个命令是独立进程，输出一个 JSON 信封。</p>
+<p><strong>2. C ABI 动态库</strong> —— 给需要高频调用的程序用。<code>libagent_desktop_ffi</code> 支持 macOS、Linux、Windows，避免” 每条命令 fork 一次” 的开销。README 给的 Python 例子：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ctypes</span><br><span class="line">lib = ctypes.CDLL(<span class="string">"./lib/libagent_desktop_ffi.dylib"</span>)</span><br><span class="line">lib.ad_adapter_create.restype = ctypes.c_void_p</span><br><span class="line">lib.ad_adapter_destroy.argtypes = [ctypes.c_void_p]</span><br><span class="line"><span class="keyword">assert</span> lib.ad_init(<span class="number">7</span>) == <span class="number">0</span>  <span class="comment"># AD_RESULT_OK when the header's AD_ABI_VERSION_MAJOR matches the library</span></span><br><span class="line">adapter = lib.ad_adapter_create()</span><br><span class="line">lib.ad_adapter_destroy(adapter)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意 <code>ad_init(7)</code> 那个 7——C ABI 主版本号到了 7。CHANGELOG 里 Unreleased 段落明确写了这是 breaking change：<code>ad_resolve_element_exact</code> 和 <code>ad_execute_ref_action_exact_with_policy</code> 现在总是拒绝并返回 <code>ACTION_NOT_SUPPORTED</code>（<code>details.kind: exact_entry_unsupported</code>），理由是”C 调用方无法提供 ref 现在赖以解析的 capture proof”。</p>
+<p><strong>3. 内置 skills 文档</strong> —— 这个设计我觉得很聪明：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">agent-desktop skills get desktop      <span class="comment"># the loop, refs, verification and retry rules</span></span><br><span class="line">agent-desktop skills get platform     <span class="comment"># what differs on the OS you run on</span></span><br><span class="line">agent-desktop &lt;<span class="built_in">command</span>&gt; --<span class="built_in">help</span>        <span class="comment"># flags for one command</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>文档直接编进二进制，版本永远跟二进制一致。用 skills.sh 的方式装进 Agent 框架：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx skills add https://github.com/vercel-labs/agent-desktop --skill agent-desktop</span><br></pre></td></tr></tbody></table></figure>
+
+<p>或者往 <code>AGENTS.md</code> 里塞几行：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Use <span class="code">`agent-desktop`</span> to see and operate desktop apps. Before the first use, run</span><br><span class="line"><span class="code">`agent-desktop skills get desktop`</span> and <span class="code">`agent-desktop skills get platform`</span>, and follow them.</span><br></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h2 id="三、核心循环：观察、行动、再观察"><a href="#三、核心循环：观察、行动、再观察" class="headerlink" title="三、核心循环：观察、行动、再观察"></a>三、核心循环：观察、行动、再观察</h2><p>这是整个项目最需要理解的部分。SKILL.md 里写得很直接：</p>
+<blockquote>
+<p>It is a tool, not an agent. Every command prints one JSON envelope (<code>ok</code>, <code>data</code> or <code>error</code>). The observe, act and verify loop runs in you.</p>
+</blockquote>
+<p>也就是说，<strong>它不做决策，循环在 Agent 那一侧</strong>。它只保证每次观察给出一份确定的快照，每次行动前会重新确认目标还是不是原来那个。</p>
+<p>README 的快速开始：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">agent-desktop snapshot --app Finder -i      <span class="comment"># interactive elements, each with a ref</span></span><br><span class="line">agent-desktop click @s8f3k2p9:e8            <span class="comment"># act on a ref from that snapshot</span></span><br><span class="line">agent-desktop snapshot --app Finder -i      <span class="comment"># observe again to verify</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出长这样：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"version"</span><span class="punctuation">:</span> <span class="string">"2.6"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"ok"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"command"</span><span class="punctuation">:</span> <span class="string">"snapshot"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"data"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"app"</span><span class="punctuation">:</span> <span class="string">"Finder"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"window"</span><span class="punctuation">:</span> <span class="punctuation">{</span> <span class="attr">"id"</span><span class="punctuation">:</span> <span class="string">"w-204749"</span><span class="punctuation">,</span> <span class="attr">"title"</span><span class="punctuation">:</span> <span class="string">"Downloads"</span> <span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"snapshot_id"</span><span class="punctuation">:</span> <span class="string">"s8f3k2p9"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"ref_count"</span><span class="punctuation">:</span> <span class="number">59</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"complete"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"tree"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"role"</span><span class="punctuation">:</span> <span class="string">"window"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"name"</span><span class="punctuation">:</span> <span class="string">"Downloads"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"children"</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">{</span> <span class="attr">"role"</span><span class="punctuation">:</span> <span class="string">"treeitem"</span><span class="punctuation">,</span> <span class="attr">"name"</span><span class="punctuation">:</span> <span class="string">"Documents"</span><span class="punctuation">,</span> <span class="attr">"ref_id"</span><span class="punctuation">:</span> <span class="string">"@s8f3k2p9:e8"</span><span class="punctuation">,</span> <span class="attr">"available_actions"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"Click"</span><span class="punctuation">]</span> <span class="punctuation">}</span></span><br><span class="line">      <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里几个细节值得停一下：</p>
+<p><strong>ref 是” 带快照 ID 的”。</strong> <code>@s8f3k2p9:e8</code> 里 <code>s8f3k2p9</code> 是 snapshot_id，<code>e8</code> 是这次快照里的第 8 个元素。裸写 <code>@e8</code> 会被拒绝，返回 <code>INVALID_ARGS</code>。CONCEPTS.md 里的理由是：</p>
+<blockquote>
+<p>Refs are deterministic inside one snapshot but are not stable across UI changes. Snapshot and find output qualify each ref with its snapshot ID, and every command accepts only the qualified form. A bare <code>@eN</code> fails with <code>INVALID_ARGS</code>.</p>
+</blockquote>
+<p>这等于强制你” 每次 UI 变了就重新观察”，而不是拿一个旧坐标硬打。</p>
+<p><strong><code>available_actions</code> 直接告诉你这个元素能干什么。</strong> 这是语义通道的威力 —— 不是” 它长在那个位置”，而是” 它是个可点击的 treeitem”。</p>
+<p><strong><code>complete: true</code> 是完整性标记。</strong> 这个字段很关键，下面第四节专门讲。</p>
+<h3 id="渐进式钻取"><a href="#渐进式钻取" class="headerlink" title="渐进式钻取"></a>渐进式钻取</h3><p>稠密应用（比如 Slack、Outlook）整棵树能有几千个节点，全读进来会把上下文吃光。所以有骨架模式：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">agent-desktop snapshot --skeleton --app Slack -i --compact   <span class="comment"># 浅层概览</span></span><br><span class="line">agent-desktop snapshot --root @s8f3k2p9:e3 -i --compact        <span class="comment"># 钻进某个区域</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>CONCEPTS.md 叫它 <strong>Drill-down</strong>：一次从已有 ref 出发、只观察该元素子树的快照操作，而不是重读整个窗口。这里有个容易踩的坑，SKILL.md 专门警告了：</p>
+<blockquote>
+<p>A <code>--root</code> drill adds its refs to the same snapshot id. Refs outside the drilled subtree, and the drilled root itself, stay valid; refs that were already inside it are replaced, so an old ref there returns <code>STALE_REF</code>.</p>
+</blockquote>
+<p>也就是说钻取不是” 新快照”，是” 往同一个快照里补货”，但被钻区域内部的旧 ref 会被作废。还有两条很实用的经验：</p>
+<blockquote>
+<p>Never skeleton a surface (<code>--surface menu</code>, <code>sheet</code>, <code>alert</code>). A surface is already focused.</p>
+<p>After an async step, use <code>wait</code> (see <code>commands-system.md</code>). A fixed sleep is a race.</p>
+</blockquote>
+<hr>
+<h2 id="四、最核心的设计：为什么它这么”较真”"><a href="#四、最核心的设计：为什么它这么”较真”" class="headerlink" title="四、最核心的设计：为什么它这么”较真”"></a>四、最核心的设计：为什么它这么” 较真”</h2><p>我读 <code>CONCEPTS.md</code>（353 行）和 <code>docs/json-output.md</code>（180 行）读了两遍。这份文档的信息密度极高，我挑几个我第一次读到时” 哦，原来是这样” 的设计讲。</p>
+<h3 id="4-1-Evidence-Tri-State：三态证据不是二态"><a href="#4-1-Evidence-Tri-State：三态证据不是二态" class="headerlink" title="4.1 Evidence Tri-State：三态证据不是二态"></a>4.1 Evidence Tri-State：三态证据不是二态</h3><p>CONCEPTS.md：</p>
+<blockquote>
+<p>Every property an adapter reads is <code>Known</code>, <code>Absent</code>, or <code>Unknown</code>, and the three are never collapsed into two.</p>
+<p><code>Absent</code> is an answer: the provider was asked and does not have this. <code>Unknown</code> is the lack of one: the read failed, or what it returned cannot be trusted.</p>
+</blockquote>
+<p><code>Absent</code>（问过了，没有）和 <code>Unknown</code>（读失败了，不知道）必须区分，原因写在原文里：</p>
+<blockquote>
+<p><code>Absent</code> satisfies completeness gating and <code>Unknown</code> must not, so a target that never answered cannot pass for one that answered “no”. Conversely a role, state, or affordance is granted only on a positive claim, so a failed read withholds it.</p>
+</blockquote>
+<p>然后是最狠的一句：</p>
+<blockquote>
+<p>A convenience predicate that flattens the tri-state to <code>bool</code> is therefore safe only in positive position, asking “did this say yes”, and fails open the moment it is negated, because negation silently rewrites “I could not tell” as “definitely not”.</p>
+</blockquote>
+<p><strong>把三态压成 bool 的便利函数，一旦被取反就会把” 我搞不清” 悄悄改写成” 肯定不是”。</strong> 这是我见过对” 不要在错误处理里偷懒” 最精确的表述之一。</p>
+<h3 id="4-2-Strict-Ref-Resolution：ref-到底怎么确认还是原来那个元素"><a href="#4-2-Strict-Ref-Resolution：ref-到底怎么确认还是原来那个元素" class="headerlink" title="4.2 Strict Ref Resolution：ref 到底怎么确认还是原来那个元素"></a>4.2 Strict Ref Resolution：ref 到底怎么确认还是原来那个元素</h3><p>这是我认为这个项目技术含量最高的部分。CONCEPTS.md 有一整节叫 <strong>Ref Re-identification</strong>。</p>
+<p>macOS 上有捷径：AX API 会给元素一个 accessibility address，ref 里存着它，后来的命令直接转回去，不用搜：</p>
+<blockquote>
+<p>On macOS the entry carries the element’s own accessibility address in <code>retained_object</code>, so a later command turns the ref back into that element without searching. The address is accepted only while the element is alive and its process, role and recorded identifier still match.</p>
+</blockquote>
+<p><strong>其他平台没有这根救命稻草</strong>，只能靠”capture proof”：</p>
+<blockquote>
+<p>Every other ref resolves from a capture proof. A ref is usable only when the capture saw its whole window completely and exactly one observed element matched its full predicate: role plus every recorded stable field, that is native id, stable name and description.</p>
+</blockquote>
+<p>翻译成人话：Windows/Linux 上的 ref 要能用，必须满足两个条件 —— <strong>当初拍快照时，这个元素在完整窗口里是唯一的</strong>；<strong>现在实时再扫一遍，还是只有一个匹配</strong>。</p>
+<p>规则是硬编码的：</p>
+<blockquote>
+<p>Zero matches is a stale ref, two or more is ambiguous, and a field the live read could not answer stays unknown rather than becoming a match, so incomplete evidence never resolves. Values and bounds are never identity. A ref that was not unique at capture is refused before anything is read from the application, because no search can pick one of two identical elements.</p>
+</blockquote>
+<p><strong>“Values and bounds are never identity”</strong>—— 值和坐标不是身份。<strong>“两个长得一样的元素，ref 宁可不给你用”</strong>。</p>
+<p>这个取舍的代价写在 <code>docs/json-output.md</code> 的 2.6 migration 里：</p>
+<blockquote>
+<p>A ref to one of two identical controls, which earlier resolved by position or geometry, now fails <code>AMBIGUOUS_TARGET</code> with <code>details.kind: "identity_not_unique"</code> before anything is read.</p>
+</blockquote>
+<p>也就是说 2.6 是个 breaking change，以前靠位置 / 几何能蒙对的操作，现在直接拒。</p>
+<p>四种 <code>details.kind</code> 值得抄下来：</p>
+<table>
+<thead>
+<tr>
+<th><code>details.kind</code></th>
+<th>Code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>retained_object_stale</code></td>
+<td><code>STALE_REF</code></td>
+<td>macOS：元素地址已死，或进程 / 角色 / 标识符不匹配</td>
+</tr>
+<tr>
+<td><code>saved_ref_absent</code></td>
+<td><code>STALE_REF</code></td>
+<td>完整证据下没有活元素匹配，元素没了</td>
+</tr>
+<tr>
+<td><code>saved_ref_ambiguous</code></td>
+<td><code>AMBIGUOUS_TARGET</code></td>
+<td>出现了和当初一样的孪生元素，两个以上匹配</td>
+</tr>
+<tr>
+<td><code>identity_not_unique</code></td>
+<td><code>AMBIGUOUS_TARGET</code></td>
+<td>拍快照时就没证明它唯一，或窗口没读完整</td>
+</tr>
+</tbody></table>
+<p>还有第五种 <code>resolution_identity_unknown</code>，带 <code>TIMEOUT</code>，是可重试的。</p>
+<h3 id="4-3-快照不完整-ref-全部作废"><a href="#4-3-快照不完整-ref-全部作废" class="headerlink" title="4.3 快照不完整 = ref 全部作废"></a>4.3 快照不完整 = ref 全部作废</h3><p>这是我觉得非常值得学的一个设计：</p>
+<blockquote>
+<p>A snapshot that needed one complete read of its window to prove its refs, and could not get it, says so with <code>"identity_unproven": true</code> in <code>data</code>. <code>complete</code> still describes the presented tree. On Windows and Linux, and on macOS for an element with no address, every ref of that snapshot fails <code>AMBIGUOUS_TARGET</code> with <code>details.kind: "identity_not_unique"</code>.</p>
+</blockquote>
+<p>翻译：快照树可能是完整展示给你的，但<strong>如果这次快照没能在超时内完整读完整个窗口，它产出的所有 ref 在 Windows/Linux 上都是不可用的</strong>。</p>
+<p>这解决了 GUI 自动化里一个经典的坑：Agent 拿到一棵被截断的树，以为看到了全部控件，其实后面三分之一没读出来，于是基于不完整信息做出错误决策。</p>
+<h3 id="4-4-Partial-Observation：超预算不报错，报”不完整”"><a href="#4-4-Partial-Observation：超预算不报错，报”不完整”" class="headerlink" title="4.4 Partial Observation：超预算不报错，报”不完整”"></a>4.4 Partial Observation：超预算不报错，报” 不完整”</h3><p><code>docs/json-output.md</code> 记录了 2.2 版本的这个改动：</p>
+<blockquote>
+<p>Version 2.2 replaces the 2.1 <code>TIMEOUT</code> error for a budget-exhausted snapshot with a successful, explicitly partial response, and adds <code>data.complete</code>. Snapshot data always carries <code>complete</code>. A snapshot that runs out of budget now returns <code>ok: true</code> with <code>"complete": false</code>, the tree it did observe, <code>"truncated": true</code>, and <code>nodes_observed</code>, instead of a <code>TIMEOUT</code> error and no tree.</p>
+</blockquote>
+<p>超时不是错误，是” 部分观察”。CONCEPTS.md 里 <strong>Partial Observation</strong> 条目还补了一句：</p>
+<blockquote>
+<p>Completeness is reported on the observation as a whole and on each node whose descendants were cut, so a reader can walk from the root to the boundary.</p>
+</blockquote>
+<p>即：既在整体上报完整度，也在每个被截断的节点上单独标 <code>subtree_truncated: true</code>，让读者能一路走到边界。</p>
+<h3 id="4-5-身份回收：窗口句柄会被复用"><a href="#4-5-身份回收：窗口句柄会被复用" class="headerlink" title="4.5 身份回收：窗口句柄会被复用"></a>4.5 身份回收：窗口句柄会被复用</h3><p>CONCEPTS.md <strong>Window Identity</strong>：</p>
+<blockquote>
+<p>Window handles can be recycled: after a window is destroyed, the OS may hand its handle to a different window. A handle alone therefore names the wrong window after churn. Identity is the handle corroborated by a process-generation token (a value derived from the owning process’s creation time), so a recycled handle whose process generation no longer matches fails closed rather than resolving to the new occupant.</p>
+</blockquote>
+<p>句柄 + 进程代际 token 双重确认，进程代际来自进程创建时间。Windows 配 HWND + creation-time token，macOS 配 window number + process start-time，Linux 配 X11 client id + boot-id 限定的进程启动时间。</p>
+<p>还有更狠的一句：</p>
+<blockquote>
+<p>Where the check and the act cannot be a single atomic operation, the corroboration has to be repeated immediately before each write the action performs, and the action’s own success check must itself be identity-qualified, confirming the responding resource is still the expected occupant and not merely that some resource at the expected handle responded.</p>
+</blockquote>
+<p><strong>检查和行动无法原子化时，每次写入前都要重新确认一次，而且成功检查本身也要带身份限定</strong> —— 不能只确认” 那个句柄上有东西响应了”。</p>
+<p>显示器也有同样一套（<strong>Display Identity</strong>），截图前后各查一次，中间变了就丢弃像素（<strong>Identity Sandwich</strong>）。</p>
+<h3 id="4-6-Secure-Field：密码框的契约是双向的"><a href="#4-6-Secure-Field：密码框的契约是双向的" class="headerlink" title="4.6 Secure Field：密码框的契约是双向的"></a>4.6 Secure Field：密码框的契约是双向的</h3><p>CONCEPTS.md <strong>Secure Field</strong>：</p>
+<blockquote>
+<p>The contract spans both sides: the <strong>read side</strong> withholds value and related text evidence and resolves by content-free fingerprint; the <strong>action side</strong> may write into the field but never echoes the attempted or observed value in steps, messages, <code>details</code>, <code>platform_detail</code>, or post-state, and reports <code>verified: None</code> when a re-read cannot confirm without leaking.</p>
+</blockquote>
+<p>读侧：不给值，用无内容的指纹来定位。写侧：可以往里写，但<strong>步骤、消息、details、platform_detail、post-state 里一个字符都不许回显</strong>，连尝试写入的内容也不行。</p>
+<hr>
+<h2 id="五、动作的可靠性：delivered-和-verified-是两件事"><a href="#五、动作的可靠性：delivered-和-verified-是两件事" class="headerlink" title="五、动作的可靠性：delivered 和 verified 是两件事"></a>五、动作的可靠性：delivered 和 verified 是两件事</h2><p>这一整块叫 <strong>Delivery Semantics</strong>，我认为是这个项目对 Agent 生态最直接的贡献。</p>
+<p>CONCEPTS.md：</p>
+<blockquote>
+<p>The distinction that matters is not success versus failure but delivered versus not: an action that never reached the target can be retried freely, while one that may have landed cannot be repeated without risking a duplicate.</p>
+</blockquote>
+<p>失败 ≠ 没送达。<strong>一个可能已经生效的动作，重试会重复提交。</strong> 这在” 帮用户点提交订单” 的场景里是致命的。</p>
+<p><code>docs/json-output.md</code> 给出了 disposition 的取值：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>取值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>delivery</code></td>
+<td><code>unknown</code> / <code>not_delivered</code> / <code>delivery_uncertain</code> / <code>delivered_unverified</code> / <code>delivered_verified</code></td>
+</tr>
+<tr>
+<td><code>retry</code></td>
+<td><code>unknown</code> / <code>safe</code> / <code>unsafe</code></td>
+</tr>
+</tbody></table>
+<p>规则是 <code>not_delivered</code> 一定 <code>safe</code>，其他非 <code>unknown</code> 的都 <code>unsafe</code>。</p>
+<p>SKILL.md 里给 Agent 的判断准则很直白：</p>
+<blockquote>
+<p>Retry or substitute an action only when <code>disposition.retry</code> is <code>safe</code>. Only <code>not_delivered</code> is safe.<br>Any other delivery value means the action may have landed. A repeat can click, type or submit twice, and <code>toggle</code> can undo itself.</p>
+</blockquote>
+<p><strong><code>toggle</code> 可以把自己撤销掉</strong> —— 这个细节很实在。</p>
+<p>错误信封的完整样子：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"version"</span><span class="punctuation">:</span> <span class="string">"2.6"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"ok"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"command"</span><span class="punctuation">:</span> <span class="string">"click"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"error"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"code"</span><span class="punctuation">:</span> <span class="string">"STALE_REF"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"message"</span><span class="punctuation">:</span> <span class="string">"@s8f3k2p9:e7 not found in current RefMap"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"suggestion"</span><span class="punctuation">:</span> <span class="string">"Re-run a snapshot to obtain fresh refs, then retry with the new ref"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"recovery"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"strategy"</span><span class="punctuation">:</span> <span class="string">"refresh_snapshot_then_retry_original"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"retryable"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"requires_fresh_snapshot"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"disposition"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"delivery"</span><span class="punctuation">:</span> <span class="string">"not_delivered"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"retry"</span><span class="punctuation">:</span> <span class="string">"safe"</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>recovery</code> 只在 <code>disposition.retry</code> 是 <code>safe</code> 时出现。<code>docs/json-output.md</code> 里明确写了 2.1 版本做的破坏性变更：</p>
+<blockquote>
+<p>Version 2.1 replaces the 2.0 <code>error.retry_command</code> string with the structured <code>error.recovery</code> object and adds <code>error.disposition</code>. Consumers must select a recovery strategy from <code>recovery.strategy</code> only when <code>disposition.retry</code> is <code>safe</code>; command strings from older envelopes must not be executed blindly. The removed <code>retry_command</code> field has no compatibility alias.</p>
+</blockquote>
+<p><strong>“旧的 retry_command 字符串不许盲目执行”</strong>—— 因为一个拼接出来的重试命令可能重复扣款。这是从事故里长出来的设计。</p>
+<h3 id="5-1-Mutation-Classifier：写操作不能复用读的分类"><a href="#5-1-Mutation-Classifier：写操作不能复用读的分类" class="headerlink" title="5.1 Mutation Classifier：写操作不能复用读的分类"></a>5.1 Mutation Classifier：写操作不能复用读的分类</h3><p>CONCEPTS.md <strong>Mutation Classifier</strong>：</p>
+<blockquote>
+<p>It answers whether the write was delivered, whether the affordance is genuinely absent (fall back to the next chain rung), or which structured failure and disposition apply. It is the write-side counterpart of Read Outcomes and must never reuse that cluster: the read table’s retryable transport codes are exactly the HRESULTs a write may already have delivered, so consulting it would authorize a double-dispatch.</p>
+</blockquote>
+<p><strong>读操作里” 可重试的传输错误码”，恰恰就是写操作” 可能已经送达” 的那些码。</strong> 拿读的标准去判断写，就会授权一次重复投递。这是两个不同的表，必须分开。</p>
+<h3 id="5-2-Read-Outcomes：读失败的四种归宿"><a href="#5-2-Read-Outcomes：读失败的四种归宿" class="headerlink" title="5.2 Read Outcomes：读失败的四种归宿"></a>5.2 Read Outcomes：读失败的四种归宿</h3><p>CONCEPTS.md 把失败的原生读取分成四类，并强调” 任何两类合并都是常见错误”：</p>
+<ul>
+<li><strong>Settled Absence</strong>—— 最终答案：问的东西不存在（provider 没实现这个 pattern、搜索确实啥也没匹配、锚点路径已经永久失效）。不重试。</li>
+<li><strong>Retryable Failure</strong>—— 关于传输而非目标的非答案（超时、fault）。值得重复。</li>
+<li><strong>Unavailable Element</strong>—— 元素本身没了。</li>
+<li><strong>Terminal Failure</strong>—— 没有定义恢复路径（拒绝、未分类的码）。最终性同 settled absence。</li>
+</ul>
+<p>还特别加了一句：</p>
+<blockquote>
+<p>An unrecognised failure code lands here by default, so a read nobody has classified surfaces rather than being guessed into a retry loop.</p>
+</blockquote>
+<p><strong>没分类的错误码默认落到” 终局失败”，宁可暴露也不要猜着重试。</strong></p>
+<hr>
+<h2 id="六、headless-默认，以及为什么这很重要"><a href="#六、headless-默认，以及为什么这很重要" class="headerlink" title="六、headless 默认，以及为什么这很重要"></a>六、headless 默认，以及为什么这很重要</h2><p><strong>Interaction Policy</strong> 这节定义了三种策略：</p>
+<ul>
+<li><strong>headless</strong>（默认）：只用无障碍 API，不动光标，不抢焦点，语义路径不可用时 <strong>fail closed</strong>。</li>
+<li><strong>headed</strong>（<code>--headed</code> 显式开启）：授权焦点和光标前置条件。</li>
+<li><strong>focus fallback</strong>（中间态）：允许焦点但不允许移动光标。CLI 的 flag 到不了，语言绑定可以直接选。</li>
+</ul>
+<p>CONCEPTS.md：</p>
+<blockquote>
+<p>Headless ref actions may still fail when the native accessibility API cannot perform the requested action; they fail closed with structured actionability or policy errors rather than silently substituting physical input. The broader <strong>headed</strong> policy must be selected explicitly with <code>--headed</code>.</p>
+</blockquote>
+<p><strong>headless 失败时不许偷偷降级成物理输入。</strong> 这条规则的价值在于可预测性：Agent 知道失败就是失败，不会出现” 我以为我没动鼠标，结果鼠标动了”。</p>
+<p>SKILL.md 里还有一条纪律，我觉得比前面所有规则都重要：</p>
+<blockquote>
+<p>Never switch to headed mode to recover from a headless failure.</p>
+</blockquote>
+<p><strong>不许用 headed 去救 headless 的失败。</strong> 因为一旦开了物理输入这个口子，Agent 在任何一次重试时都可能顺手升级成 headed，然后点到不该点的地方。</p>
+<p>Windows 上有个具体差异：</p>
+<blockquote>
+<p>On Windows, <code>type</code> has no semantic headless path, because UIA offers no insert-at-selection write. Strict-headless <code>type</code> therefore fails at policy, and <code>set-value</code> is the headless text path. Headed <code>type</code> synthesizes keys physically.</p>
+</blockquote>
+<p><strong>Windows 上 headless 的 <code>type</code> 会在策略层直接被拒</strong>，因为 UIA 没有” 在选区插入文本” 的接口。要无头写文本得用 <code>set-value</code>。</p>
+<h3 id="6-1-Action-Chain：动作阶梯"><a href="#6-1-Action-Chain：动作阶梯" class="headerlink" title="6.1 Action Chain：动作阶梯"></a>6.1 Action Chain：动作阶梯</h3><p>一个 ref 动作要走一条策略阶梯，<strong>每一级都被策略把关，每一级的送达证据都被记录</strong>：</p>
+<blockquote>
+<p>The chain pins one execution deadline at its start (distinct from the Resolver Deadline, which budgets re-identification) and every step observes it. Expiry while a step may have partially mutated the element surfaces as a structured timeout carrying the observed state, never as a plain step failure.</p>
+</blockquote>
+<p>两个不同的 deadline：解析用 Resolver Deadline，执行用 chain 自己的 deadline。</p>
+<h3 id="6-2-Actionability-Battery：动手前的体检"><a href="#6-2-Actionability-Battery：动手前的体检" class="headerlink" title="6.2 Actionability Battery：动手前的体检"></a>6.2 Actionability Battery：动手前的体检</h3><blockquote>
+<p>The shared pre-dispatch set of live checks core runs against a resolved element: visible, stable, enabled, supported action, policy, editable, and receiving events, before any adapter dispatch.</p>
+</blockquote>
+<p>七项检查。还有个细节：</p>
+<blockquote>
+<p>The battery’s <code>receives_events</code> check sweeps five candidate points from the element’s bounds (center plus four quadrant points) and passes if <em>any</em> reaches the target, asking whether the element is reachable at all so a partially occluded control still passes.</p>
+</blockquote>
+<p>中心加四个象限点，五个采样点任一命中就过 —— 问的是” 这个控件能碰到吗”，部分被遮挡的控件也算能操作。</p>
+<h3 id="6-3-Auto-Wait：默认等-5-秒"><a href="#6-3-Auto-Wait：默认等-5-秒" class="headerlink" title="6.3 Auto-Wait：默认等 5 秒"></a>6.3 Auto-Wait：默认等 5 秒</h3><blockquote>
+<p>The default-on bounded poll that holds a ref action until its target becomes actionable, then fails with <code>TIMEOUT</code> if the budget expires.</p>
+<p>The bound is 5000ms (<code>type</code> adds 30ms per character of its text); <code>--timeout-ms 0</code> restores single-shot act-immediately behavior.</p>
+</blockquote>
+<p><code>type</code> 的预算按字符加 30ms。这是个很实在的工程细节。</p>
+<hr>
+<h2 id="七、并发、租约和多-Agent"><a href="#七、并发、租约和多-Agent" class="headerlink" title="七、并发、租约和多 Agent"></a>七、并发、租约和多 Agent</h2><p><strong>Interaction Lease</strong>：</p>
+<blockquote>
+<p>Machine-wide exclusivity over desktop input, held by one process at a time so concurrent callers cannot interleave synthetic input into each other’s actions.</p>
+<p>The lease covers dispatch only, never the waiting that precedes it: waiting for an element to become actionable can run long, and holding exclusivity across it would serialize every caller on the machine. Anything resolved while waiting was therefore observed without exclusivity and is re-resolved once the lease is held. That second resolution is the correctness boundary, not redundant work.</p>
+</blockquote>
+<p><strong>租约只覆盖” 发送” 这一刻，不覆盖” 等待”。</strong> 因为等待可能很长，锁住等待会把整台机器串行化。所以等待期间解析出的元素是” 无独占观察” 出来的，拿到租约后<strong>必须重新解析一次</strong> —— 这一次才是正确性边界，不是冗余工作。</p>
+<p>这一条我觉得是全项目最精妙的细节。</p>
+<h3 id="多-Agent-鼠标光标"><a href="#多-Agent-鼠标光标" class="headerlink" title="多 Agent 鼠标光标"></a>多 Agent 鼠标光标</h3><p>CONCEPTS.md <strong>Agent Cursor Overlay</strong> 描述的场景我觉得很酷：给 harness 的多个 subagent 每个分配一个鼠标光标。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">session start --cursor --multi-agent</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后每个 subagent 带 <code>--agent-id &lt;id&gt;</code>（或 <code>AGENT_DESKTOP_AGENT_ID</code>）。规则：</p>
+<blockquote>
+<p>A headless action moves its cursor before it takes the interaction lease, so several agents’ cursors travel at the same time while their actions take turns.</p>
+</blockquote>
+<p><strong>光标同时移动，动作轮流执行。</strong> 这个区分很关键 —— 视觉上是并发，语义上还是串行。</p>
+<p><code>commands-system.md</code> 里补充了 id 的规则：1 到 64 个字母数字或 <code>-</code> <code>_</code>，按 session 作用域隔离。</p>
+<p>光标本身是纯表现层的：</p>
+<blockquote>
+<p>It never moves or replaces the OS pointer and never changes Interaction Policy, action delivery, or response semantics.</p>
+</blockquote>
+<h3 id="7-1-Release-Guard：多步物理序列的保险丝"><a href="#7-1-Release-Guard：多步物理序列的保险丝" class="headerlink" title="7.1 Release Guard：多步物理序列的保险丝"></a>7.1 Release Guard：多步物理序列的保险丝</h3><p>CONCEPTS.md <strong>Release Guard</strong>：</p>
+<blockquote>
+<p>An arm-before-commit guard on multi-event physical sequences (drag, modifier chord, chunked text) that posts corrective input at the origin on abort: drag-back plus mouse-up for a drag, key-up sweep for held keys and modifiers.</p>
+<p>Cleanup is best-effort: if the OS does not acknowledge the corrective events, the error preserves that uncertainty (<code>emergency_release_posted</code>, <code>delivered_unverified</code>, <code>delivered_events</code> count) rather than claiming no input landed.</p>
+</blockquote>
+<p>拖拽中途失败要” 拖回去 + 松开鼠标”，组合键要” 逐个松开”。<strong>但如果纠正事件本身没被系统确认，错误信息里要保留这个不确定性</strong>，不能撒谎说” 什么都没发生”。</p>
+<hr>
+<h2 id="八、命令清单"><a href="#八、命令清单" class="headerlink" title="八、命令清单"></a>八、命令清单</h2><p>60 个命令名，56 个是可用的，剩下四个（<code>key-down</code>、<code>key-up</code>、<code>mouse-down</code>、<code>mouse-up</code>）会拒绝执行：</p>
+<blockquote>
+<p>The other four (<code>key-down</code>, <code>key-up</code>, <code>mouse-down</code>, <code>mouse-up</code>) refuse to run until a daemon can release a held key or button.</p>
+</blockquote>
+<p>因为” 按住不放” 需要跨进程维持状态，而每次 CLI 调用都是独立进程 —— 这个限制来自架构本身，不是没实现。</p>
+<p>分组如下：</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Commands</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Observe</td>
+<td><code>snapshot</code>, <code>find</code>, <code>get</code>, <code>is</code>, <code>screenshot</code>, <code>list-surfaces</code></td>
+</tr>
+<tr>
+<td>Act on a ref</td>
+<td><code>click</code>, <code>double-click</code>, <code>triple-click</code>, <code>right-click</code>, <code>type</code>, <code>set-value</code>, <code>clear</code>, <code>focus</code>, <code>select</code>, <code>toggle</code>, <code>check</code>, <code>uncheck</code>, <code>expand</code>, <code>collapse</code>, <code>scroll</code>, <code>scroll-to</code></td>
+</tr>
+<tr>
+<td>Keyboard and mouse</td>
+<td><code>press</code>, <code>hover</code>, <code>drag</code>, <code>mouse-move</code>, <code>mouse-click</code>, <code>mouse-wheel</code>, <code>key-down</code>, <code>key-up</code>, <code>mouse-down</code>, <code>mouse-up</code></td>
+</tr>
+<tr>
+<td>Apps and windows</td>
+<td><code>launch</code>, <code>close-app</code>, <code>list-apps</code>, <code>list-windows</code>, <code>list-displays</code>, <code>focus-window</code>, <code>resize-window</code>, <code>move-window</code>, <code>minimize</code>, <code>maximize</code>, <code>restore</code>, <code>open-system-surface</code></td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td><code>list-notifications</code>, <code>dismiss-notification</code>, <code>dismiss-all-notifications</code>, <code>notification-action</code></td>
+</tr>
+<tr>
+<td>Clipboard</td>
+<td><code>clipboard-get</code>, <code>clipboard-set</code>, <code>clipboard-clear</code></td>
+</tr>
+<tr>
+<td>Wait</td>
+<td><code>wait</code></td>
+</tr>
+<tr>
+<td>Sessions</td>
+<td><code>session</code>, <code>trace</code>, <code>cursor-overlay</code></td>
+</tr>
+<tr>
+<td>System</td>
+<td><code>status</code>, <code>permissions</code>, <code>version</code>, <code>batch</code>, <code>skills</code></td>
+</tr>
+</tbody></table>
+<p><strong>会拿到 ref 的交互角色</strong>，FAQ 里列了 18 个：</p>
+<p><code>button</code>, <code>textfield</code>, <code>checkbox</code>, <code>link</code>, <code>menuitem</code>, <code>tab</code>, <code>slider</code>, <code>combobox</code>, <code>treeitem</code>, <code>cell</code>, <code>radiobutton</code>, <code>incrementor</code>, <code>menubutton</code>, <code>switch</code>, <code>colorwell</code>, <code>dockitem</code>, <code>listbox</code>, <code>option</code>。</p>
+<p>静态文本和惰性容器不给 ref。</p>
+<hr>
+<h2 id="九、平台支持：三套完全不同的底层"><a href="#九、平台支持：三套完全不同的底层" class="headerlink" title="九、平台支持：三套完全不同的底层"></a>九、平台支持：三套完全不同的底层</h2><table>
+<thead>
+<tr>
+<th></th>
+<th align="center">macOS</th>
+<th align="center">Windows</th>
+<th align="center">Linux</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Accessibility tree</td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+<td align="center">Yes (AT-SPI)</td>
+</tr>
+<tr>
+<td>Click / type / keyboard</td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+<td align="center">AT-SPI; X11 / GNOME keys</td>
+</tr>
+<tr>
+<td>Mouse input</td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+<td align="center">X11, <code>--headed</code></td>
+</tr>
+<tr>
+<td>Screenshot</td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+<td align="center">X11 windows; Wayland portal</td>
+</tr>
+<tr>
+<td>Clipboard</td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+<td align="center">Yes; Wayland needs <code>wl-clipboard</code></td>
+</tr>
+<tr>
+<td>App &amp; window management</td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+<td align="center">Launch/list; X11 window control</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+<td align="center">GNOME Shell</td>
+</tr>
+<tr>
+<td>Shell surfaces (<code>open-system-surface</code>)</td>
+<td align="center">Planned</td>
+<td align="center">Yes</td>
+<td align="center">GNOME tray, Action Center</td>
+</tr>
+</tbody></table>
+<p>三套 API 的词汇本身就不对齐，CONCEPTS.md <strong>Role</strong> 一节专门解释了映射的麻烦：</p>
+<blockquote>
+<p>The platform taxonomies are not parallel: UIA’s <code>Tab</code> is the container and its <code>TabItem</code> is the page selector, which is the inverse of the ARIA naming core follows, and several canonical roles (<code>switch</code>, <code>colorwell</code>) have no control type at all and are reachable only through refinement or not at all.</p>
+</blockquote>
+<p>更绝的是同一个控件在不同平台的差异：</p>
+<blockquote>
+<p>A toggle button surfaces as <code>role: button</code> with state <code>pressed</code> on macOS, because macOS keeps the control’s role as <code>button</code> and reads its toggle value as <code>pressed</code>. Windows reclassifies any <code>Button</code> control type that advertises toggle support to <code>role: switch</code> with state <code>checked</code> before states resolve, and Linux reports a toggle button as <code>checked</code>, reserving <code>pressed</code> for push buttons.</p>
+</blockquote>
+<p><strong>同一个开关按钮，macOS 上是 <code>button</code> + <code>pressed</code>，Windows 上是 <code>switch</code> + <code>checked</code>，Linux 上是 <code>checked</code>。</strong> 三套都是” 正确的映射”，但映射到不同的角色上。</p>
+<p>文档还说了这不是缺陷：</p>
+<blockquote>
+<p>The macOS/Windows divergence for the same control is a consequence of two correct role mappings meeting it, not a defect in either.</p>
+</blockquote>
+<h3 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h3><ul>
+<li><strong>macOS</strong> 需要 Accessibility 权限，截图还要 Screen Recording，打开通知中心要 Automation 权限。</li>
+<li><strong>Windows</strong> 对同权限级别的应用不用授权。但管理员运行的 app 能读，<strong>只有提权的 agent 才能给它发输入</strong> —— 这就是 <strong>Integrity Boundary</strong>。</li>
+<li><strong>Linux</strong> 目标环境是 Ubuntu 24.04+ / GNOME 46 /glibc 2.35+，需要 <code>at-spi2-core</code>，且必须跑在用户的图形会话里（SSH 的 TTY 里看不到应用）。Ubuntu 22.04 的 ATK bridge 会在 <code>Action.GetActions</code> 上崩溃。</li>
+</ul>
+<p>Windows 的 <strong>Integrity Boundary</strong> 值得单独说，CONCEPTS.md：</p>
+<blockquote>
+<p>Detection is a token-integrity comparison via <code>GetTokenInformation(TokenIntegrityLevel)</code>, never the <code>SendInput</code> return value, because the API reports success in both blocked and unblocked arms.</p>
+</blockquote>
+<p><strong>不能用 <code>SendInput</code> 的返回值判断权限边界</strong>，因为它被拦截时也返回成功。得自己去查完整性级别。文档说这在拆分权限的测试机上实测过：Medium 到 High 的 <code>set-value</code> 和 <code>type</code> 会 fail closed。</p>
+<hr>
+<h2 id="十、它怎么证明自己是对的：probe-语料和-dogfood"><a href="#十、它怎么证明自己是对的：probe-语料和-dogfood" class="headerlink" title="十、它怎么证明自己是对的：probe 语料和 dogfood"></a>十、它怎么证明自己是对的：probe 语料和 dogfood</h2><p>这一节是我在这个仓库里最欣赏的部分。</p>
+<p><strong>Probe Corpus</strong>：</p>
+<blockquote>
+<p>The committed, re-runnable set of raw platform scripts a platform’s exploration work uses to observe real OS behavior before any adapter code for that platform exists.</p>
+</blockquote>
+<p><strong>在写任何适配器代码之前，先用脚本把真实 OS 的行为观测下来。</strong></p>
+<p><strong>Capture</strong> 是一次探针运行的输出，脱敏、机器可读，存放在产生它的探针旁边。而且：</p>
+<blockquote>
+<p>Every capture is written beside a normalized twin (regenerated on every run and git-ignored) whose run-varying values (handles, process and thread ids, timings, coordinates beyond a fixed tolerance) are canonicalized, so re-running the corpus later diffs empty unless the platform genuinely changed.</p>
+</blockquote>
+<p><strong>跑一遍归一化的孪生文件，diff 是空的 —— 除非平台真的变了。</strong> 这是我见过最硬核的回归测试思路：不是断言” 结果等于某串具体值”，而是断言” 重跑没有漂移”。</p>
+<p><strong>Findings Ledger</strong> 是探针结果的账本，每一行都有稳定 id：</p>
+<blockquote>
+<p>Each row carries a stable id naming its area and its position in that area (<code>A15-7</code> on Windows, <code>L32-39</code> on Linux), and that id is the project’s citation form for a measurement: a row id stays true however the code or the docs move, so shipped source may cite one the way it would cite a CVE.</p>
+</blockquote>
+<p><strong>行号 id 是项目的引用格式，代码和文档随便怎么改，这个 id 都不变，就像 CVE 一样。</strong> 正文里确实到处能看到 <code>A9-3</code>、<code>A19-2</code>、<code>A4-1</code> 这样的标注。四种判定是 <code>CONFIRMS</code> / <code>CONTRADICTS</code> / <code>NEW-EDGE</code> / <code>DEFERRED</code>，而 <code>CONTRADICTS</code> 的处理方式最狠：</p>
+<blockquote>
+<p>A contradicting verdict is a defect in whatever assumed otherwise and is corrected in the same change that discovered it.</p>
+</blockquote>
+<p><strong>发现假设错了，就在同一个改动里把假设改掉。</strong></p>
+<p>还有 <strong>Mandatory Measurement Gate</strong>—— 探针自己声明” 我要产出哪些测量”，跑完检查这些测量是不是真的产出了：</p>
+<blockquote>
+<p>Declaring nothing fails too, and for the same reason: a run that asserted nothing is indistinguishable from a clean one, so an empty declaration is reported as a gap in its own right rather than passing vacuously.</p>
+</blockquote>
+<p><strong>什么都没断言的运行，和干净通过的运行长得一模一样 —— 所以空声明本身要算失败。</strong></p>
+<p><strong>Gate Self-Test</strong> 是给检查本身写的测试，避免” 检查规则悄悄失灵了还报绿”：</p>
+<blockquote>
+<p>The fixture must invoke the same rule declaration the real scan invokes (a shared program text, never a copied pattern), or it proves only that the copy still agrees with itself while the shipped rule drifts away from both.</p>
+</blockquote>
+<p>还有一条我觉得太真实了：</p>
+<blockquote>
+<p>And it must cover the check’s ability to run at all, not merely its rule: a gate whose interpreter is absent, whose file never got its executable bit, or whose regex dialect is a silent no-op on the platform that actually runs it exits clean and is indistinguishable from a passing tree. Finding nothing is a failure, never a skip.</p>
+</blockquote>
+<p><strong>“什么都没找到是失败，不是跳过。”</strong> 这句话适用于一切自动化检查。</p>
+<p><strong>Dogfood Run</strong> 则是拿真实发布版二进制去操作仓库作者自己没写的软件：</p>
+<blockquote>
+<p>Driving the shipped release binary against real software nobody in this repository wrote and judging it by reading its output, because correctness against real providers is not something a runner-hosted assertion can encode.</p>
+</blockquote>
+<blockquote>
+<p>This is where a platform adapter’s correctness is established; a green build proves totality and wiring, not that a mapping is right.</p>
+</blockquote>
+<p><strong>绿灯的构建只能证明” 每条路径都被走了一遍”，证明不了” 映射是对的”。</strong></p>
+<p>Linux 上有个特别诚实的说明：</p>
+<blockquote>
+<p>On Linux only the ledger (<code>probes/linux/FINDINGS.md</code>) is committed; its probe scripts and captures are kept outside the repository.</p>
+</blockquote>
+<p>Linux 的探针脚本和捕获不放进仓库，只有账本在里面。</p>
+<p>还有 <strong>Dev Box</strong> 和 <strong>Hosted Runner</strong> 的区分：</p>
+<blockquote>
+<p>A number measured only here is a fact about this machine, not about the design. Repetition removes noise but never removes environment, and a result that looked like a design win on the dev box alone has already turned out to be a dev-box artifact once.</p>
+</blockquote>
+<p><strong>只在开发机上测出来的数字，是这台机器的事实，不是设计的事实。</strong></p>
+<hr>
+<h2 id="十一、跟同类项目比，差别在哪儿"><a href="#十一、跟同类项目比，差别在哪儿" class="headerlink" title="十一、跟同类项目比，差别在哪儿"></a>十一、跟同类项目比，差别在哪儿</h2><p>我做对比时全部重新查了 GitHub API 的实时数据：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th align="right"> Stars</th>
+<th> 许可</th>
+<th>语言</th>
+<th>通道</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> vercel-labs/agent-desktop</strong></td>
+<td align="right"><strong>9,569</strong></td>
+<td>Apache-2.0</td>
+<td>Rust</td>
+<td>AX / UIA / AT-SPI</td>
+</tr>
+<tr>
+<td>browser-use/browser-use</td>
+<td align="right">119,866</td>
+<td>MIT</td>
+<td>Python</td>
+<td> 浏览器 DOM</td>
+</tr>
+<tr>
+<td>vercel-labs/agent-browser</td>
+<td align="right">45,281</td>
+<td>Apache-2.0</td>
+<td>Rust</td>
+<td> 浏览器 DOM</td>
+</tr>
+<tr>
+<td>trycua/cua</td>
+<td align="right">31,597</td>
+<td>MIT</td>
+<td>Rust</td>
+<td> 跨 OS 沙箱 + 驱动</td>
+</tr>
+<tr>
+<td> browserbase/stagehand</td>
+<td align="right">25,911</td>
+<td>MIT</td>
+<td>TypeScript</td>
+<td> 网页 DOM</td>
+</tr>
+<tr>
+<td>microsoft/OmniParser</td>
+<td align="right">25,602</td>
+<td>CC-BY-4.0</td>
+<td>Jupyter</td>
+<td> 纯视觉</td>
+</tr>
+<tr>
+<td> simular-ai/Agent-S</td>
+<td align="right">12,859</td>
+<td>Apache-2.0</td>
+<td>Python</td>
+<td> 混合视觉 + 轴</td>
+</tr>
+</tbody></table>
+<p>几点观察：</p>
+<p><strong>1. 它不是最红的，但它是唯一做” 非浏览器桌面原生应用” 这件事的。</strong></p>
+<p>browser-use 119k stars 压倒性领先，但它的战场是网页。Skyvern、stagehand、agent-browser 同样是网页。agent-desktop 把浏览器那套（DOM → 语义 ref → 严格定位）搬到了桌面原生应用上 —— 这是完全不同的技术栈。</p>
+<p>有意思的是它和 agent-browser 是同一个作者（vercel-labs），同样的 Apache-2.0、同样的 Rust、同样”CLI + C ABI + 结构化 JSON + 内置 skills” 的架构。<strong>同一个团队把同一个设计哲学用在了两个不同的树上</strong>，这本身是个强信号。</p>
+<p><strong>2. 和 OmniParser 的路线之争最本质。</strong></p>
+<p>OmniParser 走” 纯视觉” 路线：截图 → 检测 → 识别 → 结构化。优势是<strong>不要求应用配合</strong>，任何屏幕像素都能用。agent-desktop 走” 语义” 路线：直接读操作系统的无障碍树。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>OmniParser（视觉）</th>
+<th>agent-desktop（语义）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>依赖</td>
+<td>只要能截图</td>
+<td>应用要暴露无障碍树</td>
+</tr>
+<tr>
+<td> “按钮是否禁用”</td>
+<td> 靠模型猜</td>
+<td> AX/UIA 直接给</td>
+</tr>
+<tr>
+<td>元素身份</td>
+<td>靠坐标 + 外观</td>
+<td>靠 native id /name/role</td>
+</tr>
+<tr>
+<td> 成本</td>
+<td>每次推理</td>
+<td>一次系统调用</td>
+</tr>
+<tr>
+<td>抗 UI 变化</td>
+<td>差</td>
+<td>好</td>
+</tr>
+<tr>
+<td>适用范围</td>
+<td>几乎任何屏幕</td>
+<td>有无障碍树的原生应用</td>
+</tr>
+</tbody></table>
+<p><strong>它们其实是互补的。</strong> agent-desktop 的 <code>screenshot</code> 命令存在，视觉调试产物（<strong>Visual Debug Artifact</strong>）也支持把快照节点和窗口截图并排画给人工检查 —— 项目自己就在用视觉手段做验证，只是<strong>不让视觉进入决策回路</strong>。</p>
+<p><strong>3. 和 trycua/cua 的分工。</strong></p>
+<p>cua 走的是” 跨 OS 沙箱 + 驱动 + 训练基准”，agent-desktop 走的是” 在真实桌面上的可靠性”。cua 更像基础设施层，agent-desktop 更像一次具体的动作原语。</p>
+<p><strong>4. 和 browser-use /stagehand 的对照最能说明取舍。</strong></p>
+<p>那俩项目里 Agent 用的是 Playwright 的语义定位（<code>getByRole</code>、<code>getByText</code>）。agent-desktop 在桌面上的对应物就是 ref—— <strong>但比 Playwright 严格得多</strong>。Playwright 的 locator 失败会等超时重试；agent-desktop 在两个相同元素时直接给你 <code>AMBIGUOUS_TARGET</code> 让你换路子。这个严格是有代价的，但代价换来的是<strong>行为可预测</strong>。</p>
+<hr>
+<h2 id="十二、局限：说点不好听的"><a href="#十二、局限：说点不好听的" class="headerlink" title="十二、局限：说点不好听的"></a>十二、局限：说点不好听的</h2><p>这个项目我不打算只夸。以下都是我从 README / CHANGELOG / 文档里能查到的实打实的限制。</p>
+<h3 id="12-1-Linux-是二等公民"><a href="#12-1-Linux-是二等公民" class="headerlink" title="12.1 Linux 是二等公民"></a>12.1 Linux 是二等公民</h3><p>Linux 支持是 1.0.0 才加的（2026-10-28），而且是” 刚加” 的状态：</p>
+<ul>
+<li>目标环境只有 Ubuntu 24.04+ / GNOME 46，<strong>Ubuntu 22.04 直接崩</strong>（ATK bridge 在 <code>Action.GetActions</code> 上 abort）。</li>
+<li>Wayland 下 app 的指针输入拒绝执行，原生窗口控制不支持。</li>
+<li>Wayland 剪贴板要额外装 <code>wl-clipboard</code>。</li>
+<li><strong>Linux 的探针脚本和捕获根本没进仓库</strong>，只有账本。别人没法复现验证。</li>
+<li>Wayland 下连” 点两个相同控件中的一个” 都做不到 —— 文档明说只能 <code>--headed mouse-click --xy</code>，而 <strong>Wayland 会拒绝这个操作</strong>。</li>
+</ul>
+<p>所以 Linux 用户实际上拿不到完整的 ref 语义能力。</p>
+<h3 id="12-2-Windows-上-type-没有无头路径"><a href="#12-2-Windows-上-type-没有无头路径" class="headerlink" title="12.2 Windows 上 type 没有无头路径"></a>12.2 Windows 上 <code>type</code> 没有无头路径</h3><p>前面提过，这里再强调一次，因为它是日常最高频的操作：</p>
+<blockquote>
+<p>On Windows, <code>type</code> has no semantic headless path, because UIA offers no insert-at-selection write.</p>
+</blockquote>
+<p>Windows 上要么用 <code>set-value</code>（绕开选区语义），要么开 headed（放弃无头的所有好处）。<strong>这是一个跨平台行为差异，但差异落在最常用的动作上。</strong></p>
+<h3 id="12-3-严格性带来的”功能缺失”"><a href="#12-3-严格性带来的”功能缺失”" class="headerlink" title="12.3 严格性带来的”功能缺失”"></a>12.3 严格性带来的” 功能缺失”</h3><p>2.6 版本的 breaking change 让一批以前能做的操作现在做不了：</p>
+<blockquote>
+<p>A ref to one of two identical controls, which earlier resolved by position or geometry, now fails <code>AMBIGUOUS_TARGET</code>.</p>
+</blockquote>
+<p>表格里重复的按钮、行内重复的删除图标 —— 这些在真实应用里非常常见。SKILL.md 里承认了：</p>
+<blockquote>
+<p>On Windows and Linux that reads the row but does not make its button actionable: a button repeated in other rows is a twin in the window and its ref is refused.</p>
+</blockquote>
+<p><strong>读得到，点不了。</strong> 而且 2.6 之前拍的老 refmap 全部作废：</p>
+<blockquote>
+<p>A refmap written before 2.6 records no capture proof, so all of its refs on these platforms fail the same way. Take a new snapshot.</p>
+</blockquote>
+<p>如果你的 Agent 上下文里缓存了旧 ref，升级后会直接全线报错。</p>
+<h3 id="12-4-每个-CLI-调用一个进程"><a href="#12-4-每个-CLI-调用一个进程" class="headerlink" title="12.4 每个 CLI 调用一个进程"></a>12.4 每个 CLI 调用一个进程</h3><blockquote>
+<p>Every CLI call runs in its own process. Headless calls still prohibit foreground activation and synthesized input.</p>
+</blockquote>
+<p>README 明确说 <strong>Headless calls</strong> 也禁止前台激活和合成输入。这个设计换来了无依赖单二进制和强隔离，代价是高频调用有进程启动开销。npm 包装器的 <code>postinstall</code> 会把 Node 启动器换成原生二进制的链接：</p>
+<blockquote>
+<p>If the package manager blocks install scripts (npm 12 does by default), the Node launcher runs instead and each call costs about 146 ms.</p>
+</blockquote>
+<p><strong>npm 12 默认屏蔽 install scripts</strong>，于是每次调用多花约 146ms。要手动批：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install-scripts approve agent-desktop</span><br></pre></td></tr></tbody></table></figure>
+
+<p>或者 <code>--allow-scripts</code>。要极致性能就用 C ABI。</p>
+<h3 id="12-5-权限和信任边界"><a href="#12-5-权限和信任边界" class="headerlink" title="12.5 权限和信任边界"></a>12.5 权限和信任边界</h3><ul>
+<li>macOS 要 Accessibility + Screen Recording 权限，等于” 读你整个屏幕” 的权限级别。</li>
+<li>Windows 二进制<strong>没有签名</strong>：</li>
+</ul>
+<blockquote>
+<p>The binary is unsigned, so SmartScreen may warn on a browser download, antivirus may quarantine it, and Smart App Control on a clean Windows 11 install blocks it.</p>
+</blockquote>
+<p>在企业环境里这可能是直接过不去的坎。</p>
+<h3 id="12-6-隐私：截图和快照就是桌面内容"><a href="#12-6-隐私：截图和快照就是桌面内容" class="headerlink" title="12.6 隐私：截图和快照就是桌面内容"></a>12.6 隐私：截图和快照就是桌面内容</h3><p>README 的警告很直接：</p>
+<blockquote>
+<p>Snapshots, clipboard reads, screenshots, command output and debug artifacts can contain private desktop content. Keep them out of public logs and uploads.</p>
+</blockquote>
+<p>FAQ 补充：</p>
+<blockquote>
+<p>Debug HTML embeds a screenshot and accessibility data. Session traces can retain evidence artifacts even when structured fields are redacted. Redaction does not make a screenshot safe to publish.</p>
+</blockquote>
+<p><strong>脱敏不等于截图可以公开。</strong> 如果你要把 Agent 的运行日志贴到工单系统里，这一段得认真读。</p>
+<h3 id="12-7-版本口径容易看错"><a href="#12-7-版本口径容易看错" class="headerlink" title="12.7 版本口径容易看错"></a>12.7 版本口径容易看错</h3><ul>
+<li>Rust /npm 包版本：<strong>1.0.2</strong>（2026-10-30 发布）</li>
+<li>JSON 响应信封版本：<strong>2.6</strong></li>
+</ul>
+<p>这俩不是一回事。还有 C ABI 主版本到了 <strong>7</strong>。CHANGELOG 的 Unreleased 段里已经堆了好几个 breaking change，包括移除 macOS command host（每次 CLI 调用独立进程）、C ABI 的 <code>*_exact</code> 入口全部移除、2.6 的 ref 解析规则变化。</p>
+<p><strong>这是个刚发 1.0 就在做破坏性变更的项目。</strong> 用之前请认真读 CHANGELOG。</p>
+<h3 id="12-8-open-issues-122-个"><a href="#12-8-open-issues-122-个" class="headerlink" title="12.8 open issues 122 个"></a>12.8 open issues 122 个</h3><p>仓库当前 122 个 open issue。不是致命问题，但说明生态还很年轻。</p>
+<hr>
+<h2 id="十三、适合谁，不适合谁"><a href="#十三、适合谁，不适合谁" class="headerlink" title="十三、适合谁，不适合谁"></a>十三、适合谁，不适合谁</h2><h3 id="适合"><a href="#适合" class="headerlink" title="适合"></a>适合</h3><p><strong>你在做桌面原生应用的自动化</strong>，而且应用能被读出无障碍树 —— 企业内部的桌面客户端、Electron 应用（虽然 Electron 的 web wrapper 会吃掉大量深度）、原生 macOS/Windows 工具链。</p>
+<p><strong>你在给 Agent 做 computer use 后端</strong>，需要一套明确的送达语义和严格的元素身份。这套 <code>disposition</code> / <code>recovery</code> / <code>details.kind</code> 的设计，比自己拍脑袋写 try/catch 靠谱得多。</p>
+<p><strong>你需要在高频路径上调用</strong>，用 C ABI 而不是 fork 进程。</p>
+<p><strong>你想让 Agent 自己学会用这个工具</strong>，<code>skills get</code> 那套内置文档 + skills.sh 安装方式做得比大多数项目都好。</p>
+<p><strong>你重视可复现验证</strong> ——probe 语料、归一化捕获、findings ledger、dogfood run 这套东西，对做 GUI 自动化的团队是很好的范本。</p>
+<h3 id="不适合"><a href="#不适合" class="headerlink" title="不适合"></a>不适合</h3><p><strong>你要做的是浏览器自动化。</strong> 用 browser-use 或 agent-browser，别用这个。</p>
+<p><strong>应用是无障碍树残缺的</strong>。自绘控件的游戏、部分 Electron 应用、部分 Qt 应用，树很浅或者关键控件没有 role。这种情况下视觉路线（OmniParser）反而更靠谱。</p>
+<p><strong>你在 Wayland 上要完整功能。</strong> 指针输入拒绝、原生窗口控制不支持、剪贴板要额外依赖。</p>
+<p><strong>你需要” 按住不放” 这类长时状态动作。</strong> <code>key-down</code> / <code>key-up</code> / <code>mouse-down</code> / <code>mouse-up</code> 现在全部拒绝执行。</p>
+<p><strong>你在企业环境里没法给二进制签名或授权。</strong> Windows 无签名的二进制 + macOS 的屏幕录制权限，都是审批项。</p>
+<p><strong>你的场景里” 点两个相同按钮中的一个” 是常规操作。</strong> 这在 Windows/Linux 上目前做不到，只能用 <code>--headed mouse-click --xy</code>，而 Wayland 拒绝。</p>
+<h3 id="折中方案"><a href="#折中方案" class="headerlink" title="折中方案"></a>折中方案</h3><p><strong>两者结合</strong>：用 agent-desktop 处理语义清晰的部分（表单、菜单、设置），用截图 / 视觉处理无障碍树残缺的部分。agent-desktop 的 <code>screenshot</code> 和 <strong>Visual Debug Artifact</strong> 就是往这个方向留的接口。</p>
+<hr>
+<h2 id="十四、速查"><a href="#十四、速查" class="headerlink" title="十四、速查"></a>十四、速查</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install -g agent-desktop</span><br><span class="line">agent-desktop version</span><br></pre></td></tr></tbody></table></figure>
+
+<p>或者从 GitHub Releases 下原生包。校验来源：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gh attestation verify &lt;downloaded-archive&gt; --repo vercel-labs/agent-desktop</span><br></pre></td></tr></tbody></table></figure>
+
+<p>从源码构建（需要 Rust 1.89+）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/vercel-labs/agent-desktop &amp;&amp; <span class="built_in">cd</span> agent-desktop</span><br><span class="line">cargo build --release -p agent-desktop</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Linux 额外：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo build --release -p agent-desktop-linux --bins</span><br></pre></td></tr></tbody></table></figure>
+
+<p>并把 <code>agent-desktop-linux-clipboard-owner</code> 放在 CLI 旁边。</p>
+<h3 id="首次使用"><a href="#首次使用" class="headerlink" title="首次使用"></a>首次使用</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">agent-desktop status                          <span class="comment"># 平台、权限、支持的能力</span></span><br><span class="line">agent-desktop skills get platform             <span class="comment"># 当前 OS 的能力表</span></span><br><span class="line">agent-desktop permissions --guide             <span class="comment"># macOS：打开系统设置并给引导</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="典型循环"><a href="#典型循环" class="headerlink" title="典型循环"></a>典型循环</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 观察（稠密应用先看骨架）</span></span><br><span class="line">agent-desktop snapshot --skeleton --app <span class="string">"Slack"</span> -i --compact</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 钻取</span></span><br><span class="line">agent-desktop snapshot --root @s8f3k2p9:e3 -i --compact</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 行动</span></span><br><span class="line">agent-desktop click @s8f3k2p9:e12</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 验证（重新读同一区域）</span></span><br><span class="line">agent-desktop snapshot --root @s8f3k2p9:e3 -i --compact</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只在 disposition.retry == "safe" 时重试</span></span><br><span class="line"><span class="comment"># 读到 STALE_REF → 重新 snapshot</span></span><br><span class="line"><span class="comment"># 读到 AMBIGUOUS_TARGET → 换个唯一的控件，或者用 --headed mouse-click --xy</span></span><br><span class="line"><span class="comment"># 读到 TIMEOUT → 看 details.kind</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="常用命令分类"><a href="#常用命令分类" class="headerlink" title="常用命令分类"></a>常用命令分类</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">agent-desktop find --app Safari --role button        <span class="comment"># 已知 role/name 时</span></span><br><span class="line">agent-desktop get @s8f3k2p9:e8                        <span class="comment"># 读元素文本（默认 text）</span></span><br><span class="line">agent-desktop is @s8f3k2p9:e8 --property enabled      <span class="comment"># 查状态</span></span><br><span class="line">agent-desktop set-value @s8f3k2p9:e8 <span class="string">"文本"</span>            <span class="comment"># Windows 上的无头文本写入</span></span><br><span class="line">agent-desktop <span class="built_in">wait</span> --text <span class="string">"已保存"</span> --app Safari       <span class="comment"># 异步等待，别 sleep</span></span><br><span class="line">agent-desktop batch <span class="string">'[{"command":"click","args":{"ref_id":"@s8f3k2p9:e1"}}]'</span> --stop-on-error</span><br><span class="line">agent-desktop session start --cursor --multi-agent     <span class="comment"># 多 agent 光标</span></span><br><span class="line">agent-desktop trace show --session &lt;<span class="built_in">id</span>&gt;                <span class="comment"># 看 trace 时间线</span></span><br><span class="line">agent-desktop trace <span class="built_in">export</span> --out trace.html            <span class="comment"># 导出独立 HTML 查看器</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="文档地图"><a href="#文档地图" class="headerlink" title="文档地图"></a>文档地图</h3><table>
+<thead>
+<tr>
+<th>想做的事</th>
+<th>看哪里</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>修安装 / 授权 / 校验下载 / 从源码构建</td>
+<td><code>docs/install.md</code></td>
+</tr>
+<tr>
+<td>解析 JSON 信封、错误码、退出码</td>
+<td><code>docs/json-output.md</code></td>
+</tr>
+<tr>
+<td>作为 AI Agent 驱动它</td>
+<td><code>agent-desktop skills get desktop</code></td>
+</tr>
+<tr>
+<td>搞清某个 OS 的差异</td>
+<td><code>skills/agent-desktop-{macos,windows,linux}/</code></td>
+</tr>
+<tr>
+<td>查术语（refs /snapshots/sessions）</td>
+<td><code>CONCEPTS.md</code></td>
+</tr>
+<tr>
+<td>参与开发并过 CI 关卡</td>
+<td><code>CONTRIBUTING.md</code></td>
+</tr>
+<tr>
+<td>读工程规则</td>
+<td><code>AGENTS.md</code></td>
+</tr>
+<tr>
+<td>从过去的 bug 和教训里学习</td>
+<td><code>docs/solutions/</code></td>
+</tr>
+<tr>
+<td>报漏洞</td>
+<td><code>SECURITY.md</code></td>
+</tr>
+</tbody></table>
+<h3 id="版本参考"><a href="#版本参考" class="headerlink" title="版本参考"></a>版本参考</h3><ul>
+<li>npm / Rust 包：<strong>1.0.2</strong></li>
+<li>JSON 信封：<strong>2.6</strong></li>
+<li>C ABI 主版本：<strong>7</strong></li>
+<li> 许可证：<strong>Apache-2.0</strong></li>
+<li>Stars：9,569 | Forks：647 | Open issues：122</li>
+<li>npm 近一月下载：14,843</li>
+</ul>
+<hr>
+<h2 id="十五、最后"><a href="#十五、最后" class="headerlink" title="十五、最后"></a>十五、最后</h2><p>我最想从这个项目里带走的一句话，不是任何一条 API 细节，而是这个：</p>
+<blockquote>
+<p><strong>A ref that was not unique at capture is refused before anything is read from the application, because no search can pick one of two identical elements.</strong></p>
+</blockquote>
+<p>大多数 GUI 自动化工具在这里选择” 尽力猜一个”。这个项目选择” 我不猜”。</p>
+<p>在一个充满不确定性的领域里，<strong>明确说” 我不知道” 比给一个大概率错的答案有价值得多</strong>。尤其是当调用方是 Agent 的时候 —— 一个诚实的 <code>AMBIGUOUS_TARGET</code> 会让 Agent 换个思路，而一个错误的成功会让 Agent 自信地往错方向走，代价可能是双重的付款或者删掉不该删的文件。</p>
+<p>配套的 <code>disposition.delivery</code> / <code>disposition.retry</code> 体系，把” 失败了” 细分成” 没送达” 和” 可能已经送达”，这是给 Agent 的一个非常实用的抽象：<strong>前者可以放心重试，后者必须先读状态再决定</strong>。</p>
+<p>以及那个我觉得最漂亮的工程约定：</p>
+<blockquote>
+<p><strong>Finding nothing is a failure, never a skip.</strong></p>
+</blockquote>
+<p>在任何自动化检查里，” 什么都没找到” 都不该是绿灯。</p>
+<p>Vercel Labs 把它做成 Apache-2.0 发布，源码在 <code>vercel-labs/agent-desktop</code>。如果你在做桌面自动化，或者只是好奇 Agent 到底怎么” 看见” 电脑的，这套设计和文档都很值得读一遍 —— 尤其是 <code>CONCEPTS.md</code>，353 行，全是这种级别的思考。</p>
+<p><strong>参考资料</strong>：仓库 <a target="_blank" rel="noopener" href="https://github.com/vercel-labs/agent-desktop">https://github.com/vercel-labs/agent-desktop</a> ｜ npm <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/agent-desktop">https://www.npmjs.com/package/agent-desktop</a> ｜ skills.sh <a target="_blank" rel="noopener" href="https://skills.sh/vercel-labs/agent-desktop/agent-desktop">https://skills.sh/vercel-labs/agent-desktop/agent-desktop</a> ｜ 架构与协议见 <code>CONCEPTS.md</code>、<code>docs/json-output.md</code>、<code>docs/faq.md</code>、<code>docs/install.md</code>、<code>CHANGELOG.md</code></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/11/03/vercel-labs-agent-desktop-accessibility-tree-computer-use/" title="vercel-labs&#x2F;agent-desktop：9,569 stars 的无像素匹配桌面 Agent 工具，把可访问性树变成了 Agent 的眼睛">https://www.daishengli.top/2026/11/03/vercel-labs-agent-desktop-accessibility-tree-computer-use/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/GUI-Agent/" rel="tag"># GUI Agent</a>
+              <a href="/tags/agent-desktop/" rel="tag"># agent-desktop</a>
+              <a href="/tags/vercel-labs/" rel="tag"># vercel-labs</a>
+              <a href="/tags/Accessibility/" rel="tag"># Accessibility</a>
+              <a href="/tags/Computer-Use/" rel="tag"># Computer Use</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/02/deepseek-dsh-superagent-proactive-github-agent/" rel="prev" title="deepseek-ai&#x2F;dsh-superagent-prototype：7,182 stars 的主动型 GitHub 代理，把「注意力」当成唯一预算">
+                  <i class="fa fa-angle-left"></i> deepseek-ai/dsh-superagent-prototype：7,182 stars 的主动型 GitHub 代理，把「注意力」当成唯一预算
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/04/storytold-craft-anything-rust-reverse-engineering-ai-rebuild/" rel="next" title="storytold&#x2F;craft-anything：8,302 stars 的纯 Rust 逆向引擎，看懂一个软件然后让 AI 重写一个">
+                  storytold/craft-anything：8,302 stars 的纯 Rust 逆向引擎，看懂一个软件然后让 AI 重写一个 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
