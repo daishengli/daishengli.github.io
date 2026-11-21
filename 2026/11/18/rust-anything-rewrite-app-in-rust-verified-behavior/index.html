@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="rust-anything 是开发者 erKam Yaman 用 Rust 写的迁移工具箱兼 MCP 服务，2026 年 11 月 16 日发布 1.0.0，三天后拿到 3321 个 star 和 262 个 fork，MIT 许可证，crate 版本 1.5.1 已上架 crates.io 和 npm。它不做代码翻译，而是提供一套可被 Claude Code、Codex、Cursor、Gemin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="erkamyaman&#x2F;rust-anything：3321 star 的 Rust 迁移工具箱，把 Node&#x2F;Python&#x2F;Go 应用逐块改写成 Rust 并逐步验证行为一致">
+<meta property="og:url" content="https://www.daishengli.top/2026/11/18/rust-anything-rewrite-app-in-rust-verified-behavior/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="rust-anything 是开发者 erKam Yaman 用 Rust 写的迁移工具箱兼 MCP 服务，2026 年 11 月 16 日发布 1.0.0，三天后拿到 3321 个 star 和 262 个 fork，MIT 许可证，crate 版本 1.5.1 已上架 crates.io 和 npm。它不做代码翻译，而是提供一套可被 Claude Code、Codex、Cursor、Gemin">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-18T16:20:00.000Z">
+<meta property="article:modified_time" content="2026-11-21T00:07:19.393Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="开发者工具">
+<meta property="article:tag" content="rust-anything">
+<meta property="article:tag" content="erkamyaman">
+<meta property="article:tag" content="代码迁移">
+<meta property="article:tag" content="FFI">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/11/18/rust-anything-rewrite-app-in-rust-verified-behavior/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/11/18/rust-anything-rewrite-app-in-rust-verified-behavior/","path":"2026/11/18/rust-anything-rewrite-app-in-rust-verified-behavior/","title":"erkamyaman/rust-anything：3321 star 的 Rust 迁移工具箱，把 Node/Python/Go 应用逐块改写成 Rust 并逐步验证行为一致"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>erkamyaman/rust-anything：3321 star 的 Rust 迁移工具箱，把 Node/Python/Go 应用逐块改写成 Rust 并逐步验证行为一致 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">438</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">133</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#erkamyaman-rust-anything%EF%BC%9A3321-star-%E7%9A%84-Rust-%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7%E7%AE%B1%EF%BC%8C%E6%8A%8A-Node-Python-Go-%E5%BA%94%E7%94%A8%E9%80%90%E5%9D%97%E6%94%B9%E5%86%99%E6%88%90-Rust-%E5%B9%B6%E9%80%90%E6%AD%A5%E9%AA%8C%E8%AF%81%E8%A1%8C%E4%B8%BA%E4%B8%80%E8%87%B4"><span class="nav-number">1.</span> <span class="nav-text">erkamyaman&#x2F;rust-anything：3321 star 的 Rust 迁移工具箱，把 Node&#x2F;Python&#x2F;Go 应用逐块改写成 Rust 并逐步验证行为一致</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E8%AF%B4%E4%B8%AA%E8%AE%A9%E6%88%91%E8%84%B8%E7%BA%A2%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">一、先说个让我脸红的场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9A%E4%B8%80%E5%8F%A5%E8%AF%9D%E5%8A%A0%E4%B8%8A%E5%87%A0%E4%B8%AA%E5%85%B3%E9%94%AE%E6%95%B0%E5%AD%97"><span class="nav-number">1.2.</span> <span class="nav-text">二、它是什么：一句话加上几个关键数字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%B8%80%EF%BC%9A%E5%85%88%E6%B5%8B%EF%BC%8C%E5%90%8E%E6%94%B9"><span class="nav-number">1.3.</span> <span class="nav-text">三、核心机制一：先测，后改</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E4%B8%AA%E5%AE%B9%E6%98%93%E8%A2%AB%E5%BF%BD%E7%95%A5%E7%9A%84%E7%BB%86%E8%8A%82"><span class="nav-number">1.3.1.</span> <span class="nav-text">两个容易被忽略的细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%BA%8C%EF%BC%9A%E6%8C%A1%E4%BD%8F%E2%80%9D%E5%8E%9F%E6%9D%A5%E9%82%A3%E7%89%88%E5%8F%98%E4%BA%86%E2%80%9D"><span class="nav-number">1.4.</span> <span class="nav-text">四、核心机制二：挡住” 原来那版变了”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%B8%89%EF%BC%9Abridge-%E7%94%9F%E6%88%90%E6%A1%A5%E6%8E%A5%EF%BC%8C%E4%BD%86%E6%8A%8A-Rust-%E4%BB%A3%E7%A0%81%E7%95%99%E7%BB%99%E4%BD%A0"><span class="nav-number">1.5.</span> <span class="nav-text">五、核心机制三：bridge 生成桥接，但把 Rust 代码留给你</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%84%E8%AF%AD%E8%A8%80%E7%94%A8%E4%BB%80%E4%B9%88%E6%A1%A5"><span class="nav-number">1.5.1.</span> <span class="nav-text">各语言用什么桥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%93%AA%E4%BA%9B%E4%B8%9C%E8%A5%BF%E4%B8%8D%E8%83%BD%E8%B7%A8%E6%A1%A5"><span class="nav-number">1.5.2.</span> <span class="nav-text">哪些东西不能跨桥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSON-%E8%A1%A8%E8%BE%BE%E4%B8%8D%E4%BA%86%E7%9A%84%E4%B8%9C%E8%A5%BF%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="nav-number">1.5.3.</span> <span class="nav-text">JSON 表达不了的东西怎么办</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E5%9B%9B%EF%BC%9A-batch-%E6%89%8D%E6%98%AF%E7%9C%9F%E6%AD%A3%E5%BF%AB%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="nav-number">1.6.</span> <span class="nav-text">六、核心机制四：--batch 才是真正快的地方</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%85%A2"><span class="nav-number">1.6.1.</span> <span class="nav-text">为什么会慢</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#batch-%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">1.6.2.</span> <span class="nav-text">--batch 做什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%B5%8B%E6%95%B0%E5%AD%97"><span class="nav-number">1.6.3.</span> <span class="nav-text">实测数字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FuzzyScoreIndex-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.6.4.</span> <span class="nav-text">FuzzyScoreIndex 是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%84%E8%AF%AD%E8%A8%80%E6%89%B9%E9%87%8F%E5%AF%B9%E6%AF%94"><span class="nav-number">1.6.5.</span> <span class="nav-text">各语言批量对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%9D%91%EF%BC%9Amimalloc"><span class="nav-number">1.6.6.</span> <span class="nav-text">一个小坑：mimalloc</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%BA%94%EF%BC%9Aprofile-%E2%80%94%E2%80%94-%E8%BF%81%E7%A7%BB%E9%A1%BA%E5%BA%8F%E4%B9%9F%E6%98%AF%E6%95%B0%E6%8D%AE%E5%86%B3%E5%AE%9A%E7%9A%84"><span class="nav-number">1.7.</span> <span class="nav-text">七、核心机制五：profile —— 迁移顺序也是数据决定的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#analyze-%E6%8E%92%E9%A1%BA%E5%BA%8F"><span class="nav-number">1.7.1.</span> <span class="nav-text">analyze 排顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A3%8E%E9%99%A9%E6%89%93%E5%88%86"><span class="nav-number">1.7.2.</span> <span class="nav-text">风险打分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%B1%E7%BB%AA%E5%BA%A6%E4%B8%8E%E4%BC%98%E5%85%88%E7%BA%A7%E7%9A%84%E5%85%AC%E5%BC%8F"><span class="nav-number">1.7.3.</span> <span class="nav-text">就绪度与优先级的公式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E5%85%AD%EF%BC%9Ashadow-%E5%92%8C-gate-%E2%80%94%E2%80%94-%E4%B8%8A%E7%BA%BF%E5%89%8D%E7%9A%84%E4%B8%A4%E9%81%93%E9%97%B8"><span class="nav-number">1.8.</span> <span class="nav-text">八、核心机制六：shadow 和 gate —— 上线前的两道闸</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#shadow%EF%BC%9A%E6%96%B0%E6%97%A7%E5%B9%B6%E8%A1%8C%E8%B7%91"><span class="nav-number">1.8.1.</span> <span class="nav-text">shadow：新旧并行跑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gate%EF%BC%9A%E4%B8%80%E6%95%B4%E5%A5%97%E2%80%9D%E5%81%9A%E5%AE%8C%E4%BA%86%E2%80%9D%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.8.2.</span> <span class="nav-text">gate：一整套” 做完了” 的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bench-%E5%8D%95%E7%8B%AC%E5%AD%98%E5%9C%A8%EF%BC%8C%E4%B8%8D%E5%B9%B6%E8%BF%9B-gate"><span class="nav-number">1.8.3.</span> <span class="nav-text">bench 单独存在，不并进 gate</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%B8%83%EF%BC%9A%E6%95%B4%E4%B8%AA%E5%BA%94%E7%94%A8%E7%9A%84%E8%BF%81%E7%A7%BB-%E2%80%94%E2%80%94-app-%E7%B3%BB%E5%88%97"><span class="nav-number">1.9.</span> <span class="nav-text">九、核心机制七：整个应用的迁移 —— app 系列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E4%B8%AA%E5%91%BD%E4%BB%A4"><span class="nav-number">1.9.1.</span> <span class="nav-text">五个命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#app-record%EF%BC%9A%E9%BB%91%E7%9B%92%E5%BD%95%E6%95%B4%E4%B8%AA%E5%BA%94%E7%94%A8"><span class="nav-number">1.9.2.</span> <span class="nav-text">app record：黑盒录整个应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#app-replay%EF%BC%9A%E4%B8%80%E4%B8%AA%E6%95%B0%E5%AD%97%E5%8A%A0%E4%B8%80%E4%BB%BD%E6%8A%A5%E5%91%8A"><span class="nav-number">1.9.3.</span> <span class="nav-text">app replay：一个数字加一份报告</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#app-front-door%EF%BC%9ARust-%E5%89%8D%E9%97%A8"><span class="nav-number">1.9.4.</span> <span class="nav-text">app front-door：Rust 前门</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#app-wire%EF%BC%9A%E4%B8%80%E5%9D%97%E4%B8%80%E5%9D%97%E6%8A%8A%E5%91%BD%E4%BB%A4%E4%BA%A4%E7%BB%99-Rust"><span class="nav-number">1.9.5.</span> <span class="nav-text">app wire：一块一块把命令交给 Rust</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#app-lift%EF%BC%9A%E5%8F%98%E6%88%90%E7%BA%AF-Rust"><span class="nav-number">1.9.6.</span> <span class="nav-text">app lift：变成纯 Rust</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.9.7.</span> <span class="nav-text">HTTP 服务器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E4%B8%89%E4%B8%AA%E7%9C%9F%E5%AE%9E%E6%A1%88%E4%BE%8B%EF%BC%9A%E5%AE%83%E5%88%B0%E5%BA%95%E8%A1%8C%E4%B8%8D%E8%A1%8C"><span class="nav-number">1.10.</span> <span class="nav-text">十、三个真实案例：它到底行不行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E4%B8%80%EF%BC%9Avercel-ms-%E2%80%94%E2%80%94-%E7%BB%93%E8%AE%BA%E6%98%AF%E2%80%9D%E6%98%AF%E4%B8%AA%E5%A5%BD%E7%A7%BB%E6%A4%8D%EF%BC%8C%E5%9D%8F%E7%9A%84%E6%8F%90%E9%80%9F%E7%9B%AE%E6%A0%87%E2%80%9D"><span class="nav-number">1.10.1.</span> <span class="nav-text">案例一：vercel&#x2F;ms —— 结论是” 是个好移植，坏的提速目标”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E4%BA%8C%EF%BC%9AFuse-js-%E2%80%94%E2%80%94-32-%E5%80%8D"><span class="nav-number">1.10.2.</span> <span class="nav-text">案例二：Fuse.js —— 32 倍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E4%B8%89%EF%BC%9Ajson-server-%E2%80%94%E2%80%94-%E5%AE%8C%E6%95%B4%E8%B5%B0%E5%AE%8C%E5%85%A8%E5%BA%94%E7%94%A8%E6%B5%81%E7%A8%8B"><span class="nav-number">1.10.3.</span> <span class="nav-text">案例三：json-server —— 完整走完全应用流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%AE%83%E6%98%AF%E6%80%8E%E4%B9%88%E5%81%9A-Agent-%E9%9B%86%E6%88%90%E7%9A%84"><span class="nav-number">1.11.</span> <span class="nav-text">十一、它是怎么做 Agent 集成的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.11.1.</span> <span class="nav-text">安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E5%AE%83%E5%81%9A%E5%AF%B9%E7%9A%84%E5%87%A0%E4%B8%AA%E8%AE%BE%E8%AE%A1%E5%86%B3%E5%AE%9A"><span class="nav-number">1.12.</span> <span class="nav-text">十二、它做对的几个设计决定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BF%9D%E5%AE%88%E4%BC%98%E5%85%88"><span class="nav-number">1.12.1.</span> <span class="nav-text">1. 保守优先</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%8D%E7%8C%9C"><span class="nav-number">1.12.2.</span> <span class="nav-text">2. 不猜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-JSON-%E8%BE%93%E5%87%BA%E5%B8%A6%E7%89%88%E6%9C%AC"><span class="nav-number">1.12.3.</span> <span class="nav-text">3. JSON 输出带版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%8F%AA%E5%9C%A8%E7%AB%AF%E7%82%B9%E6%A3%80%E6%9F%A5%E8%A1%8C%E4%B8%BA%EF%BC%8C%E4%B8%8D%E6%A3%80%E6%9F%A5%E5%86%85%E9%83%A8"><span class="nav-number">1.12.4.</span> <span class="nav-text">4. 只在端点检查行为，不检查内部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%96%B9%E5%90%91%E6%98%AF%E5%8D%95%E5%90%91%E7%9A%84"><span class="nav-number">1.12.5.</span> <span class="nav-text">5. 方向是单向的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E4%BD%A0%E7%9A%84%E4%BB%A3%E7%A0%81%E4%B8%8D%E5%87%BA%E6%9C%AC%E6%9C%BA"><span class="nav-number">1.12.6.</span> <span class="nav-text">6. 你的代码不出本机</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E8%AF%9A%E5%AE%9E%E7%9A%84%E5%B1%80%E9%99%90"><span class="nav-number">1.13.</span> <span class="nav-text">十三、诚实的局限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%95%E4%B8%8D%E5%88%B0%E7%9A%84%E5%B0%B1%E6%9F%A5%E4%B8%8D%E5%87%BA%E6%9D%A5"><span class="nav-number">1.13.1.</span> <span class="nav-text">录不到的就查不出来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#profile-%E5%8F%AA%E6%98%AF%E2%80%9DTested%E2%80%9D%E7%8A%B6%E6%80%81"><span class="nav-number">1.13.2.</span> <span class="nav-text">profile 只是”Tested” 状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%84%E8%AF%AD%E8%A8%80%E7%9A%84%E6%94%AF%E6%8C%81%E7%A8%8B%E5%BA%A6%E5%B7%AE%E5%88%AB%E5%BE%88%E5%A4%A7"><span class="nav-number">1.13.3.</span> <span class="nav-text">各语言的支持程度差别很大</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%AE%E7%82%B9%E6%95%B0%E5%9F%BA%E6%9C%AC%E5%8C%B9%E9%85%8D%E4%B8%8D%E4%BA%86"><span class="nav-number">1.13.4.</span> <span class="nav-text">浮点数基本匹配不了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%83%E4%B8%8D%E7%BF%BB%E8%AF%91%E4%BB%A3%E7%A0%81%EF%BC%8C%E4%B9%9F%E4%B8%8D%E8%AE%A4%E8%AF%86%E4%BA%8C%E8%BF%9B%E5%88%B6"><span class="nav-number">1.13.5.</span> <span class="nav-text">它不翻译代码，也不认识二进制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kodebase-%E7%BB%93%E6%9E%84%E4%B8%8A%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-number">1.13.6.</span> <span class="nav-text">Kodebase 结构上的限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E9%9D%9E%E5%B8%B8%E6%96%B0"><span class="nav-number">1.13.7.</span> <span class="nav-text">项目非常新</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E8%B7%9F%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E6%AF%94"><span class="nav-number">1.14.</span> <span class="nav-text">十四、跟同类项目比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#vs-%E7%94%A8-AI-%E7%9B%B4%E6%8E%A5%E9%87%8D%E5%86%99"><span class="nav-number">1.14.1.</span> <span class="nav-text">vs. 用 AI 直接重写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vs-C2Rust-TRACTOR-Depyler"><span class="nav-number">1.14.2.</span> <span class="nav-text">vs. C2Rust &#x2F; TRACTOR &#x2F; Depyler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vs-wasm-pack-PyO3-%E7%AD%89%E6%A1%A5%E6%8E%A5%E5%BA%93"><span class="nav-number">1.14.3.</span> <span class="nav-text">vs. wasm-pack &#x2F; PyO3 等桥接库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vs-%E6%89%8B%E5%B7%A5%E5%81%9A-differential-testing"><span class="nav-number">1.14.4.</span> <span class="nav-text">vs. 手工做 differential testing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8B%AC%E7%89%B9%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">1.14.5.</span> <span class="nav-text">独特的位置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E9%80%82%E5%90%88%E8%B0%81%EF%BC%8C%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">1.15.</span> <span class="nav-text">十五、适合谁，不适合谁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88"><span class="nav-number">1.15.1.</span> <span class="nav-text">适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88"><span class="nav-number">1.15.2.</span> <span class="nav-text">不适合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E3%80%81%E6%88%91%E7%9A%84%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.16.</span> <span class="nav-text">十六、我的实际使用建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%83%E3%80%81%E6%9C%80%E5%90%8E"><span class="nav-number">1.17.</span> <span class="nav-text">十七、最后</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">133</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">438</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/18/rust-anything-rewrite-app-in-rust-verified-behavior/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="erkamyaman&#x2F;rust-anything：3321 star 的 Rust 迁移工具箱，把 Node&#x2F;Python&#x2F;Go 应用逐块改写成 Rust 并逐步验证行为一致 | 小戴的网络日志">
+      <meta itemprop="description" content="rust-anything 是开发者 erKam Yaman 用 Rust 写的迁移工具箱兼 MCP 服务，2026 年 11 月 16 日发布 1.0.0，三天后拿到 3321 个 star 和 262 个 fork，MIT 许可证，crate 版本 1.5.1 已上架 crates.io 和 npm。它不做代码翻译，而是提供一套可被 Claude Code、Codex、Cursor、Gemini CLI 驱动的迁移工作流：profile 找出真正耗时的那段循环，analyze 把仓库切成可移植的单元并排出迁移顺序，bridge 生成 napi-rs、wasm-bindgen、PyO3、cgo、JNI 等桥接脚手架，record 把原函数在生成边界值、语义陷阱和自有测试上的返回值录成 cases.jsonl，diff 把用例逐条回放给 Rust 版比对，bench 给出 ship 或 keep 的结论，shadow 让新旧并行跑并返回旧结果，gate 汇总 fmt、clippy、unsafe 审计和错误路径覆盖，最后 app record 到 app lift 把整个 CLI 或 HTTP 服务换成纯 Rust 二进制。TypeScript、Python、C、Go、Ruby、Java 六种语言已通过真实项目验证，PHP 与 C# 处于 preview。官方案例包括 vercel&#x2F;ms 的 975 个用例全匹配、Fuse.js 的 3414 个用例全匹配、json-server 的 514 个 HTTP 用例在纯 Rust 二进制上全通过且并发吞吐提升约五倍。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          erkamyaman/rust-anything：3321 star 的 Rust 迁移工具箱，把 Node/Python/Go 应用逐块改写成 Rust 并逐步验证行为一致
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-19 00:20:00" itemprop="dateCreated datePublished" datetime="2026-11-19T00:20:00+08:00">2026-11-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">rust-anything 是开发者 erKam Yaman 用 Rust 写的迁移工具箱兼 MCP 服务，2026 年 11 月 16 日发布 1.0.0，三天后拿到 3321 个 star 和 262 个 fork，MIT 许可证，crate 版本 1.5.1 已上架 crates.io 和 npm。它不做代码翻译，而是提供一套可被 Claude Code、Codex、Cursor、Gemini CLI 驱动的迁移工作流：profile 找出真正耗时的那段循环，analyze 把仓库切成可移植的单元并排出迁移顺序，bridge 生成 napi-rs、wasm-bindgen、PyO3、cgo、JNI 等桥接脚手架，record 把原函数在生成边界值、语义陷阱和自有测试上的返回值录成 cases.jsonl，diff 把用例逐条回放给 Rust 版比对，bench 给出 ship 或 keep 的结论，shadow 让新旧并行跑并返回旧结果，gate 汇总 fmt、clippy、unsafe 审计和错误路径覆盖，最后 app record 到 app lift 把整个 CLI 或 HTTP 服务换成纯 Rust 二进制。TypeScript、Python、C、Go、Ruby、Java 六种语言已通过真实项目验证，PHP 与 C# 处于 preview。官方案例包括 vercel/ms 的 975 个用例全匹配、Fuse.js 的 3414 个用例全匹配、json-server 的 514 个 HTTP 用例在纯 Rust 二进制上全通过且并发吞吐提升约五倍。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="erkamyaman-rust-anything：3321-star-的-Rust-迁移工具箱，把-Node-Python-Go-应用逐块改写成-Rust-并逐步验证行为一致"><a href="#erkamyaman-rust-anything：3321-star-的-Rust-迁移工具箱，把-Node-Python-Go-应用逐块改写成-Rust-并逐步验证行为一致" class="headerlink" title="erkamyaman/rust-anything：3321 star 的 Rust 迁移工具箱，把 Node/Python/Go 应用逐块改写成 Rust 并逐步验证行为一致"></a>erkamyaman/rust-anything：3321 star 的 Rust 迁移工具箱，把 Node/Python/Go 应用逐块改写成 Rust 并逐步验证行为一致</h1><h2 id="一、先说个让我脸红的场景"><a href="#一、先说个让我脸红的场景" class="headerlink" title="一、先说个让我脸红的场景"></a>一、先说个让我脸红的场景</h2><p>去年我接了一个活：把公司一个跑了七八年的 Node.js 后端服务” 现代化”。老板的原话是” 用 Rust 重写一下，性能好”。我当时觉得这活儿挺简单 ——AI 都能写 Rust，我让它写不就行了？</p>
+<p>于是我打开 Claude Code，说：” 把 <code>src/</code> 目录重写成 Rust。” 一小时后它给了我一个 <code>Cargo.toml</code>、一堆 <code>.rs</code> 文件，和一句” 完成了”。</p>
+<p>我跑了一下 <code>npm test</code>。138 个用例，挂了 71 个。</p>
+<p>挂得五花八门：JS 的 <code>slice</code> 按 UTF-16 码元切，Rust 的 <code>str</code> 按字节切，一个 emoji 就切出乱码；JS 的 <code>Math.round(-2.5)</code> 是 <code>-2</code>，Rust 的 <code>f64::round</code> 是 <code>-3</code>（远离零）；JSON 序列化以后 key 顺序不一样；有几处异常类型都变了。</p>
+<p>最难受的是我<strong>没法判断</strong>哪些是” 实现得不好”，哪些是” 本来就该不一样”。这才是真正的痛点：<strong>Rust 重写最大的成本不是写 Rust，而是证明它跟原来那个一模一样</strong>。</p>
+<p>我后来自己写了一堆测试兜底，但写测试的过程比重写业务代码还长，而且测试永远只能覆盖我想到的情况。</p>
+<p>所以当我看到 <code>erkamyaman/rust-anything</code> 这个项目时，我的感觉是：它把我那三个月手搓的活儿，做成了一个工具。</p>
+<p>2026 年 11 月 16 日它发布了 1.0.0，三天后就到了 3321 个 star。仓库在 <code>erkamyaman/rust-anything</code>，MIT 许可证，主语言 Rust。</p>
+<p>它的一句话定位是：</p>
+<blockquote>
+<p>Rewrite your whole app in Rust, one piece at a time, checked against the original at every step.</p>
+</blockquote>
+<p>翻译过来就是：<strong>把整个应用一块一块改写成 Rust，每一步都跟原版对照检查</strong>。</p>
+<p>下面我们拆开看它到底怎么做到的。</p>
+<h2 id="二、它是什么：一句话加上几个关键数字"><a href="#二、它是什么：一句话加上几个关键数字" class="headerlink" title="二、它是什么：一句话加上几个关键数字"></a>二、它是什么：一句话加上几个关键数字</h2><p>rust-anything <strong>不是</strong>代码翻译器。它不生成 Rust 代码。</p>
+<p>它提供的是一套” 工作流 + 脚手架 + 验证机制”，Rust 代码由你或者你的 coding agent 写在一份叫 <code>port.rs</code> 的文件里。它负责的是 agent 干不好的那部分：</p>
+<ul>
+<li>哪段代码值得迁移（<code>profile</code>）</li>
+<li>按什么顺序迁移（<code>analyze</code>）</li>
+<li>怎么让 Rust 代码能被原来的调用方调用（<code>bridge</code>）</li>
+<li>原来的行为到底是什么（<code>record</code>）</li>
+<li>Rust 写得对不对（<code>diff</code>）</li>
+<li>迁移完到底快不快（<code>bench</code>）</li>
+<li>上线时怎么保证不出事（<code>shadow</code>、<code>gate</code>）</li>
+<li>怎么从” 一半 Rust 一半 Node” 变成” 纯 Rust”（<code>app record</code> 到 <code>app lift</code>）</li>
+</ul>
+<p>几个关键数字（数据来自 GitHub API 与仓库文档，2026 年 11 月 19 日查证）：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Star</td>
+<td>3321</td>
+</tr>
+<tr>
+<td>Fork</td>
+<td>262</td>
+</tr>
+<tr>
+<td>Open issues</td>
+<td>7</td>
+</tr>
+<tr>
+<td> 许可证</td>
+<td> MIT</td>
+</tr>
+<tr>
+<td> 主语言</td>
+<td> Rust</td>
+</tr>
+<tr>
+<td> 当前 crate 版本</td>
+<td> 1.5.1（crates.io / npm）</td>
+</tr>
+<tr>
+<td>首次发布</td>
+<td> 2026-11-16 12:46 UTC（v1.0.0）</td>
+</tr>
+<tr>
+<td>贡献者</td>
+<td> 9 人（作者 erkamyaman 156 次提交，第二名 rudycelekli 46 次）</td>
+</tr>
+<tr>
+<td>仓库创建时间</td>
+<td> 2026-11-16 12:10 UTC</td>
+</tr>
+<tr>
+<td> 支持语言</td>
+<td> TS/JS、Python、C、Go、Ruby、Java（已验证）；PHP、C#（preview）</td>
+</tr>
+<tr>
+<td>支持的 Agent</td>
+<td>Claude Code、Codex、Cursor、Gemini CLI、任意 MCP 客户端</td>
+</tr>
+<tr>
+<td> Rust 最低版本</td>
+<td> 1.97</td>
+</tr>
+</tbody></table>
+<p>仓库规模不算大：<code>src/</code> 下面 65 个 Rust 文件，最大的几个是 <code>src/app.rs</code>（81 KB）、<code>src/harness.rs</code>（71 KB）、<code>src/codegen_java.rs</code>（71 KB）、<code>src/bridge.rs</code>（65 KB）。作者用的是 Rust 2024 edition，解析器用 <code>oxc</code>（JS/TS）和 <code>tree-sitter</code>（其余语言），并且在 <code>Cargo.toml</code> 里直接写了：</p>
+<figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[lints.rust]</span></span><br><span class="line"><span class="attr">unsafe_code</span> = <span class="string">"forbid"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>整个 crate 本身不允许出现 <code>unsafe</code>。</p>
+<p>有个细节挺有意思：README 里有 19 种语言的翻译版本（简中、繁中、日文、韩文、土耳其文、乌克兰文……），但<strong>只有英文版是作者自己写的</strong>，翻译大概率是 AI 批量生成的 —— 不过我读简体中文版时发现质量还不错。</p>
+<h2 id="三、核心机制一：先测，后改"><a href="#三、核心机制一：先测，后改" class="headerlink" title="三、核心机制一：先测，后改"></a>三、核心机制一：先测，后改</h2><p>rust-anything 的整个设计，源自一个想法：<strong>别让 AI 去猜” 原来那个函数的行为是什么”，让它去录。</strong></p>
+<p>这就是 <code>record</code>（<code>rust-anything record rust/fuzzy-rs</code>），这条命令做三件事。</p>
+<p><strong>一、生成边界用例。</strong> 从函数签名推断参数类型，然后生成一堆” 语义陷阱”：非 ASCII 字符、emoji、<code>-0</code>、<code>NaN</code>、<code>Infinity</code>、本该是浮点却传了整数、字符串长度和大小写边界、有符号除法、溢出边界、浮点打印格式、Map 和 Set 的遍历顺序。README 里提到的具体陷阱包括土耳其语的点 less i（<code>ı</code>）、Kelvin 符号（<code>K</code>）、长 s（<code>ſ</code>）、阿拉伯 - 印度数字、行分隔符、final sigma。</p>
+<p><strong>二、跑你自己的输入。</strong> <code>--inputs cases.jsonl</code> 可以喂自己的 JSONL 文件。</p>
+<p><strong>三、跑原版自己的测试。</strong> 这个是杀手锏：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rust-anything record rust/fuzzy-rs --from-tests -- npx jest</span><br></pre></td></tr></tbody></table></figure>
+
+<p>它在测试跑的时候” 偷看” 原函数的每一次调用，把调用参数和返回值都录下来。官方案例 vercel/ms 从它自己的 167 个 Jest 测试里抓到了 <strong>340 次真实调用</strong>。作者在文档里说，第一次移植时是手工从测试里抄了 149 个输入，后来才有了 <code>--from-tests</code>。</p>
+<p>录下来的东西存成 <code>cases.jsonl</code>，每个用例是一次函数调用加上它的返回值或者抛出的异常。然后 <code>diff</code> 把这些用例全部回放给 Rust 版（<code>rust-anything diff rust/fuzzy-rs</code>），有任何一条对不上它就列出来。</p>
+<h3 id="两个容易被忽略的细节"><a href="#两个容易被忽略的细节" class="headerlink" title="两个容易被忽略的细节"></a>两个容易被忽略的细节</h3><p><strong>第一，两边都抛异常算” 一致”。</strong> DECISIONS.md 里记着：</p>
+<blockquote>
+<p>L7 | Both sides throwing counts as agreement; messages are not compared.</p>
+</blockquote>
+<p>原版抛 <code>TypeError</code>，Rust 版抛 <code>ValueError</code>—— 只要两边都是” 抛了” 就算一致，错误消息文本不算契约。理由很实在：错误文本很少是真正的契约，如果要比，很多移植会卡在措辞上而不是逻辑上。Go 是例外，它的 <code>error</code> 值按消息比较，因为 Go 的调用方经常直接比错误字符串。</p>
+<p><strong>第二，录的时候跑两遍。</strong> <code>record</code> 把每个用例跑两遍，比对差异：值变了（时间戳、随机 ID）→ 变成 <code>[..]</code> 通配符；同样的行但顺序不同（哈希表遍历、并发）→ 按任意顺序比较；行数不同 → 变成 <code>...</code>，匹配任何东西。这些都会列在 <code>noise</code> 报告里要求你逐条看。文档说得很直白：”look at every one, since a hash-order or concurrency difference is exactly what can change for real in a port.”（<code>app record</code> 这一层同样跑两遍。）</p>
+<h2 id="四、核心机制二：挡住”原来那版变了”"><a href="#四、核心机制二：挡住”原来那版变了”" class="headerlink" title="四、核心机制二：挡住”原来那版变了”"></a>四、核心机制二：挡住” 原来那版变了”</h2><p>如果原版代码后来被改了，之前录的行为还有效吗？</p>
+<p>rust-anything 的做法是：<code>record</code> 保存被录单元文件的指纹，写进 <code>recorded-from.json</code>。以后原版变了，<code>diff</code> 会警告，<code>gate</code> 直接失败，直到你重新录一遍。</p>
+<blockquote>
+<p>An original that moved on. <code>record</code> saves a fingerprint of the unit’s files (<code>recorded-from.json</code>); when the original changes later, <code>diff</code> warns and <code>gate</code> fails until you record again, instead of passing against what the original used to do.</p>
+</blockquote>
+<p>这条我觉得是整套东西里最被低估的设计。因为真实项目里最常见的事故不是” 移植写错了”，而是” 移植写对了，但原版早就变了，测试用例还是三个月前的”。有了指纹，这个问题至少不会静默通过。</p>
+<h2 id="五、核心机制三：bridge-生成桥接，但把-Rust-代码留给你"><a href="#五、核心机制三：bridge-生成桥接，但把-Rust-代码留给你" class="headerlink" title="五、核心机制三：bridge 生成桥接，但把 Rust 代码留给你"></a>五、核心机制三：<code>bridge</code> 生成桥接，但把 Rust 代码留给你</h2><p><code>bridge</code> 做的是生成脚手架：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rust-anything bridge . src/fuzzy.ts --batch fuzzyScore:text</span><br></pre></td></tr></tbody></table></figure>
+
+<p>生成的东西是一个 crate：<code>Cargo.toml</code>、<code>src/lib.rs</code>（napi-rs 或 wasm-bindgen 绑定）、<code>src/port.rs</code>（<strong>你或你的 agent 在这里写 Rust</strong>，初始是空桩）、<code>src/js.rs</code>（JS 语义的忠实模拟辅助函数），以及 <code>rust-anything.json</code>。</p>
+<p>DECISIONS.md 里解释了这个拆分：</p>
+<blockquote>
+<p>L1 | <code>bridge</code> splits <code>lib.rs</code> (bindings) from <code>port.rs</code> (plain Rust, <code>#![forbid(unsafe_code)]</code>). | Binding macros expand to unsafe code; the port itself never needs it, and it stays testable without a JS runtime.</p>
+</blockquote>
+<p>翻译一下：绑定宏会展开成 unsafe 代码，但你的移植逻辑本身不需要 unsafe。而且这样 <code>port.rs</code> 不用挂着一个 JS 运行时也能测。</p>
+<h3 id="各语言用什么桥"><a href="#各语言用什么桥" class="headerlink" title="各语言用什么桥"></a>各语言用什么桥</h3><table>
+<thead>
+<tr>
+<th>语言</th>
+<th>桥接方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> TypeScript/JavaScript</td>
+<td>napi-rs 或 wasm-bindgen，生成二进制 wire 格式；类和 async 都支持</td>
+</tr>
+<tr>
+<td> Python</td>
+<td>PyO3（abi3），直接类型转换，带类型的异常</td>
+</tr>
+<tr>
+<td> C</td>
+<td><code>extern "C"</code> 函数，保留原函数名 + 头文件</td>
+</tr>
+<tr>
+<td> Go</td>
+<td> 类型化的 cgo 调用 + 生成的二进制 wire，放在一个保留原 API 的包里</td>
+</tr>
+<tr>
+<td> Ruby</td>
+<td>magnus 扩展，放在原模块下</td>
+</tr>
+<tr>
+<td> Java</td>
+<td> 类型化 JNI + 生成的二进制 wire，放在保留原方法的包装类里</td>
+</tr>
+<tr>
+<td> PHP（preview）</td>
+<td>待做：PHP FFI over C ABI</td>
+</tr>
+<tr>
+<td>C#（preview）</td>
+<td>待做：P/Invoke over C ABI</td>
+</tr>
+</tbody></table>
+<p>Rust 那边的 <code>src/lang/</code> 目录，每个语言一个文件，最大的是 <code>src/lang/python.rs</code>（45 KB）和 <code>src/lang/php.rs</code>（34 KB）。</p>
+<h3 id="哪些东西不能跨桥"><a href="#哪些东西不能跨桥" class="headerlink" title="哪些东西不能跨桥"></a>哪些东西不能跨桥</h3><p>这是最实用的一段。<code>bridge</code> 会自动把” 跨不过去” 的导出留在原语言里，并说明理由。TypeScript 的话：接收或返回函数的、生成器和迭代器、RegExp、<code>instanceof</code> 检查、泛型（可以用 <code>--as-json T</code> 桥接一个只填数据的类型参数）、以及类型里（跟着 import、re-export、<code>extends</code> 一路追下去）藏了函数的。</p>
+<p>作者在 x18n 项目上发现：55 个导出里有 <strong>26 个</strong>属于这一类。这些如果硬移植，会改掉公开 API 或者悄悄坏掉。剩下的放进 Rust 的 API 和原来完全一样，调用方一行都不用改。</p>
+<h3 id="JSON-表达不了的东西怎么办"><a href="#JSON-表达不了的东西怎么办" class="headerlink" title="JSON 表达不了的东西怎么办"></a>JSON 表达不了的东西怎么办</h3><p>这是我写 Rust 迁移时踩过最多次的坑。JSON 表达不了 <code>undefined</code>、NaN、Infinity、<code>-0</code>、孤立代理对（lone surrogate）。rust-anything 的做法是给结构化值带标记（<code>{"$undefined": true}</code>、<code>{"$num": "NaN"}</code>、<code>{"$utf16": [...]}</code>），生成的 <code>index.cjs</code> 负责翻译。</p>
+<p>X2 这条决策记录了这些标记每一个的真实来源：</p>
+<blockquote>
+<p>Each one produced real mismatches: <code>splitKey</code>‘s <code>namespace: undefined</code>, <code>toWireRange</code> with NaN, <code>diffText</code> splitting an emoji, <code>isOutdated(change)</code> with one argument.</p>
+</blockquote>
+<p>每一个标记背后都是一个真实的 bug。孤立代理对那个，是被 fixture 测试发现的 ——JS 的 <code>slice</code> 能把一个 emoji 切成两半。</p>
+<h2 id="六、核心机制四：-batch-才是真正快的地方"><a href="#六、核心机制四：-batch-才是真正快的地方" class="headerlink" title="六、核心机制四：--batch 才是真正快的地方"></a>六、核心机制四：<code>--batch</code> 才是真正快的地方</h2><p>这是我读完全部文档后觉得最有价值、也最反直觉的一节。</p>
+<p>README 里有一句警告：</p>
+<blockquote>
+<p>Calling Rust once per small function is usually <em>slower</em> than a JIT; rust-anything finds the loop worth moving, and moves it.</p>
+</blockquote>
+<p>翻译：小函数每次调用都跨一次桥，通常比 JIT 还慢。rust-anything 帮你找到那个值得搬的循环，然后把整个循环搬走。</p>
+<h3 id="为什么会慢"><a href="#为什么会慢" class="headerlink" title="为什么会慢"></a>为什么会慢</h3><p>因为跨桥有成本。DECISIONS.md 里的实测：</p>
+<blockquote>
+<p>S1 | … JSON cost 10-50x the work: the colorsys port took 11.7 µs per call, CPython 0.5 µs.</p>
+</blockquote>
+<p>Python 的 colorsys 移植一次调用 11.7 微秒，CPython 原生 0.5 微秒，差 23 倍 —— <strong>跨桥的开销比业务逻辑本身还大一个数量级</strong>。所以关键不是” 把函数写快”，而是” 别每次都跨”。</p>
+<h3 id="batch-做什么"><a href="#batch-做什么" class="headerlink" title="--batch 做什么"></a><code>--batch</code> 做什么</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rust-anything bridge . src/fuzzy.ts --batch fuzzyScore:text</span><br></pre></td></tr></tbody></table></figure>
+
+<p>生成的类接收一批 item，item 一次性进 Rust 之后<strong>就留在 Rust 里</strong>，然后在所有核上并行跑完这一批。JavaScript 侧变成这样：</p>
+<figure class="highlight js"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> search = <span class="keyword">new</span> <span class="title class_">FuzzyScoreBatch</span>(keys)          <span class="comment">// 一次</span></span><br><span class="line"><span class="keyword">const</span> order = search.<span class="title function_">rank</span>(query, <span class="number">0</span>)               <span class="comment">// 每次击键：返回索引，最优的排前面</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意返回的是<strong>索引</strong>而不是字符串 —— 调用方本来就持有那批 item，没必要再传一遍。</p>
+<h3 id="实测数字"><a href="#实测数字" class="headerlink" title="实测数字"></a>实测数字</h3><p><code>demo/</code> 目录里每个都有可复现的 benchmark。x18n 的侧边栏搜索，5 万个 key，4 核：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="right">每次查询</th>
+<th align="right">对比 TS</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TS: <code>map(fuzzyScore)</code> + filter + sort</td>
+<td align="right">10 ms</td>
+<td align="right">1x</td>
+</tr>
+<tr>
+<td>TS 用同样的收窄逻辑</td>
+<td align="right"> 4.1-5.4 ms</td>
+<td align="right">2x</td>
+</tr>
+<tr>
+<td> 同样的移植，逐个 key 调用</td>
+<td align="right"> -</td>
+<td align="right"><strong>0.2-0.4x（更慢！）</strong></td>
+</tr>
+<tr>
+<td><code>FuzzyScoreBatch</code>，默认索引（4 核）</td>
+<td align="right">5.1 ms</td>
+<td align="right">1.7x</td>
+</tr>
+<tr>
+<td><code>FuzzyScoreBatch</code> + <code>FuzzyScoreIndex</code>（napi，4 核）</td>
+<td align="right">0.45-0.56 ms</td>
+<td align="right"><strong>18-22x</strong></td>
+</tr>
+<tr>
+<td> 同样但用 wasm（单线程）</td>
+<td align="right">0.95 ms</td>
+<td align="right">11.5x</td>
+</tr>
+</tbody></table>
+<p>看清楚第 3 行：<strong>同一个移植，逐个调用反而比原版慢</strong>。这就是为什么 <code>profile</code> 必须先跑。</p>
+<h3 id="FuzzyScoreIndex-是什么"><a href="#FuzzyScoreIndex-是什么" class="headerlink" title="FuzzyScoreIndex 是什么"></a><code>FuzzyScoreIndex</code> 是什么</h3><p>这是 <code>port.rs</code> 里的一个 struct，作者手写的，设计很讲究：每个 key 预先转小写并附带字符掩码；建一张表记录每个常见字符在每个 key 里第一次出现的位置（一个字母的查询就是一列）；缓存上一次查询的匹配结果，接着输 <code>se</code> 的时候只重算 <code>s</code> 匹配过的那部分。</p>
+<p>DECISIONS.md 里有一句：</p>
+<blockquote>
+<p>S15 | An index in <code>port.rs</code> may define its own <code>rank(&lt;fixed&gt;, min)</code>; the generated <code>rank</code> of every language then calls it instead of ranking <code>run</code>‘s results.</p>
+</blockquote>
+<p>排序可以比全部打分便宜：x18n 的 index 收窄到上次查询的匹配项，单字母查询直接查表，wasm 上从 1.7x 提到 11.5x。而 S10 说明了为什么这个设计能成立：</p>
+<blockquote>
+<p>Preparing items once (lowercasing, masks) was the second 4x on x18n search; one <code>port.rs</code> then builds for napi and wasm.</p>
+</blockquote>
+<p>也就是<strong>一份 <code>port.rs</code>，同时编译成 napi 版本和 wasm 版本</strong>。桥接方式可以换，算法代码不用动。</p>
+<h3 id="各语言批量对比"><a href="#各语言批量对比" class="headerlink" title="各语言批量对比"></a>各语言批量对比</h3><table>
+<thead>
+<tr>
+<th>语言</th>
+<th>工作负载</th>
+<th align="right">原版</th>
+<th align="right">逐个调用</th>
+<th align="right">批量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> TS</td>
+<td>x18n 搜索，5 万 key</td>
+<td align="right">10 ms</td>
+<td align="right">0.2-0.4x</td>
+<td align="right"><strong>20x</strong></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>slugify</code>，2 万字符串</td>
+<td align="right"> 98 ms</td>
+<td align="right">-</td>
+<td align="right"><strong>17x</strong></td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td><code>slugify</code>，2 万字符串</td>
+<td align="right"> 110 ms</td>
+<td align="right">-</td>
+<td align="right"><strong>12.7x</strong></td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td><code>shellescape</code>（标准库），5 万值</td>
+<td align="right"> 88 ms</td>
+<td align="right">-</td>
+<td align="right"><strong>11.8x</strong></td>
+</tr>
+<tr>
+<td>Go</td>
+<td><code>Slugify</code>，5 万字符串</td>
+<td align="right"> 49 ms</td>
+<td align="right">0.93x</td>
+<td align="right"><strong>4x</strong></td>
+</tr>
+<tr>
+<td>Java</td>
+<td><code>slugify</code>，5 万字符串</td>
+<td align="right"> 43 ms</td>
+<td align="right">0.68x</td>
+<td align="right"><strong>3x</strong></td>
+</tr>
+</tbody></table>
+<p>Go 和 Java 只快 3-4 倍，因为它们<strong>原本就是编译型语言</strong>，逐项调用本来就已经很快，批量的收益主要来自多核。文档里那句总结很实在：</p>
+<blockquote>
+<p>Compiled originals gain less: the per-item work is already fast, so the batch wins by the number of cores.</p>
+</blockquote>
+<h3 id="一个小坑：mimalloc"><a href="#一个小坑：mimalloc" class="headerlink" title="一个小坑：mimalloc"></a>一个小坑：mimalloc</h3><p>DECISIONS.md 的 S12 记着，带批量的 crate 用 mimalloc 作全局分配器：系统分配器会把线程串行化（纯 Rust 4 核只有 1.6x，在 Go 进程里甚至比单线程还慢），换 mimalloc 后是 3.2x。</p>
+<h2 id="七、核心机制五：profile-——-迁移顺序也是数据决定的"><a href="#七、核心机制五：profile-——-迁移顺序也是数据决定的" class="headerlink" title="七、核心机制五：profile —— 迁移顺序也是数据决定的"></a>七、核心机制五：<code>profile</code> —— 迁移顺序也是数据决定的</h2><p>移植顺序不是拍脑袋定的。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rust-anything profile . -- node bench.mjs</span><br></pre></td></tr></tbody></table></figure>
+
+<p>它用<strong>目标语言自己的 profiler</strong> 跑一个真实负载：Node.js 用 <code>node --cpu-prof</code>，Python 用 <code>cProfile</code>，Go 用 <code>go test -cpuprofile</code> 加 <code>go tool pprof -raw</code>（保留内联帧），Java 用 JFR 执行采样，Ruby 用通过 <code>RUBYOPT</code> 加载的 TracePoint 调用追踪器。</p>
+<p>Ruby 那条在 DECISIONS.md 里有解释：</p>
+<blockquote>
+<p>Ruby has none built in that samples, and stackprof is a gem the repository may not have.</p>
+</blockquote>
+<p>所以用 TracePoint 自己写了一个。文档也承认代价：”The Ruby tracer slows the program several times; shares stay comparable.”</p>
+<p>输出的不只是” 哪些函数热”，还有<strong>谁在调用它</strong>、<strong>哪些循环值得批量</strong>。S8 这条决策说得最清楚：</p>
+<blockquote>
+<p>Which code to port is a property of how it is called, not of the code: x18n’s <code>fuzzyScore</code> is a leaf (slower in Rust per call) but a quarter of a search, called 50,000 times by one loop.</p>
+</blockquote>
+<p><code>fuzzyScore</code> 单独看是个叶子函数，移植过去一定更慢。但它是整个搜索的四分之一时间，被一个循环调用了 5 万次。</p>
+<p><strong>只看代码你永远看不出来这件事，只有 profile 能看出来。</strong></p>
+<h3 id="analyze-排顺序"><a href="#analyze-排顺序" class="headerlink" title="analyze 排顺序"></a><code>analyze</code> 排顺序</h3><p><code>rust-anything analyze .</code> 输出：单元划分、迁移顺序（wave）、风险带 <code>file:line</code>、每个单元用什么桥、依赖到 crate 的映射，以及 <code>start_here</code>（最值得先动的几个）。</p>
+<p>单元的 wave 来自<strong>单元图的强连通分量</strong>：</p>
+<blockquote>
+<p>A5 | Waves come from strongly connected components of the unit graph. | Leaves first means a Rust unit never calls back into JS; cycles must move together.</p>
+</blockquote>
+<p>叶子先动，意味着 Rust 单元永远不会回调 JS；有循环依赖的必须一起搬。</p>
+<h3 id="风险打分"><a href="#风险打分" class="headerlink" title="风险打分"></a>风险打分</h3><table>
+<thead>
+<tr>
+<th>风险</th>
+<th>严重度</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>字符串偏移</td>
+<td> high</td>
+<td><code>slice</code>、<code>indexOf</code>、<code>matchAll</code>、<code>d</code> flag：UTF-16 vs UTF-8</td>
+</tr>
+<tr>
+<td> 正则语法</td>
+<td> high</td>
+<td>lookaround、反向引用、<code>y</code>：Rust 的 <code>regex</code> crate 没有</td>
+</tr>
+<tr>
+<td>动态正则</td>
+<td> high</td>
+<td><code>new RegExp(userPattern)</code></td>
+</tr>
+<tr>
+<td>动态代码</td>
+<td> high</td>
+<td><code>eval</code>、<code>new Function</code>、动态 <code>import()</code></td>
+</tr>
+<tr>
+<td>动态类型</td>
+<td> medium</td>
+<td><code>any</code>、<code>'key' in value</code></td>
+</tr>
+<tr>
+<td>有序集合</td>
+<td> medium</td>
+<td><code>Map</code>、<code>Set</code>、<code>Object.keys</code>：插入顺序</td>
+</tr>
+<tr>
+<td>异步、生成器</td>
+<td> medium</td>
+<td>promise 和 generator 边界</td>
+</tr>
+<tr>
+<td>类继承、反射</td>
+<td> medium</td>
+<td><code>extends</code>、<code>Proxy</code>、<code>Reflect</code>、<code>Symbol</code></td>
+</tr>
+<tr>
+<td>回调形状的 API</td>
+<td>medium</td>
+<td> 函数类型的参数和方法：桥会很啰嗦</td>
+</tr>
+<tr>
+<td>异常、数字、JSON</td>
+<td>low</td>
+<td><code>throw</code>、位运算、<code>JSON.stringify</code> 顺序</td>
+</tr>
+</tbody></table>
+<p>A6 这条决策解释了为什么用启发式：</p>
+<blockquote>
+<p>False positives cost a look; false negatives cost silent bugs.</p>
+</blockquote>
+<p>误报只是多看一眼，漏报是静默的 bug。所以宁可多报。</p>
+<h3 id="就绪度与优先级的公式"><a href="#就绪度与优先级的公式" class="headerlink" title="就绪度与优先级的公式"></a>就绪度与优先级的公式</h3><p>A7 规定就绪度 = 100 − 加权风险（取对数）− 规模 − fan-in − 依赖惩罚 + 测试加分。A8 规定优先级 = 一半就绪度 + 一半价值（每行的循环和字符串工作量、有没有测试、规模是否在 80 到 600 行之间）。</p>
+<p>就绪度算的是” 安不安全”，优先级是” 安不安全 + 值不值得”，对半分。为什么对半？A8 的理由：</p>
+<blockquote>
+<p>Readiness alone picks trivial declaration files.</p>
+</blockquote>
+<p>只按就绪度排，你会先挑到一堆只有类型声明的空文件。</p>
+<h2 id="八、核心机制六：shadow-和-gate-——-上线前的两道闸"><a href="#八、核心机制六：shadow-和-gate-——-上线前的两道闸" class="headerlink" title="八、核心机制六：shadow 和 gate —— 上线前的两道闸"></a>八、核心机制六：<code>shadow</code> 和 <code>gate</code> —— 上线前的两道闸</h2><h3 id="shadow：新旧并行跑"><a href="#shadow：新旧并行跑" class="headerlink" title="shadow：新旧并行跑"></a><code>shadow</code>：新旧并行跑</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rust-anything shadow rust/fuzzy-rs</span><br></pre></td></tr></tbody></table></figure>
+
+<p>生成一个 drop-in 替换模块，它<strong>同时跑原版和 Rust 版，返回原版的结果</strong>，同时把不一致的地方报出来。</p>
+<p>L9 这条决策说得很清楚：</p>
+<blockquote>
+<p>Shadow mode returns the original’s result, runs Rust second, and never lets Rust errors reach callers. | Shipping shadow code must not change behavior; only the report sees Rust.</p>
+</blockquote>
+<p>为什么要这个模式？D5 引了 Cloudflare FL2 的做法：</p>
+<blockquote>
+<p>Cloudflare FL2 ran old and new side by side in one process and moved traffic gradually. Tests prove a port; production traffic confirms it.</p>
+</blockquote>
+<p><strong>测试证明移植是对的，生产流量才能最终确认。</strong> 而且这个需求不是 Rust 独有的，所以每种语言都有 shadow 模式 ——Ruby 用 <code>prepend</code>，Java 用 <code>&lt;Class&gt;Shadow</code> 类，C 用 <code>-D</code> 重命名加一个 <code>shadow</code> crate feature，Go 就是一个包。</p>
+<h3 id="gate：一整套”做完了”的定义"><a href="#gate：一整套”做完了”的定义" class="headerlink" title="gate：一整套”做完了”的定义"></a><code>gate</code>：一整套” 做完了” 的定义</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rust-anything gate rust/fuzzy-rs</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>gate</code> 一次性检查：</p>
+<ul>
+<li><code>cargo fmt</code></li>
+<li><code>cargo clippy -- -D warnings</code></li>
+<li><code>cargo test</code></li>
+<li><code>unsafe</code> 审计：只允许有 <code>// SAFETY:</code> 注释的</li>
+<li>没有未实现的函数</li>
+<li>构建通过</li>
+<li> API 存在</li>
+<li>行为一致（录的用例全部匹配）</li>
+<li><strong>错误路径全覆盖</strong>：原版的每条错误路径都要有一个录下来的失败用例</li>
+<li>原始版没报错的地方，Rust 不能 <code>unwrap</code>/<code>expect</code>/<code>panic!</code>（除非标了 <code>// INFALLIBLE: &lt;why&gt;</code>）</li>
+<li><strong>代码规模</strong>：Rust 版行数不能超过原版的 3 倍（外加 50 行给 import 和签名）</li>
+</ul>
+<p>规模这条在 FAQ 里有解释：</p>
+<blockquote>
+<p><code>gate</code> compares the port’s lines with the original’s and fails above 3x (plus 50 lines for imports and signatures): that usually means hand-writing what a crate already does, or handling cases one by one. | <code>analyze</code> lists the crates to use.</p>
+</blockquote>
+<p>意思就是：如果你 Rust 写了三倍多的行数，通常说明你在手写一个现成的 crate 该干的事。</p>
+<h3 id="bench-单独存在，不并进-gate"><a href="#bench-单独存在，不并进-gate" class="headerlink" title="bench 单独存在，不并进 gate"></a><code>bench</code> 单独存在，不并进 <code>gate</code></h3><p>X5：</p>
+<blockquote>
+<p><code>bench</code> is a separate step, not part of <code>gate</code>. | Speed is not correctness, but it decides whether a port should ship: every x18n core port was correct and slower.</p>
+</blockquote>
+<p>x18n core 的每一个移植都是<strong>正确的，但是更慢的</strong>。如果 <code>bench</code> 在 <code>gate</code> 里，这些移植根本过不了门。</p>
+<p>S4 记录了 <code>bench</code> 的结论逻辑：</p>
+<blockquote>
+<p><code>bench</code> ends with a verdict: ship, keep the slower functions, port a bigger unit, or (for C) optimize the port. Faster is 1.1x or more, slower under 0.9x.</p>
+</blockquote>
+<p>四个结论：可以上线 / 保留原版（更慢的那些函数） / 换一个更大的单元来移植 / （C 的话）优化这个移植。</p>
+<p>注意阈值是不对称的：1.1 倍算快，0.9 倍以下算慢。中间地带算” 持平”。</p>
+<h2 id="九、核心机制七：整个应用的迁移-——-app-系列"><a href="#九、核心机制七：整个应用的迁移-——-app-系列" class="headerlink" title="九、核心机制七：整个应用的迁移 —— app 系列"></a>九、核心机制七：整个应用的迁移 —— <code>app</code> 系列</h2><p>前面都是单个函数或模块。但真实需求是” 把整个应用变成 Rust”。</p>
+<p>这是 v1.1.0 引入的，也是我认为这个项目最有野心的部分。</p>
+<h3 id="五个命令"><a href="#五个命令" class="headerlink" title="五个命令"></a>五个命令</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rust-anything app record . -- python3 cli.py    <span class="comment"># 把整个应用的行为录下来</span></span><br><span class="line">rust-anything app replay .                      <span class="comment"># 回放，任何 build 都要过</span></span><br><span class="line">rust-anything app front-door .                  <span class="comment"># 生成 Rust 前门</span></span><br><span class="line">rust-anything app wire . textkit --<span class="built_in">command</span> upper <span class="comment"># 把某个单元接进前门</span></span><br><span class="line">rust-anything app lift .                        <span class="comment"># 变成纯 Rust 应用</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="app-record：黑盒录整个应用"><a href="#app-record：黑盒录整个应用" class="headerlink" title="app record：黑盒录整个应用"></a><code>app record</code>：黑盒录整个应用</h3><p>应用是黑盒。<code>app record</code> 会跑三组用例：应用文档里的例子（README 和 shell 文件里的 <code>$ mytool ...</code> 行，还有那些例子提到的文件）、<code>--inputs</code> 提供的 JSONL（<code>{"name", "args", "stdin", "env", "files"}</code>）、以及语义陷阱（非 ASCII 和 emoji 字符串、负除数和负取模、溢出、极大和极小的浮点、map 顺序、文件不存在）。每个用例跑两遍，差异变成通配符。</p>
+<p>用例存成 trycmd 格式的文件（<code>hello.toml</code> 存 argv/env/exit code，<code>.stdin</code>、<code>.stdout</code>、<code>.stderr</code>、<code>.in/</code> 输入文件、<code>.out/</code> 写出的文件），可以直接手工编辑，Rust 侧有现成的测试跑它们。</p>
+<h3 id="app-replay：一个数字加一份报告"><a href="#app-replay：一个数字加一份报告" class="headerlink" title="app replay：一个数字加一份报告"></a><code>app replay</code>：一个数字加一份报告</h3><p><code>rust-anything app replay .</code> 输出 <code>passed/total</code>，写一份 <code>rust/app-cases/replay-report.md</code>，每个失败的用例带 diff，任何不匹配就非零退出。</p>
+<p><strong>报告里没有时间戳，也没有临时路径</strong> —— 同一个 build 跑两次 replay，写出来的文件一模一样。这是为了能进 CI：</p>
+<blockquote>
+<p>Commit it and run <code>app replay</code> then <code>git diff --exit-code rust/app-cases/replay-report.md</code> in CI, and a half-ported app fails CI on any change in what passes, better or worse, until the report is updated with it.</p>
+</blockquote>
+<p>半迁移状态的应用，只要通过率有变化（不管是变好还是变坏）CI 就会红，直到有人更新报告。这个设计把” 迁移进度” 变成了一个可版本控制的、CI 可校验的东西。</p>
+<h3 id="app-front-door：Rust-前门"><a href="#app-front-door：Rust-前门" class="headerlink" title="app front-door：Rust 前门"></a><code>app front-door</code>：Rust 前门</h3><p><code>rust-anything app front-door .</code> 生成 <code>rust/app</code>，一个以应用命名的 Rust 二进制：clap 解析器负责命令和参数，每个命令<strong>转发给原版</strong>，原版输出和退出码原样透传，每次 fallback 都计数。所以一上来 replay 是 100% 通过、100% fallback—— 它构建并回放来证明这一点。</p>
+<p>它<strong>从不覆盖</strong> <code>rust/app</code>：一旦生成，代码就是你的了。</p>
+<h3 id="app-wire：一块一块把命令交给-Rust"><a href="#app-wire：一块一块把命令交给-Rust" class="headerlink" title="app wire：一块一块把命令交给 Rust"></a><code>app wire</code>：一块一块把命令交给 Rust</h3><p><code>rust-anything app wire . textkit --command upper</code> 会在单元 crate 上跑 <code>gate</code>、把它作为库加进 <code>rust/app</code>、写一个胶水桩（<code>src/units/textkit.rs</code>）、重新生成路由，然后构建并回放。胶水桩留给你写：</p>
+<blockquote>
+<p>writes a glue stub (src/units/<unit>.rs, yours to write: parse args, call <crate>::port, print what the original prints)</crate></unit></p>
+</blockquote>
+<p>还有一个 <strong>kill switch</strong>：<code>RUST_ANYTHING_UNIT_TEXTKIT=original</code> 设了这个环境变量，wired 单元就退回原版。这是生产环境出问题时最快的回滚方式。</p>
+<h3 id="app-lift：变成纯-Rust"><a href="#app-lift：变成纯-Rust" class="headerlink" title="app lift：变成纯 Rust"></a><code>app lift</code>：变成纯 Rust</h3><p><code>rust-anything app lift .</code> 会先检查并拒绝，列出所有阻塞项：还有用例在 fallback、胶水还是桩、有单元没过 <code>gate</code>。</p>
+<p>都过了之后，它先在副本上操作：移除 fallback 路径和 kill switch，把每个单元 crate 变成 <code>rust/app</code> 的普通库（不再有 <code>cdylib</code>、绑定和生成的包装），加上 <code>rust/app/tests/app_cases.rs</code>，让 <code>cargo test</code> 就能跑 app-cases。</p>
+<p>然后跑一遍 lift 清单：fmt、clippy、测试、<code>rust/DECISIONS.md</code> 里提到的每个 target、运行时读取的文件和没被嵌入的资源、纯二进制上的 replay。</p>
+<p><strong>全部通过之后才写回。原版永远不动。</strong></p>
+<h3 id="HTTP-服务器"><a href="#HTTP-服务器" class="headerlink" title="HTTP 服务器"></a>HTTP 服务器</h3><p>同一套命令证明 HTTP 服务器：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rust-anything app record . --http -- node server.js</span><br><span class="line">rust-anything app replay .</span><br><span class="line">rust-anything app front-door .</span><br><span class="line">rust-anything app wire . api --route <span class="string">'GET /users/{id}'</span> --route <span class="string">'*'</span></span><br><span class="line">rust-anything app lift .</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>--http</code> 表示命令会启动一个服务器，端口从 <code>PORT</code> 环境变量或命令里的 <code>{port}</code> 取。请求来源是应用文档里的 <code>curl</code> 行、<code>--inputs</code>（<code>{"name", "method", "path", "headers", "body"}</code>）和陷阱 —— 路径段与查询值换成跟 CLI 参数一样的陷阱，body 用文本和 JSON 陷阱，再加一个未知路由。</p>
+<p><strong>每次运行都重新启动服务器</strong>，按名字顺序发请求，所以请求之间的状态是保留的。还有两个服务器专属选项：<code>--fresh db.json</code>（服务器读写状态文件时，每次启动都从快照复制一份到新的工作目录）和 <code>--pace 50</code>（每个响应后等 50 毫秒）。</p>
+<p><code>--pace</code> 是被 json-server 的真实 bug 逼出来的：</p>
+<blockquote>
+<p>Found in json-server: after each of its own writes, its file watcher reloads the file. When the next request writes before that reload ends, the reload can wipe that write out: the first recording, sent as fast as the server answered, had a POST answered 201 that later reads did not show.</p>
+</blockquote>
+<p>json-server 每次写完文件，文件监视器会重新加载文件。如果下一个请求在重载完成前就写，重载会把那次写覆盖掉。第一次录制时（请求发得跟服务器回的一样快），有个 POST 返回了 201，但后来读的时候看不到那条数据。所以录制时必须加 <code>--pace 50</code>。</p>
+<p>前门是 axum 服务器，在另一个端口上启动原版，把没有单元应答的路由全部代理过去。</p>
+<h2 id="十、三个真实案例：它到底行不行"><a href="#十、三个真实案例：它到底行不行" class="headerlink" title="十、三个真实案例：它到底行不行"></a>十、三个真实案例：它到底行不行</h2><h3 id="案例一：vercel-ms-——-结论是”是个好移植，坏的提速目标”"><a href="#案例一：vercel-ms-——-结论是”是个好移植，坏的提速目标”" class="headerlink" title="案例一：vercel/ms —— 结论是”是个好移植，坏的提速目标”"></a>案例一：vercel/ms —— 结论是” 是个好移植，坏的提速目标”</h3><p><a target="_blank" rel="noopener" href="https://github.com/vercel/ms">vercel/ms</a> 5.5k star，把 <code>"2 days"</code> 转成毫秒又能转回来。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>analyze</code></td>
+<td>1 个单元（<code>src/index.ts</code>），就绪度 96</td>
+</tr>
+<tr>
+<td><code>bridge --kind napi</code></td>
+<td><code>ms</code>、<code>parse</code>、<code>parseStrict</code>、<code>format</code> 都桥接了，没有留在 TS 的</td>
+</tr>
+<tr>
+<td><code>record --from-tests -- jest</code></td>
+<td>975 个用例：生成的、陷阱的，加上从 167 个 Jest 测试里抓到的 <strong>340 次真实调用</strong></td>
+</tr>
+<tr>
+<td>移植</td>
+<td> 184 行 TS 换成 200 行 Rust，含一个每批只读一次 <code>options</code> 的 <code>FormatIndex</code></td>
+</tr>
+<tr>
+<td><code>diff</code></td>
+<td>第一次构建 784/784 匹配；加上抓到的调用后 975/975</td>
+</tr>
+<tr>
+<td><code>gate</code></td>
+<td>通过</td>
+</tr>
+<tr>
+<td><code>bench</code> 逐次调用</td>
+<td><strong> 0.56x</strong>（比原版慢）</td>
+</tr>
+<tr>
+<td>批量 <code>parse</code> × 10 万</td>
+<td> JS 11.8 ms，Rust 0.65 ms：<strong>18x</strong></td>
+</tr>
+<tr>
+<td> 批量 <code>format</code> × 10 万</td>
+<td> JS 2.1 ms，Rust 2.5 ms（算交接）：<strong>0.8x</strong></td>
+</tr>
+</tbody></table>
+<p>最后一行是全篇最重要的一行：<strong><code>format</code> 批量化之后还是比 JS 慢</strong>。作者的结论：</p>
+<blockquote>
+<p>The verdict: <code>ms</code> is a good port and a bad speed target. Correct on every recorded case, faster only when a program parses many durations in one go.</p>
+</blockquote>
+<p>翻译：ms 是个好移植，但不是好的提速目标。每一个录制的用例都正确，只有当程序一次性解析很多时长时才更快。这个案例的价值恰恰在于它<strong>没有把话说得漂亮</strong>。</p>
+<p>这个移植还暴露了一堆 JS 语义细节，每一个都被录制的用例抓住了：<code>/.../i</code> 不带 <code>u</code> flag 时只折叠 ASCII 字母，而 Rust 的 <code>regex</code> 折叠 Unicode，所以 <code>"1 ſ"</code>（长 s）和 Kelvin 符号会被错误地解析成秒，移植里改成手工按 ASCII 单位匹配；<code>Math.round</code> 是” 半数进位”（<code>-2.5</code> 得 <code>-2</code>），Rust 的 <code>round</code> 是远离零；<code>${n}</code> 会把 <code>-0</code> 打印成 <code>0</code>，把 <code>1e+21</code>、<code>5e-324</code> 这么打，移植里复刻了 JS 的数字转字符串（第一版还有个平局 bug，<code>25.728225708007812</code> 打成 <code>...813</code>，只是 ms 的整数输出碰不到）；<code>str.length</code> 数的是 UTF-16 单元，所以 100 字符的限制里一个 emoji 算两个。</p>
+<h3 id="案例二：Fuse-js-——-32-倍"><a href="#案例二：Fuse-js-——-32-倍" class="headerlink" title="案例二：Fuse.js —— 32 倍"></a>案例二：Fuse.js —— 32 倍</h3><p><a target="_blank" rel="noopener" href="https://github.com/krisk/Fuse">Fuse.js</a> 20k star，每周五大约 2000 万次 npm 下载，是无数搜索框背后的模糊搜索库。</p>
+<p>有意思的是，它<strong>不能按文件逐个移植</strong>：</p>
+<blockquote>
+<p><code>analyze</code> put every folder of <code>src/</code> in one import cycle, so Fuse cannot be ported file by file.</p>
+</blockquote>
+<p><code>src/</code> 下每个文件夹都在同一个 import 环里。作者换了个思路：走搜索真正花时间的那条路径 —— 一个 54 行的适配器（<code>adapter/relevance.ts</code>）导出 Fuse 自己给一个字符串列表里某个字符串的分数，基于 Fuse 的 <code>BitapSearch</code>、字段范数和 <code>computeScoreSingle</code>。这个函数就是”5 万个字符串的搜索” 会跑 5 万次的东西。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>适配器</td>
+<td>在任何 Rust 代码之前，适配器的排序结果就等于 <code>new Fuse(list).search(q)</code>，在 81 个查询和选项集上验证过</td>
+</tr>
+<tr>
+<td><code>record --inputs</code></td>
+<td>3,414 个用例</td>
+</tr>
+<tr>
+<td>移植</td>
+<td> 673 行 Rust 顶替 839 行 Fuse</td>
+</tr>
+<tr>
+<td><code>diff</code></td>
+<td><strong>3,414/3,414 第一次构建就匹配</strong></td>
+</tr>
+<tr>
+<td><code>gate</code></td>
+<td>通过</td>
+</tr>
+<tr>
+<td> drop-in</td>
+<td><code>withRust(Fuse)</code> 在 Rust 里答字符串列表搜索，其他全部交给 Fuse；360 次搜索返回<strong>逐字节相同</strong>的结果</td>
+</tr>
+</tbody></table>
+<p>搜索耗时（Apple M4，10 核，Node 24）：</p>
+<table>
+<thead>
+<tr>
+<th align="right">列表</th>
+<th align="right"> Fuse.js</th>
+<th align="right">Rust</th>
+<th align="right"> 加速</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right"> 1,000 字符串</td>
+<td align="right"> 1.9 ms</td>
+<td align="right">0.1 ms</td>
+<td align="right">18x</td>
+</tr>
+<tr>
+<td align="right">10,000 字符串</td>
+<td align="right"> 19.1 ms</td>
+<td align="right">0.7 ms</td>
+<td align="right">27-30x</td>
+</tr>
+<tr>
+<td align="right">50,000 字符串</td>
+<td align="right"> 91.2 ms</td>
+<td align="right">2.8 ms</td>
+<td align="right"><strong>32x</strong></td>
+</tr>
+<tr>
+<td align="right">50,000 字符串，单核</td>
+<td align="right"> 92.0 ms</td>
+<td align="right">17.5 ms</td>
+<td align="right">5.3x</td>
+</tr>
+</tbody></table>
+<p>这个案例里也有一堆 JS 语义坑：</p>
+<ul>
+<li>Bitap 跑在 32 位 JS 整数上：<code>1 &lt;&lt; 31</code> 是负数，<code>(1 &lt;&lt; 31) - 1</code> 是双精度数，下一次移位又变成 <code>2147483647</code>。移植保留了这些值。</li>
+<li>文本按 UTF-16 码元索引，所以一个 emoji 占两个位置，跟 Fuse 一致。</li>
+<li><code>ignoreDiacritics</code> 是 NFD 加一份组合记号范围表，加几个单独列出的字母（<code>ł</code>、<code>ß</code>、<code>ı</code>）。移植用了同一份表。</li>
+<li><code>String.prototype.trim</code> 决定哪些字符串被 Fuse 跳过：JS 的空白集，不是 Rust 的 <code>char::is_whitespace</code>（后者包含 U+0085 而漏掉 U+FEFF）。</li>
+</ul>
+<p>作者也诚实写了它<strong>不覆盖什么</strong>：</p>
+<blockquote>
+<p>What it does not cover: object lists with <code>keys</code>, extended and token search, logical queries, <code>includeMatches</code>, a custom <code>sortFn</code> or <code>getFn</code>.</p>
+</blockquote>
+<h3 id="案例三：json-server-——-完整走完全应用流程"><a href="#案例三：json-server-——-完整走完全应用流程" class="headerlink" title="案例三：json-server —— 完整走完全应用流程"></a>案例三：json-server —— 完整走完全应用流程</h3><p><a target="_blank" rel="noopener" href="https://github.com/typicode/json-server">json-server</a> 75k star，用一个 JSON 文件提供 REST API。这是<strong>第一个用 whole-app 流程完整移植的应用</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>analyze --whole-app</code></td>
+<td>一个服务器，9 个单元（7 个 ready，2 个 caution），13 个要替换的依赖（tinyhttp、lowdb、sirv、eta、milliparsec、dot-prop、sort-on、inflection……）</td>
+</tr>
+<tr>
+<td><code>app record --http</code></td>
+<td>514 个用例：268 个 <code>--inputs</code> 给的请求（每条路由和方法、where 操作符、sort、分页、embeds、CORS 预检、静态文件和范围、29 个畸形 JSON body、<code>/__proto__</code> 等原型名、坏转义）+ 245 个陷阱；每个录两遍，随机 ID 留成 <code>[..]</code></td>
+</tr>
+<tr>
+<td><code>front-door</code></td>
+<td>513/514，99.8% fallback。漏的那条是 URL 里的裸 <code>ü</code>，Node 回 400 而代理重新编码了</td>
+</tr>
+<tr>
+<td>单元</td>
+<td><code>where-operators</code> 207、<code>parse-where</code> 289、<code>matches-where</code> 1,346、<code>paginate</code> 853（含 json-server 自己测试里的调用）；<code>service</code> 461 和 <code>app</code> 243 通过两个小适配器；六个单元全部 <code>gate</code> 通过</td>
+</tr>
+<tr>
+<td><code>wire</code></td>
+<td>先接读操作：514/514，22.6% fallback，Node 负责写、Rust 重载 Node 写的文件；然后接全部路由：<strong>514/514，0%</strong></td>
+</tr>
+<tr>
+<td><code>lift</code></td>
+<td>一个纯 Rust 二进制（5.3 MB），514/514；<code>bin.ts</code> 的命令行部分手工移植（help、version、文件检查、启动横幅）</td>
+</tr>
+</tbody></table>
+<p>性能对比（Apple M4，10 核，16 GB，macOS 27.3，Node 24.15.0，<code>ab -k</code> 压测）：</p>
+<table>
+<thead>
+<tr>
+<th>请求</th>
+<th align="right"> Node 单连接</th>
+<th align="right"> Rust 单连接</th>
+<th align="right"> Node 50 连接</th>
+<th align="right"> Rust 50 连接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>GET /posts</code></td>
+<td align="right">11.1k / 10.8k</td>
+<td align="right">27.3k / 23.9k</td>
+<td align="right">19.7k / 20.4k</td>
+<td align="right"><strong>115.0k / 110.7k</strong></td>
+</tr>
+<tr>
+<td><code>GET /posts/1</code></td>
+<td align="right">11.0k / 11.3k</td>
+<td align="right">27.7k / 25.4k</td>
+<td align="right">21.9k / 22.6k</td>
+<td align="right"><strong>119.9k / 99.0k</strong></td>
+</tr>
+<tr>
+<td>filter + sort + page</td>
+<td align="right">10.5k / 10.0k</td>
+<td align="right">25.2k / 21.5k</td>
+<td align="right">18.3k / 16.4k</td>
+<td align="right"><strong>107.5k / 96.3k</strong></td>
+</tr>
+<tr>
+<td><code>?_embed=comments</code></td>
+<td align="right">8.7k / 6.6k</td>
+<td align="right">22.5k / 21.8k</td>
+<td align="right">13.8k / 11.0k</td>
+<td align="right"><strong>98.3k / 100.6k</strong></td>
+</tr>
+<tr>
+<td><code>GET /</code>（首页）</td>
+<td align="right">7.3k / 6.3k</td>
+<td align="right">27.6k / 21.7k</td>
+<td align="right">10.2k / 9.5k</td>
+<td align="right"><strong>135.1k / 119.3k</strong></td>
+</tr>
+</tbody></table>
+<p>内存对比：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="right">Node</th>
+<th align="right">Rust</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 空闲 RSS，小库</td>
+<td align="right"> 74 MB</td>
+<td align="right"><strong>3.5 MB</strong></td>
+</tr>
+<tr>
+<td> 峰值 RSS，小库</td>
+<td align="right"> 424 / 390 MB</td>
+<td align="right"><strong>18 MB</strong></td>
+</tr>
+<tr>
+<td> 峰值 RSS，1 万 posts</td>
+<td align="right">462 / 485 MB</td>
+<td align="right">289 / 291 MB</td>
+</tr>
+</tbody></table>
+<p>作者也诚实指出差距小的地方：</p>
+<blockquote>
+<p>Where the gap is small: one connection reading the whole 10,000-post list (1.2x: both spend the time printing 1.5 MB of JSON), writes on the big database (1.1 to 1.2x…), and the sorted title search on one connection (1.4x). | The large gains come from concurrency, which a Node process does not have</p>
+</blockquote>
+<p>大头的收益来自<strong>并发</strong>，而 Node 单进程给不了。</p>
+<p>还有一段我觉得特别精彩的调试记录。第一次 lift 出来的二进制<strong>比 Node 还慢</strong>（整个列表 33 vs 298 req/s），profile 出来五个原因，按顺序：没设 <code>TCP_NODELAY</code>（每个大响应要等大约 40 毫秒的延迟 ACK）、每次写之前整个数据库克隆一遍加 <code>$schema</code>、每个列出的项打印前克隆一遍、所有请求共用一把锁、1 万个 item 的 <code>item.id</code> 各用 SipHash 哈希一遍。全修完，而且每次修改后 3,399 个单元用例和 514 个 HTTP 用例都还是通过。这就是” 先有可验证的基准，再优化” 的典型案例。</p>
+<h2 id="十一、它是怎么做-Agent-集成的"><a href="#十一、它是怎么做-Agent-集成的" class="headerlink" title="十一、它是怎么做 Agent 集成的"></a>十一、它是怎么做 Agent 集成的</h2><p>这是我觉得设计上最聪明的一块。</p>
+<p>D1 这条决策是整个项目的定调：</p>
+<blockquote>
+<p>A toolkit your agent drives, not a translator that calls a model itself. | No model cost or vendor lock-in; works with any agent. | The checks are the part an agent cannot do reliably.</p>
+</blockquote>
+<p>翻译：这是个<strong>你的 Agent 驱动的工具箱</strong>，不是个自己调用模型的翻译器。没有模型成本，没有厂商锁定，跟任何 Agent 都能配合。<strong>检查</strong>这件事，Agent 自己做不可靠。</p>
+<p>所以它同时提供两种形态：</p>
+<p><strong>CLI</strong>（人可以自己跑）和 <strong>MCP server</strong>（Agent 调工具）。</p>
+<p><code>rust-anything setup</code> 一条命令，把 MCP server 和工作流 skill 都注册到你找到的每个 Agent 里：Claude Code 写 <code>~/.claude.json</code> 和 <code>~/.claude/skills/</code>，Codex 写 <code>~/.codex/config.toml</code> 和 <code>~/.codex/skills/</code>，Cursor 写 <code>~/.cursor/mcp.json</code>，Gemini CLI 写 <code>~/.gemini/settings.json</code>；其他 MCP 客户端可以手动加 <code>rust-anything mcp</code> 作为 stdio server。</p>
+<p>S16 这条决策专门讲了怎么不弄坏你的配置：</p>
+<blockquote>
+<p><code>setup</code> writes each agent’s own config … adding only the <code>rust-anything</code> entries, keeping key order, writing through a temporary file, and refusing files that do not parse. | A tool that rewrites someone’s settings must never lose them.</p>
+</blockquote>
+<p><strong>只加 <code>rust-anything</code> 相关的条目，保留 key 顺序，通过临时文件写入，遇到解析不了的文件直接拒绝。</strong> 改别人配置的工具绝不能把别人配置搞丢。改文件之前还会备份（<code>&lt;file&gt;.rust-anything.bak</code>），<code>--remove</code> 可以撤销。</p>
+<p>MCP 工具就是 CLI 命令的一一对应（<code>docs/tools.md</code> 明确说了 “Every tool is also a CLI command with the same options”），所以 Agent 可以调 <code>analyze</code>、<code>bridge</code>、<code>record</code>、<code>diff</code>、<code>bench</code>、<code>shadow</code>、<code>gate</code>、<code>app_record</code>、<code>app_replay</code>、<code>app_front_door</code>、<code>app_wire</code>、<code>app_lift</code> 这些。</p>
+<p>README 里给了几个问法：” 用 rust-anything 把这个 CLI 端到端重写成 Rust，并证明行为一致。”” 这个搜索感觉很慢，用 rust-anything profile 一下，把热循环搬到 Rust。”” 在 <code>rust/text-rs</code> 上 bench 一下 Rust 移植版，告诉我该不该上线。”</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cargo install rust-anything   <span class="comment"># 从 crates.io</span></span><br><span class="line">rust-anything setup           <span class="comment"># 注册到 Claude Code、Codex、Cursor、Gemini CLI</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>没有 Rust 工具链？每个 GitHub release 都附带 macOS、Linux、Windows 的预编译二进制。JavaScript 项目可以直接：</p>
+<figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g rust-anything</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Claude Code 里还能当插件装：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/plugin install rust-anything --marketplace erkamyaman/rust-anything</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="十二、它做对的几个设计决定"><a href="#十二、它做对的几个设计决定" class="headerlink" title="十二、它做对的几个设计决定"></a>十二、它做对的几个设计决定</h2><p>我想单独拎出几条 DECISIONS.md 里我认为最有价值的。</p>
+<h3 id="1-保守优先"><a href="#1-保守优先" class="headerlink" title="1. 保守优先"></a>1. 保守优先</h3><blockquote>
+<p>A6 | False positives cost a look; false negatives cost silent bugs.</p>
+</blockquote>
+<p>误报只是多看一眼，漏报是静默的 bug。整个工具的设计基调是” 宁可吵，不可漏”。</p>
+<h3 id="2-不猜"><a href="#2-不猜" class="headerlink" title="2. 不猜"></a>2. 不猜</h3><blockquote>
+<p>A9 | The library-to-crate table (<code>src/crates.toml</code>, every language) is hand-curated; unknown packages are reported as <code>unknown</code>, never guessed. | The prompt: flag missing equivalents instead of hand-rolling silently.</p>
+</blockquote>
+<p>crate 映射表是手工维护的（<code>src/crates.toml</code>，19 KB）。<strong>找不到对应 crate 的包，一律报 <code>unknown</code>，绝不猜。</strong> 如果它猜错了，你会得到一个能编译但行为完全不同的实现 —— 而这正是这个项目要消灭的东西。</p>
+<h3 id="3-JSON-输出带版本"><a href="#3-JSON-输出带版本" class="headerlink" title="3. JSON 输出带版本"></a>3. JSON 输出带版本</h3><blockquote>
+<p>A10 | JSON output carries <code>schema: rust-anything/analyze@1</code>. | Agents read it; it is a wire contract and gets versioned.</p>
+</blockquote>
+<p>因为 Agent 要读这个 JSON，所以它是一份 wire contract，得有版本号。</p>
+<h3 id="4-只在端点检查行为，不检查内部"><a href="#4-只在端点检查行为，不检查内部" class="headerlink" title="4. 只在端点检查行为，不检查内部"></a>4. 只在端点检查行为，不检查内部</h3><blockquote>
+<p>The recordings check behavior at the app’s edges (a CLI’s output, a server’s responses, a module’s exported functions), not its internals. | Mirror the old structure while units still cross the bridge; once <code>app lift</code> has removed the original, restructure the Rust freely, and <code>app replay</code> still proves the behavior.</p>
+</blockquote>
+<p>意思是：录制只检查<strong>边界行为</strong>（CLI 输出、服务器响应、模块导出），不检查内部实现。过渡期你可以照着老结构写，等 <code>lift</code> 做完把原版拿掉了，Rust 内部就可以随便重构，<code>app replay</code> 依然能证明行为。这解决了我一开始担心的那个问题 ——“会不会被老代码的设计锁死”。</p>
+<h3 id="5-方向是单向的"><a href="#5-方向是单向的" class="headerlink" title="5. 方向是单向的"></a>5. 方向是单向的</h3><blockquote>
+<p>Nothing calls back into the original either: the front door runs it as a separate process (or forwards HTTP to it), bridged units are called by the original and never the other way round, and callbacks stay in the source language.</p>
+</blockquote>
+<p>原版永远不会被 Rust 回调。前门把它当独立进程跑（或者把 HTTP 转发过去），被桥接的单元是原版调 Rust，反过来不行。这保证了不会有” 互相调用” 导致的死锁或无限递归。</p>
+<h3 id="6-你的代码不出本机"><a href="#6-你的代码不出本机" class="headerlink" title="6. 你的代码不出本机"></a>6. 你的代码不出本机</h3><blockquote>
+<p>Does my code leave my machine? No: rust-anything runs locally and sends none of your code anywhere. | Cargo downloads crates as usual, and your agent’s model provider sees what your agent sends it, under its own policy.</p>
+</blockquote>
+<h2 id="十三、诚实的局限"><a href="#十三、诚实的局限" class="headerlink" title="十三、诚实的局限"></a>十三、诚实的局限</h2><p>这一节我尽量写全，因为对判断” 该不该用” 最重要。</p>
+<h3 id="录不到的就查不出来"><a href="#录不到的就查不出来" class="headerlink" title="录不到的就查不出来"></a>录不到的就查不出来</h3><p>文档里有一节叫 “What it can’t catch”，写得非常诚实。</p>
+<p><strong>没录过的输入。</strong> 生成的用例、语义陷阱、原版的测试套件（<code>record --from-tests</code>）和你自己的 <code>--inputs</code>，就是天花板。而文档说得很直接：</p>
+<blockquote>
+<p>Add real inputs (production samples, bug reports); the user input that breaks prod is rarely one a generator thinks of.</p>
+</blockquote>
+<p><strong>会破坏生产的那个用户输入，生成器基本想不到。</strong> 这一条我认为是最要命的。</p>
+<p><strong>正则。</strong> Rust 的 <code>regex</code> crate 没有 lookaround 和反向引用，而且就算能编译的 pattern，<code>\w</code>、<code>\b</code>、<code>\d</code> 和非 ASCII 上的大小写不敏感匹配，在 JS、Python、Java 之间都不一样。换 <code>fancy-regex</code> 或重写 pattern，可能通过所有录制的用例，但在土耳其语的点 less i 或者零宽连接符上还是不一样。<code>record</code> 会给每个用到正则的文件的每个函数加正则陷阱，但文档还是建议你拿真实 pattern 对真实文本 fuzz 一遍。</p>
+<p><strong>运行时会变的东西。</strong> 时间、内存、负载下的并发行为、以及 stdout/stderr/ 退出码 / 写出的文件 / HTTP 响应<strong>之外</strong>的副作用（网络调用、数据库、信号）都不比较。</p>
+<p><strong>浮点数。</strong> 数字转文本的格式在不同语言里不一样（<code>1e21</code>、<code>-0</code>、位数）。<code>--float-tolerance</code> 只宽容舍入，<strong>永远不宽容格式</strong>。</p>
+<p><strong>其他平台。</strong> 录制只能证明录制那台机器上的行为。依赖类型大小、字节序或编译器的 C 代码在目标平台上可能完全不同 —— 所以 <code>analyze</code> 会把面向硬件的 C 留在 C 里。</p>
+<h3 id="profile-只是”Tested”状态"><a href="#profile-只是”Tested”状态" class="headerlink" title="profile 只是”Tested”状态"></a><code>profile</code> 只是”Tested” 状态</h3><p>STATUS.md 里，命令的状态是分级的：<code>Verified</code>（端到端跑过真实代码）、<code>Tested</code>（有 fixture 测试但没跑过真实项目）、<code>Preview</code>。</p>
+<p>而 <code>profile</code> 是 <strong>Tested</strong>，不是 Verified：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>analyze</code></td>
+<td>Verified（x18n 的 142 个单元）</td>
+</tr>
+<tr>
+<td><code>bridge</code>、<code>record</code>、<code>diff</code>、<code>gate</code>、<code>build</code></td>
+<td>Verified</td>
+</tr>
+<tr>
+<td><code>bench</code></td>
+<td>Verified</td>
+</tr>
+<tr>
+<td><code>record --from-tests</code></td>
+<td>Verified (TS/JS)，Tested (Python)</td>
+</tr>
+<tr>
+<td><code>--batch</code></td>
+<td>Verified</td>
+</tr>
+<tr>
+<td>wasm bridge</td>
+<td>Verified</td>
+</tr>
+<tr>
+<td><code>shadow</code></td>
+<td>Verified</td>
+</tr>
+<tr>
+<td><strong><code>profile</code></strong></td>
+<td><strong>Tested</strong></td>
+</tr>
+<tr>
+<td><code>app record</code>、<code>app replay</code></td>
+<td>Verified (servers)，Tested (CLIs)</td>
+</tr>
+<tr>
+<td><code>front-door</code>、<code>wire</code></td>
+<td>Verified (TS server)</td>
+</tr>
+<tr>
+<td><code>lift</code></td>
+<td>Verified (TS server)，Tested (CLIs)</td>
+</tr>
+<tr>
+<td>MCP server</td>
+<td>Tested</td>
+</tr>
+</tbody></table>
+<p>所以这个工作流里，<strong>最前端的那一环（profile）反而是最没被真实项目检验过的</strong>。这是个有点尴尬的事实，值得知道。</p>
+<h3 id="各语言的支持程度差别很大"><a href="#各语言的支持程度差别很大" class="headerlink" title="各语言的支持程度差别很大"></a>各语言的支持程度差别很大</h3><p>从 DECISIONS.md 的 “Known limits”：</p>
+<ul>
+<li><strong>C</strong>：只有标量和 <code>const char *</code> 的 API 能跨桥。输出缓冲区（<code>char *out, size_t *len</code>）和状态结构留在 C，通过宏定义的函数看不到。</li>
+<li><strong>Go</strong>：方法、泛型、可变参数、指针、接口和 channel 留在 Go。结构体参数以 JSON 跨（用导出字段）。</li>
+<li><strong>Ruby</strong>：只支持模块函数（<code>def self.x</code>、<code>module_function</code>）。类和接受 block 的方法留在 Ruby。</li>
+<li><strong>Java</strong>：只支持 public 类的 <code>public static</code> 方法。重载、泛型、<code>char</code> 和对象类型留在 Java。而且 <code>record</code> 只用 <code>javac</code> 单独编译模块源码，所以<strong>依赖 Maven classpath 的代码现在还录不了</strong>。</li>
+<li><strong>Shadow 模式只比对同步结果</strong>：会改参数的函数，第二个实现拿到的是已经被改过的输入。</li>
+</ul>
+<p>C 还有一条特殊情况：</p>
+<blockquote>
+<p>M5 | C records each case in a forked child; a crash is recorded as <code>crash: &lt;signal&gt;</code> and accepts any port behavior. | Inputs outside a C function’s contract are undefined behavior: real glibc segfaults on <code>isalpha(INT_MAX)</code>.</p>
+</blockquote>
+<p>C 的每个用例都在 fork 出的子进程里跑，崩溃记成 <code>crash: &lt;signal&gt;</code> 并接受任何移植行为。因为超出 C 函数契约的输入就是未定义行为 —— 真实的 glibc 在 <code>isalpha(INT_MAX)</code> 上就会 segfault。</p>
+<h3 id="浮点数基本匹配不了"><a href="#浮点数基本匹配不了" class="headerlink" title="浮点数基本匹配不了"></a>浮点数基本匹配不了</h3><p>FAQ 里说得很直接：</p>
+<blockquote>
+<p>Often not: operation order, fused multiply-add and the math library differ between compilers.</p>
+</blockquote>
+<p>如果你的代码是数值计算，<code>--float-tolerance 1e-9</code> 能宽容舍入，但<strong>整数、文本和结构必须完全一致</strong>。</p>
+<h3 id="它不翻译代码，也不认识二进制"><a href="#它不翻译代码，也不认识二进制" class="headerlink" title="它不翻译代码，也不认识二进制"></a>它不翻译代码，也不认识二进制</h3><blockquote>
+<p>It ports source code: it parses the functions, records what each one does, and checks the Rust against the running original. | A compiled app has none of that to work with, and <code>analyze</code> says so.</p>
+</blockquote>
+<p>APK、JAR、exe 这种编译产物是搞不定的。” 根据二进制的可见行为重写一个 Rust 应用” 是另一个项目。</p>
+<h3 id="Kodebase-结构上的限制"><a href="#Kodebase-结构上的限制" class="headerlink" title="Kodebase 结构上的限制"></a>Kodebase 结构上的限制</h3><ul>
+<li>Fuse.js 那种” 整个 <code>src/</code> 在一个 import 环里” 的项目，<strong>不能按文件逐个移植</strong>。作者得绕路走适配器。</li>
+<li>Go 的 profile 必须来自 <code>go test</code> 跑，因为 Go 的 pprof 只能在进程内用。</li>
+<li>Ruby 的追踪器会让程序慢好几倍。</li>
+<li>Ruby 用 <code>alias</code> 建的别名会复制原方法，所以 shadow 模式看不到通过别名的调用。</li>
+</ul>
+<h3 id="项目非常新"><a href="#项目非常新" class="headerlink" title="项目非常新"></a>项目非常新</h3><p>仓库 2026 年 11 月 16 日创建，今天是 19 日。三天。</p>
+<p>v1.0.0 到 v1.5.1 一共 9 个 release，全在 11 月 16 日到 18 日之间。这三天里作者自己也在疯狂修 bug（v1.5.1 修的就是 recorder 卡死的问题 —— 某个生成的输入让原版跑飞了，比如 <code>[w] * n</code> 分配几个 GB）。</p>
+<p>虽然作者很勤快（156 次提交，第二名贡献者 46 次），但<strong>任何 3 天大的项目都不该直接用在生产环境</strong>。</p>
+<h2 id="十四、跟同类项目比"><a href="#十四、跟同类项目比" class="headerlink" title="十四、跟同类项目比"></a>十四、跟同类项目比</h2><h3 id="vs-用-AI-直接重写"><a href="#vs-用-AI-直接重写" class="headerlink" title="vs. 用 AI 直接重写"></a>vs. 用 AI 直接重写</h3><p>这是最直接的对比，也是最有价值的对比。</p>
+<p>AI 直接重写的流程是：给上下文 → 生成代码 → 跑测试 → 修。问题在于：<strong>AI 猜语义</strong>（UTF-16 vs UTF-8、<code>Math.round</code> 的方向、<code>-0</code> 的打印、正则语义 —— 这些 AI 经常知道，但不知道的更多）；<strong>没有基线</strong>（AI 写完你怎么知道它对？你得自己写测试，那比重写还累）；<strong>“跑通测试” 不等于” 行为一致”</strong>（你现有的测试只覆盖你写过的路径）。</p>
+<p>rust-anything 的价值在于：<strong>它把” 行为一致” 这个模糊目标变成了一个机械的、可重复的、可进 CI 的检查</strong>。AI 依然要写 Rust，但写的是<strong>算法</strong>，而不是<strong>语义</strong> —— 语义由录制固定。</p>
+<p>DECISIONS.md 那句话说得最好：</p>
+<blockquote>
+<p>The checks are the part an agent cannot do reliably.</p>
+</blockquote>
+<h3 id="vs-C2Rust-TRACTOR-Depyler"><a href="#vs-C2Rust-TRACTOR-Depyler" class="headerlink" title="vs. C2Rust / TRACTOR / Depyler"></a>vs. C2Rust / TRACTOR / Depyler</h3><p><a target="_blank" rel="noopener" href="https://github.com/rust-lang/c2rust">C2Rust</a> 是最著名的 C 到 Rust 翻译器，但它只能处理 C（rust-anything 支持 6 种语言），而且是<strong>翻译</strong>（transpile），产出” 能编译的等价物”，不保证行为一致，也没有录制 / 回放机制。</p>
+<p>DARPA 的 TRACTOR 项目（2025 年）是 C 到 Rust 的转换研究项目，目标是<strong>全程序转换</strong>加<strong>形式化验证</strong>。rust-anything 的路子不一样：它不追求全程序转换，追求<strong>增量、可验证、可回滚</strong>。TRACTOR 那套更适合一次性转换，而真实项目里几乎没人能接受” 整个仓库冻结几个月”。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Andrew-A-Time/Depyler">Depyler</a> 尝试用 AI 把 Python 转成 Rust，有意思的实验，但产出质量不稳定。</p>
+<p>rust-anything 选了 TS/JS 作为第一语言（D2），理由是：</p>
+<blockquote>
+<p>No existing tool covers TS/JS to Rust. C/C++ and Python are crowded (DARPA TRACTOR, C2rust, Depyler).</p>
+</blockquote>
+<p>它的立场正好相反：<strong>不让 AI 写转换逻辑，只让 AI 写算法</strong>。</p>
+<h3 id="vs-wasm-pack-PyO3-等桥接库"><a href="#vs-wasm-pack-PyO3-等桥接库" class="headerlink" title="vs. wasm-pack / PyO3 等桥接库"></a>vs. wasm-pack / PyO3 等桥接库</h3><p>这些是<strong>底层工具</strong>，rust-anything 是<strong>上层工作流</strong>。</p>
+<p>wasm-pack 帮你把 Rust 编译成浏览器能用的 wasm，但它不告诉你该编译什么、不保证行为一致、也不管迁移顺序。</p>
+<p>rust-anything 在这些之上加了：<strong>选谁、什么顺序、怎么验、什么时候能上线</strong>。</p>
+<h3 id="vs-手工做-differential-testing"><a href="#vs-手工做-differential-testing" class="headerlink" title="vs. 手工做 differential testing"></a>vs. 手工做 differential testing</h3><p>最像的对比对象。手写 fixture、手写对照测试，跟 rust-anything 的 <code>record</code>/<code>diff</code> 思路一致。</p>
+<p>差别在于覆盖面和自动化程度。rust-anything 的优势是<strong>自动生成边界值和语义陷阱</strong>，而且陷阱清单是踩过坑积累出来的（UTF-16、孤立代理对、<code>-0</code>、final sigma……）。人写测试很难想到孤立代理对这种。</p>
+<p>劣势是：<strong>它只能发现你想到的陷阱</strong>。你自己的领域知识（比如” 这个函数在负数上语义特殊”）还是得靠你自己喂 <code>--inputs</code>。</p>
+<h3 id="独特的位置"><a href="#独特的位置" class="headerlink" title="独特的位置"></a>独特的位置</h3><p>综合看，rust-anything 在工具链里的位置是：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Claude Code / Codex / Cursor</span><br><span class="line">        │  驱动</span><br><span class="line">        ▼</span><br><span class="line">   rust-anything  ──→  profile → analyze → bridge → record → diff → bench → shadow → gate → lift</span><br><span class="line">        │                                                                              │</span><br><span class="line">        ▼                                                                              ▼</span><br><span class="line">   你或 Agent 在 port.rs 里写 Rust                                          纯 Rust 二进制（行为可证明一致）</span><br></pre></td></tr></tbody></table></figure>
+
+<p>它填补的位置是：<strong>AI 编码工具和语言迁移工具之间的那一层</strong>。</p>
+<h2 id="十五、适合谁，不适合谁"><a href="#十五、适合谁，不适合谁" class="headerlink" title="十五、适合谁，不适合谁"></a>十五、适合谁，不适合谁</h2><h3 id="适合"><a href="#适合" class="headerlink" title="适合"></a>适合</h3><p><strong>1. 你的项目有明确的性能瓶颈，而且瓶颈是” 热循环”。</strong> 最理想的场景，整套 <code>--batch</code> 机制就是为它设计的，<code>profile</code> 会告诉你哪里是。</p>
+<p><strong>2. 你在做增量迁移，不想冻结整个仓库。</strong> <code>app front-door</code> → <code>app wire</code> → <code>app lift</code> 这条路就是为增量设计的，每一块都可以单独上线、单独回滚（<code>RUST_ANYTHING_UNIT_&lt;NAME&gt;=original</code>）。</p>
+<p><strong>3. 你想用 AI 写 Rust，但担心它会悄悄改变行为。</strong> 这正是 D1 那条决策的定位。</p>
+<p><strong>4. 你的代码库有测试套件。</strong> <code>record --from-tests</code> 能从测试里抓到真实调用，录制质量会高很多，vercel/ms 的例子就是这么做的。</p>
+<p><strong>5. 你在做 CLI 或 HTTP 服务。</strong> <code>app</code> 系列对 CLI 和服务器有一等公民支持，json-server 那套流程可以直接抄。</p>
+<p><strong>6. 你想给开源项目做性能 PR。</strong> Fuse.js 那个案例就是模板：写一个适配器，录 3000 多个用例，diff 全过，然后提 PR。</p>
+<h3 id="不适合"><a href="#不适合" class="headerlink" title="不适合"></a>不适合</h3><p><strong>1. 你的项目本身就是 Python/Go/Java，而且没到性能瓶颈。</strong> 从 vercel/ms 的结论看：0.56x，慢了快一倍。</p>
+<p><strong>2. 你的代码大量依赖正则、反射、动态特性。</strong> <code>analyze</code> 会把这些标成 high 风险，你要么留在原语言，要么接受大量手工工作。</p>
+<p><strong>3. 数值计算代码。</strong> 浮点匹配基本做不到，容差机制只是缓解。</p>
+<p><strong>4. 你想要一个” 一键全量翻译” 的东西。</strong> 它明确不是这个。D2 说得很清楚：TS/JS 优先，因为 C/C++ 和 Python 那块已经挤满了。</p>
+<p><strong>5. 你的项目没有行为可录。</strong> 比如根本没有可运行的原版，或者原版已经跑不起来。没有基线，一切免谈。</p>
+<p><strong>6. 你在生产环境里，需要今天就用。</strong> 三天大的项目，三天里发了 9 个 release。作者显然在高强度迭代，但这意味着 API 还会变，文档可能跟实现不同步。</p>
+<p><strong>7. 你想要的是”AI 帮我把代码全翻译一遍”。</strong> 它是工作流，不是翻译器，而且这个定位是有意的。</p>
+<h2 id="十六、我的实际使用建议"><a href="#十六、我的实际使用建议" class="headerlink" title="十六、我的实际使用建议"></a>十六、我的实际使用建议</h2><p>如果你要用，我建议这个顺序：</p>
+<p><strong>第一步，先跑 <code>analyze</code> 看看它怎么说。</strong> <code>rust-anything analyze .</code> 是只读的，零风险，它会告诉你单元划分、风险点、<code>start_here</code>（最值得先动的）。<strong>如果它的 <code>start_here</code> 让你认同，再往下走；不认同就别勉强。</strong></p>
+<p><strong>第二步，选一个小单元试水。</strong> 不要一上来就 <code>app record --whole-app</code>。先挑一个 <code>analyze</code> 推荐的小单元走完 <code>bridge → record → diff → gate</code>，体会一下录制的质量 —— 看 <code>cases.jsonl</code> 里生成的用例有没有覆盖你真正在意的那些边界，覆盖得不好就先用 <code>--inputs</code> 喂自己的真实输入。</p>
+<p><strong>第三步，跑 <code>profile</code>。</strong> 注意这是我前面提到的唯一一个 “Tested” 而不是 “Verified” 的命令。你可以拿它当参考，别完全信。</p>
+<p><strong>第四步，才是 <code>app record</code>。</strong> 这一步最耗时（json-server 录了 514 个 HTTP 用例），而且会<strong>真的运行你的原版</strong>。README 里有很严肃的警告：</p>
+<blockquote>
+<p><code>record</code> and <code>app record</code> run your original code, calling each function (or the whole app) on many generated inputs, and <code>app record</code> runs every case twice. | Code that writes files, talks to a database or calls the network does that once per case. | Run them on a copy of the project, with a test database and no production credentials in the environment.</p>
+</blockquote>
+<p><strong>写文件的、连数据库的、调网络的代码，每个用例都会真的执行一次。</strong> 在副本上跑，用测试数据库，环境变量里别放生产凭证。</p>
+<p>这句话我要再强调一遍，因为这是最容易出事的地方。我的第一反应肯定是” 在仓库目录里直接录一下”，但如果那个仓库连着生产库……</p>
+<p><strong>第五步，<code>lift</code> 之前把所有 <code>app record</code> 的用例跑通。</strong></p>
+<p><code>lift</code> 会拒绝并列出阻塞项，这是好事。但你要确保 514 个用例全绿，而不是”99.8% 通过”（json-server 的 front-door 阶段就是 513/514）。</p>
+<h2 id="十七、最后"><a href="#十七、最后" class="headerlink" title="十七、最后"></a>十七、最后</h2><p>回到我开头那个丢人的场景：Claude Code 一小时给我 900 行 Rust，138 个用例挂了 71 个。</p>
+<p>如果当时有 rust-anything，流程会是：</p>
+<ol>
+<li><code>analyze</code> 告诉我 <code>src/parser/</code> 有 14 个单元，3 个有 high 风险</li>
+<li><code>bridge</code> 生成 crate 和空桩</li>
+<li><code>record</code> 录下 200 个边界用例，其中包括 UTF-16 偏移、<code>-0</code>、正则陷阱</li>
+<li> Claude Code 在 <code>port.rs</code> 里写实现</li>
+<li><code>diff</code> 告诉我哪几条对不上，<strong>并且是具体哪条输入</strong></li>
+<li> Claude Code 修，直到 200/200</li>
+<li><code>gate</code> 确认 fmt、clippy、测试、错误路径、代码规模</li>
+<li><code>bench</code> 说” 可以上线” 或者” 别动它”</li>
+<li><code>shadow</code> 在生产灰度，新旧并行</li>
+<li>下一个单元</li>
+</ol>
+<p>同一件事，可能从两周变成一天。</p>
+<p>我想强调的不是它有多强，而是<strong>它选了一个正确的战场</strong>。</p>
+<p>“用 AI 重写代码” 这个叙事里，AI 写代码已经够好了，好到瓶颈不在那里。瓶颈在<strong>验证</strong>。而验证是机械的、可重复的、适合用程序做的。</p>
+<p>rust-anything 的作者显然想明白了这件事 ——D1 那句 “The checks are the part an agent cannot do reliably” 是整个项目的题眼。</p>
+<p>它不聪明，也不试图聪明。它只是把” 证明这两个实现行为一致” 这件苦活，做成了一条命令。</p>
+<hr>
+<p><strong>项目</strong>：erkamyaman/rust-anything（3321 star / 262 fork / MIT / Rust / crates.io 1.5.1）<br><strong>支持语言</strong>：TypeScript/JavaScript、Python、C、Go、Ruby、Java（已验证）；PHP、C#（preview）<br><strong>验证状态</strong>：7 种语言在真实项目上跑通（json-server 514/514、Fuse.js 3414/3414、vercel/ms 975/975）<br><strong>安装</strong>：<code>cargo install rust-anything &amp;&amp; rust-anything setup</code><br><strong>注意</strong>：项目创建仅 3 天，README 有 19 种语言翻译但只有英文版是作者自己写的，翻译质量需自行核对</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/11/18/rust-anything-rewrite-app-in-rust-verified-behavior/" title="erkamyaman&#x2F;rust-anything：3321 star 的 Rust 迁移工具箱，把 Node&#x2F;Python&#x2F;Go 应用逐块改写成 Rust 并逐步验证行为一致">https://www.daishengli.top/2026/11/18/rust-anything-rewrite-app-in-rust-verified-behavior/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7/" rel="tag"># 开发者工具</a>
+              <a href="/tags/rust-anything/" rel="tag"># rust-anything</a>
+              <a href="/tags/erkamyaman/" rel="tag"># erkamyaman</a>
+              <a href="/tags/%E4%BB%A3%E7%A0%81%E8%BF%81%E7%A7%BB/" rel="tag"># 代码迁移</a>
+              <a href="/tags/FFI/" rel="tag"># FFI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/18/qwen-code-open-source-terminal-ai-coding-agent/" rel="prev" title="QwenLM&#x2F;qwen-code：3 万 star 的终端 AI 编程 Agent，Apache-2.0 全开源">
+                  <i class="fa fa-angle-left"></i> QwenLM/qwen-code：3 万 star 的终端 AI 编程 Agent，Apache-2.0 全开源
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/20/sybil-inference-optimisation-skill-local-llm-hill-climbing/" rel="next" title="sybil-solutions&#x2F;inference-optimisation-skill：把本地大模型推理调优变成可复现的工程流程">
+                  sybil-solutions/inference-optimisation-skill：把本地大模型推理调优变成可复现的工程流程 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

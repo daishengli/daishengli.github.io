@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="这是一个 1259 star 的 MIT 协议 Agent Skill，目标是把本地大模型服务的推理调优从&quot;改参数看运气&quot;变成一套有理论天花板、有噪声控制、有对照实验、有发布验收门槛的工程流程。它支持任意硬件和任意量化格式，覆盖单用户与并发解码吞吐、投机解码、prefill 吞吐、KV 缓存容量、启动时间和首 token 延迟五个维度。仓库提供 SKILL.md 主流程、五个 references">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sybil-solutions&#x2F;inference-optimisation-skill：把本地大模型推理调优变成可复现的工程流程">
+<meta property="og:url" content="https://www.daishengli.top/2026/11/20/sybil-inference-optimisation-skill-local-llm-hill-climbing/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="这是一个 1259 star 的 MIT 协议 Agent Skill，目标是把本地大模型服务的推理调优从&quot;改参数看运气&quot;变成一套有理论天花板、有噪声控制、有对照实验、有发布验收门槛的工程流程。它支持任意硬件和任意量化格式，覆盖单用户与并发解码吞吐、投机解码、prefill 吞吐、KV 缓存容量、启动时间和首 token 延迟五个维度。仓库提供 SKILL.md 主流程、五个 references">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-20T01:30:00.000Z">
+<meta property="article:modified_time" content="2026-11-21T00:07:19.395Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Agent Skill">
+<meta property="article:tag" content="inference-optimisation-skill">
+<meta property="article:tag" content="sybil-solutions">
+<meta property="article:tag" content="LLM 推理优化">
+<meta property="article:tag" content="投机解码">
+<meta property="article:tag" content="性能基准测试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/11/20/sybil-inference-optimisation-skill-local-llm-hill-climbing/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/11/20/sybil-inference-optimisation-skill-local-llm-hill-climbing/","path":"2026/11/20/sybil-inference-optimisation-skill-local-llm-hill-climbing/","title":"sybil-solutions/inference-optimisation-skill：把本地大模型推理调优变成可复现的工程流程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>sybil-solutions/inference-optimisation-skill：把本地大模型推理调优变成可复现的工程流程 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">438</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">133</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%88%91%E8%B0%83%E4%BA%86%E4%B8%89%E4%B8%AA%E6%9C%88%E6%9C%AC%E5%9C%B0%E5%A4%A7%E6%A8%A1%E5%9E%8B%EF%BC%8C%E6%89%8D%E5%8F%91%E7%8E%B0%E6%9C%80%E7%BC%BA%E7%9A%84%E4%B8%8D%E6%98%AF%E7%AE%97%E5%8A%9B%EF%BC%8C%E6%98%AF%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">我调了三个月本地大模型，才发现最缺的不是算力，是方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9A%E4%B8%8D%E6%98%AF%E8%B0%83%E5%8F%82%E6%89%8B%E5%86%8C%EF%BC%8C%E6%98%AF%E4%B8%80%E5%A5%97%E2%80%9D%E7%88%AC%E5%9D%A1%E2%80%9D%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.1.</span> <span class="nav-text">一、它到底是什么：不是调参手册，是一套” 爬坡” 协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%83%E5%92%8C%E2%80%9D%E6%9C%80%E4%BC%98%E5%8F%82%E6%95%B0%E8%A1%A8%E2%80%9D%E7%9A%84%E6%9C%AC%E8%B4%A8%E5%8C%BA%E5%88%AB"><span class="nav-number">1.1.1.</span> <span class="nav-text">它和” 最优参数表” 的本质区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%E4%B8%80%EF%BC%9A%E5%85%88%E7%AE%97%E5%A4%A9%E8%8A%B1%E6%9D%BF%EF%BC%8C%E5%86%8D%E5%86%B3%E5%AE%9A%E5%80%BC%E4%B8%8D%E5%80%BC%E5%BE%97%E5%8A%A8%E6%89%8B"><span class="nav-number">1.2.</span> <span class="nav-text">二、核心思想一：先算天花板，再决定值不值得动手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E6%88%AA%E7%84%B6%E4%B8%8D%E5%90%8C%E7%9A%84%E7%93%B6%E9%A2%88"><span class="nav-number">1.2.1.</span> <span class="nav-text">两种截然不同的瓶颈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Decode-%E7%9A%84%E5%AD%97%E8%8A%82%E8%B4%A6%E6%80%8E%E4%B9%88%E7%AE%97"><span class="nav-number">1.2.2.</span> <span class="nav-text">Decode 的字节账怎么算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%9C%E8%80%85%E7%9A%84%E5%AE%8C%E6%95%B4%E7%AE%97%E4%BE%8B"><span class="nav-number">1.2.3.</span> <span class="nav-text">作者的完整算例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%E4%BA%8C%EF%BC%9A%E6%8A%95%E6%9C%BA%E8%A7%A3%E7%A0%81%E7%9A%84%E5%85%B3%E9%94%AE%E4%B8%8D%E5%9C%A8%E6%8E%A5%E5%8F%97%E7%8E%87%EF%BC%8C%E5%9C%A8%E6%AF%8F%E6%AD%A5%E6%88%90%E6%9C%AC"><span class="nav-number">1.3.</span> <span class="nav-text">三、核心思想二：投机解码的关键不在接受率，在每步成本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%AA%E6%9E%9D-draft-LM-head-%E7%9A%84%E5%AE%9E%E6%B5%8B%E6%95%88%E6%9E%9C"><span class="nav-number">1.3.1.</span> <span class="nav-text">剪枝 draft LM head 的实测效果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E4%BC%98-draft-%E9%95%BF%E5%BA%A6%E9%9A%8F%E5%B9%B6%E5%8F%91%E5%92%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8F%98%E5%8C%96"><span class="nav-number">1.3.2.</span> <span class="nav-text">最优 draft 长度随并发和上下文变化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%95%E6%9C%BA%E8%A7%A3%E7%A0%81%E6%9C%89%E6%97%B6%E5%80%99%E6%98%AF%E8%B4%9F%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.3.</span> <span class="nav-text">投机解码有时候是负优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#verify-%E5%BF%85%E9%A1%BB%E8%B5%B0-decode-%E8%B7%AF%E5%BE%84"><span class="nav-number">1.3.4.</span> <span class="nav-text">verify 必须走 decode 路径</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%E4%B8%89%EF%BC%9A%E5%99%AA%E5%A3%B0%E6%8E%A7%E5%88%B6%E2%80%94%E2%80%94%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%A0%E7%9A%84%E2%80%9D%E4%BC%98%E5%8C%96%E2%80%9D%E7%BB%8F%E5%B8%B8%E6%98%AF%E5%81%87%E7%9A%84"><span class="nav-number">1.4.</span> <span class="nav-text">四、核心思想三：噪声控制 —— 为什么你的” 优化” 经常是假的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%AC%A1%E8%BF%90%E8%A1%8C%E7%9A%84%E5%99%AA%E5%A3%B0%E6%98%AF-%C2%B15%E2%80%9310"><span class="nav-number">1.4.1.</span> <span class="nav-text">单次运行的噪声是 ±5–10%</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E6%9D%A1%E7%A1%AC%E8%A7%84%E5%88%99"><span class="nav-number">1.4.2.</span> <span class="nav-text">三条硬规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%A8%E5%BC%95%E6%93%8E%E6%AF%94%E8%BE%83%E7%9A%84%E6%AD%A3%E7%A1%AE%E5%A7%BF%E5%8A%BF"><span class="nav-number">1.4.3.</span> <span class="nav-text">跨引擎比较的正确姿势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E5%8F%8D%E5%B8%B8%E8%AF%86%E7%9A%84%E7%BB%93%E8%AE%BA"><span class="nav-number">1.4.4.</span> <span class="nav-text">一个反常识的结论</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%E5%9B%9B%EF%BC%9A%E5%85%88%E7%AE%97%E5%A4%A9%E8%8A%B1%E6%9D%BF%EF%BC%8C%E8%83%BD%E8%AE%A9%E4%BD%A0-early-%E6%AD%A2%E6%8D%9F"><span class="nav-number">1.5.</span> <span class="nav-text">五、核心思想四：先算天花板，能让你 early 止损</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A9%E8%8A%B1%E6%9D%BF%E8%AE%A1%E7%AE%97%E5%99%A8"><span class="nav-number">1.5.1.</span> <span class="nav-text">天花板计算器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81bench-py%EF%BC%9A%E4%B8%80%E4%B8%AA%E4%B8%8D%E4%BE%9D%E8%B5%96%E4%BB%BB%E4%BD%95%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E7%9A%84%E5%9F%BA%E5%87%86%E5%8F%B0%E6%9E%B6"><span class="nav-number">1.6.</span> <span class="nav-text">六、bench.py：一个不依赖任何第三方库的基准台架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%83%E6%B5%8B%E4%BB%80%E4%B9%88"><span class="nav-number">1.6.1.</span> <span class="nav-text">它测什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%B3%95"><span class="nav-number">1.6.2.</span> <span class="nav-text">用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">1.6.3.</span> <span class="nav-text">关键实现细节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7"><span class="nav-number">1.6.4.</span> <span class="nav-text">配置长什么样</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81queue-sh%EF%BC%9A%E9%98%B2%E6%AD%A2%E4%B8%A4%E4%B8%AA%E4%BB%BB%E5%8A%A1%E6%8A%A2%E5%90%8C%E4%B8%80%E5%9D%97%E5%8D%A1"><span class="nav-number">1.7.</span> <span class="nav-text">七、queue.sh：防止两个任务抢同一块卡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81mem-sh%EF%BC%9A%E7%BB%9F%E4%B8%80%E5%86%85%E5%AD%98%E6%9C%BA%E5%99%A8%E4%B8%8A%E7%9A%84%E7%9C%9F%E5%AE%9E%E5%8D%A0%E7%94%A8"><span class="nav-number">1.8.</span> <span class="nav-text">八、mem.sh：统一内存机器上的真实占用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%AE%98%E6%96%B9%E7%BB%99%E5%87%BA%E7%9A%84%E5%AE%9E%E6%B5%8B%E7%BB%93%E6%9E%9C"><span class="nav-number">1.9.</span> <span class="nav-text">九、官方给出的实测结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E8%B0%83%E4%BC%98%E6%9D%A0%E6%9D%86%E6%B8%85%E5%8D%95%EF%BC%9A%E6%8C%89%E6%80%A7%E4%BB%B7%E6%AF%94%E6%8E%92%E5%BA%8F"><span class="nav-number">1.10.</span> <span class="nav-text">十、调优杠杆清单：按性价比排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E8%AF%9A%E5%AE%9E%E8%AF%B4%E8%AF%B4%E5%AE%83%E7%9A%84%E5%B1%80%E9%99%90"><span class="nav-number">1.11.</span> <span class="nav-text">十一、诚实说说它的局限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%83%E4%B8%8D%E4%BA%A7%E7%94%9F%E6%96%B0%E7%9A%84%E6%80%A7%E8%83%BD%EF%BC%8C%E5%AE%83%E4%BA%A7%E7%94%9F%E5%8F%AF%E4%BF%A1%E7%9A%84%E6%80%A7%E8%83%BD"><span class="nav-number">1.11.1.</span> <span class="nav-text">1. 它不产生新的性能，它产生可信的性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BB%93%E5%BA%93%E5%BE%88%E6%96%B0%EF%BC%8C%E5%AE%9E%E8%B7%B5%E6%A0%B7%E6%9C%AC%E8%BF%98%E5%B0%91"><span class="nav-number">1.11.2.</span> <span class="nav-text">2. 仓库很新，实践样本还少</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%AB%98%E5%BA%A6%E4%BE%9D%E8%B5%96%E5%85%B7%E4%BD%93%E7%9A%84%E5%BC%95%E6%93%8E%E7%89%88%E6%9C%AC"><span class="nav-number">1.11.3.</span> <span class="nav-text">3. 高度依赖具体的引擎版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E9%97%A8%E6%A7%9B%E6%AF%94%E6%83%B3%E8%B1%A1%E4%B8%AD%E9%AB%98"><span class="nav-number">1.11.4.</span> <span class="nav-text">4. 门槛比想象中高</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E7%A1%AC%E8%A7%84%E5%88%99%E6%9C%89%E7%9C%9F%E5%AE%9E%E7%9A%84%E5%89%AF%E4%BD%9C%E7%94%A8"><span class="nav-number">1.11.5.</span> <span class="nav-text">5. 硬规则有真实的副作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%86%85%E5%AD%98%E7%9C%8B%E9%97%A8%E7%8B%97%E5%9C%A8%E9%83%A8%E5%88%86%E7%8E%AF%E5%A2%83%E4%B8%8D%E5%8F%AF%E7%94%A8"><span class="nav-number">1.11.6.</span> <span class="nav-text">6. 内存看门狗在部分环境不可用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E8%B7%9F%E5%90%8C%E7%B1%BB%E4%B8%9C%E8%A5%BF%E6%AF%94%E4%B8%80%E4%B8%8B"><span class="nav-number">1.12.</span> <span class="nav-text">十二、跟同类东西比一下</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94-llm-performance-genai-bench-%E8%BF%99%E7%B1%BB%E9%80%9A%E7%94%A8-benchmark-%E5%B7%A5%E5%85%B7"><span class="nav-number">1.12.1.</span> <span class="nav-text">对比 llm-performance &#x2F;genai-bench 这类通用 benchmark 工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E5%90%84%E5%AE%B6%E5%BC%95%E6%93%8E%E7%9A%84%E5%AE%98%E6%96%B9%E8%B0%83%E4%BC%98%E6%96%87%E6%A1%A3"><span class="nav-number">1.12.2.</span> <span class="nav-text">对比各家引擎的官方调优文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E5%88%AB%E4%BA%BA%E7%9A%84%E2%80%9D%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE%E2%80%9D%E4%BB%93%E5%BA%93"><span class="nav-number">1.12.3.</span> <span class="nav-text">对比别人的” 优化配置” 仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94-local-ai-registry%EF%BC%88%E4%BD%9C%E8%80%85%E7%9A%84%E5%8F%A6%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%89"><span class="nav-number">1.12.4.</span> <span class="nav-text">对比 local-ai-registry（作者的另一个项目）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E9%80%82%E5%90%88%E8%B0%81-%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">1.13.</span> <span class="nav-text">十三、适合谁 &#x2F; 不适合谁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88"><span class="nav-number">1.13.1.</span> <span class="nav-text">适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88"><span class="nav-number">1.13.2.</span> <span class="nav-text">不适合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E6%80%8E%E4%B9%88%E7%94%A8%E8%B5%B7%E6%9D%A5"><span class="nav-number">1.14.</span> <span class="nav-text">十四、怎么用起来</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.14.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E7%94%A8-Agent-%E4%B9%9F%E8%83%BD%E8%B7%91"><span class="nav-number">1.14.2.</span> <span class="nav-text">不用 Agent 也能跑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%99-Agent-%E7%9A%84%E4%BB%BB%E5%8A%A1%E6%A8%A1%E6%9D%BF"><span class="nav-number">1.14.3.</span> <span class="nav-text">给 Agent 的任务模板</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E6%88%91%E7%9A%84%E5%AE%9E%E9%99%85%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.15.</span> <span class="nav-text">十五、我的实际建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">1.16.</span> <span class="nav-text">最后</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">133</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">438</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/20/sybil-inference-optimisation-skill-local-llm-hill-climbing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="sybil-solutions&#x2F;inference-optimisation-skill：把本地大模型推理调优变成可复现的工程流程 | 小戴的网络日志">
+      <meta itemprop="description" content="这是一个 1259 star 的 MIT 协议 Agent Skill，目标是把本地大模型服务的推理调优从&quot;改参数看运气&quot;变成一套有理论天花板、有噪声控制、有对照实验、有发布验收门槛的工程流程。它支持任意硬件和任意量化格式，覆盖单用户与并发解码吞吐、投机解码、prefill 吞吐、KV 缓存容量、启动时间和首 token 延迟五个维度。仓库提供 SKILL.md 主流程、五个 references 参考文档、四个纯标准库 Python 与 Bash 脚本（bench.py 基准台架、ceiling.py 天花板计算器、queue.sh 串行队列、mem.sh 内存看门狗），以及 PROMPT.md 任务模板。方法论核心是先算理论上限再动手、单变量实验、交叉对照取中位数、跑完必须过稳定性门禁。所有性能数字均来自作者在 Intel Arc、RTX 3090、H200 等真实硬件上的实测，并附有原始日志链接。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          sybil-solutions/inference-optimisation-skill：把本地大模型推理调优变成可复现的工程流程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-20 09:30:00" itemprop="dateCreated datePublished" datetime="2026-11-20T09:30:00+08:00">2026-11-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">这是一个 1259 star 的 MIT 协议 Agent Skill，目标是把本地大模型服务的推理调优从"改参数看运气"变成一套有理论天花板、有噪声控制、有对照实验、有发布验收门槛的工程流程。它支持任意硬件和任意量化格式，覆盖单用户与并发解码吞吐、投机解码、prefill 吞吐、KV 缓存容量、启动时间和首 token 延迟五个维度。仓库提供 SKILL.md 主流程、五个 references 参考文档、四个纯标准库 Python 与 Bash 脚本（bench.py 基准台架、ceiling.py 天花板计算器、queue.sh 串行队列、mem.sh 内存看门狗），以及 PROMPT.md 任务模板。方法论核心是先算理论上限再动手、单变量实验、交叉对照取中位数、跑完必须过稳定性门禁。所有性能数字均来自作者在 Intel Arc、RTX 3090、H200 等真实硬件上的实测，并附有原始日志链接。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="我调了三个月本地大模型，才发现最缺的不是算力，是方法"><a href="#我调了三个月本地大模型，才发现最缺的不是算力，是方法" class="headerlink" title="我调了三个月本地大模型，才发现最缺的不是算力，是方法"></a>我调了三个月本地大模型，才发现最缺的不是算力，是方法</h1><p>先说个真实的经历。</p>
+<p>去年年底我在一台 4090 上跑 Qwen2.5-32B-AWQ，之前一直没找到好的参数组合。显存够，模型能跑起来，就是慢。32B 量化后大概 18GB，单卡 decode 二十几个 token/s，能用，但做批量任务的时候就是干等。</p>
+<p>我试过很多” 优化” 手法。改 <code>--gpu-memory-utilization</code>，改 chunked prefill size，换 quant 格式，抄别人的启动命令。每改一次，跑一次，看一眼 tok/s，觉得快了就留下。</p>
+<p>然后我发现了两个残酷的事实：</p>
+<p>第一，我抄来的” 最优配置”，在我这台机器上跑出来比我的慢。别人说是 60 tok/s，我这儿 38 tok/s。</p>
+<p>第二，也是更糟的 —— 我某次把一个参数从 0.9 改成 0.85，跑出 52 tok/s，特别开心，记下来。过了两天再跑同一个配置，还是 52 tok/s。但我把这次” 进步” 的基准点往前翻，发现我之前记的那个” 基线” 41 tok/s，其实是在机器刚开机、温度还低的时候测的。<strong>不是我的优化有效，是我的基线被 thermal throttling 污染了。</strong></p>
+<p>那一瞬间挺崩溃的。不是优化没效果，是我所有的优化可能都是幻觉。</p>
+<p>后来我系统看了下本地推理调优的资料，发现真正做严肃调优的人，几乎都在做同一件事：<strong>先把理论天花板算出来，然后按” 天花板缺口 × 成功概率” 排优先级，一次只改一个变量，用交叉对照压住噪声，改完必须过稳定性门禁。</strong> 这套东西听起来像常识，但真按它做一遍，和我之前那套” 改参数看运气” 的差距是数量级的。</p>
+<p><code>sybil-solutions/inference-optimisation-skill</code> 就是把这套流程固化下来的一个开源项目。</p>
+<p>它只有 32KB，一半是 Markdown，但把它和我之前的方式对照一下，差别挺说明问题的。</p>
+<hr>
+<h2 id="一、它到底是什么：不是调参手册，是一套”爬坡”协议"><a href="#一、它到底是什么：不是调参手册，是一套”爬坡”协议" class="headerlink" title="一、它到底是什么：不是调参手册，是一套”爬坡”协议"></a>一、它到底是什么：不是调参手册，是一套” 爬坡” 协议</h2><p>仓库的自我定位很精确 ——<strong>hill-climbing a model server</strong>。</p>
+<p>“爬坡” 这个词选得准。它不是给你一份” 最佳参数表”，因为最佳参数是绑定在特定硬件 + 特定模型 + 特定量化 + 特定引擎版本上的，一张表到了你机器上大概率失效。</p>
+<p>它给的是<strong>怎么在你自己这台机器上，系统性地逼近那个上限的过程</strong>。</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">sybil-solutions/inference-optimisation-skill</span><br><span class="line">├── LICENSE                          MIT</span><br><span class="line">├── README.md                        结果总览 + 快速上手</span><br><span class="line">├── PROMPT.md                        给 Agent 用的任务模板</span><br><span class="line">└── skills/inference-optimisation/</span><br><span class="line">    ├── SKILL.md                     主流程（166 行）</span><br><span class="line">    ├── references/</span><br><span class="line">    │   ├── ceilings.md              理论天花板怎么算（含完整算例）</span><br><span class="line">    │   ├── methodology.md           测量方法论与统计陷阱</span><br><span class="line">    │   ├── levers.md                各类优化杠杆及实测证据</span><br><span class="line">    │   ├── gotchas.md               各引擎/硬件的具体坑</span><br><span class="line">    │   └── publishing.md            调优结果的发布验收流程</span><br><span class="line">    ├── scripts/</span><br><span class="line">    │   ├── bench.py                 基准测试台架（262 行，纯标准库）</span><br><span class="line">    │   ├── ceiling.py               天花板计算器</span><br><span class="line">    │   ├── queue.sh                 串行 GPU 队列</span><br><span class="line">    │   └── mem.sh                   真实内存占用探针</span><br><span class="line">    └── examples/                    示例配置</span><br></pre></td></tr></tbody></table></figure>
+
+<p>四个数字先摆出来（截至 2026-11-20 通过 GitHub API 查证）：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Stars</td>
+<td>1259</td>
+</tr>
+<tr>
+<td>Forks</td>
+<td>114</td>
+</tr>
+<tr>
+<td>License</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td> 主要语言</td>
+<td> Python</td>
+</tr>
+<tr>
+<td> 创建时间</td>
+<td> 2026-11-16</td>
+</tr>
+<tr>
+<td> 仓库体积</td>
+<td> 32 KB</td>
+</tr>
+</tbody></table>
+<p>创建才四天，1259 star，fork/star 比例接近 1/11—— 这个比例在工具类项目里算相当高的，说明大部分人是真拿去用了，而不是随手点了个星。</p>
+<h3 id="它和”最优参数表”的本质区别"><a href="#它和”最优参数表”的本质区别" class="headerlink" title="它和”最优参数表”的本质区别"></a>它和” 最优参数表” 的本质区别</h3><p>关键在于它把<strong>结论</strong>和<strong>结论的获得方式</strong>分开了。</p>
+<p>一个参数表告诉你” 在 4090 上，chunked_prefill_size 设 4096 最好”。它不告诉你：</p>
+<ul>
+<li>你的基线是在什么温度下测的？</li>
+<li>你这个” 最好” 是跑一次的结果还是 6 次的中位数？</li>
+<li>这个改动在 256K 上下文下还成立吗？</li>
+<li>有没有可能它其实让你的另一个指标退化了 10%？</li>
+</ul>
+<p>这个 Skill 里所有性能数字都带测量条件 —— 中位数还是单次、冷启动还是热缓存、thinking 开还是关、用哪个 harness 测的。这是我读它时印象最深的一点。</p>
+<p>作者在 <code>publishing.md</code> 里明确要求：<strong>“State in the README which numbers come from the gates and which from the hill-climb harness, and how each was measured.”</strong> 不同来源的数字不能混用，必须说清楚。</p>
+<p>这在我见过的开源调优材料里是很少见的自觉。</p>
+<hr>
+<h2 id="二、核心思想一：先算天花板，再决定值不值得动手"><a href="#二、核心思想一：先算天花板，再决定值不值得动手" class="headerlink" title="二、核心思想一：先算天花板，再决定值不值得动手"></a>二、核心思想一：先算天花板，再决定值不值得动手</h2><p>这是整个方法论里我最服的一条，也是我以前完全没做的。</p>
+<h3 id="两种截然不同的瓶颈"><a href="#两种截然不同的瓶颈" class="headerlink" title="两种截然不同的瓶颈"></a>两种截然不同的瓶颈</h3><p><strong>Decode（生成 token）</strong> 是<strong>内存带宽瓶颈</strong>。每生成一个 token，模型要把所有权重读一遍。所以决定速度的是你的显存 / 内存带宽，不是你的算力。</p>
+<p><strong>Prefill（预填充，处理输入）</strong> 是<strong>算力瓶颈</strong>。它要做大量矩阵乘法。</p>
+<p>搞混这两个，你会做出完全相反的优化决策。比如有人为了让 decode 更快去减少算力 —— 没用，decode 根本不缺算力，缺带宽。</p>
+<h3 id="Decode-的字节账怎么算"><a href="#Decode-的字节账怎么算" class="headerlink" title="Decode 的字节账怎么算"></a>Decode 的字节账怎么算</h3><p><code>ceilings.md</code> 给出的公式：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">B_target = dense_weight_bytes                    # 注意力/线性注意力、共享专家、router、norms</span><br><span class="line">         + expert_bytes × (top_k / n_experts)    # MoE：只读被路由到的专家</span><br><span class="line">         + lm_head_bytes                         # 大词表下常常占总字节的 10–25%！</span><br><span class="line">         + kv_bytes_per_token × context          # 随上下文增长，长上下文下占主导</span><br><span class="line">         + recurrent_state_bytes × 2             # SSM/GDN 混合模型的状态读+写</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后除以实测带宽，就是单用户 decode 的天花板。</p>
+<p>几个细节值得注意：</p>
+<p><strong>用的是 checkpoint 里张量的实际大小，不是参数量 × 位宽。</strong> 因为量化之后不同张量的实际位宽不一样，均匀假设会算错。</p>
+<p><strong>MoE 只读被路由到的专家。</strong> top-8 / 256 专家，意味着每步只读 1/32 的专家权重。这是 MoE 模型 decode 能跑得动的原因。</p>
+<p><strong>LM head 在大词表下是个大头。</strong> 文档里说它常常占总字节的 10–25%。这个后面会讲为什么它重要。</p>
+<p><strong>KV 会随上下文线性增长。</strong> 1K 上下文时它可以忽略，256K 上下文时它就是主导项。</p>
+<h3 id="作者的完整算例"><a href="#作者的完整算例" class="headerlink" title="作者的完整算例"></a>作者的完整算例</h3><p><code>ceilings.md</code> 里有一个非常完整的例子，我把它完整复现一遍，因为这是理解这套方法的最好入口。</p>
+<p><strong>硬件（实测，非规格表）：</strong></p>
+<ul>
+<li>115 GB/s 拷贝带宽，跑在 64GB LPDDR5X 上（规格是 153.6 GB/s）</li>
+<li>35.8 TFLOPS FP16 @ 4096³，到 8192³ 掉到 20 TFLOPS</li>
+</ul>
+<p><strong>模型：</strong> Ornith-1.5-35B-A3B（Qwen3.5-MoE 混合架构），EXL3 4 bpw<br>40 层 = 30 层 GDN 线性注意力 + 10 层全注意力，256 个专家，top-8。</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th align="right"> GB / 每个目标 token</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 路由专家：16.26 GB × 8/256</td>
+<td align="right">0.508</td>
+</tr>
+<tr>
+<td> 稠密部分：GDN 0.515 + 全注意力 0.137 + 共享专家 0.064 + router 0.042</td>
+<td align="right">0.758</td>
+</tr>
+<tr>
+<td>LM head（6-bit，248K 词表）</td>
+<td align="right">0.382</td>
+</tr>
+<tr>
+<td><strong> 合计</strong></td>
+<td align="right"><strong> 1.648</strong></td>
+</tr>
+</tbody></table>
+<p><strong>单用户 decode 天花板（按 115 GB/s）：</strong></p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th align="right">每个产出 token 的 GB</th>
+<th align="right"> 天花板</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>不做投机</td>
+<td align="right"> 1.68</td>
+<td align="right">68 tok/s</td>
+</tr>
+<tr>
+<td>1 个 MTP draft，完整 draft head，a = 1.85</td>
+<td align="right">1.38</td>
+<td align="right">83 tok/s</td>
+</tr>
+<tr>
+<td>1 个 draft，剪枝到 32K 词表的 draft head</td>
+<td align="right">1.19</td>
+<td align="right">97 tok/s</td>
+</tr>
+<tr>
+<td>2 个 draft，a ≈ 2.5</td>
+<td align="right">1.11</td>
+<td align="right">~103 tok/s</td>
+</tr>
+</tbody></table>
+<p>看清楚这张表的最后两行：</p>
+<p><strong>剪枝 draft head 带来的提升，比多加一个 draft 更大。</strong></p>
+<p>原因很直白：draft head 是要被每个 draft step 完整读一遍的，一个 248K 词表的 LM head 非常大。作者的说法是剪枝后的 draft head “about 8× fewer head bytes”。而多一个 draft 的收益，取决于接受率。</p>
+<hr>
+<h2 id="三、核心思想二：投机解码的关键不在接受率，在每步成本"><a href="#三、核心思想二：投机解码的关键不在接受率，在每步成本" class="headerlink" title="三、核心思想二：投机解码的关键不在接受率，在每步成本"></a>三、核心思想二：投机解码的关键不在接受率，在每步成本</h2><p>几乎所有关于投机解码的文章都在讲” 接受率”。这个 Skill 直接指出了一个更重要的点。</p>
+<p><strong><code>tok/s = a ÷ step_time</code></strong></p>
+<p>接受率 <code>a</code> 只是分母的一半。如果 step_time 同时变大，高接受率完全可能被抵消。</p>
+<p><code>levers.md</code> 里有个非常典型的例子：</p>
+<blockquote>
+<p>一个 7-token 的 draft 被接受了 3.26，MTP 的接受率是 2.85—— 看起来 MTP 更差。但那个 7-token draft <strong>实际运行慢 11–14%</strong>。</p>
+</blockquote>
+<h3 id="剪枝-draft-LM-head-的实测效果"><a href="#剪枝-draft-LM-head-的实测效果" class="headerlink" title="剪枝 draft LM head 的实测效果"></a>剪枝 draft LM head 的实测效果</h3><p>这是我认为整个仓库最有价值的单条技巧。</p>
+<p>原理：draft 模型每步要生成候选 token，要过它自己的 LM head。词表大到几十万时，这个 head 的读取量非常可观。但实际上 draft 的候选绝大多数落在词表的高频区域。</p>
+<p>做法：<strong>把 draft head 的词表裁剪成只保留最常用的块。目标模型仍然对完整词表做 verify，所以输出完全不变。</strong></p>
+<p>实测收益：</p>
+<ul>
+<li><strong>Intel Arc Pro B70 / vLLM</strong>：c1 decode 37.9 → 48.2 tok/s（<strong>+27%</strong>），用的是 1,940 个块中的 512 个，覆盖率 98.6%</li>
+<li><strong>Intel Arc B390 / SGLang</strong>：+14%，用 256 个块</li>
+</ul>
+<p>+27% 这个数字，对应的开销是” 准备一个裁剪词表”。这性价比高得有点离谱。</p>
+<h3 id="最优-draft-长度随并发和上下文变化"><a href="#最优-draft-长度随并发和上下文变化" class="headerlink" title="最优 draft 长度随并发和上下文变化"></a>最优 draft 长度随并发和上下文变化</h3><p>这条也很反直觉：</p>
+<ul>
+<li><strong>B70</strong>：k=4 在 c1 最优，k=3 在 c4 最优，k=2 在 c16 最优（+11%，因为能塞下更多流）</li>
+<li><strong>B390 在 128K 上下文</strong>：1 个 draft 跑 29.6 tok/s，3 个 draft 只有 15.5 tok/s—— 但 3 个 draft 在短上下文下反而赢</li>
+</ul>
+<p>所以<strong>必须按 workload 扫 draft 长度</strong>，不能用别人的最优值。</p>
+<h3 id="投机解码有时候是负优化"><a href="#投机解码有时候是负优化" class="headerlink" title="投机解码有时候是负优化"></a>投机解码有时候是负优化</h3><p>文档里也明确说了这种情况：</p>
+<ul>
+<li><strong>Apple M4</strong>：3 个 MTP draft 让速度从 6.35 掉到 3.25 tok/s</li>
+<li><strong>llama.cpp MTP 在难 prompt 上</strong>：36.7 vs 45.4（不开反而更快）</li>
+</ul>
+<p>原因：带宽紧张的设备上，draft 的额外字节读取代价超过了接受率带来的收益。</p>
+<h3 id="verify-必须走-decode-路径"><a href="#verify-必须走-decode-路径" class="headerlink" title="verify 必须走 decode 路径"></a>verify 必须走 decode 路径</h3><p>还有一条实现层面的坑，很有代表性：</p>
+<blockquote>
+<p>把 k-query 的 verify 发给 prefill kernel，会让 step time 每 1K 上下文增长 3.5 ms（16K 上下文时从 47 ms 涨到 104 ms）。改成每行当 decode query 跑之后：SGLang B70 的 c1 从 75.7（vLLM）变成 82.6 tok/s。</p>
+</blockquote>
+<p>还有” 把 sampler 留在 GPU 上”：CPU sampler 每 step 大约多 3 ms，移到 GPU 后 B390 的 c1 涨了 10%。</p>
+<hr>
+<h2 id="四、核心思想三：噪声控制——为什么你的”优化”经常是假的"><a href="#四、核心思想三：噪声控制——为什么你的”优化”经常是假的" class="headerlink" title="四、核心思想三：噪声控制——为什么你的”优化”经常是假的"></a>四、核心思想三：噪声控制 —— 为什么你的” 优化” 经常是假的</h2><p>这是我觉得整个仓库价值最高的部分，因为它解决的是<strong>方法论</strong>问题，不是工具问题。</p>
+<h3 id="单次运行的噪声是-±5–10"><a href="#单次运行的噪声是-±5–10" class="headerlink" title="单次运行的噪声是 ±5–10%"></a>单次运行的噪声是 ±5–10%</h3><p><code>methodology.md</code> 开头就是这句。然后它列出了所有噪声来源：</p>
+<ul>
+<li><strong>温度和时钟</strong>：跑久了降频</li>
+<li><strong>供电</strong>：笔记本用电池、或平衡模式跑，<strong>慢 8–10%</strong></li>
+<li><strong> 后台 CPU 负载</strong>：一台带 RTX 4080 的笔记本在轻微 CPU 负载下从 107 → 75 tok/s</li>
+<li><strong>prompt 内容</strong>：接受率本来就跟文本类型强相关</li>
+</ul>
+<p>我前文说的那个” 基线被污染” 的经历，本质就是最后这条的变体。</p>
+<h3 id="三条硬规则"><a href="#三条硬规则" class="headerlink" title="三条硬规则"></a>三条硬规则</h3><p><strong>规则一：≥6 次采样取中位数，不是最大值也不是单次。</strong></p>
+<p><strong>规则二：交叉对照，控制 — 候选 — 控制。</strong></p>
+<p>这个设计的精髓在于 —— <strong>候选只跟它的邻居比</strong>。文档里给出的理由非常硬：</p>
+<blockquote>
+<p>一个小时的漂移都可能超过你正在测的效应。同一个配置相隔一小时测出 53.8 和 49.5。</p>
+</blockquote>
+<p>所以流程是 <code>control → candidate → control</code>，候选必须<strong>同时打败左右两个 control</strong>。如果只有中间那次特别好，说明是漂移不是效果。</p>
+<p>这在统计上叫 randomized block design 的简化版，我做数值优化的时候见过同样的思路，但推理调优领域很少有人这么干。</p>
+<p><strong>规则三：固定环境，并且让工具拒绝在环境不对时运行。</strong></p>
+<p><code>bench.py</code> 里有个 <code>require_ac</code> 配置项：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">on_ac</span>():</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">if</span> sys.platform == <span class="string">"darwin"</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"AC Power"</span> <span class="keyword">in</span> subprocess.run([<span class="string">"pmset"</span>, <span class="string">"-g"</span>, <span class="string">"batt"</span>], capture_output=<span class="literal">True</span>, text=<span class="literal">True</span>).stdout</span><br><span class="line">        <span class="keyword">import</span> glob</span><br><span class="line">        vals = [<span class="built_in">open</span>(p).read().strip() <span class="keyword">for</span> p <span class="keyword">in</span> glob.glob(<span class="string">"/sys/class/power_supply/*/online"</span>)]</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">not</span> vals <span class="keyword">or</span> <span class="string">"1"</span> <span class="keyword">in</span> vals</span><br><span class="line">    <span class="keyword">except</span> Exception:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>而且跑完还会再检查一次，电池状态下跑的会被打上 <code>ON_BATTERY</code> 标记并判定 <code>ok=False</code>。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">finish</span>(<span class="params">res, flags, watch</span>):</span><br><span class="line">    <span class="keyword">if</span> watch:</span><br><span class="line">        watch.stop.<span class="built_in">set</span>()</span><br><span class="line">        res[<span class="string">"mem_peak_gib"</span>] = <span class="built_in">round</span>(watch.peak / <span class="number">2</span>**<span class="number">30</span>, <span class="number">2</span>)</span><br><span class="line">        <span class="keyword">if</span> watch.tripped:</span><br><span class="line">            flags.append(<span class="string">"MEM_CAP"</span>); res[<span class="string">"ok"</span>] = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> on_ac():</span><br><span class="line">        flags.append(<span class="string">"ON_BATTERY"</span>); res[<span class="string">"ok"</span>] = <span class="literal">False</span></span><br><span class="line">    res[<span class="string">"flags"</span>] = <span class="built_in">sorted</span>(<span class="built_in">set</span>(flags))</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">"ledger.jsonl"</span>, <span class="string">"a"</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(json.dumps(res) + <span class="string">"\n"</span>)</span><br><span class="line">    <span class="built_in">print</span>(json.dumps(res, indent=<span class="number">1</span>))</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑完检查环境状态，如果变了就作废这次运行 —— 这是我以前完全不会做的事。</p>
+<h3 id="跨引擎比较的正确姿势"><a href="#跨引擎比较的正确姿势" class="headerlink" title="跨引擎比较的正确姿势"></a>跨引擎比较的正确姿势</h3><blockquote>
+<p>同一天、同一张卡、背靠背跑。只有当 median (B)/median (A) 的 bootstrap 95% CI 下界大于 1.0，才接受”B 更快”。</p>
+</blockquote>
+<h3 id="一个反常识的结论"><a href="#一个反常识的结论" class="headerlink" title="一个反常识的结论"></a>一个反常识的结论</h3><blockquote>
+<p><strong>接受率更高也可能更慢。</strong></p>
+</blockquote>
+<p>前面提过 7-token draft 那个例子。而贪心等价性检查也可能因为数值差异而分叉：</p>
+<blockquote>
+<p>开 / 关投机解码的贪心结果可能因为数值而分叉：M=1 和 M=k 行用了不同的 kernel。在分叉点比较 logits 再下结论。<strong>top-2 平局 0.016 nats 不是 bug。</strong></p>
+</blockquote>
+<p>这种细节，只有真踩过坑的人才会写下来。</p>
+<hr>
+<h2 id="五、核心思想四：先算天花板，能让你-early-止损"><a href="#五、核心思想四：先算天花板，能让你-early-止损" class="headerlink" title="五、核心思想四：先算天花板，能让你 early 止损"></a>五、核心思想四：先算天花板，能让你 early 止损</h2><p>这是我个人最认同的一个设计。</p>
+<p>如果你想要 100 tok/s，而理论天花板只有 68 tok/s，那<strong>这个目标从一开始就不可能</strong>。知道了这一点，你可以直接告诉用户” 你的目标超过了物理极限”，省下几小时的无效调优。</p>
+<p>反过来，如果天花板是 103，你跑到了 53，那你就知道还有一半空间，而且 ——</p>
+<p><code>SKILL.md</code> 里说要<strong>用百分比来报告进度</strong>：</p>
+<blockquote>
+<p>Report progress as a percentage of the practical ceiling.</p>
+</blockquote>
+<p>作者自己的算例就是这么做的。B390 那次：</p>
+<ul>
+<li><strong>Decode</strong>：算出来 100 tok/s 只有在两个有效 draft 的情况下才够得着。但这个模型的 draft head 在 depth 2 接受率只有～14%，所以现实目标是～88–97 tok/s。实际跑到～55%。剩下的差距是量化 GEMV kernel 效率（verify graph 里有效带宽～76 GB/s）。</li>
+<li><strong>Prefill 256K</strong>：实用天花板～670–684 tok/s，实际 628 tok/s。<strong>基本贴着天花板了。</strong></li>
+</ul>
+<p>注意这里的表述方式：不吹” 我们优化到了 628 tok/s”，而是” 我们在天花板的 94%，长上下文 prefill 已经接近极限，不值得再花时间”。</p>
+<p><strong>能说出” 这里不值得再优化了”，比多榨 3% 更有价值。</strong></p>
+<h3 id="天花板计算器"><a href="#天花板计算器" class="headerlink" title="天花板计算器"></a>天花板计算器</h3><p>对应 <code>scripts/ceiling.py</code>，纯标准库：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 scripts/ceiling.py skills/inference-optimisation/examples/ceiling-ornith-b390.json</span><br></pre></td></tr></tbody></table></figure>
+
+<p>它读的 JSON 长这样：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span><span class="attr">"bandwidth_gbs"</span><span class="punctuation">:</span> <span class="number">115</span><span class="punctuation">,</span> <span class="attr">"peak_tflops"</span><span class="punctuation">:</span> <span class="number">36</span><span class="punctuation">,</span> <span class="attr">"mfu"</span><span class="punctuation">:</span> <span class="number">0.5</span><span class="punctuation">,</span> <span class="attr">"dense_gb"</span><span class="punctuation">:</span> <span class="number">0.758</span><span class="punctuation">,</span> <span class="attr">"experts_gb"</span><span class="punctuation">:</span> <span class="number">16.26</span><span class="punctuation">,</span> <span class="attr">"top_k"</span><span class="punctuation">:</span> <span class="number">8</span><span class="punctuation">,</span> <span class="attr">"n_experts"</span><span class="punctuation">:</span> <span class="number">256</span><span class="punctuation">,</span> <span class="attr">"lm_head_gb"</span><span class="punctuation">:</span> <span class="number">0.382</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">"active_params_b"</span><span class="punctuation">:</span> <span class="number">2.43</span><span class="punctuation">,</span> <span class="attr">"attn_layers"</span><span class="punctuation">:</span> <span class="number">10</span><span class="punctuation">,</span> <span class="attr">"attn_heads"</span><span class="punctuation">:</span> <span class="number">16</span><span class="punctuation">,</span> <span class="attr">"head_dim"</span><span class="punctuation">:</span> <span class="number">256</span><span class="punctuation">,</span> <span class="attr">"kv_bytes_per_token"</span><span class="punctuation">:</span> <span class="number">10240</span><span class="punctuation">,</span> <span class="attr">"draft_layer_gb"</span><span class="punctuation">:</span> <span class="number">0.03</span><span class="punctuation">,</span> <span class="attr">"draft_head_gb"</span><span class="punctuation">:</span> <span class="number">0.05</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">"spec"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">{</span><span class="attr">"drafts"</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span> <span class="attr">"accept"</span><span class="punctuation">:</span> <span class="number">1.0</span><span class="punctuation">}</span><span class="punctuation">,</span> <span class="punctuation">{</span><span class="attr">"drafts"</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span> <span class="attr">"accept"</span><span class="punctuation">:</span> <span class="number">1.74</span><span class="punctuation">}</span><span class="punctuation">,</span> <span class="punctuation">{</span><span class="attr">"drafts"</span><span class="punctuation">:</span> <span class="number">2</span><span class="punctuation">,</span> <span class="attr">"accept"</span><span class="punctuation">:</span> <span class="number">2.5</span><span class="punctuation">}</span><span class="punctuation">]</span><span class="punctuation">,</span> <span class="attr">"contexts"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="number">4096</span><span class="punctuation">,</span> <span class="number">32768</span><span class="punctuation">,</span> <span class="number">131072</span><span class="punctuation">,</span> <span class="number">262144</span><span class="punctuation">]</span><span class="punctuation">,</span> <span class="attr">"concurrency"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">4</span><span class="punctuation">]</span><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出会列出各个并发度、各个上下文长度下，不同 draft 数量对应的聚合 decode 天花板，以及 prefill 天花板和 KV 占用。</p>
+<p>几个参数解释一下：<code>mfu</code> 是 model FLOPs utilization，脚本默认按 0.5 算（文档说”practical ceilings assume about 100% of measured bandwidth and about 50% of measured peak FLOPs”）；<code>experts_gb</code> 对稠密模型设 0；<code>draft_head_gb</code> 记得填<strong>裁剪后</strong>的量，不然天花板会算低。</p>
+<hr>
+<h2 id="六、bench-py：一个不依赖任何第三方库的基准台架"><a href="#六、bench-py：一个不依赖任何第三方库的基准台架" class="headerlink" title="六、bench.py：一个不依赖任何第三方库的基准台架"></a>六、bench.py：一个不依赖任何第三方库的基准台架</h2><p>262 行，纯标准库（<code>json, os, random, statistics, string, subprocess, sys, threading, time, urllib.request</code> + <code>concurrent.futures</code>）。不装 <code>openai</code> SDK、不装 <code>torch</code>，往目标机器上 scp 过去就能跑。</p>
+<p>这点我觉得很重要 —— <strong>要在一个已经跑满 90% 显存的服务器上做基准，你不一定还能装得下一个 <code>torch</code> 依赖树。</strong></p>
+<h3 id="它测什么"><a href="#它测什么" class="headerlink" title="它测什么"></a>它测什么</h3><figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Measurements (all token counts come from the server's usage stats, never from streamed chunks):</span><br><span class="line">  startup_s, ttft_short_ms, c1_decode (median of --reps), c1_all, cN_aggregate (wall clock), cN_per_stream,</span><br><span class="line">  prefill_&lt;L&gt; (prompt_tokens / TTFT on a unique cold prompt), long-context needle retrieval (--long),</span><br><span class="line">  mem_peak_gib, flags (LOOP, REQ_FAIL, ON_BATTERY, MEM_CAP).</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python3 bench.py run configs/NAME.json [--long N] [--skip-cN] [--reps 6]</span><br><span class="line">python3 bench.py show [ledger.jsonl]</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="关键实现细节"><a href="#关键实现细节" class="headerlink" title="关键实现细节"></a>关键实现细节</h3><p><strong>token 数一律取服务器 usage stats，不数流式 chunk。</strong></p>
+<p>这是文档反复强调的一条，因为开着投机解码时，一个 SSE chunk 里可能有多个 token：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">body = {<span class="string">"model"</span>: <span class="variable language_">self</span>.cfg[<span class="string">"model"</span>], <span class="string">"messages"</span>: [{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: prompt}],</span><br><span class="line">        <span class="string">"max_tokens"</span>: max_tokens, <span class="string">"stream"</span>: <span class="literal">True</span>, <span class="string">"stream_options"</span>: {<span class="string">"include_usage"</span>: <span class="literal">True</span>},</span><br><span class="line">        <span class="string">"temperature"</span>: <span class="variable language_">self</span>.cfg.get(<span class="string">"temperature"</span>, <span class="number">0.6</span>) <span class="keyword">if</span> temperature <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">else</span> temperature}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>decode 速度的计算方式：</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">decode = (ct - <span class="number">1</span>) / (t_end - t_first) <span class="keyword">if</span> ct <span class="keyword">and</span> ct &gt; <span class="number">1</span> <span class="keyword">and</span> t_end &gt; t_first <span class="keyword">else</span> <span class="literal">None</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>即” 第一个 token 之后的 completion token 数 ÷ 首个 token 到结束的时间”。这排掉了 TTFT 的干扰。</p>
+<p><strong>prompt 用固定面板，不随机。</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PROMPTS = [  <span class="comment"># fixed panel: acceptance and speed depend on content, so never randomise these</span></span><br><span class="line">    <span class="string">"Write a Python implementation of an LRU cache with O(1) get and put, with docstrings and tests."</span>,</span><br><span class="line">    <span class="string">"Explain, step by step, how TCP congestion control works, including slow start and fast recovery."</span>,</span><br><span class="line">    <span class="string">"Write a short story (about 600 words) about a lighthouse keeper who finds a message in a bottle."</span>,</span><br><span class="line">    <span class="string">"Compare B-trees and LSM-trees for a write-heavy database workload. Use a table and give a recommendation."</span>,</span><br><span class="line">    <span class="string">"Write a bash script that backs up a directory to a timestamped tar.gz and keeps only the last 7 backups."</span>,</span><br><span class="line">    <span class="string">"Summarise the causes and consequences of the 1929 stock market crash in five paragraphs."</span>,</span><br><span class="line">]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注释直接写明原因：接受率和速度依赖内容，随机化就没法比较。文档里提到用随机 prompt 会让接受率从 2.4 漂到 3.7。</p>
+<p><strong>每轮生成唯一文档，绕开 prefix cache。</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">document</span>(<span class="params">tokens, seed, needles=<span class="number">3</span></span>):</span><br><span class="line">    <span class="string">"""Unique filler document of ~`tokens` tokens with `needles` retrieval codes at spread depths."""</span></span><br><span class="line">    rng = random.Random(seed)</span><br><span class="line">    n_words = <span class="built_in">int</span>(tokens / <span class="number">1.6</span>)</span><br><span class="line">    words = [rng.choice(WORDS) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n_words)]</span><br><span class="line">    codes = [<span class="string">""</span>.join(rng.choices(string.ascii_uppercase + string.digits, k=<span class="number">8</span>)) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(needles)]</span><br><span class="line">    <span class="keyword">for</span> i, c <span class="keyword">in</span> <span class="built_in">enumerate</span>(codes):</span><br><span class="line">        pos = <span class="built_in">int</span>(n_words * (i + <span class="number">1</span>) / (needles + <span class="number">1</span>))</span><br><span class="line">        words.insert(pos, <span class="string">f". The secret code number <span class="subst">{i + <span class="number">1</span>}</span> is <span class="subst">{c}</span>. "</span>)</span><br><span class="line">    head = <span class="string">f"[doc <span class="subst">{seed}</span>-<span class="subst">{time.time_ns()}</span>] "</span>  <span class="comment"># defeats prefix caching</span></span><br><span class="line">    q = <span class="string">"\n\nList every secret code number and its value that appears in the document above. Answer only with the codes."</span></span><br><span class="line">    <span class="keyword">return</span> head + <span class="string">" "</span>.join(words) + q, codes</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意 <code>time.time_ns()</code> 那个随机前缀 —— <strong>明确为了击穿 prefix caching</strong>。这对应 methodology 里那条：”Build prompts before the clock starts. Make them unique per run, with a random prefix, so prefix caching cannot hit, unless you are measuring cache hits deliberately.”</p>
+<p>同时插入的 needle 是长上下文检索正确性的验证手段。</p>
+<p><strong>输出退化检测。</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">looping</span>(<span class="params">text, n=<span class="number">8</span>, thresh=<span class="number">0.5</span></span>):</span><br><span class="line">    <span class="string">"""Degenerate-output flag: share of repeated word n-grams."""</span></span><br><span class="line">    w = text.split()</span><br><span class="line">    grams = [<span class="built_in">tuple</span>(w[i:i + n]) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">max</span>(<span class="number">0</span>, <span class="built_in">len</span>(w) - n))]</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">len</span>(grams) &gt; <span class="number">50</span> <span class="keyword">and</span> <span class="number">1</span> - <span class="built_in">len</span>(<span class="built_in">set</span>(grams)) / <span class="built_in">len</span>(grams) &gt; thresh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>文档里解释了为什么需要它：</p>
+<blockquote>
+<p>一个 117 tok/s 的” 纪录”，实际是模型在循环输出一个编号列表。</p>
+</blockquote>
+<p>这正是我前面说的” 速度很快但结果没用” 的典型。</p>
+<p><strong>内存看门狗。</strong> <code>MemWatch</code> 是个后台线程，按 <code>interval_s</code> 采样真实占用，超了 <code>cap_gib</code> 就杀掉服务器并把该次运行标记为失败。</p>
+<h3 id="配置长什么样"><a href="#配置长什么样" class="headerlink" title="配置长什么样"></a>配置长什么样</h3><figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"name"</span><span class="punctuation">:</span> <span class="string">"ctl-a"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"base_url"</span><span class="punctuation">:</span> <span class="string">"http://127.0.0.1:8000"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"model"</span><span class="punctuation">:</span> <span class="string">"my-model"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"launch"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"docker"</span><span class="punctuation">,</span> <span class="string">"run"</span><span class="punctuation">,</span> <span class="string">"-d"</span><span class="punctuation">,</span> <span class="string">"--name"</span><span class="punctuation">,</span> <span class="string">"llm"</span><span class="punctuation">,</span> <span class="string">"--device"</span><span class="punctuation">,</span> <span class="string">"/dev/dri"</span><span class="punctuation">,</span> <span class="string">"--shm-size"</span><span class="punctuation">,</span> <span class="string">"2g"</span><span class="punctuation">,</span></span><br><span class="line">             <span class="string">"-p"</span><span class="punctuation">,</span> <span class="string">"127.0.0.1:8000:8000"</span><span class="punctuation">,</span></span><br><span class="line">             <span class="string">"-v"</span><span class="punctuation">,</span> <span class="string">"/path/to/weights:/models:ro"</span><span class="punctuation">,</span></span><br><span class="line">             <span class="string">"-v"</span><span class="punctuation">,</span> <span class="string">"/path/to/persistent-cache:/root/.cache"</span><span class="punctuation">,</span></span><br><span class="line">             <span class="string">"my-engine-image@sha256:..."</span><span class="punctuation">,</span></span><br><span class="line">             <span class="string">"python3"</span><span class="punctuation">,</span> <span class="string">"-m"</span><span class="punctuation">,</span> <span class="string">"sglang.launch_server"</span><span class="punctuation">,</span> <span class="string">"--model-path"</span><span class="punctuation">,</span> <span class="string">"/models"</span><span class="punctuation">,</span> <span class="string">"--served-model-name"</span><span class="punctuation">,</span> <span class="string">"my-model"</span><span class="punctuation">,</span></span><br><span class="line">             <span class="string">"--host"</span><span class="punctuation">,</span> <span class="string">"0.0.0.0"</span><span class="punctuation">,</span> <span class="string">"--port"</span><span class="punctuation">,</span> <span class="string">"8000"</span><span class="punctuation">,</span> <span class="string">"--context-length"</span><span class="punctuation">,</span> <span class="string">"262144"</span><span class="punctuation">,</span></span><br><span class="line">             <span class="string">"--max-running-requests"</span><span class="punctuation">,</span> <span class="string">"4"</span><span class="punctuation">,</span> <span class="string">"--chunked-prefill-size"</span><span class="punctuation">,</span> <span class="string">"4096"</span><span class="punctuation">,</span></span><br><span class="line">             <span class="string">"--speculative-algorithm"</span><span class="punctuation">,</span> <span class="string">"NEXTN"</span><span class="punctuation">,</span> <span class="string">"--speculative-num-steps"</span><span class="punctuation">,</span> <span class="string">"1"</span><span class="punctuation">,</span></span><br><span class="line">             <span class="string">"--speculative-eagle-topk"</span><span class="punctuation">,</span> <span class="string">"1"</span><span class="punctuation">,</span> <span class="string">"--speculative-num-draft-tokens"</span><span class="punctuation">,</span> <span class="string">"2"</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"stop"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"bash"</span><span class="punctuation">,</span> <span class="string">"-c"</span><span class="punctuation">,</span> <span class="string">"curl -s -X POST localhost:8000/abort_request -d '{\"abort_all\":true}' -H 'Content-Type: application/json'; sleep 5; docker stop -t 60 llm; docker rm -f llm"</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"health_timeout_s"</span><span class="punctuation">:</span> <span class="number">900</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"concurrency"</span><span class="punctuation">:</span> <span class="number">4</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"prefill_lengths"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="number">4096</span><span class="punctuation">,</span> <span class="number">32768</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"extra_body"</span><span class="punctuation">:</span> <span class="punctuation">{</span><span class="attr">"chat_template_kwargs"</span><span class="punctuation">:</span> <span class="punctuation">{</span><span class="attr">"enable_thinking"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">}</span><span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"temperature"</span><span class="punctuation">:</span> <span class="number">0.6</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"memory"</span><span class="punctuation">:</span> <span class="punctuation">{</span><span class="attr">"cap_gib"</span><span class="punctuation">:</span> <span class="number">46</span><span class="punctuation">,</span> <span class="attr">"probe"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"sudo"</span><span class="punctuation">,</span> <span class="string">"-n"</span><span class="punctuation">,</span> <span class="string">"bash"</span><span class="punctuation">,</span> <span class="string">"scripts/mem.sh"</span><span class="punctuation">,</span> <span class="string">"llm"</span><span class="punctuation">,</span> <span class="string">"unified"</span><span class="punctuation">]</span><span class="punctuation">,</span> <span class="attr">"interval_s"</span><span class="punctuation">:</span> <span class="number">3</span><span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"require_ac"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>几个设计细节：</p>
+<ul>
+<li><strong><code>launch</code> 和 <code>stop</code> 都可选</strong>。省略 <code>launch</code> 就是直接测一个已经在跑的服务器（<code>config-existing-server.json</code> 就是这种）。</li>
+<li><strong><code>stop</code> 里带 <code>abort_request</code> 然后 sleep 5 再停容器。</strong> 这对应 <code>SKILL.md</code> 里那条硬规则：”Never force-kill a server mid-batch. A forced stop mid-prefill has caused GPU driver faults.”（<code>gotchas.md</code> 里也有：强制停止容器导致 Intel xe GPU page fault）</li>
+<li><strong><code>"my-engine-image@sha256:..."</code></strong>—— 镜像按 digest 固定，不是 tag。这跟 publishing.md 的要求一致。</li>
+<li><strong>没有 <code>launch</code> 就不测 startup</strong>，因为服务器不是这次启动的。</li>
+</ul>
+<hr>
+<h2 id="七、queue-sh：防止两个任务抢同一块卡"><a href="#七、queue-sh：防止两个任务抢同一块卡" class="headerlink" title="七、queue.sh：防止两个任务抢同一块卡"></a>七、queue.sh：防止两个任务抢同一块卡</h2><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"><span class="comment"># Serialized GPU queue: runs bench.py on each config in order, one GPU job at a time across all callers.</span></span><br><span class="line"><span class="comment">#   queue.sh ctl-a cand ctl-b            # interleave controls around each candidate</span></span><br><span class="line"><span class="comment">#   BENCH_FLAGS="--long 131072" queue.sh cand</span></span><br><span class="line"><span class="comment"># Detach long queues so they survive agent/terminal restarts:</span></span><br><span class="line"><span class="comment">#   setsid nohup bash queue.sh ctl-a cand ctl-b &gt; queue.log 2&gt;&amp;1 &lt; /dev/null &amp; disown</span></span><br><span class="line">LOCK=<span class="variable">${QUEUE_LOCK:-/tmp/inference-hillclimb.lock}</span></span><br><span class="line"><span class="built_in">exec</span> 9&gt;<span class="string">"<span class="variable">$LOCK</span>"</span>; flock 9</span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> <span class="string">"<span class="variable">$@</span>"</span>; <span class="keyword">do</span></span><br><span class="line">  python3 <span class="string">"<span class="variable">${BENCH:-$(dirname "$0")/bench.py}</span>"</span> run <span class="string">"configs/<span class="variable">$n</span>.json"</span> <span class="variable">${BENCH_FLAGS:-}</span> &gt; <span class="string">"runs-<span class="variable">$n</span>.log"</span> 2&gt;&amp;1</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"done <span class="variable">$n</span>: <span class="subst">$(tail -c 300 <span class="string">"runs-<span class="variable">$n</span>.log"</span> | tr '\n' ' ' | cut -c1-200)</span>"</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">echo</span> QUEUE_DONE <span class="string">"<span class="variable">$@</span>"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>核心就一行：<code>flock 9</code> 对 <code>/tmp/inference-hillclimb.lock</code> 加文件锁。<strong>全局的</strong>，不只是进程内的。所以哪怕你同时开两个终端、两个 Agent 在同一台机器上调优，也不会互相踩。</p>
+<p>这条对应 <code>gotchas.md</code> 里的警告：</p>
+<blockquote>
+<p>同一块 GPU 上跑第二个引擎，或者有个野 benchmark 还在跑，会悄悄把结果砍一半，或者两边都崩。</p>
+</blockquote>
+<p>另外它还用 <code>setsid nohup ... &amp; disown</code> 的方式支持 detach，让长队列在 Agent 重启后还能活着。这个细节对 Agent 场景特别重要 ——<code>gotchas.md</code> 里专门写了”Agent 重启会杀掉子进程”。</p>
+<hr>
+<h2 id="八、mem-sh：统一内存机器上的真实占用"><a href="#八、mem-sh：统一内存机器上的真实占用" class="headerlink" title="八、mem.sh：统一内存机器上的真实占用"></a>八、mem.sh：统一内存机器上的真实占用</h2><p>这是我觉得被严重低估的一个问题。</p>
+<p>在 Apple Silicon、Intel/AMD 核显、GB10/Spark 这类<strong>统一内存</strong>设备上，GPU 分配<strong>绕过 cgroup 记账</strong>。</p>
+<p><code>methodology.md</code> 里的例子：</p>
+<blockquote>
+<p>MemAvailable 的差值显示 14 GiB，真实占用是 29.4 GiB。</p>
+</blockquote>
+<p>差了整整一倍。这种情况下你的内存看门狗就是个摆设。</p>
+<p>解法是直接读驱动的 residency 计数：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">declare</span> -A seen</span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> <span class="variable">$pids</span>; <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">for</span> f <span class="keyword">in</span> /proc/<span class="string">"<span class="variable">$p</span>"</span>/fdinfo/*; <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">id</span>=$(awk <span class="string">'/drm-client-id/{print $2}'</span> <span class="string">"<span class="variable">$f</span>"</span> 2&gt;/dev/null) || <span class="built_in">continue</span></span><br><span class="line">    [ -z <span class="string">"<span class="variable">$id</span>"</span> ] &amp;&amp; <span class="built_in">continue</span>; [ -n <span class="string">"<span class="variable">${seen[$id]:-}</span>"</span> ] &amp;&amp; <span class="built_in">continue</span>; seen[<span class="variable">$id</span>]=1</span><br><span class="line">    kb=$(awk <span class="string">'/drm-resident-/{s+=$2} END{print s+0}'</span> <span class="string">"<span class="variable">$f</span>"</span>); gpu=$((gpu + kb * <span class="number">1024</span>))</span><br><span class="line">  <span class="keyword">done</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>按 <code>drm-client-id</code> 去重（同一个 client 可能多 fd），累加 <code>drm-resident-*</code>，再加上 cgroup 的 anon。</p>
+<p>NVIDIA 离散卡走另一条路，用 <code>nvidia-smi --query-compute-apps</code> 查容器内进程占用的显存。</p>
+<p>脚本注释里还提醒：读别的用户的 fdinfo 需要 root，要么给免密 sudo，要么以 root 跑，并且<strong>不要把密码写进脚本</strong>。</p>
+<hr>
+<h2 id="九、官方给出的实测结果"><a href="#九、官方给出的实测结果" class="headerlink" title="九、官方给出的实测结果"></a>九、官方给出的实测结果</h2><p>README 里有一张表，把作者跑过的所有 hill-climb 汇总了。我挑重点列几个（数据来自 README，未做任何改动）：</p>
+<table>
+<thead>
+<tr>
+<th>硬件</th>
+<th>模型 / 量化 / 引擎</th>
+<th>优化前 → 优化后</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> Intel Arc B390 iGPU</strong>（笔记本，64GB LPDDR5X，~115 GB/s）</td>
+<td>Ornith-1.5-35B-A3B，EXL3 4 bpw，SGLang XPU + MTP</td>
+<td>Decode 1 用户：43.6 → <strong>53 tok/s</strong>（中位数）<br>Decode 4 用户：84.7 → <strong>103 tok/s</strong><br>Prefill 32K：1,037 → <strong>1,660 tok/s</strong><br>Prefill 256K：297 → <strong>628 tok/s</strong>（2.1×）<br>KV cache：264K tokens → <strong>4 × 256K</strong><br>启动：113 → <strong>43 s</strong></td>
+</tr>
+<tr>
+<td><strong>Intel Arc Pro B70</strong></td>
+<td>Qwen3.8-27B，EXL3 4 bpw，vLLM + 自研 XPU kernel</td>
+<td>Decode：<strong>91.2 tok/s</strong>（1 用户），<strong>365</strong>（16 用户）<br>同卡 llama.cpp Q4_K_M：25.0<br>Prefill 4K/32K/128K/254K：1,654/1,434/928/650 → <strong>2,421/2,259/1,415/911</strong><br>Agent session 回放：193 → <strong>147 s</strong></td>
+</tr>
+<tr>
+<td><strong>Intel Arc Pro B70</strong></td>
+<td> 同模型，SGLang + 相同 kernel</td>
+<td>Decode 1 用户：<strong>82.6 tok/s</strong>，同日同卡 vLLM 为 75.7</td>
+</tr>
+<tr>
+<td><strong>RTX 3090</strong></td>
+<td>Qwen3.8-27B EXL3 3 bpw + MTP</td>
+<td><strong>96.2 tok/s</strong>（文本）/ <strong>141.1</strong>（代码），1 用户</td>
+</tr>
+<tr>
+<td><strong> RTX 3090</strong></td>
+<td>Qwen3.6-35B-A3B EXL3 3 bpw + MTP</td>
+<td><strong>251.7 / 357.9 tok/s</strong>，1 用户</td>
+</tr>
+<tr>
+<td><strong> 4× H200 NVL</strong></td>
+<td>DeepSeek-V4.1-Flash，vLLM + 投机解码</td>
+<td>负载下崩溃 → <strong>229.1 tok/s</strong> decode，<strong>17,546 tok/s</strong> prefill；全部六项门禁通过</td>
+</tr>
+</tbody></table>
+<p>几个我特别想指出的：</p>
+<p><strong>B390 那一行里，KV cache 从 264K tokens 变成 4 × 256K。</strong> 这个提升不是靠加显存，是靠调整引擎的池大小。而且 <code>levers.md</code> 里写明这个结果是用” 并发满长度 soak” 验证过的 ——4 条流、36.8 GiB 峰值、4/4 needle 全部命中。</p>
+<p><strong>B70 上 vLLM 91.2 tok/s，同一张卡上 llama.cpp 只有 25.0。</strong> 差 3.6 倍。这说明引擎选型的影响可能远大于调参。</p>
+<p><strong>RTX 3090 上代码比散文快</strong>（141.1 vs 96.2）。文档解释了原因：接受率跟内容强相关，代码和贪心解码的 draft 接受率高得多。</p>
+<p><strong>H200 那行从” 负载下崩溃” 到 229.1 tok/s。</strong> 起点是崩的，说明这套流程的价值不只是提速，还有救活一个跑不起来的服务。</p>
+<p>所有原始数据都放在作者的 <code>local-ai-registry</code> 仓库里，B390 那次有完整 hill-climb 日志（PR #453）。</p>
+<hr>
+<h2 id="十、调优杠杆清单：按性价比排序"><a href="#十、调优杠杆清单：按性价比排序" class="headerlink" title="十、调优杠杆清单：按性价比排序"></a>十、调优杠杆清单：按性价比排序</h2><p><code>SKILL.md</code> 给了一个明确的顺序，原则是<strong>便宜的先来</strong>：</p>
+<p><strong>1. 持久化 JIT / 编译 /graph 缓存</strong>（启动时间 −50–70%）</p>
+<p>这个收益很夸张但很容易理解：编译缓存不跨重启保留的话，每次启动都要重新编译 kernel。</p>
+<ul>
+<li>Arc B390 / SGLang：113 s → 43 s</li>
+<li>4× RTX PRO 6000 /vLLM：后续启动从约 22 分钟降到 7 分钟</li>
+</ul>
+<p>配套的还有 <code>TORCHINDUCTOR_COMPILE_THREADS=1</code>—— 编译 worker 会占约 6 GiB 瞬时内存，内存紧张的机器上要限制。</p>
+<p>还有个 vLLM 专属的坑：</p>
+<blockquote>
+<p>mmap 权重加载在某些文件系统上只有约 60 MB/s：27 GB 跑了 26 分钟。<code>--safetensors-load-strategy eager</code> 把它降到几秒。</p>
+</blockquote>
+<p><strong>2. Decode graph 捕获</strong>（CUDA/XPU graph）</p>
+<ul>
+<li>Arc Pro B70：14.4 → 28.4 tok/s</li>
+<li>SGLang XPU：16 → 32 tok/s</li>
+<li>vLLM INT4：11 → 27 tok/s</li>
+</ul>
+<p>基本是翻倍。</p>
+<p><strong>3. 投机解码</strong>（前面详细讲过了）</p>
+<p><strong>4. 并发与 KV 容量</strong></p>
+<p>这条有几个反直觉的点：</p>
+<blockquote>
+<p><strong>混合 SSM/GDN/Mamba 模型，限制并发的是 state slot 和 page size，不是 KV token 数。</strong><br>SGLang 拒绝调度超过 1 个请求，直到 <code>--max-mamba-cache-size</code> 被调大。</p>
+</blockquote>
+<p>以及：</p>
+<blockquote>
+<p>保持 vLLM 精确的 1,600-token block，而不是向上取整到 2,048，c16 的并发流从 10 提到 14，聚合吞吐 +17%。</p>
+</blockquote>
+<p><strong>prefix caching 必须显式打开</strong>，有些引擎对混合模型会静默关闭它：</p>
+<blockquote>
+<p>66K-token 的第二轮 TTFT：36 s → 0.45 s。</p>
+</blockquote>
+<p><strong>5. Prefill</strong></p>
+<ul>
+<li><strong>chunk size 是吞吐和 decode 卡顿的权衡</strong>：B70 上 8,192 → 2,048，把最坏卡顿从 7.1 s 降到 1.95 s，代价是 decode −4%</li>
+<li><strong> 先换更快的 attention 库，别急着自己写</strong>：oneDNN 融合 SDPA 比 FA2 快 7–18%；手写的 flash attention 只跑到 48 vs 61 TFLOPS</li>
+<li><strong>int8/fp8 prefill GEMM</strong>（标注为有损权衡）：Hadamard 旋转域下每行一个 scale 就够，所有 linear 快 1.89×，NLL +0.17%，top-1 一致率 97.2%，decode 保持 bit-exact</li>
+</ul>
+<p><strong>6. kernel 线程数和 tile size</strong></p>
+<blockquote>
+<p>为一张卡调的默认值，搬到另一张卡就是错的。<br>B70：4096 → 1024 线程，代码 c1 从 48.5 到 56.9。</p>
+</blockquote>
+<p><strong>7. 改 kernel</strong>（最后才做）</p>
+<p>只有配置杠杆都到平台期了才动。</p>
+<p>而且有一条经验值得单独拎出来：</p>
+<blockquote>
+<p><strong>在 graph 之下，融合小 kernel 很少有用。</strong> B390 上三次融合尝试（融合 GEMV、共享专家融合、折叠注意力）都是正确的，收益是 <strong>0%</strong>。时间在主 kernel 里面。</p>
+</blockquote>
+<hr>
+<h2 id="十一、诚实说说它的局限"><a href="#十一、诚实说说它的局限" class="headerlink" title="十一、诚实说说它的局限"></a>十一、诚实说说它的局限</h2><p>这个仓库质量很高，但我不打算把它吹成银弹。下面几点是我读完源码和文档后认为的真实限制。</p>
+<h3 id="1-它不产生新的性能，它产生可信的性能"><a href="#1-它不产生新的性能，它产生可信的性能" class="headerlink" title="1. 它不产生新的性能，它产生可信的性能"></a>1. 它不产生新的性能，它产生可信的性能</h3><p>整个仓库<strong>没有一行 kernel 优化代码</strong>，也没有一个” 一键最优启动脚本”。它提供的是流程和工具。</p>
+<p>如果你期待的是”clone 下来就有 2 倍加速”，那会失望。真实的收益是：<strong>你调出来的数字你敢信了</strong>，以及<strong>你不会把噪声当成收益</strong>。</p>
+<p>作者自己在 README 里也说，这是”we actually got these speedups” 的方法记录，不是 flag 清单。</p>
+<h3 id="2-仓库很新，实践样本还少"><a href="#2-仓库很新，实践样本还少" class="headerlink" title="2. 仓库很新，实践样本还少"></a>2. 仓库很新，实践样本还少</h3><p>创建于 2026-11-16，到我写这篇为止只有四天，6 个 open issue。所有引用的性能数字都来自作者自己的机器和几个合作仓库（<code>local-ai-registry</code>、<code>trellis-serve</code>、<code>qwen-serve</code>）。</p>
+<p><strong>跨硬件、跨模型的可重复性还没有被第三方独立验证过。</strong> 这是个必须诚实说明的点。</p>
+<h3 id="3-高度依赖具体的引擎版本"><a href="#3-高度依赖具体的引擎版本" class="headerlink" title="3. 高度依赖具体的引擎版本"></a>3. 高度依赖具体的引擎版本</h3><p><code>gotchas.md</code> 开头就写了：”Versions matter; re-check on newer releases.”（版本很重要，升级后要重新检查）</p>
+<p>文档里大量条目是特定版本的行为，比如 SGLang XPU 后端 0.5.x 的五个具体 bug。<strong>这些 bug 被修掉之后，相关的 workaround 就没必要了</strong>，甚至可能有害。</p>
+<h3 id="4-门槛比想象中高"><a href="#4-门槛比想象中高" class="headerlink" title="4. 门槛比想象中高"></a>4. 门槛比想象中高</h3><p>这套流程要求你有：</p>
+<ul>
+<li>一台能折腾的机器（要 root 权限读 DRM residency，要能改电源策略）</li>
+<li>至少几小时的连续时间（交叉对照 + 6 次采样 + 稳定性门禁，单轮就不快）</li>
+<li>一个能管理长任务的 Agent 或脚本环境</li>
+</ul>
+<p><strong>这不是” 五分钟搞定的调参技巧”，是几天起步的工程项目。</strong></p>
+<p>对个人用户来说，收益上限可能撑不起这个成本。</p>
+<h3 id="5-硬规则有真实的副作用"><a href="#5-硬规则有真实的副作用" class="headerlink" title="5. 硬规则有真实的副作用"></a>5. 硬规则有真实的副作用</h3><p>其中几条会实际影响你的系统：</p>
+<ul>
+<li>要求独占 GPU（会打断你其他任务）</li>
+<li>要求固定电源策略（笔记本用户会注意到）</li>
+<li><code>bench.py</code> 会<strong>停止并重启你的服务器</strong>（<code>stop</code> + <code>launch</code>）</li>
+<li>要求” 不要中途强杀服务器”</li>
+</ul>
+<p><strong>跑之前要先确认你的服务器上没有正在服务的请求。</strong></p>
+<h3 id="6-内存看门狗在部分环境不可用"><a href="#6-内存看门狗在部分环境不可用" class="headerlink" title="6. 内存看门狗在部分环境不可用"></a>6. 内存看门狗在部分环境不可用</h3><p><code>mem.sh</code> 要读 <code>/proc/&lt;pid&gt;/fdinfo</code>，读别的用户的进程需要 root。<code>gotchas.md</code> 里也提到 Intel XPU 上 <code>torch.topk</code> 在宽输入下会 segfault（约 2–8K 以上）—— 虽然那不是本项目的问题，但说明这类底层环境的水很深。</p>
+<hr>
+<h2 id="十二、跟同类东西比一下"><a href="#十二、跟同类东西比一下" class="headerlink" title="十二、跟同类东西比一下"></a>十二、跟同类东西比一下</h2><h3 id="对比-llm-performance-genai-bench-这类通用-benchmark-工具"><a href="#对比-llm-performance-genai-bench-这类通用-benchmark-工具" class="headerlink" title="对比 llm-performance / genai-bench 这类通用 benchmark 工具"></a>对比 llm-performance /genai-bench 这类通用 benchmark 工具</h3><p>那些工具测的是” 给定配置下模型跑多快”，是<strong>测量工具</strong>。</p>
+<p>这个项目测完之后还会告诉你 **” 这个结果可不可信”**—— 样本数、中位数还是单次、交叉对照有没有过、内存是不是真实的、有没有在跑偏。</p>
+<p>差别不在功能，在<strong>可信度保证</strong>。</p>
+<h3 id="对比各家引擎的官方调优文档"><a href="#对比各家引擎的官方调优文档" class="headerlink" title="对比各家引擎的官方调优文档"></a>对比各家引擎的官方调优文档</h3><p>vLLM、SGLang、llama.cpp 的官方文档都会告诉你有哪些参数、什么时候用哪个。问题是：</p>
+<ul>
+<li>它们不告诉你<strong>在你这台机器上</strong>哪个参数最优</li>
+<li>它们不告诉你<strong>你的基线测对了吗</strong></li>
+<li>它们不会告诉你” 这个参数在 256K 上下文下失效”</li>
+</ul>
+<p>这个项目补的正是这一层：<strong>在具体硬件上的具体结论 + 得出结论的可靠方法。</strong></p>
+<h3 id="对比别人的”优化配置”仓库"><a href="#对比别人的”优化配置”仓库" class="headerlink" title="对比别人的”优化配置”仓库"></a>对比别人的” 优化配置” 仓库</h3><p>这类仓库通常给一张参数表。问题是那张表<strong>没有测量条件</strong> —— 多少样本、冷的还是热的、中位数还是最好的一次、thinking 开还是开。</p>
+<p>这个项目最核心的贡献之一就是<strong>强制标注测量条件</strong>，还专门要求在 README 里说明哪组数字来自哪个 harness。</p>
+<h3 id="对比-local-ai-registry（作者的另一个项目）"><a href="#对比-local-ai-registry（作者的另一个项目）" class="headerlink" title="对比 local-ai-registry（作者的另一个项目）"></a>对比 <code>local-ai-registry</code>（作者的另一个项目）</h3><p>两者是配套的：</p>
+<ul>
+<li><strong><code>local-ai-registry</code></strong>（324 star）：每台机器一份验证过的 recipe，附上证据。是<strong>结果库</strong>。</li>
+<li><strong><code>inference-optimisation-skill</code></strong>（1259 star）：怎么在你自己机器上得到 recipe。是<strong>方法论</strong>。</li>
+</ul>
+<p>作者的分工很清楚：Skill 负责爬坡，Registry 负责沉淀和复用。</p>
+<hr>
+<h2 id="十三、适合谁-不适合谁"><a href="#十三、适合谁-不适合谁" class="headerlink" title="十三、适合谁 / 不适合谁"></a>十三、适合谁 / 不适合谁</h2><h3 id="适合"><a href="#适合" class="headerlink" title="适合"></a>适合</h3><p><strong>你要在一台固定机器上长期跑本地大模型，需要压榨出可用性能。</strong><br>这个场景收益最大 —— 硬件固定、模型固定、可以跑几小时的对照实验。</p>
+<p><strong>你在做推理引擎、量化格式或 kernel 相关的工作。</strong><br><code>levers.md</code> 里那些” 在 graph 下融合小 kernel 收益 0%”、”AMD B70 上 stride-3 寄存器区域变成逐元素搬移” 级别的经验，是论文里不会写的东西。</p>
+<p><strong>你需要发布可复现的调优配方。</strong><br><code>publishing.md</code> 的六道验收门禁 + pin + 干净构建 + A/B 证明，对应的是” 我的配方别人能复现” 这个诉求。</p>
+<p><strong>你在做 Agentic 编码，Claude Code 之类。</strong><br>它本来就是设计成 <code>SKILL.md</code> 格式的 Agent Skill。</p>
+<h3 id="不适合"><a href="#不适合" class="headerlink" title="不适合"></a>不适合</h3><p><strong>你只是想跑通一个模型，不需要优化。</strong><br>直接装 ollama、LM Studio，用默认参数就行。</p>
+<p><strong>你没有一块能连续占用几小时的机器。</strong><br>交叉对照、6 次采样、稳定性门禁，全都需要连续时间。</p>
+<p><strong>你需要开箱即用的” 一键最优配置”。</strong><br>这个仓库给不了，也给不了任何人。</p>
+<p><strong>你在做的是云上多租户推理服务。</strong><br>这个 Skill 是面向<strong>单机单租户</strong>优化的，强调独占 GPU、固定环境。分布式推理的调度、容错、弹性伸缩，基本不在覆盖范围内。</p>
+<hr>
+<h2 id="十四、怎么用起来"><a href="#十四、怎么用起来" class="headerlink" title="十四、怎么用起来"></a>十四、怎么用起来</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/sybil-solutions/inference-optimisation-skill</span><br><span class="line"><span class="built_in">mkdir</span> -p ~/.claude/skills</span><br><span class="line"><span class="built_in">cp</span> -r inference-optimisation-skill/skills/inference-optimisation ~/.claude/skills/</span><br></pre></td></tr></tbody></table></figure>
+
+<p>其他 Agent 直接指向 <code>skills/inference-optimisation/SKILL.md</code>，或者把 <code>PROMPT.md</code> 贴成任务提示。</p>
+<h3 id="不用-Agent-也能跑"><a href="#不用-Agent-也能跑" class="headerlink" title="不用 Agent 也能跑"></a>不用 Agent 也能跑</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">S=skills/inference-optimisation</span><br><span class="line">python3 <span class="variable">$S</span>/scripts/ceiling.py <span class="variable">$S</span>/examples/ceiling-ornith-b390.json        <span class="comment"># ceilings</span></span><br><span class="line"><span class="built_in">mkdir</span> -p configs &amp;&amp; <span class="built_in">cp</span> <span class="variable">$S</span>/examples/config-existing-server.json configs/base.json   <span class="comment"># edit base_url/model</span></span><br><span class="line">python3 <span class="variable">$S</span>/scripts/bench.py run configs/base.json --long 131072            <span class="comment"># one run</span></span><br><span class="line">bash <span class="variable">$S</span>/scripts/queue.sh base cand base                                     <span class="comment"># interleaved A/B</span></span><br><span class="line">python3 <span class="variable">$S</span>/scripts/bench.py show                                            <span class="comment"># ledger table</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="给-Agent-的任务模板"><a href="#给-Agent-的任务模板" class="headerlink" title="给 Agent 的任务模板"></a>给 Agent 的任务模板</h3><p><code>PROMPT.md</code> 是个填空模板，字段包括：模型 + 量化、引擎、当前启动命令、硬件、要最大化的指标（按优先级排）、硬约束（内存上限、必须稳定的上下文长度、并发数、质量要求是” 只允许无损” 还是” 允许标注的有损权衡”）。</p>
+<p>关键的一句是 <strong>“Stretch goal from the user”</strong>：</p>
+<blockquote>
+<p>Check it against the ceiling and report honestly.</p>
+</blockquote>
+<p>把用户的期望目标和天花板做对比，诚实汇报。这就是整套东西的落点 —— <strong>不是帮你吹出更高的数字，是帮你知道真实的天花板在哪。</strong></p>
+<hr>
+<h2 id="十五、我的实际建议"><a href="#十五、我的实际建议" class="headerlink" title="十五、我的实际建议"></a>十五、我的实际建议</h2><p>如果你是<strong>第一次认真做本地推理调优</strong>，我建议按这个顺序：</p>
+<p><strong>第一步，先装 <code>bench.py</code>，测一遍你现在的配置。</strong></p>
+<p>不调任何参数，就先测。用你<strong>真实的</strong> prompt（不是玩具 prompt），让 <code>require_ac</code> 开着，让它跑 6 次取中位数。</p>
+<p>这一步大概率会让你发现” 我以为的基线” 和” 实际的基线” 有出入。很多人卡在这一步就明白了。</p>
+<p><strong>第二步，算天花板。</strong></p>
+<p>把 <code>ceiling.py</code> 的 JSON 按你机器和模型填了（注意 <code>experts_gb</code> 稠密模型填 0，<code>draft_head_gb</code> 填裁剪后的量）。看看你的目标到底在不在物理可行范围内。</p>
+<p><strong>第三步，只做两件事：持久化缓存 + decode graph。</strong></p>
+<p>这两个在 <code>levers.md</code> 里排最前面，因为收益最确定、副作用最小、跟硬件几乎无关。启动时间 −50–70%、decode 接近翻倍，基本是白捡的。</p>
+<p><strong>第四步，如果模型支持，剪枝 draft head。</strong></p>
+<p>+14% 到 +27%，而且输出不变。性价比极高。</p>
+<p><strong>第五步，才进入投机解码、并发 KV、prefill 这些需要按 workload 调的。</strong></p>
+<p>而且记住文档里那句：<strong>按你的并发数和上下文扫 draft 长度，别抄别人的。</strong></p>
+<p><strong>最后，建立你自己的 <code>PLAN.md</code>。</strong></p>
+<p>哪怕只是一行”2026-11-20，chunked_prefill 4096→2048，c1 从 38.2→37.6（−1.6%，在噪声内），prefill 32K 从 1200→1380（+15%，采纳）”。</p>
+<p><strong>记下失败比记下成功更有价值。</strong> 文档里明确说了：”Most of the value in PLAN.md is the list of things that did not work and why.”</p>
+<p>这样半年后你不用重复踩坑，也不用再像我一样，重新发现自己的基线是脏的。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这个仓库 32KB，四个脚本，纯标准库，MIT 协议，创建四天 1259 star。</p>
+<p>它没有魔法。它做的是把一件大家都凭直觉在做、但直觉经常靠不住的事 —— <strong>性能调优</strong> —— 变成可测量、可对照、可复现、可发布的工程流程。</p>
+<p>里面的每一条建议背后都有真实硬件上的实测数据和原始日志链接。文档里明确标注了哪些是通用的 [G]，哪些只在某个技术栈上见过 [S: stack]。哪些数字来自验收门禁、哪些来自爬坡 harness，必须分开标注。哪些结论没验证过，作者自己在 <code>PROMPT.md</code> 里就写了一条 “What you did <em>not</em> verify.”</p>
+<p><strong>在一个到处都是” 我调了调快了 30%” 的领域里，愿意把方法、边界和失败都写下来的东西，是稀缺的。</strong></p>
+<p>如果你也在折腾本地模型，别再抄参数表了。先测，再算，再改。</p>
+<hr>
+<p><strong>仓库地址：</strong> <a target="_blank" rel="noopener" href="https://github.com/sybil-solutions/inference-optimisation-skill">https://github.com/sybil-solutions/inference-optimisation-skill</a></p>
+<p><strong>许可证：</strong> MIT<br><strong>Star 数：</strong> 1259（截至 2026-11-20，GitHub API 查证）<br><strong>作者其他项目：</strong> <code>local-ai-registry</code>（324 star，调优配方与证据库）、<code>trellis-serve</code>、<code>qwen-serve</code></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/11/20/sybil-inference-optimisation-skill-local-llm-hill-climbing/" title="sybil-solutions&#x2F;inference-optimisation-skill：把本地大模型推理调优变成可复现的工程流程">https://www.daishengli.top/2026/11/20/sybil-inference-optimisation-skill-local-llm-hill-climbing/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Agent-Skill/" rel="tag"># Agent Skill</a>
+              <a href="/tags/inference-optimisation-skill/" rel="tag"># inference-optimisation-skill</a>
+              <a href="/tags/sybil-solutions/" rel="tag"># sybil-solutions</a>
+              <a href="/tags/LLM-%E6%8E%A8%E7%90%86%E4%BC%98%E5%8C%96/" rel="tag"># LLM 推理优化</a>
+              <a href="/tags/%E6%8A%95%E6%9C%BA%E8%A7%A3%E7%A0%81/" rel="tag"># 投机解码</a>
+              <a href="/tags/%E6%80%A7%E8%83%BD%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95/" rel="tag"># 性能基准测试</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/18/rust-anything-rewrite-app-in-rust-verified-behavior/" rel="prev" title="erkamyaman&#x2F;rust-anything：3321 star 的 Rust 迁移工具箱，把 Node&#x2F;Python&#x2F;Go 应用逐块改写成 Rust 并逐步验证行为一致">
+                  <i class="fa fa-angle-left"></i> erkamyaman/rust-anything：3321 star 的 Rust 迁移工具箱，把 Node/Python/Go 应用逐块改写成 Rust 并逐步验证行为一致
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/20/bookwjitchieni1986-blender-ai-mcp-addon-ai-assistant-mcp-server/" rel="next" title="bookwjitchieni1986&#x2F;blender-ai-mcp-addon：给 Blender 装一个能看场景、能干活、还能组队干活的 AI 助手">
+                  bookwjitchieni1986/blender-ai-mcp-addon：给 Blender 装一个能看场景、能干活、还能组队干活的 AI 助手 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
