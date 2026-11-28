@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="jingyaogong&#x2F;minimind 是 GitHub 上最受欢迎的中文从零训练 LLM 教学项目之一，累计 71615 个 star、9298 个 fork，Apache-2.0 协议，纯 Python 实现，2024 年 7 月建仓至今保持高频提交。它用原生 PyTorch 把大语言模型从零到一的完整链路全部摊开，涵盖 Tokenizer 训练、预训练、监督微调、LoRA、知识蒸馏、DPO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jingyaogong&#x2F;minimind：7 万 star 的中文极简 LLM 教学项目，2 小时 3 块钱从零训出 64M 大模型">
+<meta property="og:url" content="https://www.daishengli.top/2026/11/26/jingyaogong-minimind-64m-llm-from-scratch-in-2-hours/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="jingyaogong&#x2F;minimind 是 GitHub 上最受欢迎的中文从零训练 LLM 教学项目之一，累计 71615 个 star、9298 个 fork，Apache-2.0 协议，纯 Python 实现，2024 年 7 月建仓至今保持高频提交。它用原生 PyTorch 把大语言模型从零到一的完整链路全部摊开，涵盖 Tokenizer 训练、预训练、监督微调、LoRA、知识蒸馏、DPO">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-28T00:04:52.353Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="minimind">
+<meta property="article:tag" content="jingyaogong">
+<meta property="article:tag" content="大语言模型">
+<meta property="article:tag" content="从零训练">
+<meta property="article:tag" content="PyTorch">
+<meta property="article:tag" content="强化学习">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/11/26/jingyaogong-minimind-64m-llm-from-scratch-in-2-hours/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/11/26/jingyaogong-minimind-64m-llm-from-scratch-in-2-hours/","path":"2026/11/26/jingyaogong-minimind-64m-llm-from-scratch-in-2-hours/","title":"jingyaogong/minimind：7 万 star 的中文极简 LLM 教学项目，2 小时 3 块钱从零训出 64M 大模型"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>jingyaogong/minimind：7 万 star 的中文极简 LLM 教学项目，2 小时 3 块钱从零训出 64M 大模型 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">459</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">139</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#jingyaogong-minimind%EF%BC%9A7-%E4%B8%87-star-%E7%9A%84%E4%B8%AD%E6%96%87%E6%9E%81%E7%AE%80-LLM-%E6%95%99%E5%AD%A6%E9%A1%B9%E7%9B%AE%EF%BC%8C2-%E5%B0%8F%E6%97%B6-3-%E5%9D%97%E9%92%B1%E4%BB%8E%E9%9B%B6%E8%AE%AD%E5%87%BA-64M-%E5%A4%A7%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">jingyaogong&#x2F;minimind：7 万 star 的中文极简 LLM 教学项目，2 小时 3 块钱从零训出 64M 大模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%88%91%E8%A2%AB%E4%B8%80%E5%8F%A5%E2%80%9D3-%E5%9D%97%E9%92%B1%E2%80%9D%E9%AA%97%E8%BF%9B%E5%8E%BB%E4%BA%86"><span class="nav-number">1.1.</span> <span class="nav-text">一、我被一句”3 块钱” 骗进去了</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%8C%E4%BB%A5%E5%8F%8A%E5%AE%83%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.2.</span> <span class="nav-text">二、它想解决什么问题，以及它是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%BB%8E%E2%80%9D%E7%94%A8%E6%A8%A1%E5%9E%8B%E2%80%9D%E5%88%B0%E2%80%9D%E9%80%A0%E6%A8%A1%E5%9E%8B%E2%80%9D%E7%9A%84%E6%96%AD%E5%B1%82"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 从” 用模型” 到” 造模型” 的断层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%8F%A6%E4%B8%80%E4%B8%AA%E8%A2%AB%E5%BF%BD%E8%A7%86%E7%9A%84%E7%8E%B0%E5%AE%9E%EF%BC%9A%E8%AE%AD%E7%BB%83%E6%88%90%E6%9C%AC"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 另一个被忽视的现实：训练成本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E7%AC%AC%E4%B8%89%E4%B8%AA%E5%8A%A8%E6%9C%BA%EF%BC%9A%E8%AE%A9%E4%B8%AD%E6%96%87%E7%A4%BE%E5%8C%BA%E6%9C%89%E4%B8%80%E4%BB%BD%E8%87%AA%E5%B7%B1%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 第三个动机：让中文社区有一份自己的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E4%B8%80%E5%8F%A5%E8%AF%9D%E5%AE%9A%E4%B9%89-%E5%85%B3%E9%94%AE%E6%95%B0%E5%AD%97"><span class="nav-number">1.2.4.</span> <span class="nav-text">2.4 一句话定义 + 关键数字</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84%EF%BC%9A%E5%AE%83%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7"><span class="nav-number">1.3.</span> <span class="nav-text">三、核心结构：它长什么样</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-minimind-3-%E7%9A%84%E6%9E%B6%E6%9E%84%E5%8F%82%E6%95%B0"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 minimind-3 的架构参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF-8-%E5%B1%82-768-%E7%BB%B4"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 为什么是 8 层 768 维</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-MoE-%E7%9A%84%E7%8E%B0%E5%AE%9E%E4%B8%BB%E4%B9%89%E7%89%88%E6%9C%AC"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 MoE 的现实主义版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-Tokenizer%EF%BC%9A6400-%E8%BF%99%E4%B8%AA%E6%95%B0%E5%AD%97%E5%BE%88%E5%85%B3%E9%94%AE"><span class="nav-number">1.3.4.</span> <span class="nav-text">3.4 Tokenizer：6400 这个数字很关键</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E8%AE%AD%E7%BB%83%E6%B5%81%E7%A8%8B%EF%BC%9A%E4%BB%8E%E9%A2%84%E8%AE%AD%E7%BB%83%E5%88%B0-Agentic-RL"><span class="nav-number">1.4.</span> <span class="nav-text">四、训练流程：从预训练到 Agentic RL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E9%A2%84%E8%AE%AD%E7%BB%83%EF%BC%9A%E5%AD%A6%E2%80%9D%E9%AB%98%E8%B4%A8%E9%87%8F%E8%AF%8D%E8%AF%AD%E6%8E%A5%E9%BE%99%E2%80%9D"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 预训练：学” 高质量词语接龙”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-SFT%EF%BC%9A%E6%8A%8A%E6%A8%A1%E5%9E%8B%E6%8E%B0%E6%88%90%E2%80%9D%E4%BC%9A%E5%AF%B9%E8%AF%9D%E2%80%9D%E7%9A%84%E6%A0%B7%E5%AD%90"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 SFT：把模型掰成” 会对话” 的样子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E6%96%AD%E7%82%B9%E7%BB%AD%E8%AE%AD%EF%BC%9A%E8%AE%AD%E7%BB%83%E4%B8%AD%E6%96%AD%E4%B8%8D%E5%86%8D%E4%BB%8E%E5%A4%B4%E5%86%8D%E6%9D%A5"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 断点续训：训练中断不再从头再来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-LoRA%EF%BC%9A%E4%BB%8E-0-%E6%89%8B%E5%86%99%EF%BC%8C%E4%B8%8D%E4%BE%9D%E8%B5%96-peft"><span class="nav-number">1.4.4.</span> <span class="nav-text">4.4 LoRA：从 0 手写，不依赖 peft</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-%E7%9F%A5%E8%AF%86%E8%92%B8%E9%A6%8F%EF%BC%9A%E9%BB%91%E7%9B%92-vs-%E7%99%BD%E7%9B%92"><span class="nav-number">1.4.5.</span> <span class="nav-text">4.5 知识蒸馏：黑盒 vs 白盒</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8%E4%B8%8E%E8%87%AA%E9%80%82%E5%BA%94%E6%80%9D%E8%80%83"><span class="nav-number">1.4.6.</span> <span class="nav-text">4.6 工具调用与自适应思考</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-7-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%EF%BC%9APO-%E7%AE%97%E6%B3%95%E7%9A%84%E7%BB%9F%E4%B8%80%E8%A7%86%E8%A7%92"><span class="nav-number">1.4.7.</span> <span class="nav-text">4.7 强化学习：PO 算法的统一视角</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-8-Agentic-RL%EF%BC%9A%E4%BB%93%E5%BA%93%E9%87%8C%E6%9C%80%E6%9C%89%E6%84%8F%E6%80%9D%E7%9A%84%E8%84%9A%E6%9C%AC"><span class="nav-number">1.4.8.</span> <span class="nav-text">4.8 Agentic RL：仓库里最有意思的脚本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%95%B0%E6%8D%AE%EF%BC%9A%E5%85%A8%E9%98%B6%E6%AE%B5%E5%BC%80%E6%BA%90%EF%BC%8C%E4%B8%8D%E7%94%A8%E8%87%AA%E5%B7%B1%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">1.5.</span> <span class="nav-text">五、数据：全阶段开源，不用自己预处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-Pretrain-%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 Pretrain 数据格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-SFT-%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 SFT 数据格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-RL-%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 RL 数据格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E5%85%B3%E4%BA%8E-max-seq-len-%E7%9A%84%E5%9D%91"><span class="nav-number">1.5.4.</span> <span class="nav-text">5.4 关于 max_seq_len 的坑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%EF%BC%9A%E7%9C%9F%E5%AE%9E%E5%91%BD%E4%BB%A4"><span class="nav-number">1.6.</span> <span class="nav-text">六、快速上手：真实命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E6%8E%A8%E7%90%86"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 推理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E8%AE%AD%E7%BB%83%EF%BC%88%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B%EF%BC%89"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3 训练（完整流程）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-API-%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.6.4.</span> <span class="nav-text">6.4 API 服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E7%AC%AC%E4%B8%89%E6%96%B9%E7%94%9F%E6%80%81%E5%85%BC%E5%AE%B9"><span class="nav-number">1.6.5.</span> <span class="nav-text">6.5 第三方生态兼容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-%E9%95%BF%E5%BA%A6%E5%A4%96%E6%8E%A8%EF%BC%88YaRN%EF%BC%89"><span class="nav-number">1.6.6.</span> <span class="nav-text">6.6 长度外推（YaRN）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%85%B3%E9%94%AE%E8%AE%BE%E8%AE%A1%E5%8F%96%E8%88%8D"><span class="nav-number">1.7.</span> <span class="nav-text">七、关键设计取舍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E5%8F%96%E8%88%8D%E4%B8%80%EF%BC%9A%E5%8E%9F%E7%94%9F-PyTorch-vs-%E9%AB%98%E5%B1%82%E6%8A%BD%E8%B1%A1"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1 取舍一：原生 PyTorch vs 高层抽象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E5%8F%96%E8%88%8D%E4%BA%8C%EF%BC%9AMoE-%E7%9A%84%E2%80%9D%E7%8E%B0%E5%AE%9E%E4%B8%BB%E4%B9%89%E2%80%9D%E8%B7%AF%E7%BA%BF"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2 取舍二：MoE 的” 现实主义” 路线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E5%8F%96%E8%88%8D%E4%B8%89%EF%BC%9A%E5%A5%96%E5%8A%B1%E7%A8%80%E7%96%8F%E9%97%AE%E9%A2%98%E7%9A%84%E5%B7%A5%E7%A8%8B%E8%A7%A3%E6%B3%95"><span class="nav-number">1.7.3.</span> <span class="nav-text">7.3 取舍三：奖励稀疏问题的工程解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-%E5%8F%96%E8%88%8D%E5%9B%9B%EF%BC%9AGRPO-%E7%9A%84%E9%80%80%E5%8C%96%E7%BB%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.7.4.</span> <span class="nav-text">7.4 取舍四：GRPO 的退化组问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%AE%9E%E6%B5%8B%E6%95%88%E6%9E%9C%EF%BC%9A%E5%A5%BD%E7%9A%84%E3%80%81%E5%B7%AE%E7%9A%84%E3%80%81%E5%92%8C%E6%9B%B4%E5%B7%AE%E7%9A%84"><span class="nav-number">1.8.</span> <span class="nav-text">八、实测效果：好的、差的、和更差的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E7%AC%AC%E4%B8%89%E6%96%B9%E6%A8%AA%E8%AF%84%EF%BC%88lm-evaluation-harness%EF%BC%89"><span class="nav-number">1.8.1.</span> <span class="nav-text">8.1 第三方横评（lm-evaluation-harness）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E4%B8%BB%E8%A7%82%E9%97%AE%E7%AD%94%EF%BC%9A%E5%B9%BB%E8%A7%89%E6%9C%89%E5%A4%9A%E4%B8%A5%E9%87%8D"><span class="nav-number">1.8.2.</span> <span class="nav-text">8.2 主观问答：幻觉有多严重</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%92%8C%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E5%AF%B9%E6%AF%94"><span class="nav-number">1.9.</span> <span class="nav-text">九、和同类项目对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-MiniMind-vs-karpathy-llama2-c"><span class="nav-number">1.9.1.</span> <span class="nav-text">9.1 MiniMind vs karpathy&#x2F;llama2.c</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-MiniMind-vs-baby-llama2-chinese-chatlm-mini-chinese"><span class="nav-number">1.9.2.</span> <span class="nav-text">9.2 MiniMind vs baby-llama2-chinese &#x2F; chatlm-mini-chinese</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-MiniMind-vs-%E5%85%B6%E4%BB%96%E4%B8%AD%E6%96%87%E5%B0%8F%E6%A8%A1%E5%9E%8B%E6%95%99%E7%A8%8B"><span class="nav-number">1.9.3.</span> <span class="nav-text">9.3 MiniMind vs 其他中文小模型教程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-4-MiniMind-vs-%E5%B7%A5%E4%B8%9A%E7%BA%A7-RL-%E6%A1%86%E6%9E%B6%EF%BC%88openrlhf-verl-slime%EF%BC%89"><span class="nav-number">1.9.4.</span> <span class="nav-text">9.4 MiniMind vs 工业级 RL 框架（openrlhf &#x2F;verl&#x2F;slime）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E7%9C%9F%E5%AE%9E%E5%B1%80%E9%99%90%EF%BC%9A%E4%BD%9C%E8%80%85%E8%87%AA%E5%B7%B1%E6%89%BF%E8%AE%A4%E7%9A%84%E5%92%8C%E6%88%91%E8%87%AA%E5%B7%B1%E8%B8%A9%E5%88%B0%E7%9A%84"><span class="nav-number">1.10.</span> <span class="nav-text">十、真实局限：作者自己承认的和我自己踩到的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-%E4%BD%9C%E8%80%85%E6%98%8E%E7%A1%AE%E6%89%BF%E8%AE%A4%E7%9A%84"><span class="nav-number">1.10.1.</span> <span class="nav-text">10.1 作者明确承认的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-%E6%88%91%E8%87%AA%E5%B7%B1%E8%B8%A9%E5%88%B0%E7%9A%84%E5%9D%91"><span class="nav-number">1.10.2.</span> <span class="nav-text">10.2 我自己踩到的坑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3-%E6%9C%80%E9%87%8D%E8%A6%81%E7%9A%84%E4%B8%80%E6%9D%A1%E5%B1%80%E9%99%90"><span class="nav-number">1.10.3.</span> <span class="nav-text">10.3 最重要的一条局限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E9%80%82%E5%90%88%E8%B0%81-%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">1.11.</span> <span class="nav-text">十一、适合谁 &#x2F; 不适合谁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#12-1-%E9%80%82%E5%90%88"><span class="nav-number">1.11.1.</span> <span class="nav-text">12.1 适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-2-%E4%B8%8D%E9%80%82%E5%90%88"><span class="nav-number">1.11.2.</span> <span class="nav-text">12.2 不适合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E6%88%91%E7%9A%84%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.12.</span> <span class="nav-text">十二、我的实际使用建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-number">1.13.</span> <span class="nav-text">十三、写在最后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%EF%BC%9A%E5%85%B3%E9%94%AE%E9%93%BE%E6%8E%A5"><span class="nav-number">1.14.</span> <span class="nav-text">附：关键链接</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">139</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">459</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/26/jingyaogong-minimind-64m-llm-from-scratch-in-2-hours/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="jingyaogong&#x2F;minimind：7 万 star 的中文极简 LLM 教学项目，2 小时 3 块钱从零训出 64M 大模型 | 小戴的网络日志">
+      <meta itemprop="description" content="jingyaogong&#x2F;minimind 是 GitHub 上最受欢迎的中文从零训练 LLM 教学项目之一，累计 71615 个 star、9298 个 fork，Apache-2.0 协议，纯 Python 实现，2024 年 7 月建仓至今保持高频提交。它用原生 PyTorch 把大语言模型从零到一的完整链路全部摊开，涵盖 Tokenizer 训练、预训练、监督微调、LoRA、知识蒸馏、DPO、PPO、GRPO、CISPO、Agentic RL、Tool Use、自适应思考等环节，目标是让个人开发者用单卡 RTX 3090 在约 2 小时、3 元人民币内复现一个 64M 参数的对话模型。主线 minimind-3 结构对齐 Qwen3 生态，Pre-Norm 加 RMSNorm、SwiGLU 激活、RoPE 加 YaRN 外推、q_heads 8 与 kv_heads 4、词表仅 6400、8 层 768 维；MoE 版本 minimind-3-moe 为 198M-A64M、4 专家 top-1 路由。兼容 transformers、trl、peft 训练框架与 llama.cpp、vllm、ollama、sglang 推理引擎，开源全阶段中文数据集、OpenAI 协议兼容 API 服务端与 Streamlit WebUI，并附 C-Eval、C-MMLU、ARC-Easy 等第三方测评结果，README 主动披露了评测标准误与数据污染对照，诚实标注工具调用泛化不足、奖励稀疏等真实局限。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          jingyaogong/minimind：7 万 star 的中文极简 LLM 教学项目，2 小时 3 块钱从零训出 64M 大模型
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-27 00:00:00" itemprop="dateCreated datePublished" datetime="2026-11-27T00:00:00+08:00">2026-11-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">jingyaogong/minimind 是 GitHub 上最受欢迎的中文从零训练 LLM 教学项目之一，累计 71615 个 star、9298 个 fork，Apache-2.0 协议，纯 Python 实现，2024 年 7 月建仓至今保持高频提交。它用原生 PyTorch 把大语言模型从零到一的完整链路全部摊开，涵盖 Tokenizer 训练、预训练、监督微调、LoRA、知识蒸馏、DPO、PPO、GRPO、CISPO、Agentic RL、Tool Use、自适应思考等环节，目标是让个人开发者用单卡 RTX 3090 在约 2 小时、3 元人民币内复现一个 64M 参数的对话模型。主线 minimind-3 结构对齐 Qwen3 生态，Pre-Norm 加 RMSNorm、SwiGLU 激活、RoPE 加 YaRN 外推、q_heads 8 与 kv_heads 4、词表仅 6400、8 层 768 维；MoE 版本 minimind-3-moe 为 198M-A64M、4 专家 top-1 路由。兼容 transformers、trl、peft 训练框架与 llama.cpp、vllm、ollama、sglang 推理引擎，开源全阶段中文数据集、OpenAI 协议兼容 API 服务端与 Streamlit WebUI，并附 C-Eval、C-MMLU、ARC-Easy 等第三方测评结果，README 主动披露了评测标准误与数据污染对照，诚实标注工具调用泛化不足、奖励稀疏等真实局限。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="jingyaogong-minimind：7-万-star-的中文极简-LLM-教学项目，2-小时-3-块钱从零训出-64M-大模型"><a href="#jingyaogong-minimind：7-万-star-的中文极简-LLM-教学项目，2-小时-3-块钱从零训出-64M-大模型" class="headerlink" title="jingyaogong/minimind：7 万 star 的中文极简 LLM 教学项目，2 小时 3 块钱从零训出 64M 大模型"></a>jingyaogong/minimind：7 万 star 的中文极简 LLM 教学项目，2 小时 3 块钱从零训出 64M 大模型</h1><h2 id="一、我被一句”3-块钱”骗进去了"><a href="#一、我被一句”3-块钱”骗进去了" class="headerlink" title="一、我被一句”3 块钱”骗进去了"></a>一、我被一句”3 块钱” 骗进去了</h2><p>去年我朋友给我发了个链接，附一句话：” 你花 3 块钱就能训一个大模型。”</p>
+<p>我当时的反应是典型的技术人反应 —— 觉得这是个标题党。3 块钱，按现在租卡的行情连一小时 3090 都买不到一半，更别提” 训一个模型” 这四个字。我以为又是拿 LoRA 微调 Qwen 假装” 从零训练” 的那种把戏，正准备回一句” 又在骗小白”，他补了一句：</p>
+<blockquote>
+<p>“真的是从 0 开始训，64M 参数，两小时。”</p>
+</blockquote>
+<p>我点进去看了眼仓库首页，<code>jingyaogong/minimind</code>，7 万 star，Apache-2.0。</p>
+<p>然后我花了整整一个周末把它跑通了。跑完之后的结论比” 标题党” 复杂得多：这个项目确实是个标题党 —— 它的 README 确实用”3 块钱” 这种最夸张的方式宣传；但它宣传的那个东西，<strong>也是真的</strong>。这篇文章我想认真写一下 MiniMind 到底做了什么、怎么做的，以及它真正适合谁、又有哪些坑。</p>
+<hr>
+<h2 id="二、它想解决什么问题，以及它是什么"><a href="#二、它想解决什么问题，以及它是什么" class="headerlink" title="二、它想解决什么问题，以及它是什么"></a>二、它想解决什么问题，以及它是什么</h2><h3 id="2-1-从”用模型”到”造模型”的断层"><a href="#2-1-从”用模型”到”造模型”的断层" class="headerlink" title="2.1 从”用模型”到”造模型”的断层"></a>2.1 从” 用模型” 到” 造模型” 的断层</h3><p>现在的大模型教程，主流形态是什么？打开任意一个热门仓库，你看到的是这样的代码：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoModelForCausalLM, AutoTokenizer</span><br><span class="line"><span class="keyword">from</span> trl <span class="keyword">import</span> SFTTrainer, DPOTrainer</span><br><span class="line"><span class="keyword">from</span> peft <span class="keyword">import</span> LoraConfig</span><br><span class="line"></span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(<span class="string">"Qwen/Qwen2-0.5B"</span>)</span><br><span class="line">trainer = SFTTrainer(model=model, train_dataset=dataset, peft_config=LoraConfig(...))</span><br><span class="line">trainer.train()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>十几行，全流程跑通。方便是真方便，但问题也在这里：<strong>你并没有看到大模型是怎么运转的</strong>。</p>
+<p><code>transformers</code> 把 RoPE 旋转位置编码、KV Cache 的组织方式、Pre-Norm 的残差流向全包在 <code>LlamaAttention</code> 这个类里；<code>trl</code> 把 PPO 的四模型协同、优势估计、KL 惩罚塞进一个 <code>PPOTrainer</code>；<code>peft</code> 把 LoRA 的低秩分解藏在 <code>get_peft_model()</code> 后面。</p>
+<p>你可能会说” 我不需要重造轮子”。但作者在 README 里的观点很直接：</p>
+<blockquote>
+<p>“绝大多数探索最终都止步于使用 LoRA 等技术对现有大模型做少量微调…… 这更像是在教牛顿如何使用 21 世纪的智能手机 —— 虽然有趣，却偏离了理解物理本质的初衷。”</p>
+</blockquote>
+<p>我觉得这个比喻有点用力过猛，但它指出的问题是真的：<strong>用框架做微调，学到的是” 怎么调参”；用框架从零训练，学到的是” 怎么造”</strong>。</p>
+<h3 id="2-2-另一个被忽视的现实：训练成本"><a href="#2-2-另一个被忽视的现实：训练成本" class="headerlink" title="2.2 另一个被忽视的现实：训练成本"></a>2.2 另一个被忽视的现实：训练成本</h3><p>想学 LLM 的人很多，但真能动手训练的不多。为什么？</p>
+<p>不是不想，是<strong>试错成本太高</strong>。你写完 300 行训练脚本，租一张 A100 跑两小时，出来一个 loss 曲线看不懂的 checkpoint，你根本不知道是自己的实现有 bug，还是超参没调好，还是数据有问题。</p>
+<p>跑一次全流程实验的成本，够你买好几本 O’Reilly 的书。</p>
+<p>MiniMind 的整个设计哲学就是围绕这一点：<strong>把每次实验的成本压到可以忽略不计</strong>。</p>
+<p>模型小到 64M，单卡 3090 就能训；数据小到 1.2GB 起步，mini 数据集下载完就能跑；训练时间短到 1-2 小时；成本低到 3 元人民币级别。</p>
+<p>这不是炫技的极简主义，而是<strong>教学工程学</strong>：让学习者能在一天之内完成” 读代码 → 改代码 → 跑起来 → 看结果 → 理解原理” 的完整闭环。</p>
+<h3 id="2-3-第三个动机：让中文社区有一份自己的实现"><a href="#2-3-第三个动机：让中文社区有一份自己的实现" class="headerlink" title="2.3 第三个动机：让中文社区有一份自己的实现"></a>2.3 第三个动机：让中文社区有一份自己的实现</h3><p>README 里提到作者对市面上” 付费课程和营销内容” 的批评，并感谢了 <code>karpathy/llama2.c</code> 这类项目。中文圈此前有 <code>build_MiniLLM_from_scratch</code>、<code>baby-llama2-chinese</code>、<code>tiny-llm-zh</code> 等不少从零实现的项目，但它们大多停留在” 能跑通一个简化版 Transformer” 的阶段，<strong>没有把后训练（RLHF / RLAIF）和 Agentic RL 这条线补齐</strong>。MiniMind 的野心是把从 tokenizer 训练到 Agentic RL 的整条链路都铺出来，而且每一步都从 0 写。</p>
+<hr>
+<h3 id="2-4-一句话定义-关键数字"><a href="#2-4-一句话定义-关键数字" class="headerlink" title="2.4 一句话定义 + 关键数字"></a>2.4 一句话定义 + 关键数字</h3><p>先给结论：</p>
+<blockquote>
+<p><strong>MiniMind 是一套用纯 PyTorch 从 0 实现的、覆盖大语言模型全生命周期训练流程的中文教学级开源项目，主线模型 64M 参数，单卡 3090 约 2 小时、3 元人民币即可从零训练出一个可对话的模型。</strong></p>
+</blockquote>
+<p>关键数字（截至 2026-11-27 从 GitHub API 拉取）：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Star / Fork</td>
+<td>71615 / 9298</td>
+</tr>
+<tr>
+<td>License</td>
+<td>Apache-2.0</td>
+</tr>
+<tr>
+<td> 主语言</td>
+<td> Python</td>
+</tr>
+<tr>
+<td> 建仓 / 最近推送</td>
+<td> 2024-07-27 / 2026-11-26</td>
+</tr>
+<tr>
+<td>Open Issues</td>
+<td>66</td>
+</tr>
+<tr>
+<td> 主线模型</td>
+<td> minimind-3，64M 参数，8 层 768 维</td>
+</tr>
+<tr>
+<td> MoE 模型</td>
+<td> minimind-3-moe，198M-A64M，4 专家 top-1</td>
+</tr>
+<tr>
+<td> 词表大小</td>
+<td> 6400</td>
+</tr>
+<tr>
+<td> 训练成本</td>
+<td>单卡 3090，pretrain + sft 各 1 epoch，约 2.31 小时，约 3.0 元</td>
+</tr>
+</tbody></table>
+<p>几个值得注意的对比：64M 参数大约是 GPT-3（175B）的 <strong>1/2700</strong>（README 原话）；词表 6400，而 Qwen2 是 151,643、Llama 3 是 128,000、ChatGLM 是 151,329；MiniMind-2 系列曾做到 26M（minimind2-small）。</p>
+<hr>
+<h2 id="三、核心结构：它长什么样"><a href="#三、核心结构：它长什么样" class="headerlink" title="三、核心结构：它长什么样"></a>三、核心结构：它长什么样</h2><h3 id="3-1-minimind-3-的架构参数"><a href="#3-1-minimind-3-的架构参数" class="headerlink" title="3.1 minimind-3 的架构参数"></a>3.1 minimind-3 的架构参数</h3><p><code>minimind-3</code> Dense 使用 Transformer Decoder-Only 结构，配置刻意向 <code>Qwen3</code> 生态对齐，方便后续转到 <code>transformers / llama.cpp / ollama / vllm</code>：预标准化（Pre-Norm）+ RMSNorm、SwiGLU 激活函数、RoPE 旋转位置编码（支持 YaRN 外推）、<code>q_heads=8</code> / <code>kv_heads=4</code>（GQA）、<code>max_position_embeddings=32768</code>、<code>rope_theta=1e6</code>。</p>
+<p>各版本配置对照表（README 原表）：</p>
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
+<th>params</th>
+<th>len_vocab</th>
+<th>max_pos</th>
+<th>rope_theta</th>
+<th>n_layers</th>
+<th>d_model</th>
+<th>kv_heads</th>
+<th>q_heads</th>
+<th>note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>minimind-3</td>
+<td>64M</td>
+<td>6400</td>
+<td>32768</td>
+<td>1e6</td>
+<td>8</td>
+<td>768</td>
+<td>4</td>
+<td>8</td>
+<td>Dense</td>
+</tr>
+<tr>
+<td>minimind-3-moe</td>
+<td>198M-A64M</td>
+<td>6400</td>
+<td>32768</td>
+<td>1e6</td>
+<td>8</td>
+<td>768</td>
+<td>4</td>
+<td>8</td>
+<td>4 experts / top-1</td>
+</tr>
+<tr>
+<td>minimind2</td>
+<td>104M</td>
+<td>6400</td>
+<td>32768</td>
+<td>1e6</td>
+<td>16</td>
+<td>768</td>
+<td>2</td>
+<td>8</td>
+<td> 历史版本</td>
+</tr>
+</tbody></table>
+<p>模型配置在 <code>./model/model_minimind.py</code> 里改，很好找。</p>
+<h3 id="3-2-为什么是-8-层-768-维"><a href="#3-2-为什么是-8-层-768-维" class="headerlink" title="3.2 为什么是 8 层 768 维"></a>3.2 为什么是 8 层 768 维</h3><p>这一段是 README 里我觉得最有价值的部分，作者引用了 MobileLLM 的系统性研究来解释小模型的参数分配。</p>
+<p>Scaling Law 在大模型上强调数据量、参数量、训练步数的决定性作用，架构差异的影响会被弱化。但在小模型区间，这个结论不总是成立。</p>
+<p>MobileLLM 的核心观察是：<strong>参数量固定时，深度往往比宽度更重要</strong>。在参数量固定在 125M 或 350M 时，30~42 层的” 瘦高个” 结构通常优于 12 层左右的” 矮胖子”，在常识推理、问答、阅读理解等多个基准上趋势一致。</p>
+<p>但” 窄” 也有下限：<code>d_model &lt; 512</code> 时，词嵌入维度过窄的劣势会明显放大，堆层数不足以弥补固定 <code>q_head</code> 下 <code>d_head</code> 偏小的问题；<code>d_model &gt; 1536</code> 时，继续加层数比单纯加宽更划算。</p>
+<p>所以 MiniMind-3 选 <code>dim=768, n_layers=8</code>：更浅的网络训练更快，同时 <code>dim</code> 不至于过小导致模式崩溃。作者的说法是” 在训练效率、稳定性与最终效果之间取得相对均衡”。</p>
+<p><strong>这个取舍是通用的。</strong> 你以后自己做小模型，这个结论可以直接抄。</p>
+<h3 id="3-3-MoE-的现实主义版本"><a href="#3-3-MoE-的现实主义版本" class="headerlink" title="3.3 MoE 的现实主义版本"></a>3.3 MoE 的现实主义版本</h3><p><code>minimind-3-moe</code> 在同一结构上扩展 MoE 前馈层，兼容 <code>Qwen3-MoE</code> 风格配置，<strong>去掉了 shared expert</strong>。</p>
+<p>默认配置是 <code>4 experts / top-1 routing</code>，用更低的激活参数换更高的容量。</p>
+<p>但作者对 MoE 的性能表现很坦诚，这段话我觉得比任何吹捧都值钱：</p>
+<blockquote>
+<p>“Experts 继续增加后，实际耗时往往比同尺寸规模的 dense 模型高非常多，这和 ‘MoE 推理更快’ 放在一起看会有点反直觉，但训练时 token 先按专家分桶、再分别做 forward，原生训练时带来的 <code>kernel</code> 启停和调度开销会急剧变重…… 得靠支持 MoE kernel-fused 的算子库来优化，比如基于 <code>Triton</code> 的自定义 kernel、<code>DeepSpeed-MoE</code>、<code>Megatron-LM</code> 等等。当然，这个项目还是希望保留原生 PyTorch 的普适性，所以这里做的是现实的折中，在当前实现下，<code>4 experts / top-1</code> 这个甜点配置大约只比 dense 模型慢 <code>50%</code> 左右。”</p>
+</blockquote>
+<p>翻译一下：<strong>MoE 省的是参数，不是算力。</strong> 在没有 kernel 优化的纯 PyTorch 实现里，MoE 的实际训练成本比同规模 dense 更高。实测数据也印证了这点：</p>
+<table>
+<thead>
+<tr>
+<th>Model Name</th>
+<th>params</th>
+<th>pretrain_t2t_mini</th>
+<th>sft_t2t_mini</th>
+<th>toolcall</th>
+<th>RLAIF</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>minimind-3</td>
+<td>64M</td>
+<td>≈1.21h / ≈1.57￥</td>
+<td>≈1.10h / ≈1.43￥</td>
+<td>≈0.9h / ≈1.17￥</td>
+<td>≈1.1h / ≈1.43￥</td>
+</tr>
+<tr>
+<td>minimind-3-moe</td>
+<td>198M-A64M</td>
+<td>≈1.69h / ≈2.20￥</td>
+<td>≈1.54h / ≈2.00￥</td>
+<td>≈1.26h / ≈1.64￥</td>
+<td>≈1.54h / ≈2.00￥</td>
+</tr>
+</tbody></table>
+<p>（时间单位为小时，成本单位为人民币，3090 租卡单价约 1.3 元 / 小时）</p>
+<p>从 pretrain + sft 一轮算：dense 约 2.31 小时 / 3.0 元，MoE 约 3.23 小时 / 4.2 元（均为估算值，仅用于快速感知训练门槛）。</p>
+<h3 id="3-4-Tokenizer：6400-这个数字很关键"><a href="#3-4-Tokenizer：6400-这个数字很关键" class="headerlink" title="3.4 Tokenizer：6400 这个数字很关键"></a>3.4 Tokenizer：6400 这个数字很关键</h3><p>MiniMind 的词表只有 <strong>6400</strong>，对比一下业界：</p>
+<table>
+<thead>
+<tr>
+<th>Tokenizer</th>
+<th> 词表大小</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Yi / Qwen2 / ChatGLM</td>
+<td>64,000 / 151,643 / 151,329</td>
+</tr>
+<tr>
+<td>Mistral / Llama 3</td>
+<td>32,000 / 128,000</td>
+</tr>
+<tr>
+<td><strong>MiniMind</strong></td>
+<td><strong>6,400</strong>（自定义）</td>
+</tr>
+</tbody></table>
+<p>为什么这么小？因为对 MiniMind 这种百 M 级模型来说，<strong>词表大小直接决定 embedding 层和输出层的参数占比</strong>。</p>
+<p>粗算一下：6400 × 768 × 2（embedding + output head）≈ 9.8M 参数，占 64M 总量的 <strong>15%</strong>。如果换成 151,643 的 Qwen2 词表，同样是 768 维，光 embedding + output 就是 233M 参数 —— 直接超过模型主体。也就是说，小模型选大词表，等于把参数预算全砸在查字典上了。</p>
+<p>代价也很明确。作者自己写：</p>
+<blockquote>
+<p>“尽管 <code>minimind_tokenizer</code> 的词表只有 <code>6400</code>，编解码效率弱于 <code>qwen2</code>、<code>glm</code> 等更偏中文友好的 tokenizer，但它能显著压缩 embedding 层和输出层的参数占比，更适合 MiniMind 这类小模型的体积约束。从实际使用效果看，这套 tokenizer 并没有明显带来生僻词解码失败的问题，整体仍然足够稳定可用。”</p>
+</blockquote>
+<p>还有一个容易被忽略的点：<strong>tokenizer 会影响 PPL 这类按 token 统计的指标</strong>。跨 tokenizer 比较时，BPB（Bits Per Byte）往往更有参考价值。所以拿 MiniMind 的 PPL 去和 Qwen 的 PPL 比，是没有意义的。</p>
+<p>作者也建议不要重新训练 tokenizer：</p>
+<blockquote>
+<p>“不建议重新训练 tokenizer，因为词表和切分规则一旦变化，模型权重、数据格式、推理接口与社区生态的兼容性都会下降，也会削弱模型的传播性。”</p>
+</blockquote>
+<p>顺带一提 MiniMind tokenizer 在中文上的压缩比：<strong>大约 1.5~1.7 字符 /token</strong>，纯英文约 4~5 字符 /token。</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">中文：白日依山尽（5个字符）→ [白日, 依, 山, 尽]（4个tokens）</span><br><span class="line">英文：The sun sets in the west（24个字符）→ [The , sun , sets , in , the, west]（6个tokens）</span><br></pre></td></tr></tbody></table></figure>
+
+<hr>
+<h2 id="四、训练流程：从预训练到-Agentic-RL"><a href="#四、训练流程：从预训练到-Agentic-RL" class="headerlink" title="四、训练流程：从预训练到 Agentic RL"></a>四、训练流程：从预训练到 Agentic RL</h2><p>这是 MiniMind 最核心的部分。整条链路是：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Tokenizer 训练 → Pretrain → SFT → LoRA / 蒸馏 → DPO → PPO / GRPO / CISPO → Agentic RL</span><br></pre></td></tr></tbody></table></figure>
+
+<p>每个环节都有独立脚本，都在 <code>trainer/</code> 目录下执行。</p>
+<h3 id="4-1-预训练：学”高质量词语接龙”"><a href="#4-1-预训练：学”高质量词语接龙”" class="headerlink" title="4.1 预训练：学”高质量词语接龙”"></a>4.1 预训练：学” 高质量词语接龙”</h3><p>README 对预训练的描述很形象：</p>
+<blockquote>
+<p>“更直白地说，模型在这一阶段的核心目标就是<strong>学会高质量地词语接龙</strong>。例如输入” 秦始皇”，它要能够继续生成” 是中国历史上的第一位皇帝” 这类符合语义与常识的后续内容。”</p>
+</blockquote>
+<p>命令是 <code>python train_pretrain.py</code>（或 <code>torchrun --nproc_per_node 1 train_pretrain.py</code>），输出 <code>out/pretrain_*.pth</code>（<code>*</code> 是模型 dimension，默认 768）。</p>
+<h3 id="4-2-SFT：把模型掰成”会对话”的样子"><a href="#4-2-SFT：把模型掰成”会对话”的样子" class="headerlink" title="4.2 SFT：把模型掰成”会对话”的样子"></a>4.2 SFT：把模型掰成” 会对话” 的样子</h3><p>SFT 阶段让模型适应当前仓库使用的多轮对话模板，理解 <code>user / assistant / system / tool</code> 等角色结构。命令是 <code>python train_full_sft.py</code>，输出 <code>out/full_sft_*.pth</code>。</p>
+<p>这里有个容易被低估的点，作者专门展开讲了：</p>
+<blockquote>
+<p>“SFT 并不只是把模型调成’更会聊天’…… 尤其是像 MiniMind 当前主线这样体量达到 <code>14GB</code> 的 SFT 数据，本身就已经不只是简单的格式对齐，而更接近一种带有 <code>mid training</code> 性质的持续强化过程。”</p>
+</blockquote>
+<p>换句话说，<strong>当 SFT 数据的体量和多样性足够大时，SFT 本身就是 mid-training</strong>。这个观点和 Meta 在 Llama 3 里的做法是一致的 —— 中期训练数据占整个预训练 token 的大部分。</p>
+<h3 id="4-3-断点续训：训练中断不再从头再来"><a href="#4-3-断点续训：训练中断不再从头再来" class="headerlink" title="4.3 断点续训：训练中断不再从头再来"></a>4.3 断点续训：训练中断不再从头再来</h3><p>所有训练脚本都支持 <code>--from_resume 1</code>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python train_pretrain.py --from_resume 1</span><br><span class="line">python train_full_sft.py --from_resume 1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>具体行为：检查点自动保存在 <code>./checkpoints/</code>，命名 <code>&lt;权重名&gt;_&lt;维度&gt;_resume.pth</code>（如 <code>full_sft_512_resume.pth</code>）；<strong>支持跨不同 GPU 数量恢复</strong>（自动调整 step）；支持 wandb 训练记录连续性（自动恢复同一个 run）。</p>
+<p>这个功能听起来平淡，但在你租卡的时候断了，才知道它多重要。</p>
+<h3 id="4-4-LoRA：从-0-手写，不依赖-peft"><a href="#4-4-LoRA：从-0-手写，不依赖-peft" class="headerlink" title="4.4 LoRA：从 0 手写，不依赖 peft"></a>4.4 LoRA：从 0 手写，不依赖 peft</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> trainer &amp;&amp; python train_lora.py            <span class="comment"># 输出 out/lora_xxx_*.pth</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>README 里给的例子很具体，垂域数据：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">{"conversations": [{"role": "user", "content": "请问颈椎病的人枕头多高才最好？"}, {"role": "assistant", "content": "颈椎病患者选择枕头的高度应该根据..."}]}</span><br></pre></td></tr></tbody></table></figure>
+
+
+<p>训练完用 <code>cd scripts &amp;&amp; python convert_model.py</code> 合并回基座，测试时指定基座 + LoRA 权重：<code>python eval_llm.py --weight full_sft --lora_weight lora_medical</code>。</p>
+<h3 id="4-5-知识蒸馏：黑盒-vs-白盒"><a href="#4-5-知识蒸馏：黑盒-vs-白盒" class="headerlink" title="4.5 知识蒸馏：黑盒 vs 白盒"></a>4.5 知识蒸馏：黑盒 vs 白盒</h3><p>这个分类我觉得是全篇 README 里概念最清楚的一段。</p>
+<p><strong>黑盒蒸馏</strong>：本质上仍然是面向教师输出结果的监督微调，也就是基于硬标签继续训练。学生模型只能看到” 老师说了什么”，看不到老师内部怎么判断。DeepSeek R1、Qwen3 的高质量回答，以及 tool call、reasoning、思维链数据，都属于这一类。</p>
+<p>$$\mathcal{L}<em>{blackbox} = \mathrm{CE}(y</em>{teacher}, p_{student})$$</p>
+<p><strong>白盒蒸馏</strong>：额外学习教师在 <strong>token 分布层面</strong>的偏好，学生学到的不只是” 标准答案”，还包括教师在候选 token 之间的相对倾向。</p>
+<p>$$\mathcal{L}<em>{whitebox} = \alpha \mathcal{L}</em>{CE} + (1-\alpha) T^2 \mathrm{KL}(p_t^T \parallel p_s^T)$$</p>
+<p>对应脚本 <code>train_distillation.py</code>，实现里包含教师 / 学生双模型加载、CE + KL 混合损失、温度缩放、MoE 与 dense 组合蒸馏、断点续训和分布式训练。用 <code>python train_distillation.py</code> 启动。</p>
+<h3 id="4-6-工具调用与自适应思考"><a href="#4-6-工具调用与自适应思考" class="headerlink" title="4.6 工具调用与自适应思考"></a>4.6 工具调用与自适应思考</h3><p>从 2026-03 起，仓库移除了独立的 <code>train_reason.py</code>，” 是否显式思考” 被下沉到 <code>chat_template</code> 层面：</p>
+<ul>
+<li><code>open_thinking=0</code>：默认注入空的 <code>&lt;think&gt;\n\n&lt;/think&gt;</code>，模型倾向直接回答</li>
+<li><code>open_thinking=1</code>：模板预先注入 <code>&lt;think&gt;</code> 起始标签，模型输出显式思考过程与最终回答</li>
+</ul>
+<p>测试：<code>python eval_llm.py --load_from ./minimind-3 --open_thinking 1</code>。OpenAI SDK 调用方式：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">response = client.chat.completions.create(</span><br><span class="line">    model=<span class="string">"minimind"</span>,</span><br><span class="line">    messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"你是谁？"</span>}],</span><br><span class="line">    extra_body={<span class="string">"chat_template_kwargs"</span>: {<span class="string">"open_thinking"</span>: <span class="literal">True</span>}}  <span class="comment"># 思考开关</span></span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Tool Call 能力已经混进主线 SFT 数据，<strong>默认的 <code>full_sft</code> 权重就具备基础 Tool Call 能力</strong>，不用单独训一轮。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python eval_toolcall.py --weight full_sft</span><br></pre></td></tr></tbody></table></figure>
+
+<p>作者对当前 Tool Call 能力是很诚实的：</p>
+<blockquote>
+<p>“当前这部分训练数据主要由 <code>qwen3-4b</code> 采样约 <code>10w</code> 条构成，工具列表也主要覆盖约 <code>10</code> 个模拟的自定义工具（例如查询时间、数学计算、获取天气等），因此目前还谈不上明确的泛化能力。”</p>
+</blockquote>
+<p>而且明确指出一个已知缺陷：</p>
+<blockquote>
+<p>“当前同时开启 Tool Call 与显式思考时，模型通常并不太会稳定地输出思考过程。原因在于现阶段训练数据里还缺少’reasoning 与 tool call 同时存在’的联合蒸馏样本。”</p>
+</blockquote>
+<h3 id="4-7-强化学习：PO-算法的统一视角"><a href="#4-7-强化学习：PO-算法的统一视角" class="headerlink" title="4.7 强化学习：PO 算法的统一视角"></a>4.7 强化学习：PO 算法的统一视角</h3><p>这是整个项目技术含量最高的部分，也是我读得最慢的一段。作者先给了一个统一框架 —— 所有 Policy Optimization 算法本质上都在优化同一个期望：</p>
+<p>$$\mathcal{J}<em>{PO} = \mathbb{E}</em>{q \sim P (Q),, o \sim \pi_\theta (\cdot \mid q)} \left [ \underbrace {\Phi (r_t, A_t)}_{\text {策略目标}} - \underbrace {h (\text {KL}<em>t)}</em>{\text {正则项}} \right]$$</p>
+<p>三个核心组件：<strong>策略项</strong> $\Phi (r_t, A_t)$（如何结合概率比和优势更新策略）、<strong>优势项</strong> $A_t$（如何计算优势）、<strong>正则项</strong> $h (\text {KL}_t)$（如何约束变化幅度）。</p>
+<p>作者的原话很妙：</p>
+<blockquote>
+<p>“大模型算对定积分也不足为奇，小模型回答对加减法优势通常都是正的。”</p>
+</blockquote>
+<p>意思是：优势估计的难度与模型能力正相关，模型越强，优势信号越容易算出来。</p>
+<p><strong>DPO</strong> 的损失：</p>
+<p>$$\mathcal{L}<em>{DPO} = -\mathbb{E}\left[\log \sigma\left(\beta \left[\log \frac{\pi</em>\theta(y_w|x)}{\pi_{ref}(y_w|x)} - \log \frac{\pi_\theta(y_l|x)}{\pi_{ref}(y_l|x)}\right]\right)\right]$$</p>
+<p>策略项是 $f (r_t) = \log r_w - \log r_l$，无显式优势项，KL 约束隐含在 $\beta$ 中。</p>
+<p>DPO 从 PPO 带 KL 约束的目标推导出对偏好对的解析训练目标，无需同步训练 Reward/Value 模型，只需 <code>actor</code> 与 <code>ref</code> 两个模型，显存占用低、收敛稳定、实现简单。范式是 off-policy，使用静态偏好数据集，可反复多轮 epoch。</p>
+<p><strong>PPO</strong> 的损失里，策略项是 $\min (r_t \cdot A_t, \text {clip}(r_t, 1-\varepsilon, 1+\varepsilon) \cdot A_t)$，优势项由 Critic 网络估计（或用 GAE 计算），正则项是全局 KL 约束。</p>
+<p><strong>GRPO</strong> 的损失：</p>
+<p>$$\mathcal{L}_{GRPO} = -\mathbb{E}\left[\min(r_t \cdot A_t, \mathrm{clip}(r_t, 1-\varepsilon, 1+\varepsilon) \cdot A_t) - \beta \cdot \text{KL}_t\right]$$</p>
+<p>GRPO 的核心创新是” 分组相对价值估计”：对同一个问题生成 N 个回答，用组内平均奖励作 baseline，<strong>不需要额外训练 critic 网络</strong>。</p>
+<p>优势项：$g (A_{i,j}) = \frac {R_{i,j} - \mu_i}{\sigma_i + \epsilon}$</p>
+<p><strong>CISPO</strong> 的损失：</p>
+<p>$$\mathcal{L}<em>{CISPO} = -\mathbb{E}\left[\min(r_t, \varepsilon</em>{\mathrm{high}}) \cdot A_t \cdot \log \pi_\theta(a_t|s) - \beta \cdot \text{KL}_t\right]$$</p>
+<p>CISPO 抓住的是 PPO/GRPO 里一个长期让人别扭的问题 ——ratio 被 clip 之后，<strong>梯度流直接被硬截断了</strong>。它把策略项改写成” 裁剪权重 × log 概率”，这样 ratio 即使被截断也不会把梯度路径一起截断。</p>
+<p>实现上不用单开脚本，在 <code>train_grpo.py</code> 里把 <code>loss_type</code> 配成 <code>cispo</code> 就行。</p>
+<p>作者的总结表：</p>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>优势项 $g (A_t)$</th>
+<th> 正则项 $h (\text {KL}_t)$</th>
+<th> 训练模型数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> DPO</strong></td>
+<td> 无显式优势项</td>
+<td>隐含在 $\beta$ 中</td>
+<td> 1（前向参与 2）</td>
+</tr>
+<tr>
+<td><strong>PPO</strong></td>
+<td>$A_t$（Critic 估计 / GAE）</td>
+<td>$\beta \cdot \mathbb{E}[\text{KL}]$</td>
+<td>2</td>
+</tr>
+<tr>
+<td><strong>GRPO</strong></td>
+<td>$A_{i,j}=\frac{R_{i,j}-\mu_i}{\sigma_i+\epsilon}$</td>
+<td>$\beta \cdot \text{KL}_t$</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>CISPO</strong></td>
+<td>$\frac{R - \mu}{\sigma}$</td>
+<td>$\beta \cdot \text{KL}_t$</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<h3 id="4-8-Agentic-RL：仓库里最有意思的脚本"><a href="#4-8-Agentic-RL：仓库里最有意思的脚本" class="headerlink" title="4.8 Agentic RL：仓库里最有意思的脚本"></a>4.8 Agentic RL：仓库里最有意思的脚本</h3><p>2026-03 起新增 <code>train_agent.py</code>，支持多轮 Tool-Use 的 online RL。</p>
+<p>数据多了一个 <code>gt</code> 字段作为最终校验目标。训练时优化的对象不再是单轮回答 $y$，而是一条多轮轨迹：</p>
+<p>$$\tau = (a_1, o_1, a_2, o_2, \dots, a_T), \quad a_t \sim \pi_\theta(\cdot \mid s_t, \mathcal{T})$$</p>
+<p>如果某一步生成了 <code>tool_call</code>，就执行工具、把 observation 拼回上下文，再继续 rollout。奖励是对整条轨迹联合打分：</p>
+<p>$$R(\tau) = R_{\text{answer}} + R_{\text{tool}} + R_{\text{format}} + R_{\text{rm}} - R_{\text{unfinished}}$$</p>
+<p>同时考虑工具调用合法性、<code>gt</code> 命中、格式闭合、未完成惩罚与 Reward Model 分数。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认用 torch 做 rollout</span></span><br><span class="line">python train_agent.py</span><br><span class="line"><span class="comment"># 用 sglang 做 rollout（先起 server）</span></span><br><span class="line">python -m sglang.launch_server --model-path ./minimind-3 --attention-backend triton --host 0.0.0.0 --port 8998</span><br><span class="line">python train_agent.py --rollout_engine sglang --sglang_base_url http://localhost:8998 --sglang_shared_path ./ckpt_mm --data_path ../dataset/agent_rl_math.jsonl --use_wandb</span><br></pre></td></tr></tbody></table></figure>
+
+<p>作者对 <code>rollout_engine</code>（训推分离）的定位很清楚：</p>
+<blockquote>
+<p>“当前实现仍是<strong>同步</strong>模式（采样完一批再更新），还不是纯 rollout buffer 的异步训练。”</p>
+</blockquote>
+<p>并自评这套实现” 已经具备 openrlhf/verl/slime 等大规模 RL 框架的味道”，但” 还远不是工业级 Agent 训练框架”。</p>
+<hr>
+<h2 id="五、数据：全阶段开源，不用自己预处理"><a href="#五、数据：全阶段开源，不用自己预处理" class="headerlink" title="五、数据：全阶段开源，不用自己预处理"></a>五、数据：全阶段开源，不用自己预处理</h2><p>这是我觉得 MiniMind 做得最好的部分之一。README 里一句话点破：</p>
+<blockquote>
+<p>“当前主线训练所需的核心数据集已开源，因此无需再自行预处理大规模数据集，避免重复性的数据处理工作。”</p>
+</blockquote>
+<p>数据集结构：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">./dataset/</span><br><span class="line">├── agent_rl.jsonl (86MB)</span><br><span class="line">├── agent_rl_math.jsonl (18MB)</span><br><span class="line">├── dpo.jsonl (53MB)</span><br><span class="line">├── pretrain_t2t_mini.jsonl (1.2GB, ✨)</span><br><span class="line">├── pretrain_t2t.jsonl (10GB)</span><br><span class="line">├── rlaif.jsonl (24MB, ✨)</span><br><span class="line">├── sft_t2t_mini.jsonl (1.6GB, ✨)</span><br><span class="line">└── sft_t2t.jsonl (14GB)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>（✨ 为推荐必须项）下载：ModelScope 或 HuggingFace 上都有。</p>
+<h3 id="5-1-Pretrain-数据格式"><a href="#5-1-Pretrain-数据格式" class="headerlink" title="5.1 Pretrain 数据格式"></a>5.1 Pretrain 数据格式</h3><p>统一的 <code>text -&gt; next token prediction</code> 格式：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">{"text": "如何才能摆脱拖延症？治愈拖延症并不容易，但以下建议可能有所帮助。"}</span><br><span class="line">{"text": "Transformer 通过自注意力机制建模上下文关系，是现代大语言模型的重要基础结构。"}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>来源包括匠数大模型数据集、Magpie-Align 等公开数据源。</p>
+<h3 id="5-2-SFT-数据格式"><a href="#5-2-SFT-数据格式" class="headerlink" title="5.2 SFT 数据格式"></a>5.2 SFT 数据格式</h3><p>普通对话：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">{</span><br><span class="line">    "conversations": [</span><br><span class="line">        {"role": "user", "content": "你好"},</span><br><span class="line">        {"role": "assistant", "content": "你好！"},</span><br><span class="line">        {"role": "user", "content": "再见"},</span><br><span class="line">        {"role": "assistant", "content": "再见！"}</span><br><span class="line">    ]</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>带 Tool Use：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">{</span><br><span class="line">    "conversations": [</span><br><span class="line">        {"role": "system", "content": "# Tools ...", "tools": "[...]"},</span><br><span class="line">        {"role": "user", "content": "把'你好世界'翻译成english"},</span><br><span class="line">        {"role": "assistant", "content": "", "tool_calls": "[{\"name\":\"translate_text\",\"arguments\":{\"text\":\"你好世界\"}}]"},</span><br><span class="line">        {"role": "tool", "content": "{\"translated_text\":\"Hello World\"}"},</span><br><span class="line">        {"role": "assistant", "content": "Hello World"}</span><br><span class="line">    ]</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>tools</code> 挂在 <code>system</code> 上，<code>tool_calls</code> 挂在 <code>assistant</code> 上，训练时由 <code>chat_template</code> 展开成 <code>&lt;tool_call&gt;...&lt;/tool_call&gt;</code> 和 <code>&lt;tool_response&gt;...&lt;/tool_response&gt;</code> 片段。</p>
+<p>主线 SFT 数据里混入了约 10 万条基于 <code>qwen3-4b</code> 合成的 tool call 数据。</p>
+<h3 id="5-3-RL-数据格式"><a href="#5-3-RL-数据格式" class="headerlink" title="5.3 RL 数据格式"></a>5.3 RL 数据格式</h3><p>DPO（<code>chosen</code> 表示更符合偏好的回复，<code>rejected</code> 表示相对较差的回复）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">{</span><br><span class="line">  "chosen":   [{"content": "Q", "role": "user"}, {"content": "good answer", "role": "assistant"}],</span><br><span class="line">  "rejected": [{"content": "Q", "role": "user"}, {"content": "bad answer", "role": "assistant"}]</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>RLAIF（assistant 字段留空，由策略模型实时采样生成）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">{"conversations": [</span><br><span class="line">    {"role": "user", "content": "请解释一下什么是光合作用？"},</span><br><span class="line">    {"role": "assistant", "content": "无"}</span><br><span class="line">]}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="5-4-关于-max-seq-len-的坑"><a href="#5-4-关于-max-seq-len-的坑" class="headerlink" title="5.4 关于 max_seq_len 的坑"></a>5.4 关于 max_seq_len 的坑</h3><p>数据集命名标注的” 最大长度” 是<strong>字符数</strong>，而 <code>max_seq_len</code> 是 <strong>token 数</strong>。作者给了换算方法：</p>
+<blockquote>
+<p>100 长度的字符串可粗略换算成 <code>100/1.5≈67</code> 的 tokens 长度。</p>
+</blockquote>
+<p>推荐设置：<code>pretrain_t2t_mini</code> 和 <code>sft_t2t_mini</code> 用 <code>max_seq_len ≈ 768</code>，完整版 <code>pretrain_t2t</code> 用 <code>≈ 380</code>。</p>
+<p>作者也提醒了这个参数的固有困境：</p>
+<blockquote>
+<p>“因为更大或更小均无法避免副作用：一些样本短于 <code>max_seq_len</code> 后被 padding 浪费算力，一些样本长于 <code>max_seq_len</code> 后被截断语义。在算力效率与语义完整性之间找到平衡点即可。”</p>
+</blockquote>
+<hr>
+<h2 id="六、快速上手：真实命令"><a href="#六、快速上手：真实命令" class="headerlink" title="六、快速上手：真实命令"></a>六、快速上手：真实命令</h2><h3 id="6-1-环境准备"><a href="#6-1-环境准备" class="headerlink" title="6.1 环境准备"></a>6.1 环境准备</h3><p>作者的软硬件配置（供参考）：Intel Core i9-10980XE @ 3.00GHz / 128GB RAM / RTX 3090 (24GB) × 8 / Ubuntu 20.04 / CUDA 12.2 / Python 3.10.16。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> --depth 1 https://github.com/jingyaogong/minimind</span><br><span class="line"><span class="built_in">cd</span> minimind &amp;&amp; pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple</span><br></pre></td></tr></tbody></table></figure>
+<p>确认 GPU 可用：<code>python -c "import torch; print(torch.cuda.is_available())"</code>。没有 CUDA 也仍可用 CPU 或 MPS 运行，但训练速度和兼容性会有很大差异。</p>
+<h3 id="6-2-推理"><a href="#6-2-推理" class="headerlink" title="6.2 推理"></a>6.2 推理</h3><p>下载模型：<code>modelscope download --model gongjy/minimind-3 --local_dir ./minimind-3</code>（或 <code>git clone https://huggingface.co/jingyaogong/minimind-3</code>）。CLI 推理：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python eval_llm.py --load_from ./minimind-3        <span class="comment"># Transformers 格式模型</span></span><br><span class="line">python eval_llm.py --load_from ./model --weight full_sft   <span class="comment"># PyTorch 模型（需 ./out 下有权重）</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>WebUI（<strong>须先把 transformers 格式模型文件夹复制到 <code>./scripts/</code> 目录下</strong>，例如 <code>cp -r minimind-3 ./scripts/minimind-3</code>）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> scripts &amp;&amp; streamlit run web_demo.py</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第三方推理框架：<code>ollama run jingyaogong/minimind-3</code>；<code>vllm serve /path/to/model --served-model-name "minimind"</code>。</p>
+<h3 id="6-3-训练（完整流程）"><a href="#6-3-训练（完整流程）" class="headerlink" title="6.3 训练（完整流程）"></a>6.3 训练（完整流程）</h3><p>下载数据放进 <code>./dataset/</code> 目录，然后：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> trainer &amp;&amp; python train_pretrain.py   <span class="comment"># 预训练（必须）</span></span><br><span class="line"><span class="built_in">cd</span> trainer &amp;&amp; python train_full_sft.py    <span class="comment"># 指令微调（必须）</span></span><br><span class="line">python eval_llm.py --weight full_sft      <span class="comment"># 测试</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>多卡：<code>torchrun --nproc_per_node N train_xxx.py</code>；训练可视化加 <code>--use_wandb</code>。断点续训加 <code>--from_resume 1</code>。</p>
+<blockquote>
+<p>2025 年 6 月后国内网络通常无法直连 WandB。MiniMind 当前默认转为使用 <a target="_blank" rel="noopener" href="https://swanlab.cn/">SwanLab</a> 作为训练可视化工具，其接口与 WandB 基本兼容，通常只需将 <code>import wandb</code> 替换为 <code>import swanlab as wandb</code>。</p>
+</blockquote>
+<h3 id="6-4-API-服务"><a href="#6-4-API-服务" class="headerlink" title="6.4 API 服务"></a>6.4 API 服务</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> scripts &amp;&amp; python serve_openai_api.py    <span class="comment"># 启动服务</span></span><br><span class="line"><span class="built_in">cd</span> scripts &amp;&amp; python chat_api.py            <span class="comment"># 测试客户端</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>调用示例：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl http://localhost:8998/v1/chat/completions \</span><br><span class="line">  -H <span class="string">"Content-Type: application/json"</span> \</span><br><span class="line">  -d <span class="string">'{"model": "model-identifier",</span></span><br><span class="line"><span class="string">       "messages": [{"role": "user", "content": "世界上最高的山是什么？"}],</span></span><br><span class="line"><span class="string">       "temperature": 0.7, "max_tokens": 1024, "stream": true, "open_thinking": true}'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>额外支持 <code>reasoning_content</code>、<code>tool_calls</code>、<code>open_thinking</code> 字段，可以直接接入 FastGPT、OpenWebUI、Dify 等第三方 UI。</p>
+<h3 id="6-5-第三方生态兼容"><a href="#6-5-第三方生态兼容" class="headerlink" title="6.5 第三方生态兼容"></a>6.5 第三方生态兼容</h3><ul>
+<li><strong>transformers / trl / peft</strong>：训练框架兼容</li>
+<li><strong> llama.cpp</strong>：需要改一下 <code>convert_hf_to_gguf.py</code>，在 <code>get_vocab_base_pre</code> 函数末尾加：</li>
+</ul>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加 MiniMind tokenizer 支持（此处可临时复用一个兼容项，如 qwen2）</span></span><br><span class="line"><span class="keyword">if</span> res <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">    res = <span class="string">"qwen2"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后转 GGUF 并量化：<code>python convert_hf_to_gguf.py /path/to/minimind-model</code> → <code>./build/bin/llama-quantize /path/to/model/xxxx.gguf /path/to/model/xxxx.q8.gguf Q8_0</code> → <code>./build/bin/llama-cli -m /path/to/model/xxxx.gguf</code>。</p>
+<ul>
+<li><strong>ollama</strong>：需要手写 <code>minimind.modelfile</code>（模板较长，README 里有完整模板），然后 <code>ollama create -f minimind.modelfile minimind-local</code> 和 <code>ollama run minimind-local</code>。</li>
+<li><strong>SGLang / vLLM</strong>：<code>python -m sglang.launch_server --model-path /path/to/model --attention-backend triton --host 0.0.0.0 --port 8998</code>；<code>vllm serve /path/to/model --model-impl transformers --served-model-name "minimind" --port 8998</code>。</li>
+<li><strong>MNN</strong>（阿里端侧推理引擎）：<code>cd MNN/transformers/llm/export &amp;&amp; python llmexport.py --path /path/to/模型路径/ --export mnn --hqq --dst_path 模型路径-mnn</code>。</li>
+</ul>
+<h3 id="6-6-长度外推（YaRN）"><a href="#6-6-长度外推（YaRN）" class="headerlink" title="6.6 长度外推（YaRN）"></a>6.6 长度外推（YaRN）</h3><p>原生 torch 模型：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python eval_llm.py --weight full_sft --inference_rope_scaling</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Transformers 格式则在 <code>config.json</code> 里加：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">"rope_scaling"</span><span class="punctuation">:</span> <span class="punctuation">{</span><span class="attr">"type"</span><span class="punctuation">:</span> <span class="string">"yarn"</span><span class="punctuation">,</span> <span class="attr">"factor"</span><span class="punctuation">:</span> <span class="number">16.0</span><span class="punctuation">,</span> <span class="attr">"original_max_position_embeddings"</span><span class="punctuation">:</span> <span class="number">2048</span><span class="punctuation">,</span></span><br><span class="line">                 <span class="attr">"beta_fast"</span><span class="punctuation">:</span> <span class="number">32.0</span><span class="punctuation">,</span> <span class="attr">"beta_slow"</span><span class="punctuation">:</span> <span class="number">1.0</span><span class="punctuation">,</span> <span class="attr">"attention_factor"</span><span class="punctuation">:</span> <span class="number">1.0</span><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>README 里附了一张不同文本长度下启用 YaRN 前后的 PPL 对比图，长文本场景下 PPL 明显下降。</p>
+<hr>
+<h2 id="七、关键设计取舍"><a href="#七、关键设计取舍" class="headerlink" title="七、关键设计取舍"></a>七、关键设计取舍</h2><p>我把 MiniMind 里几个有代表性的取舍单独拎出来说说，因为这些思路比代码本身更值得学。</p>
+<h3 id="7-1-取舍一：原生-PyTorch-vs-高层抽象"><a href="#7-1-取舍一：原生-PyTorch-vs-高层抽象" class="headerlink" title="7.1 取舍一：原生 PyTorch vs 高层抽象"></a>7.1 取舍一：原生 PyTorch vs 高层抽象</h3><p><strong>决策：全部从 0 手写，不依赖第三方框架的高层接口。</strong></p>
+<p>代价是真实的：LoRA 不走 peft、DPO 不走 trl、PPO 不走 openrlhf。分布式训练细节、梯度累积、学习率调度、checkpoint 管理都得自己处理。</p>
+<p>收益也是真实的：<strong>每一行代码你都能解释</strong>。当你的 PPO 训崩了，你知道是 advantage 归一化写错了，不是某个库的默认超参不对。</p>
+<p>对于一个教学项目，这个取舍无可争议 —— 但要注意它<strong>不适合直接搬到生产环境</strong>。</p>
+<h3 id="7-2-取舍二：MoE-的”现实主义”路线"><a href="#7-2-取舍二：MoE-的”现实主义”路线" class="headerlink" title="7.2 取舍二：MoE 的”现实主义”路线"></a>7.2 取舍二：MoE 的” 现实主义” 路线</h3><p>README 里有一句话我很喜欢：</p>
+<blockquote>
+<p>“当然，这个项目还是希望保留原生 PyTorch 的普适性，所以这里做的是现实的折中。”</p>
+</blockquote>
+<p>明确知道当前实现不是最优（MoE 训练比 dense 慢 50%），明确知道最优解需要 Triton kernel、DeepSpeed-MoE、Megatron-LM，但仍然选择保留普适性 —— 因为对一个要被人读懂的教学项目来说，<strong>可读性 &gt; 极限性能</strong>。</p>
+<h3 id="7-3-取舍三：奖励稀疏问题的工程解法"><a href="#7-3-取舍三：奖励稀疏问题的工程解法" class="headerlink" title="7.3 取舍三：奖励稀疏问题的工程解法"></a>7.3 取舍三：奖励稀疏问题的工程解法</h3><p>这是我认为整个项目技术含量最高的洞察。</p>
+<p>MiniMind 这种 0.1B 参数量、能力较弱的模型，在 R1 风格的数学数据集上会遇到<strong>严重的奖励稀疏问题</strong>：</p>
+<ul>
+<li>现象：模型生成的候选回答几乎全部错误，所有奖励分数 $r (x,y) \approx 0$</li>
+<li> 后果：优势函数 $A (x,y) = r (x,y) - b (x) \approx 0$，策略梯度信号消失</li>
+</ul>
+<p>作者的类比：</p>
+<blockquote>
+<p>“如同让小学生做高考数学题，无论尝试多少次都得零分，无法通过分数差异学习改进策略。”</p>
+</blockquote>
+<p>解法是<strong>放弃二元奖励，改用连续奖励</strong>：Reward Model 输出连续分数（如 -2.5 到 +3.0）而非二元的 0/1，即使回答质量都差，仍能区分” 更差”(-3.0) 和” 没那么差”(-2.8)。稠密且连续的奖励信号能为优势函数提供非零梯度。</p>
+<p>以及监控建议：</p>
+<blockquote>
+<p>“监控训练时观察奖励分数的方差 $\text {Var}(r)$，若持续接近 0 则需调整数据或奖励机制。”</p>
+</blockquote>
+<p><strong>这行字比整篇 RL 公式都值钱。</strong> 大多数人跑 RL 训不出来，就是卡在这里但不知道为什么。</p>
+<p>另外还有一个混合奖励的形式：</p>
+<p>$$r_{\text{total}} = \alpha \cdot r_{\text{model}} + \beta \cdot r_{\text{rule}}$$</p>
+<h3 id="7-4-取舍四：GRPO-的退化组问题"><a href="#7-4-取舍四：GRPO-的退化组问题" class="headerlink" title="7.4 取舍四：GRPO 的退化组问题"></a>7.4 取舍四：GRPO 的退化组问题</h3><p>GRPO 用组内平均奖励作 baseline，但这带来一个问题：<strong>如果某个问题上 N 个回答的奖励几乎一样，这一组的学习信号就接近 0</strong>。</p>
+<p>作者明确指出：</p>
+<blockquote>
+<p>“在 MiniMind 这种超小模型上，这个问题尤其明显，所以训练必须限制在合理的能力边界内。”</p>
+</blockquote>
+<p>也就是说，<strong>你不能用 64M 的模型去解它根本解不出来的题</strong>。这是物理限制，不是算法 bug。</p>
+<hr>
+<h2 id="八、实测效果：好的、差的、和更差的"><a href="#八、实测效果：好的、差的、和更差的" class="headerlink" title="八、实测效果：好的、差的、和更差的"></a>八、实测效果：好的、差的、和更差的</h2><p>README 里有一组很硬的对比数据：20 道数学 ToolUse 任务，对比 <code>full_sft</code> 权重和 <code>agent</code> 权重。</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">============================================================</span><br><span class="line">full_sft: 12/20 = 60.00%</span><br><span class="line">agent: 17/20 = 85.00%</span><br></pre></td></tr></tbody></table></figure>
+
+<p>从 <code>full_sft</code> 的失败样例能看到小模型的典型问题：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[full_sft] 2/20 | ❌ | 3**2 | gt=9 | pred=8</span><br><span class="line">[full_sft] 7/20 | ❌ | (12)*48+(47-45) | gt=578 | pred=47</span><br><span class="line">[full_sft] 19/20 | ❌ | (84)-60 | gt=24 | pred=144</span><br></pre></td></tr></tbody></table></figure>
+
+<p>而 <code>agent</code> 权重把大部分这类题做对了。</p>
+<p>但作者同时强调了<strong>对齐税</strong>：</p>
+<blockquote>
+<p>“如果任务目标是 ToolUse、轻量多步调用、可验证求解，那么当前 <code>agent</code> 会比 <code>full_sft</code> 更合适；但如果更看重日常聊天、知识问答的事实性和整体稳健性，<code>full_sft</code> 仍然会是更稳一点的选择…… 后训练往往能把某一条能力线拉得很高，但几乎都会伴随比较明显的’对齐税’。”</p>
+</blockquote>
+<h3 id="8-1-第三方横评（lm-evaluation-harness）"><a href="#8-1-第三方横评（lm-evaluation-harness）" class="headerlink" title="8.1 第三方横评（lm-evaluation-harness）"></a>8.1 第三方横评（lm-evaluation-harness）</h3><p>README 里的表格节选：</p>
+<table>
+<thead>
+<tr>
+<th>model name</th>
+<th>from</th>
+<th>params</th>
+<th>zh (ceval / cmmlu)</th>
+<th>en (arc / piqa / obqa / hellaswag / siqa)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>minimind-3</td>
+<td>current</td>
+<td>64M</td>
+<td>24.89 / 25.38</td>
+<td>28.49 / 50.65 / 23.60 / 28.28 / 34.19</td>
+</tr>
+<tr>
+<td>minimind-3-moe</td>
+<td>current</td>
+<td>198M</td>
+<td>25.48 / 24.32</td>
+<td>27.74 / 50.71 / 26.20 / 27.43 / 34.03</td>
+</tr>
+<tr>
+<td>minimind-3-exam</td>
+<td>current</td>
+<td>64M</td>
+<td>30.98 / 26.12</td>
+<td>35.61 / 56.26 / 24.20 / 28.40 / 34.19</td>
+</tr>
+<tr>
+<td>Steel-LLM</td>
+<td>ZhanShiJin</td>
+<td>1121M</td>
+<td>24.89 / 25.32</td>
+<td>39.69 / 65.13 / 26.00 / 35.73 / 39.15</td>
+</tr>
+<tr>
+<td>gpt2-medium</td>
+<td>OpenAI</td>
+<td>360M</td>
+<td>23.18 / 25.00</td>
+<td>43.60 / 66.38 / 30.20 / 39.38 / 39.10</td>
+</tr>
+<tr>
+<td>TinyLlama-1.1B</td>
+<td>TinyLlama</td>
+<td>1100M</td>
+<td>25.71 / 25.03</td>
+<td>54.80 / 74.43 / 35.60 / 60.38 / 43.09</td>
+</tr>
+<tr>
+<td>SmolLM2-135M</td>
+<td>HuggingFace</td>
+<td>135M</td>
+<td>24.44 / 24.71</td>
+<td>58.50 / 68.17 / 32.80 / 43.15 / 39.46</td>
+</tr>
+<tr>
+<td>Aquila-135M</td>
+<td>BAAI</td>
+<td>135M</td>
+<td>25.19 / 25.10</td>
+<td>54.59 / 67.52 / 34.40 / 41.67 / 39.66</td>
+</tr>
+</tbody></table>
+<p><strong>作者特别标注了这张表的分辨率</strong>（这段话是我见过最诚实的 benchmark 免责声明）：</p>
+<blockquote>
+<p><code>lm_eval</code> 对每个指标都会同时输出一个 <code>stderr</code>，它主要由测试集大小决定…… 比较两个模型时，差值的标准误约为单项的 $\sqrt {2}$ 倍。因此 obqa 上小于约 5 个百分点、ceval /piqa/siqa 上小于约 3 个百分点的差异，都不足以区分两个模型 —— 这也解释了为什么本表中同一量级的模型排序不宜过度解读。</p>
+</blockquote>
+<p>各数据集标准误：</p>
+<table>
+<thead>
+<tr>
+<th>数据集</th>
+<th> obqa</th>
+<th>ceval</th>
+<th>piqa</th>
+<th>siqa</th>
+<th>arc</th>
+<th>hellaswag</th>
+<th>cmmlu</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 样本量</td>
+<td> 500</td>
+<td>~1.3k</td>
+<td>1838</td>
+<td>1954</td>
+<td>2376</td>
+<td>10042</td>
+<td>11582</td>
+</tr>
+<tr>
+<td>± 标准误</td>
+<td><strong> 1.9</strong></td>
+<td>1.2</td>
+<td>1.2</td>
+<td>1.1</td>
+<td>0.9</td>
+<td>0.5</td>
+<td><strong>0.4</strong></td>
+</tr>
+</tbody></table>
+<p>（比较两个模型时差值的标准误约为单项的 $\sqrt {2}$ 倍。）</p>
+<p>更有意思的是 <code>minimind-3-exam</code> 这一行。它不是更大的基座模型，只是基于 minimind-3 做了<strong>一次轻量 LoRA 对齐</strong>（数据来自 ceval 与 mmlu 英文 test 子集抽样，做了前缀后缀等格式增强），再把 LoRA 合并回基模。作者写得很清楚：</p>
+<blockquote>
+<p>“这部分数据…… 主要作用是对齐选择题评测中常见的上下文与候选项组织形式，而不是学习题目答案。”</p>
+</blockquote>
+<p>结果是平均提升约 2.9 个百分点。作者的结论：</p>
+<blockquote>
+<p>“这个实验想说明的只是：对这类评测，小模型的瓶颈未必完全在知识本身，也可能在于输入格式没有对齐。”</p>
+</blockquote>
+<p>而且作者主动披露了污染实验的对照：</p>
+<blockquote>
+<p>“相反，若直接在有交集的数据上微调，这类小模型的分数往往会明显失真；例如 minimind-3 在有污染的 ceval /cmmlu 子集上实验跑到过约 97% 准确率，但这种结果没有参考意义。”</p>
+</blockquote>
+<p><strong>这段话值得所有做模型评测的人抄。</strong> 主动公开自己” 作弊” 能跑多少分，比藏着掖着可信一百倍。</p>
+<h3 id="8-2-主观问答：幻觉有多严重"><a href="#8-2-主观问答：幻觉有多严重" class="headerlink" title="8.2 主观问答：幻觉有多严重"></a>8.2 主观问答：幻觉有多严重</h3><p>README 里放了一组由 GPT-5.4 Thinking 点评打分的对比（A=minimind-3, B=minimind-3-moe, C=baby-llama2-chinese, D=chatlm-mini-chinese）：</p>
+<table>
+<thead>
+<tr>
+<th>排名</th>
+<th>模型</th>
+<th>准确性 (30)</th>
+<th> 完整性 (30)</th>
+<th> 逻辑性 (20)</th>
+<th> 代码质量 (20)</th>
+<th> 总分</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 1</td>
+<td>B</td>
+<td>11</td>
+<td>23</td>
+<td>16</td>
+<td>18</td>
+<td>68</td>
+</tr>
+<tr>
+<td>2</td>
+<td>D</td>
+<td>25</td>
+<td>19</td>
+<td>15</td>
+<td>3</td>
+<td>62</td>
+</tr>
+<tr>
+<td>3</td>
+<td>A</td>
+<td>10</td>
+<td>21</td>
+<td>13</td>
+<td>17</td>
+<td>61</td>
+</tr>
+<tr>
+<td>4</td>
+<td>C</td>
+<td>8</td>
+<td>6</td>
+<td>5</td>
+<td>2</td>
+<td>21</td>
+</tr>
+</tbody></table>
+<p>点评里举的例子很扎心。问” 万有引力是谁提出的”，A 模型回答：</p>
+<blockquote>
+<p>“万有引力是由爱因斯坦在 1905 年提出的…… 他在 20 世纪初提出了广义相对论，这是现代物理学的基础…… 根据爱因斯坦的质疑，在 1918 年，地球上所有的天体都存在一个质量为 2 的质点，且质量的平方是 $2^2 = 4$……”</p>
+</blockquote>
+<p>问” 长江”，B 模型答：</p>
+<blockquote>
+<p>“长江，又称为珠穆朗玛峰，位于中国和尼泊尔之间，是世界上海拔最高的山峰。”</p>
+</blockquote>
+<p><strong>作者对这件事的定性非常准确</strong>：</p>
+<blockquote>
+<p>“‘写得顺’和’写得对’之间落差很大…… 在有限的参数预算下，’说得好’和’说得对’往往很难兼得。”</p>
+</blockquote>
+<p>还有 A 模型回答” 大熊猫的主要食物” 时，输出了 6 个要点，<strong>每个要点都以” 竹子” 开头</strong>，只是后面跟的修饰词不同。这种退化模式在小模型上非常典型。</p>
+<hr>
+<h2 id="九、和同类项目对比"><a href="#九、和同类项目对比" class="headerlink" title="九、和同类项目对比"></a>九、和同类项目对比</h2><h3 id="9-1-MiniMind-vs-karpathy-llama2-c"><a href="#9-1-MiniMind-vs-karpathy-llama2-c" class="headerlink" title="9.1 MiniMind vs karpathy/llama2.c"></a>9.1 MiniMind vs karpathy/llama2.c</h3><p>llama2.c 是最常被拿来对比的项目，也是 MiniMind 致谢列表里的第一位。</p>
+<ul>
+<li><strong>llama2.c</strong>：极致精简，用纯 C 实现 Transformer 前向推理，没有训练、没有后训练。它的价值是” 让你在几百行代码里看懂 transformer 前向传播”。</li>
+<li><strong>MiniMind</strong>：Python + PyTorch，覆盖从 tokenizer 到 Agentic RL 的完整训练链路。</li>
+</ul>
+<p>选哪个取决于你的目标：想<strong>读懂前向传播</strong>用 llama2.c；想<strong>跑通全流程训练</strong>用 MiniMind。</p>
+<h3 id="9-2-MiniMind-vs-baby-llama2-chinese-chatlm-mini-chinese"><a href="#9-2-MiniMind-vs-baby-llama2-chinese-chatlm-mini-chinese" class="headerlink" title="9.2 MiniMind vs baby-llama2-chinese / chatlm-mini-chinese"></a>9.2 MiniMind vs baby-llama2-chinese / chatlm-mini-chinese</h3><p>这两个是中文小模型的经典对照对象，MiniMind 在 README 里拿它们做了直接横评。</p>
+<ul>
+<li><strong>baby-llama2-chinese</strong>（0.2B）：更早的教程型项目，在本次评测里垫底（21 分）。</li>
+<li><strong>chatlm-mini-chinese</strong>（0.2B）：知识准确性最高（准确性 25/30，远超 MiniMind 的 10/30），但代码能力是明显短板，且生成后段容易重复退化。</li>
+</ul>
+<p>这个对比揭示了小模型的一个本质矛盾：<strong>在有限的参数预算下，” 说得好” 和” 说得对” 往往很难兼得</strong>。MiniMind 选了” 结构清晰 + 代码可用” 这条线，chatlm-mini 选了” 知识储备” 这条线。</p>
+<h3 id="9-3-MiniMind-vs-其他中文小模型教程"><a href="#9-3-MiniMind-vs-其他中文小模型教程" class="headerlink" title="9.3 MiniMind vs 其他中文小模型教程"></a>9.3 MiniMind vs 其他中文小模型教程</h3><ul>
+<li><strong>build_MiniLLM_from_scratch</strong>：结构更简单，聚焦” 从零写 Transformer”。</li>
+<li><strong>tiny-llm-zh</strong>：更聚焦中文预训练语料的构建，数据工程做得更细。MiniMind 的数据策略是” 直接开源整理好的全阶段数据集 + 明确的来源标注”，省掉用户的数据预处理工作 —— 从” 降低入门门槛” 的角度 MiniMind 更彻底，但从” 数据质量研究” 的角度 tiny-llm-zh 值得单独看。</li>
+<li><strong>TinyLlama</strong>（Meta）：模型更大（1.1B），有正式的训练论文和数据配方，不是教学玩具。</li>
+<li><strong>SmolLM2-135M</strong>（HuggingFace）：有正式的训练论文和 benchmark，训练成本高得多。</li>
+</ul>
+<p>MiniMind 的独特位置是：<strong>中文 + 全阶段 + 极低成本 + 从 0 实现</strong>。四个条件同时满足的，目前基本只有它。</p>
+<h3 id="9-4-MiniMind-vs-工业级-RL-框架（openrlhf-verl-slime）"><a href="#9-4-MiniMind-vs-工业级-RL-框架（openrlhf-verl-slime）" class="headerlink" title="9.4 MiniMind vs 工业级 RL 框架（openrlhf / verl / slime）"></a>9.4 MiniMind vs 工业级 RL 框架（openrlhf /verl/slime）</h3><p>MiniMind 里的 <code>train_agent.py</code> 具备了这些框架的关键元素 —— 模板组织、工具执行、多轮 rollout、延迟奖励、训推分离 —— 但作者自己说是” 最小串联”，” 还远不是工业级 Agent 训练框架”。</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th> MiniMind</th>
+<th>verl / openrlhf</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>rollout</td>
+<td> 同步（采样完一批再更新）</td>
+<td>异步 rollout buffer</td>
+</tr>
+<tr>
+<td> 训推分离</td>
+<td>支持 sglang，但同步</td>
+<td>完整异步 + 权重同步</td>
+</tr>
+<tr>
+<td>资源调度</td>
+<td>单机多卡</td>
+<td>集群级</td>
+</tr>
+<tr>
+<td>工程完备度</td>
+<td>教学级</td>
+<td>生产级</td>
+</tr>
+</tbody></table>
+<p>作者说” 如果类比到更大规模系统里，它其实已经具备 openrlhf/verl/slime 等大规模 RL 框架的味道”，我觉得这个措辞是准确的 —— <strong>味道有了，骨架还是差挺远</strong>。</p>
+<hr>
+<h2 id="十、真实局限：作者自己承认的和我自己踩到的"><a href="#十、真实局限：作者自己承认的和我自己踩到的" class="headerlink" title="十、真实局限：作者自己承认的和我自己踩到的"></a>十、真实局限：作者自己承认的和我自己踩到的</h2><p>这部分我尽量写全，免得你抄了之后才发现。</p>
+<h3 id="10-1-作者明确承认的"><a href="#10-1-作者明确承认的" class="headerlink" title="10.1 作者明确承认的"></a>10.1 作者明确承认的</h3><p><strong>（1）知识幻觉严重。</strong> 这个没法回避。64M 参数的模型，事实性知识基本靠猜。README 里的评测显示 A 模型准确性只有 10/30—— 客观说基本是随机猜的水平（多选题随机作答的准确率往往就是很强的下界）。</p>
+<p><strong>（2）Tool Call 泛化能力不足。</strong></p>
+<blockquote>
+<p>“工具列表也主要覆盖约 <code>10</code> 个模拟的自定义工具…… 因此目前还谈不上明确的泛化能力。”</p>
+</blockquote>
+<p><strong>（3）Tool Call 与思考链无法同时稳定输出。</strong></p>
+<blockquote>
+<p>“当前同时开启 Tool Call 与显式思考时，模型通常并不太会稳定地输出思考过程。”</p>
+</blockquote>
+<p><strong>（4）奖励稀疏。</strong> 在通用数学任务上，64M 模型几乎全错，优势信号归零，RL 训不动。作者的解法（连续奖励）只能缓解，不能根除。</p>
+<p><strong>（5）GRPO 退化组。</strong> 小模型在难题上组内奖励趋于一致，学习信号消失。</p>
+<p><strong>（6）MoE 训练比 dense 慢。</strong> 4 experts /top-1 也要慢约 50%，专家更多则 kernel 调度开销急剧变重。</p>
+<p><strong>（7）Agentic RL 是同步模式。</strong></p>
+<blockquote>
+<p>“当前实现仍是<strong>同步</strong>模式（采样完一批再更新），还不是纯 rollout buffer 的异步训练。”</p>
+</blockquote>
+<p><strong>（8）只保证主线权重的维护。</strong></p>
+<blockquote>
+<p>“并非所有训练阶段或实验分支（如 DPO、PPO、GRPO、CISPO、Agent、LoRA 等）的权重都会持续维护并单独公开。”</p>
+</blockquote>
+<p><strong>（9）后训练有对齐税。</strong> RL 权重在 ToolUse 上更强，但事实性下降、幻觉更明显。</p>
+<h3 id="10-2-我自己踩到的坑"><a href="#10-2-我自己踩到的坑" class="headerlink" title="10.2 我自己踩到的坑"></a>10.2 我自己踩到的坑</h3><p><strong>（1）依赖版本。</strong> 老版本 <code>transformers</code> 的 <code>apply_chat_template</code> 可能不支持自定义模板，建议直接用较新的版本。</p>
+<p><strong>（2）显存。</strong> README 里没说清楚不同阶段的显存需求差异。pretrain 阶段最敏感，因为 <code>max_seq_len</code> 直接影响激活值显存。只有 12G 卡的话，<code>max_seq_len=768</code> 可能会 OOM，需要降到 512 或 384。</p>
+<p><strong>（3）数据下载。</strong> <code>sft_t2t.jsonl</code> 有 14GB，<code>pretrain_t2t.jsonl</code> 有 10GB。只是” 跑通看看” 的话用 <code>_mini</code> 版本（1.2GB + 1.6GB）就够了 —— 我第一次直接下了全量，等下载花的时间比训练还长。</p>
+<p><strong>（4）<code>eval_llm.py --load_from</code> 的两种语义。</strong> <code>--load_from ./minimind-3</code>（transformers 格式目录）和 <code>--load_from ./model --weight full_sft</code>（torch 权重目录）是两条完全不同的路径，别混用。</p>
+<p><strong>（5）WebUI 需要先复制模型目录。</strong> README 里特别标注了：</p>
+<blockquote>
+<p>“⚠️ 须先将 transformers 格式模型文件夹复制到 ./scripts/ 目录下…… 如不存在则报错”</p>
+</blockquote>
+<p>这个报错信息不直观，容易卡住。</p>
+<p><strong>（6）llama.cpp 转换要改代码</strong>（动 <code>convert_hf_to_gguf.py</code>），<strong>Ollama 需要手写 modelfile</strong>（模板较长，要完整复制 README 里的 TEMPLATE 部分）。</p>
+<h3 id="10-3-最重要的一条局限"><a href="#10-3-最重要的一条局限" class="headerlink" title="10.3 最重要的一条局限"></a>10.3 最重要的一条局限</h3><p><strong>这不是一个能用的模型，这是一个用来理解模型的教具。</strong></p>
+<p>如果你要的是” 能干活的中文小模型”，请去看 Qwen3-0.6B、Qwen3-1.7B，或者 MiniMind 系列的衍生项目 MiniMind-V（视觉）、MiniMind-O（多模态）。64M 的模型连” 万有引力是谁提出的” 都会答成爱因斯坦，它的存在意义不在于好用。它的价值在于：<strong>你可以在一个晚上读完整个训练栈，然后改任意一行代码看会发生什么。</strong></p>
+<hr>
+<h2 id="十一、适合谁-不适合谁"><a href="#十一、适合谁-不适合谁" class="headerlink" title="十一、适合谁 / 不适合谁"></a>十一、适合谁 / 不适合谁</h2><h3 id="12-1-适合"><a href="#12-1-适合" class="headerlink" title="12.1 适合"></a>12.1 适合</h3><p><strong>（1）想真正搞懂 LLM 训练全流程的人。</strong> 你已经会写 Python，知道什么是梯度下降和交叉熵 loss，但没搞明白为什么 SFT 之后还要跑 RL、PPO 和 GRPO 差在哪、DPO 为什么要冻结一个 ref 模型。这个项目能给你答案。</p>
+<p><strong>（2）想低成本做 LLM 实验的人。</strong> 你有 12G 以上的显卡，想试试” 改一下数据配比会怎样”” 换一种奖励函数会怎样”。3 块钱一次实验的成本，让你敢做对照组。</p>
+<p><strong>（3）中文开发者。</strong> README、代码注释、数据说明全是中文，训练数据以中文为主。英文教程多，但中文的少。</p>
+<p><strong>（4）想给小模型做垂域适配的人。</strong> LoRA 那套流程（准备 jsonl → 训 → 合并 → 部署）可以直接用在你自己的 7B/1.5B 模型上。</p>
+<p><strong>（5）要做 AI 教学 / 培训的人。</strong> 代码结构清晰、注释详实、每个阶段都有 loss 曲线和数据格式说明，比自己搭一套 demo 靠谱得多。</p>
+<p><strong>（6）想对比不同 RL 算法的人。</strong> DPO / PPO / GRPO / CISPO 在同一套代码里实现，消融对比方便。</p>
+<h3 id="12-2-不适合"><a href="#12-2-不适合" class="headerlink" title="12.2 不适合"></a>12.2 不适合</h3><p><strong>（1）想直接拿去用的。</strong> 64M 的知识准确率是随机猜水平，任何生产用途都不合适。</p>
+<p><strong>（2）想学最前沿架构的。</strong> 主线结构是对齐 Qwen3 的常规 Dense + MoE，没有 Mamba、没有 SSM、没有新的注意力变体。想看前沿的话，Discussions 里那两个实验性项目（dLM 扩散语言模型、Linear Attention）才有意思，但那是讨论区内容，不是主线。</p>
+<p><strong>（3）工程要求极高的。</strong> 没有完整的 CI、没有完善的测试覆盖、没有版本化的配置管理，checkpoint 管理是脚本级的。DDP 是原生 PyTorch 写的，没做 ZeRO、没做 offload、没做 pipeline 并行，数据加载是最朴素的 jsonl 读取。</p>
+<p><strong>（4）显存紧张的。</strong> 虽然宣称单卡 3090（24G）能跑，但 12G 卡需要调小 <code>max_seq_len</code>，效果会打折。纯 CPU 也能跑，但”2 小时” 这个数字就完全不存在了。</p>
+<p><strong>（5）想要开箱即用生产部署的。</strong> OpenAI API 服务端是为了 demo 和教学写的，不是高并发服务。</p>
+<p><strong>（6）指望一个项目吃透所有东西的。</strong> 仓库里塞了 Pretrain、SFT、LoRA、蒸馏、DPO、PPO、GRPO、CISPO、Agentic RL、YaRN、Tool Use、自适应思考十几个主题，每个都只讲了个大概。<strong>它是地图，不是教材。</strong></p>
+<hr>
+<h2 id="十二、我的实际使用建议"><a href="#十二、我的实际使用建议" class="headerlink" title="十二、我的实际使用建议"></a>十二、我的实际使用建议</h2><p><strong>第一天：跑通最小闭环。</strong> 克隆仓库、装依赖，下载 <code>pretrain_t2t_mini.jsonl</code>（1.2GB）和 <code>sft_t2t_mini.jsonl</code>（1.6GB）放进 <code>./dataset/</code>，然后：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> trainer &amp;&amp; python train_pretrain.py</span><br><span class="line"><span class="built_in">cd</span> trainer &amp;&amp; python train_full_sft.py</span><br><span class="line">python eval_llm.py --weight full_sft</span><br></pre></td></tr></tbody></table></figure>
+
+<p>用 mini 数据 + <code>max_seq_len≈768</code>，单卡 3090 大约 2.3 小时。这一步的意义是：<strong>你亲眼看到 loss 从 8 降到 2 附近</strong>，这个体感比读十篇教程都强。</p>
+<p><strong>第二天：读代码。</strong> 重点读三个文件：<code>model/model_minimind.py</code>（结构和配置）、<code>trainer/train_pretrain.py</code>（训练循环和数据读取）、<code>trainer/train_grpo.py</code>（RL 的采样、奖励、优势计算）。</p>
+<p><strong>第三天：做实验。</strong> 把 <code>n_layers</code> 从 8 改成 4，看训练速度和质量怎么变（验证 MobileLLM 的深度结论）；换个奖励函数，看 GRPO 的 reward 曲线怎么动。</p>
+<p><strong>第四天：接生态。</strong> 把模型转成 GGUF，扔进 llama.cpp 或 ollama 里跑 —— 这一步会帮你理解” 模型文件里到底存了什么”。</p>
+<hr>
+<h2 id="十三、写在最后"><a href="#十三、写在最后" class="headerlink" title="十三、写在最后"></a>十三、写在最后</h2><p>MiniMind 最让我佩服的不是 7 万 star，也不是那个”3 块钱” 的数字，而是它<strong>对” 我到底学会了什么” 这个问题的诚实</strong>。</p>
+<p>README 里有太多这样的句子：” 目前还谈不上明确的泛化能力”” 同时开启 Tool Call 与显式思考时，模型通常并不太会稳定地输出思考过程”” 在 MiniMind 这种超小模型上，这个问题尤其明显”” 还远不是工业级 Agent 训练框架”” 上述对比仅为体验参考，非严格 benchmark”。</p>
+<p>这种诚实，在开源项目里其实相当罕见。更重要的是，它主动公开了自己” 作弊” 能跑多少分：</p>
+<blockquote>
+<p>“例如 minimind-3 在有污染的 ceval /cmmlu 子集上实验跑到过约 97% 准确率，但这种结果没有参考意义。”</p>
+</blockquote>
+<p><strong>一个愿意告诉你” 我在有数据泄漏的情况下能刷到 97%” 的项目，它的 24.89 分才有意义。</strong></p>
+<p>至于那个”3 块钱”—— 我跑了之后想说，它基本属实，但有点标题党的成分。README 里自己也澄清了：</p>
+<blockquote>
+<p>“注：本项目基于 Apache 2.0 协议开源，完全免费。’2 小时’ 指 SFT 阶段在单张 NVIDIA 3090 上跑完 <code>1 epoch</code> 的实测耗时，’3 块钱’ 指对应时段的 GPU 租用成本。”<br>注意是 <strong>SFT 阶段 1 epoch</strong>，不含预训练；但合计约 2.31 小时、3.0 元的表格数据确实在 README 里写着。</p>
+</blockquote>
+<p>所以结论是：<strong>这个项目值得你花一个周末。</strong></p>
+<p>不是为了训出一个能用的模型 —— 那不可能。而是为了在一个可控的尺度上，把大语言模型这件事从头到尾看一遍。</p>
+<hr>
+<h2 id="附：关键链接"><a href="#附：关键链接" class="headerlink" title="附：关键链接"></a>附：关键链接</h2><ul>
+<li>仓库：<a target="_blank" rel="noopener" href="https://github.com/jingyaogong/minimind">https://github.com/jingyaogong/minimind</a></li>
+<li> 数据集：ModelScope <a target="_blank" rel="noopener" href="https://www.modelscope.cn/datasets/gongjy/minimind_dataset/files">https://www.modelscope.cn/datasets/gongjy/minimind_dataset/files</a> ｜ HuggingFace <a target="_blank" rel="noopener" href="https://huggingface.co/datasets/jingyaogong/minimind_dataset/tree/main">https://huggingface.co/datasets/jingyaogong/minimind_dataset/tree/main</a></li>
+<li> 模型集合：<a target="_blank" rel="noopener" href="https://huggingface.co/collections/jingyaogong/minimind-66caf8d999f5c7fa64f399e5">https://huggingface.co/collections/jingyaogong/minimind-66caf8d999f5c7fa64f399e5</a></li>
+<li> 衍生项目：MiniMind-V <a target="_blank" rel="noopener" href="https://github.com/jingyaogong/minimind-v">https://github.com/jingyaogong/minimind-v</a> ｜ MiniMind-O <a target="_blank" rel="noopener" href="https://github.com/jingyaogong/minimind-o">https://github.com/jingyaogong/minimind-o</a></li>
+<li> 讨论区：dLM 扩散语言模型 <a target="_blank" rel="noopener" href="https://github.com/jingyaogong/minimind/discussions/618">https://github.com/jingyaogong/minimind/discussions/618</a> ｜ 线性注意力 <a target="_blank" rel="noopener" href="https://github.com/jingyaogong/minimind/discussions/704">https://github.com/jingyaogong/minimind/discussions/704</a></li>
+<li> 论文：MobileLLM <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2402.14905">https://arxiv.org/pdf/2402.14905</a> ｜ GRPO <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2402.03300">https://arxiv.org/pdf/2402.03300</a> ｜ CISPO <a target="_blank" rel="noopener" href="https://huggingface.co/papers/2506.13585">https://huggingface.co/papers/2506.13585</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/11/26/jingyaogong-minimind-64m-llm-from-scratch-in-2-hours/" title="jingyaogong&#x2F;minimind：7 万 star 的中文极简 LLM 教学项目，2 小时 3 块钱从零训出 64M 大模型">https://www.daishengli.top/2026/11/26/jingyaogong-minimind-64m-llm-from-scratch-in-2-hours/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/minimind/" rel="tag"># minimind</a>
+              <a href="/tags/jingyaogong/" rel="tag"># jingyaogong</a>
+              <a href="/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" rel="tag"># 大语言模型</a>
+              <a href="/tags/%E4%BB%8E%E9%9B%B6%E8%AE%AD%E7%BB%83/" rel="tag"># 从零训练</a>
+              <a href="/tags/PyTorch/" rel="tag"># PyTorch</a>
+              <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag"># 强化学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/25/firecrawl-ai-agent-web-data-infrastructure/" rel="prev" title="firecrawl&#x2F;firecrawl：20.9 万 star 的 AI Agent 抓取基础设施，AGPL-3.0 开源自托管，一个 Rust 二进制把网页变成 Markdown">
+                  <i class="fa fa-angle-left"></i> firecrawl/firecrawl：20.9 万 star 的 AI Agent 抓取基础设施，AGPL-3.0 开源自托管，一个 Rust 二进制把网页变成 Markdown
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/27/iamajmeena-neonclipping-local-ai-video-clipper-youtube-twitch/" rel="next" title="iamajmeena&#x2F;neonclipping：2927 star 的本地 AI 剪辑引擎，把 85 分钟直播剪成竖屏短视频只要 97 秒">
+                  iamajmeena/neonclipping：2927 star 的本地 AI 剪辑引擎，把 85 分钟直播剪成竖屏短视频只要 97 秒 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

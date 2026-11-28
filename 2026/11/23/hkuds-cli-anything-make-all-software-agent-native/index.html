@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="HKUDS&#x2F;CLI-Anything 是一个由香港大学数据智能实验室出品的开源项目，核心主张只有一句话——让任何有代码库的软件都能被 AI Agent 以命令行方式驱动。它提供一套 Claude Code 插件、SKILL 规范和多平台适配（Claude Code、Cursor、OpenCode、OpenClaw、Codex、Pi、Qodercli 等），把 GUI 软件的后端引擎包装成带 --j">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HKUDS&#x2F;CLI-Anything：63603 star 的开源项目，把 40 多个专业软件变成 AI Agent 能用的命令行">
+<meta property="og:url" content="https://www.daishengli.top/2026/11/23/hkuds-cli-anything-make-all-software-agent-native/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="HKUDS&#x2F;CLI-Anything 是一个由香港大学数据智能实验室出品的开源项目，核心主张只有一句话——让任何有代码库的软件都能被 AI Agent 以命令行方式驱动。它提供一套 Claude Code 插件、SKILL 规范和多平台适配（Claude Code、Cursor、OpenCode、OpenClaw、Codex、Pi、Qodercli 等），把 GUI 软件的后端引擎包装成带 --j">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-23T16:02:11.000Z">
+<meta property="article:modified_time" content="2026-11-28T00:04:52.353Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="自动化">
+<meta property="article:tag" content="自托管">
+<meta property="article:tag" content="CLI-Anything">
+<meta property="article:tag" content="HKUDS">
+<meta property="article:tag" content="命令行工具">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/11/23/hkuds-cli-anything-make-all-software-agent-native/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/11/23/hkuds-cli-anything-make-all-software-agent-native/","path":"2026/11/23/hkuds-cli-anything-make-all-software-agent-native/","title":"HKUDS/CLI-Anything：63603 star 的开源项目，把 40 多个专业软件变成 AI Agent 能用的命令行"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>HKUDS/CLI-Anything：63603 star 的开源项目，把 40 多个专业软件变成 AI Agent 能用的命令行 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">459</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">139</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HKUDS-CLI-Anything%EF%BC%9A63603-star-%E7%9A%84%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%EF%BC%8C%E6%8A%8A-40-%E5%A4%9A%E4%B8%AA%E4%B8%93%E4%B8%9A%E8%BD%AF%E4%BB%B6%E5%8F%98%E6%88%90-AI-Agent-%E8%83%BD%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C"><span class="nav-number">1.</span> <span class="nav-text">HKUDS&#x2F;CLI-Anything：63603 star 的开源项目，把 40 多个专业软件变成 AI Agent 能用的命令行</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%88%91%E8%A2%AB-GIMP-%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9D%E9%80%80%E4%BA%86%E6%95%B4%E6%95%B4%E4%B8%89%E5%B9%B4"><span class="nav-number">1.1.</span> <span class="nav-text">一、我被 GIMP 的自动化劝退了整整三年</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9A%E6%8A%8A-GUI-%E8%BD%AF%E4%BB%B6%E7%9A%84%E5%90%8E%E7%AB%AF%E6%8B%86%E5%87%BA%E6%9D%A5%EF%BC%8C%E5%A5%97%E4%B8%80%E5%B1%82%E5%91%BD%E4%BB%A4%E8%A1%8C"><span class="nav-number">1.2.</span> <span class="nav-text">二、它是什么：把 GUI 软件的后端拆出来，套一层命令行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%95%B0%E5%AD%97"><span class="nav-number">1.2.1.</span> <span class="nav-text">关键数字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88"><span class="nav-number">1.2.2.</span> <span class="nav-text">它想解决什么</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%EF%BC%9A7-%E9%98%B6%E6%AE%B5%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="nav-number">1.3.</span> <span class="nav-text">三、核心机制：7 阶段流水线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Phase-1%EF%BC%9A%E4%BB%A3%E7%A0%81%E5%BA%93%E5%88%86%E6%9E%90"><span class="nav-number">1.3.1.</span> <span class="nav-text">Phase 1：代码库分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Phase-2%EF%BC%9ACLI-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.3.2.</span> <span class="nav-text">Phase 2：CLI 架构设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Phase-3%EF%BC%9A%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.3.</span> <span class="nav-text">Phase 3：实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Phase-4-6%EF%BC%9A%E6%B5%8B%E8%AF%95%E8%A7%84%E5%88%92%E3%80%81%E6%B5%8B%E8%AF%95%E5%AE%9E%E7%8E%B0%E3%80%81%E6%B5%8B%E8%AF%95%E6%96%87%E6%A1%A3"><span class="nav-number">1.3.4.</span> <span class="nav-text">Phase 4-6：测试规划、测试实现、测试文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Phase-6-5%EF%BC%9ASKILL-md-%E7%94%9F%E6%88%90"><span class="nav-number">1.3.5.</span> <span class="nav-text">Phase 6.5：SKILL.md 生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Phase-7%EF%BC%9APyPI-%E5%8F%91%E5%B8%83%E4%B8%8E%E5%AE%89%E8%A3%85"><span class="nav-number">1.3.6.</span> <span class="nav-text">Phase 7：PyPI 发布与安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E4%BA%94%E4%B8%AA%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="nav-number">1.4.</span> <span class="nav-text">四、五个核心设计原则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%9C%9F%E5%AE%9E%E8%BD%AF%E4%BB%B6%E9%9B%86%E6%88%90"><span class="nav-number">1.4.1.</span> <span class="nav-text">1. 真实软件集成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%81%B5%E6%B4%BB%E7%9A%84%E4%BA%A4%E4%BA%92%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.4.2.</span> <span class="nav-text">2. 灵活的交互模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%B8%80%E8%87%B4%E7%9A%84%E7%94%A8%E6%88%B7%E4%BD%93%E9%AA%8C"><span class="nav-number">1.4.3.</span> <span class="nav-text">3. 一致的用户体验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Agent-%E5%8E%9F%E7%94%9F%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.4.4.</span> <span class="nav-text">4. Agent 原生设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%9B%B6%E5%A6%A5%E5%8D%8F%E4%BE%9D%E8%B5%96"><span class="nav-number">1.4.5.</span> <span class="nav-text">5. 零妥协依赖</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">1.5.</span> <span class="nav-text">五、快速上手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%BA%BF-A%EF%BC%9A%E7%9B%B4%E6%8E%A5%E7%94%A8%E7%8E%B0%E6%88%90%E7%9A%84-CLI%EF%BC%88%E6%9C%80%E7%9C%81%E4%BA%8B%EF%BC%89"><span class="nav-number">1.5.1.</span> <span class="nav-text">路线 A：直接用现成的 CLI（最省事）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%BA%BF-B%EF%BC%9A%E8%AE%A9-Agent-%E8%87%AA%E5%B7%B1%E5%8E%BB%E8%A3%85"><span class="nav-number">1.5.2.</span> <span class="nav-text">路线 B：让 Agent 自己去装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%BA%BF-C%EF%BC%9A%E7%BB%99%E4%B8%80%E4%B8%AA%E6%96%B0%E8%BD%AF%E4%BB%B6%E7%94%9F%E6%88%90-CLI"><span class="nav-number">1.5.3.</span> <span class="nav-text">路线 C：给一个新软件生成 CLI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%BA%BF-D%EF%BC%9A%E8%BF%AD%E4%BB%A3%E5%A2%9E%E5%BC%BA"><span class="nav-number">1.5.4.</span> <span class="nav-text">路线 D：迭代增强</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%B9%B3%E5%8F%B0"><span class="nav-number">1.5.5.</span> <span class="nav-text">其他平台</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E7%94%9F%E6%88%90%E5%87%BA%E6%9D%A5%E7%9A%84-CLI"><span class="nav-number">1.5.6.</span> <span class="nav-text">用生成出来的 CLI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%91%E6%B5%8B%E8%AF%95"><span class="nav-number">1.5.7.</span> <span class="nav-text">跑测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E7%94%9F%E6%88%90%E7%9A%84-CLI-%E5%AE%9E%E9%99%85%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7"><span class="nav-number">1.6.</span> <span class="nav-text">六、生成的 CLI 实际长什么样</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81HARNESS-md-%E9%87%8C%E9%82%A3%E4%BA%9B%E3%80%8C%E8%B8%A9%E8%BF%87%E5%9D%91%E6%89%8D%E7%9F%A5%E9%81%93%E3%80%8D%E7%9A%84%E6%95%99%E8%AE%AD"><span class="nav-number">1.7.</span> <span class="nav-text">七、HARNESS.md 里那些「踩过坑才知道」的教训</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81Preview-%E4%B8%8E-Live-Preview%EF%BC%9A%E7%BB%99-Agent-%E4%B8%80%E4%B8%AA%E3%80%8C%E7%9C%8B%E4%B8%80%E7%9C%BC%E3%80%8D%E7%9A%84%E6%9C%BA%E5%88%B6"><span class="nav-number">1.8.</span> <span class="nav-text">八、Preview 与 Live Preview：给 Agent 一个「看一眼」的机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E8%B7%9F%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E6%AF%94%E4%B8%80%E6%AF%94"><span class="nav-number">1.9.</span> <span class="nav-text">九、跟同类项目比一比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#vs-MCP%EF%BC%88Model-Context-Protocol%EF%BC%89"><span class="nav-number">1.9.1.</span> <span class="nav-text">vs MCP（Model Context Protocol）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vs-UI-%E8%87%AA%E5%8A%A8%E5%8C%96%EF%BC%88Playwright%E3%80%81Selenium%E3%80%81Computer-Use%EF%BC%89"><span class="nav-number">1.9.2.</span> <span class="nav-text">vs UI 自动化（Playwright、Selenium、Computer Use）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vs-%E8%87%AA%E5%B7%B1%E6%89%8B%E5%86%99-API-%E5%B0%81%E8%A3%85"><span class="nav-number">1.9.3.</span> <span class="nav-text">vs 自己手写 API 封装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vs-Anthropic-%E7%9A%84-Claude-Computer-Use-%E5%90%84%E7%B1%BB-GUI-Agent"><span class="nav-number">1.9.4.</span> <span class="nav-text">vs Anthropic 的 Claude Computer Use &#x2F; 各类 GUI Agent</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E8%A6%86%E7%9B%96%E8%8C%83%E5%9B%B4%EF%BC%9A%E5%88%B0%E5%BA%95%E8%83%BD%E7%94%A8%E5%9C%A8%E5%93%AA%E4%BA%9B%E8%BD%AF%E4%BB%B6%E4%B8%8A"><span class="nav-number">1.10.</span> <span class="nav-text">十、覆盖范围：到底能用在哪些软件上</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E7%9C%9F%E5%AE%9E%E5%B1%80%E9%99%90%EF%BC%9A%E8%AF%B4%E5%87%A0%E4%B8%AA%E6%88%91%E4%B8%8D%E5%90%B9%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="nav-number">1.11.</span> <span class="nav-text">十一、真实局限：说几个我不吹的地方</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#README-%E5%AE%98%E6%96%B9%E6%89%BF%E8%AE%A4%E7%9A%84%E4%B8%89%E6%9D%A1"><span class="nav-number">1.11.1.</span> <span class="nav-text">README 官方承认的三条</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E8%A1%A5%E5%85%85%E7%9A%84%E5%87%A0%E6%9D%A1"><span class="nav-number">1.11.2.</span> <span class="nav-text">我补充的几条</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E9%80%82%E5%90%88%E8%B0%81%EF%BC%8C%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">1.12.</span> <span class="nav-text">十二、适合谁，不适合谁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88"><span class="nav-number">1.12.1.</span> <span class="nav-text">适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88"><span class="nav-number">1.12.2.</span> <span class="nav-text">不适合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E6%88%91%E7%9A%84%E5%88%A4%E6%96%AD"><span class="nav-number">1.13.</span> <span class="nav-text">十三、我的判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E4%B8%8A%E6%89%8B%E5%BB%BA%E8%AE%AE%EF%BC%9A%E4%B8%89%E6%9D%A1%E8%B7%AF%E5%BE%84%E6%80%8E%E4%B9%88%E9%80%89"><span class="nav-number">1.14.</span> <span class="nav-text">十四、上手建议：三条路径怎么选</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">139</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">459</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/23/hkuds-cli-anything-make-all-software-agent-native/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="HKUDS&#x2F;CLI-Anything：63603 star 的开源项目，把 40 多个专业软件变成 AI Agent 能用的命令行 | 小戴的网络日志">
+      <meta itemprop="description" content="HKUDS&#x2F;CLI-Anything 是一个由香港大学数据智能实验室出品的开源项目，核心主张只有一句话——让任何有代码库的软件都能被 AI Agent 以命令行方式驱动。它提供一套 Claude Code 插件、SKILL 规范和多平台适配（Claude Code、Cursor、OpenCode、OpenClaw、Codex、Pi、Qodercli 等），把 GUI 软件的后端引擎包装成带 --json 输出、状态化 REPL、undo&#x2F;redo 和真实渲染验证的 Python Click 命令行工具。项目采用 Apache-2.0 协议，当前 63603 star、5776 fork、291 个开放 issue，主语言 Python，要求 Python 3.10 以上；仓库里已内置 GIMP、Blender、LibreOffice、Inkscape、Audacity、Shotcut、Kdenlive、OBS Studio、Godot、n8n、QGIS、FreeCAD、Joplin、Zotero 等 40 多个软件适配器，累计 2464 个测试全部通过。配套的 cli-anything-hub 包管理器（PyPI 版本 0.4.1）可以一条命令浏览、安装、升级和卸载社区做的 CLI。它的方法论写在一份 HARNESS.md 里，明确要求调用真实软件渲染而不是自己复刻，README 也直说依赖前沿大模型、只对有源码的软件有效、常常需要多轮 refine 才能到生产可用。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HKUDS/CLI-Anything：63603 star 的开源项目，把 40 多个专业软件变成 AI Agent 能用的命令行
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-24 00:02:11" itemprop="dateCreated datePublished" datetime="2026-11-24T00:02:11+08:00">2026-11-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">HKUDS/CLI-Anything 是一个由香港大学数据智能实验室出品的开源项目，核心主张只有一句话——让任何有代码库的软件都能被 AI Agent 以命令行方式驱动。它提供一套 Claude Code 插件、SKILL 规范和多平台适配（Claude Code、Cursor、OpenCode、OpenClaw、Codex、Pi、Qodercli 等），把 GUI 软件的后端引擎包装成带 --json 输出、状态化 REPL、undo/redo 和真实渲染验证的 Python Click 命令行工具。项目采用 Apache-2.0 协议，当前 63603 star、5776 fork、291 个开放 issue，主语言 Python，要求 Python 3.10 以上；仓库里已内置 GIMP、Blender、LibreOffice、Inkscape、Audacity、Shotcut、Kdenlive、OBS Studio、Godot、n8n、QGIS、FreeCAD、Joplin、Zotero 等 40 多个软件适配器，累计 2464 个测试全部通过。配套的 cli-anything-hub 包管理器（PyPI 版本 0.4.1）可以一条命令浏览、安装、升级和卸载社区做的 CLI。它的方法论写在一份 HARNESS.md 里，明确要求调用真实软件渲染而不是自己复刻，README 也直说依赖前沿大模型、只对有源码的软件有效、常常需要多轮 refine 才能到生产可用。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="HKUDS-CLI-Anything：63603-star-的开源项目，把-40-多个专业软件变成-AI-Agent-能用的命令行"><a href="#HKUDS-CLI-Anything：63603-star-的开源项目，把-40-多个专业软件变成-AI-Agent-能用的命令行" class="headerlink" title="HKUDS/CLI-Anything：63603 star 的开源项目，把 40 多个专业软件变成 AI Agent 能用的命令行"></a>HKUDS/CLI-Anything：63603 star 的开源项目，把 40 多个专业软件变成 AI Agent 能用的命令行</h1><blockquote>
+<p><strong>本文 GitHub 项目地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/HKUDS/CLI-Anything">HKUDS/CLI-Anything</a><br>今日 stars：63,603・forks：5,776・开放 issue：291・主语言 Python・License: Apache-2.0<br>今日推荐理由：它是目前少数真的把「Agent 驱动专业软件」这件事做成了一套可复用方法论的开源项目，而且方法论本身（HARNESS.md）写得比大多数论文都实在。</p>
+</blockquote>
+<h2 id="一、我被-GIMP-的自动化劝退了整整三年"><a href="#一、我被-GIMP-的自动化劝退了整整三年" class="headerlink" title="一、我被 GIMP 的自动化劝退了整整三年"></a>一、我被 GIMP 的自动化劝退了整整三年</h2><p>先说个我自己踩过的坑。</p>
+<p>我业余做点视频剪辑，用的 Kdenlive。这东西的界面挺好，剪切、关键帧、轨道，鼠标一拖就完事了。但每次我想批量处理一批素材的时候，就会陷入一种特别难受的处境：</p>
+<p>打开 Kdenlive，导入 12 个视频，手动在时间线上摆好轨道，加转场，调音量曲线，导出。做完之后发现文件名错了，改一遍再来。如果这 12 个素材要每周处理一次，那就是每周重复 40 分钟的纯鼠标劳动。</p>
+<p>我想过写脚本。但 Kdenlive 的项目文件是 MLT XML，你得先理解它的节点结构、filter、transition 是怎么组织的，才能正确改写它。更麻烦的是，改完 XML 还不算完 —— 有些视觉效果是「渲染的时候」才生效的，你在 XML 里看到的参数和最终画面不是一回事。</p>
+<p>于是我写了个半成品脚本，处理了两次之后就放弃了。不是因为 Python 不会写，是因为「用代码可靠地驱动一个专业 GUI 软件」这件事本身，比我想象的要难一个数量级。</p>
+<p>这正是 HKUDS/CLI-Anything 想解决的核心问题。它的 README 里有一句话挺直白：</p>
+<blockquote>
+<p>AI agents are great at reasoning but terrible at using real professional software.</p>
+</blockquote>
+<p>翻译一下：AI 推理很强，但用专业软件很废。</p>
+<p>现在的方案无非三条路：GUI 自动化（截图、点击、写像素坐标）、用软件官方 API（很多专业软件压根没有 API，或者 API 覆盖了 10% 功能）、或者自己复刻一个简化版（功能缺失一大半）。</p>
+<p>CLI-Anything 选了第四条：<strong>不碰 GUI，也不复刻功能，而是找到软件真正的后端引擎，直接包装成命令行</strong>。</p>
+<h2 id="二、它是什么：把-GUI-软件的后端拆出来，套一层命令行"><a href="#二、它是什么：把-GUI-软件的后端拆出来，套一层命令行" class="headerlink" title="二、它是什么：把 GUI 软件的后端拆出来，套一层命令行"></a>二、它是什么：把 GUI 软件的后端拆出来，套一层命令行</h2><p>一句话定义：</p>
+<blockquote>
+<p>CLI-Anything 是一个 Agent 原生（agent-native）的软件接口生成方法论 + 工具链：把任意一个有源码的软件，转换成一个 AI Agent 可以可靠驱动的结构化命令行工具。</p>
+</blockquote>
+<h3 id="关键数字"><a href="#关键数字" class="headerlink" title="关键数字"></a>关键数字</h3><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Stars</td>
+<td>63,603</td>
+</tr>
+<tr>
+<td>Forks</td>
+<td>5,776</td>
+</tr>
+<tr>
+<td>Watchers（订阅）</td>
+<td>233</td>
+</tr>
+<tr>
+<td> 开放 Issue</td>
+<td>291</td>
+</tr>
+<tr>
+<td> 主语言</td>
+<td> Python</td>
+</tr>
+<tr>
+<td>License</td>
+<td>Apache-2.0</td>
+</tr>
+<tr>
+<td> 要求 Python</td>
+<td>≥ 3.10</td>
+</tr>
+<tr>
+<td> 内置软件适配器</td>
+<td> 40+</td>
+</tr>
+<tr>
+<td> 累计测试</td>
+<td> 2,464 个，100% 通过</td>
+</tr>
+<tr>
+<td>贡献者</td>
+<td> 100+（前 15 人贡献 270+ 次）</td>
+</tr>
+<tr>
+<td>创建时间</td>
+<td> 2026-03-08</td>
+</tr>
+<tr>
+<td> 最近推送</td>
+<td> 2026-11-20</td>
+</tr>
+<tr>
+<td>CLI-Hub 包版本</td>
+<td> PyPI <code>cli-anything-hub</code> 0.4.1</td>
+</tr>
+<tr>
+<td> 技术报告</td>
+<td> arXiv:2606.03854</td>
+</tr>
+</tbody></table>
+<p>仓库结构上有意思的一点：它不是「一个生成器脚本」，而是一个<strong>单仓库（monorepo）</strong>—— 里面既有方法论文档（HARNESS.md），也有 40 多个已经生成好的 <code>agent-harness/</code> 目录，每个目录都是一个可以直接 <code>pip install -e .</code> 的独立 Python 包。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">cli-anything/</span><br><span class="line">├── cli-anything-plugin/       # Claude Code 插件</span><br><span class="line">│   ├── HARNESS.md              # 方法论 SOP（唯一权威来源）</span><br><span class="line">│   ├── QUICKSTART.md</span><br><span class="line">│   ├── PUBLISHING.md</span><br><span class="line">│   ├── repl_skin.py            # 统一 REPL 皮肤</span><br><span class="line">│   └── commands/               # cli-anything.md / refine.md / test.md / validate.md</span><br><span class="line">├── cursor-plugin/             # Cursor 桌面端插件</span><br><span class="line">├── codex-skill/               # Codex skill 安装器</span><br><span class="line">├── hermes-skill/              # Hermes Agent skill</span><br><span class="line">├── reasonix-skill/            # Reasonix skill</span><br><span class="line">├── skills/                    # 各 harness 的 canonical SKILL.md</span><br><span class="line">├── gimp/agent-harness/        # GIMP CLI（107 测试）</span><br><span class="line">├── blender/agent-harness/     # Blender CLI（208 测试）</span><br><span class="line">├── inkscape/agent-harness/     # Inkscape CLI（202 测试）</span><br><span class="line">├── libreoffice/agent-harness/ # LibreOffice CLI（158 测试）</span><br><span class="line">├── audacity/agent-harness/    # Audacity CLI（161 测试）</span><br><span class="line">├── kdenlive/agent-harness/    # Kdenlive CLI（155 测试）</span><br><span class="line">├── shotcut/agent-harness/     # Shotcut CLI（154 测试）</span><br><span class="line">├── obs-studio/agent-harness/  # OBS Studio CLI（153 测试）</span><br><span class="line">├── joplin/agent-harness/      # Joplin CLI（134 测试）</span><br><span class="line">├── drawio/agent-harness/      # Draw.io CLI（138 测试）</span><br><span class="line">└── ... 共 40+ 个</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="它想解决什么"><a href="#它想解决什么" class="headerlink" title="它想解决什么"></a>它想解决什么</h3><p>README 把目标写成了三句话：</p>
+<ul>
+<li><strong>Universal Access</strong> — 每个软件通过结构化 CLI 瞬间变成 Agent 可控</li>
+<li><strong> Seamless Integration</strong> — Agent 无需 API、无需 GUI、无需重建就能控制任何应用</li>
+<li><strong> Future-Ready Ecosystem</strong> — 一条命令把人类设计的软件变成 Agent 原生工具</li>
+</ul>
+<p>而它选 CLI 作为载体，给了六条理由：</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>结构化、可组合</td>
+<td>文本命令天然匹配 LLM 的表达形式，能串成复杂工作流</td>
+</tr>
+<tr>
+<td>轻量、通用</td>
+<td>几乎零额外依赖，跨系统都能跑</td>
+</tr>
+<tr>
+<td>自描述</td>
+<td><code>--help</code> 就是自动生成的文档，Agent 可以自己发现能力</td>
+</tr>
+<tr>
+<td>已被验证</td>
+<td> Claude Code 每天通过 CLI 跑上千条真实工作流</td>
+</tr>
+<tr>
+<td> Agent 优先</td>
+<td>结构化 JSON 输出消灭了解析复杂度</td>
+</tr>
+<tr>
+<td>确定性</td>
+<td>结果一致，Agent 行为可预测</td>
+</tr>
+</tbody></table>
+<p>这六条里，最被低估的是第三条：<strong><code>--help</code> 自描述</strong>。这意味着一个 Agent 不需要有人手写 API 文档给它，它自己 <code>--help</code> 一遍就知道这个工具能干什么、有哪些参数。这是 MCP 之外另一条「让模型自己摸索」的路子。</p>
+<h2 id="三、核心机制：7-阶段流水线"><a href="#三、核心机制：7-阶段流水线" class="headerlink" title="三、核心机制：7 阶段流水线"></a>三、核心机制：7 阶段流水线</h2><p>整个项目的灵魂是一份 747 行的文档：<a target="_blank" rel="noopener" href="https://github.com/HKUDS/CLI-Anything/blob/main/cli-anything-plugin/HARNESS.md"><code>cli-anything-plugin/HARNESS.md</code></a>。它自称是「the single source of truth」，是一套把 GUI 应用变成 Agent 可用 CLI 的标准作业流程（SOP）。</p>
+<p>7 个阶段如下：</p>
+<h3 id="Phase-1：代码库分析"><a href="#Phase-1：代码库分析" class="headerlink" title="Phase 1：代码库分析"></a>Phase 1：代码库分析</h3><p>这一步的目标是找到软件真正的「引擎」，而不是包装它的界面。SOP 给了五条操作：</p>
+<ol>
+<li><strong>Identify the backend engine</strong> —— 大多数 GUI 应用把表现层和逻辑层分开了，找到核心库 / 框架（比如 Shotcut 的 MLT、GIMP 的 ImageMagick）。</li>
+<li><strong>Map GUI actions to API calls</strong> —— 把每个按钮点击、拖拽、菜单项，都对应到一个函数调用上，编成目录。</li>
+<li><strong>Identify the data model</strong> —— 项目状态用什么格式表示？XML、JSON、二进制还是数据库？</li>
+<li><strong>Find existing CLI tools</strong> —— 很多后端自带 CLI（<code>melt</code>、<code>ffmpeg</code>、<code>convert</code>），这些就是现成的积木。</li>
+<li><strong>Catalog the command/undo system</strong> —— 如果软件有 undo/redo，那它多半用了 command pattern，这些 command 就是你的 CLI 操作。</li>
+</ol>
+<p>第 1 步和第 4 步是这个方法论成立的前提：<strong>你不是在给 GUI 写自动化脚本，你是在给软件的后端库写 API</strong>。</p>
+<h3 id="Phase-2：CLI-架构设计"><a href="#Phase-2：CLI-架构设计" class="headerlink" title="Phase 2：CLI 架构设计"></a>Phase 2：CLI 架构设计</h3><p>SOP 建议的交互模型是「两者都要」：</p>
+<ul>
+<li><strong>Stateful REPL</strong> —— 面向交互式 Agent 会话，保持上下文</li>
+<li><strong> Subcommand CLI</strong> —— 面向一次性脚本和流水线</li>
+<li><strong> Both（推荐）</strong> —— 一个 CLI 同时支持两种模式</li>
+</ul>
+<p>命令组按软件的逻辑域划分：项目管理（new/open/save/close）、核心操作、导入导出、配置、会话 / 状态管理（undo/redo/history/status）。</p>
+<p>状态模型要回答三个问题：命令之间什么必须持久化？状态存哪（REPL 内存 vs CLI 文件）？怎么序列化（JSON session 文件）？</p>
+<p>输出格式：<strong>人类可读表格</strong> 和 <strong>机器可读 JSON</strong> 都做，用 <code>--json</code> 开关切换。</p>
+<h3 id="Phase-3：实现"><a href="#Phase-3：实现" class="headerlink" title="Phase 3：实现"></a>Phase 3：实现</h3><p>实现顺序是有讲究的：</p>
+<ol>
+<li><strong>先做数据层</strong> —— 直接操作 XML/JSON 项目文件</li>
+<li><strong>加 probe/info 命令</strong> —— 让 Agent 能先「看」再「改」</li>
+<li><strong>加 mutation 命令</strong> —— 一个逻辑操作一个命令</li>
+<li><strong>加后端集成</strong> —— 一个 <code>utils/&lt;software&gt;_backend.py</code> 模块包装真实软件的 CLI</li>
+<li><strong> 加渲染 / 导出</strong> —— 生成合法中间文件，再调真实软件转换</li>
+<li><strong>加会话管理</strong> —— 状态持久化 + undo/redo</li>
+<li><strong> 加统一皮肤的 REPL</strong></li>
+</ol>
+<p>第 4 步的 SOP 给了 LibreOffice 的示例代码：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># utils/lo_backend.py</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">convert_odf_to</span>(<span class="params">odf_path, output_format, output_path=<span class="literal">None</span>, overwrite=<span class="literal">False</span></span>):</span><br><span class="line">    lo = find_libreoffice()  <span class="comment"># raises RuntimeError with install instructions</span></span><br><span class="line">    subprocess.run([lo, <span class="string">"--headless"</span>, <span class="string">"--convert-to"</span>, output_format, ...])</span><br><span class="line">    <span class="keyword">return</span> {<span class="string">"output"</span>: final_path, <span class="string">"format"</span>: output_format, <span class="string">"method"</span>: <span class="string">"libreoffice-headless"</span>}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意「raises RuntimeError with install instructions」—— 软件没装就报错，不做降级。这个「零妥协依赖」原则后面会展开讲。</p>
+<p>第 7 步的统一 REPL 皮肤 <code>ReplSkin</code> 挺关键，它把所有生成出来的 CLI 的交互体验统一了：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> cli_anything.&lt;software&gt;.utils.repl_skin <span class="keyword">import</span> ReplSkin</span><br><span class="line"></span><br><span class="line">skin = ReplSkin(<span class="string">"&lt;software&gt;"</span>, version=<span class="string">"1.0.0"</span>)</span><br><span class="line">skin.print_banner()          <span class="comment"># 品牌化启动框</span></span><br><span class="line">pt_session = skin.create_prompt_session()  <span class="comment"># prompt_toolkit 历史 + 样式</span></span><br><span class="line">line = skin.get_input(pt_session, project_name=<span class="string">"my_project"</span>, modified=<span class="literal">True</span>)</span><br><span class="line">skin.<span class="built_in">help</span>(commands_dict)     <span class="comment"># 格式化帮助列表</span></span><br><span class="line">skin.success(<span class="string">"Saved"</span>)        <span class="comment"># ✓ 绿色</span></span><br><span class="line">skin.error(<span class="string">"Not found"</span>)      <span class="comment"># ✗ 红色</span></span><br><span class="line">skin.warning(<span class="string">"Unsaved"</span>)      <span class="comment"># ⚠ 黄色</span></span><br><span class="line">skin.info(<span class="string">"Processing..."</span>)   <span class="comment"># ● 蓝色</span></span><br><span class="line">skin.status(<span class="string">"Key"</span>, <span class="string">"value"</span>)  <span class="comment"># 键值状态行</span></span><br><span class="line">skin.table(headers, rows)    <span class="comment"># 格式化表格</span></span><br><span class="line">skin.progress(<span class="number">3</span>, <span class="number">10</span>, <span class="string">"..."</span>)  <span class="comment"># 进度条</span></span><br><span class="line">skin.print_goodbye()         <span class="comment"># 样式化退出消息</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>REPL 必须是默认行为，实现方式是 Click 的 <code>invoke_without_command=True</code>：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@click.group(<span class="params">invoke_without_command=<span class="literal">True</span></span>)</span></span><br><span class="line"><span class="meta">@click.pass_context</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cli</span>(<span class="params">ctx, ...</span>):</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> ctx.invoked_subcommand <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        ctx.invoke(repl, project_path=<span class="literal">None</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这样 <code>cli-anything-gimp</code> 不带参数直接进 REPL。</p>
+<h3 id="Phase-4-6：测试规划、测试实现、测试文档"><a href="#Phase-4-6：测试规划、测试实现、测试文档" class="headerlink" title="Phase 4-6：测试规划、测试实现、测试文档"></a>Phase 4-6：测试规划、测试实现、测试文档</h3><p>这是我觉得这个项目最值得学的地方。SOP 强制要求<strong>先写测试计划，再写测试代码</strong>。</p>
+<p>测试分四层：</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>测什么</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Unit</td>
+<td> 每个核心函数的隔离测试，用合成数据</td>
+<td><code>test_core.py</code> —— 项目创建、图层操作、滤镜参数</td>
+</tr>
+<tr>
+<td> E2E (native)</td>
+<td> 项目文件生成流水线的正确性</td>
+<td>合法 ODF ZIP 结构、正确 MLT XML、SVG 良构性</td>
+</tr>
+<tr>
+<td> E2E (true backend)</td>
+<td> 真实软件调用 + 输出验证</td>
+<td> LibreOffice → PDF 且校验 <code>%PDF-</code> magic bytes；Blender → 渲染出 PNG</td>
+</tr>
+<tr>
+<td>CLI subprocess</td>
+<td> 通过 <code>subprocess.run</code> 调已安装的命令</td>
+<td><code>cli-anything-gimp --json project new</code> → 合法 JSON</td>
+</tr>
+</tbody></table>
+<p>作者给出的测试结果（README 里的汇总表）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">================================ Test Summary ================================</span><br><span class="line">gimp          107 passed  ✅   (64 unit + 43 e2e)</span><br><span class="line">blender       208 passed  ✅   (150 unit + 58 e2e)</span><br><span class="line">inkscape      202 passed  ✅   (148 unit + 54 e2e)</span><br><span class="line">audacity      161 passed  ✅   (107 unit + 54 e2e)</span><br><span class="line">libreoffice   158 passed  ✅   (89 unit + 69 e2e)</span><br><span class="line">obs-studio    153 passed  ✅   (116 unit + 37 e2e)</span><br><span class="line">kdenlive      155 passed  ✅   (111 unit + 44 e2e)</span><br><span class="line">shotcut       154 passed  ✅   (110 unit + 44 e2e)</span><br><span class="line">drawio        138 passed  ✅   (116 unit + 22 e2e)</span><br><span class="line">joplin        134 passed  ✅   (107 unit + 27 e2e)</span><br><span class="line">...</span><br><span class="line">sbox          244 passed  ✅   (157 unit + 17 orchestrator + 50 e2e + 20 exit-code)</span><br><span class="line">──────────────────────────────────────────────────────────────────────────────</span><br><span class="line">TOTAL        2,464 passed  ✅   100% pass rate</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意几个细节：</p>
+<ul>
+<li><code>eth2-quickstart 18 passed ✅ (18 unit + 3 e2e skipped)</code> —— E2E 被 skip 了，但徽章还是绿的。这说明它不隐瞒跳过。</li>
+<li><code>wavetone 30 passed ✅ (24 unit + 6 default e2e, 2 backend-gated e2e skipped; 32 passed opt-in)</code> —— 后端相关的 E2E 需要真实软件才跑。</li>
+<li><code>sketch 19 passed ✅ (19 jest, Node.js)</code> —— 有个 harness 用的是 Node.js 测试。</li>
+</ul>
+<h3 id="Phase-6-5：SKILL-md-生成"><a href="#Phase-6-5：SKILL-md-生成" class="headerlink" title="Phase 6.5：SKILL.md 生成"></a>Phase 6.5：SKILL.md 生成</h3><p>这是 2026-03-16 加进来的功能，也是让整套东西能被 Agent 自主发现的关键。</p>
+<p>每个生成的 CLI 都会附带一个 <code>SKILL.md</code>，遵循 Agent skill 的标准格式：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">"cli-anything-&lt;software&gt;"</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">"Brief description of what the CLI does"</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>正文包含安装前置、命令语法、命令组、用法示例，以及给 Agent 的专门指导（JSON 输出、错误处理）。</p>
+<p>生成方式是 <code>skill_generator.py</code>，直接从 CLI 的 <strong>Click decorators</strong>、setup.py 和 README 里抽取元数据，也可以用 Jinja2 模板 <code>templates/SKILL.md.template</code> 定制。</p>
+<p>产物位置有点讲究：canonical 版本放在仓库根的 <code>skills/cli-anything-&lt;software&gt;/SKILL.md</code>（这样整个 monorepo 可以直接被 <code>npx skills add HKUDS/CLI-Anything --list</code> 发现），同时在 <code>cli_anything/&lt;software&gt;/skills/SKILL.md</code> 留一份兼容副本，这样 <code>pip install</code> 之后安装好的 harness 也能带上 skill 文件。REPL 启动横幅会优先显示仓库根的 canonical 路径，找不到才回退到包内副本。</p>
+<h3 id="Phase-7：PyPI-发布与安装"><a href="#Phase-7：PyPI-发布与安装" class="headerlink" title="Phase 7：PyPI 发布与安装"></a>Phase 7：PyPI 发布与安装</h3><p>关键规则是 <strong>PEP 420 namespace package</strong>：<code>cli_anything/</code> 目录<strong>没有</strong> <code>__init__.py</code>（是命名空间包），每个子包（<code>gimp/</code>、<code>blender/</code> 等）<strong>有</strong> <code>__init__.py</code>。</p>
+<p>这样所有 CLI 都能装进同一个 <code>cli_anything</code> 命名空间，互不冲突，同时可以用一条 <code>pip install -e .</code> 装到 PATH 上。</p>
+<h2 id="四、五个核心设计原则"><a href="#四、五个核心设计原则" class="headerlink" title="四、五个核心设计原则"></a>四、五个核心设计原则</h2><p>README 的「Core Design Principles」写得很清楚，这五条基本决定了整个项目的性格。</p>
+<h3 id="1-真实软件集成"><a href="#1-真实软件集成" class="headerlink" title="1. 真实软件集成"></a>1. 真实软件集成</h3><blockquote>
+<p>We build structured interfaces TO software, not replacements.</p>
+</blockquote>
+<p>我们构建的是「指向软件的」结构化接口，不是替代品。</p>
+<p>SOP 把这条列为 <strong>#1 rule</strong>，并且措辞强硬：</p>
+<blockquote>
+<p>The real software is a hard dependency. The CLI MUST invoke the actual application for rendering and export — not reimplement the software’s functionality in Python. Do NOT gracefully degrade to a fallback library.</p>
+</blockquote>
+<p>不许用 Pillow 代替 GIMP，不许自己写渲染器代替 Blender。软件没装就报错，并且错误信息里要带安装指引。</p>
+<p>为什么这么执着？因为「复刻」出来的实现和原软件的行为差距很大 —— 滤镜参数怎么算、色彩空间怎么处理、编解码器支持哪些，这些细节几十页文档都写不全。而调真实软件，就永远一致。</p>
+<h3 id="2-灵活的交互模型"><a href="#2-灵活的交互模型" class="headerlink" title="2. 灵活的交互模型"></a>2. 灵活的交互模型</h3><p>每个 CLI 同时有两种模式：有状态的 REPL（给交互式 Agent 会话用）+ 子命令接口（给脚本和流水线用）。不带参数运行 → 进 REPL。</p>
+<h3 id="3-一致的用户体验"><a href="#3-一致的用户体验" class="headerlink" title="3. 一致的用户体验"></a>3. 一致的用户体验</h3><p>所有生成的 CLI 共用同一个 <code>repl_skin.py</code>：品牌化横幅、样式化提示符、命令历史、进度条、标准化格式。</p>
+<p>这在多工具协同里很重要 ——Agent 在 <code>cli-anything-blender</code> 和 <code>cli-anything-gimp</code> 之间切换时，看到的交互契约是一样的。</p>
+<h3 id="4-Agent-原生设计"><a href="#4-Agent-原生设计" class="headerlink" title="4. Agent 原生设计"></a>4. Agent 原生设计</h3><p>每条命令都内置 <code>--json</code>，同时保留人类可读的表格。Agent 通过标准的 <code>--help</code> 和 <code>which</code> 命令发现能力。</p>
+<h3 id="5-零妥协依赖"><a href="#5-零妥协依赖" class="headerlink" title="5. 零妥协依赖"></a>5. 零妥协依赖</h3><p>真实软件是硬依赖，没有 fallback，没有优雅降级。SOP 的原话很硬气：</p>
+<blockquote>
+<p>Tests fail (not skip) when backends are missing, ensuring authentic functionality.</p>
+</blockquote>
+<p>后端缺失时测试<strong>失败</strong>（不是跳过），以确保功能是真的。</p>
+<p>这一条和第 1 条有点矛盾 —— 上面表格里确实有 skip 的测试 —— 但整体原则是：能测真的一定测真，实在没法测的（需要付费账号、需要特定 GPU 的）才 skip，并且显式标注。</p>
+<h2 id="五、快速上手"><a href="#五、快速上手" class="headerlink" title="五、快速上手"></a>五、快速上手</h2><h3 id="路线-A：直接用现成的-CLI（最省事）"><a href="#路线-A：直接用现成的-CLI（最省事）" class="headerlink" title="路线 A：直接用现成的 CLI（最省事）"></a>路线 A：直接用现成的 CLI（最省事）</h3><p>先装 CLI-Hub 包管理器：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install cli-anything-hub</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 浏览注册表</span></span><br><span class="line">cli-hub list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 按关键词搜索</span></span><br><span class="line">cli-hub search image</span><br><span class="line"></span><br><span class="line"><span class="comment"># 装一个</span></span><br><span class="line">cli-hub install gimp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 看信息</span></span><br><span class="line">cli-hub info gimp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 直接跑</span></span><br><span class="line">cli-hub launch gimp</span><br></pre></td></tr></tbody></table></figure>
+
+<p>完整命令表：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cli-hub list</code></td>
+<td>浏览注册表</td>
+</tr>
+<tr>
+<td><code>cli-hub search &lt;query&gt;</code></td>
+<td>按关键词搜索</td>
+</tr>
+<tr>
+<td><code>cli-hub info &lt;name&gt;</code></td>
+<td>查看某个 CLI 的详情</td>
+</tr>
+<tr>
+<td><code>cli-hub install &lt;name&gt;</code></td>
+<td>从 CLI-Hub 安装</td>
+</tr>
+<tr>
+<td><code>cli-hub update &lt;name&gt;</code></td>
+<td>更新已安装的</td>
+</tr>
+<tr>
+<td><code>cli-hub uninstall &lt;name&gt;</code></td>
+<td>卸载</td>
+</tr>
+<tr>
+<td><code>cli-hub launch &lt;name&gt; [args...]</code></td>
+<td>运行已安装的 CLI</td>
+</tr>
+</tbody></table>
+<p>⚠️ 一个重要提醒（README 原文）：</p>
+<blockquote>
+<p>Some CLIs wrap real desktop or backend software. If a selected CLI needs GIMP, Blender, LibreOffice, or another upstream tool, install that upstream application too.</p>
+</blockquote>
+<p>有些 CLI 是包在真实桌面软件外面的，GIMP、Blender、LibreOffice 这些上游你得自己先装好。</p>
+<h3 id="路线-B：让-Agent-自己去装"><a href="#路线-B：让-Agent-自己去装" class="headerlink" title="路线 B：让 Agent 自己去装"></a>路线 B：让 Agent 自己去装</h3><p>给支持 SKILL 的 Agent 装上 CLI-Hub 的 meta-skill：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx skills add HKUDS/CLI-Anything --skill cli-hub-meta-skill -g -y</span><br></pre></td></tr></tbody></table></figure>
+
+<p>也可以从 ClawHub、SkillHub、SkillHub.cn 装。</p>
+<p>然后直接对 Agent 说：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Find appropriate CLI software in CLI-Hub and complete the task: ...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这个 meta-skill 的作用是把 Agent 指向 CLI-Hub 的实时目录，让它自己选工具、自己装、自己读对应 CLI 的 <code>SKILL.md</code> 来了解用法。</p>
+<h3 id="路线-C：给一个新软件生成-CLI"><a href="#路线-C：给一个新软件生成-CLI" class="headerlink" title="路线 C：给一个新软件生成 CLI"></a>路线 C：给一个新软件生成 CLI</h3><p>以 Claude Code 为例，三步：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第 1 步：加 marketplace</span></span><br><span class="line">/plugin marketplace add HKUDS/CLI-Anything</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第 2 步：装插件</span></span><br><span class="line">/plugin install cli-anything</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第 3 步：一条命令生成 CLI</span></span><br><span class="line">/cli-anything ./gimp</span><br></pre></td></tr></tbody></table></figure>
+
+<p>也可以直接给仓库地址：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/cli-anything https://github.com/blender/blender</span><br></pre></td></tr></tbody></table></figure>
+
+<p>跑完这 7 个阶段：分析源码 → 设计命令组 → 实现 Click CLI（含 REPL、JSON 输出、undo/redo）→ 生成 TEST.md 测试计划 → 写测试 → 回填测试结果 → 生成 setup.py 并装到 PATH。</p>
+<h3 id="路线-D：迭代增强"><a href="#路线-D：迭代增强" class="headerlink" title="路线 D：迭代增强"></a>路线 D：迭代增强</h3><p>一次生成往往覆盖不全，可以 refine：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 全量缺口分析</span></span><br><span class="line">/cli-anything:refine ./gimp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 针对特定功能区</span></span><br><span class="line">/cli-anything:refine ./gimp <span class="string">"我想要更多关于图片批量处理和滤镜的 CLI"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>refine 是增量且非破坏性的，可以反复跑。</p>
+<h3 id="其他平台"><a href="#其他平台" class="headerlink" title="其他平台"></a>其他平台</h3><p>不只有 Claude Code。仓库里自带了 Cursor、OpenCode、OpenClaw、Codex、Pi、Qodercli、Hermes、Reasonix、Goose 等一堆适配。举几个：</p>
+<p><strong>Cursor</strong>（有 Generator 和 Consumer 两条线）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/HKUDS/CLI-Anything.git</span><br><span class="line">bash CLI-Anything/cursor-plugin/scripts/install.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Windows PowerShell：</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\CLI<span class="literal">-Anything</span>\cursor<span class="literal">-plugin</span>\scripts\install.ps1</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>OpenCode</strong>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/HKUDS/CLI-Anything.git</span><br><span class="line"><span class="built_in">cp</span> CLI-Anything/opencode-commands/*.md ~/.config/opencode/commands/</span><br><span class="line"><span class="built_in">cp</span> CLI-Anything/cli-anything-plugin/HARNESS.md ~/.config/opencode/commands/</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意 README 特别提醒：<code>HARNESS.md</code> 是所有命令共同引用的方法论规范，<strong>必须和命令文件放在同一目录</strong>。</p>
+<p><strong>Pi Coding Agent</strong>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/HKUDS/CLI-Anything.git</span><br><span class="line"><span class="built_in">cd</span> CLI-Anything</span><br><span class="line">bash .pi-extension/cli-anything/install.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="用生成出来的-CLI"><a href="#用生成出来的-CLI" class="headerlink" title="用生成出来的 CLI"></a>用生成出来的 CLI</h3><p>不管用哪个平台生成的，用法都一样：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 装到 PATH</span></span><br><span class="line"><span class="built_in">cd</span> gimp/agent-harness &amp;&amp; pip install -e .</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从任何地方用</span></span><br><span class="line">cli-anything-gimp --<span class="built_in">help</span></span><br><span class="line">cli-anything-gimp project new --width 1920 --height 1080 -o poster.json</span><br><span class="line">cli-anything-gimp --json layer add -n <span class="string">"Background"</span> --<span class="built_in">type</span> solid --color <span class="string">"#1a1a2e"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 进交互式 REPL</span></span><br><span class="line">cli-anything-gimp</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="跑测试"><a href="#跑测试" class="headerlink" title="跑测试"></a>跑测试</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 跑某个 CLI 的测试</span></span><br><span class="line"><span class="built_in">cd</span> &lt;software&gt;/agent-harness</span><br><span class="line">python3 -m pytest cli_anything/&lt;software&gt;/tests/ -v</span><br><span class="line"></span><br><span class="line"><span class="comment"># 强制以已安装模式跑（验证时推荐）</span></span><br><span class="line">CLI_ANYTHING_FORCE_INSTALLED=1 python3 -m pytest cli_anything/&lt;software&gt;/tests/ -v -s</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="六、生成的-CLI-实际长什么样"><a href="#六、生成的-CLI-实际长什么样" class="headerlink" title="六、生成的 CLI 实际长什么样"></a>六、生成的 CLI 实际长什么样</h2><p>README 给了一个 LibreOffice 的完整例子，这个我觉得比任何架构图都有说服力：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 新建一个 Writer 文档</span></span><br><span class="line">$ cli-anything-libreoffice document new -o report.json --<span class="built_in">type</span> writer</span><br><span class="line">✓ Created Writer document: report.json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加内容</span></span><br><span class="line">$ cli-anything-libreoffice --project report.json writer add-heading -t <span class="string">"Q1 Report"</span> --level 1</span><br><span class="line">✓ Added heading: <span class="string">"Q1 Report"</span></span><br><span class="line"></span><br><span class="line">$ cli-anything-libreoffice --project report.json writer add-table --rows 4 --cols 3</span><br><span class="line">✓ Added 4×3 table</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过真实的 LibreOffice headless 导出 PDF</span></span><br><span class="line">$ cli-anything-libreoffice --project report.json <span class="built_in">export</span> render output.pdf -p pdf --overwrite</span><br><span class="line">✓ Exported: output.pdf (42,831 bytes) via libreoffice-headless</span><br><span class="line"></span><br><span class="line"><span class="comment"># JSON 模式，给 Agent 用</span></span><br><span class="line">$ cli-anything-libreoffice --json document info --project report.json</span><br><span class="line">{</span><br><span class="line">  <span class="string">"name"</span>: <span class="string">"Q1 Report"</span>,</span><br><span class="line">  <span class="string">"type"</span>: <span class="string">"writer"</span>,</span><br><span class="line">  <span class="string">"pages"</span>: 1,</span><br><span class="line">  <span class="string">"elements"</span>: 2,</span><br><span class="line">  <span class="string">"modified"</span>: <span class="literal">true</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意「✓ Exported: output.pdf (42,831 bytes) via libreoffice-headless」这行 —— 它明确告诉你产物是哪个字节数、走的哪条后端路径。这就是「真实软件集成」原则在输出上的体现。</p>
+<p>REPL 模式长这样：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ cli-anything-blender</span><br><span class="line">╔══════════════════════════════════════════╗</span><br><span class="line">║       cli-anything-blender v1.0.0       ║</span><br><span class="line">║     Blender CLI for AI Agents           ║</span><br><span class="line">╚══════════════════════════════════════════╝</span><br><span class="line"></span><br><span class="line">blender&gt; scene new --name ProductShot</span><br><span class="line">✓ Created scene: ProductShot</span><br><span class="line"></span><br><span class="line">blender[ProductShot]&gt; object add-mesh --type cube --location 0 0 1</span><br><span class="line">✓ Added mesh: Cube at (0, 0, 1)</span><br><span class="line"></span><br><span class="line">blender[ProductShot]*&gt; render execute --output render.png --engine CYCLES</span><br><span class="line">✓ Rendered: render.png (1920×1080, 2.3 MB) via blender --background</span><br><span class="line"></span><br><span class="line">blender[ProductShot]&gt; exit</span><br><span class="line">Goodbye! 👋</span><br></pre></td></tr></tbody></table></figure>
+
+<p>几个细节值得注意：</p>
+<ul>
+<li>提示符 <code>blender[ProductShot]&gt;</code> 里有当前场景名，括号后有个 <code>*</code> 表示有未保存修改</li>
+<li>渲染输出带了分辨率、文件大小和后端路径</li>
+<li>整个过程没有任何 GUI 参与</li>
+</ul>
+<h2 id="七、HARNESS-md-里那些「踩过坑才知道」的教训"><a href="#七、HARNESS-md-里那些「踩过坑才知道」的教训" class="headerlink" title="七、HARNESS.md 里那些「踩过坑才知道」的教训"></a>七、HARNESS.md 里那些「踩过坑才知道」的教训</h2><p>HARNESS.md 的价值有一大半在「Critical Lessons」这张表上。这些不是从原理推出来的，是被真实 bug 教育出来的。</p>
+<table>
+<thead>
+<tr>
+<th>教训</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong> Use the real software</strong></td>
+<td>CLI 必须调用真实应用渲染。不许用 Pillow 替代 GIMP，不许自写渲染器替代 Blender。生成合法项目文件 → 调用真实后端。</td>
+</tr>
+<tr>
+<td><strong>The Rendering Gap</strong>（渲染鸿沟）</td>
+<td>GUI 应用是在渲染时才应用特效的。如果你只改项目文件却用了个朴素的导出工具，特效会被<strong>静默丢弃</strong>。解法：原生渲染器 → 滤镜翻译 → 渲染脚本。</td>
+</tr>
+<tr>
+<td><strong>Filter Translation</strong>（滤镜翻译）</td>
+<td>在格式之间映射特效时（MLT → ffmpeg），要注意重复滤镜合并、交错流顺序、参数空间差异，以及根本无法映射的特效。</td>
+</tr>
+<tr>
+<td><strong>Timecode Precision</strong>（时间码精度）</td>
+<td>非整数帧率（29.97fps）会导致累积舍入误差。用 <code>round()</code> 而不是 <code>int()</code>，显示时用整数运算，测试里允许 ±1 帧容差。</td>
+</tr>
+<tr>
+<td><strong>Output Verification</strong>（输出验证）</td>
+<td>永远不要因为退出码是 0 就相信导出成功了。要验证：magic bytes、ZIP/OOXML 结构、像素分析、音频 RMS 电平、时长检查。</td>
+</tr>
+</tbody></table>
+<p>「The Rendering Gap」这一条，正好是我开头说的那个 Kdenlive 困境的官方描述。当年我放弃的时候，就是被这个坑住的 —— 以为改完 XML 就完事了，实际上转场和特效一个都没生效，而且<strong>没有任何报错</strong>。</p>
+<p>HARNESS.md 里给的验证方法论具体到了这种程度：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 视频：探测特定帧</span></span><br><span class="line"><span class="comment"># 第 0 帧应该是淡入（接近全黑）</span></span><br><span class="line"><span class="comment"># 中间帧应该有色彩特效（和源片比较亮度/饱和度）</span></span><br><span class="line"><span class="comment"># 最后一帧应该是淡出（接近全黑）</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 比较不同分辨率下的像素值时，</span></span><br><span class="line"><span class="comment"># 要排除 letterbox/pillarbox（黑边填充条）。</span></span><br><span class="line"><span class="comment"># 竖屏视频放在横屏帧里大约有 40% 是黑像素。</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 音频：检查首尾的 RMS 电平验证淡入淡出</span></span><br><span class="line"><span class="comment"># 比较频谱特征和源片</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>「竖屏视频在横屏帧里约有 40% 黑像素」这种细节，是真的被测试逼出来的。</p>
+<h2 id="八、Preview-与-Live-Preview：给-Agent-一个「看一眼」的机制"><a href="#八、Preview-与-Live-Preview：给-Agent-一个「看一眼」的机制" class="headerlink" title="八、Preview 与 Live Preview：给 Agent 一个「看一眼」的机制"></a>八、Preview 与 Live Preview：给 Agent 一个「看一眼」的机制</h2><p>这是 2026 年比较新的一个方向，HARNESS.md 里有一整节规范。</p>
+<p>Preview 支持在 harness 层面是可选的，但一旦暴露了有意义的中间视觉 / 检查状态，就必须遵守统一契约，这样人和 Agent 才能在不同软件间用同样的方式推理。</p>
+<p>规范里几条要点：</p>
+<ul>
+<li><strong>不要从 GUI 窗口截屏做预览</strong> —— 预览产物必须由真实后端产出，或由原生检查 / 导出路径产出</li>
+<li><strong> Producer 和 Viewer 角色分离</strong> —— harness 通过 <code>cli-anything-&lt;software&gt; preview ...</code> 发布预览状态；<code>cli-hub previews ...</code> 是只读消费者（inspect/html/watch/open），<strong>不应该被当成渲染路径</strong></li>
+<li><strong>共享预览 bundle 协议</strong> —— 支持预览的 harness 应该产出 <code>preview-bundle/v1</code> 格式的 bundle，bundle 是契约，渲染器仍然是真实软件</li>
+<li><strong> Live preview 要区分 head 和 history</strong> —— <code>session.json</code> 是可变的当前 head，每次捕获产生一个不可变的 bundle 目录，<code>trajectory.json</code> 是只追加的命令到预览历史</li>
+<li><strong>别把 <code>_bundle_dir</code> 当永久构建标识</strong> —— 它只是一次快照路径，稳定的 live replay 应该锚定在 <code>session_dir</code> + <code>trajectory.json</code></li>
+<li><strong><code>preview live status --json</code> 要让 Agent 便宜</strong> —— 应该包含紧凑的 <code>trajectory_summary</code>，这样 Agent 不用去读 <code>trajectory.json</code> 就知道最新的命令到 bundle 的映射</li>
+<li><strong>必须有 preview recipes /capture/latest</strong>，Diff 类工具还要有 preview diff</li>
+</ul>
+<p>README 的 Real-World Demos 章节提到，FreeCAD 和 Blender 的 demo 用到了「Preview、Live Preview 和 Trajectory 循环」来产出真实产物 ——CAD 构建、3D 场景、图表、游戏画面、字幕等等。</p>
+<p>对 Agent 来说，这个机制的价值在于：<strong>它能低成本地看到自己刚才那一系列操作产生了什么</strong>，而不是盲写一串命令然后祈祷结果正确。对做长链路生成任务（比如「搭一个 CAD 模型然后渲染出来」）的 Agent 来说，这是闭环里最关键的一环。</p>
+<h2 id="九、跟同类项目比一比"><a href="#九、跟同类项目比一比" class="headerlink" title="九、跟同类项目比一比"></a>九、跟同类项目比一比</h2><p>CLI-Anything 不是这个赛道上的第一个项目，但它选了一个很特别的位置。</p>
+<h3 id="vs-MCP（Model-Context-Protocol）"><a href="#vs-MCP（Model-Context-Protocol）" class="headerlink" title="vs MCP（Model Context Protocol）"></a>vs MCP（Model Context Protocol）</h3><p>MCP 是当下最热的 Agent 工具接入协议，生态更大，官方背书，Claude Desktop / Cursor 都原生支持。</p>
+<p>对比：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th> CLI-Anything</th>
+<th>MCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 接入方式</td>
+<td>生成真实命令行</td>
+<td>定义工具 schema，走 MCP server</td>
+</tr>
+<tr>
+<td> 需要对方配合吗</td>
+<td>不需要，只要软件有源码 / 后端 CLI</td>
+<td> 需要服务端实现 MCP 协议</td>
+</tr>
+<tr>
+<td>交互模式</td>
+<td> REPL + 子命令，有状态</td>
+<td>通常是无状态请求 / 响应</td>
+</tr>
+<tr>
+<td>生态规模</td>
+<td>小（40+ 内置 + 社区）</td>
+<td>极大，官方 server 数百个</td>
+</tr>
+<tr>
+<td>长任务</td>
+<td>天然支持（进程常驻）</td>
+<td>需要额外设计</td>
+</tr>
+</tbody></table>
+<p>CLI-Anything 的 README 提到过 MCP 桥接 —— 比如 ArcGIS Pro 的 demo 描述是「Live Agent Cartography via the MCP Bridge」，Unreal Editor 的 UEAtelier 也是「MCP self-extension workbench with a Python CLI proxy」。所以它更像是在 MCP 生态的缝隙里补位：<strong>MCP 只能覆盖那些愿意做 MCP server 的软件，剩下的靠 CLI 兜底</strong>。</p>
+<p>而且有个现实优势：CLI 是 UNIX 世界的原生接口。已经有几千个专业软件的 CLI 了，CLI-Anything 不需要说服厂商做任何事 —— 它直接去调。</p>
+<h3 id="vs-UI-自动化（Playwright、Selenium、Computer-Use）"><a href="#vs-UI-自动化（Playwright、Selenium、Computer-Use）" class="headerlink" title="vs UI 自动化（Playwright、Selenium、Computer Use）"></a>vs UI 自动化（Playwright、Selenium、Computer Use）</h3><ul>
+<li><strong>Computer Use</strong>（让模型看屏幕点鼠标）是最通用的，但它慢、贵、不确定。同一个任务跑两次结果可能不同。</li>
+<li><strong>Playwright / Selenium</strong> 稳定，但只适用于网页，且仍然要处理选择器脆弱问题。</li>
+</ul>
+<p>CLI-Anything 的口号是：</p>
+<blockquote>
+<p>No screenshots, no clicking, no RPA fragility. Pure command-line reliability with structured interfaces.</p>
+</blockquote>
+<p>它自己的 README 说 CLI-Anything 可以「flat-out replace GUI-based agent approaches」。</p>
+<p>但它比 UI 自动化多一个维度：<strong>UI 自动化只能操作 GUI 能暴露的东西，CLI-Anything 操作的是后端引擎的全部能力</strong>。一个 GIMP 的 CLI 理论上能做的操作，比它的 GUI 菜单还多（GUI 没暴露的参数，CLI 层可以直接调）。</p>
+<h3 id="vs-自己手写-API-封装"><a href="#vs-自己手写-API-封装" class="headerlink" title="vs 自己手写 API 封装"></a>vs 自己手写 API 封装</h3><p>很多团队确实会针对自己的业务软件写 API wrapper。区别在于：</p>
+<ul>
+<li>手写是 N 个软件 N 遍，CLI-Anything 是<strong>一套方法论 N 个软件</strong></li>
+<li>手写的质量取决于写的人，CLI-Anything 有 HARNESS.md 这种被 2464 个测试检验过的 SOP</li>
+</ul>
+<h3 id="vs-Anthropic-的-Claude-Computer-Use-各类-GUI-Agent"><a href="#vs-Anthropic-的-Claude-Computer-Use-各类-GUI-Agent" class="headerlink" title="vs Anthropic 的 Claude Computer Use / 各类 GUI Agent"></a>vs Anthropic 的 Claude Computer Use / 各类 GUI Agent</h3><p>这个更接近。它们的思路是「通用电脑操作」，CLI-Anything 的思路是「把专业软件编译成专用命令」。</p>
+<p>我认为区别在于<strong>任务类型</strong>：通用电脑操作适合「打开浏览器搜个东西」这种一次性、模糊的任务；CLI-Anything 适合「批量转换 200 个文件并且保证每个都正确」这种需要确定性和可验证性的任务。</p>
+<h2 id="十、覆盖范围：到底能用在哪些软件上"><a href="#十、覆盖范围：到底能用在哪些软件上" class="headerlink" title="十、覆盖范围：到底能用在哪些软件上"></a>十、覆盖范围：到底能用在哪些软件上</h2><p>README 有一张很长的表，我挑几个有代表性的：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>代表软件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> GitHub 仓库</td>
+<td> VSCodium、WordPress、Calibre、Zotero、Joplin、Logseq、Penpot、Super Productivity</td>
+</tr>
+<tr>
+<td>AI/ML 平台</td>
+<td> Stable Diffusion WebUI、ComfyUI、Ollama、InvokeAI、Text-generation-webui、Open WebUI、Kohya_ss、AnythingLLM、SillyTavern</td>
+</tr>
+<tr>
+<td> 数据与分析</td>
+<td> JupyterLab、Apache Superset、Metabase、Redash、DBeaver、KNIME、Orange、OpenSearch Dashboards、Lightdash</td>
+</tr>
+<tr>
+<td> 开发工具</td>
+<td> Jenkins、Gitea、Portainer、pgAdmin、SonarQube、ArgoCD、OpenLens、Insomnia、Beekeeper Studio、iTerm2</td>
+</tr>
+<tr>
+<td> 创意与媒体</td>
+<td> Blender、GIMP、OBS Studio、Audacity、WaveTone、Krita、Kdenlive、Shotcut、Inkscape、Darktable、LMMS、Ardour</td>
+</tr>
+<tr>
+<td> 游戏开发</td>
+<td> Godot Engine、s&amp;box</td>
+</tr>
+<tr>
+<td> 科学计算</td>
+<td> ImageJ、FreeCAD、QGIS、ParaView、Gephi、LibreCAD、Stellarium、KiCad、JASP、Jamovi</td>
+</tr>
+<tr>
+<td> 企业与办公</td>
+<td> NextCloud、GitLab、Grafana、Mattermost、LibreOffice、AppFlowy、NocoDB、Odoo、Plane、ERPNext</td>
+</tr>
+<tr>
+<td> 协作与通信</td>
+<td> Zoom、Jitsi Meet、BigBlueButton、Mattermost</td>
+</tr>
+<tr>
+<td> 图表与可视化</td>
+<td> Draw.io、Mermaid、PlantUML、Excalidraw、yEd</td>
+</tr>
+<tr>
+<td> 测试与 Mock</td>
+<td>WireMock</td>
+</tr>
+<tr>
+<td> 图形与 GPU 调试</td>
+<td> RenderDoc、Nsight Graphics、Unreal Insights</td>
+</tr>
+<tr>
+<td> 硬件与制造</td>
+<td> MeerK40t（激光雕刻）、Ink/Stitch（刺绣）</td>
+</tr>
+<tr>
+<td>视频与字幕</td>
+<td> VideoCaptioner</td>
+</tr>
+<tr>
+<td>AI 搜索</td>
+<td> Exa</td>
+</tr>
+<tr>
+<td>AI 内容生成</td>
+<td> AnyGen、Gamma、Beautiful.ai、Tome</td>
+</tr>
+</tbody></table>
+<p>最后两行我特别想提一下。</p>
+<p><strong>硬件控制</strong>那一行，SOP 里写了「safety-gated detect, preflight, jog, and framing commands with machine profiles」—— 安全门控的探测、预检、点动、构图命令，加上机器配置档案。激光切割机这种设备，直接让 Agent 点鼠标是很危险的；有明确的安全前置检查流程，是这类工具能不能被 Agent 使用的底线。</p>
+<p><strong>Exa</strong> 那一行说明它不只处理「有源码的软件」，也能包装云端 API。README 里说得很清楚：</p>
+<blockquote>
+<p>Tired of juggling fragmented web service APIs? Feed the docs or SDK manuscripts to /cli-anything and your agents get a powerful, stateful CLI that wraps those individual endpoints into coherent command groups.</p>
+</blockquote>
+<p>把散乱的 API 包装成一个有状态的 CLI。这个思路是把「几十次零散 API 调用」变成「一个工具」，既省 token 又有语义。</p>
+<h2 id="十一、真实局限：说几个我不吹的地方"><a href="#十一、真实局限：说几个我不吹的地方" class="headerlink" title="十一、真实局限：说几个我不吹的地方"></a>十一、真实局限：说几个我不吹的地方</h2><p>README 自己列了三条 Limitations，我原样翻译，再补几条我的观察。</p>
+<h3 id="README-官方承认的三条"><a href="#README-官方承认的三条" class="headerlink" title="README 官方承认的三条"></a>README 官方承认的三条</h3><p><strong>1. 需要强模型</strong></p>
+<blockquote>
+<p>CLI-Anything relies on frontier-class models (e.g., Claude Opus 4.6, Claude Sonnet 4.6, GPT-5.4) for reliable harness generation. Weaker or smaller models may produce incomplete or incorrect CLIs that require significant manual correction.</p>
+</blockquote>
+<p>它点名要 Opus 4.6 / Sonnet 4.6 / GPT-5.4 这个级别的模型。弱模型生成的 CLI 可能不完整或不对，需要大量手工修正。</p>
+<p>这条很关键 —— <strong>这意味着用便宜的小模型跑一遍是没有意义的</strong>。你省下的 API 费用会被后面的人工修正成本吃掉。</p>
+<p><strong>2. 依赖源码</strong></p>
+<blockquote>
+<p>The 7-phase pipeline analyzes and generates from source code. When the target software only provides compiled binaries that require decompilation, harness quality and coverage will degrade substantially.</p>
+</blockquote>
+<p>只有二进制、需要反编译的软件，质量会大幅下降。</p>
+<p><strong>3. 通常需要多轮 refine</strong></p>
+<blockquote>
+<p>A single /cli-anything run may not fully cover all capabilities. Running /refine one or more times is often needed.</p>
+</blockquote>
+<p>一次生成通常覆盖不全，得反复 refine。</p>
+<h3 id="我补充的几条"><a href="#我补充的几条" class="headerlink" title="我补充的几条"></a>我补充的几条</h3><p><strong>4. 上游软件的版本漂移</strong></p>
+<p>这个 README 没写，但实际用起来会遇到。生成的 CLI 是基于<strong>某一版</strong>源码的后端行为写的。上游软件一升级，参数名改了、默认行为变了、某个 filter 改名了，你的 CLI 就开始行为不一致。</p>
+<p>SOP 里「Filter Translation」和「Timecode Precision」那两条教训，本质上都是因为上游行为比文档更复杂。</p>
+<p><strong>5. 上游软件的安装成本经常被低估</strong></p>
+<p>CLI-Anything 生成完就完了，但你要用它，得把 GIMP / Blender / LibreOffice / QGIS 都装上，装对版本，装上它们各自的插件和依赖。Kdenlive 还要 FFmpeg，Godot 要 headless 环境。</p>
+<p>这跟「一键生成」的宣传给人的心理预期有落差。README 里的警告是必要的，但<strong>警告得不够显眼</strong>。</p>
+<p><strong>6. 291 个开放 Issue</strong></p>
+<p>63,603 star 的项目有 291 个开放 issue、5,776 fork、100+ 贡献者。这是一个活跃但也确实嘈杂的社区。Issue 数量本身不说明质量，但说明这个项目还在快速演化，接口可能会变。</p>
+<p><strong>7. 星标增速异常</strong></p>
+<p>创建于 2026-03-08，到 2026-11-24 大约 8 个半月，63,603 star，日均约 260 star。这个增速在 GitHub 上属于极快的级别（README 里挂了 Trendshift 和 Star History 的徽章）。</p>
+<p>我不做阴谋论，但客观说：这个增速明显高于它技术含量所对应的自然曲线。<strong>star 数在这里是声望指标，不是质量指标</strong>。如果你要评估「这项目能不能用」，该看的是 2464 个测试、HARNESS.md 的详细程度、以及 40 多个 harness 的实际可用性，而不是 6.3 万这个数字。</p>
+<p><strong>8. 测试数量 ≠ 测试深度</strong></p>
+<p>2464 个测试听起来很唬人，但要拆开看：<code>blender 208 passed (150 unit + 58 e2e)</code>，unit 占大头。unit test 用的是合成数据。真正证明「能用」的 E2E 部分，每个 harness 大概只有几十个。</p>
+<p>而且这些测试是<strong>它自己的 harness 自己的测试</strong>，测的是「这个 harness 符不符合 HARNESS.md 的规格」，不是「这个 harness 能完成真实复杂任务」。README 的 Roadmap 里有一条还没打勾：</p>
+<blockquote>
+<ul>
+<li><input disabled="" type="checkbox"> Benchmark suite for agent task completion rates</li>
+</ul>
+</blockquote>
+<p>也就是说，「Agent 用这个 CLI 完成任务的成功率」这个真正该关心的指标，<strong>目前还没有基准测试</strong>。</p>
+<p><strong>9. 部分 harness 还标着 experimental</strong></p>
+<p>比如 NotebookLM CLI 是「experimental」，OpenCode 平台是「Experimental」，Goose 和 Qodercli 标着「Community」。这些说明集成的成熟度参差不齐。</p>
+<h2 id="十二、适合谁，不适合谁"><a href="#十二、适合谁，不适合谁" class="headerlink" title="十二、适合谁，不适合谁"></a>十二、适合谁，不适合谁</h2><h3 id="适合"><a href="#适合" class="headerlink" title="适合"></a>适合</h3><ul>
+<li><strong>做 Agent 产品的团队</strong> —— 你需要一个能把 Agent 接到真实专业软件上的可靠方案，不想自己写集成</li>
+<li><strong>有大量重复性图形 / 文档工作的人</strong> —— 批量处理素材、生成报告、画图表，这些一旦能 CLI 化就是数量级的效率提升</li>
+<li><strong>内部工具多、没有 API 的组织</strong> —— 老系统、闭源系统、专业桌面软件，只要能找到后端引擎就能包</li>
+<li><strong>做 GUI Agent 的研究者</strong> —— 它提供了一条跟 Computer Use 完全不同的技术路线，HARNESS.md 是可以直接拿去当论文素材的方法论</li>
+<li><strong>想学「怎么给 LLM 设计工具接口」的人</strong> —— HARNESS.md 的「Output Verification」「Fail loudly and clearly」「Provide introspection」这几条，是通用工具设计原则</li>
+</ul>
+<h3 id="不适合"><a href="#不适合" class="headerlink" title="不适合"></a>不适合</h3><ul>
+<li><strong>只有闭源二进制、拿不到源码的软件</strong> —— 官方承认质量会大幅下降</li>
+<li><strong>用不起前沿模型的团队</strong> —— 小模型生成出来的 CLI 得不偿失</li>
+<li><strong>一次性任务</strong> —— 装 GIMP + 让 Agent 迭代三轮的成本，比你手动做一次还高</li>
+<li><strong>要求 100% 稳定的生产场景</strong> —— 上游漂移、多轮 refine、Issue 数量都说明它还在快速变化</li>
+<li><strong>只是想「试试 AI 能不能用 Blender」</strong> —— 为什么不直接用 Blender 自带的 Python API？</li>
+</ul>
+<h2 id="十三、我的判断"><a href="#十三、我的判断" class="headerlink" title="十三、我的判断"></a>十三、我的判断</h2><p>说点我自己的看法。</p>
+<p>CLI-Anything 最有价值的部分不是那 40 多个 harness，而是 <strong>HARNESS.md</strong>。</p>
+<p>40 个 harness 明天可能就过时了 —— 上游软件一升级就得跟。但「怎么给一个 GUI 软件造 Agent 接口」这件事的方法论，是可以长期复用的：</p>
+<ol>
+<li><strong>找后端引擎，不要包装界面</strong></li>
+<li><strong>先做 probe/info 命令，让 Agent 先看再改</strong></li>
+<li><strong>真实软件是硬依赖，不许降级</strong></li>
+<li><strong>每个命令都要 <code>--json</code></strong></li>
+<li><strong>输出必须验证，不能信退出码</strong></li>
+<li><strong> REPL 是默认模式，因为 Agent 需要跨命令保持上下文</strong></li>
+</ol>
+<p>这六条，无论用什么协议（MCP、HTTP、gRPC）、在什么框架上，都是对的。</p>
+<p>另外我觉得「SKILL.md 自动生成」这步是这个项目最聪明的地方。它把「工具的说明书」变成了<strong>工具构建过程的一部分</strong>，而不是事后补的文档。这意味着：</p>
+<ul>
+<li>文档不会过期（因为是从 Click decorators 里抽的）</li>
+<li>Agent 拿到 CLI 的同时就拿到了说明书</li>
+<li><code>--help</code>（人类）和 <code>SKILL.md</code>（Agent）两条发现路径共存</li>
+</ul>
+<p>63,603 star 里有多少是给这个设计买单的，我不好说。但 100+ 贡献者、40 多个真实可用的 harness、2464 个测试、747 行的方法论文档 —— <strong>这些是真金白银的工程量</strong>，不是包装出来的。</p>
+<p>它现在最缺的东西，README 的 Roadmap 里写得很清楚：<strong>任务完成率基准测试</strong>。有了那个，「这个 CLI 到底好不好用」才有客观答案，而不是靠 demo 视频和 star 数。</p>
+<h2 id="十四、上手建议：三条路径怎么选"><a href="#十四、上手建议：三条路径怎么选" class="headerlink" title="十四、上手建议：三条路径怎么选"></a>十四、上手建议：三条路径怎么选</h2><table>
+<thead>
+<tr>
+<th>你的情况</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>只想用现成的</td>
+<td><code>pip install cli-anything-hub</code> → <code>cli-hub search &lt;关键词&gt;</code> → 装一个试试</td>
+</tr>
+<tr>
+<td>想让 Agent 自主选工具</td>
+<td>装 <code>cli-hub-meta-skill</code>，然后用自然语言下指令</td>
+</tr>
+<tr>
+<td>想给自己的软件造 CLI</td>
+<td> 装插件 → <code>/cli-anything ./your-repo</code> → 反复 <code>/cli-anything:refine</code></td>
+</tr>
+<tr>
+<td>想研究方法论</td>
+<td>直接读 HARNESS.md 的「Architecture Patterns &amp; Pitfalls」和「Critical Lessons」两节</td>
+</tr>
+<tr>
+<td>想读代码</td>
+<td>挑一个 harness 看 <code>cli_anything/&lt;software&gt;/utils/&lt;software&gt;_backend.py</code>，那是最能体现设计意图的文件</td>
+</tr>
+</tbody></table>
+<p>我的个人建议是：<strong>先用一个你已经熟悉的软件</strong>（比如 GIMP 或 LibreOffice），读它的 <code>agent-harness/</code> 目录，然后再决定要不要用在自己的项目上。看懂一个 harness 的结构，比看 40 个 demo 有用得多。</p>
+<hr>
+<blockquote>
+<p><strong>免责说明</strong>：本文所有数字（star、fork、issue 数、测试数、版本号、日期）均取自 HKUDS/CLI-Anything 仓库的 GitHub API 响应与 README 原文，采集于 2026-11-24。star 数每日变动，读者查阅时以仓库实际数据为准。</p>
+<p><strong>项目地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/HKUDS/CLI-Anything">https://github.com/HKUDS/CLI-Anything</a><br><strong>技术报告</strong>：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2606.03854">arXiv:2606.03854 — CLI-Anything: Towards Agent-Native Computer Use</a><br><strong>CLI-Hub</strong>：<a target="_blank" rel="noopener" href="https://clianything.cc/">https://clianything.cc/</a> · PyPI <code>cli-anything-hub</code> 0.4.1</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/11/23/hkuds-cli-anything-make-all-software-agent-native/" title="HKUDS&#x2F;CLI-Anything：63603 star 的开源项目，把 40 多个专业软件变成 AI Agent 能用的命令行">https://www.daishengli.top/2026/11/23/hkuds-cli-anything-make-all-software-agent-native/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag"># 自动化</a>
+              <a href="/tags/%E8%87%AA%E6%89%98%E7%AE%A1/" rel="tag"># 自托管</a>
+              <a href="/tags/CLI-Anything/" rel="tag"># CLI-Anything</a>
+              <a href="/tags/HKUDS/" rel="tag"># HKUDS</a>
+              <a href="/tags/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7/" rel="tag"># 命令行工具</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/22/el4cteo-fast-anything-port-slow-5-percent-to-rust/" rel="prev" title="EL4CTEO&#x2F;fast-anything：1869 star 的工具，让 AI Agent 只把最慢的 5% 改写成 Rust 并证明行为一致">
+                  <i class="fa fa-angle-left"></i> EL4CTEO/fast-anything：1869 star 的工具，让 AI Agent 只把最慢的 5% 改写成 Rust 并证明行为一致
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/25/firecrawl-ai-agent-web-data-infrastructure/" rel="next" title="firecrawl&#x2F;firecrawl：20.9 万 star 的 AI Agent 抓取基础设施，AGPL-3.0 开源自托管，一个 Rust 二进制把网页变成 Markdown">
+                  firecrawl/firecrawl：20.9 万 star 的 AI Agent 抓取基础设施，AGPL-3.0 开源自托管，一个 Rust 二进制把网页变成 Markdown <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

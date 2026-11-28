@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Tracer-Cloud&#x2F;opensre 是一个用 Python 写的开源 SRE Agent，专注解决 CI 变红之后的那个最贵的环节——没人愿意接手的失败排查。它能读 GitHub Actions 失败日志、关联 Grafana 和 Datadog 的指标与 trace、在受控的工具调用循环里提出并验证假设，区分「CI 环境导致的失败」和「代码导致的失败」，然后把修复 commit 推到 PR">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tracer-Cloud&#x2F;opensre：13982 star 的 CI&#x2F;CD 可靠性 Agent，能自己读日志、改代码、推分支">
+<meta property="og:url" content="https://www.daishengli.top/2026/11/21/tracer-cloud-opensre-ci-cd-reliability-agent/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="Tracer-Cloud&#x2F;opensre 是一个用 Python 写的开源 SRE Agent，专注解决 CI 变红之后的那个最贵的环节——没人愿意接手的失败排查。它能读 GitHub Actions 失败日志、关联 Grafana 和 Datadog 的指标与 trace、在受控的工具调用循环里提出并验证假设，区分「CI 环境导致的失败」和「代码导致的失败」，然后把修复 commit 推到 PR">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-21T16:04:05.000Z">
+<meta property="article:modified_time" content="2026-11-28T00:04:52.358Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="自托管">
+<meta property="article:tag" content="opensre">
+<meta property="article:tag" content="Tracer-Cloud">
+<meta property="article:tag" content="SRE Agent">
+<meta property="article:tag" content="CI&#x2F;CD">
+<meta property="article:tag" content="可观测性">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/11/21/tracer-cloud-opensre-ci-cd-reliability-agent/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/11/21/tracer-cloud-opensre-ci-cd-reliability-agent/","path":"2026/11/21/tracer-cloud-opensre-ci-cd-reliability-agent/","title":"Tracer-Cloud/opensre：13982 star 的 CI/CD 可靠性 Agent，能自己读日志、改代码、推分支"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Tracer-Cloud/opensre：13982 star 的 CI/CD 可靠性 Agent，能自己读日志、改代码、推分支 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">459</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">139</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Tracer-Cloud-opensre%EF%BC%9A13982-star-%E7%9A%84-CI-CD-%E5%8F%AF%E9%9D%A0%E6%80%A7-Agent%EF%BC%8C%E8%83%BD%E8%87%AA%E5%B7%B1%E8%AF%BB%E6%97%A5%E5%BF%97%E3%80%81%E6%94%B9%E4%BB%A3%E7%A0%81%E3%80%81%E6%8E%A8%E5%88%86%E6%94%AF"><span class="nav-number">1.</span> <span class="nav-text">Tracer-Cloud&#x2F;opensre：13982 star 的 CI&#x2F;CD 可靠性 Agent，能自己读日志、改代码、推分支</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%91%A8%E4%BA%94%E4%B8%8B%E5%8D%88%E4%BA%94%E7%82%B9%EF%BC%8Cmain-%E5%88%86%E6%94%AF%E7%BA%A2%E4%BA%86"><span class="nav-number">1.1.</span> <span class="nav-text">一、周五下午五点，main 分支红了</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9A%E4%B8%80%E4%B8%AA%E5%8F%AA%E7%AE%A1%E3%80%8CCI-reliability%E3%80%8D%E7%9A%84-Agent"><span class="nav-number">1.2.</span> <span class="nav-text">二、它是什么：一个只管「CI  reliability」的 Agent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%83%E5%AE%9E%E9%99%85%E8%83%BD%E5%81%9A%E7%9A%84%E5%9B%9B%E4%BB%B6%E4%BA%8B"><span class="nav-number">1.3.</span> <span class="nav-text">三、它实际能做的四件事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%EF%BC%9A%E4%B8%80%E6%AC%A1-Agent-%E8%BD%AE%E6%AC%A1%E6%98%AF%E6%80%8E%E4%B9%88%E8%B7%91%E8%B5%B7%E6%9D%A5%E7%9A%84"><span class="nav-number">1.4.</span> <span class="nav-text">四、核心机制：一次 Agent 轮次是怎么跑起来的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E3%80%8C%E5%8C%BA%E5%88%86-CI-%E5%A4%B1%E8%B4%A5%E5%92%8C%E4%BB%A3%E7%A0%81%E5%A4%B1%E8%B4%A5%E3%80%8D"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 「区分 CI 失败和代码失败」</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E3%80%8C%E4%B8%8D%E8%AE%B8%E7%94%A8%E5%85%B3%E9%94%AE%E8%AF%8D%E8%B7%AF%E7%94%B1%E3%80%8D"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 「不许用关键词路由」</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%9E%B6%E6%9E%84%EF%BC%9A%E4%B8%83%E4%B8%AA%E5%8C%85%EF%BC%8C%E5%9B%9B%E5%B1%82%EF%BC%8C%E4%BE%9D%E8%B5%96%E5%8F%AA%E5%BE%80%E4%B8%8B%E6%B5%81"><span class="nav-number">1.5.</span> <span class="nav-text">五、架构：七个包，四层，依赖只往下流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E4%B8%80%E4%B8%AA%E7%9C%9F%E5%AE%9E%E7%9A%84-mermaid-%E4%BE%9D%E8%B5%96%E5%9B%BE"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 一个真实的 mermaid 依赖图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-tools-%E5%92%8C-integrations-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%88%86%E5%BC%80"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 tools 和 integrations 为什么要分开</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E3%80%8C%E8%B0%81%E6%9D%A5%E6%B3%A8%E5%86%8C%E8%83%BD%E5%8A%9B%E3%80%8D%E7%9A%84%E8%A7%A3%E6%B3%95"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 「谁来注册能力」的解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E5%AE%9E%E9%99%85%E7%9A%84%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="nav-number">1.5.4.</span> <span class="nav-text">5.4 实际的目录结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">1.6.</span> <span class="nav-text">六、快速上手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E5%AE%89%E8%A3%85%EF%BC%88macOS-Linux%EF%BC%89"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 安装（macOS &#x2F; Linux）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E5%90%AF%E5%8A%A8"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E4%BA%A4%E4%BA%92%E5%BC%8F-shell"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3 交互式 shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E6%97%A0%E5%A4%B4%E6%A8%A1%E5%BC%8F%EF%BC%88headless%EF%BC%89"><span class="nav-number">1.6.4.</span> <span class="nav-text">6.4 无头模式（headless）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E4%BB%8E-Python-%E8%B0%83%E7%94%A8"><span class="nav-number">1.6.5.</span> <span class="nav-text">6.5 从 Python 调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-%E4%BB%8E%E6%BA%90%E7%A0%81%E8%B7%91"><span class="nav-number">1.6.6.</span> <span class="nav-text">6.6 从源码跑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E9%9B%86%E6%88%90%E9%9D%A2%EF%BC%9A87-%E4%B8%AA%E7%9B%AE%E5%BD%95"><span class="nav-number">1.7.</span> <span class="nav-text">七、集成面：87 个目录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E5%87%A0%E4%B8%AA%E6%9C%89%E6%84%8F%E6%80%9D%E7%9A%84%E7%BB%86%E8%8A%82"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1 几个有意思的细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E9%83%A8%E7%BD%B2%EF%BC%9A%E4%B8%89%E7%A7%8D%E5%A7%BF%E5%8A%BF"><span class="nav-number">1.8.</span> <span class="nav-text">八、部署：三种姿势</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-AMI-systemd%EF%BC%88EC2%EF%BC%8CTelegram-%E7%BD%91%E5%85%B3%EF%BC%89"><span class="nav-number">1.8.1.</span> <span class="nav-text">8.2 AMI + systemd（EC2，Telegram 网关）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E9%80%9A%E7%94%A8%E8%87%AA%E6%89%98%E7%AE%A1%EF%BC%88Dockerfile-Railway-ECS-Vercel%EF%BC%89"><span class="nav-number">1.8.2.</span> <span class="nav-text">8.3 通用自托管（Dockerfile &#x2F; Railway &#x2F; ECS &#x2F; Vercel）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E4%BE%9D%E8%B5%96%E4%B8%8E%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">1.9.</span> <span class="nav-text">九、依赖与实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E4%B8%80%E4%B8%AA%E7%BB%86%E8%8A%82%EF%BC%9A%E5%AE%83%E8%87%AA%E5%B7%B1%E7%9A%84-CI"><span class="nav-number">1.9.1.</span> <span class="nav-text">9.1 一个细节：它自己的 CI</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E5%92%8C%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E6%AF%94"><span class="nav-number">1.10.</span> <span class="nav-text">十、和同类项目比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-%E5%AF%B9%E6%AF%94-Datadog-Bits-AI%E3%80%81New-Relic-AI%E3%80%81PagerDuty-Advance"><span class="nav-number">1.10.1.</span> <span class="nav-text">10.1 对比 Datadog Bits AI、New Relic AI、PagerDuty Advance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-%E5%AF%B9%E6%AF%94-GitHub-Copilot-Claude-Code-Cursor-%E8%BF%99%E7%B1%BB%E7%BC%96%E7%A8%8B-Agent"><span class="nav-number">1.10.2.</span> <span class="nav-text">10.2 对比 GitHub Copilot &#x2F; Claude Code &#x2F; Cursor 这类编程 Agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3-%E5%AF%B9%E6%AF%94-Sentry-Seer%E3%80%81Datadog-Bits-AI-%E7%9A%84%E3%80%8C%E8%87%AA%E5%8A%A8%E4%BF%AE%E5%A4%8D%E3%80%8D"><span class="nav-number">1.10.3.</span> <span class="nav-text">10.3 对比 Sentry Seer、Datadog Bits AI 的「自动修复」</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-4-%E5%AF%B9%E6%AF%94%E4%BC%A0%E7%BB%9F-SRE-%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7"><span class="nav-number">1.10.4.</span> <span class="nav-text">10.4 对比传统 SRE 自动化工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-5-%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93%E5%AE%83%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">1.10.5.</span> <span class="nav-text">10.5 一句话总结它的位置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E7%9C%9F%E5%AE%9E%E5%B1%80%E9%99%90%EF%BC%9A%E8%AF%B4%E7%82%B9%E4%B8%8D%E5%A5%BD%E5%90%AC%E7%9A%84"><span class="nav-number">1.11.</span> <span class="nav-text">十一、真实局限：说点不好听的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#11-1-%E5%AE%83%E6%98%AF-public-alpha"><span class="nav-number">1.11.1.</span> <span class="nav-text">11.1 它是 public alpha</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-2-%E5%AE%83%E7%9A%84-CI-%E4%BF%AE%E5%A4%8D%E8%83%BD%E5%8A%9B%EF%BC%8C%E5%AE%9E%E9%99%85%E6%95%88%E6%9E%9C%E4%BE%9D%E8%B5%96%E6%A8%A1%E5%9E%8B%E5%92%8C%E9%9B%86%E6%88%90%E8%B4%A8%E9%87%8F"><span class="nav-number">1.11.2.</span> <span class="nav-text">11.2 它的 CI 修复能力，实际效果依赖模型和集成质量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-3-%E9%9B%86%E6%88%90%E6%95%B0%E9%87%8F-%E2%89%A0-%E9%9B%86%E6%88%90%E8%B4%A8%E9%87%8F"><span class="nav-number">1.11.3.</span> <span class="nav-text">11.3 集成数量 ≠ 集成质量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-4-%E3%80%8C%E4%BF%AE%E5%A4%8D%E5%BE%AA%E7%8E%AF%E3%80%8D%E7%9A%84%E8%87%AA%E5%8A%A8%E6%8E%A8%E9%80%81%E6%98%AF%E6%9C%89%E9%A3%8E%E9%99%A9%E7%9A%84"><span class="nav-number">1.11.4.</span> <span class="nav-text">11.4 「修复循环」的自动推送是有风险的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-5-%E9%81%A5%E6%B5%8B%E9%BB%98%E8%AE%A4%E6%98%AF%E5%BC%80%E7%9A%84"><span class="nav-number">1.11.5.</span> <span class="nav-text">11.5 遥测默认是开的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-6-%E4%B8%80%E4%B8%AA%E4%BA%BA%E6%89%9B%E8%B5%B7%E4%BA%86%E5%A4%A7%E5%8D%8A%E4%BB%A3%E7%A0%81"><span class="nav-number">1.11.6.</span> <span class="nav-text">11.6 一个人扛起了大半代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-7-%E6%96%87%E6%A1%A3%E5%92%8C%E4%BB%A3%E7%A0%81%E4%B9%8B%E9%97%B4%E6%9C%89-gap"><span class="nav-number">1.11.7.</span> <span class="nav-text">11.7 文档和代码之间有 gap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-8-Python-3-12-%E7%9A%84%E9%97%A8%E6%A7%9B"><span class="nav-number">1.11.8.</span> <span class="nav-text">11.8 Python 3.12+ 的门槛</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E9%80%82%E5%90%88%E8%B0%81%EF%BC%8C%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">1.12.</span> <span class="nav-text">十二、适合谁，不适合谁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#12-1-%E9%80%82%E5%90%88"><span class="nav-number">1.12.1.</span> <span class="nav-text">12.1 适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-2-%E4%B8%8D%E9%80%82%E5%90%88"><span class="nav-number">1.12.2.</span> <span class="nav-text">12.2 不适合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E6%88%91%E7%9A%84%E5%AE%9E%E6%B5%8B%E6%83%B3%E6%B3%95%E5%92%8C%E4%B8%80%E4%B8%AA%E4%B8%8A%E6%89%8B%E8%B7%AF%E7%BA%BF"><span class="nav-number">1.13.</span> <span class="nav-text">十三、我的实测想法和一个上手路线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#13-1-%E8%AE%B0%E5%BE%97%E5%85%B3%E9%81%A5%E6%B5%8B"><span class="nav-number">1.13.1.</span> <span class="nav-text">13.1 记得关遥测</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E9%99%A4%E4%BA%86%E7%94%A8%E8%B5%B7%E6%9D%A5%EF%BC%8C%E5%AE%83%E7%9A%84%E4%BB%A3%E7%A0%81%E4%B9%9F%E5%80%BC%E5%BE%97%E8%AF%BB"><span class="nav-number">1.14.</span> <span class="nav-text">十四、除了用起来，它的代码也值得读</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#14-1-%E7%94%A8-import-linter-%E6%8A%8A%E6%9E%B6%E6%9E%84%E7%BA%A6%E6%9D%9F%E5%8F%98%E6%88%90-CI-%E4%B8%8D%E5%8F%98%E9%87%8F"><span class="nav-number">1.14.1.</span> <span class="nav-text">14.1 用 import-linter 把架构约束变成 CI 不变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-2-%E3%80%8C%E8%83%BD%E5%8A%9B%E6%B3%A8%E5%86%8C%E3%80%8D%E7%9A%84%E6%94%B6%E6%95%9B%E7%82%B9-%E6%B5%8B%E8%AF%95%E9%92%89%E6%AD%BB"><span class="nav-number">1.14.2.</span> <span class="nav-text">14.2 「能力注册」的收敛点 + 测试钉死</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-3-%E4%BF%9D%E6%8A%A4%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BA%BA%E7%B1%BB%E6%96%87%E4%BB%B6"><span class="nav-number">1.14.3.</span> <span class="nav-text">14.3 保护自己的人类文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-4-pre-push-hook-%E5%8F%AA%E5%81%9A%E4%BE%BF%E5%AE%9C%E7%9A%84%E6%A3%80%E6%9F%A5"><span class="nav-number">1.14.4.</span> <span class="nav-text">14.4 pre-push hook 只做便宜的检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-5-%E5%BC%BA%E5%88%B6%E8%B1%81%E5%85%8D%E8%A6%81%E7%95%99%E7%97%95"><span class="nav-number">1.14.5.</span> <span class="nav-text">14.5 强制豁免要留痕</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-6-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%9B%86%E4%B8%AD%E6%B2%BB%E7%90%86"><span class="nav-number">1.14.6.</span> <span class="nav-text">14.6 环境变量集中治理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.15.</span> <span class="nav-text">十五、总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%EF%BC%9A%E6%9C%AC%E6%96%87%E4%BA%8B%E5%AE%9E%E6%A0%B8%E5%AF%B9"><span class="nav-number">1.16.</span> <span class="nav-text">附：本文事实核对</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">139</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">459</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/21/tracer-cloud-opensre-ci-cd-reliability-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Tracer-Cloud&#x2F;opensre：13982 star 的 CI&#x2F;CD 可靠性 Agent，能自己读日志、改代码、推分支 | 小戴的网络日志">
+      <meta itemprop="description" content="Tracer-Cloud&#x2F;opensre 是一个用 Python 写的开源 SRE Agent，专注解决 CI 变红之后的那个最贵的环节——没人愿意接手的失败排查。它能读 GitHub Actions 失败日志、关联 Grafana 和 Datadog 的指标与 trace、在受控的工具调用循环里提出并验证假设，区分「CI 环境导致的失败」和「代码导致的失败」，然后把修复 commit 推到 PR 分支上等你 review。项目基于 Apache-2.0 协议，13982 star、1943 fork、87 个集成目录，覆盖 Kubernetes、AWS、Grafana、Datadog、Slack、PagerDuty 等主流云原生栈，支持 Anthropic、OpenAI、Gemini、Ollama 等九家 LLM 提供商，也可以完全自托管在 EC2 或容器里。它的代码架构用 import-linter 把七个一方包锁成四层单向依赖，是给大规模 Agent 项目看的一个很硬的工程样板；代价是它自己仍然是 public alpha 状态，README 里明确写着核心流程可用但尚未完全稳定。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Tracer-Cloud/opensre：13982 star 的 CI/CD 可靠性 Agent，能自己读日志、改代码、推分支
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-22 00:04:05" itemprop="dateCreated datePublished" datetime="2026-11-22T00:04:05+08:00">2026-11-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Tracer-Cloud/opensre 是一个用 Python 写的开源 SRE Agent，专注解决 CI 变红之后的那个最贵的环节——没人愿意接手的失败排查。它能读 GitHub Actions 失败日志、关联 Grafana 和 Datadog 的指标与 trace、在受控的工具调用循环里提出并验证假设，区分「CI 环境导致的失败」和「代码导致的失败」，然后把修复 commit 推到 PR 分支上等你 review。项目基于 Apache-2.0 协议，13982 star、1943 fork、87 个集成目录，覆盖 Kubernetes、AWS、Grafana、Datadog、Slack、PagerDuty 等主流云原生栈，支持 Anthropic、OpenAI、Gemini、Ollama 等九家 LLM 提供商，也可以完全自托管在 EC2 或容器里。它的代码架构用 import-linter 把七个一方包锁成四层单向依赖，是给大规模 Agent 项目看的一个很硬的工程样板；代价是它自己仍然是 public alpha 状态，README 里明确写着核心流程可用但尚未完全稳定。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Tracer-Cloud-opensre：13982-star-的-CI-CD-可靠性-Agent，能自己读日志、改代码、推分支"><a href="#Tracer-Cloud-opensre：13982-star-的-CI-CD-可靠性-Agent，能自己读日志、改代码、推分支" class="headerlink" title="Tracer-Cloud/opensre：13982 star 的 CI/CD 可靠性 Agent，能自己读日志、改代码、推分支"></a>Tracer-Cloud/opensre：13982 star 的 CI/CD 可靠性 Agent，能自己读日志、改代码、推分支</h1><blockquote>
+<p><strong>本文 GitHub 项目地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/Tracer-Cloud/opensre">Tracer-Cloud/opensre</a><br>今日 stars：13,982・forks：1,943・最新版本 v0.1.2026.11.21（2026-11-21）・License: Apache-2.0<br>今日推荐理由：它把「CI 挂了」这件事从「谁有空谁去查」变成「Agent 先查一轮，附上证据给你看」，而且用的是 Python + 87 个集成目录 + 严格分层架构，代码本身也是学习材料。</p>
+</blockquote>
+<h2 id="一、周五下午五点，main-分支红了"><a href="#一、周五下午五点，main-分支红了" class="headerlink" title="一、周五下午五点，main 分支红了"></a>一、周五下午五点，main 分支红了</h2><p>先说个我特别熟悉的场景。</p>
+<p>我们团队大概十几个人，用 GitHub Actions 跑 CI。日常一天大概推 40 到 60 个 PR，绝大多数时候 CI 是绿的。但每个周五下午五点前后，总会有一段时间特别难受：某个 PR 的测试挂了，挂在某个你根本没改过的模块上 —— 可能是某个 Docker 镜像拉取超时，可能是某个 test fixture 依赖的外部服务 mock 挂了，可能是矩阵构建里只有 macOS 那条腿失败。日志有 4000 行，前面 3900 行都是绿的上下文，真正有用的信息在最后 40 行。</p>
+<p>这时候会发生什么呢？</p>
+<p>刷 GitHub 通知的人，通常不是你。团队里那个最懂 CI 配置的人，往往正在写季度汇报。等他放下手上的活看一眼，判断是「flaky，重跑一下」，于是重跑，绿了，收工。但没人知道这次为什么会 flaky，也没人把「这个测试每周五必挂」这件事记下来。下周它再挂，还是重跑，还是没人记。</p>
+<p>三个月后你回头看数据：<code>main</code> 分支每周有大约 6 小时是红的；整个团队的 flaky test 每周消耗大概 20 个工程师小时；关键路径上的那个测试已经挂了两个月没人碰。</p>
+<p>这就是 OpenSRE 想解决的那个具体的、有点无聊的、但每天都在烧钱的问题。</p>
+<h2 id="二、它是什么：一个只管「CI-reliability」的-Agent"><a href="#二、它是什么：一个只管「CI-reliability」的-Agent" class="headerlink" title="二、它是什么：一个只管「CI  reliability」的 Agent"></a>二、它是什么：一个只管「CI  reliability」的 Agent</h2><p>先给个准确的一句话定义：</p>
+<blockquote>
+<p><strong>OpenSRE 是一个开源的 CLI Agent，它读取失败的 CI 运行记录，追溯原因，然后把修复推到你 PR 的分支上等你 review。自托管，跑你自己的模型。</strong></p>
+</blockquote>
+<p>README 里那句描述我觉得写得很准：</p>
+<blockquote>
+<p>Your CI tells you it broke, but not why or how to fix it. OpenSRE is a CLI agent that reads the failed run, traces the cause and pushes a fix for you to review.</p>
+</blockquote>
+<p>关键数字（截至 2026-11-22 拉取 GitHub API）：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Stars</td>
+<td>13,982</td>
+</tr>
+<tr>
+<td>Forks</td>
+<td>1,943</td>
+</tr>
+<tr>
+<td>Watchers</td>
+<td>64</td>
+</tr>
+<tr>
+<td>Open Issues</td>
+<td>19</td>
+</tr>
+<tr>
+<td>License</td>
+<td>Apache-2.0</td>
+</tr>
+<tr>
+<td> 主语言</td>
+<td> Python</td>
+</tr>
+<tr>
+<td> 创建时间</td>
+<td> 2026-01-13</td>
+</tr>
+<tr>
+<td> 最后推送</td>
+<td> 2026-11-21</td>
+</tr>
+<tr>
+<td> 仓库体积</td>
+<td>约 195 MB</td>
+</tr>
+<tr>
+<td><code>integrations/</code> 下的集成目录</td>
+<td> 87 个</td>
+</tr>
+<tr>
+<td>一方包（first-party packages）</td>
+<td>7 个，分四层</td>
+</tr>
+</tbody></table>
+<p>几个值得注意的事实：</p>
+<ul>
+<li><p><strong>项目很新</strong>。2026 年 1 月 13 日才创建，到今天才 10 个多月，已经拿到接近 1.4 万 star。这个增速说明它踩中了某个真实痛点。</p>
+</li>
+<li><p><strong>每天发版</strong>。Releases 页面是 <code>v0.1.2026.11.21</code>、<code>v0.1.2026.11.20</code>、<code>v0.1.2026.11.19</code> 这种按天滚动的版本号，还有个 <code>main-build</code> 的滚动 tag。发布节奏非常激进。</p>
+</li>
+<li><p><strong>状态是 public alpha</strong>。README 顶部有个橙色 badge 明写着：</p>
+<blockquote>
+<p>🚧 Public Alpha: Core workflows are usable for early exploration, though not yet fully stable. The project is in active development, and APIs and integrations may evolve.</p>
+</blockquote>
+<p>这个要记住，后面聊局限的时候我会再提。</p>
+</li>
+<li><p><strong>贡献者不算少</strong>。contributors API 返回 100 条记录，Top 100 累计 3950 次提交，第一名 <code>davincios</code> 1100 次，第二名 <code>VaibhavUpreti</code> 641 次。看起来是 Tracer Cloud 这家公司的核心团队在做，有一名主力贡献者提交数超过了其他所有人的总和。</p>
+</li>
+</ul>
+<h2 id="三、它实际能做的四件事"><a href="#三、它实际能做的四件事" class="headerlink" title="三、它实际能做的四件事"></a>三、它实际能做的四件事</h2><p>OpenSRE 的 CI/CD 部分不是一个功能，而是四个能力。官方文档 <code>docs/cicd/overview.mdx</code> 里列得很清楚，四个能力的读写边界分得很干净 —— 这一点我觉得做得挺好：</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>读</th>
+<th>写</th>
+<th>跑在哪</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> CI 可靠性分析</td>
+<td>某仓库 30 天的 Actions 运行记录</td>
+<td> shell 里出一份报告</td>
+<td>你本机</td>
+</tr>
+<tr>
+<td>健康扫描</td>
+<td>所有组织的开放 PR 和分支头</td>
+<td>无</td>
+<td>你本机</td>
+</tr>
+<tr>
+<td>修一个 PR</td>
+<td> 某 PR 或分支的失败 check 和日志</td>
+<td> PR 分支上一个 commit，或新开修复分支</td>
+<td>你本机</td>
+</tr>
+<tr>
+<td>可靠性 Agent</td>
+<td> 最近 7 天，每个工作日早上</td>
+<td> shell inbox 一份报告</td>
+<td>你本机，跑成定时循环</td>
+</tr>
+<tr>
+<td>修复循环</td>
+<td>某 PR 的失败 check</td>
+<td>10 分钟内最多 3 次修复推送</td>
+<td>你本机，或托管网关</td>
+</tr>
+</tbody></table>
+<p>具体说：</p>
+<ul>
+<li><strong>衡量 CI 可靠性</strong> —— 给一个仓库出一份 30 天报告：失败率、CI 失败 vs 代码失败的区分、因 CI 不可靠损失的开发者工时、默认分支保持红色的时长。这是官方推荐的第一个 demo，纯只读。</li>
+<li><strong>扫描全组织的红色 PR</strong>—— 一次扫完 token 能看到的所有仓库，列出哪些 PR 和分支正在失败、失败在哪个 check 上。</li>
+<li><strong>修一个 PR 上的失败 check</strong>—— 读失败日志，用 coding agent 生成修复，推到 PR 分支，等新 check 跑完。</li>
+<li><strong>常驻的可靠性 Agent</strong>—— 定时可靠性报告，加上针对单个 PR 的修复循环（10 分钟内最多推 3 次）。</li>
+</ul>
+<p>安全边界也写得很明确：<strong>修复循环拒绝 fork 开的 PR，永远不直接推到 <code>main</code> 这类受保护分支</strong>。</p>
+<h2 id="四、核心机制：一次-Agent-轮次是怎么跑起来的"><a href="#四、核心机制：一次-Agent-轮次是怎么跑起来的" class="headerlink" title="四、核心机制：一次 Agent 轮次是怎么跑起来的"></a>四、核心机制：一次 Agent 轮次是怎么跑起来的</h2><p>README 的 “How OpenSRE Works” 描述了一个六步流程，我把原文的逻辑拆开讲：</p>
+<ol>
+<li><strong>抓取上下文</strong> —— 失败的 check 和 CI 日志、最近的 commit 和部署记录、关联的日志 / 指标 /trace</li>
+<li><strong> 脱敏</strong>（可选）—— 在调用外部 LLM 之前遮蔽敏感标识符</li>
+<li><strong>推理</strong> —— 跨已连接的系统，在工具调用循环里验证假设，把 CI 导致的失败和代码导致的失败分开</li>
+<li><strong>回答</strong> —— 在会话里给出带证据链接的回复</li>
+<li><strong>修复</strong> —— 修因并推到 PR 分支等你 review，或者给下一步建议（可选地执行补救动作）</li>
+<li><strong>通知</strong> —— 把摘要直接发到 Slack、PagerDuty 或 Telegram</li>
+</ol>
+<p>这里有两个设计我觉得特别值得聊。</p>
+<h3 id="4-1-「区分-CI-失败和代码失败」"><a href="#4-1-「区分-CI-失败和代码失败」" class="headerlink" title="4.1 「区分 CI 失败和代码失败」"></a>4.1 「区分 CI 失败和代码失败」</h3><p>这是 OpenSRE 跟一堆「AI 修 bug」工具最不一样的地方。</p>
+<p>绝大多数 AI 修复工具的假设是「失败 = 代码有问题 = 去改代码」。但 CI 环境的失败有一大类根本不是代码问题：runner 磁盘满了、依赖仓库挂了、Docker 镜像拉取超时、测试间共享了状态、测试之间有执行顺序依赖。如果 agent 每次都无脑改代码，你得到的不是「自动修复」，而是「自动制造 diff」—— 它会为了让 CI 变绿，去加一个 <code>sleep 5</code> 或者把断言改宽松。</p>
+<p>OpenSRE 的做法是在推理阶段就显式地把这两类分开。文档里那句话是核心：</p>
+<blockquote>
+<p><strong>Fix the cause, not just the rerun:</strong> it separates CI-caused failures from code-caused ones, so you fix the right thing</p>
+</blockquote>
+<p>所以它对「CI 是 flaky 的」这个判断是当作一个<strong>结论</strong>来产出的，而不是当作一个不能修的东西。这也是为什么它的健康扫描功能存在 ——CI 导致的失败本来就不该靠修代码解决，该靠改配置、改依赖、改测试隔离。</p>
+<h3 id="4-2-「不许用关键词路由」"><a href="#4-2-「不许用关键词路由」" class="headerlink" title="4.2 「不许用关键词路由」"></a>4.2 「不许用关键词路由」</h3><p>这条规则写在 <code>AGENTS.md</code> 里，我觉得挺有意思：</p>
+<blockquote>
+<p>Natural-language intent belongs to the action agent: no regex/keyword/fuzzy routing or deterministic bypasses. The interactive-shell planner never denies turns; do not restore <code>mark_unhandled</code> or <code>UNHANDLED:</code>.</p>
+</blockquote>
+<p>翻译一下：不要用正则、关键词、模糊匹配来决定「这个输入对应哪个工具」。所有自然语言意图的判断，都交给 Agent 自己做。</p>
+<p>这个取舍是有代价的 ——Agent 判断比规则慢、贵、不可预测。但对 SRE 这种场景，我认为是对的：同一句「为什么 checkout-api 慢」，在不同时间可能需要查的完全不同的东西（可能是下游服务超时，可能是某个 feature flag 关了，可能是上周刚上的一个迁移）。写死关键词路由的系统，在这种场景下会非常脆弱。</p>
+<p>顺带一提，仓库的 <code>AGENTS.md</code> 里还有一条我觉得非常值得学习的规定：</p>
+<blockquote>
+<p><strong>Human-owned files (mandatory)</strong> — Agents must never create, edit, rename, move, or delete any <code>SKILL.md</code> anywhere in this repository or <code>core/agent_harness/prompts/opensre_system_prompt.md</code>, including frontmatter.</p>
+</blockquote>
+<p>它给自己的 Agent 立了规矩：<strong>不许改自己的 system prompt 和任何 SKILL.md</strong>。唯一例外是用户逐字给出「当前文本」和「替换文本」时的字面替换。而且它强调这个例外<strong>是绝对的</strong> —— 不许顺手重排、不许改 frontmatter、不许「既然我在这儿就一起修了」。</p>
+<p>一个 Agent 项目能把自己的 prompt 文件锁成人类专属，这个自觉挺难得的。</p>
+<h2 id="五、架构：七个包，四层，依赖只往下流"><a href="#五、架构：七个包，四层，依赖只往下流" class="headerlink" title="五、架构：七个包，四层，依赖只往下流"></a>五、架构：七个包，四层，依赖只往下流</h2><p>OpenSRE 的 <code>docs/ARCHITECTURE.md</code> 我认为是整个仓库最有价值的文档之一。它定义了七个一方包，锁在四个层级里：</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>包</th>
+<th>可以导入</th>
+<th>绝不能导入</th>
+<th>同层规则</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 1（顶层）</td>
+<td><code>surfaces</code>、<code>gateway</code></td>
+<td><code>tools</code>、<code>integrations</code>、<code>core</code>、<code>infrastructure</code>、<code>config</code></td>
+<td>—</td>
+<td> 独立同层，<strong>不能互相导入</strong>（<code>.importlinter</code> 里只追踪三条 CLI/REPL gateway-command 边）</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>tools</code></td>
+<td><code>core</code>、<code>infrastructure</code>、<code>config</code></td>
+<td><code>surfaces</code>、<code>gateway</code></td>
+<td><code>integrations</code> 的同层伙伴，不能导入它</td>
+</tr>
+<tr>
+<td> 2</td>
+<td><code>integrations</code></td>
+<td><code>core</code>、<code>infrastructure</code>、<code>config</code></td>
+<td><code>tools</code>、<code>surfaces</code>、<code>gateway</code></td>
+<td><code>tools</code> 的同层伙伴，不能导入它</td>
+</tr>
+<tr>
+<td> 3</td>
+<td><code>core</code>、<code>infrastructure</code></td>
+<td><code>config</code></td>
+<td>上面全部</td>
+<td>同级兄弟，<strong>可以</strong>互相导入</td>
+</tr>
+<tr>
+<td> 4（底层）</td>
+<td><code>config</code></td>
+<td>无（不导入任何一方包）</td>
+<td>全部</td>
+<td>独立叶子</td>
+</tr>
+</tbody></table>
+<p>文档里一句话总结得很利落：</p>
+<blockquote>
+<p>The shortcut: <strong>dependencies point downward only.</strong></p>
+</blockquote>
+<p>而且这不是文档里写着好看而已 —— 架构文档明确说这些规则是 CI 强制的：</p>
+<blockquote>
+<p>These dependency rules are CI-enforced (<code>make check-imports</code>), so they are real invariants rather than aspirations.</p>
+</blockquote>
+<p><code>.importlinter</code> 就是干这个的工具（项目依赖里也确实有 <code>import-linter&gt;=2.0</code>）。</p>
+<h3 id="5-1-一个真实的-mermaid-依赖图"><a href="#5-1-一个真实的-mermaid-依赖图" class="headerlink" title="5.1 一个真实的 mermaid 依赖图"></a>5.1 一个真实的 mermaid 依赖图</h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">flowchart TD</span><br><span class="line">    subgraph T1["Tier 1 — hosts"]</span><br><span class="line">        SURFACES[surfaces]</span><br><span class="line">        GATEWAY[gateway]</span><br><span class="line">    end</span><br><span class="line">    subgraph T2["Tier 2 — capability"]</span><br><span class="line">        TOOLS[tools]</span><br><span class="line">        INTEGRATIONS[integrations]</span><br><span class="line">    end</span><br><span class="line">    subgraph T3["Tier 3 — runtime + infrastructure"]</span><br><span class="line">        CORE[core]</span><br><span class="line">        INFRA[infrastructure]</span><br><span class="line">    end</span><br><span class="line">    subgraph T4["Tier 4 — config"]</span><br><span class="line">        CONFIG[config]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    SURFACES --&gt; TOOLS</span><br><span class="line">    SURFACES --&gt; INTEGRATIONS</span><br><span class="line">    GATEWAY --&gt; TOOLS</span><br><span class="line">    GATEWAY --&gt; INTEGRATIONS</span><br><span class="line"></span><br><span class="line">    TOOLS --&gt; CORE</span><br><span class="line">    TOOLS --&gt; INFRA</span><br><span class="line">    INTEGRATIONS --&gt; CORE</span><br><span class="line">    INTEGRATIONS --&gt; INFRA</span><br><span class="line"></span><br><span class="line">    CORE &lt;--&gt; INFRA</span><br><span class="line"></span><br><span class="line">    CORE --&gt; CONFIG</span><br><span class="line">    INFRA --&gt; CONFIG</span><br></pre></td></tr></tbody></table></figure>
+
+<p>唯一一处「双向」是 <code>core ⟷ infrastructure</code>，这是<strong>故意设计</strong>的：架构文档解释了原因 ——<code>core</code> 需要 <code>infrastructure</code> 里的 guardrails、masking、observability；而 <code>infrastructure</code> 需要 <code>core</code> 里的共享状态和会话类型（<code>core.state</code>、<code>core.agent_harness.session</code>）。如果把它们拆成两个层级，这条边就被禁掉了，所以它们共享一个层级，作为兄弟包存在。</p>
+<p>这种「为了保留一条合法的双向依赖，牺牲一点层次纯洁性」的决策，通常比强行分层更务实。</p>
+<h3 id="5-2-tools-和-integrations-为什么要分开"><a href="#5-2-tools-和-integrations-为什么要分开" class="headerlink" title="5.2 tools 和 integrations 为什么要分开"></a>5.2 <code>tools</code> 和 <code>integrations</code> 为什么要分开</h3><p>这是我觉得设计得最清楚的一处：</p>
+<ul>
+<li><strong><code>integrations/</code></strong> 是「用户配置和外部客户端」的边界 —— 每个厂商一个目录（<code>integrations/datadog</code>、<code>integrations/grafana</code>、<code>integrations/github</code>……），负责配置归一化、凭证解析、API 客户端</li>
+<li><strong><code>tools/</code></strong> 是「厂商无关的、Agent 可调用的」的边界 —— 注册表、交互式 shell 的工具框架、<code>tools/system/</code>（没有明确厂商归属的能力）、<code>tools/cross_vendor/</code>（确实跨厂商的少数能力）</li>
+</ul>
+<p>规则很明确：</p>
+<blockquote>
+<p>A tool tied to one vendor belongs under <code>integrations/&lt;vendor&gt;/tools/</code>, beside that vendor’s client and configuration.</p>
+</blockquote>
+<p>翻译：某个工具如果只服务一个厂商（比如查 Datadog 的某个指标），那它就住在 <code>integrations/datadog/tools/</code> 里，跟它的客户端和配置放一起。只有真正厂商无关的工具（查部署历史、看沙箱状态之类的）才进 <code>tools/</code>。</p>
+<p>这样避免了 <code>tools</code> 和 <code>integrations</code> 互相导入，也就避免了循环依赖。文档里还特意提醒：</p>
+<blockquote>
+<p>Do <strong>not</strong> reintroduce top-level <code>vendors/</code> or <code>services/</code> packages.</p>
+</blockquote>
+<p>—— 把曾经踩过的坑写进规则里，这种习惯值得抄。</p>
+<h3 id="5-3-「谁来注册能力」的解法"><a href="#5-3-「谁来注册能力」的解法" class="headerlink" title="5.3 「谁来注册能力」的解法"></a>5.3 「谁来注册能力」的解法</h3><p><code>tools</code> 和 <code>integrations</code> 是不能互相导入的同层包，但一个进程在第一轮对话之前需要<strong>两个都注册好</strong>。这看起来是个死结，解法是：</p>
+<blockquote>
+<p>Each capability package owns its own registration: <code>integrations/harness_adapters.py</code>, <code>tools/harness_adapters.py</code>…</p>
+</blockquote>
+<p>然后只有 host 层（<code>surfaces</code> 或 <code>gateway</code>）可以同时导入这两个包，所以每个 host 在 <code>CAPABILITY_REGISTRARS</code> 这个常量里各写一次这两个注册器。测试 <code>tests/infrastructure/process/test_capability_registrars.py</code> 会在两边不一致或者出现第三份副本时失败。</p>
+<p>这是个很典型的解法：<strong>把「谁可以做这件事」收敛到一个地方，并且用测试把这个收敛点钉死</strong>。</p>
+<h3 id="5-4-实际的目录结构"><a href="#5-4-实际的目录结构" class="headerlink" title="5.4 实际的目录结构"></a>5.4 实际的目录结构</h3><p>我拉了仓库根目录，结构大概是这样：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">opensre/</span><br><span class="line">├── core/                 # provider-agnostic Agent 运行时</span><br><span class="line">│   ├── agent/            # think → call tools → observe 的 ReAct 循环</span><br><span class="line">│   ├── agent_harness/    # 会话与轮次编排</span><br><span class="line">│   ├── context_budget.py # 上下文预算强制</span><br><span class="line">│   ├── llm/              # 共享 LLM 客户端</span><br><span class="line">│   ├── state/            # Agent 状态</span><br><span class="line">│   ├── tool/             # 工具契约、schema、注册表、执行、错误报告</span><br><span class="line">│   └── tool_framework/   # 工具编写辅助</span><br><span class="line">├── integrations/         # 87 个厂商目录</span><br><span class="line">├── tools/                # 厂商无关的工具层（cross_vendor / interactive_shell / system）</span><br><span class="line">├── infrastructure/       # 横向服务：safety(guardrails) / observability / evidence</span><br><span class="line">│                         # / scheduling / deployment / turn_host / analytics …</span><br><span class="line">├── surfaces/             # CLI + 交互式 shell + embedded</span><br><span class="line">│   ├── cli/  interactive_shell/  shared/  embedded.py</span><br><span class="line">├── gateway/              # 独立消息网关（Telegram/Slack/Discord/Buzz）</span><br><span class="line">│   ├── transports/  core/{session,storage,middleware}  web/（FastAPI）</span><br><span class="line">├── config/               # 常量、prompt、UI 主题（叶子）</span><br><span class="line">├── docs/  tests/</span><br><span class="line">├── main.py  pyproject.toml  AGENTS.md  CI.md  DEPLOYMENT.md  SETUP.md</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>infrastructure/</code> 里那个 <code>turn_host</code> 值得单独说。架构文档解释了它为什么存在：</p>
+<blockquote>
+<p>the shared <strong>turn host</strong> (<code>turn_host</code>) — the single <code>TurnRunner</code> the interactive shell and every gateway transport run turns through, so the two entry paths cannot drift.</p>
+</blockquote>
+<p>也就是说，交互式 shell 和所有网关 transport（Slack、Telegram、Discord、Buzz）跑的是<strong>同一个</strong> <code>TurnRunner</code>。这样两条入口路径不会各写各的然后慢慢漂移。</p>
+<h2 id="六、快速上手"><a href="#六、快速上手" class="headerlink" title="六、快速上手"></a>六、快速上手</h2><h3 id="6-1-安装（macOS-Linux）"><a href="#6-1-安装（macOS-Linux）" class="headerlink" title="6.1 安装（macOS / Linux）"></a>6.1 安装（macOS / Linux）</h3><p>README 里的官方命令：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://install.opensre.com | bash -s -- -gh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Windows PowerShell：</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp; ([<span class="type">scriptblock</span>]::Create((<span class="built_in">irm</span> https://install.opensre.com/install.ps1))) <span class="literal">-gh</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>-gh</code> 参数是给 GitHub CLI 装认证的。安装器会从 <code>main</code> 分支拉最新构建，不需要 sudo。</p>
+<p>如果 <code>opensre</code> 命令找不到，按安装器打印的 PATH 提示操作，或者开个新终端。</p>
+<h3 id="6-2-启动"><a href="#6-2-启动" class="headerlink" title="6.2 启动"></a>6.2 启动</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opensre</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第一次启动会让你登录并激活托管模型。文档里说：</p>
+<blockquote>
+<p>Run <code>opensre</code> to sign in and get started. The first launch activates the hosted model.</p>
+</blockquote>
+<p>注意 —— <strong>默认走的是托管模型</strong>。想完全自托管、用自己的模型，需要显式配 <code>LLM_PROVIDER</code> 和对应的 key（下面部署那节会讲）。</p>
+<p>如果你在参与 webapp 开发，可以走本地认证：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opensre setup --dev</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="6-3-交互式-shell"><a href="#6-3-交互式-shell" class="headerlink" title="6.3 交互式 shell"></a>6.3 交互式 shell</h3><p>不带子命令的 <code>opensre</code> 会进入 REPL（需要 TTY）。常用的斜杠命令：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/help        /status      /cost        /sessions</span><br><span class="line">/resume      /compact     /new         /exit</span><br><span class="line">/integrations list        /integrations verify</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>Ctrl+C</code> 可以取消当前轮次而不丢失会话状态。</p>
+<p>用自然语言直接描述问题就行：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">analyze Tracer-Cloud/opensre CI/CD performance for the last 30 days</span><br><span class="line">how much developer time does flaky CI cost us</span><br><span class="line">how many PRs and branches currently have failing CI across all my orgs?</span><br><span class="line">fix failing checks on Tracer-Cloud/opensre#4597</span><br><span class="line">set up an agent that improves CI/CD reliability for Tracer-Cloud/opensre</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这几条是官方文档 <code>docs/cicd/overview.mdx</code> 里给的原句，可以直接抄。</p>
+<h3 id="6-4-无头模式（headless）"><a href="#6-4-无头模式（headless）" class="headerlink" title="6.4 无头模式（headless）"></a>6.4 无头模式（headless）</h3><p>跑完一轮就退出，适合脚本和 CI job：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opensre ask <span class="string">"why is checkout-api slow?"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>只读的任务（分析、健康扫描）可以直接无头跑：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opensre --json ask <span class="string">"how many PRs currently have failing CI in Tracer-Cloud?"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>需要写权限的任务要显式批准工具</strong> —— 这是我觉得设计上很到位的一点。因为无头跑没人点「同意」，所以它不默认放行，而是要求你指名道姓：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修一个 PR</span></span><br><span class="line">opensre ask --allowed-tool fix_github_pr_ci <span class="string">"fix failing checks on Tracer-Cloud/opensre#4597"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 调度可靠性 Agent</span></span><br><span class="line">opensre ask --allowed-tool schedule_ci_reliability_loop <span class="string">"set up an agent that improves CI/CD reliability for Tracer-Cloud/opensre"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 调度单个 PR 的修复循环</span></span><br><span class="line">opensre ask --allowed-tool schedule_ci_repair_loop <span class="string">"schedule a CI repair loop for Tracer-Cloud/opensre pull request 6054"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>文档里还有一句提醒：</p>
+<blockquote>
+<p>Each <code>--allowed-tool</code> covers one tool; a task that needs two takes the flag twice.</p>
+</blockquote>
+<p>也就是说每个 <code>--allowed-tool</code> 只对应一个工具，需要两个就得写两遍。这种「最小授权」的设计比一个 <code>--yes-i-know-what-im-doing</code> 强多了。</p>
+<h3 id="6-5-从-Python-调用"><a href="#6-5-从-Python-调用" class="headerlink" title="6.5 从 Python 调用"></a>6.5 从 Python 调用</h3><p>仓库里有个 <code>surfaces/embedded</code> 模块，可以在进程内驱动 Agent：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> surfaces.embedded <span class="keyword">import</span> start_embedded_session</span><br><span class="line"></span><br><span class="line">session = start_embedded_session()</span><br><span class="line">result = session.chat(<span class="string">"why is checkout-api slow?"</span>)</span><br><span class="line"><span class="comment"># ``answered`` is true for any reply text, including a failed model call.</span></span><br><span class="line"><span class="comment"># That failure sets accounting_status to "not_run" and stop_reason to "error".</span></span><br><span class="line"><span class="keyword">if</span> result.action_result.accounting_status == <span class="string">"completed"</span> <span class="keyword">and</span> <span class="keyword">not</span> result.cancelled:</span><br><span class="line">    <span class="built_in">print</span>(result.primary_response_text)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>README 的原注释里有个细节值得注意：<code>answered</code> 为真<strong>不代表模型调用成功</strong>。模型调用失败时，<code>primary_response_text</code> 仍然会被填上，但 <code>accounting_status</code> 是 <code>"not_run"</code>、<code>stop_reason</code> 是 <code>"error"</code>。所以正确的用法是像上面这样同时检查 <code>accounting_status</code> 和 <code>cancelled</code>。</p>
+<h3 id="6-6-从源码跑"><a href="#6-6-从源码跑" class="headerlink" title="6.6 从源码跑"></a>6.6 从源码跑</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">make install</span><br><span class="line">uv run opensre …</span><br><span class="line">uv run python …</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>make install</code> 会装依赖<strong>并</strong>装一个阻塞式的 pre-push hook。其他常用命令：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">opensre integrations setup</span><br><span class="line">opensre update</span><br><span class="line">opensre uninstall   <span class="comment"># 移除 opensre 和所有本地数据</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="七、集成面：87-个目录"><a href="#七、集成面：87-个目录" class="headerlink" title="七、集成面：87 个目录"></a>七、集成面：87 个目录</h2><p>我把 <code>integrations/</code> 目录完整拉下来了，87 个目录，按官方 README 的分类整理：</p>
+<table>
+<thead>
+<tr>
+<th>分类</th>
+<th>集成</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> AI / LLM 提供商（9 家）</td>
+<td>Anthropic · OpenAI · OpenAI Codex · Ollama · Google Gemini · OpenRouter · TrustedRouter · NVIDIA NIM · Bedrock</td>
+</tr>
+<tr>
+<td> 可观测性</td>
+<td> Grafana（Loki / Mimir / Tempo / annotations）· Datadog · Honeycomb · Coralogix · groundcover · CloudWatch · Sentry · Elasticsearch · Better Stack · Splunk · Victoria Logs · SigNoz · OpenObserve · OpenSearch · Azure Monitor · New Relic</td>
+</tr>
+<tr>
+<td> 基础设施</td>
+<td> Kubernetes · AWS（S3 / Lambda / EKS / EC2 / CloudTrail）· Azure · ArgoCD · Helm</td>
+</tr>
+<tr>
+<td> 数据库</td>
+<td> MongoDB · ClickHouse · PostgreSQL · MySQL · MariaDB · MongoDB Atlas · Azure SQL · Snowflake · Redis · RDS · Supabase · Neon</td>
+</tr>
+<tr>
+<td> 数据平台</td>
+<td> Apache Airflow · Apache Kafka · Prefect · RabbitMQ · Dagster · Temporal</td>
+</tr>
+<tr>
+<td>Dev Tools</td>
+<td>GitHub · GitHub MCP · Bitbucket · GitLab · Jenkins</td>
+</tr>
+<tr>
+<td> 事件管理</td>
+<td> PagerDuty・Jira・Alertmanager・incident.io・ServiceNow・Trello（只有 client helper）</td>
+</tr>
+<tr>
+<td>通讯</td>
+<td> Slack · Google Docs · Discord · Telegram · Rocket.Chat · WhatsApp · Buzz</td>
+</tr>
+<tr>
+<td>Agent 部署</td>
+<td> Vercel · AWS EC2 / ECS · Railway</td>
+</tr>
+<tr>
+<td> 协议</td>
+<td> MCP</td>
+</tr>
+</tbody></table>
+<p>LLM 提供商那一行里 <strong>Ollama 在列</strong>，这很关键 —— 完全本地跑模型是官方支持的路径，不是「理论上可以」。</p>
+<p>README 里说「60+ tools and services」，而 <code>integrations/</code> 目录实际有 87 个 —— 数字差异大概是因为 README 按「独立服务」计，目录按「厂商包」计。这两个数不冲突。</p>
+<h3 id="7-1-几个有意思的细节"><a href="#7-1-几个有意思的细节" class="headerlink" title="7.1 几个有意思的细节"></a>7.1 几个有意思的细节</h3><ul>
+<li><p><strong>Slack 被拆成两半</strong>。架构文档里说：</p>
+<blockquote>
+<p>Slack is not a surface: its inbound transport lives in <code>gateway/transports/slack</code>, outbound delivery in <code>integrations/slack</code>.</p>
+</blockquote>
+<p>入站（收消息）和出站（发消息）住在不同的地方，这个切分对避免循环依赖有直接作用。</p>
+</li>
+<li><p><strong><code>integrations/coding_agent</code></strong> 这个目录存在。SRE Agent 内部调用一个 coding agent 来改代码，这两个职责是分开的。</p>
+</li>
+<li><p><strong><code>integrations/knowledge_scans</code>、<code>integrations/webapp_knowledge</code>、<code>integrations/webapp_requests</code></strong> 这几个看起来是 webapp 侧的能力。</p>
+</li>
+<li><p><strong><code>infrastructure/skills_registry</code></strong> —— 结合 AGENTS.md 里对 SKILL.md 的严格保护规则，说明它有一套正式的 Skill 机制，只是这套文件是「人类拥有」的。</p>
+</li>
+</ul>
+<h2 id="八、部署：三种姿势"><a href="#八、部署：三种姿势" class="headerlink" title="八、部署：三种姿势"></a>八、部署：三种姿势</h2><p><strong>第一种是 OpenSRE Cloud 托管网关</strong>：由组织管理员在 web app 里开通。已登录的 shell 用户可以查看、启动、停止自己组织的网关，启动和停止需要审批和管理员权限。</p>
+<h3 id="8-2-AMI-systemd（EC2，Telegram-网关）"><a href="#8-2-AMI-systemd（EC2，Telegram-网关）" class="headerlink" title="8.2 AMI + systemd（EC2，Telegram 网关）"></a>8.2 AMI + systemd（EC2，Telegram 网关）</h3><p>不用 Docker。流程是：把网关烤进一个自定义 AMI，之后每次部署从这个 AMI 起一台新机器，大约 2 到 3 分钟。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Step 1 — 烤一个网关 AMI（每次代码变更跑一次，5-10 分钟）</span></span><br><span class="line">make build-gateway-image</span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 2 — 从存好的 AMI 起一台 EC2（快）</span></span><br><span class="line">make deploy-gateway</span><br><span class="line"></span><br><span class="line"><span class="comment"># 拆掉（默认保留 AMI）</span></span><br><span class="line">make destroy-gateway</span><br><span class="line"></span><br><span class="line"><span class="comment"># 连 AMI 注销一起彻底拆掉</span></span><br><span class="line">OPENSRE_GATEWAY_DESTROY_PURGE_AMI=1 make destroy-gateway</span><br></pre></td></tr></tbody></table></figure>
+
+<p>回滚到之前的 AMI：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OPENSRE_GATEWAY_AMI_ID=ami-&lt;previous-id&gt; make deploy-gateway</span><br></pre></td></tr></tbody></table></figure>
+
+<p>用 SSM 连进去看状态：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">aws ssm start-session --target &lt;InstanceId&gt;</span><br><span class="line"><span class="comment"># 进去之后：</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl status opensre-gateway</span><br><span class="line"><span class="built_in">sudo</span> journalctl -u opensre-gateway -f</span><br></pre></td></tr></tbody></table></figure>
+
+<p>部署产物写在 <code>~/.opensre/deployments/opensre-gateway.json</code>。</p>
+<blockquote>
+<p>⚠️ 注意 <code>DEPLOYMENT.md</code> 里的一个警告：<strong>Slack 的部署不走这条路径</strong>。原因是 Socket Mode 是单消费者模式 —— 起第二个消费者会把事件分流掉。所以 EC2 部署里 <code>SLACK_*</code> 变量会被忽略（校验时会告警）。</p>
+</blockquote>
+<h3 id="8-3-通用自托管（Dockerfile-Railway-ECS-Vercel）"><a href="#8-3-通用自托管（Dockerfile-Railway-ECS-Vercel）" class="headerlink" title="8.3 通用自托管（Dockerfile / Railway / ECS / Vercel）"></a>8.3 通用自托管（Dockerfile / Railway / ECS / Vercel）</h3><p>用仓库自带的 <code>Dockerfile</code>，设 <code>MODE</code>，配 <code>LLM_PROVIDER</code> 和对应的 API key：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LLM_PROVIDER=anthropic</span><br><span class="line">ANTHROPIC_API_KEY=...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>各 provider 的 key 名字：</p>
+<table>
+<thead>
+<tr>
+<th><code>LLM_PROVIDER</code></th>
+<th>环境变量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>anthropic</code></td>
+<td><code>ANTHROPIC_API_KEY</code></td>
+</tr>
+<tr>
+<td><code>openai</code></td>
+<td><code>OPENAI_API_KEY</code></td>
+</tr>
+<tr>
+<td><code>openrouter</code></td>
+<td><code>OPENROUTER_API_KEY</code></td>
+</tr>
+<tr>
+<td><code>trustedrouter</code></td>
+<td><code>TRUSTEDROUTER_API_KEY</code></td>
+</tr>
+<tr>
+<td><code>gemini</code></td>
+<td><code>GEMINI_API_KEY</code></td>
+</tr>
+</tbody></table>
+<p>多副本部署时还需要 <code>DATABASE_URL</code>（Postgres），用于 Slack Events API 这类需要跨副本共享状态的场景。<code>OPENSRE_HOME</code> 要放到共享挂载上，否则多进程的调度任务会打架。</p>
+<p>顺便说一下，仓库根目录的 <code>.env.example</code> 有 26,596 字节 ——2.6 万字节的环境变量说明。这是个信息量很大的文件，也侧面说明了「60+ 集成」的实际配置复杂度。<strong>如果你只是先试用，别一上来就配这个文件</strong>，先用默认的托管模型跑通再慢慢加。</p>
+<h2 id="九、依赖与实现细节"><a href="#九、依赖与实现细节" class="headerlink" title="九、依赖与实现细节"></a>九、依赖与实现细节</h2><p>从 <code>pyproject.toml</code> 能看出这个项目的技术选型：</p>
+<figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[project]</span></span><br><span class="line"><span class="attr">name</span> = <span class="string">"opensre"</span></span><br><span class="line"><span class="attr">version</span> = <span class="string">"0.1"</span></span><br><span class="line"><span class="attr">description</span> = <span class="string">"Open-source SRE agent for automated incident investigation and root cause analysis..."</span></span><br><span class="line"><span class="attr">requires-python</span> = <span class="string">"&gt;=3.12"</span></span><br><span class="line"><span class="attr">license</span> = { text = <span class="string">"Apache-2.0"</span> }</span><br><span class="line"><span class="attr">keywords</span> = [<span class="string">"sre"</span>, <span class="string">"devops"</span>, <span class="string">"incident"</span>, <span class="string">"rca"</span>, <span class="string">"llm"</span>, <span class="string">"ai"</span>, <span class="string">"agent"</span>, <span class="string">"observability"</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>依赖里几个关键项（完整清单有 60 多项，这里只挑值得说的）：</p>
+<figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dependencies</span> = [</span><br><span class="line">    <span class="comment"># Core AI/Agent</span></span><br><span class="line">    <span class="string">"anthropic&gt;=0.77.1"</span>,</span><br><span class="line">    <span class="string">"mcp&gt;=1.28.1"</span>,</span><br><span class="line">    <span class="string">"openai&gt;=2.0.0"</span>,</span><br><span class="line">    <span class="string">"litellm&gt;=1.106.2,&lt;1.110.0"</span>,</span><br><span class="line">    <span class="comment"># Data validation</span></span><br><span class="line">    <span class="string">"pydantic&gt;=2.12.5,&lt;3"</span>,</span><br><span class="line">    <span class="string">"kubernetes&gt;=28.1.0,&lt;37.0.0"</span>,</span><br><span class="line">    <span class="comment"># HTTP and async</span></span><br><span class="line">    <span class="string">"httpx[socks]&gt;=0.27.0"</span>,</span><br><span class="line">    <span class="string">"fastapi&gt;=0.135.3"</span>,</span><br><span class="line">    <span class="string">"uvicorn[standard]&gt;=0.30.0"</span>,</span><br><span class="line">    <span class="comment"># Authentication</span></span><br><span class="line">    <span class="string">"PyJWT&gt;=2.13.0"</span>,</span><br><span class="line">    <span class="string">"cryptography&gt;=50.0.0,&lt;51"</span>,</span><br><span class="line">    <span class="comment"># AWS / Slack / Discord</span></span><br><span class="line">    <span class="string">"boto3&gt;=1.42.88"</span>,</span><br><span class="line">    <span class="string">"slack-sdk&gt;=3.31.0"</span>,</span><br><span class="line">    <span class="string">"discord.py&gt;=2.4.0,&lt;3"</span>,</span><br><span class="line">    <span class="comment"># OpenTelemetry</span></span><br><span class="line">    <span class="string">"opentelemetry-api&gt;=1.41.0"</span>,</span><br><span class="line">    <span class="string">"opentelemetry-sdk&gt;=1.20.0"</span>,</span><br><span class="line">    <span class="string">"opentelemetry-exporter-otlp-proto-http&gt;=1.41.0"</span>,</span><br><span class="line">    <span class="string">"opentelemetry-instrumentation&gt;=0.40b0"</span>,</span><br><span class="line">    <span class="string">"tracer_decorator"</span>,</span><br><span class="line">    <span class="comment"># Databases</span></span><br><span class="line">    <span class="string">"pymongo&gt;=4.6.0,&lt;6.0.0"</span>,</span><br><span class="line">    <span class="string">"redis&gt;=5.0.0,&lt;9.0.0"</span>,</span><br><span class="line">    <span class="string">"clickhouse-connect&gt;=0.15.1,&lt;2.0.0"</span>,</span><br><span class="line">    <span class="string">"pymysql&gt;=1.1.0,&lt;2.0.0"</span>,</span><br><span class="line">    <span class="comment"># Scheduler for cron-driven deliveries</span></span><br><span class="line">    <span class="string">"APScheduler&gt;=3.10.0,&lt;4.0.0"</span>,</span><br><span class="line">]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>几个观察：</p>
+<ol>
+<li><strong><code>litellm</code> 统一了多 provider 接入</strong>。这也解释了为什么 LLM provider 能从 Anthropic 一路铺到 NVIDIA NIM、TrustedRouter 这些。</li>
+<li><strong><code>mcp&gt;=1.28.1</code></strong> 在依赖里，而且集成表里有 MCP 协议和 <code>github_mcp</code>、<code>sentry_mcp</code>、<code>posthog_mcp</code>—— 它不只是消费 MCP，也在产出 MCP 工具。</li>
+<li><strong><code>opentelemetry-*</code> 全套</strong>。一个 SRE Agent 自己不做 OpenTelemetry 接入是说不过去的 —— 它得能被观测。</li>
+<li><strong><code>tracer_decorator</code> 来自 Tracer</strong>，项目母公司的自家 SDK。</li>
+<li><strong>那条 <code>cryptography</code> 的注释特别有意思</strong>，值得单独看：</li>
+</ol>
+<figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 50.0.0 is the first version patched for CVE-2026-69247 (GHSA-g6cj-pr64-35w5,</span></span><br><span class="line"><span class="comment"># PKCS#7 Bleichenbacher oracle). cryptography &gt;=49 ships no x86-64 macOS wheel,</span></span><br><span class="line"><span class="comment"># so the frozen darwin-x64 release binary builds it from source against</span></span><br><span class="line"><span class="comment"># OpenSSL &gt;= 3.2 (SSL_get0_group_name). release.yml pins Homebrew openssl@3</span></span><br><span class="line"><span class="comment"># and re-copies those dylibs into the PyInstaller onedir bundle.</span></span><br><span class="line">"cryptography&gt;=50.0.0,&lt;51",</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这条注释把整条链路都写清楚了：为什么锁死版本区间（因为 CVE-2026-69247，PKCS#7 的 Bleichenbacher oracle 攻击）、为什么 darwin-x64 要从源码编译（&gt;=49 没有 x86-64 macOS wheel）、为什么 release workflow 里要 pin Homebrew openssl@3（因为要用 OpenSSL 3.2 的 <code>SSL_get0_group_name</code>）。这正是 README 里说的「structured and auditable LLM prompts」的同一价值观在依赖管理上的体现。</p>
+<h3 id="9-1-一个细节：它自己的-CI"><a href="#9-1-一个细节：它自己的-CI" class="headerlink" title="9.1 一个细节：它自己的 CI"></a>9.1 一个细节：它自己的 CI</h3><p><code>CI.md</code> 明确写着：</p>
+<blockquote>
+<p>This file is the <strong>single source of truth</strong> for required local validation before any push or pull request.</p>
+</blockquote>
+<p>它区分了两类验证：</p>
+<ul>
+<li><strong>pre-push hook</strong>：只跑 <strong>Ruff lint 和格式检查，且只针对改动的 Python 文件</strong>，从被推送的已提交 revision 里跑。用临时 Git worktree 保证「未提交的源码修改不能掩盖一个已提交的 lint 失败」。明确说了它<strong>不</strong>跑测试、类型检查、注册表检查、导入检查。</li>
+<li><strong>PR CI</strong>：跑全部共享质量检查和完整测试矩阵，另有 Linux/Windows 检查、CodeQL、打包、release 校验。</li>
+</ul>
+<p>还有一条我觉得很实在的规定：</p>
+<blockquote>
+<p>Run <code>make check-full</code> for an explicit full local validation run… This is opt-in, not a routine commit, push, or PR prerequisite.</p>
+</blockquote>
+<p>以及紧急豁免机制：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git -c opensre.prePushOverride=<span class="string">'incident reference and reason'</span> push</span><br></pre></td></tr></tbody></table></figure>
+
+<p>豁免必须给理由，而且只对那一次 push 生效。<strong>强制豁免要留痕</strong> —— 这是个很小的设计，但很多团队做不到。</p>
+<h2 id="十、和同类项目比"><a href="#十、和同类项目比" class="headerlink" title="十、和同类项目比"></a>十、和同类项目比</h2><p>先把话说清楚：<strong>OpenSRE 不是唯一一个 AI SRE / AIOps 工具</strong>，这个赛道 2025 年之后挺拥挤的。我按几个维度对比一下它相对的位置。</p>
+<h3 id="10-1-对比-Datadog-Bits-AI、New-Relic-AI、PagerDuty-Advance"><a href="#10-1-对比-Datadog-Bits-AI、New-Relic-AI、PagerDuty-Advance" class="headerlink" title="10.1 对比 Datadog Bits AI、New Relic AI、PagerDuty Advance"></a>10.1 对比 Datadog Bits AI、New Relic AI、PagerDuty Advance</h3><p>这些是<strong>商业可观测性平台内置的 AI</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th> OpenSRE</th>
+<th>Datadog Bits AI / New Relic AI</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 部署</td>
+<td>自托管、开源、Apache-2.0</td>
+<td> 闭源 SaaS，绑定平台</td>
+</tr>
+<tr>
+<td>模型</td>
+<td>自选，9 家 provider，可 Ollama 全本地</td>
+<td>平台内建，通常不可选</td>
+</tr>
+<tr>
+<td>能动代码吗</td>
+<td><strong>能</strong>，推 commit 到 PR 分支</td>
+<td><strong>不能</strong>，只做分析和建议</td>
+</tr>
+<tr>
+<td> CI 视角</td>
+<td>核心场景就是 CI 失败排查</td>
+<td>通常不覆盖 CI</td>
+</tr>
+<tr>
+<td> 数据流向</td>
+<td>日志和指标可以留在自己机器上</td>
+<td>需要数据上云</td>
+</tr>
+<tr>
+<td>价格</td>
+<td>免费（软件），自己付模型和基础设施</td>
+<td>按平台订阅</td>
+</tr>
+<tr>
+<td><strong>核心差异是「能不能动代码」</strong>。Datadog Bits AI 能告诉你「这个 p99 上升是因为某个 downstream 超时」，但它不会给你开 PR。OpenSRE 的整个价值主张在于把「诊断」延伸到「修复」，而且是在你的 git 仓库里、用你的 review 流程。</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>代价也很直接：<strong>你要自己承担 Agent 改错代码的风险</strong>，所以才有 <code>--allowed-tool</code>、受保护分支拒绝、fork PR 拒绝这些设计。</p>
+<h3 id="10-2-对比-GitHub-Copilot-Claude-Code-Cursor-这类编程-Agent"><a href="#10-2-对比-GitHub-Copilot-Claude-Code-Cursor-这类编程-Agent" class="headerlink" title="10.2 对比 GitHub Copilot / Claude Code / Cursor 这类编程 Agent"></a>10.2 对比 GitHub Copilot / Claude Code / Cursor 这类编程 Agent</h3><p>这可能是最容易被拿来问的一组。</p>
+<p><strong>它们的目标不同。</strong> Copilot 和 Claude Code 是「帮我写代码」的工具，CI 挂了你可以让它看看，但它们不知道你的 CI 配置、不知道哪个 test 之前一直 flaky、不知道 <code>main</code> 上周红了 6 小时。</p>
+<p><strong>OpenSRE 的目标不同。</strong> 它的领域知识是「CI 可靠性和事故排查」，它带着这个领域的集成（Grafana Loki、PromQL、Alertmanager、Kubernetes pod 状态、部署历史），它的输出形态是「CI 可靠性报告 + 修复 PR + 事故摘要」。</p>
+<p><strong>但它们在能力上重叠得比想象的多。</strong> OpenSRE 内部自己就带了一个 <code>coding_agent</code> 集成。你完全可以只用 Claude Code 加一堆 MCP server 达到类似效果。</p>
+<p>那 OpenSRE 的差异在哪？我觉得在三点：</p>
+<ol>
+<li><strong>默认动作不同</strong>。编程 Agent 默认是「等你给指令」，OpenSRE 默认是「我主动扫一遍你的仓库，看哪些 PR 红了、CI 花了多少工时」。</li>
+<li><strong>领域模型不同</strong>。它区分「CI 导致的失败」和「代码导致的失败」，这个概念编程 Agent 不会主动建立。</li>
+<li><strong>成本模型不同</strong>。它的 CI 扫描和分析是<strong>只读</strong>的，可以无头批量跑，成本可控；而编程 Agent 的每次调用都在烧你的订阅额度。</li>
+</ol>
+<h3 id="10-3-对比-Sentry-Seer、Datadog-Bits-AI-的「自动修复」"><a href="#10-3-对比-Sentry-Seer、Datadog-Bits-AI-的「自动修复」" class="headerlink" title="10.3 对比 Sentry Seer、Datadog Bits AI 的「自动修复」"></a>10.3 对比 Sentry Seer、Datadog Bits AI 的「自动修复」</h3><p>Sentry Seer 也在做 AI 根因分析，但它的范围限定在 Sentry 自己的错误事件里。OpenSRE 的范围宽得多 ——CI、K8s、AWS、Grafana、日志、trace、告警、部署历史。</p>
+<h3 id="10-4-对比传统-SRE-自动化工具"><a href="#10-4-对比传统-SRE-自动化工具" class="headerlink" title="10.4 对比传统 SRE 自动化工具"></a>10.4 对比传统 SRE 自动化工具</h3><p>传统方案是 PagerDuty Automation、Rundeck 这些 —— 它们做的是<strong>确定性的 runbook 执行</strong>。「磁盘满了就扩容」「服务挂了就重启」。OpenSRE 是<strong>非确定性推理</strong>。</p>
+<p>两者是互补的，不是替代。老的确定性 runbook 更快、更可靠、更便宜；Agent 适合处理那些「runbook 没覆盖到」的模糊场景。一个务实的团队最终大概是：确定性自动化处理已知故障，Agent 处理长尾。</p>
+<h3 id="10-5-一句话总结它的位置"><a href="#10-5-一句话总结它的位置" class="headerlink" title="10.5 一句话总结它的位置"></a>10.5 一句话总结它的位置</h3><blockquote>
+<p>OpenSRE 是 **「CI 可靠性」这个垂直领域的开源 Agent**，强项是集成广度 + 自托管 + 只读分析低风险；弱项是成熟度（public alpha）、单个项目的工程量巨大（87 个集成目录）。</p>
+</blockquote>
+<h2 id="十一、真实局限：说点不好听的"><a href="#十一、真实局限：说点不好听的" class="headerlink" title="十一、真实局限：说点不好听的"></a>十一、真实局限：说点不好听的</h2><p>这一节我要认真写，因为这个项目太新、太热、太「AI」了，不泼点冷水容易被带偏。</p>
+<h3 id="11-1-它是-public-alpha"><a href="#11-1-它是-public-alpha" class="headerlink" title="11.1 它是 public alpha"></a>11.1 它是 public alpha</h3><p>README 明说了：</p>
+<blockquote>
+<p>🚧 Public Alpha: Core workflows are usable for early exploration, though not yet fully stable.</p>
+</blockquote>
+<p>「核心流程可以用于早期探索，但尚未完全稳定。」API 和集成都可能变。</p>
+<p>这在实践中的意思是：<strong>你今天写的集成脚本、用的 CLI 参数，明天可能就变。</strong> 如果你要把它接进生产 CI 流程，锁版本是必须的。</p>
+<h3 id="11-2-它的-CI-修复能力，实际效果依赖模型和集成质量"><a href="#11-2-它的-CI-修复能力，实际效果依赖模型和集成质量" class="headerlink" title="11.2 它的 CI 修复能力，实际效果依赖模型和集成质量"></a>11.2 它的 CI 修复能力，实际效果依赖模型和集成质量</h3><p>Agent 能不能修好你的 CI，取决于三件事：</p>
+<ol>
+<li><strong>模型能力</strong>。用弱模型跑 ReAct 循环，很可能查半天查不出根因，最后给你一个「建议重跑」的废话答案。</li>
+<li><strong>日志质量</strong>。如果你的 CI 日志是 4000 行 unstructured text，Agent 需要很强的长上下文能力才能捞到关键信息。这就是为什么 <code>core/context_budget.py</code> 这种上下文预算强制机制存在。</li>
+<li><strong>集成是否接全</strong>。只接了 GitHub、不接 Grafana 和 Kubernetes，它就只能看到 CI 日志，看不到 pod 状态和指标，诊断深度会差很多。</li>
+</ol>
+<p>所以「装上就好用」是不成立的。README 里那句「Built by 883 stars today」式的热度，跟「它能不能解决我的具体问题」是两回事。</p>
+<h3 id="11-3-集成数量-≠-集成质量"><a href="#11-3-集成数量-≠-集成质量" class="headerlink" title="11.3 集成数量 ≠ 集成质量"></a>11.3 集成数量 ≠ 集成质量</h3><p>87 个集成目录，配置起来是个工程。<code>.env.example</code> 26KB 的规模已经说明问题了。而且每次接一个外部系统，都意味着：</p>
+<ul>
+<li>多一份凭证要保管</li>
+<li>多一个外部 API 的速率限制要考虑</li>
+<li>多一个可能 schema 变了的依赖</li>
+</ul>
+<p>我个人的判断是：<strong>开箱用的话，先只接 GitHub</strong>（<code>opensre integrations setup github</code>），把 CI 分析和 PR 修复跑通就够了。Grafana、Datadog、K8s 这些等你真的需要跨系统关联时再加。</p>
+<h3 id="11-4-「修复循环」的自动推送是有风险的"><a href="#11-4-「修复循环」的自动推送是有风险的" class="headerlink" title="11.4 「修复循环」的自动推送是有风险的"></a>11.4 「修复循环」的自动推送是有风险的</h3><p>文档说修复循环是「10 分钟内最多推 3 次修复」。这听起来很安全（有次数上限），但它推的是真 commit。配合 <code>--allowed-tool</code> 的显式授权，虽然你在批准那一步是知情的，但 <strong>Agent 连续推 3 次不同修复</strong>这个行为本身，需要你有信心。</p>
+<p>我的建议：初期只用「修一个 PR」这种一次性的（<code>fix_github_pr_ci</code>），别一上来就开自动循环。看看它推的东西靠不靠谱，再决定要不要放手。</p>
+<h3 id="11-5-遥测默认是开的"><a href="#11-5-遥测默认是开的" class="headerlink" title="11.5 遥测默认是开的"></a>11.5 遥测默认是开的</h3><p>README 里：</p>
+<blockquote>
+<p>First-party product analytics and Sentry (errors) are <strong>opt-out</strong>.</p>
+</blockquote>
+<p>opt-out 意思是默认开启，要手动关。关闭方法：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> OPENSRE_NO_TELEMETRY=1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>安全策略里提到：</p>
+<blockquote>
+<p>structured and auditable LLM prompts, local transcript handling by default, and no silent bulk export of raw logs.</p>
+</blockquote>
+<p>「默认本地处理 transcript」「不会静默批量导出原始日志」—— 这两点听起来不错。但注意这是<strong>默认</strong>行为，配置起来之后未必。而且托管模型那条路径，你的日志是要发给外部 LLM provider 的。README 里提到的 masking（敏感标识符遮蔽）是<strong>可选</strong>的：</p>
+<blockquote>
+<p><strong>Masks</strong> sensitive identifiers (optional) before external LLM calls</p>
+</blockquote>
+<p>「optional」这个词很关键。对日志脱敏有要求的团队（金融、医疗、涉及 PII 的），必须自己确认这个开关是开着的。</p>
+<h3 id="11-6-一个人扛起了大半代码"><a href="#11-6-一个人扛起了大半代码" class="headerlink" title="11.6 一个人扛起了大半代码"></a>11.6 一个人扛起了大半代码</h3><p>contributors 数据里，<code>davincios</code> 1100 次提交，<code>VaibhavUpreti</code> 641 次，第二第三名骤降到 364、359。Bus factor 不高。虽然 Tracer Cloud 是家公司（有商业支持），但如果你要长期依赖，需要考虑这一点。</p>
+<h3 id="11-7-文档和代码之间有-gap"><a href="#11-7-文档和代码之间有-gap" class="headerlink" title="11.7 文档和代码之间有 gap"></a>11.7 文档和代码之间有 gap</h3><p>它每天发版，README 里的 <code>quickstart</code> 链接指向 opensre.com 的文档站，而代码在 GitHub。架构文档写得非常详细，但细节（比如具体某个工具的参数）以线上文档为准。这个在我读的时候是正常的，但如果线上文档跟仓库版本对不上，会让人踩坑。</p>
+<h3 id="11-8-Python-3-12-的门槛"><a href="#11-8-Python-3-12-的门槛" class="headerlink" title="11.8 Python 3.12+ 的门槛"></a>11.8 Python 3.12+ 的门槛</h3><p><code>requires-python = "&gt;=3.12"</code>。如果你的生产环境还在 3.10/3.11（不少公司是这样，尤其是 CentOS 系的服务器），自托管会有摩擦。当然用容器能绕过。</p>
+<h2 id="十二、适合谁，不适合谁"><a href="#十二、适合谁，不适合谁" class="headerlink" title="十二、适合谁，不适合谁"></a>十二、适合谁，不适合谁</h2><h3 id="12-1-适合"><a href="#12-1-适合" class="headerlink" title="12.1 适合"></a>12.1 适合</h3><p><strong>✅ 团队 CI 经常红、且红得没规律</strong></p>
+<p>这是最核心的画像。你的团队每周要花 5 小时以上在「重跑 CI 看是不是 flaky」上，OpenSRE 直接就是为你做的。</p>
+<p><strong>✅ 已经有可观测性栈（Grafana、Datadog、K8s）</strong></p>
+<p>集成面广是它最大的优势。如果你只有 GitHub Actions 一个东西，它能做的就只是读日志，深度有限。</p>
+<p><strong>✅ 在意数据不出内网</strong></p>
+<p>支持 Ollama，能完全本地跑模型，日志默认本地处理。对有合规要求的团队这是硬需求。</p>
+<p><strong>✅ 想给新同事「 senior 级的上下文」</strong></p>
+<p>README 里那句话说得挺准：</p>
+<blockquote>
+<p><strong>Senior-level context for everyone:</strong> every engineer gets the same depth of analysis</p>
+</blockquote>
+<p>不是每个团队都有 SRE。老工程师离职后，CI 排查的知识就跟着走了。这个工具某种程度上是在把资深工程师的经验固化成 Agent。</p>
+<p><strong>✅ 想把 CI 可靠性当一个指标来管</strong></p>
+<p>如果你已经在看「部署频率」和「变更失败率」这类 DORA 指标，OpenSRE 的 30 天报告能直接接上 —— 它给你「CI 导致的失败占比」和「main 保持红色的时长」。</p>
+<p><strong>✅ 愿意自己搭的团队</strong></p>
+<p>它的自托管路径（AMI 或 Dockerfile）需要你懂一点 AWS / Docker / K8s。想要开箱即用的 SaaS 体验，这个项目不是。</p>
+<h3 id="12-2-不适合"><a href="#12-2-不适合" class="headerlink" title="12.2 不适合"></a>12.2 不适合</h3><p><strong>❌ CI 一直是绿的、团队也就三五个人</strong></p>
+<p>收益会非常有限。CI 绿的时候不需要 Agent。</p>
+<p><strong>❌ 只有一个单体仓库、CI 配置很简单</strong></p>
+<p>「CI 红了」在简单项目里通常一眼就能看出来。用 Agent 排查属于杀鸡用牛刀。</p>
+<p><strong>❌ 要求输出稳定可复现的确定性</strong></p>
+<p>Agent 的输出是概率性的。如果你的流程（合规、审计、客户交付）要求「同样的输入必须得到同样的结论」，别用它。</p>
+<p><strong>❌ 团队里没人能 review Agent 推的代码</strong></p>
+<p><strong>这条我觉得最重要。</strong> 如果团队里没有人有足够的技术判断力去 review 一个 AI 生成的 CI 修复，那这套东西就是一台「自动生成 diff 的机器」，你只是把「重跑」换成了「review 一坨不知道对不对的补丁」，工作负担反而增加了。</p>
+<p><strong>❌ 数据不能出内网但也不想折腾本地模型</strong></p>
+<p>自托管 + Ollama 需要你有 GPU 资源和运维能力。没有的话，要么用托管模型（数据出内网），要么先别用。</p>
+<p><strong>❌ 急着要稳定生产方案</strong></p>
+<p>public alpha。每天发版。API 会变。</p>
+<h2 id="十三、我的实测想法和一个上手路线"><a href="#十三、我的实测想法和一个上手路线" class="headerlink" title="十三、我的实测想法和一个上手路线"></a>十三、我的实测想法和一个上手路线</h2><p>如果你想试，我建议这个顺序 —— 每一步都能独立停下来，不会有「装了一半」的尴尬。</p>
+<p><strong>第 1 步：只跑只读的分析（零风险）</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://install.opensre.com | bash -s -- -gh</span><br><span class="line">opensre</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后在 shell 里：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">analyze &lt;你的owner&gt;/&lt;你的repo&gt; CI/CD performance for the last 30 days</span><br><span class="line">how many PRs and branches currently have failing CI across all my orgs?</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这两条都只读，不改任何东西，但能给你一个 baseline：你的 CI 到底有多不可靠？如果答案是「失败率 3%，每周 main 红 1 小时」，那你就知道这个工具对你值不值。</p>
+<p><strong>第 2 步：在一个「扔了也不心疼」的 PR 上试修复</strong></p>
+<p>挑一个你自己都懒得看的 flaky PR：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opensre ask --allowed-tool fix_github_pr_ci <span class="string">"fix failing checks on &lt;owner&gt;/&lt;repo&gt;#&lt;PR号&gt;"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>看它推的 commit，重点看两件事</strong>：它有没有区分「CI 失败」和「代码失败」，以及它的解释里有没有给出证据链接。README 说输出是 evidence-linked 的，实际能给出多少证据，是判断这个工具成色的关键。</p>
+<p><strong>第 3 步：接一个可观测性系统</strong></p>
+<p>只有当你觉得第 2 步的诊断深度不够时再接。这时候加 Grafana Loki 或者 Datadog，收益最大。</p>
+<p><strong>第 4 步（谨慎）：常驻 Agent / 修复循环</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opensre ask --allowed-tool schedule_ci_reliability_loop <span class="string">"set up an agent that improves CI/CD reliability for &lt;owner&gt;/&lt;repo&gt;"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>先只开只读的可靠性报告（每个工作日早上推一份到 inbox），这个是纯收益。修复循环放到最后，且只在你自己完全清楚它的行为边界之后。</p>
+<h3 id="13-1-记得关遥测"><a href="#13-1-记得关遥测" class="headerlink" title="13.1 记得关遥测"></a>13.1 记得关遥测</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> OPENSRE_NO_TELEMETRY=1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>放到你的 shell rc 里。</p>
+<h2 id="十四、除了用起来，它的代码也值得读"><a href="#十四、除了用起来，它的代码也值得读" class="headerlink" title="十四、除了用起来，它的代码也值得读"></a>十四、除了用起来，它的代码也值得读</h2><p>这是我今天最想说的一个额外收获：<strong>这个仓库拿来当 Agent 工程的架构样板，比拿来当工具用更有价值。</strong></p>
+<p>它有几处设计是能直接抄到自己项目里的：</p>
+<h3 id="14-1-用-import-linter-把架构约束变成-CI-不变量"><a href="#14-1-用-import-linter-把架构约束变成-CI-不变量" class="headerlink" title="14.1 用 import-linter 把架构约束变成 CI 不变量"></a>14.1 用 import-linter 把架构约束变成 CI 不变量</h3><p>架构文档里那句话是关键：</p>
+<blockquote>
+<p>These dependency rules are CI-enforced (<code>make check-imports</code>), so they are real invariants rather than aspirations.</p>
+</blockquote>
+<p>大部分项目的架构文档写着「A 层不能依赖 B 层」，实际靠人自觉 review。OpenSRE 把它变成了 <code>make check-imports</code> 里的一条命令，违反就红。这比在 review 里盯着有效得多。</p>
+<h3 id="14-2-「能力注册」的收敛点-测试钉死"><a href="#14-2-「能力注册」的收敛点-测试钉死" class="headerlink" title="14.2 「能力注册」的收敛点 + 测试钉死"></a>14.2 「能力注册」的收敛点 + 测试钉死</h3><p>两个不能互相导入的同层包，能力注册收敛到 <code>CAPABILITY_REGISTRARS</code> 一个常量，测试在两边不一致时失败。这类「架构不变量测试」值得抄：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># tests/infrastructure/process/test_capability_registrars.py 的思路</span></span><br><span class="line"><span class="comment"># 两边的注册器列表必须一致，且不允许出现第三份副本</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="14-3-保护自己的人类文件"><a href="#14-3-保护自己的人类文件" class="headerlink" title="14.3 保护自己的人类文件"></a>14.3 保护自己的人类文件</h3><figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## Human-owned files (mandatory)</span></span><br><span class="line"></span><br><span class="line">Agents must never create, edit, rename, move, or delete any <span class="code">`SKILL.md`</span> anywhere</span><br><span class="line">in this repository or <span class="code">`core/agent_harness/prompts/opensre_system_prompt.md`</span>,</span><br><span class="line">including frontmatter.</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>任何 Agent 项目都该有这条。</strong> 我见过太多 Agent 项目因为自己「顺手优化」prompt 导致行为漂移，而且没人知道是哪次改的。OpenSRE 直接把它写成硬规则，还规定了唯一例外（用户逐字给出替换文本时的字面替换）—— 连「不许顺手重排」都写进去了。</p>
+<h3 id="14-4-pre-push-hook-只做便宜的检查"><a href="#14-4-pre-push-hook-只做便宜的检查" class="headerlink" title="14.4 pre-push hook 只做便宜的检查"></a>14.4 pre-push hook 只做便宜的检查</h3><p>它的 pre-push hook 只跑 Ruff lint（且只针对改动的文件），不跑测试、不跑类型检查。理由写得很清楚：</p>
+<blockquote>
+<p>It does not install dependencies or run tests, typechecking, registry checks, or import checks.</p>
+</blockquote>
+<p><strong>本地 hook 跑重的，慢得让人想 <code>--no-verify</code>，那就等于没有。</strong> 重的检查放 CI，快的放本地。这个分工是很多团队的直觉盲区。</p>
+<h3 id="14-5-强制豁免要留痕"><a href="#14-5-强制豁免要留痕" class="headerlink" title="14.5 强制豁免要留痕"></a>14.5 强制豁免要留痕</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git -c opensre.prePushOverride=<span class="string">'incident reference and reason'</span> push</span><br></pre></td></tr></tbody></table></figure>
+
+<p>紧急绕过是合理的，但必须留下理由字符串。小设计，大作用。</p>
+<h3 id="14-6-环境变量集中治理"><a href="#14-6-环境变量集中治理" class="headerlink" title="14.6 环境变量集中治理"></a>14.6 环境变量集中治理</h3><p>AGENTS.md 里的规定：</p>
+<blockquote>
+<p>Env-var names and shared static constants belong in domain leaf modules under <code>config/constants/</code>, re-exported by its <code>__init__.py</code>. Only names used solely inside <code>config/llm_settings.py</code> may live there; do not create auth import cycles.</p>
+</blockquote>
+<p>还有一个我觉得很见功力：</p>
+<blockquote>
+<p>Redact exception details at external HTTP/chat response boundaries, not shared call sites. Log full detail server-side with <code>logger</code> and <code>capture_exception</code>; return a generic message or exception type name.</p>
+</blockquote>
+<p><strong>在边界处脱敏，不在共享调用点脱敏。</strong> 本地终端保留完整细节（便于排查），但发给外部的响应里不能暴露 provider/model 内部信息。这条规则很具体，而且能直接抄。</p>
+<h2 id="十五、总结"><a href="#十五、总结" class="headerlink" title="十五、总结"></a>十五、总结</h2><p>回到开头那个周五下午五点的场景。</p>
+<p>OpenSRE 做的事情，本质上是<strong>把「CI 挂了之后的那 30 分钟」从人的时间轴上摘下来</strong>。不是摘走「CI 不会挂了」——CI 该红还是红 —— 而是摘走「你得花 30 分钟 + 一个资深工程师的脑力，才能搞清楚为什么红」。</p>
+<p>它给出的答案是：让 Agent 自己去查，附上证据链，把修复推到你的 PR 上，你只需要点 review。</p>
+<p>从这个角度看，它和我见过的其他 AI Agent 项目有个明显区别：<strong>它的场景边界划得很窄，但划得准</strong>。不贪大，不做「全能运维助手」，就是「CI 可靠性 + 事故排查」这一件事，然后为了这一件事去接 87 个系统。</p>
+<p>项目本身还在 alpha，文档里明说了。但它的架构分层、import-linter 强制的依赖不变量、对人类文件的所有权保护、pre-push 与 CI 的分工 —— 这些工程实践是可以现在就学的。</p>
+<p>如果让我给一个具体建议：<strong>先跑那个 30 天只读分析</strong>。二十分钟的成本，你就能知道自己的 CI 到底在偷走多少工时。这个数字如果够难看，剩下的决定就好做了。</p>
+<hr>
+<h2 id="附：本文事实核对"><a href="#附：本文事实核对" class="headerlink" title="附：本文事实核对"></a>附：本文事实核对</h2><p>本文所有数据来自 2026-11-22 拉取的 GitHub REST API（<code>repos/Tracer-Cloud/opensre</code>、<code>contributors?per_page=100</code>、<code>releases</code>、<code>contents/integrations</code>）以及仓库内的 <code>README.md</code>、<code>AGENTS.md</code>、<code>docs/ARCHITECTURE.md</code>、<code>docs/cicd/overview.mdx</code>、<code>DEPLOYMENT.md</code>、<code>CI.md</code>、<code>pyproject.toml</code>、<code>SECURITY.md</code>。</p>
+<p>未在仓库中查证的内容（模型性能、准确率、实际节省工时等）本文一律未写具体数字。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/11/21/tracer-cloud-opensre-ci-cd-reliability-agent/" title="Tracer-Cloud&#x2F;opensre：13982 star 的 CI&#x2F;CD 可靠性 Agent，能自己读日志、改代码、推分支">https://www.daishengli.top/2026/11/21/tracer-cloud-opensre-ci-cd-reliability-agent/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/%E8%87%AA%E6%89%98%E7%AE%A1/" rel="tag"># 自托管</a>
+              <a href="/tags/opensre/" rel="tag"># opensre</a>
+              <a href="/tags/Tracer-Cloud/" rel="tag"># Tracer-Cloud</a>
+              <a href="/tags/SRE-Agent/" rel="tag"># SRE Agent</a>
+              <a href="/tags/CI-CD/" rel="tag"># CI/CD</a>
+              <a href="/tags/%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7/" rel="tag"># 可观测性</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/20/bookwjitchieni1986-blender-ai-mcp-addon-ai-assistant-mcp-server/" rel="prev" title="bookwjitchieni1986&#x2F;blender-ai-mcp-addon：给 Blender 装一个能看场景、能干活、还能组队干活的 AI 助手">
+                  <i class="fa fa-angle-left"></i> bookwjitchieni1986/blender-ai-mcp-addon：给 Blender 装一个能看场景、能干活、还能组队干活的 AI 助手
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/22/el4cteo-fast-anything-port-slow-5-percent-to-rust/" rel="next" title="EL4CTEO&#x2F;fast-anything：1869 star 的工具，让 AI Agent 只把最慢的 5% 改写成 Rust 并证明行为一致">
+                  EL4CTEO/fast-anything：1869 star 的工具，让 AI Agent 只把最慢的 5% 改写成 Rust 并证明行为一致 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

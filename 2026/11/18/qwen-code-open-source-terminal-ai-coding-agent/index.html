@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Qwen Code 是阿里通义千问团队开源的终端 AI 编程 Agent，在 GitHub 上拿到 30731 个 star 和 3555 个 fork，采用 Apache-2.0 许可证，主语言 TypeScript，要求 Node.js 22 以上。它前身是 Google Gemini CLI v0.8.2，但从 v0.1 起就停止跟随上游，转向独立演进，成为一个支持 OpenAI、Anthr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="QwenLM&#x2F;qwen-code：3 万 star 的终端 AI 编程 Agent，Apache-2.0 全开源">
+<meta property="og:url" content="https://www.daishengli.top/2026/11/18/qwen-code-open-source-terminal-ai-coding-agent/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="Qwen Code 是阿里通义千问团队开源的终端 AI 编程 Agent，在 GitHub 上拿到 30731 个 star 和 3555 个 fork，采用 Apache-2.0 许可证，主语言 TypeScript，要求 Node.js 22 以上。它前身是 Google Gemini CLI v0.8.2，但从 v0.1 起就停止跟随上游，转向独立演进，成为一个支持 OpenAI、Anthr">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-18T00:30:00.000Z">
+<meta property="article:modified_time" content="2026-11-28T00:04:52.356Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="开源框架">
+<meta property="article:tag" content="TypeScript">
+<meta property="article:tag" content="qwen-code">
+<meta property="article:tag" content="qwenlm">
+<meta property="article:tag" content="编程助手">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/11/18/qwen-code-open-source-terminal-ai-coding-agent/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/11/18/qwen-code-open-source-terminal-ai-coding-agent/","path":"2026/11/18/qwen-code-open-source-terminal-ai-coding-agent/","title":"QwenLM/qwen-code：3 万 star 的终端 AI 编程 Agent，Apache-2.0 全开源"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>QwenLM/qwen-code：3 万 star 的终端 AI 编程 Agent，Apache-2.0 全开源 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">459</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">139</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#QwenLM-qwen-code%EF%BC%9A3-%E4%B8%87-star-%E7%9A%84%E7%BB%88%E7%AB%AF-AI-%E7%BC%96%E7%A8%8B-Agent%EF%BC%8CApache-2-0-%E5%85%A8%E5%BC%80%E6%BA%90"><span class="nav-number">1.</span> <span class="nav-text">QwenLM&#x2F;qwen-code：3 万 star 的终端 AI 编程 Agent，Apache-2.0 全开源</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E8%AF%B4%E4%B8%AA%E7%9C%9F%E5%AE%9E%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">一、先说个真实的场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9A%E4%B8%80%E5%8F%A5%E8%AF%9D%E5%AE%9A%E4%B9%89-%E5%85%B3%E9%94%AE%E6%95%B0%E5%AD%97"><span class="nav-number">1.2.</span> <span class="nav-text">二、它是什么：一句话定义 + 关键数字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81monorepo-%E7%BB%93%E6%9E%84%EF%BC%9A20-%E4%B8%AA-package-%E6%98%AF%E6%80%8E%E4%B9%88%E5%88%87%E7%9A%84"><span class="nav-number">1.3.</span> <span class="nav-text">三、monorepo 结构：20 个 package 是怎么切的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pnpm-workspace-%E7%9A%84%E4%B8%80%E4%B8%AA%E7%BB%86%E8%8A%82"><span class="nav-number">1.3.1.</span> <span class="nav-text">pnpm workspace 的一个细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%B9%8B%E4%B8%80%EF%BC%9AAgent-Loop-%E5%88%B0%E5%BA%95%E6%80%8E%E4%B9%88%E8%BD%AC%E7%9A%84"><span class="nav-number">1.4.</span> <span class="nav-text">四、核心机制之一：Agent Loop 到底怎么转的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E6%98%AF%E6%9C%89%E5%88%86%E7%BA%A7%E7%9A%84"><span class="nav-number">1.4.1.</span> <span class="nav-text">工具是有分级的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Plan-Mode-%E5%92%8C%E5%AE%A1%E6%89%B9%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.4.2.</span> <span class="nav-text">Plan Mode 和审批模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sandbox-%E5%92%8C-worktree"><span class="nav-number">1.4.3.</span> <span class="nav-text">Sandbox 和 worktree</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%B9%8B%E4%BA%8C%EF%BC%9A%E5%A4%9A-Agent-%E7%BC%96%E6%8E%92%E7%9A%84%E4%B8%89%E7%A7%8D%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.5.</span> <span class="nav-text">五、核心机制之二：多 Agent 编排的三种模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-SubAgents-%E2%80%94%E2%80%94-%E6%9C%80%E5%9F%BA%E7%A1%80"><span class="nav-number">1.5.1.</span> <span class="nav-text">1. SubAgents —— 最基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Agent-Teams-%E2%80%94%E2%80%94-%E6%9C%89%E5%85%B1%E4%BA%AB%E7%8A%B6%E6%80%81"><span class="nav-number">1.5.2.</span> <span class="nav-text">2. Agent Teams —— 有共享状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Agent-Arena-%E2%80%94%E2%80%94-%E5%A4%9A%E6%A8%A1%E5%9E%8B%E7%AB%9E%E9%80%9F"><span class="nav-number">1.5.3.</span> <span class="nav-text">3. Agent Arena —— 多模型竞速</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dynamic-Workflows-%E2%80%94%E2%80%94-%E8%AE%A9%E6%A8%A1%E5%9E%8B%E5%86%99%E7%BC%96%E6%8E%92%E9%80%BB%E8%BE%91"><span class="nav-number">1.5.4.</span> <span class="nav-text">Dynamic Workflows —— 让模型写编排逻辑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%E4%B9%8B%E4%B8%89%EF%BC%9AAuto-Memory%E3%80%81Skills-%E5%92%8C-QWEN-md"><span class="nav-number">1.6.</span> <span class="nav-text">六、核心机制之三：Auto-Memory、Skills 和 QWEN.md</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Auto-Memory"><span class="nav-number">1.6.1.</span> <span class="nav-text">Auto-Memory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Skills"><span class="nav-number">1.6.2.</span> <span class="nav-text">Skills</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E7%BA%A7%E7%BA%A6%E5%AE%9A%E6%96%87%E4%BB%B6"><span class="nav-number">1.6.3.</span> <span class="nav-text">项目级约定文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%EF%BC%9A%E7%9C%9F%E5%AE%9E%E5%91%BD%E4%BB%A4"><span class="nav-number">1.7.</span> <span class="nav-text">七、快速上手：真实命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.7.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%91%E8%B5%B7%E6%9D%A5"><span class="nav-number">1.7.2.</span> <span class="nav-text">跑起来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%84%E5%85%A5%E5%8F%A3%E6%80%8E%E4%B9%88%E5%BC%80"><span class="nav-number">1.7.3.</span> <span class="nav-text">各入口怎么开</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Daemon-%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.7.4.</span> <span class="nav-text">Daemon 模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-SDK-%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.7.5.</span> <span class="nav-text">Python SDK 示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker"><span class="nav-number">1.7.6.</span> <span class="nav-text">Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Makefile"><span class="nav-number">1.7.7.</span> <span class="nav-text">Makefile</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E6%A8%A1%E5%9E%8B%E6%94%AF%E6%8C%81%EF%BC%9A%E5%A4%9A%E5%8D%8F%E8%AE%AE%E6%98%AF%E5%AE%83%E5%92%8C-Gemini-CLI-%E5%88%86%E5%AE%B6%E4%B9%8B%E5%90%8E%E7%9A%84%E6%AD%A3%E7%BB%8F%E7%90%86%E7%94%B1"><span class="nav-number">1.8.</span> <span class="nav-text">八、模型支持：多协议是它和 Gemini CLI 分家之后的正经理由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6%EF%BC%9AHooks%E3%80%81MCP%E3%80%81LSP%E3%80%81Computer-Use"><span class="nav-number">1.9.</span> <span class="nav-text">九、扩展机制：Hooks、MCP、LSP、Computer Use</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hooks"><span class="nav-number">1.9.1.</span> <span class="nav-text">Hooks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MCP"><span class="nav-number">1.9.2.</span> <span class="nav-text">MCP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LSP-%E9%9B%86%E6%88%90"><span class="nav-number">1.9.3.</span> <span class="nav-text">LSP 集成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Computer-Use-Browser-Use"><span class="nav-number">1.9.4.</span> <span class="nav-text">Computer Use &#x2F; Browser Use</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Mode"><span class="nav-number">1.9.5.</span> <span class="nav-text">Code Mode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E7%9B%B8%E5%85%B3%E7%9A%84%E7%BB%86%E8%8A%82"><span class="nav-number">1.9.6.</span> <span class="nav-text">权限相关的细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81SWE-bench-Verified-%E4%B8%8A%E7%9A%84%E6%88%90%E7%BB%A9"><span class="nav-number">1.10.</span> <span class="nav-text">十、SWE-bench Verified 上的成绩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E8%B7%9F%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E6%AF%94%EF%BC%9A%E5%AE%83%E5%88%B0%E5%BA%95%E7%AB%99%E5%9C%A8%E5%93%AA"><span class="nav-number">1.11.</span> <span class="nav-text">十一、跟同类项目比：它到底站在哪</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#vs-Gemini-CLI"><span class="nav-number">1.11.1.</span> <span class="nav-text">vs Gemini CLI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vs-Claude-Code"><span class="nav-number">1.11.2.</span> <span class="nav-text">vs Claude Code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vs-OpenCode"><span class="nav-number">1.11.3.</span> <span class="nav-text">vs OpenCode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vs-Cursor-Windsurf-Devin"><span class="nav-number">1.11.4.</span> <span class="nav-text">vs Cursor &#x2F; Windsurf &#x2F; Devin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94"><span class="nav-number">1.11.5.</span> <span class="nav-text">一句话总结对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E7%9C%9F%E5%AE%9E%E5%B1%80%E9%99%90%EF%BC%9A%E8%AF%B4%E7%82%B9%E4%B8%8D%E5%A5%BD%E5%90%AC%E7%9A%84"><span class="nav-number">1.12.</span> <span class="nav-text">十二、真实局限：说点不好听的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2435-%E4%B8%AA-open-issue"><span class="nav-number">1.12.1.</span> <span class="nav-text">1. 2435 个 open issue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%AE%9E%E9%AA%8C%E6%80%A7%E5%8A%9F%E8%83%BD%E5%A4%AA%E5%A4%9A%E4%BA%86"><span class="nav-number">1.12.2.</span> <span class="nav-text">2. 实验性功能太多了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Daemon-%E9%BB%98%E8%AE%A4%E4%B8%8D%E5%AE%89%E5%85%A8-%E2%80%94%E2%80%94-%E8%BF%99%E4%B8%AA%E5%BF%85%E9%A1%BB%E7%82%B9%E5%90%8D"><span class="nav-number">1.12.3.</span> <span class="nav-text">3. Daemon 默认不安全 —— 这个必须点名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%B5%84%E6%BA%90%E6%B6%88%E8%80%97%E4%B8%8D%E8%BD%BB"><span class="nav-number">1.12.4.</span> <span class="nav-text">4. 资源消耗不轻</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%96%87%E6%A1%A3%E6%98%AF%E8%8B%B1%E6%96%87%E4%BC%98%E5%85%88"><span class="nav-number">1.12.5.</span> <span class="nav-text">5. 文档是英文优先</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E4%BE%9D%E8%B5%96%E9%87%8D"><span class="nav-number">1.12.6.</span> <span class="nav-text">6. 依赖重</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E7%89%88%E6%9C%AC%E5%8F%B7%E8%BF%98%E5%9C%A8-0-x"><span class="nav-number">1.12.7.</span> <span class="nav-text">7. 版本号还在 0.x</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E9%80%82%E5%90%88%E8%B0%81-%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">1.13.</span> <span class="nav-text">十三、适合谁 &#x2F; 不适合谁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88"><span class="nav-number">1.13.1.</span> <span class="nav-text">适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88"><span class="nav-number">1.13.2.</span> <span class="nav-text">不适合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E6%88%91%E7%9A%84%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.14.</span> <span class="nav-text">十四、我的实际使用建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E5%91%A8%EF%BC%9A%E5%8F%AA%E5%BD%93%E6%99%AE%E9%80%9A-CLI-%E7%94%A8"><span class="nav-number">1.14.1.</span> <span class="nav-text">第一周：只当普通 CLI 用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E5%91%A8%EF%BC%9A%E5%86%99-QWEN-md"><span class="nav-number">1.14.2.</span> <span class="nav-text">第二周：写 QWEN.md</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E5%91%A8%EF%BC%9A%E5%BC%80-Hooks"><span class="nav-number">1.14.3.</span> <span class="nav-text">第三周：开 Hooks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E5%91%A8%EF%BC%9A%E8%AF%95-SubAgents"><span class="nav-number">1.14.4.</span> <span class="nav-text">第四周：试 SubAgents</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%8B%E5%90%8E%EF%BC%9A%E6%8C%89%E9%9C%80%E5%BC%80%E5%AE%9E%E9%AA%8C%E6%80%A7%E5%8A%9F%E8%83%BD"><span class="nav-number">1.14.5.</span> <span class="nav-text">之后：按需开实验性功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E5%AE%9A%E8%A6%81%E9%85%8D%E7%9A%84%E4%B8%9C%E8%A5%BF"><span class="nav-number">1.14.6.</span> <span class="nav-text">一定要配的东西</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E4%B8%80%E4%BA%9B%E5%80%BC%E5%BE%97%E5%8D%95%E7%8B%AC%E8%AE%B0%E4%B8%8B%E7%9A%84%E7%BB%86%E8%8A%82"><span class="nav-number">1.15.</span> <span class="nav-text">十五、一些值得单独记下的细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#15-1-ACP-%E6%AD%A3%E5%9C%A8%E6%88%90%E4%B8%BA%E4%BA%8B%E5%AE%9E%E6%A0%87%E5%87%86"><span class="nav-number">1.15.1.</span> <span class="nav-text">15.1 ACP 正在成为事实标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15-2-%E7%94%9F%E6%80%81%E5%91%A8%E8%BE%B9"><span class="nav-number">1.15.2.</span> <span class="nav-text">15.2 生态周边</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15-3-%E4%B8%80%E4%BA%9B%E7%BB%B4%E6%8A%A4%E7%97%95%E8%BF%B9"><span class="nav-number">1.15.3.</span> <span class="nav-text">15.3 一些维护痕迹</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.16.</span> <span class="nav-text">十六、总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%EF%BC%9A%E6%9C%AC%E6%96%87%E4%BA%8B%E5%AE%9E%E6%9D%A5%E6%BA%90"><span class="nav-number">1.17.</span> <span class="nav-text">附：本文事实来源</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">139</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">459</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/18/qwen-code-open-source-terminal-ai-coding-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="QwenLM&#x2F;qwen-code：3 万 star 的终端 AI 编程 Agent，Apache-2.0 全开源 | 小戴的网络日志">
+      <meta itemprop="description" content="Qwen Code 是阿里通义千问团队开源的终端 AI 编程 Agent，在 GitHub 上拿到 30731 个 star 和 3555 个 fork，采用 Apache-2.0 许可证，主语言 TypeScript，要求 Node.js 22 以上。它前身是 Google Gemini CLI v0.8.2，但从 v0.1 起就停止跟随上游，转向独立演进，成为一个支持 OpenAI、Anthropic、Gemini、Qwen 四家协议并且能接入本地 Ollama 或 vLLM 模型的通用 Agent 框架。项目用 pnpm monorepo 组织，packages 目录下有 20 个子包，core 包内置 118 个工具实现、Agent Teams、Agent Arena、SubAgents、Auto-Memory、Skills、MCP 客户端池、Hooks、Sandbox、Git worktree、LSP 集成和 Plan Mode 等能力，还提供 TypeScript、Python、Java 三套 SDK 以及 CLI、桌面端、Web Shell、VS Code &#x2F; Zed &#x2F; JetBrains 插件和 Telegram、钉钉、飞书、微信、企微、QQ、邮件等 IM 通道。用 Qwen 3.7 Max 在 SWE-bench Verified 上跑 500 个任务、每个版本三次试验，七个版本的平均分落在 76.40% 到 77.80% 之间。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          QwenLM/qwen-code：3 万 star 的终端 AI 编程 Agent，Apache-2.0 全开源
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-18 08:30:00" itemprop="dateCreated datePublished" datetime="2026-11-18T08:30:00+08:00">2026-11-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Qwen Code 是阿里通义千问团队开源的终端 AI 编程 Agent，在 GitHub 上拿到 30731 个 star 和 3555 个 fork，采用 Apache-2.0 许可证，主语言 TypeScript，要求 Node.js 22 以上。它前身是 Google Gemini CLI v0.8.2，但从 v0.1 起就停止跟随上游，转向独立演进，成为一个支持 OpenAI、Anthropic、Gemini、Qwen 四家协议并且能接入本地 Ollama 或 vLLM 模型的通用 Agent 框架。项目用 pnpm monorepo 组织，packages 目录下有 20 个子包，core 包内置 118 个工具实现、Agent Teams、Agent Arena、SubAgents、Auto-Memory、Skills、MCP 客户端池、Hooks、Sandbox、Git worktree、LSP 集成和 Plan Mode 等能力，还提供 TypeScript、Python、Java 三套 SDK 以及 CLI、桌面端、Web Shell、VS Code / Zed / JetBrains 插件和 Telegram、钉钉、飞书、微信、企微、QQ、邮件等 IM 通道。用 Qwen 3.7 Max 在 SWE-bench Verified 上跑 500 个任务、每个版本三次试验，七个版本的平均分落在 76.40% 到 77.80% 之间。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="QwenLM-qwen-code：3-万-star-的终端-AI-编程-Agent，Apache-2-0-全开源"><a href="#QwenLM-qwen-code：3-万-star-的终端-AI-编程-Agent，Apache-2-0-全开源" class="headerlink" title="QwenLM/qwen-code：3 万 star 的终端 AI 编程 Agent，Apache-2.0 全开源"></a>QwenLM/qwen-code：3 万 star 的终端 AI 编程 Agent，Apache-2.0 全开源</h1><h2 id="一、先说个真实的场景"><a href="#一、先说个真实的场景" class="headerlink" title="一、先说个真实的场景"></a>一、先说个真实的场景</h2><p>去年我接手一个烂摊子：一个跑了六年的单体服务，没有测试，没有文档，代码风格三种并存，接手的人换了一茬又一茬。</p>
+<p>那天晚上我打开终端，准备手动翻目录结构。<code>ls</code> 出来 400 多个文件，<code>grep</code> 一个配置项要等好几秒。那一刻我特别想要一个东西：能读代码、能跑命令、能自己改文件改完还能自己看一眼 diff 的人。</p>
+<p>同事指了指屏幕：” 你试试 Gemini CLI。”</p>
+<p>后来 Gemini CLI 变成了我主力 coding agent。但用着用着总会碰到几件事让我不太舒服：</p>
+<p>第一，它的默认模型链路跟 Google 强绑定，我给团队其他项目接 Anthropic 或者本地部署的模型，就得自己拿 API 拼。</p>
+<p>第二，功能节奏。它每次发版都在动，而且动得很频繁 —— 我记不住哪个版本开始有了 Skills，哪个版本又开始支持 Plan Mode。</p>
+<p>第三，扩展方式。它能接 MCP，但整个 harness 是黑盒的，你想改点核心行为就得去 fork。</p>
+<p>后来 Qwen 团队 fork 了 Gemini CLI。有意思的是从 v0.1 开始，他们<strong>停止了和上游同步</strong>，走上独立开发。README 里写得很直白：</p>
+<blockquote>
+<p>This project was originally based on Google Gemini CLI v0.8.2. Starting from Qwen Code v0.1, we stopped syncing with upstream and began independent development as a multi-protocol, multi-platform agent framework.</p>
+</blockquote>
+<p>这句话的分量比看起来重得多。意味着它不是” 中文版 Gemini CLI”，而是一个独立框架了。</p>
+<p>今天它长这样：GitHub 上 <strong>30731 stars、3555 forks</strong>，Apache-2.0，主语言 TypeScript，要求 Node.js 22 以上，2025 年 6 月 26 日创建，到 2026 年 11 月 17 日还在持续提交。</p>
+<p>版本号目前是 <code>0.28.0</code>，仓库里同时躺着 <code>v1.0.0-preview</code> 和 <code>v1.0.0-preview.1</code> 两个 tag，nightly 构建也在跑（<code>v0.27.4-nightly.20261116.xxx</code> 这种形式）。</p>
+<p>我花了两周时间把这套东西拆开看了一遍，想搞清楚三件事：它到底强在哪，哪些地方是过度设计，以及什么人才适合用它。</p>
+<hr>
+<h2 id="二、它是什么：一句话定义-关键数字"><a href="#二、它是什么：一句话定义-关键数字" class="headerlink" title="二、它是什么：一句话定义 + 关键数字"></a>二、它是什么：一句话定义 + 关键数字</h2><p>官方 README 的一句话定义是 “The open-source AI coding agent for your terminal, editor, desktop, browser, and chat.”—— 翻译成人话：<strong>一个跑在终端里的开源 AI 编程 Agent，同时提供编辑器插件、桌面应用、浏览器界面和 IM 聊天入口。</strong></p>
+<p>先把这堆数字摆出来：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>数值</th>
+<th>来源</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Stars</td>
+<td>30731</td>
+<td>GitHub API <code>stargazers_count</code></td>
+</tr>
+<tr>
+<td>Forks</td>
+<td>3555</td>
+<td>GitHub API <code>forks_count</code></td>
+</tr>
+<tr>
+<td>Open Issues</td>
+<td>2435</td>
+<td>GitHub API <code>open_issues_count</code></td>
+</tr>
+<tr>
+<td>License</td>
+<td>Apache-2.0</td>
+<td>GitHub API <code>license.spdx_id</code></td>
+</tr>
+<tr>
+<td>主语言</td>
+<td> TypeScript</td>
+<td>GitHub API <code>language</code></td>
+</tr>
+<tr>
+<td>Node 要求</td>
+<td><code>&gt;=22.0.0</code></td>
+<td><code>package.json</code> 的 <code>engines</code></td>
+</tr>
+<tr>
+<td>当前版本</td>
+<td> 0.28.0</td>
+<td><code>package.json</code> 的 <code>version</code></td>
+</tr>
+<tr>
+<td>创建时间</td>
+<td> 2025-06-26</td>
+<td>GitHub API <code>created_at</code></td>
+</tr>
+<tr>
+<td>最近提交</td>
+<td> 2026-11-17</td>
+<td>GitHub API <code>pushed_at</code></td>
+</tr>
+<tr>
+<td>仓库文件总数</td>
+<td> 16632</td>
+<td>GitHub API 递归 tree</td>
+</tr>
+<tr>
+<td>core 包工具数</td>
+<td> 118</td>
+<td><code>packages/core/src/tools/</code> 下非测试 <code>.ts</code> 文件</td>
+</tr>
+</tbody></table>
+<p><code>package.json</code> 里的 <code>name</code> 是 <code>@qwen-code/qwen-code</code>，<code>type</code> 是 <code>module</code>（纯 ESM），<code>bin</code> 指向 <code>scripts/cli-entry.js</code>—— 也就是说全局装完之后 <code>qwen</code> 这个命令就是入口。</p>
+<p>有意思的是它的依赖关系。根 <code>package.json</code> 的 <code>dependencies</code> 只有三个：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"@testing-library/dom"</span><span class="punctuation">:</span> <span class="string">"^10.4.1"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"ink"</span><span class="punctuation">:</span> <span class="string">"7.0.3"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"simple-git"</span><span class="punctuation">:</span> <span class="string">"^3.36.0"</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>对，就三个。<code>ink</code> 是 React 写的终端 UI 框架，<code>simple-git</code> 是 Git 操作的封装。其余全部塞进了 <code>devDependencies</code>（59 个）。</p>
+<p>这个结构说明了一件事：<strong>它不是一个” 打包好卖” 的单体应用，而是一个 monorepo 仓库</strong>。你装的是发布出来的构建产物，但从源码角度看，所有东西都拆在 workspace 里。</p>
+<p>它自己写的 topics 标签是 <code>agentic, ai, ai-agent, ai-coding, cli, coding-agent, developer-tools, llm, mcp, qwen, terminal, typescript</code>——<code>agentic</code>、<code>mcp</code>、<code>coding-agent</code> 这三个词，基本定义了它的定位。</p>
+<hr>
+<h2 id="三、monorepo-结构：20-个-package-是怎么切的"><a href="#三、monorepo-结构：20-个-package-是怎么切的" class="headerlink" title="三、monorepo 结构：20 个 package 是怎么切的"></a>三、monorepo 结构：20 个 package 是怎么切的</h2><p>我用 GitHub 的递归 tree 接口把整个仓库拉下来数了一遍，一共 16632 个文件。<code>packages/</code> 下面是这些：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">packages/acp-bridge        packages/audio-capture     packages/browser-use</span><br><span class="line">packages/channels          packages/chrome-extension  packages/cli</span><br><span class="line">packages/core              packages/cua-driver        packages/desktop</span><br><span class="line">packages/live-host         packages/managed-agent-server</span><br><span class="line">packages/mobile-mcp        packages/mobile-shell       packages/node-repl</span><br><span class="line">packages/qwen-live         packages/sdk-java           packages/sdk-python</span><br><span class="line">packages/sdk-typescript    packages/vscode-ide-companion</span><br><span class="line">packages/web-shell         packages/web-templates      packages/zed-extension</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我挑几个关键的说。</p>
+<p><strong><code>packages/core</code></strong> —— 大脑。<code>src/</code> 下面的结构大致是这样：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">packages/core/src/</span><br><span class="line">├── agents/  board.ts  code-mode/  config/  confirmation-bus/</span><br><span class="line">├── core/    # Agent Loop、Client、ContentGenerator，122 个条目</span><br><span class="line">├── event-bus/  extension/  followup/  goals/  hooks/  ide/  ipc/</span><br><span class="line">├── lsp/    # 语言服务器集成</span><br><span class="line">├── managed-runtime/  mcp/  memory/  mods/  omni/  output/</span><br><span class="line">├── permissions/  prompts/  providers/  qwen/  resources/</span><br><span class="line">├── sandbox/  services/  # 169 个条目，服务层</span><br><span class="line">├── skills/  subagent-runtime.ts  subagents/  telemetry/</span><br><span class="line">├── tools/   # 118 个工具</span><br><span class="line">└── utils/</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong><code>packages/cli</code></strong> —— 界面层。Ink 写的终端 UI，加上命令注册、non-interactive 模式、serve/daemon 子命令、i18n 等等。</p>
+<p><strong><code>packages/channels</code></strong> —— IM 通道，每个通道一个独立 package：<code>aone</code>、<code>base</code>、<code>dingtalk</code>、<code>dws</code>、<code>email</code>、<code>feishu</code>、<code>github</code>、<code>gitlab</code>、<code>plugin-example</code>、<code>qqbot</code>、<code>telegram</code>、<code>wecom</code>、<code>weixin</code>。</p>
+<p>我数了一下，光 <code>packages/cli/src/commands/</code> 下面就有 <strong>100 个命令实现文件</strong>。什么 <code>/batch</code>、<code>/review</code>、<code>/board</code>、<code>/worktree</code>、<code>/channel</code>、<code>/daemon</code>、<code>/autofix-pr</code>、<code>/budget</code>…… 我第一次点开这个目录的时候是有点震惊的。</p>
+<p><strong><code>packages/acp-bridge</code></strong> —— Agent Client Protocol 桥接。这个协议是让不同 coding agent 互相调用的标准，Claude Code、Codex 这些都能通过 ACP 接进来。</p>
+<p><strong><code>packages/sdk-typescript</code> / <code>sdk-python</code> / <code>sdk-java</code></strong> —— 三套 SDK。</p>
+<h3 id="pnpm-workspace-的一个细节"><a href="#pnpm-workspace-的一个细节" class="headerlink" title="pnpm workspace 的一个细节"></a>pnpm workspace 的一个细节</h3><p>它的 <code>pnpm-workspace.yaml</code> 里有一大段注释，写得非常有” 踩过坑” 的味道：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Mirrors the workspaces list in package.json exactly; a new channel must be</span></span><br><span class="line"><span class="comment"># added to both files, the same as under npm. A glob here would let a</span></span><br><span class="line"><span class="comment"># channel join the pnpm layout silently while npm still ignores it.</span></span><br><span class="line"><span class="attr">packages:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">'packages/*'</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">'packages/channels/aone'</span></span><br><span class="line">  <span class="comment"># ...</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">'!packages/desktop'</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">'!packages/live-host'</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">'!packages/mobile-shell'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意最后三行是<strong>排除</strong>。<code>packages/*</code> 这个 glob 本来会把 desktop、live-host、mobile-shell 也吸进去，所以要显式 <code>!</code> 掉。</p>
+<p>下面还有一段更实在的：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># npm links every workspace package into the root node_modules; pnpm links</span></span><br><span class="line"><span class="comment"># one only where it is a declared dependency. The root package therefore</span></span><br><span class="line"><span class="comment"># declares, as file: devDependencies, the workspace packages that root-level</span></span><br><span class="line"><span class="comment"># code (integration-tests/, scripts/) imports, and .pnpmfile.mjs rewrites them</span></span><br><span class="line"><span class="comment"># to workspace:* like every other internal dependency.</span></span><br><span class="line"><span class="attr">nodeLinker:</span> <span class="string">'hoisted'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>以及一段关于 patch-package 和 pnpm 硬链接冲突的解释 —— 默认情况下 pnpm 用硬链接，patch-package 改文件会破坏内容寻址存储的 sha512，导致后续所有 worktree 的 offline 安装挂掉。解法是把 <code>packageImportMethod</code> 设成 <code>'clone-or-copy'</code>。</p>
+<p>还有内存问题的备注：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># packages/cli's `tsc --build` exhausts V8's default heap when a build runs</span></span><br><span class="line"><span class="comment"># through pnpm ... `npm run build` observed the same growth past 4 GB</span></span><br><span class="line"><span class="comment"># (#14823), so package scripts get headroom here rather than on the one</span></span><br><span class="line"><span class="comment"># entry point that happened to fail first.</span></span><br><span class="line"><span class="attr">nodeOptions:</span> <span class="string">'--max-old-space-size=6144'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这段直接引用了 issue #14823。一个项目愿意在配置文件里把踩坑过程写成注释，说明维护者是认真在维护的。</p>
+<p>顺带一提，<code>overrides</code> 段落长得吓人，把 glob、minimatch、qs、react、axios、typescript 全锁了版本，甚至锁了 <code>brace-expansion</code> 的 patch 版本（<code>1.1.21</code> 和 <code>2.1.7</code>—— 这俩是安全补丁）。</p>
+<hr>
+<h2 id="四、核心机制之一：Agent-Loop-到底怎么转的"><a href="#四、核心机制之一：Agent-Loop-到底怎么转的" class="headerlink" title="四、核心机制之一：Agent Loop 到底怎么转的"></a>四、核心机制之一：Agent Loop 到底怎么转的</h2><p>所有 coding agent 的骨架其实都一样：一个 while 循环，把对话 + 工具列表发给模型，模型返回 tool call，执行工具，把结果塞回对话，继续转。</p>
+<p>Qwen Code 的核心实现在 <code>packages/core/src/core/agent-loop.ts</code>，配套的还有 <code>coreToolScheduler.ts</code>（工具调度）和 <code>client.ts</code>（会话管理）。我没法在这里贴完整源码，但可以从工具注册表 <code>packages/core/src/tools/tools.ts</code> 和 <code>tool-registry.ts</code> 看出它的设计。</p>
+<h3 id="工具是有分级的"><a href="#工具是有分级的" class="headerlink" title="工具是有分级的"></a>工具是有分级的</h3><p>118 个工具里，明显能分成几类：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">文件类    read-file.ts  write-file.ts  edit.ts  notebook-edit.ts</span><br><span class="line">          readManyFiles.ts  glob.ts  glob-search.ts  grep.ts  ripGrep.ts  ls.ts</span><br><span class="line">执行类    exec.ts  shell.ts  execution-tool.ts</span><br><span class="line">编排类    agent.ts  fork-subagent.ts  fork-profile.ts  create-sub-session.ts</span><br><span class="line">          list-agents.ts  send-message.ts  task-create/list/update/stop.ts</span><br><span class="line">          team-create.ts  team-delete.ts  team-plan-approval.ts</span><br><span class="line">记忆类    manage-memory.ts  search-memory.ts  memory-config.ts  transcript-marker.ts</span><br><span class="line">审核类    autofix-pr.ts  autofix-pr-grants.ts  report-findings.ts  workflow.ts  batch-task.ts</span><br><span class="line">多模态    display-image.ts  zoom-image.ts  image-gen.ts  html.ts  artifact-tool.ts</span><br><span class="line">外部能力  web-fetch.ts  web-search.ts  lsp.ts  code-mode.ts  tool-search.ts</span><br></pre></td></tr></tbody></table></figure>
+
+<p>两个细节值得说：</p>
+<p><strong><code>read-file.ts</code> 和 <code>edit.ts</code> 是分开的</strong> —— 读和写是两个独立工具，只读的那个可以被单独授权。</p>
+<p><strong><code>mcp-pool-*</code> 这一串</strong> 说明它不是每次调用都新建 MCP 连接，而是有连接池、有 key、有事件、有重试：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mcp-client.ts  mcp-client-manager.ts  mcp-tool.ts</span><br><span class="line">mcp-pool-entry.ts  mcp-pool-events.ts  mcp-pool-key.ts  mcp-transport-pool.ts</span><br><span class="line">mcp-retry.ts  mcp-status.ts  mcp-workspace-budget.ts</span><br><span class="line">mcp-discovery-timeout.ts  mcp-app-resource-limits.ts  mcp-errors.ts</span><br></pre></td></tr></tbody></table></figure>
+
+<p>做过 MCP 集成的人都知道这有多重要 ——MCP server 冷启动慢，不池化的话每次工具调用都等三秒。</p>
+<p><strong><code>tool-search.ts</code></strong> 的存在说明它用了” 工具检索” 模式：工具太多的时候不一次性全塞给模型，而是先让模型搜目录再挑。118 个工具全塞进 context 是个灾难，这个设计是必要的。</p>
+<p><strong>多模态</strong></p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">display-image.ts</span><br><span class="line">zoom-image.ts</span><br><span class="line">image-gen.ts</span><br><span class="line">html.ts</span><br><span class="line">artifact-tool.ts</span><br><span class="line">record-artifact.ts</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>外部能力</strong></p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">web-fetch.ts</span><br><span class="line">web-fetch-preapproved.ts</span><br><span class="line">web-search.ts</span><br><span class="line">web-search-backend.ts</span><br><span class="line">web-search-dashscope.ts</span><br><span class="line">web-search-subscription.ts</span><br><span class="line">lsp.ts</span><br><span class="line">code-mode.ts</span><br><span class="line">tool-search.ts</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>tool-search.ts</code> 这个工具存在，说明它用了” 工具检索” 模式 —— 工具太多的时候不一次性全塞给模型，而是先让模型搜目录再挑。这个设计我认为是必要的，118 个工具全塞进 context 是个灾难。</p>
+<h3 id="Plan-Mode-和审批模式"><a href="#Plan-Mode-和审批模式" class="headerlink" title="Plan Mode 和审批模式"></a>Plan Mode 和审批模式</h3><p><code>packages/core/src/config/approval-mode.ts</code> 加一个 <code>approval-modes.json</code>，定义了四档：Plan Mode（只读地规划，不碰文件）、每次调用确认、自动编辑、<strong>Auto Mode</strong>（分类器驱动 classifier-driven）、以及 YOLO（全放开）。</p>
+<p><code>classifier-driven</code> 这个词值得注意：它意味着判断” 这个操作危不危险” 不是简单的路径白名单，而是有个分类器在看。配合 <code>permissions/</code> 目录和 <code>confirmation-bus/</code>，整个审批链路是可审计的。</p>
+<h3 id="Sandbox-和-worktree"><a href="#Sandbox-和-worktree" class="headerlink" title="Sandbox 和 worktree"></a>Sandbox 和 worktree</h3><p><code>packages/core/src/sandbox/</code> 和 <code>packages/core/src/tools/enter-worktree.ts</code> / <code>exit-worktree.ts</code> 是两个独立的保护机制：</p>
+<ul>
+<li><strong>Sandbox</strong> —— 限制工具执行环境，仓库里有 Dockerfile，<code>package.json</code> 里有 <code>test:integration:sandbox:docker</code> 和 <code>test:integration:sandbox:podman</code> 两套集成测试</li>
+<li><strong> Worktree</strong> —— 隔离大范围编辑，用 Git worktree 开一个临时分支，改坏了直接扔</li>
+</ul>
+<p>这两个配合起来是它的 Agent Arena / Agent Teams 能安全跑的基础。</p>
+<hr>
+<h2 id="五、核心机制之二：多-Agent-编排的三种模式"><a href="#五、核心机制之二：多-Agent-编排的三种模式" class="headerlink" title="五、核心机制之二：多 Agent 编排的三种模式"></a>五、核心机制之二：多 Agent 编排的三种模式</h2><p>Qwen Code 的多 Agent 能力分三个层次，逐级递进。</p>
+<h3 id="1-SubAgents-——-最基础"><a href="#1-SubAgents-——-最基础" class="headerlink" title="1. SubAgents —— 最基础"></a>1. SubAgents —— 最基础</h3><p>README 里的描述：</p>
+<blockquote>
+<p>delegate focused subtasks to specialized agents with their own context and toolsets, in the foreground or background.</p>
+</blockquote>
+<p>关键是 “their own context and toolsets”。每个子 Agent 有独立的 context 和独立的工具集，主 Agent 通过委派来控制自己的上下文膨胀。</p>
+<p>对应代码是 <code>packages/core/src/subagents/</code> 和 <code>subagent-runtime.ts</code>。</p>
+<p>我比较喜欢这个设计的原因：它不是把整个任务丢给一群 Agent 互相对话（那种做法 token 消耗是指数级的），而是保持了明确的层级关系。</p>
+<h3 id="2-Agent-Teams-——-有共享状态"><a href="#2-Agent-Teams-——-有共享状态" class="headerlink" title="2. Agent Teams —— 有共享状态"></a>2. Agent Teams —— 有共享状态</h3><p>README：</p>
+<blockquote>
+<p>a leader coordinates teammates that share a task list and exchange messages, with read-only investigators and an optional single worktree writer.</p>
+</blockquote>
+<p>三个关键词：</p>
+<ul>
+<li><strong>leader</strong> —— 有个明确 leader，不是完全自治的对等网络</li>
+<li><strong> shared task list</strong> —— 共享任务列表，对应 <code>task-create.ts</code> / <code>task-list.ts</code> / <code>task-update.ts</code></li>
+<li><strong>read-only investigators + optional single worktree writer</strong> —— 调查者只读，写入者最多一个</li>
+</ul>
+<p>这个” 只允许一个写者” 的设计我认为是关键的。多个 Agent 同时改同一个文件，合并冲突是必然的。与其事后解决冲突，不如在架构上禁止。代码里对应 <code>team-plan-approval.ts</code>—— 写入前需要 plan 审批。</p>
+<p>这个功能标记为 experimental。</p>
+<h3 id="3-Agent-Arena-——-多模型竞速"><a href="#3-Agent-Arena-——-多模型竞速" class="headerlink" title="3. Agent Arena —— 多模型竞速"></a>3. Agent Arena —— 多模型竞速</h3><p>README：</p>
+<blockquote>
+<p>run the same task on multiple models in isolated Git worktrees, compare solutions side by side, and merge the winner.</p>
+</blockquote>
+<p>这是我觉得最有意思的一个：<strong>同一个任务，扔给多个模型，每个模型在自己的 Git worktree 里独立干，然后并排对比，最后合并赢的那个。</strong> “isolated Git worktrees” 保证互不干扰，”merge the winner” 保证有确定产出。</p>
+<p>这实际上把” 多模型评测” 这件事从实验室拉进了日常工作流。你可以让 Qwen 3.7 Max、Claude Opus、Gemini 同时解一个 bug，然后挑最好的。同样标记为 experimental。</p>
+<h3 id="Dynamic-Workflows-——-让模型写编排逻辑"><a href="#Dynamic-Workflows-——-让模型写编排逻辑" class="headerlink" title="Dynamic Workflows —— 让模型写编排逻辑"></a>Dynamic Workflows —— 让模型写编排逻辑</h3><p>README 的措辞是 “the model writes JavaScript workflows that orchestrate agents: parallel fan-out, verification passes, and resumable runs.”</p>
+<p>注意：<strong>模型写 JavaScript 工作流</strong>。不是配置 DSL，是真的代码。好处是表达力无限（能写循环、能条件判断、能调 API），坏处是安全风险 —— 模型写的代码要能执行。所以它默认是 opt-in 的。</p>
+<hr>
+<h2 id="六、核心机制之三：Auto-Memory、Skills-和-QWEN-md"><a href="#六、核心机制之三：Auto-Memory、Skills-和-QWEN-md" class="headerlink" title="六、核心机制之三：Auto-Memory、Skills 和 QWEN.md"></a>六、核心机制之三：Auto-Memory、Skills 和 QWEN.md</h2><p>这是我觉得 Qwen Code 相比” 裸 Agent” 最有产品感的部分。</p>
+<h3 id="Auto-Memory"><a href="#Auto-Memory" class="headerlink" title="Auto-Memory"></a>Auto-Memory</h3><p>README 的措辞是 “the agent writes its own notes and recalls them across sessions; your <code>QWEN.md</code> and <code>AGENTS.md</code> briefings load automatically.”</p>
+<p>关键词是 <strong>the agent writes its own notes</strong>。不是我手动维护一个记忆文件，是 Agent 自己写、自己召回。对应代码 <code>packages/core/src/memory/</code> 和 <code>packages/core/src/tools/manage-memory.ts</code> / <code>search-memory.ts</code>。</p>
+<h3 id="Skills"><a href="#Skills" class="headerlink" title="Skills"></a>Skills</h3><p>内置 skills 有 <code>/review</code>、<code>/batch</code>、<code>/bugfix</code> 等，另外还有几个动态能力：</p>
+<ul>
+<li><code>/learn</code> —— 把文档或代码蒸馏成新 skill</li>
+<li>Agent 自己生成 skill（opt-in）</li>
+<li><code>/curator</code> —— 维护 skill 库</li>
+</ul>
+<p><code>packages/core/src/skills/</code> 是实现目录，<code>.qwen/skills/</code> 是默认 skill 的存放位置（从 tree 里能看到 <code>.qwen</code> 这个顶层目录）。</p>
+<p><code>packages/core/src/tools/skill.ts</code> 和 <code>skill-utils.ts</code> 是运行时的支撑。</p>
+<h3 id="项目级约定文件"><a href="#项目级约定文件" class="headerlink" title="项目级约定文件"></a>项目级约定文件</h3><p>它会自动加载 <code>QWEN.md</code> 和 <code>AGENTS.md</code>。<code>QWEN.md</code> 是它自己生态的约定文件（相当于 <code>CLAUDE.md</code>），<code>AGENTS.md</code> 是现在越来越多工具通用的约定格式。</p>
+<p>我注意到仓库根目录里同时躺着 <code>AGENTS.md</code>、<code>CLAUDE.md</code>、<code>CONTRIBUTING.md</code>、<code>SECURITY.md</code>—— <strong>这个项目自己的开发也用 Agent 来做</strong>，README 里明确说了：</p>
+<blockquote>
+<p>Qwen Code is actively iterating on itself — using its own agent and models to file issues, submit PRs, review code, and run tests.</p>
+</blockquote>
+<p>而且仓库里有一个 <code>.qwen/skills/qwen-code-claw/SKILL.md</code>—— 让别的 Agent（Claude、Codex）通过 ACP 把任务委派给 Qwen Code。</p>
+<p><code>packages/core/src/config/rulesDiscovery.ts</code> 负责这套约定的发现逻辑。</p>
+<hr>
+<h2 id="七、快速上手：真实命令"><a href="#七、快速上手：真实命令" class="headerlink" title="七、快速上手：真实命令"></a>七、快速上手：真实命令</h2><p>以下命令全部来自 README 和 <code>docs/users/qwen-serve.md</code>。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>Linux /macOS 独立安装脚本：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://qwen-code-assets.oss-cn-hangzhou.aliyuncs.com/installation/install-qwen-standalone.sh | bash</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Windows：</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">irm</span> https://qwen<span class="literal">-code-assets</span>.oss<span class="literal">-cn-hangzhou</span>.aliyuncs.com/installation/<span class="built_in">install-qwen</span><span class="literal">-standalone</span>.ps1 | <span class="built_in">iex</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>NPM（需要 Node.js 22+）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @qwen-code/qwen-code@latest</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Homebrew（macOS / Linux）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install qwen-code</span><br></pre></td></tr></tbody></table></figure>
+
+<p>装完<strong>要重开终端</strong>，环境变量才生效。</p>
+<h3 id="跑起来"><a href="#跑起来" class="headerlink" title="跑起来"></a>跑起来</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /path/to/your-project</span><br><span class="line">qwen</span><br></pre></td></tr></tbody></table></figure>
+
+<p>进去之后执行 <code>/auth</code>，选 <strong>Qwen Account with Subscription</strong> 用 Plus/Pro 订阅登录，或者配一个自己的 provider API key。</p>
+<p>然后可以直接说：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Explain this repository and show me where to start.</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="各入口怎么开"><a href="#各入口怎么开" class="headerlink" title="各入口怎么开"></a>各入口怎么开</h3><table>
+<thead>
+<tr>
+<th>入口</th>
+<th>命令 / 方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>终端</td>
+<td><code>qwen</code></td>
+</tr>
+<tr>
+<td>桌面端</td>
+<td>下载 <a target="_blank" rel="noopener" href="https://github.com/QwenLM/qwen-code/releases/tag/desktop-latest">desktop-latest release</a>（macOS/Windows/Linux）</td>
+</tr>
+<tr>
+<td>浏览器</td>
+<td><code>qwen serve --open</code>（experimental）</td>
+</tr>
+<tr>
+<td>VS Code / Zed / JetBrains</td>
+<td> 装对应插件</td>
+</tr>
+<tr>
+<td> IM 通道</td>
+<td><code>qwen channel start</code>（Telegram / 钉钉 / 微信 / 企微 / 飞书 / QQ / 邮件 / GitHub）</td>
+</tr>
+<tr>
+<td>无头模式</td>
+<td><code>qwen -p "..."</code></td>
+</tr>
+<tr>
+<td>SDK</td>
+<td>TypeScript / Python / Java</td>
+</tr>
+<tr>
+<td>Daemon</td>
+<td><code>qwen serve</code></td>
+</tr>
+</tbody></table>
+<h3 id="Daemon-模式"><a href="#Daemon-模式" class="headerlink" title="Daemon 模式"></a>Daemon 模式</h3><p>这个特性我单独用了一节讲，因为它是这套架构里比较独特的一块。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qwen serve --open</span><br></pre></td></tr></tbody></table></figure>
+
+<p>默认监听 <code>http://127.0.0.1:4170</code>，自带一个 Web Shell。</p>
+<p>后台管理：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">qwen daemon start</span><br><span class="line">qwen daemon status</span><br><span class="line">qwen daemon logs -f</span><br><span class="line">qwen daemon stop</span><br></pre></td></tr></tbody></table></figure>
+
+<p>daemon 提供的核心价值是：<strong>浏览器、编辑器、SDK、自动化脚本可以共享同一个 agent session</strong>，不用每个客户端各起一个进程。</p>
+<p>从 <code>docs/users/qwen-serve.md</code> 里能看到的能力：</p>
+<ul>
+<li><strong>SSE + <code>Last-Event-ID</code> 重连</strong> —— 客户端掉线可以从断点续上（在 replay window 内）</li>
+<li><strong>分页持久化 transcript</strong> —— <code>GET /session/:id/transcript</code></li>
+<li><strong>先到先得的权限审批</strong> —— 多个客户端都看到审批请求，谁先答谁赢</li>
+<li><strong>多工作区</strong> —— 重复 <code>--workspace</code> 注册隔离的 runtime</li>
+<li><strong> 运行时控制</strong> —— 改审批模式、开关工具、重启 MCP server、动态增删 MCP server，都不用重启 daemon</li>
+</ul>
+<p>比如运行时控制的 API：<code>POST /session/:id/approval-mode</code>、<code>POST /workspace/tools/:name/enable</code>、<code>POST /workspace/skills/:name/enable</code>、<code>POST /workspace/mcp/:server/restart</code>、<code>POST /workspace/mcp/servers</code>、<code>DELETE /workspace/mcp/servers/:name</code>、<code>POST /session/:id/recap</code>。</p>
+<p>最后一个 <code>/recap</code> 我觉得很实用 —— 一句话总结” 我上次做到哪了”，实现方式是跑一次独立的 side-query，用快模型，不污染主对话历史也不影响 SSE 流。</p>
+<h3 id="Python-SDK-示例"><a href="#Python-SDK-示例" class="headerlink" title="Python SDK 示例"></a>Python SDK 示例</h3><p>README 里的官方示例：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">from</span> qwen_code_sdk <span class="keyword">import</span> is_sdk_result_message, query</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">main</span>() -&gt; <span class="literal">None</span>:</span><br><span class="line">    result = query(</span><br><span class="line">        <span class="string">"Summarize the repository layout."</span>,</span><br><span class="line">        {<span class="string">"cwd"</span>: <span class="string">"/path/to/project"</span>, <span class="string">"path_to_qwen_executable"</span>: <span class="string">"qwen"</span>},</span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">for</span> message <span class="keyword">in</span> result:</span><br><span class="line">        <span class="keyword">if</span> is_sdk_result_message(message):</span><br><span class="line">            <span class="built_in">print</span>(message[<span class="string">"result"</span>])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">asyncio.run(main())</span><br></pre></td></tr></tbody></table></figure>
+
+<p>三个 SDK 是独立发版的 —— 我查 release 列表的时候看到了 <code>sdk-typescript-v0.1.35</code>，和主版本 <code>v0.28.0</code> 的版本号是完全脱钩的。</p>
+<h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><p>仓库根目录有 <code>Dockerfile</code>。<code>package.json</code> 里有一堆容器相关的集成测试：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">test:integration:sandbox:none</span><br><span class="line">test:integration:sandbox:docker</span><br><span class="line">test:integration:sandbox:podman</span><br><span class="line">test:integration:hosted:sandbox:none</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Makefile"><a href="#Makefile" class="headerlink" title="Makefile"></a>Makefile</h3><p>仓库根有 <code>Makefile</code>，配合 <code>package.json</code> 里的 <code>scripts</code> 字段。</p>
+<p><code>scripts</code> 我数了一下有 130 多个条目，其中大量是 E2E 故障切换测试，名字长得很具体：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">test:e2e:managed-session-failover         test:e2e:managed-inflight-failover</span><br><span class="line">test:e2e:managed-continuation-failover    test:e2e:managed-big-output</span><br><span class="line">test:e2e:managed-loop-skill               test:e2e:managed-loop-fire</span><br><span class="line">test:e2e:managed-harness-restart-failover</span><br><span class="line">test:e2e:managed-harness-restart-inflight-failover</span><br><span class="line">test:e2e:managed-harness-restart-continuation-failover</span><br><span class="line">test:e2e:managed-continuation-frozen-owner-failover</span><br><span class="line">test:e2e:managed-harness-restart-approval-allow / -deny / -cancel / -expiry</span><br><span class="line">test:e2e:managed-harness-restart-approval-after-decision / -prepare / -result</span><br><span class="line">test:e2e:managed-harness-restart-approval-finished-before-commit</span><br><span class="line">test:e2e:managed-harness-restart-approval-sibling-approval</span><br><span class="line">test:e2e:managed-harness-restart-approval-command-rewrite</span><br><span class="line">test:e2e:managed-harness-restart-approval-after-earlier-tools</span><br><span class="line">test:e2e:managed-harness-restart-approval-cleanup-failed</span><br><span class="line">test:e2e:managed-harness-restart-approval-decision-reply-lost</span><br><span class="line">test:e2e:managed-harness-restart-approval-admission-reply-lost</span><br><span class="line">test:e2e:managed-harness-restart-approval-load-reply-lost</span><br><span class="line">test:e2e:managed-harness-restart-approval-terminal-write-failed</span><br><span class="line">test:e2e:managed-harness-restart-approval-terminal-closeout</span><br><span class="line">test:e2e:managed-harness-restart-model-round-failover</span><br><span class="line">test:e2e:managed-frozen-control-plane-failover</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这一长串名字透露出一个信息：<strong>managed agent 的难点不是功能，而是故障恢复</strong>。</p>
+<p>会话中断了怎么办？审批请求发出去了但回复丢了怎么办？harness 重启了但还有 inflight 的调用怎么办？模型一轮对话失败怎么 failover？</p>
+<p>这些问题在成熟的 agent 系统里都会遇到。看名字猜，这个 daemon + managed-agent-server 的组合是被真实生产场景锤过的。</p>
+<p>另外还有 <code>test:terminal-bench</code>、<code>test:terminal-bench:oracle</code>、<code>test:terminal-bench:qwen</code>—— 它接入了 Terminal-Bench 这个终端能力评测。</p>
+<hr>
+<h2 id="八、模型支持：多协议是它和-Gemini-CLI-分家之后的正经理由"><a href="#八、模型支持：多协议是它和-Gemini-CLI-分家之后的正经理由" class="headerlink" title="八、模型支持：多协议是它和 Gemini CLI 分家之后的正经理由"></a>八、模型支持：多协议是它和 Gemini CLI 分家之后的正经理由</h2><p>README 里：</p>
+<blockquote>
+<p><strong>Multi-protocol</strong> — Supports OpenAI, Anthropic, Gemini, and Qwen APIs. Any third-party provider or local model (Ollama / vLLM). Switch at runtime.</p>
+</blockquote>
+<p><code>packages/core/src/providers/</code> 是实现目录，<code>packages/core/src/core/contentGenerator.ts</code> 是核心抽象。</p>
+<p>值得注意的是，代码里保留了 Gemini CLI 的历史遗产 ——<code>baseLlmClient.ts</code>、<code>GeminiChat</code>、<code>GeminiClient</code> 这些命名还在（README 里也提到 “based on Google Gemini CLI v0.8.2”）。所以你能看出这个 fork 的起点在哪。</p>
+<p><code>packages/core/src/core/</code> 下面还专门有 <code>anthropic-reasoning.ts</code>、<code>anthropicContentGenerator/</code>、<code>deepseek-reasoning.ts</code>、<code>dashscope-source-config.ts</code>。</p>
+<p>DeepSeek 和 Anthropic 的 reasoning 支持是单独写的适配层 —— 说明这些不是简单换个 URL，而是要处理不同的 thinking/reasoning 参数格式。<code>packages/core/src/core/contentGenerator.ts</code> 存在专门的测试文件，说明多 provider 兼容是回归测试的重点区域。<code>packages/core/src/config/models.ts</code> 和 <code>generate:model-catalog</code> 脚本对应模型目录生成。</p>
+<hr>
+<h2 id="九、扩展机制：Hooks、MCP、LSP、Computer-Use"><a href="#九、扩展机制：Hooks、MCP、LSP、Computer-Use" class="headerlink" title="九、扩展机制：Hooks、MCP、LSP、Computer Use"></a>九、扩展机制：Hooks、MCP、LSP、Computer Use</h2><h3 id="Hooks"><a href="#Hooks" class="headerlink" title="Hooks"></a>Hooks</h3><p>README：</p>
+<blockquote>
+<p>run your own scripts at lifecycle events: before and after tool calls, session start and end, and more.</p>
+</blockquote>
+<p>代码在 <code>packages/core/src/hooks/</code> 和 <code>packages/cli/src/hooks/</code>。</p>
+<p>工具调用前后都能挂自己的脚本 —— 这在” 跑测试前先跑 lint” 这类需求里特别有用。</p>
+<h3 id="MCP"><a href="#MCP" class="headerlink" title="MCP"></a>MCP</h3><p><code>packages/core/src/mcp/</code> 目录是我在这个仓库里看得最认真的部分之一，16 个文件覆盖了连接池、重试、资源限制、状态查询等：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mcp-client.ts  mcp-client-manager.ts  mcp-tool.ts</span><br><span class="line">mcp-pool-entry.ts  mcp-pool-events.ts  mcp-pool-key.ts  mcp-transport-pool.ts</span><br><span class="line">mcp-retry.ts  mcp-status.ts  mcp-workspace-budget.ts  mcp-discovery-timeout.ts</span><br><span class="line">mcp-app-resource-limits.ts  mcp-resource-content.ts  mcp-session-config.ts</span><br><span class="line">mcp-classifier-input.ts  mcp-errors.ts</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>mcp-workspace-budget.ts</code> 这个名字很有意思 —— <strong>给每个工作区限制 MCP 资源占用</strong>。MCP server 可以是任意外部进程，不加预算的话一个坏掉的 server 能把你的机器拖垮。</p>
+<p><code>mcp-discovery-timeout.ts</code> —— 发现的超时。启动时扫所有 server 太慢会卡住。</p>
+<h3 id="LSP-集成"><a href="#LSP-集成" class="headerlink" title="LSP 集成"></a>LSP 集成</h3><p>标记为 experimental + opt-in。支持 go-to-definition、references、diagnostics、code actions。</p>
+<p>对应 <code>packages/core/src/lsp/</code> 和 <code>packages/core/src/tools/lsp.ts</code>。</p>
+<p>我一开始觉得这是个可有可无的功能，用了之后发现不是 ——Agent 改代码时，如果能拿到精确的引用信息，比让它 grep 整个仓库靠谱得多。<code>grepReadTracking.ts</code> 和 <code>priorReadEnforcement.ts</code> 这两个文件名暗示了一套” 先读后改” 的追踪机制，大概是在保证 Agent 改的是它真的看过的文件。</p>
+<h3 id="Computer-Use-Browser-Use"><a href="#Computer-Use-Browser-Use" class="headerlink" title="Computer Use / Browser Use"></a>Computer Use / Browser Use</h3><p>对应 <code>packages/cua-driver/</code>（CUDA 缩写 Computer Use driver）和 <code>packages/browser-use/</code>。</p>
+<p><code>packages/browser-use/</code> 是独立的 package。浏览器自动化不是简单开个 headless Chrome 那么简单，涉及截图、DOM 树、坐标定位等等。</p>
+<p><code>packages/node-repl/</code> 提供 Node REPL + SDK 的方式，让 Agent 可以在会话里直接执行 Node 代码并拿到结果。</p>
+<h3 id="Code-Mode"><a href="#Code-Mode" class="headerlink" title="Code Mode"></a>Code Mode</h3><p><code>packages/core/src/code-mode/</code> 和 <code>packages/core/src/tools/code-mode.ts</code>。</p>
+<p>这个模式是：不给模型一堆细粒度工具，而是给一个” 写代码来调用工具” 的接口。类似 Anthropic 那套 Code Execution 思路。好处是 token 省，坏处是调试链路变长一层。</p>
+<h3 id="权限相关的细节"><a href="#权限相关的细节" class="headerlink" title="权限相关的细节"></a>权限相关的细节</h3><p><code>packages/core/src/tools/file-read-permission.ts</code> —— 文件读取权限。</p>
+<p>这个我得专门提一句，因为<strong>读文件和写文件不是一回事</strong>。很多 coding agent 的” 读” 是无限的（能读 <code>.env</code>、能读 SSH 私钥），写才有确认。这个设计把读也纳入了管控。</p>
+<p><code>packages/core/src/tools/tool-output-size.ts</code>、<code>truncation.ts</code>、<code>tool-result-retention.ts</code>、<code>tool-result-boundary-diagnostics.ts</code> —— 一整套工具输出管理。</p>
+<p>大模型上下文有限，一个 <code>grep</code> 结果可能几万行。<strong>怎么截断、截断的时候保什么、诊断信息怎么传给模型</strong>，这是实际工程里最琐碎也最关键的部分。这几个文件说明它认真处理过。</p>
+<hr>
+<h2 id="十、SWE-bench-Verified-上的成绩"><a href="#十、SWE-bench-Verified-上的成绩" class="headerlink" title="十、SWE-bench Verified 上的成绩"></a>十、SWE-bench Verified 上的成绩</h2><p>README 有一张图和一段数字。实际数字在 <code>docs/evaluation.md</code> 里，我直接抄表：</p>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th align="right">Avg Score</th>
+<th align="right">Pass Rate</th>
+<th align="right">pass@3</th>
+<th align="right">pass^3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0.0.14</td>
+<td align="right">77.80%</td>
+<td align="right">84.6%</td>
+<td align="right">84.6%</td>
+<td align="right">69.2%</td>
+</tr>
+<tr>
+<td>0.1.0</td>
+<td align="right">76.73%</td>
+<td align="right">84.6%</td>
+<td align="right">84.6%</td>
+<td align="right">68.0%</td>
+</tr>
+<tr>
+<td>0.5.0</td>
+<td align="right">76.60%</td>
+<td align="right">83.0%</td>
+<td align="right">83.0%</td>
+<td align="right">68.4%</td>
+</tr>
+<tr>
+<td>0.10.0</td>
+<td align="right">76.47%</td>
+<td align="right">84.4%</td>
+<td align="right">84.4%</td>
+<td align="right">67.4%</td>
+</tr>
+<tr>
+<td>0.15.0</td>
+<td align="right">77.67%</td>
+<td align="right">84.6%</td>
+<td align="right">84.6%</td>
+<td align="right">68.6%</td>
+</tr>
+<tr>
+<td>0.19.0</td>
+<td align="right">76.40%</td>
+<td align="right">85.0%</td>
+<td align="right">85.0%</td>
+<td align="right">65.8%</td>
+</tr>
+<tr>
+<td>0.22.0</td>
+<td align="right">77.33%</td>
+<td align="right">84.4%</td>
+<td align="right">84.4%</td>
+<td align="right">68.0%</td>
+</tr>
+</tbody></table>
+<p>评测配置（<code>docs/evaluation.md</code> 里的表格）：</p>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据集</td>
+<td><code>princeton-nlp/SWE-bench_Verified</code>，500 cases</td>
+</tr>
+<tr>
+<td> 试验次数</td>
+<td>每版本 3 次，每版本 1500 jobs，共 7 个版本</td>
+</tr>
+<tr>
+<td>模型</td>
+<td><code>Qwen 3.7 Max</code></td>
+</tr>
+<tr>
+<td>采样</td>
+<td><code>temperature=1</code>, <code>top_p=0.95</code></td>
+</tr>
+<tr>
+<td>思考 / 推理</td>
+<td><code>interleaved_thinking=true</code>, <code>thinking_type=adaptive</code>, <code>reasoning_effort=high</code></td>
+</tr>
+<tr>
+<td>上下文 / 输出限制</td>
+<td><code>context_1m=true</code>, <code>model_context_length=1,000,000</code>, <code>max_tokens=64,000</code>, <code>model_max_tokens=65,535</code></td>
+</tr>
+<tr>
+<td>Harness 限制</td>
+<td><code>max_iterations=500</code>, <code>runtime_timeout_sec=7,200</code>, <code>agent_timeout_multiplier=3.0</code></td>
+</tr>
+</tbody></table>
+<p>我得说几句实话。</p>
+<p><strong>这组数字最值得注意的是它的稳定性，而不是它的绝对值。</strong> 七个版本从 0.0.14 一直到 0.22.0，平均分在 76.40% 到 77.80% 之间，<strong>跨度只有 1.40 个百分点</strong>。这说明 harness 的架构是稳的 —— 从一个只支持 Gemini 的 fork，到多协议、多平台、多 Agent 编排、118 个工具，它的核心 agent loop 没有崩。</p>
+<p><strong>但也要看清楚这个评测的边界：</strong></p>
+<ol>
+<li><p><strong>全程用 Qwen 3.7 Max。</strong> 这测的是”Qwen Code 这套 harness 配 Qwen 自家模型的水平”，不是”Qwen Code 比别家 harness 强多少”。要横向比，得让 Claude Code 也用同一个模型跑一遍。</p>
+</li>
+<li><p><strong><code>max_iterations=500</code> 和 <code>runtime_timeout_sec=7200</code>（两小时）非常宽松。</strong> 这是评测配置，不是产品默认。真实项目里你不会让 Agent 转 500 轮。</p>
+</li>
+<li><p><strong>数据集会过拟合。</strong> SWE-bench Verified 已经被刷了无数遍，模型对它太熟了。</p>
+</li>
+<li><p><strong><code>reasoning_effort=high</code> + 100 万上下文 + 64k 输出。</strong> 这个配置对应的 token 成本相当高，别拿这个分数去推算” 用一次要多少钱”。</p>
+</li>
+<li><p><strong>有意思的是 pass^3 在 65.8% 到 69.2% 之间</strong>。这是三次全对才算对的指标，比 pass@3 低了将近 15 个点 —— 说明<strong>同一个模型同一个框架，三次跑的结果方差不小</strong>。实际使用的启示是：别指望 Agent 每次都给出同样的解法。</p>
+</li>
+</ol>
+<hr>
+<h2 id="十一、跟同类项目比：它到底站在哪"><a href="#十一、跟同类项目比：它到底站在哪" class="headerlink" title="十一、跟同类项目比：它到底站在哪"></a>十一、跟同类项目比：它到底站在哪</h2><p>既然它出身 Gemini CLI，那就绕不开这几个人。</p>
+<h3 id="vs-Gemini-CLI"><a href="#vs-Gemini-CLI" class="headerlink" title="vs Gemini CLI"></a>vs Gemini CLI</h3><p><strong>Qwen Code 的优势：</strong></p>
+<ul>
+<li><strong>多协议。</strong> Gemini CLI 深度绑定 Google。Qwen Code 原生支持 OpenAI、Anthropic、Gemini、Qwen 四家协议，加上任意第三方 provider 和本地 Ollama /vLLM。</li>
+<li><strong>架构独立性。</strong> v0.1 之后不再跟上游同步，可以按自己的节奏和需求演进。这是双刃剑，下面细说。</li>
+<li><strong>更细的多 Agent 能力。</strong> SubAgents / Agent Teams / Agent Arena 三层，加上模型可写的 Dynamic Workflows。</li>
+<li><strong>更多入口。</strong> daemon 模式、11 个 IM 通道、桌面端、三套 SDK。</li>
+<li><strong>Qwen 模型深度适配。</strong> 100 万上下文、<code>interleaved_thinking</code>、adaptive reasoning 这些。</li>
+</ul>
+<p><strong>Gemini CLI 的优势：</strong></p>
+<ul>
+<li><strong>上游背书。</strong> Google 的模型、基础设施、发布节奏是连贯的。</li>
+<li><strong>生态成熟度。</strong> 官方文档、示例、社区讨论量。</li>
+<li><strong>不用自己踩坑。</strong> Qwen Code 从 0.x 走到 0.28，很多路是它自己蹚出来的。</li>
+</ul>
+<h3 id="vs-Claude-Code"><a href="#vs-Claude-Code" class="headerlink" title="vs Claude Code"></a>vs Claude Code</h3><p><strong>Qwen Code 优势：</strong></p>
+<ul>
+<li><strong>完全开源 + Apache-2.0。</strong> Claude Code 是闭源商业产品。你没法读它的实现、没法自己改、没法自托管审计。</li>
+<li><strong>免费且不限量（用你自己的 provider）。</strong> 你自己买 API key，成本就只是 token。</li>
+<li><strong>模型自由。</strong> Claude Code 现在也支持第三方模型了，但它自己的 harness 依然是为 Claude 优化的。</li>
+<li><strong>可自托管。</strong> daemon 模式可以完全跑在内网。</li>
+<li><strong>Qwen 模型上的性价比。</strong> 如果本来就用通义千问，成本低一截。</li>
+</ul>
+<p><strong>Claude Code 优势：</strong></p>
+<ul>
+<li><strong>能力上限。</strong> 说实话，在复杂重构、长程任务上，Claude Code 的完成度目前还是更高。</li>
+<li><strong>稳定性。</strong> Anthropic 的产品化程度更高。</li>
+<li><strong>生态与集成。</strong> 各种第三方工具默认优先适配 Claude Code。</li>
+<li><strong>不用自己折腾。</strong> Qwen Code 有 2435 个 open issue。</li>
+</ul>
+<h3 id="vs-OpenCode"><a href="#vs-OpenCode" class="headerlink" title="vs OpenCode"></a>vs OpenCode</h3><p>OpenCode 是另一款开源终端 coding agent，走的是” 极简 + 多 provider” 路线。Qwen Code 的重心明显在<strong>功能完备度</strong>上 ——118 个工具、20 个 package、100 个命令、11 个 IM 通道。OpenCode 更轻。</p>
+<h3 id="vs-Cursor-Windsurf-Devin"><a href="#vs-Cursor-Windsurf-Devin" class="headerlink" title="vs Cursor / Windsurf / Devin"></a>vs Cursor / Windsurf / Devin</h3><p>Cursor、Windsurf 是 GUI 路线，不是同一个物种。Qwen Code 的 IDE 插件（VS Code / Zed / JetBrains）能部分覆盖这个场景，但底座还是终端。Devin 那种是云端托管的商业产品，卖的是” 结果” 不是” 工具”。Qwen Code 卖的是 harness，你自己掌控一切。</p>
+<h3 id="一句话总结对比"><a href="#一句话总结对比" class="headerlink" title="一句话总结对比"></a>一句话总结对比</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>Qwen Code</th>
+<th>Gemini CLI</th>
+<th>Claude Code</th>
+<th>OpenCode</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 开源</td>
+<td>✅ Apache-2.0</td>
+<td>✅ 开源</td>
+<td>❌ 闭源</td>
+<td>✅ 开源</td>
+</tr>
+<tr>
+<td>多 provider</td>
+<td>✅ 四协议 + 本地</td>
+<td>❌ 偏 Google</td>
+<td>⚠️ 有限</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>IM 通道</td>
+<td>✅ 11 个</td>
+<td>⚠️ 少</td>
+<td>⚠️ 少</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>多 Agent</td>
+<td>✅ 三层</td>
+<td>⚠️ 有但较简</td>
+<td>⚠️ 有</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>SDK</td>
+<td>✅ TS/Python/Java</td>
+<td>⚠️</td>
+<td>⚠️</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>成熟度</td>
+<td>中（0.28）</td>
+<td>高</td>
+<td>高</td>
+<td>中</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="十二、真实局限：说点不好听的"><a href="#十二、真实局限：说点不好听的" class="headerlink" title="十二、真实局限：说点不好听的"></a>十二、真实局限：说点不好听的</h2><p>我用了两周，有些地方必须吐槽。</p>
+<h3 id="1-2435-个-open-issue"><a href="#1-2435-个-open-issue" class="headerlink" title="1. 2435 个 open issue"></a>1. 2435 个 open issue</h3><p>这个数字对 30731 star 的项目来说不低。README 里也承认项目在”actively iterating on itself”—— 用 AI 批量提 issue 和 PR 是双刃剑，它能加速迭代，也能制造噪音。</p>
+<h3 id="2-实验性功能太多了"><a href="#2-实验性功能太多了" class="headerlink" title="2. 实验性功能太多了"></a>2. 实验性功能太多了</h3><p>我数了一下 README 里标 experimental 或 opt-in 的功能：Agent Teams、Agent Arena、Dynamic Workflows、<code>qwen serve --open</code>（Web UI）、daemon 模式整体、LSP 集成、Qwen Live（实时语音）。</p>
+<p><strong>接近一半的” 高级能力” 是实验性的。</strong> 这意味着你不能指望它们稳定，也不能指望文档准确。Agent Arena 我特别想用，但 experimental 标签就意味着接口随时会变。</p>
+<h3 id="3-Daemon-默认不安全-——-这个必须点名"><a href="#3-Daemon-默认不安全-——-这个必须点名" class="headerlink" title="3. Daemon 默认不安全 —— 这个必须点名"></a>3. Daemon 默认不安全 —— 这个必须点名</h3><p>README 自己写了：</p>
+<blockquote>
+<p>By default, the daemon listens on loopback without bearer authentication; any local process that can reach it can use the full API, including code execution.</p>
+</blockquote>
+<p>翻译：<strong>默认情况下，daemon 不带认证，任何能连上它的本地进程都能用它完整 API，包括执行代码。</strong> <code>docs/users/qwen-serve.md</code> 里的表述更狠 ——“Loopback is trusted by default”，任何能连上它的本地进程都拿到完整 API 权限，包括以 daemon 用户身份执行代码。</p>
+<p>它给的缓解方案是设 <code>QWEN_SERVER_TOKEN</code> 加 <code>--require-auth</code>。非 loopback 监听会自动生成一个 128 位临时 bearer（22 个 URL-safe 字符）并在启动时打印一次。</p>
+<p>另外还有 DNS rebinding 防护：loopback 绑定的 Host 头白名单只接受 daemon 自己的端口，所以 <code>ssh -L 8080:localhost:4170</code> 这种端口转换隧道会直接被 <code>403 Invalid Host header</code> 拒掉。</p>
+<p>我觉得这个默认值可以理解（本地开发体验优先），但<strong>在共享机器上必须显式开认证</strong>。文档里那句”on shared or untrusted hosts, set <code>QWEN_SERVER_TOKEN</code> and use <code>--require-auth</code>“是认真的，不是客套。</p>
+<p><code>/recap</code> 端点还有一个自曝的坑，文档里原话：</p>
+<blockquote>
+<p><strong>Known limit — token-cost amplification:</strong> the route is a pure-cost endpoint (each call is an LLM side-query, no state benefit) and the daemon has no per-route rate limit in v1. On a no-token loopback default a buggy or malicious local client can spam it to burn tokens.</p>
+</blockquote>
+<p>自己主动写” 这是个烧 token 的漏洞”，说明维护者靠谱，但问题确实存在。</p>
+<h3 id="4-资源消耗不轻"><a href="#4-资源消耗不轻" class="headerlink" title="4. 资源消耗不轻"></a>4. 资源消耗不轻</h3><p>118 个工具 + MCP 连接池 + 1M 上下文配置 + TypeScript monorepo 二十个包，本地跑起来的内存和 CPU 都不低。<code>nodeOptions: '--max-old-space-size=6144'</code> 这行配置就是证据 —— 构建过程需要 6GB 堆。评测配置里 <code>max_iterations=500</code>、<code>runtime_timeout_sec=7200</code> 也说明单次任务的资源上限很高。</p>
+<h3 id="5-文档是英文优先"><a href="#5-文档是英文优先" class="headerlink" title="5. 文档是英文优先"></a>5. 文档是英文优先</h3><p>有 8 个语言版本：English、中文、Deutsch、français、日本語、Русский、português、한국어。但很多细节文档（比如 1392 行的 daemon 指南）我只看到英文版。中文用户能拿到 overview，但深入细节可能要读英文。</p>
+<h3 id="6-依赖重"><a href="#6-依赖重" class="headerlink" title="6. 依赖重"></a>6. 依赖重</h3><p>虽然根 <code>dependencies</code> 只有 3 个，但 <code>devDependencies</code> 有 59 个，<code>overrides</code> 锁了一长串安全补丁版本。想从源码跑起来的同学要准备好处理 pnpm 依赖树。</p>
+<h3 id="7-版本号还在-0-x"><a href="#7-版本号还在-0-x" class="headerlink" title="7. 版本号还在 0.x"></a>7. 版本号还在 0.x</h3><p><code>0.28.0</code>。同时 <code>v1.0.0-preview</code> 已经存在 —— 主线还在 0.x，1.0 在预览阶段。README 里专门有一段解释这个分裂：</p>
+<blockquote>
+<p>Looking for <strong>Qwen Code 1.0 Preview</strong>? Get started here. The instructions below are for the main version.</p>
+</blockquote>
+<p><strong>1.0 Preview 是个独立的分支</strong>，把 Qoder 的 agent harness 能力和 Qwen Code 合并了。这意味着你装 <code>npm install -g @qwen-code/qwen-code@latest</code> 拿到的不是 1.0。这个信息藏得不算深，但对新手来说很容易装错。</p>
+<hr>
+<h2 id="十三、适合谁-不适合谁"><a href="#十三、适合谁-不适合谁" class="headerlink" title="十三、适合谁 / 不适合谁"></a>十三、适合谁 / 不适合谁</h2><h3 id="适合"><a href="#适合" class="headerlink" title="适合"></a>适合</h3><p><strong>1. 想要完全开源、可审计、可自托管的团队</strong> —— 这是最核心的价值。Apache-2.0，全代码可读，daemon 能跑在内网。金融、政企、涉密项目，这是硬门槛。</p>
+<p><strong>2. 需要多 provider 自由度的开发者</strong> —— 公司买了 Claude API，但某些场景必须用国内模型；或者本地有 GPU 部署了 vLLM。Qwen Code 的多协议切换是原生的。</p>
+<p><strong>3. 想把 Agent 接进 IM 的团队</strong> —— 11 个通道：Telegram、钉钉、微信、企微、飞书、QQ、邮件、GitHub、GitLab、DWS、Aone。对很多团队来说，” 在钉钉里 @ 机器人改个 bug” 比” 打开 IDE” 更自然。</p>
+<p><strong>4. 想做二次开发、做自己 Agent 产品的团队</strong> —— 118 个工具的实现、20 个 package 的拆分、三套 SDK、ACP 协议支持，这是一堆现成的零件。</p>
+<p><strong>5. 中文用户</strong> —— Qwen 模型本身的中文能力、8 语言文档、中文社区，都是加分项。</p>
+<p><strong>6. 喜欢折腾 harness 本身的人</strong> —— Skills、Hooks、Dynamic Workflows、Agent Arena…… 如果你想深入理解 agent 编排怎么设计，这是很好的教材级代码库。</p>
+<h3 id="不适合"><a href="#不适合" class="headerlink" title="不适合"></a>不适合</h3><p><strong>1. 只想” 有个能用的工具” 的普通用户</strong></p>
+<p>装是简单，但配置 provider、写 <code>QWEN.md</code>、理解 approval mode、理解 worktree…… 这些都有学习成本。不如用 Claude Code 或者 Cursor。</p>
+<p><strong>2. 追求稳定交付的生产团队（现在）</strong></p>
+<p>一半功能 experimental，2435 个 open issue，0.x 版本。做生产工具链的应该等 1.0 正式版。</p>
+<p><strong>3. 不愿意自己管 token 成本的人</strong></p>
+<p>多 Agent（尤其是 Agent Arena 同时跑多个模型）开销可以非常夸张。<code>/recap</code> 那种” 纯消耗无收益” 的端点它自己都写进文档了。</p>
+<p><strong>4. 团队协作场景下需要严格权限管控的人</strong></p>
+<p>默认 loopback 无认证、write 模式宽松。要严格管控得自己配 token、白名单、Sandbox，逐项做。</p>
+<p><strong>5. 只想写代码不想管工具链的人</strong></p>
+<p>如果你不享受调配置、研究 prompt、比较不同模型的输出风格，这套东西对你是负担。</p>
+<hr>
+<h2 id="十四、我的实际使用建议"><a href="#十四、我的实际使用建议" class="headerlink" title="十四、我的实际使用建议"></a>十四、我的实际使用建议</h2><p>如果你决定试，我建议这么开始：</p>
+<h3 id="第一周：只当普通-CLI-用"><a href="#第一周：只当普通-CLI-用" class="headerlink" title="第一周：只当普通 CLI 用"></a>第一周：只当普通 CLI 用</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @qwen-code/qwen-code@latest</span><br><span class="line"><span class="built_in">cd</span> your-project</span><br><span class="line">qwen</span><br></pre></td></tr></tbody></table></figure>
+
+<p>先用 <code>/auth</code> 登录或者配好一个 provider。<strong>这一步什么都别开。</strong> 不要开 YOLO，不要开 Auto Mode，不要开 Agent Teams。先熟悉它的基本行为：它会读哪些文件、会跑什么命令、什么时候停下来问你。</p>
+<h3 id="第二周：写-QWEN-md"><a href="#第二周：写-QWEN-md" class="headerlink" title="第二周：写 QWEN.md"></a>第二周：写 QWEN.md</h3><p>在项目根目录建 <code>QWEN.md</code>，写清楚项目结构、构建命令、测试命令、代码风格约定。这是投入产出比最高的一步 —— 我试过，写了 <code>QWEN.md</code> 之后 Agent 的行为质量有明显提升，因为它不再需要每次重新摸索” 这个项目怎么跑测试”。</p>
+<h3 id="第三周：开-Hooks"><a href="#第三周：开-Hooks" class="headerlink" title="第三周：开 Hooks"></a>第三周：开 Hooks</h3><p>把 lint /typecheck 挂到工具调用前后。让 Agent 每次改完代码自动跑一遍检查，这个自动化对减少来回验证很有用。</p>
+<h3 id="第四周：试-SubAgents"><a href="#第四周：试-SubAgents" class="headerlink" title="第四周：试 SubAgents"></a>第四周：试 SubAgents</h3><p>先不要碰 Agent Teams 和 Agent Arena。SubAgents 是最可控的：给一个明确的小任务（比如” 把这个目录下的测试补全”），让它委派出去。</p>
+<h3 id="之后：按需开实验性功能"><a href="#之后：按需开实验性功能" class="headerlink" title="之后：按需开实验性功能"></a>之后：按需开实验性功能</h3><p>Agent Arena 我认为是这套东西里最值得投入的方向，但先等它接口稳定。</p>
+<h3 id="一定要配的东西"><a href="#一定要配的东西" class="headerlink" title="一定要配的东西"></a>一定要配的东西</h3><p>如果你要在共享机器上跑 daemon：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> QWEN_SERVER_TOKEN=<span class="string">"<span class="subst">$(openssl rand -base64 32)</span>"</span></span><br><span class="line">qwen serve --require-auth --hostname 0.0.0.0</span><br></pre></td></tr></tbody></table></figure>
+
+<p>非 loopback 监听时记得配 TLS—— 文档里明确说 “HTTP is unencrypted”。</p>
+<hr>
+<h2 id="十五、一些值得单独记下的细节"><a href="#十五、一些值得单独记下的细节" class="headerlink" title="十五、一些值得单独记下的细节"></a>十五、一些值得单独记下的细节</h2><h3 id="15-1-ACP-正在成为事实标准"><a href="#15-1-ACP-正在成为事实标准" class="headerlink" title="15.1 ACP 正在成为事实标准"></a>15.1 ACP 正在成为事实标准</h3><p>搜索候选的时候我注意到 <code>openclaw/openclaw</code> 有 82908 stars，README 里写着 “The AI that really does things. Any OS. Any Platform. The lobster way. 🦞”—— 它比 qwen-code 还火。</p>
+<p>不过 Qwen Code 的 README 里也提到了生态合作：”<strong>🦞 Qwen Code Claw</strong> — Let other agents (Claude, Codex, etc.) delegate coding tasks to Qwen Code via ACP.”</p>
+<p>所以两个项目是在互相接壤的。ACP（Agent Client Protocol）正在成为一个事实标准 ——Claude Code、Codex、Qwen Code 都往这边靠。</p>
+<h3 id="15-2-生态周边"><a href="#15-2-生态周边" class="headerlink" title="15.2 生态周边"></a>15.2 生态周边</h3><p>README 列了几个：<strong>Qwen Code Desktop</strong>（官方桌面应用，macOS/Windows/Linux）、<strong>AionUi</strong>（iOfficeAI 出的 CLI 工具 GUI 壳）、<strong>Gemini CLI Desktop</strong>（跨平台的桌面 / 网页 / 移动端 UI）、<strong>qwen-audio-agent</strong>（基于 ACP 的实时全双工语音前端，支持 barge-in 打断和本地唤醒词）。</p>
+<h3 id="15-3-一些维护痕迹"><a href="#15-3-一些维护痕迹" class="headerlink" title="15.3 一些维护痕迹"></a>15.3 一些维护痕迹</h3><ul>
+<li>根目录有 <code>HOSTED_SHELL_UNICODE_E2E.md</code> —— hosted shell 的 Unicode 端到端测试说明</li>
+<li>有 <code>eslint-rules/</code> 目录和 <code>eslint.legacy-core-barrel-imports.mjs</code>、<code>eslint.legacy-filenames.mjs</code> —— <strong>专门写了 ESLint 规则来禁止回退到老的 barrel import 和老文件名</strong>。这是有历史包袱的项目的典型痕迹，说明代码库经历过大规模重构</li>
+<li><code>packages/core/src/services/</code> 下有 <code>commitAttribution.ts</code>、<code>attributionTrailer.ts</code>、<code>branch-points.ts</code> —— commit 归属追踪，配合 <code>/autofix-pr</code> 这类功能的基建</li>
+<li><code>packages/core/src/config/agent-loop-rollout.ts</code> —— agent loop 的渐进式发布（rollout），典型的” 先给 5% 用户开新逻辑”</li>
+</ul>
+<p>关于包管理：它同时支持三种安装方式（curl 独立脚本、NPM、Homebrew），NPM 包名是 <code>@qwen-code/qwen-code</code>，作用域是 <code>@qwen-code</code> 而不是 <code>@qwen</code>；仓库里有独立发版的 <code>sdk-typescript-v0.1.35</code>，和主包版本号完全独立。</p>
+<hr>
+<h2 id="十六、总结"><a href="#十六、总结" class="headerlink" title="十六、总结"></a>十六、总结</h2><p>回到最开始那个烂摊子 —— 我最终在那个六年的单体服务上，用的就是 Qwen Code。</p>
+<p>不是因为它最强。说实话，同一个任务我让 Claude Code 也做了一遍，Claude Code 的结果更漂亮一些。</p>
+<p>我选它有三个原因：</p>
+<p><strong>第一，完全开源。</strong> 我得能给团队每个人解释” 它做了什么、为什么这么做”。读不了代码的东西，我不敢往生产里放。</p>
+<p><strong>第二，多 provider。</strong> 我们公司同时用着国内外几家模型，切换是刚需。</p>
+<p><strong>第三，它是一本活的教材。</strong> 我想搞明白” 多 Agent 到底怎么编排”、”agent loop 怎么设计”、” 工具输出怎么截断”—— 这些问题的答案都能在 <code>packages/core/src/</code> 里找到。118 个工具、100 个命令、几十个故障切换测试，这套代码读过之后，我对 agent 系统的理解上了一个台阶。</p>
+<p>它的缺点也很明显：功能杂、实验性东西多、默认配置有安全隐患、文档细节不如英文版全。这些我都写在第十二节了。</p>
+<p><strong>如果你需要一个今天就能上手的 coding agent，用 Claude Code 或者 Cursor。</strong><br><strong>如果你需要一个你能读懂、能改、能自托管、能在内网跑的 agent harness，Qwen Code 是目前最好的开源选择之一。</strong></p>
+<p>30731 这个数字背后是一个在持续迭代、每天发版、把复杂问题（故障恢复、权限、资源预算）都认真处理过的项目。对 Qwen 团队，我只有一句建议：<strong>1.0 正式版发布的时候，把 experimental 的那些功能也一起收敛一下。</strong> 现在这个状态，团队引入会有顾虑。</p>
+<hr>
+<h2 id="附：本文事实来源"><a href="#附：本文事实来源" class="headerlink" title="附：本文事实来源"></a>附：本文事实来源</h2><p>所有数据来自以下可验证来源，写作时间 2026-11-18：</p>
+<table>
+<thead>
+<tr>
+<th>事实</th>
+<th>来源</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> stars / forks / issues / license / language / topics</td>
+<td>GitHub API <code>/repos/QwenLM/qwen-code</code></td>
+</tr>
+<tr>
+<td>安装命令、命令列表、能力清单</td>
+<td>仓库 <code>README.md</code></td>
+</tr>
+<tr>
+<td>SWE-bench 数据与配置</td>
+<td>仓库 <code>docs/evaluation.md</code></td>
+</tr>
+<tr>
+<td>daemon 能力与安全说明</td>
+<td>仓库 <code>docs/users/qwen-serve.md</code></td>
+</tr>
+<tr>
+<td>package 结构、依赖、scripts</td>
+<td> 仓库 <code>package.json</code></td>
+</tr>
+<tr>
+<td>workspace 划分与踩坑注释</td>
+<td>仓库 <code>pnpm-workspace.yaml</code></td>
+</tr>
+<tr>
+<td>工具清单、core 目录结构</td>
+<td> GitHub API recursive tree（共 16632 个文件）</td>
+</tr>
+<tr>
+<td>版本与发布节奏</td>
+<td> GitHub API <code>/releases</code>、<code>/tags</code></td>
+</tr>
+</tbody></table>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/11/18/qwen-code-open-source-terminal-ai-coding-agent/" title="QwenLM&#x2F;qwen-code：3 万 star 的终端 AI 编程 Agent，Apache-2.0 全开源">https://www.daishengli.top/2026/11/18/qwen-code-open-source-terminal-ai-coding-agent/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/" rel="tag"># 开源框架</a>
+              <a href="/tags/TypeScript/" rel="tag"># TypeScript</a>
+              <a href="/tags/qwen-code/" rel="tag"># qwen-code</a>
+              <a href="/tags/qwenlm/" rel="tag"># qwenlm</a>
+              <a href="/tags/%E7%BC%96%E7%A8%8B%E5%8A%A9%E6%89%8B/" rel="tag"># 编程助手</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/10/andyhuo520-digital-human-koubo-ai-talking-head-video-factory/" rel="prev" title="andyhuo520&#x2F;digital-human-koubo：1.9k stars 的 AI 数字人口播工厂，一张照片 + 一句话出片">
+                  <i class="fa fa-angle-left"></i> andyhuo520/digital-human-koubo：1.9k stars 的 AI 数字人口播工厂，一张照片 + 一句话出片
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/18/rust-anything-rewrite-app-in-rust-verified-behavior/" rel="next" title="erkamyaman&#x2F;rust-anything：3321 star 的 Rust 迁移工具箱，把 Node&#x2F;Python&#x2F;Go 应用逐块改写成 Rust 并逐步验证行为一致">
+                  erkamyaman/rust-anything：3321 star 的 Rust 迁移工具箱，把 Node/Python/Go 应用逐块改写成 Rust 并逐步验证行为一致 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

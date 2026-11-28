@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="andyhuo520&#x2F;digital-human-koubo 是 2026 年 10 月 26 日新建的开源项目，两周冲到 1,897 stars、435 forks，MIT 协议，主语言 TypeScript，是一个跑在 Claude Code &#x2F; Codex &#x2F; OpenClaw 等 agent 里的标准 Agent Skill。它把数字人口播视频的整条流水线做成了 agent 可执行的脚本：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="andyhuo520&#x2F;digital-human-koubo：1.9k stars 的 AI 数字人口播工厂，一张照片 + 一句话出片">
+<meta property="og:url" content="https://www.daishengli.top/2026/11/10/andyhuo520-digital-human-koubo-ai-talking-head-video-factory/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="andyhuo520&#x2F;digital-human-koubo 是 2026 年 10 月 26 日新建的开源项目，两周冲到 1,897 stars、435 forks，MIT 协议，主语言 TypeScript，是一个跑在 Claude Code &#x2F; Codex &#x2F; OpenClaw 等 agent 里的标准 Agent Skill。它把数字人口播视频的整条流水线做成了 agent 可执行的脚本：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-10T00:05:00.000Z">
+<meta property="article:modified_time" content="2026-11-28T00:04:52.348Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="digital-human-koubo">
+<meta property="article:tag" content="andyhuo520">
+<meta property="article:tag" content="Agent Skill">
+<meta property="article:tag" content="数字人">
+<meta property="article:tag" content="视频生成">
+<meta property="article:tag" content="Remotion">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/11/10/andyhuo520-digital-human-koubo-ai-talking-head-video-factory/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/11/10/andyhuo520-digital-human-koubo-ai-talking-head-video-factory/","path":"2026/11/10/andyhuo520-digital-human-koubo-ai-talking-head-video-factory/","title":"andyhuo520/digital-human-koubo：1.9k stars 的 AI 数字人口播工厂，一张照片 + 一句话出片"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>andyhuo520/digital-human-koubo：1.9k stars 的 AI 数字人口播工厂，一张照片 + 一句话出片 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">459</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">139</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%EF%BC%9A%E5%8F%A3%E6%92%AD%E8%A7%86%E9%A2%91%E7%9A%84%E7%9C%9F%E5%AE%9E%E6%88%90%E6%9C%AC"><span class="nav-number">1.</span> <span class="nav-text">一、它想解决什么：口播视频的真实成本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9A%E4%B8%80%E4%BB%BD-Agent-Skill%EF%BC%8C%E4%B8%8D%E6%98%AF%E4%B8%80%E4%B8%AA-SaaS"><span class="nav-number">2.</span> <span class="nav-text">二、它是什么：一份 Agent Skill，不是一个 SaaS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-897-stars-%E6%98%AF%E6%80%8E%E4%B9%88%E6%9D%A5%E7%9A%84"><span class="nav-number">2.1.</span> <span class="nav-text">1,897 stars 是怎么来的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%83%E9%9C%80%E8%A6%81%E4%BB%80%E4%B9%88%E6%89%8D%E8%83%BD%E8%B7%91%E8%B5%B7%E6%9D%A5"><span class="nav-number">2.2.</span> <span class="nav-text">它需要什么才能跑起来</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%EF%BC%9A%E6%95%B4%E6%9D%A1%E6%B5%81%E6%B0%B4%E7%BA%BF%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7"><span class="nav-number">3.</span> <span class="nav-text">三、核心机制：整条流水线长什么样</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-persona-json%EF%BC%9A%E6%8A%8A%E2%80%9D%E4%BA%BA%E2%80%9D%E5%9B%BA%E5%8C%96%E6%88%90%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 persona.json：把” 人” 固化成配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E6%8A%A5%E4%BB%B7%E9%97%A8%EF%BC%9A%E8%BF%99%E4%B8%AA%E9%A1%B9%E7%9B%AE%E6%9C%80%E5%80%BC%E9%92%B1%E7%9A%84%E4%B8%80%E8%A1%8C%E4%BB%A3%E7%A0%81"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 报价门：这个项目最值钱的一行代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E7%94%BB%E8%B4%A8%E6%A1%A3%E4%BD%8D%E7%9A%84%E5%9D%91%EF%BC%9A480p-%E5%88%B0%E5%BA%95%E8%83%BD%E4%B8%8D%E8%83%BD%E7%94%A8"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 画质档位的坑：480p 到底能不能用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E4%B8%8B%E8%BD%BD%EF%BC%9ARenoise-%E7%BE%8E%E5%9B%BD-CDN-%E4%BC%9A%E6%88%AA%E6%96%AD%E5%B9%B6%E5%8F%91"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 下载：Renoise 美国 CDN 会截断并发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-%E8%B4%A8%E6%A3%80%EF%BC%9Awhisper-%E5%9B%9E%E5%90%AC-%E6%8A%BD%E5%B8%A7"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 质检：whisper 回听 + 抽帧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-%E5%BF%B5%E9%94%99%E5%AD%97%EF%BC%9A%E8%BF%99%E6%98%AF%E6%95%B4%E4%B8%AA%E9%A1%B9%E7%9B%AE%E6%8A%80%E6%9C%AF%E5%90%AB%E9%87%8F%E6%9C%80%E9%AB%98%E7%9A%84%E9%83%A8%E5%88%86"><span class="nav-number">3.6.</span> <span class="nav-text">3.6 念错字：这是整个项目技术含量最高的部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-%E9%9F%B3%E8%89%B2%E7%BB%9F%E4%B8%80%EF%BC%9A%E6%8A%8A-30-%E6%AE%B5%E7%8B%AC%E7%AB%8B%E7%94%9F%E6%88%90%E7%9A%84%E9%9F%B3%E9%A2%91%E6%8F%89%E6%88%90%E4%B8%80%E6%9D%A1"><span class="nav-number">3.7.</span> <span class="nav-text">3.7 音色统一：把 30 段独立生成的音频揉成一条</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-8-%E5%89%AA%E8%BE%91%EF%BC%9ARemotion-48-%E4%B8%AA%E5%8C%85%E8%A3%85%E7%BB%84%E4%BB%B6"><span class="nav-number">3.8.</span> <span class="nav-text">3.8 剪辑：Remotion + 48 个包装组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-9-%E6%96%87%E5%AD%97%E5%9C%A8%E4%BA%BA%E8%BA%AB%E5%90%8E%EF%BC%9AmacOS-Vision-%E6%8A%A0%E5%83%8F"><span class="nav-number">3.9.</span> <span class="nav-text">3.9 文字在人身后：macOS Vision 抠像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-10-%E5%B0%81%E9%9D%A2%E5%8D%B3%E9%A6%96%E5%B8%A7"><span class="nav-number">3.10.</span> <span class="nav-text">3.10 封面即首帧</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%EF%BC%9A%E7%9C%9F%E7%9A%84%E8%83%BD%E8%B7%91%E8%B5%B7%E6%9D%A5%E5%90%97"><span class="nav-number">4.</span> <span class="nav-text">四、快速上手：真的能跑起来吗</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E6%8B%89%E4%BB%A3%E7%A0%81"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 拉代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E8%A3%85-skill-%E5%88%B0%E4%BD%A0%E7%9A%84-agent"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 装 skill 到你的 agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E8%BF%9E-Renoise-MCP"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 连 Renoise MCP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E8%A3%85%E6%9C%AC%E5%9C%B0%E5%B7%A5%E5%85%B7"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 装本地工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-%E7%94%9F%E6%88%90%E9%9F%B3%E6%95%88%E5%92%8C%E5%8D%A0%E4%BD%8D-BGM"><span class="nav-number">4.5.</span> <span class="nav-text">4.5 生成音效和占位 BGM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-%E5%BC%80%E5%B7%A5"><span class="nav-number">4.6.</span> <span class="nav-text">4.6 开工</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%85%B3%E9%94%AE%E8%AE%BE%E8%AE%A1%E5%8F%96%E8%88%8D%EF%BC%9A%E4%BD%9C%E8%80%85%E5%81%9A%E5%AF%B9%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-number">5.</span> <span class="nav-text">五、关键设计取舍：作者做对了什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E6%8A%A5%E4%BB%B7%E4%B8%8D%E6%98%AF%E5%8A%9F%E8%83%BD%EF%BC%8C%E6%98%AF%E4%BF%A1%E4%BB%BB%E6%9C%BA%E5%88%B6"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 报价不是功能，是信任机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E7%BA%A6%E6%9D%9F%E5%89%8D%E7%A7%BB%EF%BC%9A%E6%8A%8A%E6%A8%A1%E5%9E%8B%E7%BC%BA%E9%99%B7%E5%86%99%E8%BF%9B%E7%94%9F%E6%88%90%E6%9D%A1%E4%BB%B6"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 约束前移：把模型缺陷写进生成条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E5%B1%80%E9%83%A8%E4%BF%AE%E5%A4%8D%E4%BC%98%E5%85%88%E4%BA%8E%E5%85%A8%E5%B1%80%E9%87%8D%E5%81%9A"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 局部修复优先于全局重做</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E5%A3%B0%E5%AD%A6%E7%BB%9F%E4%B8%80%E5%81%9A%E5%88%B0%E2%80%9D%E5%90%8C%E4%B8%80%E4%B8%AA%E6%88%BF%E9%97%B4%E2%80%9D%E8%BF%99%E4%B8%AA%E7%B2%92%E5%BA%A6"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 声学统一做到” 同一个房间” 这个粒度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-%E6%8A%8A%E2%80%9D%E7%9C%8B%E8%B5%B7%E6%9D%A5%E4%B8%93%E4%B8%9A%E2%80%9D%E8%BF%99%E4%BB%B6%E4%BA%8B%E6%8B%86%E6%88%90%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%BB%84%E4%BB%B6"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 把” 看起来专业” 这件事拆成可执行组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-%E9%A6%96%E5%B8%A7%E6%80%9D%E7%BB%B4"><span class="nav-number">5.6.</span> <span class="nav-text">5.6 首帧思维</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%92%8C%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E6%AF%94%EF%BC%9A%E5%AE%83%E7%AB%99%E5%9C%A8%E5%93%AA"><span class="nav-number">6.</span> <span class="nav-text">六、和同类项目比：它站在哪</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-vs-%E9%97%AD%E6%BA%90%E6%95%B0%E5%AD%97%E4%BA%BA-SaaS%EF%BC%88Synthesia%E3%80%81HeyGen%E3%80%81Rephrase-AI-%E9%82%A3%E4%B8%80%E7%B1%BB%EF%BC%89"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 vs 闭源数字人 SaaS（Synthesia、HeyGen、Rephrase.AI 那一类）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-vs-%E7%BA%AF-Python-%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%E8%84%9A%E6%9C%AC%EF%BC%88%E6%AF%94%E5%A6%82%E5%90%84%E7%A7%8D-SadTalker-Wav2Lip-%E5%B0%81%E8%A3%85%EF%BC%89"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 vs 纯 Python 视频生成脚本（比如各种 SadTalker &#x2F; Wav2Lip 封装）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-vs-Remotion-%E6%A8%A1%E6%9D%BF%E5%BA%93-CapCut-%E6%A8%A1%E6%9D%BF"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 vs Remotion 模板库 &#x2F; CapCut 模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-vs-HeyGen-%E4%B9%8B%E7%B1%BB%E8%87%AA%E5%B8%A6%E2%80%9D%E8%A7%86%E9%A2%91%E7%BF%BB%E8%AF%91-%E6%8D%A2%E8%AF%AD%E8%A8%80%E2%80%9D%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">6.4.</span> <span class="nav-text">6.4 vs HeyGen 之类自带” 视频翻译 &#x2F; 换语言” 的功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E5%92%8C%E5%90%8C%E4%BD%9C%E8%80%85%E7%94%9F%E6%80%81%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">6.5.</span> <span class="nav-text">6.5 和同作者生态的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E7%9C%9F%E5%AE%9E%E5%B1%80%E9%99%90%EF%BC%9A%E5%88%AB%E5%BD%93%E9%93%B6%E5%BC%B9%E7%94%A8"><span class="nav-number">7.</span> <span class="nav-text">七、真实局限：别当银弹用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E5%BC%BA%E4%BE%9D%E8%B5%96%E5%A4%96%E9%83%A8%E6%9C%8D%E5%8A%A1"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 强依赖外部服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E6%9C%AC%E5%9C%B0%E4%BE%9D%E8%B5%96%E4%B8%8D%E8%BD%BB"><span class="nav-number">7.2.</span> <span class="nav-text">7.2 本地依赖不轻</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-TextBehind-%E4%BE%9D%E8%B5%96-macOS"><span class="nav-number">7.3.</span> <span class="nav-text">7.3 TextBehind 依赖 macOS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-%E6%95%B0%E5%AD%97%E4%BA%BA%E5%BD%A2%E8%B1%A1%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E4%B8%8D%E6%98%AF-100"><span class="nav-number">7.4.</span> <span class="nav-text">7.4 数字人形象的一致性不是 100%</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-%E6%88%90%E6%9C%AC%E5%AF%B9%E4%B8%AA%E4%BA%BA%E5%88%9B%E4%BD%9C%E8%80%85%E4%BB%8D%E7%84%B6%E4%B8%8D%E4%BD%8E"><span class="nav-number">7.5.</span> <span class="nav-text">7.5 成本对个人创作者仍然不低</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-6-Remotion-%E7%9A%84-license-%E9%99%90%E5%88%B6"><span class="nav-number">7.6.</span> <span class="nav-text">7.6 Remotion 的 license 限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-7-%E5%B7%B2%E7%9F%A5%E5%9D%91%E8%BF%98%E6%B2%A1%E6%A0%B9%E6%B2%BB"><span class="nav-number">7.7.</span> <span class="nav-text">7.7 已知坑还没根治</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-8-%E7%94%9F%E6%80%81%E7%BB%91%E5%AE%9A%E7%9A%84%E5%BC%80%E6%94%BE%E6%80%A7%E9%97%AE%E9%A2%98"><span class="nav-number">7.8.</span> <span class="nav-text">7.8 生态绑定的开放性问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E9%80%82%E5%90%88%E8%B0%81%EF%BC%8C%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">8.</span> <span class="nav-text">八、适合谁，不适合谁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88"><span class="nav-number">8.1.</span> <span class="nav-text">适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88"><span class="nav-number">8.2.</span> <span class="nav-text">不适合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E6%88%91%E7%9A%84%E8%AF%84%E4%BB%B7"><span class="nav-number">9.</span> <span class="nav-text">九、我的评价</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E8%AF%95%E8%AF%95%E7%9C%8B"><span class="nav-number">10.</span> <span class="nav-text">十、试试看</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">10.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">139</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">459</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/10/andyhuo520-digital-human-koubo-ai-talking-head-video-factory/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="andyhuo520&#x2F;digital-human-koubo：1.9k stars 的 AI 数字人口播工厂，一张照片 + 一句话出片 | 小戴的网络日志">
+      <meta itemprop="description" content="andyhuo520&#x2F;digital-human-koubo 是 2026 年 10 月 26 日新建的开源项目，两周冲到 1,897 stars、435 forks，MIT 协议，主语言 TypeScript，是一个跑在 Claude Code &#x2F; Codex &#x2F; OpenClaw 等 agent 里的标准 Agent Skill。它把数字人口播视频的整条流水线做成了 agent 可执行的脚本：persona.json 固化形象与口播提示词（5.4 字&#x2F;秒、15 秒上限），按内容诊断推荐 5 种剪辑风格之一（小林式解说 &#x2F; 网红花字口播 &#x2F; 发布解读 &#x2F; 保姆级教程 &#x2F; 多主播多语言），script.json 切段后经 Renoise MCP 用 Grok Video 1.5 分段生成，先报价再扣 credits，rangedl.py 用 6 段 Range 并发下载应对美国 CDN 截断，whisper 回听加抽帧质检，voicefx&#x2F;unify.py 做 1&#x2F;3 倍频程频谱匹配与统一小房间混响（齿音段间差 13.2 dB 降到 5.9 dB），Remotion 4 渲染时自动套用从 25 个头部博主视频逐帧拆出的 48 个包装组件，最后把封面接成成片首帧。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          andyhuo520/digital-human-koubo：1.9k stars 的 AI 数字人口播工厂，一张照片 + 一句话出片
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-10 08:05:00" itemprop="dateCreated datePublished" datetime="2026-11-10T08:05:00+08:00">2026-11-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">andyhuo520/digital-human-koubo 是 2026 年 10 月 26 日新建的开源项目，两周冲到 1,897 stars、435 forks，MIT 协议，主语言 TypeScript，是一个跑在 Claude Code / Codex / OpenClaw 等 agent 里的标准 Agent Skill。它把数字人口播视频的整条流水线做成了 agent 可执行的脚本：persona.json 固化形象与口播提示词（5.4 字/秒、15 秒上限），按内容诊断推荐 5 种剪辑风格之一（小林式解说 / 网红花字口播 / 发布解读 / 保姆级教程 / 多主播多语言），script.json 切段后经 Renoise MCP 用 Grok Video 1.5 分段生成，先报价再扣 credits，rangedl.py 用 6 段 Range 并发下载应对美国 CDN 截断，whisper 回听加抽帧质检，voicefx/unify.py 做 1/3 倍频程频谱匹配与统一小房间混响（齿音段间差 13.2 dB 降到 5.9 dB），Remotion 4 渲染时自动套用从 25 个头部博主视频逐帧拆出的 48 个包装组件，最后把封面接成成片首帧。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上周有个朋友问我：</p>
+<blockquote>
+<p>“我想做口播号，但不想露脸、不想配音、不想学剪辑。 有没有可能丢一段文案进去，它自己出片？”</p>
+</blockquote>
+<p>我第一反应是” 这不就是那些 AI 数字人工具吗”，但真的一去翻 GitHub，发现能用的东西要么是闭源 SaaS（按分钟计费，样式就那几套），要么是几百行的 demo 脚本（生成完就没了，还得自己找剪辑软件）。</p>
+<p>然后我刷到了 <strong>andyhuo520/digital-human-koubo</strong>。</p>
+<p>1,897 stars，435 forks，MIT，主语言 TypeScript，2026 年 10 月 26 日建的仓库，到 10 月 31 日还有提交。<strong>不到两周</strong>。</p>
+<p>它不是” 一个数字人生成工具”。它是一个<strong>跑在 AI agent 里的完整视频生产车间</strong> —— 你跟 Claude Code 说一句话，它从诊断内容、选风格、写稿、报价、生成、回听质检、统一音色、套包装、做封面，一路跑到成片 mp4。</p>
+<p>作者 Berryxia 在 README 里写了一句我觉得很实在的话：</p>
+<blockquote>
+<p><strong>Made by Berryxia · built with Claude Code</strong></p>
+</blockquote>
+<p>意思是：这个仓库本身就是 Claude Code 写出来的。我花了一晚上把 README、SKILL.md、persona.json 和几个关键脚本翻了一遍，下面按” 这玩意到底怎么运作的、哪些设计是真有想法的、坑在哪” 来写。</p>
+<hr>
+<h2 id="一、它想解决什么：口播视频的真实成本"><a href="#一、它想解决什么：口播视频的真实成本" class="headerlink" title="一、它想解决什么：口播视频的真实成本"></a>一、它想解决什么：口播视频的真实成本</h2><p>先说清楚痛点，别急着看代码。做一条数字人口播视频，拆开看是六件事：</p>
+<ol>
+<li><strong>找 / 造一个形象</strong> —— 要么自拍，要么找人画，要么用现成形象库</li>
+<li><strong>写稿</strong> —— 口播稿和文章不一样，得算语速</li>
+<li><strong>生成带口型的视频</strong> —— 这段最贵</li>
+<li><strong>质检</strong> —— 念错字、字幕烧进画面、齿音不一致</li>
+<li><strong>剪辑</strong> —— 字幕、花字、卡片、节奏、BGM、音效</li>
+<li><strong>封面 + 首帧</strong> —— 平台拿第一帧当缩略图</li>
+</ol>
+<p>单看每一步都不难。难的是<strong>串起来</strong>，而且每一步都会往回污染上一步：</p>
+<ul>
+<li>稿子太长 → 生成超时 → 分段 → 段间音色漂移 → 声音对不上口型</li>
+<li>生成出来发现烧了字幕 → 重拍 → credits 白花</li>
+<li>念错一个字 → 重拍整条？或者重配音 → 口型又对不上</li>
+<li>剪辑时才发现某个镜头是特写 → 文字在人身后放不下 → 整条镜头重拍</li>
+</ul>
+<p>这个项目最有意思的地方，就是它把上面每一条” 回流” 都变成了<strong>可执行的脚本</strong>。</p>
+<hr>
+<h2 id="二、它是什么：一份-Agent-Skill，不是一个-SaaS"><a href="#二、它是什么：一份-Agent-Skill，不是一个-SaaS" class="headerlink" title="二、它是什么：一份 Agent Skill，不是一个 SaaS"></a>二、它是什么：一份 Agent Skill，不是一个 SaaS</h2><p>先把定位说准，这很重要。</p>
+<p><code>andyhuo520/digital-human-koubo</code> 不是一个 Web 应用，不是一个 npm 包，<strong>它是一个 Agent Skill</strong>—— 遵循 2026 年 Anthropic 提出的开放 Agent Skills 格式：一个文件夹，里面有 <code>SKILL.md</code> + 脚本 + 资源。</p>
+<p>仓库结构（从 GitHub tree API 拉的真实结构）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">skills/</span><br><span class="line">  digital-human-koubo/            主 skill</span><br><span class="line">    SKILL.md                      agent 遵守的工作流</span><br><span class="line">    persona.json                  形象、声音、提示词模板</span><br><span class="line">    references/                   风格菜单 · 包装 · 玩法 · 研究报告</span><br><span class="line">    scripts/                      build_tasks · rangedl · assemble · align · check_edit</span><br><span class="line">                                  cutout_video · voicefx/unify · doctor · new_edit</span><br><span class="line">                                  make_cover · cover_first · lin_scenes · lin_subs</span><br><span class="line">                                  lin_sfx · lin_mix · misread_check · patch_words</span><br><span class="line">    templates/</span><br><span class="line">      huazi-916/                  9:16 数据驱动口播模板</span><br><span class="line">      packaging/                  48 组件套件 + 图鉴工程</span><br><span class="line">      lin-169/                    16:9 小林式解说模板（scenes.json 驱动，13 种场景）</span><br><span class="line">      reference/                  launch-169 · tutorial-169 · multihost-169</span><br><span class="line">  finance-explainer/              纯图表财经长片引擎</span><br><span class="line">docs/</span><br></pre></td></tr></tbody></table></figure>
+
+<p>整个仓库 git tree 里 <strong>979 个条目</strong>（917 个文件 + 62 个目录），其中 <strong>31 个 Python 脚本</strong>、<strong>611 个 ts/tsx</strong>（绝大部分是 Remotion 模板组件）、<strong>3 个 shell 脚本</strong>。</p>
+<h3 id="1-897-stars-是怎么来的"><a href="#1-897-stars-是怎么来的" class="headerlink" title="1,897 stars 是怎么来的"></a>1,897 stars 是怎么来的</h3><p>数字上没有水分：</p>
+<ul>
+<li><strong>1,897 stars / 435 forks</strong></li>
+<li><strong>MIT</strong>，作者 Berryxia（andyhuo520）</li>
+<li>仓库创建：<strong>2026-10-26</strong></li>
+<li> 最后推送：<strong>2026-10-31</strong></li>
+<li> 唯一 release：<strong>v1.0.0（2026-10-26）</strong>，带着 5 个 demo mp4</li>
+</ul>
+<p>10 月 26 日建仓，10 月 26 日发 v1.0.0，5 天内冲到 1.9k stars。这在 AI agent 工具里属于<strong>爆发式传播</strong> —— 大概率是被” 一条照片出直播带货广告” 的 demo 视频刷屏了。</p>
+<h3 id="它需要什么才能跑起来"><a href="#它需要什么才能跑起来" class="headerlink" title="它需要什么才能跑起来"></a>它需要什么才能跑起来</h3><p>README 里写得很明白，一个 agent 要驱动完整流水线，需要三件事：</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>说明</th>
+<th>谁有</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>加载 Agent Skills</td>
+<td>skills 文件夹或 zip 上传</td>
+<td> Claude Code / Codex / OpenClaw / WorkBuddy…</td>
+</tr>
+<tr>
+<td> 连接远程 MCP server</td>
+<td>Renoise，streamable HTTP，浏览器登录，<strong>不用 API key</strong></td>
+<td> 全部主流 agent</td>
+</tr>
+<tr>
+<td> 在本机跑命令</td>
+<td> ffmpeg、Python、Node，用于下载、质检、剪辑</td>
+<td> Claude Code / Codex 有；网页版 Claude 只有沙箱</td>
+</tr>
+</tbody></table>
+<p>第三条是分水岭：<strong>只有 MCP + 对话、没有本机 shell 的 agent，仍然可以规划、报价、生成视频片段</strong>，但剪辑得另外找 Claude Code / Codex 干，或者手工执行 <code>SKILL.md</code> 里的命令。</p>
+<p>这个降级设计我觉得挺聪明 —— 它没有假设” 所有人都有 Claude Code”。</p>
+<hr>
+<h2 id="三、核心机制：整条流水线长什么样"><a href="#三、核心机制：整条流水线长什么样" class="headerlink" title="三、核心机制：整条流水线长什么样"></a>三、核心机制：整条流水线长什么样</h2><p>README 里给的流程图，我把它翻译成人话：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">你的内容 ──► 0. 环境检查（Renoise MCP / ffmpeg / whisper，缺什么装什么）</span><br><span class="line">              1. 诊断内容 → 从 5 种风格里推荐 2 种 → 一次性问完 → brief.json</span><br><span class="line">              2. script.json（每段 ≤15 秒，中文约 5.4 字/秒）</span><br><span class="line">              3. 报价 credits → 等你说"好" → 生成第 1 段 → 你确认 → 批量</span><br><span class="line">              4. Range 分段下载（CDN 安全）→ whisper 回听 → 抽帧检查</span><br><span class="line">              5. 音色统一（频谱匹配 + 去齿音 + 同一间小房间混响）</span><br><span class="line">              6. 逐字时间轴 tl.json</span><br><span class="line">              7. Remotion 剪辑：风格模板 + 默认包装（+ 你的追加要求）</span><br><span class="line">              8. 渲染 → 检查过渡中间帧 → 响度（-14 / -16 LUFS）</span><br><span class="line">              9. 封面：挑主播帧 → 16:9 / 9:16 / 3:4 → 接成首帧（0.5 秒）</span><br></pre></td></tr></tbody></table></figure>
+
+<p>九步。<strong>每一步的产物都是磁盘上一个文件</strong>，这是整个设计能成立的前提 —— 因为 agent 的上下文有限，但文件不会。</p>
+<h3 id="3-1-persona-json：把”人”固化成配置"><a href="#3-1-persona-json：把”人”固化成配置" class="headerlink" title="3.1 persona.json：把”人”固化成配置"></a>3.1 persona.json：把” 人” 固化成配置</h3><p>数字人视频最容易失控的地方是” 每条视频长得不一样”。解法很朴素：<strong>把身份写成文件</strong>。<code>persona.json</code> 里的一个主播长这样：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"name"</span><span class="punctuation">:</span> <span class="string">"白背心数字人"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"renoise"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"reference_material"</span><span class="punctuation">:</span> <span class="string">"material:329814"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"multiview_task"</span><span class="punctuation">:</span> <span class="string">"task:357546"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"note"</span><span class="punctuation">:</span> <span class="string">"参考图是用户自己 Grok 视频里的一帧（正脸、闭嘴、头发不挡脸）"</span></span><br><span class="line">  <span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"look"</span><span class="punctuation">:</span> <span class="string">"年轻东亚女性，黑色长发带脸侧碎发，白色罗纹背心，竖屏自拍构图，室内自然光"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"voice"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"engine"</span><span class="punctuation">:</span> <span class="string">"grok-native"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"desc"</span><span class="punctuation">:</span> <span class="string">"young friendly female voice, clear and patient but lively, natural pace"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"speed_cps"</span><span class="punctuation">:</span> <span class="number">5.4</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"alt_clone"</span><span class="punctuation">:</span> <span class="string">"MiMo mimo-v2.5-tts-voiceclone"</span></span><br><span class="line">  <span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"model"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"name"</span><span class="punctuation">:</span> <span class="string">"grok-video-1.5"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"ratio"</span><span class="punctuation">:</span> <span class="string">"9:16"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"full_shot_resolution"</span><span class="punctuation">:</span> <span class="string">"720p"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"pip_shot_resolution"</span><span class="punctuation">:</span> <span class="string">"480p"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"max_seconds"</span><span class="punctuation">:</span> <span class="number">15</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"price_per_second"</span><span class="punctuation">:</span> <span class="punctuation">{</span> <span class="attr">"720p"</span><span class="punctuation">:</span> <span class="number">17</span><span class="punctuation">,</span> <span class="attr">"480p"</span><span class="punctuation">:</span> <span class="number">10</span> <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>几个我觉得很关键的设计：</p>
+<p><strong><code>speed_cps: 5.4</code></strong> —— 中文语速 5.4 字 / 秒，写稿时按这个数切。这是个非常具体的经验值，比” 写得有节奏一点” 有用一万倍。</p>
+<p><strong><code>acts</code> 字典</strong> —— 每个镜头类型对应一段行为描述：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">"acts"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"full"</span><span class="punctuation">:</span> <span class="string">"warm eye contact, expressive face, natural hand gestures"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"pip"</span><span class="punctuation">:</span> <span class="string">"calm explaining tone, small nods, occasionally glancing down as if reading a screen"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"vlog"</span><span class="punctuation">:</span> <span class="string">"relaxed lifestyle vlogger sharing a favorite tool, natural small head tilts"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"depth"</span><span class="punctuation">:</span> <span class="string">"medium shot with generous headroom and plain background visible on both sides of the head and shoulders (for text-behind-subject graphics)"</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意 <code>depth</code> 那条 —— <strong>它明确说了” 头顶两侧要留出背景”</strong>。因为有个效果叫” 文字在人身后”（TextBehind），如果镜头是特写，人占画面 89%，字根本放不下。这个约束被写进了 prompt 模板，靠<strong>生成前就限定构图</strong>来解决，而不是生成完再返工。</p>
+<p><strong><code>prompt_template</code></strong> —— 所有出镜段落共用一个模板，<code>{ref}</code> <code>{purpose}</code> <code>{act}</code> <code>{voice}</code> <code>{line}</code> 五个槽：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">The young woman in {ref} talks straight into her phone's front camera,</span><br><span class="line">same selfie framing, lighting and outfit as the reference, like a friendly</span><br><span class="line">Chinese tech vlogger {purpose}: {act}. Handheld selfie feel with only a</span><br><span class="line">very slight natural sway. She speaks Mandarin Chinese, clearly lip-synced,</span><br><span class="line">in a {voice}: "{line}"</span><br><span class="line">Sound: only her voice and quiet room tone, no music, no subtitles, no on-screen text.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后那句 <code>no music, no subtitles, no on-screen text</code> 不是装饰。README 的” 已知坑” 里第一条就是：</p>
+<blockquote>
+<p>Grok 偶尔<strong>自己烧字幕</strong>进横屏片段，即使提示词写了也挡不住 → 帧检查 + 重拍那段。</p>
+</blockquote>
+<p>作者知道模型不听，但还是写了，再用质检兜住。<strong>这就是工程和 prompt 的边界在哪。</strong></p>
+<p><strong><code>other_hosts</code></strong> —— 同一个文件里还有另外三个主播：用户本人（藏青 polo，横屏）、橘猫店长、柴犬新闻主播。所以” 造一个自己的数字人” 就是往这个 JSON 里加一段。</p>
+<p><strong><code>languages_tested</code></strong> —— 记录了实测的 whisper 回听准确率：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">"languages_tested"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"en"</span><span class="punctuation">:</span> <span class="string">"100%"</span><span class="punctuation">,</span> <span class="attr">"ja"</span><span class="punctuation">:</span> <span class="string">"100%"</span><span class="punctuation">,</span> <span class="attr">"ko"</span><span class="punctuation">:</span> <span class="string">"94%"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"fr"</span><span class="punctuation">:</span> <span class="string">"100%"</span><span class="punctuation">,</span> <span class="attr">"es"</span><span class="punctuation">:</span> <span class="string">"100%"</span><span class="punctuation">,</span> <span class="attr">"ar"</span><span class="punctuation">:</span> <span class="string">"99%"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"note"</span><span class="punctuation">:</span> <span class="string">"2026-10 第三期实测 whisper 回听准确率；台词提前翻好再写进提示词"</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>阿拉伯语 99%、韩语 94%—— 这些数字是从哪来的？作者说是” 第三期实测”，也就是他自己第三条片子真的一口气试了六种语言。</p>
+<h3 id="3-2-报价门：这个项目最值钱的一行代码"><a href="#3-2-报价门：这个项目最值钱的一行代码" class="headerlink" title="3.2 报价门：这个项目最值钱的一行代码"></a>3.2 报价门：这个项目最值钱的一行代码</h3><p>SKILL.md 的” 红线” 第一条：</p>
+<blockquote>
+<p>生成花用户的 Renoise credits：create_tasks 之前先报「段数・秒数・预估 credits・余额」，等用户在对话里明确同意。先拍第 1 段给用户确认音色，再批量。重拍也要先报价。</p>
+</blockquote>
+<p>翻译成实现：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python3 scripts/build_tasks.py script.json tasks.json --purpose <span class="string">"..."</span></span><br><span class="line"><span class="comment"># → 打印段数、秒数、预估 credits</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后拿 <code>estimate_cost</code> 核一次，报给用户等确认。<strong>确认后才生成第 1 段</strong>，用户看过音色和画质，<strong>才批量生成其余的</strong>。</p>
+<p>这在 AI 视频生成工具里是稀缺品质。因为视频生成本质上是<strong>按秒计费的不可逆操作</strong> —— 生成了就是生成了，credits 花出去回不来。一个不报价、不分批的工具，第一次用就能烧掉你几百积分。</p>
+<p>作者在 README 里也留了实盘成本：</p>
+<table>
+<thead>
+<tr>
+<th>片子</th>
+<th>生成内容</th>
+<th> Credits</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 直播带货广告，9:16，27 秒</td>
+<td> 1 张场景图 + 5 段 Grok（720p）</td>
+<td><strong>482</strong></td>
+</tr>
+<tr>
+<td> 教程第 2 集，16:9，4:36</td>
+<td>32 段（全 720p / PiP 480p）+ demo</td>
+<td>~3,250</td>
+</tr>
+<tr>
+<td> 教程第 3 集，16:9，5:54</td>
+<td>30 段新生成 + 7 张场景图，复用 17 段</td>
+<td> ~3,409</td>
+</tr>
+</tbody></table>
+<p>当时的价：Grok Video 1.5 —— 720p <strong>17 credits / 秒</strong>，480p <strong>10 credits / 秒</strong>；GPT Image 2.5 2k —— <strong>23 credits</strong>。</p>
+<p>换算一下：一条 27 秒的竖屏带货广告，<strong>482 积分</strong>；一条 5 分钟的教程，<strong>三千多积分</strong>。这个价格放到 SaaS 数字人平台上是什么水平，你自己算。</p>
+<h3 id="3-3-画质档位的坑：480p-到底能不能用"><a href="#3-3-画质档位的坑：480p-到底能不能用" class="headerlink" title="3.3 画质档位的坑：480p 到底能不能用"></a>3.3 画质档位的坑：480p 到底能不能用</h3><p><code>build_tasks.py</code> 的逻辑里有个很实用的判断，SKILL.md 写得很直白：</p>
+<blockquote>
+<p><strong>主播要裁成半身 / 放大显示、或者 pip 段的主播卡并不小时，所有出镜段一律 720p（<code>--all-720p</code>）</strong>：480p 原片只有 400×736，裁半身再铺满大卡会放大 2 倍以上，明显发糊（vibe-knowledge 介绍片因此重拍 4 段，多花 680 积分）。</p>
+</blockquote>
+<p>这是我全篇最喜欢的一段工程注释。因为它同时给了三样东西：</p>
+<ol>
+<li><strong>数字</strong>：480p 原片是 400×736</li>
+<li><strong> 推理</strong>：裁半身再铺满 → 放大 2 倍 → 糊</li>
+<li><strong>代价</strong>：实际重拍 4 段，多花 680 积分</li>
+</ol>
+<p>有第三样，别的开发者才会信你前面两条。</p>
+<h3 id="3-4-下载：Renoise-美国-CDN-会截断并发"><a href="#3-4-下载：Renoise-美国-CDN-会截断并发" class="headerlink" title="3.4 下载：Renoise 美国 CDN 会截断并发"></a>3.4 下载：Renoise 美国 CDN 会截断并发</h3><p><code>scripts/rangedl.py</code> 全文 31 行，核心逻辑：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">N = <span class="number">6</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">part</span>(<span class="params">url, path, a, b</span>):</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">30</span>):</span><br><span class="line">        have = os.path.getsize(path) <span class="keyword">if</span> os.path.exists(path) <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> have &gt;= b - a + <span class="number">1</span>: <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        r = subprocess.run([<span class="string">'curl'</span>, <span class="string">'-sS'</span>, <span class="string">'--http1.1'</span>, <span class="string">'--max-time'</span>, <span class="string">'60'</span>,</span><br><span class="line">                            <span class="string">'-r'</span>, <span class="string">f'<span class="subst">{a + have}</span>-<span class="subst">{b}</span>'</span>, url], capture_output=<span class="literal">True</span>)</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(path, <span class="string">'ab'</span>) <span class="keyword">as</span> f: f.write(r.stdout)</span><br><span class="line">    <span class="keyword">return</span> os.path.getsize(path) &gt;= b - a + <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fetch</span>(<span class="params">tid, url</span>):</span><br><span class="line">    n = size(url); step = (n + N - <span class="number">1</span>) // N</span><br><span class="line">    rngs = [(i * step, <span class="built_in">min</span>(n - <span class="number">1</span>, (i + <span class="number">1</span>) * step - <span class="number">1</span>)) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N)]</span><br><span class="line">    <span class="keyword">with</span> cf.ThreadPoolExecutor(N) <span class="keyword">as</span> ex:</span><br><span class="line">        ok = <span class="built_in">list</span>(ex.<span class="built_in">map</span>(<span class="keyword">lambda</span> ir: part(url, <span class="string">f'.p<span class="subst">{tid}</span>_<span class="subst">{ir[<span class="number">0</span>]}</span>'</span>, *ir[<span class="number">1</span>]), <span class="built_in">enumerate</span>(rngs)))</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">f'renoise-<span class="subst">{tid}</span>'</span>, <span class="string">'wb'</span>) <span class="keyword">as</span> out:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">            p = <span class="string">f'.p<span class="subst">{tid}</span>_<span class="subst">{i}</span>'</span></span><br><span class="line">            out.write(<span class="built_in">open</span>(p, <span class="string">'rb'</span>).read()[: rngs[i][<span class="number">1</span>] - rngs[i][<span class="number">0</span>] + <span class="number">1</span>]); os.remove(p)</span><br><span class="line">    bad = subprocess.run([<span class="string">'ffmpeg'</span>, <span class="string">'-v'</span>, <span class="string">'error'</span>, <span class="string">'-i'</span>, <span class="string">f'renoise-<span class="subst">{tid}</span>'</span>,</span><br><span class="line">                          <span class="string">'-f'</span>, <span class="string">'null'</span>, <span class="string">'-'</span>], capture_output=<span class="literal">True</span>, text=<span class="literal">True</span>).stderr.strip()</span><br><span class="line">    <span class="keyword">return</span> tid, n, <span class="built_in">all</span>(ok), <span class="string">'OK'</span> <span class="keyword">if</span> <span class="keyword">not</span> bad <span class="keyword">else</span> <span class="string">'BAD '</span> + bad[:<span class="number">60</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>四个要点：</p>
+<ul>
+<li>每个文件切 <strong>6 段 Range 并发</strong></li>
+<li>每段单独<strong>断点续传</strong>（用 <code>have</code> 偏移续 <code>-r</code>）</li>
+<li>单段最多重试 <strong>30 次</strong></li>
+<li>全部拼完<strong>用 ffmpeg 解码校验</strong>，报错就标 <code>BAD</code></li>
+</ul>
+<p>最后那步是关键。<strong>下完不等于下好了</strong> —— 一个字节不差但文件损坏的 mp4，ffmpeg 能立刻告诉你。</p>
+<p>这段代码本身很朴素，但它解决的是那种” 每次跑都有 1/3 概率某几个段下不全” 的<strong>烦人问题</strong>。作者在 README 里写”Renoise 的美国 CDN 会截断并行下载”，这是被坑过才会写出来的话。</p>
+<h3 id="3-5-质检：whisper-回听-抽帧"><a href="#3-5-质检：whisper-回听-抽帧" class="headerlink" title="3.5 质检：whisper 回听 + 抽帧"></a>3.5 质检：whisper 回听 + 抽帧</h3><p>SKILL.md 里质检环节的描述：</p>
+<blockquote>
+<p><code>python3 scripts/assemble.py script.json ids.json --out 成片_完整版.mp4</code>：whisper 逐段转写比对文稿、只保留到说完后 0.25 秒、拼接、loudnorm -16。</p>
+</blockquote>
+<p>然后是两条硬规则：</p>
+<blockquote>
+<ul>
+<li>whisper <code>--prompt 原文</code> 会让个别段漏掉前半句，用中性提示「以下是普通话的句子。」</li>
+<li><strong>每段抽 4 帧看一眼</strong>：Grok 横屏口播偶尔自己烧字幕（提示词写了也挡不住），有就重拍那段。</li>
+</ul>
+</blockquote>
+<p>第一条特别有意思。whisper 有个 <code>prompt</code> 参数可以给它上下文，但用它来对齐文稿反而会<strong>污染结果</strong> —— 模型会倾向于把听到的音往提示词上凑。所以脚本里用的是” 不带原文的转写”。</p>
+<h3 id="3-6-念错字：这是整个项目技术含量最高的部分"><a href="#3-6-念错字：这是整个项目技术含量最高的部分" class="headerlink" title="3.6 念错字：这是整个项目技术含量最高的部分"></a>3.6 念错字：这是整个项目技术含量最高的部分</h3><p>大多数 AI 视频工具的做法：念错了，重拍。成本是整段。</p>
+<p>这个项目做了两件事。</p>
+<p><strong>第一件：找出来。</strong> <code>misread_check.py</code> 的逻辑在 SKILL.md 里写得很清楚：</p>
+<blockquote>
+<p><strong>不能拿带原文提示的转写判断读音</strong>：它会把念错的字纠正回去（「通胀」念成 tōng zhèng，带原文照样判全对）。同音字会误报，可疑处听一下确认。</p>
+</blockquote>
+<p>所以 <code>misread_check.py</code> 的做法是：<strong>按停顿切句、不带原文逐句转写</strong>，列出可疑字。</p>
+<p><strong>第二件：修，而且不花钱。</strong> <code>patch_words.py</code>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python3 scripts/patch_words.py script.json patch.json \</span><br><span class="line">  --ref &lt;2–3 段干净原声&gt; --synth-only</span><br></pre></td></tr></tbody></table></figure>
+
+<p>机制是：</p>
+<blockquote>
+<p>只把错的那一句换成 MiMo 克隆音，长度拉到和原句一样，切在停顿上。换整句比只换两个字自然。</p>
+</blockquote>
+<p><strong>用别的模型（MiMo TTS 声音克隆）重新合成出错的那一句，音频长度拉成和原句完全一致，然后切在停顿上替换回去。</strong> 口型是原片的，没动。</p>
+<p>代价：<strong>0 积分</strong>。</p>
+<p>而如果整片重配音，口型就全乱了。作者还专门警告：</p>
+<blockquote>
+<p><strong>别整片换音色</strong>：口型跟的是原声，整片换掉会到处对不上；也别先提 OmniHuman 重做口型（全片约 5,000 积分）。</p>
+</blockquote>
+<p>这里有个非常成熟的成本直觉：<strong>局部修复 &gt; 全局重做</strong>，即使局部修复技术上更麻烦。</p>
+<p>还有一个细节：</p>
+<blockquote>
+<p>开头第一个字最容易被吞或念歪（例：「一个知识点」→「几个知识地点」），写稿时第一段开头别放关键名词，或者先垫一个短词。</p>
+</blockquote>
+<p>这是<strong>用写稿规避模型缺陷</strong>，而不是硬刚。写 prompt 的人才会这么想。</p>
+<h3 id="3-7-音色统一：把-30-段独立生成的音频揉成一条"><a href="#3-7-音色统一：把-30-段独立生成的音频揉成一条" class="headerlink" title="3.7 音色统一：把 30 段独立生成的音频揉成一条"></a>3.7 音色统一：把 30 段独立生成的音频揉成一条</h3><p>这是我认为整个项目最硬的工程部分。<code>voicefx/unify.py</code> 97 行，做三件事。</p>
+<p><strong>第一件：1/3 倍频程频谱匹配。</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">CENTERS = [<span class="number">100</span>, <span class="number">125</span>, <span class="number">160</span>, <span class="number">200</span>, <span class="number">250</span>, <span class="number">315</span>, <span class="number">400</span>, <span class="number">500</span>, <span class="number">630</span>, <span class="number">800</span>, <span class="number">1000</span>, <span class="number">1250</span>,</span><br><span class="line">           <span class="number">1600</span>, <span class="number">2000</span>, <span class="number">2500</span>, <span class="number">3150</span>, <span class="number">4000</span>, <span class="number">5000</span>, <span class="number">6300</span>, <span class="number">8000</span>, <span class="number">10000</span>, <span class="number">12500</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">band_db</span>(<span class="params">x</span>):</span><br><span class="line">    n = <span class="number">1</span> &lt;&lt; <span class="number">14</span>; win = np.hanning(n); acc = <span class="literal">None</span>; k = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(x) - n, n // <span class="number">2</span>):</span><br><span class="line">        seg = x[i:i + n]</span><br><span class="line">        <span class="keyword">if</span> np.sqrt(np.mean(seg ** <span class="number">2</span>)) &lt; <span class="number">0.01</span>: <span class="keyword">continue</span></span><br><span class="line">        s = np.<span class="built_in">abs</span>(np.fft.rfft(seg * win)) ** <span class="number">2</span>; acc = s <span class="keyword">if</span> acc <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">else</span> acc + s; k += <span class="number">1</span></span><br><span class="line">    f = np.fft.rfftfreq(n, <span class="number">1</span> / SR); s = acc / <span class="built_in">max</span>(<span class="number">1</span>, k)</span><br><span class="line">    out = np.array([<span class="number">10</span> * np.log10(np.<span class="built_in">sum</span>(s[(f &gt;= c / <span class="number">2</span> ** (<span class="number">1</span> / <span class="number">6</span>)) &amp; (f &lt; c * <span class="number">2</span> ** (<span class="number">1</span> / <span class="number">6</span>))]) + <span class="number">1e-12</span>) <span class="keyword">for</span> c <span class="keyword">in</span> CENTERS])</span><br><span class="line">    <span class="keyword">return</span> out - out.mean()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>每个片段算 22 个频段的能量（每段覆盖 1/3 倍频程），减去全段均值得到形状，然后向” 参照组中位数” 对齐，<strong>修正量限制在 ±4 dB</strong>：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">B = {c: band_db(load(c)) <span class="keyword">for</span> c <span class="keyword">in</span> clips}</span><br><span class="line">pool = [band_db(load(p)) <span class="keyword">for</span> p <span class="keyword">in</span> <span class="built_in">sorted</span>(ref.glob(<span class="string">"*.mp4"</span>))] <span class="keyword">if</span> ref <span class="keyword">else</span> <span class="built_in">list</span>(B.values())</span><br><span class="line">med = np.median(np.stack(pool), <span class="number">0</span>)</span><br><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> clips:</span><br><span class="line">    g = np.clip(med - B[c], -<span class="number">4</span>, <span class="number">4</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>--ref</code> 参数让你可以把新片段向上一期的旧片段靠拢 —— <strong>跨集统一音色</strong>。这在做系列内容时非常关键。</p>
+<p>修正量最后转成 ffmpeg 的 <code>firequalizer</code>：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fq</span>(<span class="params">g</span>):</span><br><span class="line">    g = np.convolve(np.pad(g, <span class="number">1</span>, mode=<span class="string">"edge"</span>), [<span class="number">0.25</span>, <span class="number">0.5</span>, <span class="number">0.25</span>], mode=<span class="string">"valid"</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"firequalizer=gain_entry='"</span> + <span class="string">";"</span>.join(<span class="string">f"entry(<span class="subst">{c}</span>,<span class="subst">{v:<span class="number">.2</span>f}</span>)"</span> <span class="keyword">for</span> c, v <span class="keyword">in</span> <span class="built_in">zip</span>(CENTERS, g)) + <span class="string">"'"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>第二件：去刺耳 + 统一频响。</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CHAIN = (<span class="string">"highpass=f=80,lowpass=f=15000,deesser=i=0.6:m=0.6:f=0.55,"</span></span><br><span class="line">         <span class="string">"equalizer=f=6600:t=q:w=1.3:g=-3,equalizer=f=3600:t=q:w=1.1:g=-1.2,"</span></span><br><span class="line">         <span class="string">"equalizer=f=200:t=q:w=0.9:g=1.4,"</span></span><br><span class="line">         <span class="string">"acompressor=threshold=-22dB:ratio=2.3:attack=8:release=120:makeup=1.4"</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>6.6 kHz 收 3 dB（齿音区）、3.6 kHz 收 1.2 dB（鼻音区）、200 Hz 补 1.4 dB（胸腔感），加轻度压缩。</p>
+<p><strong>第三件：同一个小房间混响。</strong> 这个是我觉得最漂亮的一步。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">tail_ms</span>(<span class="params">x</span>):</span><br><span class="line">    <span class="string">"""语音峰值后衰减 20 dB 所需时间的中位数（ms），越大越「湿」"""</span></span><br><span class="line">    hop = SR // <span class="number">50</span></span><br><span class="line">    env = np.array([np.sqrt(np.mean(x[i:i + hop] ** <span class="number">2</span>)) + <span class="number">1e-9</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(x) - hop, hop)])</span><br><span class="line">    db = <span class="number">20</span> * np.log10(env); out = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">len</span>(db) - <span class="number">15</span>):</span><br><span class="line">        <span class="keyword">if</span> db[i] &gt; db.<span class="built_in">max</span>() - <span class="number">18</span> <span class="keyword">and</span> db[i + <span class="number">1</span>] &lt; db[i] - <span class="number">3</span>:</span><br><span class="line">            j = i</span><br><span class="line">            <span class="keyword">while</span> j &lt; <span class="built_in">len</span>(db) - <span class="number">1</span> <span class="keyword">and</span> db[j] &gt; db[i] - <span class="number">20</span>: j += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> j - i &lt; <span class="number">40</span>: out.append((j - i) * <span class="number">20</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">int</span>(np.median(out)) <span class="keyword">if</span> out <span class="keyword">else</span> <span class="number">0</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这个函数量的是<strong>每段音频本身带的混响尾巴有多长</strong>。然后：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tl = tail_ms(load(c))</span><br><span class="line">wet = <span class="built_in">float</span>(np.clip(<span class="number">0.24</span> - (tl - <span class="number">60</span>) / <span class="number">320</span> * <span class="number">0.16</span>, <span class="number">0.08</span>, <span class="number">0.24</span>))</span><br></pre></td></tr></tbody></table></figure>
+
+<p>意思是：<strong>本来已经很湿的段，少加混响；本来很干的段，多加混响。</strong> 最后所有段共用同一个脉冲响应：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">room_ir</span>():</span><br><span class="line">    <span class="string">"""小房间脉冲响应：早期反射 + 0.32 s 衰减尾巴，高频吸收（像卧室 / 书房里自拍）"""</span></span><br><span class="line">    rng = np.random.default_rng(<span class="number">7</span>)</span><br><span class="line">    n = <span class="built_in">int</span>(<span class="number">0.55</span> * SR); t = np.arange(n) / SR</span><br><span class="line">    ir = np.zeros((n, <span class="number">2</span>), np.float32); ir[<span class="number">0</span>] = <span class="number">1.0</span></span><br><span class="line">    <span class="keyword">for</span> d, g <span class="keyword">in</span> [(<span class="number">0.0061</span>, <span class="number">.42</span>), (<span class="number">0.0093</span>, <span class="number">.33</span>), (<span class="number">0.0137</span>, <span class="number">.28</span>),</span><br><span class="line">                 (<span class="number">0.0189</span>, <span class="number">.22</span>), (<span class="number">0.0247</span>, <span class="number">.17</span>), (<span class="number">0.0311</span>, <span class="number">.12</span>)]:</span><br><span class="line">        ...</span><br><span class="line">    tail = rng.standard_normal((n, <span class="number">2</span>)).astype(np.float32) * np.exp(-<span class="number">6.91</span> * t / <span class="number">0.32</span>)[:, <span class="literal">None</span>] * <span class="number">0.09</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>早期反射（6.1ms、9.3ms、13.7ms、18.9ms、24.7ms、31.1ms）+ 0.32 秒指数衰减尾巴 + 高频吸收。<strong>这不是” 套个混响插件”，这是在用代码合成一个” 卧室里自拍” 的声学空间</strong>，然后把 30 段来自不同生成批次的音频塞进同一个房间。</p>
+<p>效果数字：<strong>齿音段间差从 13.2 dB 降到 5.9 dB</strong>（README 和脚本 docstring 里都写了这个数，是 2026 年 10 月第二、三期实测）。</p>
+<p>还有个细节 ——<code>--scene</code> 参数。场景片段（B-roll、动物）<strong>不加房间混响</strong>，只做去齿音 + 响度：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SCENE = <span class="string">"highpass=f=70,deesser=i=0.5:m=0.5:f=0.55,equalizer=f=6600:t=q:w=1.3:g=-2"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>因为把 B-roll 混进人声的房间里会露馅。</p>
+<h3 id="3-8-剪辑：Remotion-48-个包装组件"><a href="#3-8-剪辑：Remotion-48-个包装组件" class="headerlink" title="3.8 剪辑：Remotion + 48 个包装组件"></a>3.8 剪辑：Remotion + 48 个包装组件</h3><p>剪辑用 <strong>Remotion 4</strong>（React 写视频，MIT 之外它自己有个 license：个人和 3 人以下公司免费，更多要买公司 license）。</p>
+<p><code>templates/huazi-916/src/kit/</code> 目录里的组件结构：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">src/</span><br><span class="line">  Huazi.tsx</span><br><span class="line">  Root.tsx</span><br><span class="line">  index.ts</span><br><span class="line">  icons/NotoEmoji.tsx</span><br><span class="line">  kit/</span><br><span class="line">    Annotate.tsx   Beast.tsx   Depth.tsx   Explain.tsx</span><br><span class="line">    Map.tsx        Overlay.tsx Polish.tsx  Text.tsx</span><br><span class="line">    Wangan.tsx     core.tsx    registry.tsx</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>registry.tsx</code> 说明这些是<strong>注册式组件</strong> —— 按名字查表渲染。</p>
+<p>包装组件是 48 个，分四组：</p>
+<table>
+<thead>
+<tr>
+<th>组</th>
+<th>组件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>开场 / 钩子</td>
+<td> TeaserColdOpen · ColdOpenFreeze · SearchTyping · NumberSpike · SlamText · WordStack · TornStrip · <strong>TextBehind</strong></td>
+</tr>
+<tr>
+<td> 证据 / 数据</td>
+<td> EvidenceCard · DocFocus · SourceDoc · ZoomFocus · Counter · Odometer · GlassPanel · SpecCard · LineDraw · BarCompare · ReviewCards · ArchiveCards · MapRoute · CompareWipe · PaperCollage</td>
+</tr>
+<tr>
+<td> 标注 / 人物</td>
+<td> HandDraw · CalloutPill · LeaderLabel · TypedNameTag · LowerThird · NamePlate · SourceTag · FreezeFrame</td>
+</tr>
+<tr>
+<td> 节奏 / 互动</td>
+<td> PunchInHost · KeywordStack · RetentionCaption · TiltLine · Aside · Danmaku · ReactionPop · MemeWindow · PollPop · GlitchInterstitial · HostFloaters · ProgressChapters · ProgressTracker · ChapterCard · RecapBoard · Countdown · GhostWord</td>
+</tr>
+</tbody></table>
+<p>这些组件的来源 README 说得清楚：</p>
+<blockquote>
+<p>我们逐帧测量了 25 个视频（镜头检测、开场节拍、屏幕文字、声音）—— 完整报告在 <code>references/research/</code>。<br>测量对象：MrBeast、Mark Rober、Ryan Trahan、MKBHD、MediaStorm / 影视飓风、何同学、Johnny Harris、Vox、Kurzgesagt、回形针、半佛仙人、差评、毕导</p>
+</blockquote>
+<p>规则提炼成了 <code>packaging-playbook.md</code>，我挑几条：</p>
+<blockquote>
+<ul>
+<li>剪辑次数可以少，但刺激不能停：前 30 秒，每 3–5 秒要有个新东西。</li>
+<li>前 3 秒：主张或动作 —— 不要问候，不要 logo。</li>
+<li>所有东西底下铺一层 BGM；音效只在事件上（中文口播频道每分钟 1–3 个）；揭示前留 0.6–1.0 秒静音。</li>
+<li>对单机位数字人，最便宜的节奏是<strong>句边界上的 punch-in 切</strong>（1.0× / 1.18× / 1.32×）。</li>
+</ul>
+</blockquote>
+<p>“对单机位数字人，最便宜的节奏是 punch-in 切”—— 这句话说明作者是想清楚了<strong>在数字人这个特定约束下</strong>怎么做节奏，而不是照搬真人多机位拍摄那套。</p>
+<p>组件调用方式是往 <code>pack</code> 数组里塞，时间点写成 <code>"段:词"</code>：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">"pack"</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">{</span> <span class="attr">"use"</span><span class="punctuation">:</span> <span class="string">"NumberSpike"</span><span class="punctuation">,</span> <span class="attr">"at"</span><span class="punctuation">:</span> <span class="string">"1:不到十块钱"</span><span class="punctuation">,</span> <span class="attr">"until"</span><span class="punctuation">:</span> <span class="string">"1:end"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"text"</span><span class="punctuation">:</span> <span class="string">"¥9.9/节"</span><span class="punctuation">,</span> <span class="attr">"label"</span><span class="punctuation">:</span> <span class="string">"一节课"</span> <span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">{</span> <span class="attr">"use"</span><span class="punctuation">:</span> <span class="string">"Danmaku"</span><span class="punctuation">,</span> <span class="attr">"items"</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">{</span> <span class="attr">"t"</span><span class="punctuation">:</span> <span class="string">"真的假的？"</span><span class="punctuation">,</span> <span class="attr">"at"</span><span class="punctuation">:</span> <span class="string">"1:"</span> <span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">      <span class="punctuation">{</span> <span class="attr">"t"</span><span class="punctuation">:</span> <span class="string">"AI 还能帮我干活？"</span><span class="punctuation">,</span> <span class="attr">"at"</span><span class="punctuation">:</span> <span class="string">"1:教你"</span><span class="punctuation">,</span> <span class="attr">"hot"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span> <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">{</span> <span class="attr">"use"</span><span class="punctuation">:</span> <span class="string">"TextBehind"</span><span class="punctuation">,</span> <span class="attr">"src"</span><span class="punctuation">:</span> <span class="string">"main.mp4"</span><span class="punctuation">,</span> <span class="attr">"cutout"</span><span class="punctuation">:</span> <span class="string">"main_cut_s4.webm"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"cutoutFrom"</span><span class="punctuation">:</span> <span class="number">17.2</span><span class="punctuation">,</span> <span class="attr">"at"</span><span class="punctuation">:</span> <span class="string">"4:"</span><span class="punctuation">,</span> <span class="attr">"until"</span><span class="punctuation">:</span> <span class="string">"4:end"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"mode"</span><span class="punctuation">:</span> <span class="string">"count"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"lines"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">{</span> <span class="attr">"t"</span><span class="punctuation">:</span> <span class="string">"¥99"</span><span class="punctuation">,</span> <span class="attr">"font"</span><span class="punctuation">:</span> <span class="string">"en"</span><span class="punctuation">,</span> <span class="attr">"color"</span><span class="punctuation">:</span> <span class="string">"#FFE14D"</span><span class="punctuation">,</span> <span class="attr">"size"</span><span class="punctuation">:</span> <span class="number">0.17</span> <span class="punctuation">}</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"count"</span><span class="punctuation">:</span> <span class="punctuation">{</span> <span class="attr">"from"</span><span class="punctuation">:</span> <span class="number">999</span><span class="punctuation">,</span> <span class="attr">"to"</span><span class="punctuation">:</span> <span class="number">99</span><span class="punctuation">,</span> <span class="attr">"prefix"</span><span class="punctuation">:</span> <span class="string">"¥"</span> <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意 <code>at</code> 的格式是 <code>"3:积分"</code> 这种<strong>段号：关键词</strong> —— 不是时间戳。因为视频是<strong>逐段生成</strong>的，每段长度会漂移，写死时间戳根本对不上。用” 在第 3 段说到’积分’的时候触发”，才是能对齐真实口播的方式。</p>
+<h3 id="3-9-文字在人身后：macOS-Vision-抠像"><a href="#3-9-文字在人身后：macOS-Vision-抠像" class="headerlink" title="3.9 文字在人身后：macOS Vision 抠像"></a>3.9 文字在人身后：macOS Vision 抠像</h3><p><code>TextBehind</code> 是这 48 个组件里最有技术含量的一个 —— <strong>把大号文字放在人物和背景之间</strong>。</p>
+<p>实现路径：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python3 scripts/cutout_video.py public/main.mp4 public/main_cut_s4.webm \</span><br><span class="line">  --from 17.2 --to 22.4</span><br></pre></td></tr></tbody></table></figure>
+
+<p>用 <strong>Apple Vision 的人像分割</strong>把人物抠成透明 webm，然后三层合成：背景 → 大字 → 抠出来的人。</p>
+<p>作者在 README 里明确标注了这个功能的限制：</p>
+<blockquote>
+<p>它在<strong>中景且头顶留白</strong>时有效。在自拍特写里人物占画面约 89%，会盖住文字 —— 脚本会在超过 60% 时警告。把这种段标记为 <code>"shot": "depth"</code>，它们就会按中景生成。</p>
+</blockquote>
+<p>又是同一个模式：<strong>约束写进生成前的 prompt，而不是生成完再补救。</strong></p>
+<p>另外注意 <code>--from 17.2 --to 22.4</code>—— <strong>只抠需要的那几秒</strong>，不做全片抠像。因为抠像很慢，而且中间帧质量差。</p>
+<h3 id="3-10-封面即首帧"><a href="#3-10-封面即首帧" class="headerlink" title="3.10 封面即首帧"></a>3.10 封面即首帧</h3><p>最后一个环节，但我觉得这个设计很聪明：</p>
+<blockquote>
+<p>平台默认拿视频第一帧当封面，所以每条片子都做封面，并把它接在成片最前面。</p>
+</blockquote>
+<p>流程：</p>
+<ol>
+<li>写 <code>cover.json</code>（栏目名、钩子标题 ≤8 字、红色强调句 ≤6 字、副标题、≤3 个标签、链接、主播帧、≤2 张证据卡）</li>
+<li><code>make_cover.py cover.json --candidates</code> 抽 12 帧拼候选图</li>
+<li>挑一帧<strong>笑着、眼睛睁开、没在说话或嘴型好看的</strong></li>
+<li><code>make_cover.py cover.json</code> 出三种比例：<code>cover_16x9.jpg</code> / <code>cover_9x16.jpg</code> / <code>cover_3x4.jpg</code></li>
+<li><code>cover_first.py 成片.mp4 cover/cover_16x9.jpg 交付.mp4</code> —— <strong>封面停 0.5 秒后硬切进正片，声音整体后推 0.5 秒</strong></li>
+</ol>
+<p>第 5 步尤其重要：因为封面帧和正片第一帧是<strong>两段独立视频</strong>，硬切过去会有跳帧感。所以声音要<strong>整体后推 0.5 秒</strong>和封面停顿时长对齐。这个细节不处理的话，成片开头会很怪。</p>
+<hr>
+<h2 id="四、快速上手：真的能跑起来吗"><a href="#四、快速上手：真的能跑起来吗" class="headerlink" title="四、快速上手：真的能跑起来吗"></a>四、快速上手：真的能跑起来吗</h2><p>按 README 的顺序：</p>
+<h3 id="4-1-拉代码"><a href="#4-1-拉代码" class="headerlink" title="4.1 拉代码"></a>4.1 拉代码</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/andyhuo520/digital-human-koubo.git</span><br><span class="line"><span class="built_in">cd</span> digital-human-koubo</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-2-装-skill-到你的-agent"><a href="#4-2-装-skill-到你的-agent" class="headerlink" title="4.2 装 skill 到你的 agent"></a>4.2 装 skill 到你的 agent</h3><p><strong>Claude Code</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p ~/.claude/skills &amp;&amp; <span class="built_in">cp</span> -R skills/digital-human-koubo skills/finance-explainer ~/.claude/skills/</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>Codex</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p ~/.codex/skills &amp;&amp; <span class="built_in">cp</span> -R skills/digital-human-koubo skills/finance-explainer ~/.codex/skills/</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>WorkBuddy / OpenClaw / 其他 agent</strong> —— 打包导入：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> skills &amp;&amp; zip -r ../digital-human-skills.zip digital-human-koubo finance-explainer &amp;&amp; <span class="built_in">cd</span> ..</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-3-连-Renoise-MCP"><a href="#4-3-连-Renoise-MCP" class="headerlink" title="4.3 连 Renoise MCP"></a>4.3 连 Renoise MCP</h3><p>Renoise 是 AI 视频 / 图片生成服务，<strong>streamable HTTP，浏览器登录，不用 API key</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th> 命令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Claude Code</td>
+<td><code>/plugin marketplace add ArcoCodes/renoise-plugins-official</code> 然后 <code>/plugin install renoise@renoise-plugins-official</code></td>
+</tr>
+<tr>
+<td>Codex</td>
+<td><code>codex mcp add renoise --url https://renoise.ai/api/public/mcp</code> 然后 <code>codex mcp login renoise</code></td>
+</tr>
+<tr>
+<td>OpenClaw</td>
+<td><code>openclaw plugins install renoise --marketplace ArcoCodes/renoise-plugins-official</code></td>
+</tr>
+<tr>
+<td>Claude 桌面端</td>
+<td> Settings → Connectors → Add custom connector → URL 填 <code>https://renoise.ai/api/public/mcp</code></td>
+</tr>
+<tr>
+<td>通用配置</td>
+<td><code>{"mcpServers":{"renoise":{"url":"https://renoise.ai/api/public/mcp"}}}</code></td>
+</tr>
+</tbody></table>
+<p>验证：问 agent “查一下我的 Renoise 余额”。</p>
+<h3 id="4-4-装本地工具"><a href="#4-4-装本地工具" class="headerlink" title="4.4 装本地工具"></a>4.4 装本地工具</h3><table>
+<thead>
+<tr>
+<th>工具</th>
+<th> macOS</th>
+<th>Windows</th>
+<th>Linux</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ffmpeg</td>
+<td><code>brew install ffmpeg</code></td>
+<td><code>winget install Gyan.FFmpeg</code></td>
+<td><code>sudo apt install ffmpeg</code></td>
+</tr>
+<tr>
+<td>Python 3 + numpy + Pillow</td>
+<td><code>brew install python</code> 然后 <code>python3 -m pip install numpy pillow</code></td>
+<td><code>winget install Python.Python.3.12</code></td>
+<td><code>sudo apt install python3-pip</code></td>
+</tr>
+<tr>
+<td>Playwright + Chromium</td>
+<td><code>python3 -m pip install playwright &amp;&amp; python3 -m playwright install chromium</code></td>
+<td>同</td>
+<td>同</td>
+</tr>
+<tr>
+<td> Node.js 18+（Remotion）</td>
+<td><code>brew install node</code></td>
+<td><code>winget install OpenJS.NodeJS.LTS</code></td>
+<td><code>nvm install --lts</code></td>
+</tr>
+<tr>
+<td>whisper.cpp</td>
+<td><code>brew install whisper-cpp</code></td>
+<td>Releases 下载</td>
+<td>源码编译</td>
+</tr>
+<tr>
+<td> whisper 模型</td>
+<td><code>ggml-medium-q5_0.bin</code> → <code>~/models/</code></td>
+<td>同</td>
+<td>同</td>
+</tr>
+</tbody></table>
+<p>一条命令检查（会跳过已有的、列出缺的）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash ~/.claude/skills/digital-human-koubo/scripts/doctor.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-5-生成音效和占位-BGM"><a href="#4-5-生成音效和占位-BGM" class="headerlink" title="4.5 生成音效和占位 BGM"></a>4.5 生成音效和占位 BGM</h3><p>仓库<strong>不附带任何第三方音频</strong>，全部用代码生成（<code>new_edit.sh</code> 每次新建工程会自动跑）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 ~/.claude/skills/digital-human-koubo/scripts/make_assets.py</span><br></pre></td></tr></tbody></table></figure>
+
+<p>生成 30 个音效 + 一条占位 BGM。</p>
+<h3 id="4-6-开工"><a href="#4-6-开工" class="headerlink" title="4.6 开工"></a>4.6 开工</h3><p>跟 agent 用人话说话：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">用我的数字人 Skill 讲这段：……（粘贴你的内容）</span><br><span class="line">Use my digital human skill to make a 30-second livestream ad: WorkBuddy course, 10 lessons, ¥99 (was ¥999).</span><br><span class="line">Make a 3-minute explainer about why Silicon Valley Bank collapsed, Xiaolin-style.</span><br><span class="line">Add a map route when she mentions these countries. / Put "¥99" behind her. / Add a teaser cold open.</span><br><span class="line">把包装组件图鉴发我看看  (show me the packaging gallery)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>之后 agent 会：环境检查（已装的跳过）→ 一行诊断 + 推荐 2 种风格（带预览图）+ 一次性问完所有问题 → 写稿 + 场景设计 + <strong>报价</strong> → 你批准 → 生成第 1 段 → 你批准 → 其余的 → 质检 → 统一音色 → 按风格默认包装剪辑 → 出 mp4。</p>
+<hr>
+<h2 id="五、关键设计取舍：作者做对了什么"><a href="#五、关键设计取舍：作者做对了什么" class="headerlink" title="五、关键设计取舍：作者做对了什么"></a>五、关键设计取舍：作者做对了什么</h2><p>我把作者明显想清楚的几个点拎出来。</p>
+<h3 id="5-1-报价不是功能，是信任机制"><a href="#5-1-报价不是功能，是信任机制" class="headerlink" title="5.1 报价不是功能，是信任机制"></a>5.1 报价不是功能，是信任机制</h3><p>任何”AI 视频生成” 工具跑第一次，你都不知道要花多少钱。这个项目的做法是<strong>先报” 段数・秒数・预估 credits・余额”，等你说好；先出第 1 段给你看音色，确认了再批量</strong>。</p>
+<p>它牺牲了” 一键出片” 的流畅感，换来的是<strong>用户敢点第一次</strong>。</p>
+<p>而且 README 里给了实盘成本表，让用户能在点之前就做预算。这在 AI 工具里太少了 —— 大部分只给”credits per second” 这种单价，不给” 我这个需求大概多少” 的实数。</p>
+<h3 id="5-2-约束前移：把模型缺陷写进生成条件"><a href="#5-2-约束前移：把模型缺陷写进生成条件" class="headerlink" title="5.2 约束前移：把模型缺陷写进生成条件"></a>5.2 约束前移：把模型缺陷写进生成条件</h3><p>前面提到三次的例子：</p>
+<ul>
+<li><code>depth</code> 镜位要求” 头顶两侧留背景”（为了放字）</li>
+<li>prompt 里写 <code>no subtitles</code>（因为模型会乱烧）</li>
+<li>写稿时第一段开头别放关键名词（因为第一个字容易念歪）</li>
+</ul>
+<p>这三条的共同点是：<strong>它们都把” 生成后要返工” 的成本，转移到了” 生成前要想清楚” 的阶段。</strong></p>
+<p>一个提示词写得好不好，看的就是这个。</p>
+<h3 id="5-3-局部修复优先于全局重做"><a href="#5-3-局部修复优先于全局重做" class="headerlink" title="5.3 局部修复优先于全局重做"></a>5.3 局部修复优先于全局重做</h3><p>念错字的处理是这个项目最值得学的决策：</p>
+<ul>
+<li>❌ 整段重拍 → 费积分，口型还是新的</li>
+<li>❌ 整片重配音 → 口型全乱，SKILL.md 明确警告</li>
+<li>❌ 全片 OmniHuman 重做口型 → 约 5,000 积分</li>
+<li>✅ <strong>只换出错的那一句</strong>，用 MiMo 克隆音，拉长到原句长度，切在停顿处 → <strong>0 积分，口型不动</strong></li>
+</ul>
+<p>而且作者还解释了为什么换整句比只换两个字自然（语音连贯性），以及为什么必须切在停顿上（不然会有咔哒声）。</p>
+<p><strong>这就是成熟的成本直觉：修复的成本要和错误的严重程度成反比。</strong></p>
+<h3 id="5-4-声学统一做到”同一个房间”这个粒度"><a href="#5-4-声学统一做到”同一个房间”这个粒度" class="headerlink" title="5.4 声学统一做到”同一个房间”这个粒度"></a>5.4 声学统一做到” 同一个房间” 这个粒度</h3><p>大多数教程会说” 用 Audition 统一响度”。这个项目做的是<strong>频谱形状匹配 + 按原混响尾巴自适应补混响 + 共用同一个合成 IR</strong>。</p>
+<p>最终效果是 30 段来自不同生成批次的音频，听感上是” 同一个人在同一个房间连着说了 5 分钟”。</p>
+<p>13.2 dB → 5.9 dB 这个数字说明作者是<strong>先测出问题、再量化、最后修</strong>的，不是拍脑袋调 EQ。</p>
+<h3 id="5-5-把”看起来专业”这件事拆成可执行组件"><a href="#5-5-把”看起来专业”这件事拆成可执行组件" class="headerlink" title="5.5 把”看起来专业”这件事拆成可执行组件"></a>5.5 把” 看起来专业” 这件事拆成可执行组件</h3><p>“包装感” 在教程里通常是玄学。这个项目把它拆成 <strong>48 个有名字的组件</strong>，每个组件有参数，然后：</p>
+<ul>
+<li>每个风格有<strong>默认包装配方</strong>（<code>packaging-presets.json</code>）</li>
+<li>正文保证 <code>stimulus_every_s</code> 秒内有一个新视觉事件</li>
+<li><code>recurring</code> 类组件全片挂着</li>
+<li>用户可以点名加减（” 加地图”” 开场加预告”” 加弹幕”）</li>
+</ul>
+<p><strong>把审美决策编码成配置</strong>，这是让 agent 能稳定复现质量的关键一步。</p>
+<h3 id="5-6-首帧思维"><a href="#5-6-首帧思维" class="headerlink" title="5.6 首帧思维"></a>5.6 首帧思维</h3><p>“平台默认拿第一帧当封面” 这个认知，把” 要不要单独传封面图” 这个流程节点直接消掉了。产物是<strong>一个文件</strong>，不是两个。</p>
+<hr>
+<h2 id="六、和同类项目比：它站在哪"><a href="#六、和同类项目比：它站在哪" class="headerlink" title="六、和同类项目比：它站在哪"></a>六、和同类项目比：它站在哪</h2><p>我按” 生成能力” 和” 工程化程度” 两个维度找了几类参照。</p>
+<h3 id="6-1-vs-闭源数字人-SaaS（Synthesia、HeyGen、Rephrase-AI-那一类）"><a href="#6-1-vs-闭源数字人-SaaS（Synthesia、HeyGen、Rephrase-AI-那一类）" class="headerlink" title="6.1 vs 闭源数字人 SaaS（Synthesia、HeyGen、Rephrase.AI 那一类）"></a>6.1 vs 闭源数字人 SaaS（Synthesia、HeyGen、Rephrase.AI 那一类）</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>digital-human-koubo</th>
+<th> 商业 SaaS</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 价格</td>
+<td>按 Renoise credits 计（27 秒约 482，5 分钟约 3,400）</td>
+<td>按分钟订阅，通常年付几千到几万</td>
+</tr>
+<tr>
+<td>形象</td>
+<td>自己的照片 + persona.json 自定义</td>
+<td>平台模板库 + 少量定制</td>
+</tr>
+<tr>
+<td>剪辑</td>
+<td> Remotion 48 组件，完全可控</td>
+<td>平台内置几套模板</td>
+</tr>
+<tr>
+<td>数据</td>
+<td>生成在 Renoise，剪辑全本地</td>
+<td>全部上传到平台</td>
+</tr>
+<tr>
+<td>上手</td>
+<td>要装 ffmpeg /whisper/ Node / 连 MCP</td>
+<td> 网页打开就能用</td>
+</tr>
+<tr>
+<td>门槛</td>
+<td><strong>高</strong></td>
+<td><strong>低</strong></td>
+</tr>
+</tbody></table>
+<p>结论：<strong>如果你要的是” 一次成片、不想折腾”，商业 SaaS 完胜。如果你出 5 条以上视频、或者要求每一帧可控，这个项目能给你 SaaS 给不了的东西。</strong></p>
+<h3 id="6-2-vs-纯-Python-视频生成脚本（比如各种-SadTalker-Wav2Lip-封装）"><a href="#6-2-vs-纯-Python-视频生成脚本（比如各种-SadTalker-Wav2Lip-封装）" class="headerlink" title="6.2 vs 纯 Python 视频生成脚本（比如各种 SadTalker / Wav2Lip 封装）"></a>6.2 vs 纯 Python 视频生成脚本（比如各种 SadTalker / Wav2Lip 封装）</h3><ul>
+<li>这类项目产出的是<strong>一段” 照片在动”</strong>，成片还得自己进 Premiere / DaVinci</li>
+<li> 这个项目直接给你<strong>带花字、卡片、节奏、封面首帧的成片</strong></li>
+<li>而且它不自己训模型，<strong>站在 Grok Video 1.5 / Wan 3.0 / OmniHuman / MiMo 之上做工程</strong></li>
+</ul>
+<p><strong>用别人的模型，做自己的流水线。</strong> 这是 2026 年 AI 工具的典型形态：不卷基座，卷工程。</p>
+<h3 id="6-3-vs-Remotion-模板库-CapCut-模板"><a href="#6-3-vs-Remotion-模板库-CapCut-模板" class="headerlink" title="6.3 vs Remotion 模板库 / CapCut 模板"></a>6.3 vs Remotion 模板库 / CapCut 模板</h3><ul>
+<li>CapCut 模板：手工填，样式固定，改动受限</li>
+<li> Remotion 官方模板：需要自己写 React，对非程序员门槛高</li>
+<li>这个项目：<strong>把 Remotion 包装成 agent 可调用的组件 + JSON 配置</strong></li>
+</ul>
+<p>多了一层” 从自然语言到 edit.json” 的翻译。</p>
+<h3 id="6-4-vs-HeyGen-之类自带”视频翻译-换语言”的功能"><a href="#6-4-vs-HeyGen-之类自带”视频翻译-换语言”的功能" class="headerlink" title="6.4 vs HeyGen 之类自带”视频翻译/换语言”的功能"></a>6.4 vs HeyGen 之类自带” 视频翻译 / 换语言” 的功能</h3><p>这个项目的多语言是<strong>重新生成</strong>，不是配音替换。好处是口型对得上（模型自己生成语音 + 口型），坏处是<strong>每次都要重新生成，花 credits</strong>。</p>
+<p>README 里的实测准确率（英 / 日 / 法 / 西 100%，韩 94%，阿 99%）是 whisper 回听准确率，翻译成 5 分钟多语言内容，仍然是几千积分的量级。</p>
+<h3 id="6-5-和同作者生态的关系"><a href="#6-5-和同作者生态的关系" class="headerlink" title="6.5 和同作者生态的关系"></a>6.5 和同作者生态的关系</h3><p>这个项目是”<strong>Agent Skill + MCP + 本地脚本</strong> “这个范式的典型样本。同类还有 BrowserSkill（浏览器自动化）、teamai-cli（团队 AI harness），以及这个博客里写过的其他 Agent Skill 类项目。</p>
+<p><strong>共同点：agent 负责决策，脚本负责执行，文件负责传递状态。</strong>—</p>
+<h2 id="七、真实局限：别当银弹用"><a href="#七、真实局限：别当银弹用" class="headerlink" title="七、真实局限：别当银弹用"></a>七、真实局限：别当银弹用</h2><p>作者在 README 里写了不少，但我觉得还有几条值得单独拎出来说。</p>
+<h3 id="7-1-强依赖外部服务"><a href="#7-1-强依赖外部服务" class="headerlink" title="7.1 强依赖外部服务"></a>7.1 强依赖外部服务</h3><ul>
+<li><strong>Renoise</strong> —— 视频生成、报价、下载全靠它。Renoise 挂了、改价了、账号出问题了，整个流水线停摆</li>
+<li><strong> Grok Video 1.5</strong> —— 当前默认模型。README 说 Wan 3.0、OmniHuman 也有文档，但主路径是 Grok</li>
+<li><strong>GPT Image 2.5</strong> —— 场景图靠它</li>
+<li><strong> MiMo TTS</strong> —— 念错字修复、换音色靠它</li>
+</ul>
+<p>作者把这些做成了可替换的（<code>persona.json</code> 里 <code>engine</code> 字段、<code>model.name</code> 字段），但<strong>替代方案没被同等验证</strong>。</p>
+<h3 id="7-2-本地依赖不轻"><a href="#7-2-本地依赖不轻" class="headerlink" title="7.2 本地依赖不轻"></a>7.2 本地依赖不轻</h3><p>ffmpeg + Python + numpy/Pillow + Playwright + Chromium + Node 18+ + whisper.cpp + whisper 模型。Windows / Linux /macOS 三套装法。</p>
+<p><strong>“一键可用” 这个目标，这个项目没有达成。</strong> 它达成的是” 在愿意折腾的人手里，能稳定产出专业级成片”。</p>
+<h3 id="7-3-TextBehind-依赖-macOS"><a href="#7-3-TextBehind-依赖-macOS" class="headerlink" title="7.3 TextBehind 依赖 macOS"></a>7.3 TextBehind 依赖 macOS</h3><p>Apple Vision 人像分割，<strong>只有 macOS 能用</strong>。虽然 skill 里说了其余功能跨平台，但这是个明确的功能缺口。</p>
+<h3 id="7-4-数字人形象的一致性不是-100"><a href="#7-4-数字人形象的一致性不是-100" class="headerlink" title="7.4 数字人形象的一致性不是 100%"></a>7.4 数字人形象的一致性不是 100%</h3><p>persona.json 里 <code>reference_material: "material:329814"</code> 是作者账号下的素材 ID。README 明确说：</p>
+<blockquote>
+<p>本仓库里的 <code>material:</code> ID 属于作者账号，在你的账号上用不了 —— 这是预期内的。</p>
+</blockquote>
+<p>也就是说<strong>你必须用自己的照片重新做一个形象</strong>。做新形象需要：选照片 → 让 agent 生成四视图（正 / 侧 / 侧 / 背，GPT Image 2.5 2k，约 23 credits）→ 上传拿 material id → 填进 persona.json。</p>
+<p><strong>这一步的成败直接决定后面所有视频的质量</strong>，而且四视图生成本身也不保证跨角度完全一致。</p>
+<h3 id="7-5-成本对个人创作者仍然不低"><a href="#7-5-成本对个人创作者仍然不低" class="headerlink" title="7.5 成本对个人创作者仍然不低"></a>7.5 成本对个人创作者仍然不低</h3><p>27 秒 482 credits，5 分钟 3,400 credits。这个量级下，<strong>“每周一条 5 分钟教程”</strong> 是需要认真算预算的。README 提到教程第 3 集复用了 17 段，” 复用” 是控制成本的关键手段，但复用也意味着<strong>形象和场景要保持一致</strong>，反过来限制了选题自由度。</p>
+<h3 id="7-6-Remotion-的-license-限制"><a href="#7-6-Remotion-的-license-限制" class="headerlink" title="7.6 Remotion 的 license 限制"></a>7.6 Remotion 的 license 限制</h3><p>项目是 MIT，但 <strong>Remotion 自己不是完全自由</strong>：个人和 3 人以下公司免费，更多要买 company license。作者在 README 里明确列了这条 —— 这是加分项，但公司用户要自己算账。</p>
+<h3 id="7-7-已知坑还没根治"><a href="#7-7-已知坑还没根治" class="headerlink" title="7.7 已知坑还没根治"></a>7.7 已知坑还没根治</h3><p>README 的” 已知坑” 清单第一条就是 Grok 会烧字幕，<strong>“即使提示词写了也挡不住”</strong>。也就是说这条坑是<strong>靠重拍来解决的，不是被修掉的</strong>。</p>
+<p>这意味着：<strong>核心体验里永远有一部分是” 抽到坏段 → 重拍 → 再花钱”</strong>。报价门让你不至于失控，但没法让你不难受。</p>
+<h3 id="7-8-生态绑定的开放性问题"><a href="#7-8-生态绑定的开放性问题" class="headerlink" title="7.8 生态绑定的开放性问题"></a>7.8 生态绑定的开放性问题</h3><p>SKILL.md 是开放的 Agent Skills 格式，脚本是普通 Python/shell，Remotion 模板是 React。<strong>技术上都是可移植的</strong>。</p>
+<p>但 <code>persona.json</code> 里的素材 ID、<code>material:</code> 引用、<code>--ref</code> 指向的旧片段目录，<strong>都是 Renoise 账号相关的</strong>。你换账号，这套配置就得重做。</p>
+<hr>
+<h2 id="八、适合谁，不适合谁"><a href="#八、适合谁，不适合谁" class="headerlink" title="八、适合谁，不适合谁"></a>八、适合谁，不适合谁</h2><h3 id="适合"><a href="#适合" class="headerlink" title="适合"></a>适合</h3><p>✅ <strong>做系列口播内容的个人创作者</strong> —— 48 个包装组件 + persona 固化 + <code>--ref</code> 跨集统一音色，都是为” 第 1 期到第 30 期” 设计的</p>
+<p>✅ <strong>有 Claude Code / Codex 的技术人</strong> —— 这是一个 agent skill，不是 GUI 工具，你得习惯跟 agent 协作</p>
+<p>✅ <strong>小团队的内容 / 增长岗</strong> —— 让一个人产出原本需要一个剪辑师的位置</p>
+<p>✅ <strong>想做数字人技术验证的人</strong> —— 即使你不用它出片，<code>unify.py</code> 和 <code>cutout_video.py</code> 也是能单独拿出来复用的好东西</p>
+<p>✅ <strong>在意成本可控的人</strong> —— 报价门 + 实盘成本表 + 复用段 + 局部修复，比大多数工具透明</p>
+<h3 id="不适合"><a href="#不适合" class="headerlink" title="不适合"></a>不适合</h3><p>❌ <strong>完全不懂技术的运营同学</strong> —— 需要装 ffmpeg / Node /whisper，还要能跟 agent 反复确认。一键出片的期望要放一放</p>
+<p>❌ <strong>只想偶尔做一条的人</strong> —— 27 秒 482 credits + 半小时折腾环境 + 做自己形象，性价比不如买 SaaS 月费</p>
+<p>❌ <strong>需要严格品牌规范的企业</strong> —— 48 个组件是” 头部博主的通用包装”，不是你的品牌设计系统。虽然 <code>pack</code> 数组可改，但要做到规范统一，得自己写组件</p>
+<p>❌ <strong>对 AI 内容有合规红线的行业</strong> —— 项目本身有明确要求（标” 内容由 AI 数字人演绎”、只用有授权的脸和声音、不用网络梗和影视片段），但<strong>这个” 合规” 是作者自我约束，不是法律保证</strong>。所在行业有额外规定的，请自己再过一遍</p>
+<p>❌ <strong>Windows 用户想用 TextBehind</strong> —— macOS 限定　｜　<strong>期待完全离线的人</strong> —— 生成环节<strong>必须</strong>走 Renoise 云服务</p>
+<hr>
+<h2 id="九、我的评价"><a href="#九、我的评价" class="headerlink" title="九、我的评价"></a>九、我的评价</h2><p>作为一个项目，<code>andyhuo520/digital-human-koubo</code> 有三点我觉得明显高于同类：</p>
+<p><strong>第一，它把” 提示词工程” 落到了” 约束前移”。</strong><br>大多数人在” 模型输出的效果不够好” 这件事上的反应是” 改改 prompt 再试试”。这个项目的做法是量出 480p 是 400×736、量出齿音段间差 13.2 dB、量出 4:43 里 44 段累积落后 0.38 秒，然后<strong>把结论写进生成条件或写进校验脚本</strong>。这是从” 用模型” 到” 工程化使用模型” 的分水岭。</p>
+<p><strong>第二，它对成本的敏感度是真实的。</strong><br>“先报价再扣费”” 先出 1 段再批量”” 复用上一期的段对齐音色”” 只换出错那一句不重拍整片”” 别整片重配音”—— 这些不是产品文档话术，是<strong>被 bills 教过</strong>的人才会写下的规则。</p>
+<p>尤其 “别整片换音色，口型跟的是原声” 这一句，一句话点破了大多数 AI 配音方案的根本矛盾。</p>
+<p><strong>第三，它没有假装自己是模型。</strong><br>它就是一个<strong>编排层</strong>：上面是 agent（决策），中间是脚本（执行），下面是一堆第三方模型（生成）。模型换一代，它可能要改；模型不换，它照样能用。这个定位很清醒。</p>
+<p>它的短板也很明显：<strong>门槛高、依赖外部、成本对个人不算低、部分功能有平台限制、核心体验里永远有一部分是” 抽到坏段重拍”</strong>。</p>
+<p>但我更想说的是 —— <strong>它展示了一种可能性</strong>：</p>
+<blockquote>
+<p>当 agent 的能力足够强，” 领域经验” 就可以被写成 <code>SKILL.md</code> + 一堆 Python 脚本，然后被复用到任何一个能加载 skill 的 agent 上。</p>
+</blockquote>
+<p><code>SKILL.md</code> 里的红线、看稿子、质检、报价、混音那一套，<strong>本来是作者脑子里和剪辑师聊天才能学到的东西</strong>。这个项目把它固化成了可执行的形式。</p>
+<p>你不需要它的任何一条 demo，你只需要看一眼这个仓库的 <code>SKILL.md</code> 和 <code>scripts/</code> 目录，就会意识到 —— <strong>很多我们以为” 只能靠人传” 的经验，其实可以写下来。</strong></p>
+<p>这可能比它生成的任何一条视频都更有价值。</p>
+<hr>
+<h2 id="十、试试看"><a href="#十、试试看" class="headerlink" title="十、试试看"></a>十、试试看</h2><p>如果你想试：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/andyhuo520/digital-human-koubo.git</span><br><span class="line"><span class="built_in">cd</span> digital-human-koubo</span><br><span class="line"><span class="built_in">mkdir</span> -p ~/.claude/skills &amp;&amp; <span class="built_in">cp</span> -R skills/digital-human-koubo skills/finance-explainer ~/.claude/skills/</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后连上 Renoise MCP，跑一遍：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash ~/.claude/skills/digital-human-koubo/scripts/doctor.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>确认环境没问题，再跟 agent 说一句” 用我的数字人 Skill 讲这段：……”。</p>
+<p><strong>但是</strong>，别一上来就做 5 分钟的。先做一条 27 秒的竖屏试试水 —— 就像作者 README 里那个 482 credits 的直播广告 demo。先看看音色对不对、齿音在不在、包装组件是不是你想要的风格。</p>
+<p><strong>先花小钱验证，再决定要不要规模化。</strong> 这也是这个项目自己教你的第一条规矩。</p>
+<hr>
+<p><strong>项目地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/andyhuo520/digital-human-koubo">https://github.com/andyhuo520/digital-human-koubo</a></p>
+<p><strong>如果这篇对你有用，欢迎点个 star。</strong> 作者 Berryxia 用 Claude Code 写出来的这个仓库，值得被更多人看见。</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/andyhuo520/digital-human-koubo">andyhuo520/digital-human-koubo</a> —— 仓库、README、SKILL.md、persona.json</li>
+<li><code>scripts/voicefx/unify.py</code> —— 音色统一・<code>scripts/rangedl.py</code> —— 分段并发下载・<code>scripts/patch_words.py</code> —— 局部念错修复 </li>
+<li><a target="_blank" rel="noopener" href="https://www.remotion.dev/">Remotion</a> —— 视频渲染框架・<a target="_blank" rel="noopener" href="https://renoise.ai/mcp">Renoise</a> —— AI 视频 / 图片生成 MCP・<a target="_blank" rel="noopener" href="https://github.com/ggerganov/whisper.cpp">whisper.cpp</a> —— 语音识别</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/11/10/andyhuo520-digital-human-koubo-ai-talking-head-video-factory/" title="andyhuo520&#x2F;digital-human-koubo：1.9k stars 的 AI 数字人口播工厂，一张照片 + 一句话出片">https://www.daishengli.top/2026/11/10/andyhuo520-digital-human-koubo-ai-talking-head-video-factory/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/digital-human-koubo/" rel="tag"># digital-human-koubo</a>
+              <a href="/tags/andyhuo520/" rel="tag"># andyhuo520</a>
+              <a href="/tags/Agent-Skill/" rel="tag"># Agent Skill</a>
+              <a href="/tags/%E6%95%B0%E5%AD%97%E4%BA%BA/" rel="tag"># 数字人</a>
+              <a href="/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/" rel="tag"># 视频生成</a>
+              <a href="/tags/Remotion/" rel="tag"># Remotion</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/04/storytold-craft-anything-rust-reverse-engineering-ai-rebuild/" rel="prev" title="storytold&#x2F;craft-anything：8,302 stars 的纯 Rust 逆向引擎，看懂一个软件然后让 AI 重写一个">
+                  <i class="fa fa-angle-left"></i> storytold/craft-anything：8,302 stars 的纯 Rust 逆向引擎，看懂一个软件然后让 AI 重写一个
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/18/qwen-code-open-source-terminal-ai-coding-agent/" rel="next" title="QwenLM&#x2F;qwen-code：3 万 star 的终端 AI 编程 Agent，Apache-2.0 全开源">
+                  QwenLM/qwen-code：3 万 star 的终端 AI 编程 Agent，Apache-2.0 全开源 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="小戴的网络日志">
+<meta property="og:url" content="https://www.daishengli.top/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="Java开发,SpringBoot优化,MySQL性能调优,Vue3实战,高并发架构,数据库优化,全栈开发,大模型应用,FastGPT,RAG技术,技术团队管理,远程工作,程序员职业发展,高效开发,代码优化,数字游民,技术人生活,效率工具,个人博客,学习笔记,实战经验分享,技术人思考,程序员成长,硬核技术博客">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"index.html","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">小戴的网络日志</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">459</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">139</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">139</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">459</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/27/iamajmeena-neonclipping-local-ai-video-clipper-youtube-twitch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 小戴的网络日志">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/27/iamajmeena-neonclipping-local-ai-video-clipper-youtube-twitch/" class="post-title-link" itemprop="url">iamajmeena/neonclipping：2927 star 的本地 AI 剪辑引擎，把 85 分钟直播剪成竖屏短视频只要 97 秒</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-28 00:05:00" itemprop="dateCreated datePublished" datetime="2026-11-28T00:05:00+08:00">2026-11-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>neonclipping 是印度 Jaipur 的导演 Ajay K Meena 用 Python 写的本地短视频剪辑引擎，2026 年 11 月 19 日上线，五天后拿到 2927 个 star 和 194 个 fork，AGPL-3.0 许可证（2026 年 11 月 24 日之前发布的版本仍是 MIT）。它解决的是 OpusClip 这类云端剪辑服务的核心痛点：一条 85 分钟的直播录屏上传上去要等几十分钟还按分钟计费、素材还留在别人服务器上。它最核心的思路是「音频优先」——先只下载 79 MB 音频，用 YouTube 自带的逐词字幕拿到 transcript，靠响度突变、2-4 kHz 人声能量、optical flow 运动量和静音到爆发过渡打分挑出候选片段，再让本地 Ollama 模型读候选段落的文字打分、写标题和 hook，最后只下载被选中那几秒视频片段，用 FFmpeg 烧录字幕输出 1080x1920 竖屏成片。README 实测 RTX 2060 上 85 分钟 YouTube 直播剪 3 条用 97 秒，3 小时 Twitch VOD 用 136 秒。项目还包含 11 种主播画面布局、5 种字幕样式、52 种字幕语言、自动找摄像头框的 YuNet 人脸检测、基于聊天热度突增的直播实时剪辑、手机远程控制、本地 MCP 接口给 Agent 调用，以及直接发布到 YouTube、Instagram、TikTok 的凭证对接。全部跑在本地，服务默认只监听 127.0.0.1。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/11/27/iamajmeena-neonclipping-local-ai-video-clipper-youtube-twitch/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/26/jingyaogong-minimind-64m-llm-from-scratch-in-2-hours/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 小戴的网络日志">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/26/jingyaogong-minimind-64m-llm-from-scratch-in-2-hours/" class="post-title-link" itemprop="url">jingyaogong/minimind：7 万 star 的中文极简 LLM 教学项目，2 小时 3 块钱从零训出 64M 大模型</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-27 00:00:00" itemprop="dateCreated datePublished" datetime="2026-11-27T00:00:00+08:00">2026-11-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>jingyaogong/minimind 是 GitHub 上最受欢迎的中文从零训练 LLM 教学项目之一，累计 71615 个 star、9298 个 fork，Apache-2.0 协议，纯 Python 实现，2024 年 7 月建仓至今保持高频提交。它用原生 PyTorch 把大语言模型从零到一的完整链路全部摊开，涵盖 Tokenizer 训练、预训练、监督微调、LoRA、知识蒸馏、DPO、PPO、GRPO、CISPO、Agentic RL、Tool Use、自适应思考等环节，目标是让个人开发者用单卡 RTX 3090 在约 2 小时、3 元人民币内复现一个 64M 参数的对话模型。主线 minimind-3 结构对齐 Qwen3 生态，Pre-Norm 加 RMSNorm、SwiGLU 激活、RoPE 加 YaRN 外推、q_heads 8 与 kv_heads 4、词表仅 6400、8 层 768 维；MoE 版本 minimind-3-moe 为 198M-A64M、4 专家 top-1 路由。兼容 transformers、trl、peft 训练框架与 llama.cpp、vllm、ollama、sglang 推理引擎，开源全阶段中文数据集、OpenAI 协议兼容 API 服务端与 Streamlit WebUI，并附 C-Eval、C-MMLU、ARC-Easy 等第三方测评结果，README 主动披露了评测标准误与数据污染对照，诚实标注工具调用泛化不足、奖励稀疏等真实局限。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/11/26/jingyaogong-minimind-64m-llm-from-scratch-in-2-hours/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/25/firecrawl-ai-agent-web-data-infrastructure/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 小戴的网络日志">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/25/firecrawl-ai-agent-web-data-infrastructure/" class="post-title-link" itemprop="url">firecrawl/firecrawl：20.9 万 star 的 AI Agent 抓取基础设施，AGPL-3.0 开源自托管，一个 Rust 二进制把网页变成 Markdown</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-25 08:30:00" itemprop="dateCreated datePublished" datetime="2026-11-25T08:30:00+08:00">2026-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>firecrawl/firecrawl 是 GitHub 上星标最多的 AI Agent 数据基础设施项目之一，累计 208914 个 star、10916 个 fork，AGPL-3.0 协议（SDK 为 MIT），主语言 TypeScript，2024 年 4 月建仓至今高频提交。它是一套把网页变成干净 Markdown 的清洗引擎加统一 API，核心能力包括 scrape 单页抓取、crawl 整站爬取、map 站点 URL 发现、batch scrape 批量抓取、search 搜索、interact 浏览器交互、agent 自主取数，以及 Alexandria 的 550 多个数据源。项目提供三种形态：apps/local 是 Rust 单二进制，不依赖数据库队列容器，可本地跑抓取、把 v2 API 服务在 3002 端口并以 MCP 接入 Claude Code、Cursor、Codex 等；apps/api 是 Docker Compose 编排的完整自托管服务端，含 API、worker、Playwright、Redis、RabbitMQ、NuQ PostgreSQL；Firecrawl Cloud 是官方托管服务，宣称 96% 网页覆盖率与 3.4 秒 P95 延迟。仓库另含 Python、Node.js、Go、Java、Rust、Ruby、.NET、PHP、Elixir 九套 SDK。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/11/25/firecrawl-ai-agent-web-data-infrastructure/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/23/hkuds-cli-anything-make-all-software-agent-native/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 小戴的网络日志">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/23/hkuds-cli-anything-make-all-software-agent-native/" class="post-title-link" itemprop="url">HKUDS/CLI-Anything：63603 star 的开源项目，把 40 多个专业软件变成 AI Agent 能用的命令行</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-24 00:02:11" itemprop="dateCreated datePublished" datetime="2026-11-24T00:02:11+08:00">2026-11-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>HKUDS/CLI-Anything 是一个由香港大学数据智能实验室出品的开源项目，核心主张只有一句话——让任何有代码库的软件都能被 AI Agent 以命令行方式驱动。它提供一套 Claude Code 插件、SKILL 规范和多平台适配（Claude Code、Cursor、OpenCode、OpenClaw、Codex、Pi、Qodercli 等），把 GUI 软件的后端引擎包装成带 --json 输出、状态化 REPL、undo/redo 和真实渲染验证的 Python Click 命令行工具。项目采用 Apache-2.0 协议，当前 63603 star、5776 fork、291 个开放 issue，主语言 Python，要求 Python 3.10 以上；仓库里已内置 GIMP、Blender、LibreOffice、Inkscape、Audacity、Shotcut、Kdenlive、OBS Studio、Godot、n8n、QGIS、FreeCAD、Joplin、Zotero 等 40 多个软件适配器，累计 2464 个测试全部通过。配套的 cli-anything-hub 包管理器（PyPI 版本 0.4.1）可以一条命令浏览、安装、升级和卸载社区做的 CLI。它的方法论写在一份 HARNESS.md 里，明确要求调用真实软件渲染而不是自己复刻，README 也直说依赖前沿大模型、只对有源码的软件有效、常常需要多轮 refine 才能到生产可用。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/11/23/hkuds-cli-anything-make-all-software-agent-native/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/22/el4cteo-fast-anything-port-slow-5-percent-to-rust/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 小戴的网络日志">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/22/el4cteo-fast-anything-port-slow-5-percent-to-rust/" class="post-title-link" itemprop="url">EL4CTEO/fast-anything：1869 star 的工具，让 AI Agent 只把最慢的 5% 改写成 Rust 并证明行为一致</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-23 00:08:00" itemprop="dateCreated datePublished" datetime="2026-11-23T00:08:00+08:00">2026-11-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>fast-anything 是 2026 年 11 月 21 日上线的新项目，两天拿到 1869 个 star，MIT 许可证，主语言 Rust。它不做整应用重写，而是先用各语言自带的 profiler 把一次真实运行里的函数按耗时与可移植性排序，筛出既慢又干净的热点，再让 Claude Code 或 Codex 等编码 Agent 只把这些函数改写成 Rust，最后用录制的真实调用逐条回放比对：只有返回值一致、异常类型一致、单次调用不比原实现慢，才允许启用。工具支持 Python、JavaScript 与 TypeScript、Ruby、Java、Go、PHP、C、C++、C# 等十种语言，绑定分别用 PyO3、napi-rs 和统一的 C ABI 加 JSON 桥接。verify 除了回放最多 500 条真实调用，还会派生 NaN、负零、非 ASCII 文本等边界用例，并让原实现回答收缩输入，一致率不到 100% 一律不许上线。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/11/22/el4cteo-fast-anything-port-slow-5-percent-to-rust/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/21/tracer-cloud-opensre-ci-cd-reliability-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 小戴的网络日志">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/21/tracer-cloud-opensre-ci-cd-reliability-agent/" class="post-title-link" itemprop="url">Tracer-Cloud/opensre：13982 star 的 CI/CD 可靠性 Agent，能自己读日志、改代码、推分支</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-22 00:04:05" itemprop="dateCreated datePublished" datetime="2026-11-22T00:04:05+08:00">2026-11-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Tracer-Cloud/opensre 是一个用 Python 写的开源 SRE Agent，专注解决 CI 变红之后的那个最贵的环节——没人愿意接手的失败排查。它能读 GitHub Actions 失败日志、关联 Grafana 和 Datadog 的指标与 trace、在受控的工具调用循环里提出并验证假设，区分「CI 环境导致的失败」和「代码导致的失败」，然后把修复 commit 推到 PR 分支上等你 review。项目基于 Apache-2.0 协议，13982 star、1943 fork、87 个集成目录，覆盖 Kubernetes、AWS、Grafana、Datadog、Slack、PagerDuty 等主流云原生栈，支持 Anthropic、OpenAI、Gemini、Ollama 等九家 LLM 提供商，也可以完全自托管在 EC2 或容器里。它的代码架构用 import-linter 把七个一方包锁成四层单向依赖，是给大规模 Agent 项目看的一个很硬的工程样板；代价是它自己仍然是 public alpha 状态，README 里明确写着核心流程可用但尚未完全稳定。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/11/21/tracer-cloud-opensre-ci-cd-reliability-agent/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/20/bookwjitchieni1986-blender-ai-mcp-addon-ai-assistant-mcp-server/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 小戴的网络日志">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/20/bookwjitchieni1986-blender-ai-mcp-addon-ai-assistant-mcp-server/" class="post-title-link" itemprop="url">bookwjitchieni1986/blender-ai-mcp-addon：给 Blender 装一个能看场景、能干活、还能组队干活的 AI 助手</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-21 00:20:00" itemprop="dateCreated datePublished" datetime="2026-11-21T00:20:00+08:00">2026-11-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>这是一个 1763 star 的 MIT 协议 Blender 扩展，产品名 mcp-for-blender-pro，做两件事：把 ChatGPT、Claude、Gemini、Ollama 及自定义端点接进 Blender 3D 视图对话框，并内置一个跑在 127.0.0.1:9876 的 Streamable HTTP MCP 服务器，让 OpenCode、Cline 等外部客户端也能驱动场景。2026 年 11 月 19 日建仓，同日发布 v1.0.0，压缩包 12.8 MB，1451 次下载。核心是 21 个场景工具，分场景检查、物体创建、编辑、可视反馈与脚本、Blender API 查询与导出、资产检索六组，集成 Poly Haven、Sketchfab、Poly Pizza 三个资产源。除了单助手模式，还提供 manager / worker / reviewer 三角色串行的 Team chain 多智能体工作流，带任务看板和一次纠错机会。要求 Windows x64 与 Blender 4.2 以上，捆绑 Python 3.13 运行时。短板同样明显：仓库只有 README 和两份文档，代码全在二进制压缩包里无法审计；exec 代码执行没有沙箱；遥测默认开启；Windows 专属限定与 Token 消耗过快是高频痛点。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/11/20/bookwjitchieni1986-blender-ai-mcp-addon-ai-assistant-mcp-server/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/20/sybil-inference-optimisation-skill-local-llm-hill-climbing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 小戴的网络日志">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/20/sybil-inference-optimisation-skill-local-llm-hill-climbing/" class="post-title-link" itemprop="url">sybil-solutions/inference-optimisation-skill：把本地大模型推理调优变成可复现的工程流程</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-20 09:30:00" itemprop="dateCreated datePublished" datetime="2026-11-20T09:30:00+08:00">2026-11-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>这是一个 1259 star 的 MIT 协议 Agent Skill，目标是把本地大模型服务的推理调优从"改参数看运气"变成一套有理论天花板、有噪声控制、有对照实验、有发布验收门槛的工程流程。它支持任意硬件和任意量化格式，覆盖单用户与并发解码吞吐、投机解码、prefill 吞吐、KV 缓存容量、启动时间和首 token 延迟五个维度。仓库提供 SKILL.md 主流程、五个 references 参考文档、四个纯标准库 Python 与 Bash 脚本（bench.py 基准台架、ceiling.py 天花板计算器、queue.sh 串行队列、mem.sh 内存看门狗），以及 PROMPT.md 任务模板。方法论核心是先算理论上限再动手、单变量实验、交叉对照取中位数、跑完必须过稳定性门禁。所有性能数字均来自作者在 Intel Arc、RTX 3090、H200 等真实硬件上的实测，并附有原始日志链接。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/11/20/sybil-inference-optimisation-skill-local-llm-hill-climbing/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/18/rust-anything-rewrite-app-in-rust-verified-behavior/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 小戴的网络日志">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/18/rust-anything-rewrite-app-in-rust-verified-behavior/" class="post-title-link" itemprop="url">erkamyaman/rust-anything：3321 star 的 Rust 迁移工具箱，把 Node/Python/Go 应用逐块改写成 Rust 并逐步验证行为一致</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-19 00:20:00" itemprop="dateCreated datePublished" datetime="2026-11-19T00:20:00+08:00">2026-11-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>rust-anything 是开发者 erKam Yaman 用 Rust 写的迁移工具箱兼 MCP 服务，2026 年 11 月 16 日发布 1.0.0，三天后拿到 3321 个 star 和 262 个 fork，MIT 许可证，crate 版本 1.5.1 已上架 crates.io 和 npm。它不做代码翻译，而是提供一套可被 Claude Code、Codex、Cursor、Gemini CLI 驱动的迁移工作流：profile 找出真正耗时的那段循环，analyze 把仓库切成可移植的单元并排出迁移顺序，bridge 生成 napi-rs、wasm-bindgen、PyO3、cgo、JNI 等桥接脚手架，record 把原函数在生成边界值、语义陷阱和自有测试上的返回值录成 cases.jsonl，diff 把用例逐条回放给 Rust 版比对，bench 给出 ship 或 keep 的结论，shadow 让新旧并行跑并返回旧结果，gate 汇总 fmt、clippy、unsafe 审计和错误路径覆盖，最后 app record 到 app lift 把整个 CLI 或 HTTP 服务换成纯 Rust 二进制。TypeScript、Python、C、Go、Ruby、Java 六种语言已通过真实项目验证，PHP 与 C# 处于 preview。官方案例包括 vercel/ms 的 975 个用例全匹配、Fuse.js 的 3414 个用例全匹配、json-server 的 514 个 HTTP 用例在纯 Rust 二进制上全通过且并发吞吐提升约五倍。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/11/18/rust-anything-rewrite-app-in-rust-verified-behavior/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/18/qwen-code-open-source-terminal-ai-coding-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 小戴的网络日志">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/11/18/qwen-code-open-source-terminal-ai-coding-agent/" class="post-title-link" itemprop="url">QwenLM/qwen-code：3 万 star 的终端 AI 编程 Agent，Apache-2.0 全开源</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-18 08:30:00" itemprop="dateCreated datePublished" datetime="2026-11-18T08:30:00+08:00">2026-11-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Qwen Code 是阿里通义千问团队开源的终端 AI 编程 Agent，在 GitHub 上拿到 30731 个 star 和 3555 个 fork，采用 Apache-2.0 许可证，主语言 TypeScript，要求 Node.js 22 以上。它前身是 Google Gemini CLI v0.8.2，但从 v0.1 起就停止跟随上游，转向独立演进，成为一个支持 OpenAI、Anthropic、Gemini、Qwen 四家协议并且能接入本地 Ollama 或 vLLM 模型的通用 Agent 框架。项目用 pnpm monorepo 组织，packages 目录下有 20 个子包，core 包内置 118 个工具实现、Agent Teams、Agent Arena、SubAgents、Auto-Memory、Skills、MCP 客户端池、Hooks、Sandbox、Git worktree、LSP 集成和 Plan Mode 等能力，还提供 TypeScript、Python、Java 三套 SDK 以及 CLI、桌面端、Web Shell、VS Code / Zed / JetBrains 插件和 Telegram、钉钉、飞书、微信、企微、QQ、邮件等 IM 通道。用 Qwen 3.7 Max 在 SWE-bench Verified 上跑 500 个任务、每个版本三次试验，七个版本的平均分落在 76.40% 到 77.80% 之间。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/11/18/qwen-code-open-source-terminal-ai-coding-agent/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

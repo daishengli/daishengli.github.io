@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="firecrawl&#x2F;firecrawl 是 GitHub 上星标最多的 AI Agent 数据基础设施项目之一，累计 208914 个 star、10916 个 fork，AGPL-3.0 协议（SDK 为 MIT），主语言 TypeScript，2024 年 4 月建仓至今高频提交。它是一套把网页变成干净 Markdown 的清洗引擎加统一 API，核心能力包括 scrape 单页抓取、craw">
+<meta property="og:type" content="article">
+<meta property="og:title" content="firecrawl&#x2F;firecrawl：20.9 万 star 的 AI Agent 抓取基础设施，AGPL-3.0 开源自托管，一个 Rust 二进制把网页变成 Markdown">
+<meta property="og:url" content="https://www.daishengli.top/2026/11/25/firecrawl-ai-agent-web-data-infrastructure/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="firecrawl&#x2F;firecrawl 是 GitHub 上星标最多的 AI Agent 数据基础设施项目之一，累计 208914 个 star、10916 个 fork，AGPL-3.0 协议（SDK 为 MIT），主语言 TypeScript，2024 年 4 月建仓至今高频提交。它是一套把网页变成干净 Markdown 的清洗引擎加统一 API，核心能力包括 scrape 单页抓取、craw">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-25T00:30:00.000Z">
+<meta property="article:modified_time" content="2026-11-28T00:04:52.352Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="TypeScript">
+<meta property="article:tag" content="firecrawl">
+<meta property="article:tag" content="网页抓取">
+<meta property="article:tag" content="自托管">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/11/25/firecrawl-ai-agent-web-data-infrastructure/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/11/25/firecrawl-ai-agent-web-data-infrastructure/","path":"2026/11/25/firecrawl-ai-agent-web-data-infrastructure/","title":"firecrawl/firecrawl：20.9 万 star 的 AI Agent 抓取基础设施，AGPL-3.0 开源自托管，一个 Rust 二进制把网页变成 Markdown"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>firecrawl/firecrawl：20.9 万 star 的 AI Agent 抓取基础设施，AGPL-3.0 开源自托管，一个 Rust 二进制把网页变成 Markdown | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">459</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">139</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#firecrawl-firecrawl%EF%BC%9A20-9-%E4%B8%87-star-%E7%9A%84-AI-Agent-%E6%8A%93%E5%8F%96%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD"><span class="nav-number">1.</span> <span class="nav-text">firecrawl&#x2F;firecrawl：20.9 万 star 的 AI Agent 抓取基础设施</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E8%AF%B4%E4%B8%80%E4%B8%AA%E6%88%91%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91"><span class="nav-number">1.1.</span> <span class="nav-text">一、先说一个我踩过的坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E5%88%B0%E5%BA%95%E6%83%B3%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">二、它到底想解决什么问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Agent-%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8D%E6%98%AF%E7%BB%99%E5%AE%9A%E7%9A%84%EF%BC%8C%E6%98%AF%E8%A6%81%E2%80%9D%E6%8A%93%E2%80%9D%E7%9A%84"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 Agent 的上下文不是给定的，是要” 抓” 的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E4%B8%80%E4%B8%AA%E5%8A%9F%E8%83%BD%E7%9F%A9%E9%98%B5%E5%85%88%E7%9C%8B%E6%87%82"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 一个功能矩阵先看懂</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%85%B3%E9%94%AE%E6%95%B0%E5%AD%97%EF%BC%88%E5%85%A8%E9%83%A8%E6%9D%A5%E8%87%AA%E4%BB%93%E5%BA%93-API-README%EF%BC%8C%E9%9D%9E%E4%BC%B0%E7%AE%97%EF%BC%89"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 关键数字（全部来自仓库 API &#x2F; README，非估算）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%83%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%84%EF%BC%9A%E4%B8%89%E7%A7%8D%E7%94%A8%E6%B3%95"><span class="nav-number">1.3.</span> <span class="nav-text">三、它是怎么工作的：三种用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E7%94%A8%E6%B3%95%E4%B8%80%EF%BC%9AFirecrawl-Local%EF%BC%88Rust-%E5%8D%95%E4%BA%8C%E8%BF%9B%E5%88%B6%EF%BC%89"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 用法一：Firecrawl Local（Rust 单二进制）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E7%94%A8%E6%B3%95%E4%BA%8C%EF%BC%9A%E6%8E%A5%E8%BF%9B%E4%BD%A0%E7%9A%84-AI-Agent%EF%BC%88MCP%EF%BC%89"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 用法二：接进你的 AI Agent（MCP）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E7%94%A8%E6%B3%95%E4%B8%89%EF%BC%9A%E5%9C%A8%E6%9C%AC%E5%9C%B0%E8%B7%91-Firecrawl-API"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 用法三：在本地跑 Firecrawl API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E7%94%A8%E6%B3%95%E5%9B%9B%EF%BC%9A%E5%AE%8C%E6%95%B4%E8%87%AA%E6%89%98%E7%AE%A1%E6%9C%8D%E5%8A%A1%E7%AB%AF%EF%BC%88Docker-Compose%EF%BC%89"><span class="nav-number">1.3.4.</span> <span class="nav-text">3.4 用法四：完整自托管服务端（Docker Compose）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E9%80%90%E4%B8%AA%E6%8B%86%E5%BC%80"><span class="nav-number">1.4.</span> <span class="nav-text">四、核心能力逐个拆开</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Scrape%EF%BC%9A%E6%9C%80%E5%9F%BA%E7%A1%80%E4%B9%9F%E6%9C%80%E6%A0%B8%E5%BF%83"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 Scrape：最基础也最核心</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Crawl%EF%BC%9A%E6%95%B4%E7%AB%99%E7%88%AC%E5%8F%96"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 Crawl：整站爬取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-Map%EF%BC%9A%E7%AB%99%E7%82%B9-URL-%E5%8F%91%E7%8E%B0"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 Map：站点 URL 发现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-Batch-Scrape%EF%BC%9A%E6%89%B9%E9%87%8F"><span class="nav-number">1.4.4.</span> <span class="nav-text">4.4 Batch Scrape：批量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-Search%EF%BC%9A%E6%90%9C%E7%B4%A2%E5%B9%B6%E7%9B%B4%E6%8E%A5%E6%8B%BF%E5%88%B0%E6%AD%A3%E6%96%87"><span class="nav-number">1.4.5.</span> <span class="nav-text">4.5 Search：搜索并直接拿到正文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-Interact%EF%BC%9A%E8%AE%A9-AI-%E7%82%B9%E9%A1%B5%E9%9D%A2"><span class="nav-number">1.4.6.</span> <span class="nav-text">4.6 Interact：让 AI 点页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-7-Agent%EF%BC%9A%E4%B8%8D%E7%BB%99%E4%BD%A0-URL%EF%BC%8C%E8%AE%A9%E5%AE%83%E8%87%AA%E5%B7%B1%E6%89%BE"><span class="nav-number">1.4.7.</span> <span class="nav-text">4.7 Agent：不给你 URL，让它自己找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-8-Alexandria%EF%BC%9A550-%E6%95%B0%E6%8D%AE%E6%BA%90"><span class="nav-number">1.4.8.</span> <span class="nav-text">4.8 Alexandria：550+ 数据源</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81SDK-%E7%94%9F%E6%80%81%EF%BC%9A%E4%B9%9D%E7%A7%8D%E8%AF%AD%E8%A8%80"><span class="nav-number">1.5.</span> <span class="nav-text">五、SDK 生态：九种语言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%85%B3%E9%94%AE%E8%AE%BE%E8%AE%A1%E5%8F%96%E8%88%8D"><span class="nav-number">1.6.</span> <span class="nav-text">六、关键设计取舍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E5%8F%96%E8%88%8D%E4%B8%80%EF%BC%9A%E6%9C%AC%E5%9C%B0%E4%BC%98%E5%85%88%EF%BC%8C%E8%BF%98%E6%98%AF%E4%BA%91%E4%BC%98%E5%85%88%EF%BC%9F"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 取舍一：本地优先，还是云优先？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E5%8F%96%E8%88%8D%E4%BA%8C%EF%BC%9A%E5%8D%95%E4%BA%8C%E8%BF%9B%E5%88%B6-vs-%E5%AE%8C%E6%95%B4%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A0%88"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 取舍二：单二进制 vs 完整微服务栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E5%8F%96%E8%88%8D%E4%B8%89%EF%BC%9A%E5%A4%8D%E7%94%A8%E4%BD%A0%E6%9C%BA%E5%99%A8%E4%B8%8A%E7%9A%84%E6%B5%8F%E8%A7%88%E5%99%A8%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E5%86%85%E7%BD%AE"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3 取舍三：复用你机器上的浏览器，而不是内置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E5%8F%96%E8%88%8D%E5%9B%9B%EF%BC%9A%E9%BB%98%E8%AE%A4%E9%81%B5%E5%AE%88-robots-txt"><span class="nav-number">1.6.4.</span> <span class="nav-text">6.4 取舍四：默认遵守 robots.txt</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%92%8C%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E6%AF%94%E4%B8%80%E6%AF%94"><span class="nav-number">1.7.</span> <span class="nav-text">七、和同类项目比一比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E5%AF%B9%E6%AF%94-Crawlee%EF%BC%88Apify-%E7%94%9F%E6%80%81%EF%BC%89"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1 对比 Crawlee（Apify 生态）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E5%AF%B9%E6%AF%94-Scrapy"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2 对比 Scrapy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E5%AF%B9%E6%AF%94-Browserbase-Browserless-Stagehand"><span class="nav-number">1.7.3.</span> <span class="nav-text">7.3 对比 Browserbase &#x2F; Browserless &#x2F; Stagehand</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-%E5%AF%B9%E6%AF%94-Jina-Reader-Apify-Tavily"><span class="nav-number">1.7.4.</span> <span class="nav-text">7.4 对比 Jina Reader &#x2F; Apify &#x2F; Tavily</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E7%9C%9F%E5%AE%9E%E5%B1%80%E9%99%90%EF%BC%9A%E8%AF%B4%E7%82%B9%E4%B8%8D%E5%A5%BD%E5%90%AC%E7%9A%84"><span class="nav-number">1.8.</span> <span class="nav-text">八、真实局限：说点不好听的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-AGPL-3-0-%E6%98%AF%E4%B8%80%E9%81%93%E5%95%86%E4%B8%9A%E9%97%A8%E6%A7%9B"><span class="nav-number">1.8.1.</span> <span class="nav-text">8.1 AGPL-3.0 是一道商业门槛</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E8%87%AA%E6%89%98%E7%AE%A1%E7%9A%84%E7%BB%84%E4%BB%B6%E6%A0%88%E4%B8%8D%E8%BD%BB"><span class="nav-number">1.8.2.</span> <span class="nav-text">8.2 自托管的组件栈不轻</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E6%9C%AC%E5%9C%B0%E7%89%88%E7%9A%84%E5%8A%9F%E8%83%BD%E7%BC%BA%E5%8F%A3"><span class="nav-number">1.8.3.</span> <span class="nav-text">8.3 本地版的功能缺口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-4-Cloud-%E4%BE%9D%E8%B5%96%E4%B8%8D%E6%98%AF%E5%AE%8C%E5%85%A8%E5%8F%AF%E9%80%89%E7%9A%84"><span class="nav-number">1.8.4.</span> <span class="nav-text">8.4 Cloud 依赖不是完全可选的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-5-%E6%8A%93%E5%8F%96%E6%9C%AC%E8%BA%AB%E5%B0%B1%E6%98%AF%E6%9C%89%E5%AF%B9%E6%8A%97%E7%9A%84"><span class="nav-number">1.8.5.</span> <span class="nav-text">8.5 抓取本身就是有对抗的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-6-%E6%95%B0%E5%AD%97%E9%83%BD%E6%98%AF%E5%AE%98%E6%96%B9%E8%87%AA%E5%B7%B1%E8%AF%B4%E7%9A%84"><span class="nav-number">1.8.6.</span> <span class="nav-text">8.6 数字都是官方自己说的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-7-star-%E6%95%B0%E7%9A%84%E4%BF%A1%E5%8F%B7%E8%A6%81%E6%89%93%E6%8A%98"><span class="nav-number">1.8.7.</span> <span class="nav-text">8.7 star 数的信号要打折</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E9%80%82%E5%90%88%E8%B0%81%EF%BC%8C%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">1.9.</span> <span class="nav-text">九、适合谁，不适合谁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E9%9D%9E%E5%B8%B8%E9%80%82%E5%90%88"><span class="nav-number">1.9.1.</span> <span class="nav-text">9.1 非常适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-%E4%B8%8D%E5%A4%AA%E9%80%82%E5%90%88"><span class="nav-number">1.9.2.</span> <span class="nav-text">9.2 不太适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-%E6%88%91%E7%9A%84%E5%AE%9E%E9%99%85%E5%BB%BA%E8%AE%AE%E8%B7%AF%E5%BE%84"><span class="nav-number">1.9.3.</span> <span class="nav-text">9.3 我的实际建议路径</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E4%B8%8A%E6%89%8B%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="nav-number">1.10.</span> <span class="nav-text">十、上手速查表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-Firecrawl-Local%EF%BC%88%E6%9C%AC%E5%9C%B0%E4%BA%8C%E8%BF%9B%E5%88%B6%EF%BC%89"><span class="nav-number">1.10.1.</span> <span class="nav-text">10.1 Firecrawl Local（本地二进制）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-Firecrawl-Cloud-CLI"><span class="nav-number">1.10.2.</span> <span class="nav-text">10.2 Firecrawl Cloud CLI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3-MCP-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.10.3.</span> <span class="nav-text">10.3 MCP 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-4-%E5%85%B3%E9%94%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">1.10.4.</span> <span class="nav-text">10.4 关键环境变量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E7%BB%93%E8%AF%AD"><span class="nav-number">1.11.</span> <span class="nav-text">十一、结语</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">139</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">459</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/25/firecrawl-ai-agent-web-data-infrastructure/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="firecrawl&#x2F;firecrawl：20.9 万 star 的 AI Agent 抓取基础设施，AGPL-3.0 开源自托管，一个 Rust 二进制把网页变成 Markdown | 小戴的网络日志">
+      <meta itemprop="description" content="firecrawl&#x2F;firecrawl 是 GitHub 上星标最多的 AI Agent 数据基础设施项目之一，累计 208914 个 star、10916 个 fork，AGPL-3.0 协议（SDK 为 MIT），主语言 TypeScript，2024 年 4 月建仓至今高频提交。它是一套把网页变成干净 Markdown 的清洗引擎加统一 API，核心能力包括 scrape 单页抓取、crawl 整站爬取、map 站点 URL 发现、batch scrape 批量抓取、search 搜索、interact 浏览器交互、agent 自主取数，以及 Alexandria 的 550 多个数据源。项目提供三种形态：apps&#x2F;local 是 Rust 单二进制，不依赖数据库队列容器，可本地跑抓取、把 v2 API 服务在 3002 端口并以 MCP 接入 Claude Code、Cursor、Codex 等；apps&#x2F;api 是 Docker Compose 编排的完整自托管服务端，含 API、worker、Playwright、Redis、RabbitMQ、NuQ PostgreSQL；Firecrawl Cloud 是官方托管服务，宣称 96% 网页覆盖率与 3.4 秒 P95 延迟。仓库另含 Python、Node.js、Go、Java、Rust、Ruby、.NET、PHP、Elixir 九套 SDK。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          firecrawl/firecrawl：20.9 万 star 的 AI Agent 抓取基础设施，AGPL-3.0 开源自托管，一个 Rust 二进制把网页变成 Markdown
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-25 08:30:00" itemprop="dateCreated datePublished" datetime="2026-11-25T08:30:00+08:00">2026-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">firecrawl/firecrawl 是 GitHub 上星标最多的 AI Agent 数据基础设施项目之一，累计 208914 个 star、10916 个 fork，AGPL-3.0 协议（SDK 为 MIT），主语言 TypeScript，2024 年 4 月建仓至今高频提交。它是一套把网页变成干净 Markdown 的清洗引擎加统一 API，核心能力包括 scrape 单页抓取、crawl 整站爬取、map 站点 URL 发现、batch scrape 批量抓取、search 搜索、interact 浏览器交互、agent 自主取数，以及 Alexandria 的 550 多个数据源。项目提供三种形态：apps/local 是 Rust 单二进制，不依赖数据库队列容器，可本地跑抓取、把 v2 API 服务在 3002 端口并以 MCP 接入 Claude Code、Cursor、Codex 等；apps/api 是 Docker Compose 编排的完整自托管服务端，含 API、worker、Playwright、Redis、RabbitMQ、NuQ PostgreSQL；Firecrawl Cloud 是官方托管服务，宣称 96% 网页覆盖率与 3.4 秒 P95 延迟。仓库另含 Python、Node.js、Go、Java、Rust、Ruby、.NET、PHP、Elixir 九套 SDK。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="firecrawl-firecrawl：20-9-万-star-的-AI-Agent-抓取基础设施"><a href="#firecrawl-firecrawl：20-9-万-star-的-AI-Agent-抓取基础设施" class="headerlink" title="firecrawl/firecrawl：20.9 万 star 的 AI Agent 抓取基础设施"></a>firecrawl/firecrawl：20.9 万 star 的 AI Agent 抓取基础设施</h1><h2 id="一、先说一个我踩过的坑"><a href="#一、先说一个我踩过的坑" class="headerlink" title="一、先说一个我踩过的坑"></a>一、先说一个我踩过的坑</h2><p>上个月我给自己的 AI Agent 装了一套「网页阅读」能力。用着挺顺，直到有一天我让它去查一个供应商的 API 定价页，它拿回来的内容是这样的：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Skip to main content</span><br><span class="line">Announcements</span><br><span class="line">Search</span><br><span class="line">Toggle navigation</span><br><span class="line">Home</span><br><span class="line">Docs</span><br><span class="line">Pricing</span><br><span class="line">Blog</span><br><span class="line">Community</span><br><span class="line">Sign in</span><br><span class="line">Get started</span><br></pre></td></tr></tbody></table></figure>
+
+<p>整段东西有 60% 是导航菜单和页脚，剩下的才是真正的价格表。然后 Agent 就开始编 —— 它盯着一个价格表格的截图结构，硬生生给我拼出了一个”Enterprise 方案每月 $500” 的价格表。</p>
+<p>我一开始以为是模型幻觉，直到我把同一段 HTML 直接喂给它看，问题就清楚了：<strong>不是模型笨，是喂给它的东西太脏</strong>。一个 800KB 的 HTML 里，真正有信息量的可能只有 3KB，剩下的全是 <code>&lt;nav&gt;</code>、<code>&lt;footer&gt;</code>、cookie 弹窗、广告位和无限滚动加载的骨架屏。</p>
+<p>Firecrawl 就是来解决这件事的。一句话概括它的定位：</p>
+<blockquote>
+<p>把任意网页变成一份干净的、可以直接塞进 AI 上下文里的 Markdown。</p>
+</blockquote>
+<p>它现在在 GitHub 上是 <strong>208914 个 star、10916 个 fork</strong>，AGPL-3.0 协议，主语言 TypeScript，仓库从 2024 年 4 月建到现在还在天天提交，open issues 有 917 个。这是我写博客以来第一次在 star 数上被一个” 抓取工具” 级别的项目震到 —— 说实话，我一开始以为 AI Agent 赛道里刷星最狠的一定是模型或者 IDE。</p>
+<p>更有意思的是，它并不是一个云 API 的闭源后端。这个仓库里同时塞着完整的服务端源码、一个 Rust 编写的本地单文件二进制、以及九套 SDK。你可以完全不用它的云服务。</p>
+<h2 id="二、它到底想解决什么问题"><a href="#二、它到底想解决什么问题" class="headerlink" title="二、它到底想解决什么问题"></a>二、它到底想解决什么问题</h2><p>Firecrawl 官方的自我描述是 <strong>“Knowledge infrastructure to make your agents smarter”</strong>—— 让 Agent 更聪明的知识基础设施。这句话听起来很虚，但拆开看它其实指一件很具体的事。</p>
+<h3 id="2-1-Agent-的上下文不是给定的，是要”抓”的"><a href="#2-1-Agent-的上下文不是给定的，是要”抓”的" class="headerlink" title="2.1 Agent 的上下文不是给定的，是要”抓”的"></a>2.1 Agent 的上下文不是给定的，是要” 抓” 的</h3><p>今天绝大多数 AI Agent 的知识来源是训练时烧进去的静态语料。想让它知道今天的新闻、某个库的最新版文档、某家公司的最新定价，就只能上网抓。</p>
+<p>但” 上网抓” 这件事有巨大的坑：</p>
+<p><strong>坑一：HTML 噪音。</strong> 现代网站的 HTML 里，正文内容可能只占 20%。剩下的是导航、侧边栏、弹窗、埋点脚本、SEO 文本、推荐位。直接把 HTML 塞给模型。一是烧 token（一个页面轻易几百 KB），二是干扰模型 —— 它会把导航里的” 登录 / 注册” 当成页面标题。</p>
+<p><strong>坑二：JavaScript 渲染。</strong> 现代前端站点（尤其是 Next.js/ Nuxt / Svelte 这类 SPA）服务端返回的 HTML 里根本没有正文，内容全靠前端 JS 跑出来。用 <code>curl</code> 抓就是一个空壳。</p>
+<p><strong>坑三：格式不统一。</strong> PDF、Word、PPT、Excel 要单独写一套解析逻辑，而且解析出来的还是乱序的。</p>
+<p><strong>坑四：站点结构。</strong> 你想抓整个文档站 200 页，得自己写递归、限流、断点续传、去重。</p>
+<p>Firecrawl 把这四件事全包了。</p>
+<h3 id="2-2-一个功能矩阵先看懂"><a href="#2-2-一个功能矩阵先看懂" class="headerlink" title="2.2 一个功能矩阵先看懂"></a>2.2 一个功能矩阵先看懂</h3><p>README 里有一张表，我第一次读的时候没太当回事，看完文档才明白这张表才是整个项目的设计核心：</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Firecrawl Local</th>
+<th>Firecrawl Cloud</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Scrape</td>
+<td>Markdown, HTML, raw HTML and links</td>
+<td>Adds structured JSON, summaries, screenshots and browser actions</td>
+</tr>
+<tr>
+<td>Crawl, Map and Batch Scrape</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>PDFs and Office documents</td>
+<td>✅</td>
+<td>✅, plus Parse for uploaded files</td>
+</tr>
+<tr>
+<td>Search</td>
+<td>Through Firecrawl Cloud, no account needed</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Alexandria</td>
+<td>Through Firecrawl Cloud after login</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Interact, Agent and Monitor</td>
+<td></td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<p>看懂这张表，你就能理解 Firecrawl 的整体架构思路了。</p>
+<p>它把能力分成了<strong>三层</strong>：</p>
+<ol>
+<li><strong>纯本地层（scrape /crawl/map /batch scrape / 文档解析）</strong>—— 这是最核心的清洗能力，本地二进制用 Rust 实现，不依赖数据库、队列或容器，零配置。</li>
+<li><strong>需要索引的层（search）</strong>—— 本地笔记本没有搜索引擎索引，只能走云。</li>
+<li><strong>需要大模型 / 大集群的层（interact /agent/ Alexandria /monitor）</strong>—— 需要 LLM 驱动浏览器、需要 550+ 数据源的庞大后端，只能走云。</li>
+</ol>
+<p>第 2、3 层是” 合理的云依赖”，第 1 层是” 本地必须能跑”。这个切分做得非常克制，我在后面会展开讲。</p>
+<h3 id="2-3-关键数字（全部来自仓库-API-README，非估算）"><a href="#2-3-关键数字（全部来自仓库-API-README，非估算）" class="headerlink" title="2.3 关键数字（全部来自仓库 API / README，非估算）"></a>2.3 关键数字（全部来自仓库 API / README，非估算）</h3><p>Stars <strong>208914</strong>、Forks <strong>10916</strong>、License <strong>AGPL-3.0</strong>（SDK 和部分 UI 组件为 MIT）、主语言 <strong>TypeScript</strong>（本地二进制为 Rust）、创建于 <strong>2024-04-15</strong>、Open issues <strong>917</strong>、最新 release <strong>v2.11.0</strong>（2026-06-19 发布，此前有 v2.10、v2.9.0、v2.8.0、v2.7.0）。</p>
+<p>Alexandria 提供 <strong>550+ 个数据 provider</strong>，覆盖 <strong>250M+ 人员、75M+ 公司、41M+ 研究论文</strong>。Cloud 声称网页覆盖率 <strong>96%</strong>、P95 延迟 <strong>3.4 秒</strong>（跨数百万页面），官方 benchmark 页面是 <code>the-worlds-best-web-data-api-v25</code>。</p>
+<h2 id="三、它是怎么工作的：三种用法"><a href="#三、它是怎么工作的：三种用法" class="headerlink" title="三、它是怎么工作的：三种用法"></a>三、它是怎么工作的：三种用法</h2><p>这是 Firecrawl 最值得讲的部分。同一个仓库，提供了三种完全不同的运行形态。</p>
+<h3 id="3-1-用法一：Firecrawl-Local（Rust-单二进制）"><a href="#3-1-用法一：Firecrawl-Local（Rust-单二进制）" class="headerlink" title="3.1 用法一：Firecrawl Local（Rust 单二进制）"></a>3.1 用法一：Firecrawl Local（Rust 单二进制）</h3><p><code>apps/local</code> 目录是整个仓库里最狠的一块。一个 Rust 写的 CLI，<strong>不需要数据库、不需要队列、不需要容器</strong>。</p>
+<p>它装在 crates.io 上：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo install firecrawl-local</span><br></pre></td></tr></tbody></table></figure>
+
+<p>编译需要 Rust 和一个 C 编译器 ——macOS 上是 <code>xcode-select --install</code>，Debian/Ubuntu 上是 <code>build-essential</code>。</p>
+<p>如果你没有 Rust，也可以直接用 npm 版 CLI（这个走的是云）：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx -y firecrawl-cli@latest scrape https://firecrawl.dev</span><br></pre></td></tr></tbody></table></figure>
+
+<p>本地版的四个基本命令：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 抓一页，打印 markdown</span></span><br><span class="line">firecrawl-local scrape https://firecrawl.dev --markdown</span><br><span class="line"></span><br><span class="line"><span class="comment"># 爬整站，每页存一个 markdown 文件</span></span><br><span class="line">firecrawl-local crawl https://docs.firecrawl.dev --<span class="built_in">limit</span> 50 --out ./pages</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出站点所有 URL</span></span><br><span class="line">firecrawl-local map https://firecrawl.dev</span><br></pre></td></tr></tbody></table></figure>
+
+<p>不带 <code>--markdown</code> 时，<code>scrape</code> 打印的是和 Firecrawl API 完全一致的 JSON。需要多种格式用 <code>--format</code>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firecrawl-local scrape https://example.com --format markdown,links</span><br></pre></td></tr></tbody></table></figure>
+
+<p>可选值是 <code>markdown</code>、<code>html</code>、<code>rawHtml</code> 和 <code>links</code>。<strong>PDF 和 Office 文档也是在本机解析的。</strong></p>
+<p>关于渲染：需要 JavaScript 的页面会用你机器上<strong>已有的</strong> Chrome 或 Chromium 渲染。没有浏览器的话静态页面照样能用，只是需要渲染的页面会带一个 warning 返回。</p>
+<p>这里有个细节我觉得很聪明 —— 它不是内置一个 headless browser 二进制，而是复用你机器上装好的浏览器。少几百 MB 依赖，也避开了浏览器版本兼容问题。</p>
+<h3 id="3-2-用法二：接进你的-AI-Agent（MCP）"><a href="#3-2-用法二：接进你的-AI-Agent（MCP）" class="headerlink" title="3.2 用法二：接进你的 AI Agent（MCP）"></a>3.2 用法二：接进你的 AI Agent（MCP）</h3><p>这是 Firecrawl Local 最 killer 的功能：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firecrawl-local init</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这一条命令会<strong>自动扫描你机器上安装的 AI 工具</strong> ——Claude Code、Claude Desktop、Cursor、Windsurf、Gemini CLI 和 Codex—— 然后把 Firecrawl Local 作为 MCP server 塞进每一个的配置文件。</p>
+<p>两个细节值得注意：</p>
+<ol>
+<li><strong>它会先备份每个配置文件</strong>再动手改。</li>
+<li><strong>MCP server 本身需要 Node.js 22 或更新版本</strong>（因为 <code>firecrawl-mcp</code> 是个 npm 包）。</li>
+</ol>
+<p>想看它会改什么，加 <code>--dry-run</code>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firecrawl-local init --dry-run</span><br></pre></td></tr></tbody></table></figure>
+
+<p>只配一个工具的话：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firecrawl-local init --agent cursor</span><br></pre></td></tr></tbody></table></figure>
+
+<p>手工注册也可以：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"mcpServers"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"firecrawl"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"command"</span><span class="punctuation">:</span> <span class="string">"/path/to/firecrawl-local"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"args"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"mcp"</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>firecrawl-local mcp</code> 的工作方式是：在 loopback 上起一个本地 API，然后用 <code>firecrawl-mcp</code> 这个 npm 包连上去。<strong>结果是 scrape、crawl、map、batch scrape 这些工具跑在你本机，其它 Firecrawl 工具转发到云。</strong></p>
+<p>这个设计是 Firecrawl 最聪明的一点：<strong>你日常 90% 的抓取需求（读文档、读博客、读新闻）根本不产生任何外网流量和数据出境</strong>，但搜索这类需要索引的能力又能无缝用上。</p>
+<h3 id="3-3-用法三：在本地跑-Firecrawl-API"><a href="#3-3-用法三：在本地跑-Firecrawl-API" class="headerlink" title="3.3 用法三：在本地跑 Firecrawl API"></a>3.3 用法三：在本地跑 Firecrawl API</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firecrawl-local serve</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这会在 <strong>3002 端口</strong>上提供 Firecrawl v2 API。任何为 Firecrawl Cloud 写的代码，改个 base URL 就能跑在本地：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> firecrawl <span class="keyword">import</span> Firecrawl</span><br><span class="line"></span><br><span class="line">app = Firecrawl(api_url=<span class="string">"http://localhost:3002"</span>)</span><br><span class="line"><span class="built_in">print</span>(app.scrape(<span class="string">"https://firecrawl.dev"</span>).markdown)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Node.js 版：</p>
+<figure class="highlight js"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> { <span class="title class_">Firecrawl</span> } <span class="keyword">from</span> <span class="string">"firecrawl"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> <span class="title class_">Firecrawl</span>({ <span class="attr">apiUrl</span>: <span class="string">"http://localhost:3002"</span> });</span><br><span class="line"><span class="keyword">const</span> doc = <span class="keyword">await</span> app.<span class="title function_">scrape</span>(<span class="string">"https://firecrawl.dev"</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(doc.<span class="property">markdown</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>本地实际提供的路由（来自 apps/local/README.md）：</p>
+<table>
+<thead>
+<tr>
+<th>Route</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>POST /v2/scrape</code></td>
+<td>Scrape one URL</td>
+</tr>
+<tr>
+<td><code>POST /v2/map</code></td>
+<td>List a site’s URLs</td>
+</tr>
+<tr>
+<td><code>POST /v2/crawl</code>, <code>GET</code> and <code>DELETE /v2/crawl/{id}</code></td>
+<td>Start, check and cancel a crawl</td>
+</tr>
+<tr>
+<td><code>POST /v2/batch/scrape</code>, <code>GET</code> and <code>DELETE /v2/batch/scrape/{id}</code></td>
+<td>Start, check and cancel a batch scrape</td>
+</tr>
+<tr>
+<td><code>GET /health</code></td>
+<td>Health check</td>
+</tr>
+</tbody></table>
+<p>三个必须知道的限制：</p>
+<ul>
+<li>其它所有 <code>/v2</code> 路由（比如 <code>/v2/search</code>）会<strong>转发到 Firecrawl Cloud</strong>，除非设 <code>FIRECRAWL_CLOUD=off</code>。</li>
+<li><strong>v0 和 v1 路由不提供。</strong></li>
+<li><strong>crawl 和 batch job 存在内存里，任务开始一小时后过期。</strong></li>
+</ul>
+<p>这三个限制说实话，暴露了本地版和完整版的差距 —— 内存态队列意味着进程重启任务就没了，重启后正在跑的爬取任务也会丢。</p>
+<h3 id="3-4-用法四：完整自托管服务端（Docker-Compose）"><a href="#3-4-用法四：完整自托管服务端（Docker-Compose）" class="headerlink" title="3.4 用法四：完整自托管服务端（Docker Compose）"></a>3.4 用法四：完整自托管服务端（Docker Compose）</h3><p><code>apps/api</code> 是完整的 Firecrawl 服务端。它的依赖栈在 <code>SELF_HOST.md</code> 里写得很清楚：</p>
+<blockquote>
+<p>Compose 运行 Firecrawl API 和 worker、Playwright、Redis、RabbitMQ、NuQ PostgreSQL，以及可选队列后端的 FoundationDB 服务。默认只有 API 端口发布到宿主机，端口 <code>3002</code>。</p>
+</blockquote>
+<p>也就是说，自托管要跑起来的组件是：Firecrawl API + Worker、Playwright、Redis、RabbitMQ、NuQ PostgreSQL，以及可选的 FoundationDB。</p>
+<p>Docker Compose 的编排文件在仓库根目录的 <code>docker-compose.yaml</code>，Kubernetes 清单在 <code>examples/kubernetes/cluster-install</code>，Helm chart 在 <code>examples/kubernetes/firecrawl-helm</code>。</p>
+<p><code>SELF_HOST.md</code> 里那份「首次运行保持简单」的清单，我觉得是全仓库最有价值的文档之一：</p>
+<ul>
+<li><strong>Release：锁死一个确切 tag。</strong> 主分支和浮动镜像标签会独立变化，先审目标 release 的 Compose 文件。</li>
+<li><strong>API 认证：<code>USE_DB_AUTHENTICATION=false</code>。</strong> 认证要在 provision 好数据库 schema 和应用配置之后再加，光改这一个变量不构成完整的认证部署。</li>
+<li><strong>队列：默认用 NuQ PostgreSQL</strong>，除非你明确要设 <code>NUQ_BACKEND=fdb</code> 并且准备好运维 FoundationDB。</li>
+<li><strong>抓取：用自带的 Playwright，加 basic fetch 兜底。</strong></li>
+<li><strong>AI 能力：默认没有模型 provider</strong>，需要时接 OpenAI、OpenAI 兼容端点或 Ollama。</li>
+<li><strong>队列管理 UI：默认关闭</strong>，要用就配一个强 <code>BULL_AUTH_KEY</code> 并限制网络访问。</li>
+</ul>
+<p>文档最后那句总结特别实在：</p>
+<blockquote>
+<p>自托管给你源码和基础设施的控制权，但安全、可用性、容量、升级、数据留存和合规也都归你。</p>
+</blockquote>
+<p>以及一句我觉得该抄下来的警告：</p>
+<blockquote>
+<p>检入的 Compose 文件是一个与源码对齐的起点，不是生产架构。</p>
+</blockquote>
+<h2 id="四、核心能力逐个拆开"><a href="#四、核心能力逐个拆开" class="headerlink" title="四、核心能力逐个拆开"></a>四、核心能力逐个拆开</h2><h3 id="4-1-Scrape：最基础也最核心"><a href="#4-1-Scrape：最基础也最核心" class="headerlink" title="4.1 Scrape：最基础也最核心"></a>4.1 Scrape：最基础也最核心</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> firecrawl <span class="keyword">import</span> Firecrawl</span><br><span class="line"></span><br><span class="line">app = Firecrawl(api_key=<span class="string">"fc-YOUR_API_KEY"</span>)</span><br><span class="line"></span><br><span class="line">result = app.scrape(<span class="string">'firecrawl.dev'</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Node.js：</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> { <span class="title class_">Firecrawl</span> } <span class="keyword">from</span> <span class="string">'firecrawl'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> <span class="title class_">Firecrawl</span>({ <span class="attr">apiKey</span>: <span class="string">"fc-YOUR_API_KEY"</span> });</span><br><span class="line"></span><br><span class="line">app.<span class="title function_">scrape</span>(<span class="string">'firecrawl.dev'</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Cloud 版返回的不只是 markdown，还有结构化 JSON、摘要、截图和浏览器操作结果。本地版返回 markdown、HTML、raw HTML 和链接。</p>
+<p>CLI 版用法在第十节速查表里都有，这里不再重复。</p>
+<h3 id="4-2-Crawl：整站爬取"><a href="#4-2-Crawl：整站爬取" class="headerlink" title="4.2 Crawl：整站爬取"></a>4.2 Crawl：整站爬取</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST <span class="string">'https://api.firecrawl.dev/v2/crawl'</span> \</span><br><span class="line">  -H <span class="string">'Authorization: Bearer fc-YOUR_API_KEY'</span> \</span><br><span class="line">  -H <span class="string">'Content-Type: application/json'</span> \</span><br><span class="line">  -d <span class="string">'{</span></span><br><span class="line"><span class="string">    "url": "https://docs.firecrawl.dev",</span></span><br><span class="line"><span class="string">    "limit": 100,</span></span><br><span class="line"><span class="string">    "scrapeOptions": {</span></span><br><span class="line"><span class="string">      "formats": ["markdown"]</span></span><br><span class="line"><span class="string">    }</span></span><br><span class="line"><span class="string">  }'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>返回的是 job ID，SDK 会自动轮询直到爬完：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"success"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"id"</span><span class="punctuation">:</span> <span class="string">"123-456-789"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"url"</span><span class="punctuation">:</span> <span class="string">"https://api.firecrawl.dev/v2/crawl/123-456-789"</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>SDK 里的写法（Python）：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docs = app.crawl(<span class="string">"https://docs.firecrawl.dev"</span>, limit=<span class="number">50</span>)</span><br><span class="line"><span class="keyword">for</span> doc <span class="keyword">in</span> docs.data:</span><br><span class="line">    <span class="built_in">print</span>(doc.metadata.source_url, doc.markdown[:<span class="number">100</span>])</span><br></pre></td></tr></tbody></table></figure>
+
+<p>本地 CLI 的可选项更全：<code>--limit</code>（默认 100）、<code>--max-depth</code>、<code>--include</code> 和 <code>--exclude</code>（路径正则）、<code>--entire-domain</code>（跟到起始路径之外）、<code>--out</code>（直接写 markdown 文件而不是 JSON）。</p>
+<h3 id="4-3-Map：站点-URL-发现"><a href="#4-3-Map：站点-URL-发现" class="headerlink" title="4.3 Map：站点 URL 发现"></a>4.3 Map：站点 URL 发现</h3><p>这个能力常被忽略，但它其实很关键 —— <strong>在决定爬什么之前，先知道有什么</strong>。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">result = app.<span class="built_in">map</span>(<span class="string">"https://firecrawl.dev"</span>, search=<span class="string">"pricing"</span>)</span><br><span class="line"><span class="comment"># Returns URLs ordered by relevance to "pricing"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>本地版：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firecrawl-local map https://firecrawl.dev</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>--search</code> 只保留包含某个文本的 URL，<code>--limit</code> 限制数量。本地版是从 sitemap 和起始页里找 URL。</p>
+<h3 id="4-4-Batch-Scrape：批量"><a href="#4-4-Batch-Scrape：批量" class="headerlink" title="4.4 Batch Scrape：批量"></a>4.4 Batch Scrape：批量</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">job = app.batch_scrape([</span><br><span class="line">    <span class="string">"https://firecrawl.dev"</span>,</span><br><span class="line">    <span class="string">"https://docs.firecrawl.dev"</span>,</span><br><span class="line">    <span class="string">"https://firecrawl.dev/pricing"</span></span><br><span class="line">], formats=[<span class="string">"markdown"</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> doc <span class="keyword">in</span> job.data:</span><br><span class="line">    <span class="built_in">print</span>(doc.metadata.source_url)</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-5-Search：搜索并直接拿到正文"><a href="#4-5-Search：搜索并直接拿到正文" class="headerlink" title="4.5 Search：搜索并直接拿到正文"></a>4.5 Search：搜索并直接拿到正文</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">search_result = app.search(<span class="string">"firecrawl"</span>, limit=<span class="number">5</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Node.js：</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.<span class="title function_">search</span>(<span class="string">"firecrawl"</span>, { <span class="attr">limit</span>: <span class="number">5</span> })</span><br></pre></td></tr></tbody></table></figure>
+
+<p>cURL：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST <span class="string">'https://api.firecrawl.dev/v2/search'</span> \</span><br><span class="line">-H <span class="string">'Authorization: Bearer fc-YOUR_API_KEY'</span> \</span><br><span class="line">-H <span class="string">'Content-Type: application/json'</span> \</span><br><span class="line">-d <span class="string">'{</span></span><br><span class="line"><span class="string">  "query": "firecrawl",</span></span><br><span class="line"><span class="string">  "limit": 5</span></span><br><span class="line"><span class="string">}'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>返回格式：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"url"</span><span class="punctuation">:</span> <span class="string">"https://firecrawl.dev"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"title"</span><span class="punctuation">:</span> <span class="string">"Firecrawl"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"markdown"</span><span class="punctuation">:</span> <span class="string">"Turn websites into..."</span></span><br><span class="line">  <span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"url"</span><span class="punctuation">:</span> <span class="string">"https://docs.firecrawl.dev"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"title"</span><span class="punctuation">:</span> <span class="string">"Firecrawl Docs"</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"markdown"</span><span class="punctuation">:</span> <span class="string">"# Getting Started..."</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>搜索结果直接带 markdown 正文</strong> —— 这个设计比” 给你一堆链接让 Agent 自己抓” 要省事得多，少了 N 次网络往返和 N 次被反爬拦截的风险。</p>
+<p>CLI：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firecrawl search <span class="string">"firecrawl"</span> --<span class="built_in">limit</span> 5</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-6-Interact：让-AI-点页面"><a href="#4-6-Interact：让-AI-点页面" class="headerlink" title="4.6 Interact：让 AI 点页面"></a>4.6 Interact：让 AI 点页面</h3><p>这是 Cloud 独有的能力。抓完一个页面之后，可以用自然语言或代码跟这个页面交互。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">app = Firecrawl(api_key=<span class="string">"fc-YOUR_API_KEY"</span>)</span><br><span class="line"></span><br><span class="line">result = app.scrape(<span class="string">"https://amazon.com"</span>)</span><br><span class="line">scrape_id = result.metadata.scrape_id</span><br><span class="line"></span><br><span class="line">app.interact(scrape_id, prompt=<span class="string">"Search for 'mechanical keyboard'"</span>)</span><br><span class="line">app.interact(scrape_id, prompt=<span class="string">"Click the first result"</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Node.js 版本有个小差异，字段是驼峰 <code>scrapeId</code>：</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> result = <span class="keyword">await</span> app.<span class="title function_">scrape</span>(<span class="string">"https://amazon.com"</span>);</span><br><span class="line"><span class="keyword">await</span> app.<span class="title function_">interact</span>(result.<span class="property">metadata</span>.<span class="property">scrapeId</span>, { <span class="attr">prompt</span>: <span class="string">"Search for 'mechanical keyboard'"</span> });</span><br></pre></td></tr></tbody></table></figure>
+
+<p>cURL 是两步：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. Scrape the page</span></span><br><span class="line">curl -X POST <span class="string">'https://api.firecrawl.dev/v2/scrape'</span> \</span><br><span class="line">-H <span class="string">'Authorization: Bearer fc-YOUR_API_KEY'</span> \</span><br><span class="line">-H <span class="string">'Content-Type: application/json'</span> \</span><br><span class="line">-d <span class="string">'{"url": "https://amazon.com"}'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Interact with the page (use scrapeId from step 1)</span></span><br><span class="line">curl -X POST <span class="string">'https://api.firecrawl.dev/v2/scrape/SCRAPE_ID/interact'</span> \</span><br><span class="line">-H <span class="string">'Authorization: Bearer fc-YOUR_API_KEY'</span> \</span><br><span class="line">-H <span class="string">'Content-Type: application/json'</span> \</span><br><span class="line">-d <span class="string">'{"prompt": "Search for mechanical keyboard"}'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>返回：</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"success"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"output"</span><span class="punctuation">:</span> <span class="string">"Keyboard available at $100"</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"liveViewUrl"</span><span class="punctuation">:</span> <span class="string">"https://liveview.firecrawl.dev/..."</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>liveViewUrl</code> 是个实时视图链接，人类能打开看 Agent 到底在点什么。这个细节做得很到位 ——<strong>AI 自动点击黑盒化是很可怕的，能看回放就让人敢用。</strong></p>
+<p>CLI：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firecrawl interact <span class="built_in">exec</span> --prompt <span class="string">"Search for 'mechanical keyboard'"</span></span><br><span class="line">firecrawl interact <span class="built_in">exec</span> --prompt <span class="string">"Click the first result"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-7-Agent：不给你-URL，让它自己找"><a href="#4-7-Agent：不给你-URL，让它自己找" class="headerlink" title="4.7 Agent：不给你 URL，让它自己找"></a>4.7 Agent：不给你 URL，让它自己找</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST <span class="string">'https://api.firecrawl.dev/v2/agent'</span> \</span><br><span class="line">  -H <span class="string">'Authorization: Bearer fc-YOUR_API_KEY'</span> \</span><br><span class="line">  -H <span class="string">'Content-Type: application/json'</span> \</span><br><span class="line">  -d <span class="string">'{</span></span><br><span class="line"><span class="string">    "prompt": "Find the pricing plans for Notion"</span></span><br><span class="line"><span class="string">  }'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"success"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"data"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"result"</span><span class="punctuation">:</span> <span class="string">"Notion offers the following pricing plans:\n\n1. Free - $0/month...\n2. Plus - $10/seat/month...\n3. Business - $18/seat/month..."</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">"sources"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"https://www.notion.so/pricing"</span><span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>还能传 schema 拿结构化数据：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> firecrawl <span class="keyword">import</span> Firecrawl</span><br><span class="line"><span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel, Field</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span>, <span class="type">Optional</span></span><br><span class="line"></span><br><span class="line">app = Firecrawl(api_key=<span class="string">"fc-YOUR_API_KEY"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Founder</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    name: <span class="built_in">str</span> = Field(description=<span class="string">"Full name of the founder"</span>)</span><br><span class="line">    role: <span class="type">Optional</span>[<span class="built_in">str</span>] = Field(<span class="literal">None</span>, description=<span class="string">"Role or position"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">FoundersSchema</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    founders: <span class="type">List</span>[Founder] = Field(description=<span class="string">"List of founders"</span>)</span><br><span class="line"></span><br><span class="line">result = app.agent(</span><br><span class="line">    prompt=<span class="string">"Find the founders of Firecrawl"</span>,</span><br><span class="line">    schema=FoundersSchema</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(result.data)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>文档提到 Agent 支持起始 URL、effort 级别和 <code>spark-2</code> 模型。</p>
+<h3 id="4-8-Alexandria：550-数据源"><a href="#4-8-Alexandria：550-数据源" class="headerlink" title="4.8 Alexandria：550+ 数据源"></a>4.8 Alexandria：550+ 数据源</h3><p>这是 Firecrawl Cloud 上一个独立的数据源目录（<code>alexandria.firecrawl.dev</code>）：</p>
+<blockquote>
+<p>250M+ 人员、75M+ 公司、41M+ 研究论文，外加专用索引和实时网页，通过统一的 API、MCP 或 CLI 暴露。</p>
+</blockquote>
+<p>工作模式我觉得设计得很好：</p>
+<blockquote>
+<p>AI Agent 在浏览网页结果的同时发现一个工具，检查它的输入和定价，然后运行它拿到结构化数据。<strong>发现是免费的，运行工具才消耗该工具上标注的 credits。</strong></p>
+</blockquote>
+<p>这是典型的 MCP 风格的工具发现 —— 把「工具目录」本身也当成一种可检索的知识。</p>
+<p>对应到本地 CLI：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firecrawl-local find-tools &lt;query&gt;     <span class="comment"># 找 Alexandria 数据源（需登录）</span></span><br><span class="line">firecrawl-local data &lt;provider&gt; &lt;capability&gt;   <span class="comment"># 运行某个数据源（需登录）</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>Alexandria 只跑在 Firecrawl Cloud 上，<strong>自托管的服务器不包含它</strong>。</p>
+<h2 id="五、SDK-生态：九种语言"><a href="#五、SDK-生态：九种语言" class="headerlink" title="五、SDK 生态：九种语言"></a>五、SDK 生态：九种语言</h2><p>这是 Firecrawl 做得最” 重” 的部分之一。一个抓取工具愿意维护九套 SDK，本身就说明了它想做成基础设施层而不是小工具。</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Install</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Python</td>
+<td><code>pip install firecrawl</code></td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td><code>npm install firecrawl</code></td>
+</tr>
+<tr>
+<td>Go</td>
+<td><code>go get github.com/firecrawl/firecrawl/apps/go-sdk</code></td>
+</tr>
+<tr>
+<td>Java</td>
+<td><code>com.firecrawl:firecrawl-java</code> from Maven Central</td>
+</tr>
+<tr>
+<td>Rust</td>
+<td><code>cargo add firecrawl</code></td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td><code>gem install firecrawl-sdk</code></td>
+</tr>
+<tr>
+<td>.NET</td>
+<td><code>dotnet add package firecrawl-sdk</code></td>
+</tr>
+<tr>
+<td>PHP</td>
+<td><code>composer require firecrawl/firecrawl-sdk</code></td>
+</tr>
+<tr>
+<td>Elixir</td>
+<td><code>{:firecrawl, "~&gt; 1.0"} in mix.exs</code></td>
+</tr>
+</tbody></table>
+<p>SDK 的共同点是<strong>帮你轮询异步任务</strong> ——crawl 和 batch scrape 返回的是 job ID，SDK 内部负责 poll 到完成。</p>
+<p>Python 完整示例：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> firecrawl <span class="keyword">import</span> Firecrawl</span><br><span class="line"></span><br><span class="line">app = Firecrawl(api_key=<span class="string">"fc-YOUR_API_KEY"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Scrape a single URL</span></span><br><span class="line">doc = app.scrape(<span class="string">"https://firecrawl.dev"</span>, formats=[<span class="string">"markdown"</span>])</span><br><span class="line"><span class="built_in">print</span>(doc.markdown)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Crawl a website (automatically waits for completion)</span></span><br><span class="line">docs = app.crawl(<span class="string">"https://docs.firecrawl.dev"</span>, limit=<span class="number">50</span>)</span><br><span class="line"><span class="keyword">for</span> doc <span class="keyword">in</span> docs.data:</span><br><span class="line">    <span class="built_in">print</span>(doc.metadata.source_url, doc.markdown[:<span class="number">100</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># Search the web</span></span><br><span class="line">results = app.search(<span class="string">"best AI data tools 2024"</span>, limit=<span class="number">10</span>)</span><br><span class="line"><span class="built_in">print</span>(results)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Node.js 的 <code>agent</code> 调用形如 <code>await app.agent({ prompt: 'Find the founders of Stripe' })</code>。</p>
+<p>注意 Node.js 里 metadata 字段是 <code>sourceURL</code>（大写 URL），Python 里是 <code>source_url</code>（下划线）。跨语言迁移时这个会咬人。</p>
+<h2 id="六、关键设计取舍"><a href="#六、关键设计取舍" class="headerlink" title="六、关键设计取舍"></a>六、关键设计取舍</h2><p>抛开功能，这套设计里有几个决策我觉得非常值得拆开讲。</p>
+<h3 id="6-1-取舍一：本地优先，还是云优先？"><a href="#6-1-取舍一：本地优先，还是云优先？" class="headerlink" title="6.1 取舍一：本地优先，还是云优先？"></a>6.1 取舍一：本地优先，还是云优先？</h3><p>Firecrawl 的答案是<strong>本地优先，云兜底</strong>。</p>
+<p>它可以完全本地跑的部分：scrape、crawl、map、batch scrape、PDF/Office 解析、还有本地 serve 的 v2 API。</p>
+<p>它明确交给云的三件事（<code>apps/local/README.md</code> 给的理由）：</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Why it goes to the cloud</th>
+<th>Account needed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Search</td>
+<td>There is no search index on your machine</td>
+<td>No, keyless search is rate limited</td>
+</tr>
+<tr>
+<td>Pages that refuse your machine</td>
+<td>When a site blocks</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Alexandria</td>
+<td> 数据在云端</td>
+<td> Yes</td>
+</tr>
+</tbody></table>
+<p>这里有个细节：<strong>默认情况下，本地单页抓取如果在你机器上加载不了，会被送去 Firecrawl Cloud 抓，结果里标记 <code>"source": "firecrawl-cloud"</code>。</strong></p>
+<p>这个 fallback 策略我一开始觉得有点” 背叛本地优先” 的承诺，但你仔细想就明白了 —— 它解决的正是” 某个站点专门封了你的 IP” 这个最烦人的场景。用户拿到了能用的结果，同时能明确知道这个结果是云端来的。</p>
+<p>而且可以完全关掉：<code>FIRECRAWL_CLOUD=off</code>，一切留在本机。</p>
+<p>Keyless 模式也值得提：<strong>不需要 API key 就能用 MCP、CLI 和 API，每月 1000 个免费 credits</strong>，而且无 key 的 Cloud 调用是限速的。</p>
+<h3 id="6-2-取舍二：单二进制-vs-完整微服务栈"><a href="#6-2-取舍二：单二进制-vs-完整微服务栈" class="headerlink" title="6.2 取舍二：单二进制 vs 完整微服务栈"></a>6.2 取舍二：单二进制 vs 完整微服务栈</h3><p>Firecrawl 同时提供这两种形态，看起来是重复投入，其实是精确切分：</p>
+<ul>
+<li><strong>要” 能用” 的</strong> → <code>cargo install firecrawl-local</code>，一条命令，不需要 Docker，不需要理解 Redis/RabbitMQ/NuQ/FoundationDB。</li>
+<li><strong>要” 可控 / 可扩展” 的</strong> → Docker Compose / K8s / Helm，自己掌控数据留存、升级节奏、合规。</li>
+</ul>
+<p>这是开源基础设施项目成熟的标志。<strong>只给完整微服务栈的门槛太高；只给单二进制的可控性不够。</strong></p>
+<h3 id="6-3-取舍三：复用你机器上的浏览器，而不是内置"><a href="#6-3-取舍三：复用你机器上的浏览器，而不是内置" class="headerlink" title="6.3 取舍三：复用你机器上的浏览器，而不是内置"></a>6.3 取舍三：复用你机器上的浏览器，而不是内置</h3><p>Firecrawl Local 不内置 headless browser，而是用你机器上已有的 Chrome/Chromium 渲染需要 JS 的页面。</p>
+<p>好处：省几百 MB 依赖、避开 Chromium 版本跟协议不兼容的问题、顺便还帮你做了页面缓存。</p>
+<p>代价：<strong>首次渲染速度取决于你机器的浏览器启动速度</strong>，而且遇到反爬严格到识别浏览器的站点，共享的浏览器 profile 反而更容易被标记成” 自动化流量”。</p>
+<h3 id="6-4-取舍四：默认遵守-robots-txt"><a href="#6-4-取舍四：默认遵守-robots-txt" class="headerlink" title="6.4 取舍四：默认遵守 robots.txt"></a>6.4 取舍四：默认遵守 robots.txt</h3><p>README 结尾有一句：</p>
+<blockquote>
+<p><strong>最终用户有责任在抓取时尊重各网站的政策。</strong> 用户被建议遵守适用的隐私政策和使用条款。<strong>默认情况下，Firecrawl 尊重 robots.txt 指令。</strong></p>
+</blockquote>
+<p>这个默认值选得很对。对比一下很多爬虫框架默认无视 robots.txt，Firecrawl 在合规上更保守 —— 虽然这意味着你抓某些站点会拿到 403。</p>
+<h2 id="七、和同类项目比一比"><a href="#七、和同类项目比一比" class="headerlink" title="七、和同类项目比一比"></a>七、和同类项目比一比</h2><p>这个赛道其实挺拥挤的，我把主要的几个放一起对比。</p>
+<h3 id="7-1-对比-Crawlee（Apify-生态）"><a href="#7-1-对比-Crawlee（Apify-生态）" class="headerlink" title="7.1 对比 Crawlee（Apify 生态）"></a>7.1 对比 Crawlee（Apify 生态）</h3><p><strong>Crawlee</strong> 是 Node.js 生态最成熟的爬虫框架，核心强项是<strong>爬虫编排</strong>：请求队列、重试、并发控制、请求指纹、防重、Session 池、代理轮换、数据集存储（<code>Dataset</code> / <code>RequestQueue</code>）。</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th> Firecrawl</th>
+<th>Crawlee</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> 核心定位</td>
+<td>网页 → 干净 Markdown</td>
+<td> 请求编排 / 爬虫运行时</td>
+</tr>
+<tr>
+<td>编程模型</td>
+<td>配置 + 调用 API</td>
+<td> 写 JS/TS 代码</td>
+</tr>
+<tr>
+<td>输出</td>
+<td> Markdown / JSON / 截图</td>
+<td>原始结构化数据</td>
+</tr>
+<tr>
+<td>队列 / 重试 / 代理</td>
+<td> Cloud 版托管，自托管版有</td>
+<td>一等公民，非常成熟</td>
+</tr>
+<tr>
+<td> AI Agent 接入</td>
+<td>原生 MCP + CLI init</td>
+<td> 需要自己包一层</td>
+</tr>
+<tr>
+<td>语言</td>
+<td> 9 种 SDK + Rust 本地二进制</td>
+<td>主要是 JS/TS，也有 Python 版</td>
+</tr>
+<tr>
+<td>协议</td>
+<td> AGPL-3.0 + MIT</td>
+<td>Apache-2.0</td>
+</tr>
+</tbody></table>
+<p><strong>结论</strong>：Crawlee 是” 给工程师的爬虫框架”，Firecrawl 是” 给 Agent 的数据层”。你要是想自己写一套复杂的抓取逻辑（登录、翻页、表单交互、状态机），Crawlee 更合适；你要是想让 Agent 直接拿到能读的网页，Crawlee 帮不上太多忙 —— 它不产出 Markdown。</p>
+<h3 id="7-2-对比-Scrapy"><a href="#7-2-对比-Scrapy" class="headerlink" title="7.2 对比 Scrapy"></a>7.2 对比 Scrapy</h3><p>老牌 Python 爬虫框架，架构成熟、有 Middleware 机制、生态庞大。差异：Scrapy 输出的是 Item（你定义结构），你得自己写清洗逻辑把它变成 Markdown；Firecrawl 直接给你能塞进上下文的成品。Scrapy 免费（BSD 协议），Firecrawl 核心是 AGPL。</p>
+<p>如果你要抓的站点结构稳定、量大、要长期维护，Scrapy + 自己的清洗 pipeline 是更经济的选择。Firecrawl 的价值在”Agent 临时要读一个网页”。</p>
+<h3 id="7-3-对比-Browserbase-Browserless-Stagehand"><a href="#7-3-对比-Browserbase-Browserless-Stagehand" class="headerlink" title="7.3 对比 Browserbase / Browserless / Stagehand"></a>7.3 对比 Browserbase / Browserless / Stagehand</h3><p>这是<strong>浏览器基础设施</strong>赛道，做的是” 托管一个真浏览器给你用”。区别在于粒度：Browserbase 给你浏览器，Stagehand 给你 AI 驱动的浏览器操作抽象，Firecrawl 给你<strong>已经洗好的内容</strong>。</p>
+<p>有意思的是 Firecrawl 现在也在往这个方向走 ——<code>interact</code> 和 <code>agent</code> 就是 AI 驱动的浏览器操作。所以 Firecrawl 实际上是从” 内容抽取” 往上打到了” 浏览器操作”。</p>
+<h3 id="7-4-对比-Jina-Reader-Apify-Tavily"><a href="#7-4-对比-Jina-Reader-Apify-Tavily" class="headerlink" title="7.4 对比 Jina Reader / Apify / Tavily"></a>7.4 对比 Jina Reader / Apify / Tavily</h3><p><strong>Jina Reader</strong>（<code>r.jina.ai</code>）思路跟 Firecrawl 很像：给个 URL，还你干净的 Markdown。优势是零部署。但 Firecrawl 有几个能力是它没有的：站点级 crawl、map、结构化 JSON、schema 化 agent 取数、交互、以及完整的自托管。</p>
+<p><strong>Apify</strong> 是托管的爬虫平台，Actor 生态丰富，商业化很成熟。Firecrawl 更偏” 给 Agent 用的”——MCP 集成、CLI init 自动改 Agent 配置、schema 输出。Apify 更偏” 给运营团队用的”—— 可视化、定时任务、数据集管理、Actor 市场。</p>
+<p><strong>Tavily / Exa</strong> 是搜索 API 赛道。Tavily 专做搜索，Exa 做向量搜索。Firecrawl 现在也有 search，且搜索结果直接带 markdown 正文 —— 功能上和 Tavily 重叠了。差异点是：Firecrawl 的 search 和 scrape 是同一个抽象下的两种模式，可以无缝组合；而且它有本地模式。</p>
+<h2 id="八、真实局限：说点不好听的"><a href="#八、真实局限：说点不好听的" class="headerlink" title="八、真实局限：说点不好听的"></a>八、真实局限：说点不好听的</h2><p>我不打算把 Firecrawl 吹成完美的。这篇文章如果只夸不骂，那对读者没价值。</p>
+<h3 id="8-1-AGPL-3-0-是一道商业门槛"><a href="#8-1-AGPL-3-0-是一道商业门槛" class="headerlink" title="8.1 AGPL-3.0 是一道商业门槛"></a>8.1 AGPL-3.0 是一道商业门槛</h3><p>README 的 License 段落写得很清楚：</p>
+<blockquote>
+<p>本项目主要采用 GNU Affero General Public License v3.0（AGPL-3.0）授权。SDK 和部分 UI 组件采用 MIT 协议。</p>
+</blockquote>
+<p>AGPL 的关键触发点是：<strong>如果你通过网络提供服务给用户，并且修改了 Firecrawl，那你也必须开源你的修改。</strong></p>
+<p>这意味着：</p>
+<ul>
+<li><strong>自托管做企业内部使用</strong>：没问题，AGPL 不触发。</li>
+<li><strong>自托管做成对外服务</strong>：触发。</li>
+<li><strong>只在 SDK 层集成而不碰服务端代码</strong>：SDK 是 MIT，相对宽松。</li>
+</ul>
+<p><strong>AGPL 在企业内部” 自托管不外传” 的场景是安全的</strong> —— 这恰好覆盖了大多数自托管的动机。但一旦你要做产品，这个协议会成为法务会议上的议题。</p>
+<h3 id="8-2-自托管的组件栈不轻"><a href="#8-2-自托管的组件栈不轻" class="headerlink" title="8.2 自托管的组件栈不轻"></a>8.2 自托管的组件栈不轻</h3><p>回头看那个栈：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">API + Worker + Playwright + Redis + RabbitMQ + NuQ PostgreSQL (+ FoundationDB 可选)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>六个组件。对” 我只是想抓个网页” 来说太重了。而且 <code>SELF_HOST.md</code> 里已经明说了：</p>
+<ul>
+<li><strong>默认没有持久化卷</strong>（root Compose 文件没给 NuQ PostgreSQL、Redis、RabbitMQ 定义持久卷）。</li>
+<li><strong>默认 API 无认证</strong>（<code>USE_DB_AUTHENTICATION=false</code>）。</li>
+<li><strong>管理 UI 默认关闭。</strong></li>
+<li><strong>PostgreSQL 配置和 API 值要保持一致</strong>，内置的 <code>pg_cron</code> 配置指向默认 <code>postgres</code> 数据库。</li>
+<li><strong>依赖端口默认应保持私有。</strong></li>
+</ul>
+<p>这些都是「这不是生产架构」的明确声明。我如果真要上生产，必须自己补：认证、TLS 终止、网络策略、持久化、备份、监控、资源限制、扩缩容触发器、升级和回滚流程。</p>
+<p><strong>这就是「自托管给你控制权，但控制权是要用运维人力换的」的真实含义。</strong></p>
+<h3 id="8-3-本地版的功能缺口"><a href="#8-3-本地版的功能缺口" class="headerlink" title="8.3 本地版的功能缺口"></a>8.3 本地版的功能缺口</h3><p>前面表格里已经列了，本地版<strong>没有</strong>：structured JSON、summaries、screenshots、browser actions、Interact、Agent、Monitor、Parse（上传文件）。</p>
+<p>而且本地版 crawl job 在内存里，<strong>一小时后过期</strong>，进程重启就没了。</p>
+<h3 id="8-4-Cloud-依赖不是完全可选的"><a href="#8-4-Cloud-依赖不是完全可选的" class="headerlink" title="8.4 Cloud 依赖不是完全可选的"></a>8.4 Cloud 依赖不是完全可选的</h3><p>即使你用本地二进制，search 还是要走云。Alexandria 更是<strong>只在云上</strong>，自托管的服务器明确不包含它。</p>
+<p>如果你做的是涉敏数据或者内网环境 —— <strong>内网自托管 + <code>FIRECRAWL_CLOUD=off</code> 是唯一真正闭环的方案</strong>，此时你得接受上面说的所有功能缺口。</p>
+<h3 id="8-5-抓取本身就是有对抗的"><a href="#8-5-抓取本身就是有对抗的" class="headerlink" title="8.5 抓取本身就是有对抗的"></a>8.5 抓取本身就是有对抗的</h3><p>Firecrawl 再强也绕不过反爬。README 自己说 Cloud 覆盖 96% 的网页 —— <strong>反过来理解就是有 4% 抓不到</strong>。</p>
+<p>而且它默认遵守 robots.txt，意味着<strong>尊重 robots.txt 的站点你会拿到拒绝</strong>。这是合规和覆盖率之间的必然取舍。</p>
+<h3 id="8-6-数字都是官方自己说的"><a href="#8-6-数字都是官方自己说的" class="headerlink" title="8.6 数字都是官方自己说的"></a>8.6 数字都是官方自己说的</h3><p>“96% 覆盖率”、”P95 3.4 秒”、”550+ 数据源”、”250M+ 人员”—— 这些全部来自 Firecrawl 自己的 README 和他们自己的 benchmark 页面。<strong>它们没有第三方独立验证。</strong> 我在文章里原样引用，但读者应该清楚这是厂商自述。</p>
+<h3 id="8-7-star-数的信号要打折"><a href="#8-7-star-数的信号要打折" class="headerlink" title="8.7 star 数的信号要打折"></a>8.7 star 数的信号要打折</h3><p>20.9 万 star 很夸张。但要冷静看：</p>
+<ul>
+<li>这个项目 2024 年 4 月成立，<strong>两年半</strong>做到 20 万 star，在 AI 赛道这个速度不算特别罕见。</li>
+<li>它有商业版（Cloud），star 和商业获客是强相关的。</li>
+<li><strong>AGPL + 商业 SaaS 的组合</strong>，意味着 star 数里有一部分来自” 我想用云服务” 而不是” 我想自托管”。</li>
+</ul>
+<p>这不代表项目不好，但代表 <strong>star 数在这里不能直接当成” 自托管用户数” 来理解</strong>。</p>
+<h2 id="九、适合谁，不适合谁"><a href="#九、适合谁，不适合谁" class="headerlink" title="九、适合谁，不适合谁"></a>九、适合谁，不适合谁</h2><h3 id="9-1-非常适合"><a href="#9-1-非常适合" class="headerlink" title="9.1 非常适合"></a>9.1 非常适合</h3><p><strong>① 你在做 AI Agent，需要让 Agent 能读网页。</strong></p>
+<p>这是最核心的场景。你不需要理解抓取细节，Agent 直接调用 MCP 工具就能拿到干净内容。<code>firecrawl-local init</code> 一条命令接进 Claude Code / Cursor / Codex，这个体验是目前同类里最顺的。</p>
+<p><strong>② 你需要把文档站整体灌进知识库 / RAG。</strong></p>
+<p><code>crawl</code> + <code>limit</code> + <code>--out ./pages</code>，产出的是一堆干净的 markdown 文件，直接进向量库。<code>map</code> 还能先做 URL 发现。这一整条链路省掉了大量胶水代码。</p>
+<p><strong>③ 你在处理「格式很脏」的非 HTML 文档。</strong></p>
+<p>PDF、Word、PPT、Excel 本地解析，输出统一格式。这在企业内网场景里价值极高 —— 那批没人愿意维护的老系统文档页，全是 Word 导出的。</p>
+<p><strong>④ 你要合规、要数据不出境。</strong></p>
+<p>自托管 + <code>FIRECRAWL_CLOUD=off</code>，抓取全在你自己的机器上。对于法务明确要求” 数据不能出境” 的场景，这是唯一可行路径。</p>
+<p><strong>⑤ 你在做网页数据的 CI/CD 监控。</strong></p>
+<p>crawl 返回 job ID，可以挂到定时任务里，对比历史快照。配合 <code>map</code> 做站点结构变更检测。</p>
+<h3 id="9-2-不太适合"><a href="#9-2-不太适合" class="headerlink" title="9.2 不太适合"></a>9.2 不太适合</h3><p><strong>① 你的需求是” 长期高频抓同一个大站”。</strong> 那用 Crawlee 或 Scrapy 更合适。它们在请求队列、代理轮换、失败重试、断点续传、指纹规避这些” 工业化爬虫” 问题上积累了几十年，Firecrawl 在这些上不是它的战场。</p>
+<p><strong>② 你不想引入任何外部依赖。</strong> 注意 AGPL 和 Cloud 依赖。真要完全自托管，你要自己养 Redis、RabbitMQ、PostgreSQL、Playwright。</p>
+<p><strong>③ 你需要爬高反爬站点。</strong> 默认遵守 robots.txt + 共用本机浏览器 profile，碰到 Cloudflare 这类会直接吃瘪。专业反爬对抗需要自己搭指纹和代理池。</p>
+<p><strong>④ 你只是要读几个固定页面。</strong> 如果你的场景是” 读 5 个已知 URL”，直接 <code>requests</code> + <code>trafilatura</code> 或者更简单的 <code>html2text</code> 就够了，引入 Firecrawl 是杀鸡用牛刀。</p>
+<p><strong>⑤ 你需要闭源商业产品。</strong> AGPL 的传染性会直接卡住这条路。除非你只用 MIT 授权的 SDK 层。</p>
+<h3 id="9-3-我的实际建议路径"><a href="#9-3-我的实际建议路径" class="headerlink" title="9.3 我的实际建议路径"></a>9.3 我的实际建议路径</h3><p>如果你正在考虑集成，我会这么走：</p>
+<p><strong>第一步：先用 CLI 试，别一上来就部署。</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx -y firecrawl-cli@latest scrape https://your-target-site</span><br></pre></td></tr></tbody></table></figure>
+
+<p>看输出质量是不是符合预期。清洗质量不行，先别往下走。</p>
+<p><strong>第二步：本地二进制试。</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cargo install firecrawl-local</span><br><span class="line">firecrawl-local scrape https://your-target-site --markdown</span><br></pre></td></tr></tbody></table></figure>
+
+<p>验证” 在你的机器上能不能抓到”。</p>
+<p><strong>第三步：接进 Agent。</strong></p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firecrawl-local init --dry-run   <span class="comment"># 先看它要改什么</span></span><br><span class="line">firecrawl-local init             <span class="comment"># 再真装</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>第四步：确认是否真的需要自托管。</strong></p>
+<p>如果你的场景是” 团队内部查文档”，<strong>很可能不需要</strong> —— 用 Keyless（每月 1000 免费 credits，无需 API key）或者 Cloud 就够了。真要自托管，再去啃 SELF_HOST.md 那套。</p>
+<h2 id="十、上手速查表"><a href="#十、上手速查表" class="headerlink" title="十、上手速查表"></a>十、上手速查表</h2><p>最后把常用命令汇总一下，方便直接抄。</p>
+<h3 id="10-1-Firecrawl-Local（本地二进制）"><a href="#10-1-Firecrawl-Local（本地二进制）" class="headerlink" title="10.1 Firecrawl Local（本地二进制）"></a>10.1 Firecrawl Local（本地二进制）</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">cargo install firecrawl-local</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从源码构建</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/firecrawl/firecrawl.git</span><br><span class="line"><span class="built_in">cd</span> firecrawl/apps/local</span><br><span class="line">cargo build --release</span><br><span class="line"></span><br><span class="line"><span class="comment"># 抓一页 / 爬整站 / 列 URL</span></span><br><span class="line">firecrawl-local scrape https://example.com --markdown</span><br><span class="line">firecrawl-local scrape https://example.com --format markdown,links</span><br><span class="line">firecrawl-local crawl https://docs.firecrawl.dev --<span class="built_in">limit</span> 50 --out ./pages</span><br><span class="line">firecrawl-local map https://firecrawl.dev</span><br><span class="line"></span><br><span class="line"><span class="comment"># 起本地 API</span></span><br><span class="line">firecrawl-local serve</span><br><span class="line">curl -s http://localhost:3002/v2/scrape \</span><br><span class="line">  -H <span class="string">'content-type: application/json'</span> \</span><br><span class="line">  -d <span class="string">'{"url":"https://example.com","formats":["markdown"]}'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 接进 AI 工具</span></span><br><span class="line">firecrawl-local init</span><br><span class="line">firecrawl-local init --dry-run</span><br><span class="line">firecrawl-local init --agent cursor</span><br><span class="line"></span><br><span class="line"><span class="comment"># 其它</span></span><br><span class="line">firecrawl-local search <span class="string">"query"</span></span><br><span class="line">firecrawl-local login</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="10-2-Firecrawl-Cloud-CLI"><a href="#10-2-Firecrawl-Cloud-CLI" class="headerlink" title="10.2 Firecrawl Cloud CLI"></a>10.2 Firecrawl Cloud CLI</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">npx -y firecrawl-cli@latest init --all --browser</span><br><span class="line"></span><br><span class="line">firecrawl scrape https://firecrawl.dev</span><br><span class="line">firecrawl https://firecrawl.dev --only-main-content</span><br><span class="line">firecrawl search <span class="string">"firecrawl"</span> --<span class="built_in">limit</span> 5</span><br><span class="line">firecrawl interact <span class="built_in">exec</span> --prompt <span class="string">"Search for 'mechanical keyboard'"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="10-3-MCP-配置"><a href="#10-3-MCP-配置" class="headerlink" title="10.3 MCP 配置"></a>10.3 MCP 配置</h3><figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"mcpServers"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"firecrawl-mcp"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">      <span class="attr">"command"</span><span class="punctuation">:</span> <span class="string">"npx"</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"args"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"-y"</span><span class="punctuation">,</span> <span class="string">"firecrawl-mcp"</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">"env"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">        <span class="attr">"FIRECRAWL_API_KEY"</span><span class="punctuation">:</span> <span class="string">"fc-YOUR_API_KEY"</span></span><br><span class="line">      <span class="punctuation">}</span></span><br><span class="line">    <span class="punctuation">}</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>Agent 自己注册账号拿 key 的 onboarding skill：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s https://firecrawl.dev/agent-onboarding/SKILL.md</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="10-4-关键环境变量"><a href="#10-4-关键环境变量" class="headerlink" title="10.4 关键环境变量"></a>10.4 关键环境变量</h3><table>
+<thead>
+<tr>
+<th>变量</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>FIRECRAWL_CLOUD=off</code></td>
+<td>完全不连云，所有东西留在本机</td>
+</tr>
+<tr>
+<td><code>FIRECRAWL_API_KEY</code></td>
+<td>Cloud API key</td>
+</tr>
+<tr>
+<td><code>USE_DB_AUTHENTICATION=false</code></td>
+<td>自托管时的 API 认证基线</td>
+</tr>
+<tr>
+<td><code>NUQ_BACKEND=fdb</code></td>
+<td>把队列后端切到 FoundationDB</td>
+</tr>
+<tr>
+<td><code>BULL_AUTH_KEY</code></td>
+<td>开启带 key 的管理路由</td>
+</tr>
+<tr>
+<td><code>BULL_AUTH_KEY_PREVIOUS</code></td>
+<td>双 key 轮换用，避免停机</td>
+</tr>
+<tr>
+<td><code>BULL_AUTH_KEY_PATH_ROUTES=false</code></td>
+<td>关掉路径式管理路由 <code>/admin/&lt;key&gt;/...</code></td>
+</tr>
+<tr>
+<td><code>ADMIN_INTERNAL_PORT</code></td>
+<td>起一个不需要 key 的内部监听端口</td>
+</tr>
+</tbody></table>
+<h2 id="十一、结语"><a href="#十一、结语" class="headerlink" title="十一、结语"></a>十一、结语</h2><p>Firecrawl 做到 20 万 star，我一开始是不太理解的。写完这篇的过程中我逐渐明白了它做对的几个点：</p>
+<p><strong>第一，它把” 脏活” 藏起来了。</strong> Agent 生态真正缺的不是” 又一个 HTTP 客户端”，而是一个” 网页 → 可用上下文” 的可靠转换层。Firecrawl 恰好站在这个位置上，而且用 MCP 把接入成本压到了一条 <code>init</code> 命令。</p>
+<p><strong>第二，它没有把” 本地” 和” 云” 做成二选一。</strong> 一个 Rust 单二进制 + 一个完整 Docker Compose 栈 + 一个托管云，三种形态共存，各自覆盖不同场景。这种” 全都给你，你自己选” 的做法，在基础设施项目里是很少见的诚意。</p>
+<p><strong>第三，它的文档写得比代码还认真。</strong> <code>SELF_HOST.md</code> 里那句「检入的 Compose 文件是一个与源码对齐的起点，不是生产架构」，以及默认关闭认证、默认不开管理 UI、默认无持久化卷这些选择 —— <strong>主动告诉用户” 这里还有坑”</strong>，这种诚实在国内的开源项目文档里是稀缺的。</p>
+<p>当然，AGPL 是硬门槛，Cloud 的 96% 覆盖率是自说自话，本地版功能缺口明显，自托管的运维成本不低。这些我在第八节都写清楚了。</p>
+<p><strong>如果你正在做 Agent，我的建议很直接：先跑 <code>npx -y firecrawl-cli@latest scrape &lt;你常抓的网站&gt;</code>，用三十秒看看输出质量。</strong> 如果清洗结果让你惊喜，那就顺着这篇文章往下看；如果还是不满意 —— 那多半是你的场景该用 Crawlee，而不是 Firecrawl。</p>
+<hr>
+<p><em>本文所有数字（star /fork/license / 语言 / 创建时间 /release 版本 / Alexandria 覆盖量 / 96% 覆盖率 / P95 延迟）均来自 GitHub API 与仓库 README、SELF_HOST.md、apps/local/README.md 原文，未做估算。凡官方未公布的数据，本文一概未写。</em></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/11/25/firecrawl-ai-agent-web-data-infrastructure/" title="firecrawl&#x2F;firecrawl：20.9 万 star 的 AI Agent 抓取基础设施，AGPL-3.0 开源自托管，一个 Rust 二进制把网页变成 Markdown">https://www.daishengli.top/2026/11/25/firecrawl-ai-agent-web-data-infrastructure/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/TypeScript/" rel="tag"># TypeScript</a>
+              <a href="/tags/firecrawl/" rel="tag"># firecrawl</a>
+              <a href="/tags/%E7%BD%91%E9%A1%B5%E6%8A%93%E5%8F%96/" rel="tag"># 网页抓取</a>
+              <a href="/tags/%E8%87%AA%E6%89%98%E7%AE%A1/" rel="tag"># 自托管</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/23/hkuds-cli-anything-make-all-software-agent-native/" rel="prev" title="HKUDS&#x2F;CLI-Anything：63603 star 的开源项目，把 40 多个专业软件变成 AI Agent 能用的命令行">
+                  <i class="fa fa-angle-left"></i> HKUDS/CLI-Anything：63603 star 的开源项目，把 40 多个专业软件变成 AI Agent 能用的命令行
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/26/jingyaogong-minimind-64m-llm-from-scratch-in-2-hours/" rel="next" title="jingyaogong&#x2F;minimind：7 万 star 的中文极简 LLM 教学项目，2 小时 3 块钱从零训出 64M 大模型">
+                  jingyaogong/minimind：7 万 star 的中文极简 LLM 教学项目，2 小时 3 块钱从零训出 64M 大模型 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="fast-anything 是 2026 年 11 月 21 日上线的新项目，两天拿到 1869 个 star，MIT 许可证，主语言 Rust。它不做整应用重写，而是先用各语言自带的 profiler 把一次真实运行里的函数按耗时与可移植性排序，筛出既慢又干净的热点，再让 Claude Code 或 Codex 等编码 Agent 只把这些函数改写成 Rust，最后用录制的真实调用逐条回放比对：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EL4CTEO&#x2F;fast-anything：1869 star 的工具，让 AI Agent 只把最慢的 5% 改写成 Rust 并证明行为一致">
+<meta property="og:url" content="https://www.daishengli.top/2026/11/22/el4cteo-fast-anything-port-slow-5-percent-to-rust/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="fast-anything 是 2026 年 11 月 21 日上线的新项目，两天拿到 1869 个 star，MIT 许可证，主语言 Rust。它不做整应用重写，而是先用各语言自带的 profiler 把一次真实运行里的函数按耗时与可移植性排序，筛出既慢又干净的热点，再让 Claude Code 或 Codex 等编码 Agent 只把这些函数改写成 Rust，最后用录制的真实调用逐条回放比对：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-22T16:08:00.000Z">
+<meta property="article:modified_time" content="2026-11-28T00:04:52.351Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="fast-anything">
+<meta property="article:tag" content="EL4CTEO">
+<meta property="article:tag" content="性能优化">
+<meta property="article:tag" content="开发者工具">
+<meta property="article:tag" content="FFI">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/11/22/el4cteo-fast-anything-port-slow-5-percent-to-rust/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/11/22/el4cteo-fast-anything-port-slow-5-percent-to-rust/","path":"2026/11/22/el4cteo-fast-anything-port-slow-5-percent-to-rust/","title":"EL4CTEO/fast-anything：1869 star 的工具，让 AI Agent 只把最慢的 5% 改写成 Rust 并证明行为一致"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>EL4CTEO/fast-anything：1869 star 的工具，让 AI Agent 只把最慢的 5% 改写成 Rust 并证明行为一致 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">459</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">139</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#EL4CTEO-fast-anything%EF%BC%9A1869-star-%E7%9A%84%E5%B7%A5%E5%85%B7%EF%BC%8C%E8%AE%A9-AI-Agent-%E5%8F%AA%E6%8A%8A%E6%9C%80%E6%85%A2%E7%9A%84-5-%E6%94%B9%E5%86%99%E6%88%90-Rust-%E5%B9%B6%E8%AF%81%E6%98%8E%E8%A1%8C%E4%B8%BA%E4%B8%80%E8%87%B4"><span class="nav-number">1.</span> <span class="nav-text">EL4CTEO&#x2F;fast-anything：1869 star 的工具，让 AI Agent 只把最慢的 5% 改写成 Rust 并证明行为一致</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%80%E4%B8%AA%E8%AE%A9%E6%88%91%E6%B2%89%E9%BB%98%E4%BA%86%E4%B8%89%E7%A7%92%E7%9A%84%E9%9C%80%E6%B1%82"><span class="nav-number">1.1.</span> <span class="nav-text">一、一个让我沉默了三秒的需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.2.</span> <span class="nav-text">二、它到底是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%83%E6%95%A2%E8%AE%A9-Agent-%E5%86%99-Rust"><span class="nav-number">1.3.</span> <span class="nav-text">三、核心机制：为什么它敢让 Agent 写 Rust</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%BD%95%E5%88%B6%EF%BC%9A%E6%8A%8A%E7%9C%9F%E5%AE%9E%E8%B0%83%E7%94%A8%E5%8F%98%E6%88%90%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 录制：把真实调用变成测试用例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%9B%9E%E6%94%BE%EF%BC%9ARust-%E7%89%88%E5%BF%85%E9%A1%BB%E9%80%90%E6%9D%A1%E5%AF%B9%E4%B8%8A"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 回放：Rust 版必须逐条对上</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%B4%BE%E7%94%9F%E7%94%A8%E4%BE%8B%EF%BC%9A%E8%AE%A9%E5%8E%9F%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E5%87%BA%E9%A2%98"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 派生用例：让原实现自己出题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E4%B8%89%E9%87%8D%E5%90%A6%E5%86%B3"><span class="nav-number">1.3.4.</span> <span class="nav-text">3.4 三重否决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-%E8%BE%B9%E7%95%8C%E5%9B%9E%E9%80%80%E5%BC%80%E5%85%B3"><span class="nav-number">1.3.5.</span> <span class="nav-text">3.5 边界回退开关</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%83%E6%80%8E%E4%B9%88%E7%9F%A5%E9%81%93%E8%AF%A5%E4%BC%98%E5%8C%96%E5%93%AA%E4%B8%AA%E5%87%BD%E6%95%B0"><span class="nav-number">1.4.</span> <span class="nav-text">四、它怎么知道该优化哪个函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">1.5.</span> <span class="nav-text">五、快速上手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E8%B7%9F-Agent-%E7%9A%84%E9%9B%86%E6%88%90%E6%96%B9%E5%BC%8F"><span class="nav-number">1.6.</span> <span class="nav-text">六、跟 Agent 的集成方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-Claude-Code-%E6%8F%92%E4%BB%B6"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 Claude Code 插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-MCP-server"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 MCP server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-Skill"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3 Skill</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E5%88%87%E6%8D%A2%E6%98%AF%E6%80%8E%E4%B9%88%E5%81%9A%E5%88%B0%E7%9A%84"><span class="nav-number">1.6.4.</span> <span class="nav-text">6.4 切换是怎么做到的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%87%A0%E4%B8%AA%E5%85%B3%E9%94%AE%E8%AE%BE%E8%AE%A1%E5%8F%96%E8%88%8D"><span class="nav-number">1.7.</span> <span class="nav-text">七、几个关键设计取舍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E7%A7%BB%E6%A4%8D%E2%80%9D%E6%9C%80%E5%A4%96%E5%B1%82%E5%BE%AA%E7%8E%AF%E2%80%9D%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E6%9C%80%E5%86%85%E5%B1%82%E5%87%BD%E6%95%B0"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1 移植” 最外层循环”，而不是最内层函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E2%80%9C%E7%A7%BB%E6%A4%8D%E7%89%88%E6%AF%94%E5%8E%9F%E7%89%88%E6%85%A2%E5%B0%B1%E4%B8%8D%E5%90%AF%E7%94%A8%E2%80%9D"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2 “移植版比原版慢就不启用”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-C-ABI-JSON-%E4%BD%9C%E4%B8%BA%E9%80%9A%E7%94%A8%E6%A1%A5%E6%8E%A5"><span class="nav-number">1.7.3.</span> <span class="nav-text">7.3 C ABI + JSON 作为通用桥接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-%E7%BC%93%E5%AD%98%EF%BC%9A%E6%89%80%E6%9C%89%E7%A7%BB%E6%A4%8D%E7%89%88%E5%85%B1%E4%BA%AB%E4%B8%80%E4%B8%AA-fast-target"><span class="nav-number">1.7.4.</span> <span class="nav-text">7.4 缓存：所有移植版共享一个 .fast&#x2F;target</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-Agent-%E5%9C%A8%E7%8E%AF%E5%A4%96%EF%BC%8C%E5%B7%A5%E5%85%B7%E5%9C%A8%E7%8E%AF%E5%86%85"><span class="nav-number">1.7.5.</span> <span class="nav-text">7.5 Agent 在环外，工具在环内</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%AE%9E%E6%B5%8B%E6%95%B0%E6%8D%AE"><span class="nav-number">1.8.</span> <span class="nav-text">八、实测数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%92%8C%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E5%AF%B9%E6%AF%94"><span class="nav-number">1.9.</span> <span class="nav-text">九、和同类项目对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-vs-%E6%95%B4%E5%BA%94%E7%94%A8%E9%87%8D%E5%86%99%E5%B7%A5%E5%85%B7"><span class="nav-number">1.9.1.</span> <span class="nav-text">9.1 vs. 整应用重写工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-vs-%E4%BC%A0%E7%BB%9F-profiler"><span class="nav-number">1.9.2.</span> <span class="nav-text">9.2 vs. 传统 profiler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-vs-Cython-Nuitka-PyO3-%E6%89%8B%E5%86%99"><span class="nav-number">1.9.3.</span> <span class="nav-text">9.3 vs. Cython &#x2F; Nuitka &#x2F; PyO3 手写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-4-vs-%E9%80%9A%E7%94%A8-FFI-%E5%BA%93%EF%BC%88PyO3-napi-rs-JNI-%E7%AD%89%EF%BC%89"><span class="nav-number">1.9.4.</span> <span class="nav-text">9.4 vs. 通用 FFI 库（PyO3 &#x2F;napi-rs&#x2F; JNI 等）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-5-vs-Rust-%E7%94%9F%E6%80%81%E7%9A%84%E6%80%A7%E8%83%BD%E5%B7%A5%E5%85%B7%EF%BC%88Miri%E3%80%81cargo-flamegraph-%E7%AD%89%EF%BC%89"><span class="nav-number">1.9.5.</span> <span class="nav-text">9.5 vs. Rust 生态的性能工具（Miri、cargo-flamegraph 等）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E7%9C%9F%E5%AE%9E%E5%B1%80%E9%99%90"><span class="nav-number">1.10.</span> <span class="nav-text">十、真实局限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-%E5%8F%AA%E8%83%BD%E7%A7%BB%E6%A4%8D%E2%80%9D%E7%BA%AF%E5%87%BD%E6%95%B0%E2%80%9D"><span class="nav-number">1.10.1.</span> <span class="nav-text">10.1 只能移植” 纯函数”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-%E6%80%A7%E8%83%BD%E6%94%B6%E7%9B%8A%E9%AB%98%E5%BA%A6%E4%BE%9D%E8%B5%96%E5%9C%BA%E6%99%AF"><span class="nav-number">1.10.2.</span> <span class="nav-text">10.2 性能收益高度依赖场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3-%E7%A7%BB%E6%A4%8D%E7%89%88%E4%BB%A3%E7%A0%81%E9%9C%80%E8%A6%81%E4%BA%BA%E7%9C%8B%E4%B8%80%E7%9C%BC"><span class="nav-number">1.10.3.</span> <span class="nav-text">10.3 移植版代码需要人看一眼</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-4-%E9%9C%80%E8%A6%81-Rust-%E5%B7%A5%E5%85%B7%E9%93%BE"><span class="nav-number">1.10.4.</span> <span class="nav-text">10.4 需要 Rust 工具链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-5-%E9%A1%B9%E7%9B%AE%E5%A4%AA%E6%96%B0"><span class="nav-number">1.10.5.</span> <span class="nav-text">10.5 项目太新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-6-%E9%9C%80%E8%A6%81-Agent%EF%BC%8C%E6%9C%89-Token-%E6%88%90%E6%9C%AC"><span class="nav-number">1.10.6.</span> <span class="nav-text">10.6 需要 Agent，有 Token 成本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E9%80%82%E5%90%88%E8%B0%81%EF%BC%8C%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">1.11.</span> <span class="nav-text">十一、适合谁，不适合谁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E5%90%88"><span class="nav-number">1.11.1.</span> <span class="nav-text">适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E9%80%82%E5%90%88"><span class="nav-number">1.11.2.</span> <span class="nav-text">不适合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E6%88%91%E7%9A%84%E5%AE%9E%E9%99%85%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.12.</span> <span class="nav-text">十二、我的实际建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E8%BF%99%E4%B8%AA%E9%A1%B9%E7%9B%AE%E6%8A%98%E5%B0%84%E5%87%BA%E7%9A%84%E6%9B%B4%E5%A4%A7%E8%B6%8B%E5%8A%BF"><span class="nav-number">1.13.</span> <span class="nav-text">十三、这个项目折射出的更大趋势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E7%BB%93%E8%AF%AD"><span class="nav-number">1.14.</span> <span class="nav-text">十四、结语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%EF%BC%9A%E9%A1%B9%E7%9B%AE%E9%93%BE%E6%8E%A5%E4%B8%8E%E4%BA%8B%E5%AE%9E%E6%9D%A5%E6%BA%90"><span class="nav-number">1.15.</span> <span class="nav-text">附：项目链接与事实来源</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">139</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">459</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/22/el4cteo-fast-anything-port-slow-5-percent-to-rust/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="EL4CTEO&#x2F;fast-anything：1869 star 的工具，让 AI Agent 只把最慢的 5% 改写成 Rust 并证明行为一致 | 小戴的网络日志">
+      <meta itemprop="description" content="fast-anything 是 2026 年 11 月 21 日上线的新项目，两天拿到 1869 个 star，MIT 许可证，主语言 Rust。它不做整应用重写，而是先用各语言自带的 profiler 把一次真实运行里的函数按耗时与可移植性排序，筛出既慢又干净的热点，再让 Claude Code 或 Codex 等编码 Agent 只把这些函数改写成 Rust，最后用录制的真实调用逐条回放比对：只有返回值一致、异常类型一致、单次调用不比原实现慢，才允许启用。工具支持 Python、JavaScript 与 TypeScript、Ruby、Java、Go、PHP、C、C++、C# 等十种语言，绑定分别用 PyO3、napi-rs 和统一的 C ABI 加 JSON 桥接。verify 除了回放最多 500 条真实调用，还会派生 NaN、负零、非 ASCII 文本等边界用例，并让原实现回答收缩输入，一致率不到 100% 一律不许上线。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          EL4CTEO/fast-anything：1869 star 的工具，让 AI Agent 只把最慢的 5% 改写成 Rust 并证明行为一致
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-23 00:08:00" itemprop="dateCreated datePublished" datetime="2026-11-23T00:08:00+08:00">2026-11-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">fast-anything 是 2026 年 11 月 21 日上线的新项目，两天拿到 1869 个 star，MIT 许可证，主语言 Rust。它不做整应用重写，而是先用各语言自带的 profiler 把一次真实运行里的函数按耗时与可移植性排序，筛出既慢又干净的热点，再让 Claude Code 或 Codex 等编码 Agent 只把这些函数改写成 Rust，最后用录制的真实调用逐条回放比对：只有返回值一致、异常类型一致、单次调用不比原实现慢，才允许启用。工具支持 Python、JavaScript 与 TypeScript、Ruby、Java、Go、PHP、C、C++、C# 等十种语言，绑定分别用 PyO3、napi-rs 和统一的 C ABI 加 JSON 桥接。verify 除了回放最多 500 条真实调用，还会派生 NaN、负零、非 ASCII 文本等边界用例，并让原实现回答收缩输入，一致率不到 100% 一律不许上线。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="EL4CTEO-fast-anything：1869-star-的工具，让-AI-Agent-只把最慢的-5-改写成-Rust-并证明行为一致"><a href="#EL4CTEO-fast-anything：1869-star-的工具，让-AI-Agent-只把最慢的-5-改写成-Rust-并证明行为一致" class="headerlink" title="EL4CTEO/fast-anything：1869 star 的工具，让 AI Agent 只把最慢的 5% 改写成 Rust 并证明行为一致"></a>EL4CTEO/fast-anything：1869 star 的工具，让 AI Agent 只把最慢的 5% 改写成 Rust 并证明行为一致</h1><h2 id="一、一个让我沉默了三秒的需求"><a href="#一、一个让我沉默了三秒的需求" class="headerlink" title="一、一个让我沉默了三秒的需求"></a>一、一个让我沉默了三秒的需求</h2><p>上周开会，有人提了个需求，原话我记到现在：</p>
+<p>“我们那个 Python 报表服务太慢了，能不能用 Rust 重写一下？”</p>
+<p>我当场就想说” 好”，然后停住了。</p>
+<p>因为过去两年我听过这句话太多次了。每次的结果都一样 —— 重写三个月，中间发现一个新的业务规则没覆盖，测试用例没人补，最后旧版本继续跑，新版本躺在仓库里吃灰。旧项目不是不能重写，是<strong>重写的成本从来不是写代码，而是证明写出来的东西跟原来一样</strong>。</p>
+<p>更扎心的是性能数据本身就不支持重写。一个典型的报表服务，真正耗时的可能就是那两个字符串相似度比较函数，占了总耗时的 80%。剩下 80% 的代码 —— 配置解析、数据库查询、模板渲染、异常处理 —— 一共占 20%，重写它们收益为零，风险却包圆了。</p>
+<p>所以现在我听到” 重写成 Rust” 这个需求，第一反应变成了三个问题：</p>
+<ol>
+<li>到底哪几个函数慢？</li>
+<li>这几个函数能不能干净地挪到 Rust？</li>
+<li>挪过去之后，<strong>凭什么说它跟原来一样</strong>？</li>
+</ol>
+<p>第三个问题最难回答。人工做这件事非常痛苦，因为你要构造几十组输入、覆盖各种边界、逐个比对。这活儿枯燥、重复、极易漏，而且漏了就是线上事故。</p>
+<p>11 月 21 日，一个叫 <code>EL4CTEO/fast-anything</code> 的仓库在 GitHub 上出现了。两天时间，1869 个 star，109 个 fork。它的 README 第一行写着：</p>
+<blockquote>
+<p>Don’t rewrite it in Rust. Rewrite the 5% that’s slow.</p>
+</blockquote>
+<p>（别把它整个重写成 Rust。只重写那慢的 5%。）</p>
+<p>这句话基本上把这个项目的全部主张都说完了。</p>
+<h2 id="二、它到底是什么"><a href="#二、它到底是什么" class="headerlink" title="二、它到底是什么"></a>二、它到底是什么</h2><p>一句话定义：<strong>fast-anything 是一个” 局部热点自动 Rust 化” 的流水线工具</strong>，它自己不做代码翻译，它做的是编排 ——profile、录制、生成脚手架、驱动编码 Agent 写 Rust、验证、切换、基准测试、出报告。</p>
+<p>项目的关键事实（截至 2026 年 11 月 23 日我写这篇博客时）：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>仓库</td>
+<td><code>EL4CTEO/fast-anything</code></td>
+</tr>
+<tr>
+<td>Star</td>
+<td>1869</td>
+</tr>
+<tr>
+<td>Fork</td>
+<td>109</td>
+</tr>
+<tr>
+<td> 许可证</td>
+<td> MIT</td>
+</tr>
+<tr>
+<td> 主语言</td>
+<td> Rust</td>
+</tr>
+<tr>
+<td>crate 版本</td>
+<td> 0.7.0</td>
+</tr>
+<tr>
+<td> 创建时间</td>
+<td> 2026-11-21</td>
+</tr>
+<tr>
+<td> 提交数</td>
+<td> 56</td>
+</tr>
+<tr>
+<td> 编辑器版本</td>
+<td> Rust edition 2024，最低 rustc 1.88</td>
+</tr>
+<tr>
+<td> 分发渠道</td>
+<td> npm <code>@el4cteo/fast-anything</code>、crates.io <code>fast-anything</code></td>
+</tr>
+</tbody></table>
+<p>注意创建时间 —— <strong>这个项目只有两天大</strong>。56 个提交就冲到了 1869 star，说明它精准地踩中了当前开发者的一个焦虑点。</p>
+<p>再看看它自己的 <code>Cargo.toml</code>，能看出作者对这个工具的定位：</p>
+<figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[package]</span></span><br><span class="line"><span class="attr">name</span> = <span class="string">"fast-anything"</span></span><br><span class="line"><span class="attr">version</span> = <span class="string">"0.7.0"</span></span><br><span class="line"><span class="attr">edition</span> = <span class="string">"2024"</span></span><br><span class="line"><span class="attr">rust-version</span> = <span class="string">"1.88"</span></span><br><span class="line"><span class="attr">description</span> = <span class="string">"Find the slow 5% of your app, have your coding agent rewrite just that in Rust, and prove it still behaves the same."</span></span><br><span class="line"><span class="attr">license</span> = <span class="string">"MIT"</span></span><br><span class="line"><span class="attr">keywords</span> = [<span class="string">"performance"</span>, <span class="string">"python"</span>, <span class="string">"nodejs"</span>, <span class="string">"java"</span>, <span class="string">"ai-agents"</span>]</span><br><span class="line"><span class="attr">categories</span> = [<span class="string">"command-line-utilities"</span>, <span class="string">"development-tools::profiling"</span>]</span><br><span class="line"></span><br><span class="line"><span class="section">[[bin]]</span></span><br><span class="line"><span class="attr">name</span> = <span class="string">"fast-anything"</span></span><br><span class="line"><span class="attr">path</span> = <span class="string">"src/main.rs"</span></span><br><span class="line"></span><br><span class="line"><span class="section">[dependencies]</span></span><br><span class="line"><span class="attr">anyhow</span> = <span class="string">"1.0.104"</span></span><br><span class="line"><span class="attr">clap</span> = { version = <span class="string">"4.6.9"</span>, features = [<span class="string">"derive"</span>] }</span><br><span class="line"><span class="attr">libloading</span> = <span class="string">"0.9.1"</span></span><br><span class="line"><span class="attr">serde</span> = { version = <span class="string">"1.0.229"</span>, features = [<span class="string">"derive"</span>] }</span><br><span class="line"><span class="attr">serde_json</span> = <span class="string">"1.0.154"</span></span><br><span class="line"></span><br><span class="line"><span class="section">[profile.release]</span></span><br><span class="line"><span class="attr">lto</span> = <span class="string">"fat"</span></span><br><span class="line"><span class="attr">codegen-units</span> = <span class="number">1</span></span><br><span class="line"><span class="attr">strip</span> = <span class="literal">true</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里有个值得注意的细节：主二进制只有四个直接依赖 ——<code>anyhow</code>、<code>clap</code>、<code>libloading</code>、<code>serde</code>。没有内嵌 LLM SDK，没有向量数据库，没有庞大的推理框架。这说明<strong>所有 AI 相关的能力都在外面</strong>，fast-anything 本体是一个纯粹的、不含模型的确定性工具。</p>
+<p>这个设计决定非常重要，我后面会展开讲。</p>
+<p>它自己带的 <code>description</code> 一句话：” 找出你应用里慢的那 5%，让你的编码 Agent 只把那个改写成 Rust，然后证明它行为依然一致。”</p>
+<h2 id="三、核心机制：为什么它敢让-Agent-写-Rust"><a href="#三、核心机制：为什么它敢让-Agent-写-Rust" class="headerlink" title="三、核心机制：为什么它敢让 Agent 写 Rust"></a>三、核心机制：为什么它敢让 Agent 写 Rust</h2><p>整个项目最核心的技术难题，不是” 怎么调用 Agent”，而是<strong>怎么让 Agent 写的 Rust 是对的</strong>。</p>
+<p>作者选择的答案是：<strong>录制 + 回放</strong>。</p>
+<h3 id="3-1-录制：把真实调用变成测试用例"><a href="#3-1-录制：把真实调用变成测试用例" class="headerlink" title="3.1 录制：把真实调用变成测试用例"></a>3.1 录制：把真实调用变成测试用例</h3><p><code>fast-anything port</code> 这一步会重新跑一遍你的应用，用探针捕获目标函数的每一次真实调用 —— 参数是什么、返回值是什么、调用了多少次 —— 最多记录 500 条。</p>
+<p>这 500 条不是随便造的测试用例，是<strong>你的真实生产工作负载</strong>。这跟传统单元测试有本质区别：单元测试是开发者拍脑袋想出来的边界，而录制下来的是” 这个函数在真实数据上到底被怎么用的”。</p>
+<p>作者在 README 里把这套东西叫做 “Proof, not vibes”（要证据，不要感觉）。这四个字基本是整个项目的设计哲学。</p>
+<h3 id="3-2-回放：Rust-版必须逐条对上"><a href="#3-2-回放：Rust-版必须逐条对上" class="headerlink" title="3.2 回放：Rust 版必须逐条对上"></a>3.2 回放：Rust 版必须逐条对上</h3><p><code>fast-anything verify</code> 会用 release 模式编译 Rust 移植版，然后把录制的每一条调用逐条喂进去，逐字节比对输出。</p>
+<p>不一致？直接拒绝启用。</p>
+<p>这里有个细节我觉得很值得学。README 提到一个真实案例：</p>
+<blockquote>
+<p>那个移植版看起来是对的，但它比较的是字节而不是字符。500 条真实调用里有 148 条抓到了它。</p>
+</blockquote>
+<p>翻译一下：Rust 里 <code>String</code> 是 UTF-8 字节序列，<code>chars()</code> 才是 Unicode 码点。Python 的 <code>str</code> 是码点序列。如果 Agent 直接用 Rust 字节切片去模拟 Python 的字符串操作，遇到中文、emoji、组合字符就会出错。</p>
+<p>而<strong>这条错误用普通单元测试很难发现</strong>，因为你得特意去构造非 ASCII 输入。录制回放天然就撞上了，因为你的真实数据里有中文。</p>
+<h3 id="3-3-派生用例：让原实现自己出题"><a href="#3-3-派生用例：让原实现自己出题" class="headerlink" title="3.3 派生用例：让原实现自己出题"></a>3.3 派生用例：让原实现自己出题</h3><p>光有录制还不够。录制只能覆盖” 过去发生过的事”，覆盖不了” 未来可能发生的事”。所以 fast-anything 会在录制的基础上自动派生额外的边界用例，并且 —— 这是最巧妙的地方 —— <strong>让原实现来回答这些派生用例</strong>。</p>
+<p>派生出来的边界包括：</p>
+<ul>
+<li><code>NaN</code></li>
+<li>正负无穷（<code>±infinity</code>）</li>
+<li>负零（<code>-0.0</code>）</li>
+<li>零和一、负一</li>
+<li>非 ASCII 文本（带重音的字母、CJK 字符、emoji、组合标记）</li>
+<li>空输入</li>
+<li>最大到 16 倍大的输入</li>
+</ul>
+<p>另外还有一类叫 <strong>shrunk inputs（收缩输入）</strong>：把原始输入切成更小的片段（极小的切片、随机的切片），然后仍然让原实现回答。</p>
+<p>这个” 让原实现回答” 的思路是整个方案里我认为最漂亮的一处。派生用例是工具生成的，那么” 正确答案” 从哪来？答案是：<strong>从原实现那里拿</strong>。你不需要知道正确答案是什么，你只需要新实现和旧实现给出同一个答案。</p>
+<p>这就把它从” 模糊测试 + 人工审查” 变成了” 差分测试（differential testing）”，而且是自动化的差分测试。</p>
+<h3 id="3-4-三重否决"><a href="#3-4-三重否决" class="headerlink" title="3.4 三重否决"></a>3.4 三重否决</h3><p>综合起来，一个移植版要活下来得同时满足三件事：</p>
+<ol>
+<li><strong>值一致</strong>：浮点数允许 <code>1e-9</code> 的误差范围内</li>
+<li><strong>错误一致</strong>：原实现抛异常的地方，Rust 版也得抛同样的异常类型</li>
+<li><strong>不更慢</strong>：单次调用比原实现还慢的移植版，不允许启用</li>
+</ol>
+<p>第三条特别务实。作者的解释很直白：<strong>跨语言调用本身有开销，如果调 Rust 的成本超过了省下的计算，那就白折腾了</strong>。</p>
+<p>想强行启用可以，<code>enable --force</code>。</p>
+<p>关于异常类型，CHANGELOG 里 0.6.2 有一条修正很能说明作者的态度：</p>
+<blockquote>
+<p>Python verify only accepts the exception type the original raises; a Rust panic no longer counts.</p>
+</blockquote>
+<p>Rust 里 panic 是一种语言级崩溃，不是 Python 的异常。移植版里 panic 崩掉了，被 catch 住假装抛了个异常 —— 这在 PyO3 场景下是能混过去的。作者专门修了这个洞，说明他真的在认真做验证这件事，而不是写个样子。</p>
+<h3 id="3-5-边界回退开关"><a href="#3-5-边界回退开关" class="headerlink" title="3.5 边界回退开关"></a>3.5 边界回退开关</h3><p><code>FAST_ANYTHING_DISABLE=1</code> 可以让任何一次运行都走原始实现。</p>
+<p>这是个很关键的设计。你随时可以” 撤销”，代价是一次环境变量。这意味着这个工具<strong>不要求你相信它</strong>，它要求你<strong>先小范围试用</strong>。</p>
+<h2 id="四、它怎么知道该优化哪个函数"><a href="#四、它怎么知道该优化哪个函数" class="headerlink" title="四、它怎么知道该优化哪个函数"></a>四、它怎么知道该优化哪个函数</h2><p><code>scan</code> 这一步用各语言<strong>自己的</strong> profiler 跑一次应用，然后把函数按一个综合指标排序 ——README 的原话是 “ranks functions by time × how portable they are”，也就是<strong>耗时 × 可移植性</strong>。</p>
+<p>这个乘法很关键。一个占 40% 耗时但读了全局环境变量的函数，不可移植；一个占 3% 耗时但完全纯函数的函数，也不值得移植。真正该被挑出来的是那些<strong>既慢又干净</strong>的函数。</p>
+<p>作者在给 Agent 的 SKILL.md 里写了一条明确的纪律：</p>
+<blockquote>
+<p>Skip anything under 2% of the run: porting it can’t make a visible difference.</p>
+<p>（运行耗时低于 2% 的直接跳过，移植它看不出区别。）</p>
+</blockquote>
+<p>而且如果某个函数因为 I/O、随机性、全局状态、住在入口脚本里等原因没法移植，<code>scan</code> 会明确告诉你<strong>为什么现在还不能挪</strong>，而不是默默跳过。</p>
+<p>各语言的 profiling 后端也是各用各的现成方案，从 CHANGELOG 能看到：</p>
+<table>
+<thead>
+<tr>
+<th>语言</th>
+<th> Profiling 方式</th>
+<th>源码解析</th>
+<th>调用桥接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Python</td>
+<td> 探针</td>
+<td> AST</td>
+<td>PyO3</td>
+</tr>
+<tr>
+<td>JavaScript / TypeScript</td>
+<td> 探针 + <code>worker_threads</code></td>
+<td>AST</td>
+<td>napi-rs</td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td> 探针</td>
+<td> —</td>
+<td>C ABI + JSON（Fiddle）</td>
+</tr>
+<tr>
+<td>Java</td>
+<td>Flight Recorder</td>
+<td>javac 自身解析器</td>
+<td> FFM API</td>
+</tr>
+<tr>
+<td>Kotlin</td>
+<td> 同 Java</td>
+<td>—</td>
+<td>Java 桥接</td>
+</tr>
+<tr>
+<td> Go</td>
+<td>pprof</td>
+<td>—</td>
+<td>Windows loader / dlopen</td>
+</tr>
+<tr>
+<td>PHP</td>
+<td> 每函数一行计时器</td>
+<td> PHP tokenizer</td>
+<td>FFI 扩展</td>
+</tr>
+<tr>
+<td> C / C++</td>
+<td> 自己构建应用</td>
+<td> —</td>
+<td>LoadLibrary / dlopen</td>
+</tr>
+<tr>
+<td>C# / .NET 8+</td>
+<td>EventPipe 采样器</td>
+<td> Roslyn</td>
+<td>NativeLibrary</td>
+</tr>
+</tbody></table>
+<p>看到 C# 那一行了吗？”Profiled with the runtime’s own EventPipe sampler (nothing to install)”。作者没有为了支持 .NET 去引入一个第三方 profiler，而是用运行时自带的。这就是” 用现成的东西” 的思路。</p>
+<p>Go 那行也有讲究：CHANGELOG 0.2.0 提到 “bench times a prebuilt binary so the compiler isn’t counted”。基准测试跑的是预编译的二进制，不然 Go 编译时间会被算进性能数据里 —— 这坑我踩过。</p>
+<h2 id="五、快速上手"><a href="#五、快速上手" class="headerlink" title="五、快速上手"></a>五、快速上手</h2><p>安装，两选一：</p>
+<figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm i -g @el4cteo/fast-anything      <span class="comment"># 或者</span></span><br><span class="line">cargo install fast-anything</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意 README 明确说了：<strong>移植产物是用你自己的 Rust 工具链编译的</strong>，所以你得有 <a target="_blank" rel="noopener" href="https://rustup.rs/">rustup</a>。</p>
+<p>一条命令跑完整条流水线：</p>
+<figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fast-anything go --agent claude -- python app.py</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>--agent</code> 后面可以跟 <code>claude</code>、<code>codex</code>，或者<strong>任何从 stdin 读 prompt 的命令</strong>。不用 Claude 也没关系 —— 你可以自己把 <code>TASK.md</code> 喂给任何 AI 工具。</p>
+<p>完整的应用运行时支持列表：</p>
+<figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python</span></span><br><span class="line">fast-anything go --agent claude -- python app.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># Node / TypeScript</span></span><br><span class="line">fast-anything go --agent claude -- node app.ts</span><br><span class="line">fast-anything go --agent claude -- bun app.ts</span><br><span class="line">fast-anything go --agent claude -- deno run -A app.ts</span><br><span class="line"></span><br><span class="line"><span class="comment"># Ruby</span></span><br><span class="line">fast-anything go --agent claude -- ruby app.rb</span><br><span class="line"></span><br><span class="line"><span class="comment"># Java</span></span><br><span class="line">fast-anything go --agent claude -- java App.java</span><br><span class="line">fast-anything go --agent claude -- mvn <span class="built_in">exec</span>:java</span><br><span class="line">fast-anything go --agent claude -- gradle run</span><br><span class="line"></span><br><span class="line"><span class="comment"># Go</span></span><br><span class="line">fast-anything go --agent claude -- go run .</span><br><span class="line"></span><br><span class="line"><span class="comment"># PHP</span></span><br><span class="line">fast-anything go --agent claude -- php app.php</span><br><span class="line"></span><br><span class="line"><span class="comment"># C / C++</span></span><br><span class="line">fast-anything go --agent claude -- clang -O2 main.c</span><br></pre></td></tr></tbody></table></figure>
+
+<p>分步执行的话，每一步是一条独立命令：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>scan -- &lt;cmd&gt;</code></td>
+<td>剖析应用，按” 耗时 × 可移植性” 给函数排名</td>
+</tr>
+<tr>
+<td><code>port [id]</code></td>
+<td>录制最多 500 次真实调用，生成单函数 Rust crate 和 <code>TASK.md</code></td>
+</tr>
+<tr>
+<td><code>verify</code></td>
+<td>release 构建移植版，回放每一条录制调用</td>
+</tr>
+<tr>
+<td><code>enable</code> / <code>disable</code></td>
+<td>把 Rust 版换上去 / 换回来</td>
+</tr>
+<tr>
+<td><code>bench</code></td>
+<td>原始版 vs Rust 版，交错运行计时</td>
+</tr>
+<tr>
+<td><code>report</code></td>
+<td>生成 markdown 报告和 SVG 卡片，可以直接贴 PR</td>
+</tr>
+<tr>
+<td><code>doctor</code></td>
+<td>检查 Rust、各语言运行时、Agent 是否就位</td>
+</tr>
+</tbody></table>
+<h2 id="六、跟-Agent-的集成方式"><a href="#六、跟-Agent-的集成方式" class="headerlink" title="六、跟 Agent 的集成方式"></a>六、跟 Agent 的集成方式</h2><p>作者对 AI 的接入做了三种，这是我觉得这个项目最务实的地方。</p>
+<h3 id="6-1-Claude-Code-插件"><a href="#6-1-Claude-Code-插件" class="headerlink" title="6.1 Claude Code 插件"></a>6.1 Claude Code 插件</h3><figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/plugin marketplace add EL4CTEO/fast-anything</span><br><span class="line">/plugin install fast-anything@fast-anything</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后：</p>
+<figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/fast-anything:fast python app.py</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="6-2-MCP-server"><a href="#6-2-MCP-server" class="headerlink" title="6.2 MCP server"></a>6.2 MCP server</h3><p>MCP server 直接编进二进制里，不需要额外起进程：</p>
+<figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claude mcp add fast-anything -- fast-anything mcp</span><br></pre></td></tr></tbody></table></figure>
+
+<p>暴露 8 个工具：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">fast_scan</span><br><span class="line">fast_port</span><br><span class="line">fast_verify</span><br><span class="line">fast_enable</span><br><span class="line">fast_disable</span><br><span class="line">fast_bench</span><br><span class="line">fast_report</span><br><span class="line">fast_status</span><br></pre></td></tr></tbody></table></figure>
+
+<p>CHANGELOG 里 0.6.2 加了一条：长工具调用期间会发 progress notification。这细节说明作者是真的在用。</p>
+<h3 id="6-3-Skill"><a href="#6-3-Skill" class="headerlink" title="6.3 Skill"></a>6.3 Skill</h3><p><code>skills/fast-anything/SKILL.md</code> 是一份教任何 Agent 走这条流程的说明书。我把它的核心摘出来，因为这份说明书本身就很有参考价值：</p>
+<figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## Loop</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">1.</span> <span class="strong">**Scan**</span>: <span class="code">`fast-anything scan -- python app.py`</span>, using the command the user runs their app with</span><br><span class="line">   (a representative workload, not the test suite). Pick the top function marked "port it".</span><br><span class="line">   Skip anything under 2% of the run: porting it can't make a visible difference.</span><br><span class="line"><span class="bullet">2.</span> <span class="strong">**Port**</span>: <span class="code">`fast-anything port &lt;id&gt;`</span>. It re-runs the app, records up to 500 real calls, and creates</span><br><span class="line">   <span class="code">`.fast/ports/&lt;id&gt;/`</span> with a stub <span class="code">`src/lib.rs`</span> and a <span class="code">`TASK.md`</span>. Read TASK.md fully.</span><br><span class="line"><span class="bullet">3.</span> <span class="strong">**Write the Rust**</span> in <span class="code">`src/lib.rs`</span> (Ruby, Java, Go, PHP, C, C++, C#: <span class="code">`src/port.rs`</span>;</span><br><span class="line">   <span class="code">`src/lib.rs`</span> there is generated glue):</span><br><span class="line"><span class="bullet">   -</span> Same semantics: Unicode code points (<span class="code">`.chars()`</span>; JavaScript compares UTF-16 units),</span><br><span class="line"><span class="code">     integer ranges, float operation order, error cases.</span></span><br><span class="line"><span class="code">   - Fast: borrow, no needless allocation, ASCII fast paths, `with_capacity`.</span></span><br><span class="line"><span class="code">   - Keep the function and module names. Run `cargo check` in the crate.</span></span><br><span class="line"><span class="code">4. **Verify**: `fast-anything verify &lt;id&gt;` builds in release mode and replays every recorded call.</span></span><br><span class="line"><span class="code">   On mismatch, read the failing call, fix, verify again. Never edit the recordings.</span></span><br><span class="line"><span class="code">5. **Enable**: `fast-anything enable &lt;id&gt;`, then `fast-anything bench` and `fast-anything report`.</span></span><br><span class="line"><span class="code">6. Tell the user the end-to-end speedup, the per-call speedup, and how to undo</span></span><br><span class="line"><span class="code">   (`fast-anything disable &lt;id&gt;`, or `FAST_ANYTHING_DISABLE=1` for a single run).</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="section">## Don't</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> Don't edit the original Python function: the block appended to its module does the swap.</span><br><span class="line"><span class="bullet">-</span> Don't enable a port that hasn't passed verify.</span><br><span class="line"><span class="bullet">-</span> If a function shows ✗ (I/O, randomness, globals, lives in the entry script), say why it can't be</span><br><span class="line">  ported yet. Suggest moving pure logic into its own module when that's the blocker.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意两点：</p>
+<ul>
+<li><strong>“Never edit the recordings”</strong>—— 不许改录制数据。这是差分测试的基本纪律，改了就等于自己给自己判卷。</li>
+<li><strong>“Don’t edit the original Python function”</strong>—— 原函数不改，切换是在模块末尾追加一个标记块完成的。</li>
+</ul>
+<h3 id="6-4-切换是怎么做到的"><a href="#6-4-切换是怎么做到的" class="headerlink" title="6.4 切换是怎么做到的"></a>6.4 切换是怎么做到的</h3><p>README 里说 <code>enable</code> / <code>disable</code> 的切换方式是 “one marked block, removed byte for byte”—— 一个带标记的代码块，禁用时<strong>逐字节原样移除</strong>。</p>
+<p>这句话我反复看了两遍。它意味着：启用 Rust 移植版，你的原始函数体<strong>没有被改写</strong>，只是在文件末尾多了一个标记块，里面写着” 如果开了 Rust 路径，就走 Rust”。禁用的时候这个块被完整删掉，文件回到原样。</p>
+<p>CHANGELOG 0.6.1 里有一条更能说明细节：</p>
+<blockquote>
+<p>Node.js: … <code>const</code> functions port (declared with <code>let</code> while enabled, put back on disable)</p>
+</blockquote>
+<p>JavaScript 里 <code>const</code> 声明的函数没法被重新赋值。所以启用的时候它临时改成 <code>let</code>，禁用的时候再改回 <code>const</code>。这种” 改回来” 的细节，作者是逐个语言处理的。</p>
+<p>Node 那条还有个细节：0.6.1 说 “verify checks functions that aren’t exported”。也就是说，即使你的函数根本没被 export，verify 也会检查它 —— 因为移植版可能引用不到。</p>
+<h2 id="七、几个关键设计取舍"><a href="#七、几个关键设计取舍" class="headerlink" title="七、几个关键设计取舍"></a>七、几个关键设计取舍</h2><h3 id="7-1-移植”最外层循环”，而不是最内层函数"><a href="#7-1-移植”最外层循环”，而不是最内层函数" class="headerlink" title="7.1 移植”最外层循环”，而不是最内层函数"></a>7.1 移植” 最外层循环”，而不是最内层函数</h3><p>这是整个项目里我认为技术含量最高的一条决策。</p>
+<p>README 举了个例子：fast-anything 移植的是它能拿到的<strong>最外层循环</strong>，连同它调用的辅助函数一起移植，这样应用<strong>只跨一次语言边界进入 Rust</strong>，而不是跨几百万次。</p>
+<p>对比数据很直观：</p>
+<blockquote>
+<p>Porting only the inner <code>levenshtein</code> gave 35× and 1.9×.</p>
+</blockquote>
+<p>只移植最内层的 <code>levenshtein</code>，Python 侧得到 35 倍、PHP 侧只有 1.9 倍。而移植最外层循环，Python 是 116 倍，PHP 是 55 倍。</p>
+<p>原因很直观：每次跨 FFI 边界都有固定成本（参数打包、类型转换、调用开销）。移植一百万次 vs 移植一次，差了六个数量级。</p>
+<p><strong>这个洞察对任何” 局部优化” 方案都成立</strong>，包括不用 Rust 的场景。跨语言边界是极其昂贵的东西，能不跨就不跨。</p>
+<h3 id="7-2-“移植版比原版慢就不启用”"><a href="#7-2-“移植版比原版慢就不启用”" class="headerlink" title="7.2 “移植版比原版慢就不启用”"></a>7.2 “移植版比原版慢就不启用”</h3><p>前面提过，但值得单独强调，因为这体现了作者对” 性能优化” 这件事的理解。</p>
+<p>很多人做优化会陷入” 只要更快就是好的” 的误区。但 fast-anything 明确把” 单次调用不比原实现快” 列为<strong>不启用条件</strong>。因为对于一个被调用一次的热函数，跨语言开销就是净亏损。</p>
+<p><code>enable --force</code> 可以绕过，但我猜作者自己也不建议用。</p>
+<h3 id="7-3-C-ABI-JSON-作为通用桥接"><a href="#7-3-C-ABI-JSON-作为通用桥接" class="headerlink" title="7.3 C ABI + JSON 作为通用桥接"></a>7.3 C ABI + JSON 作为通用桥接</h3><p>看支持的语言列表，会发现一个规律：</p>
+<ul>
+<li><strong>Python</strong> 用 PyO3（专门的绑定，类型映射更精细）</li>
+<li><strong>JavaScript / TypeScript</strong> 用 napi-rs（Node 生态的标准做法）</li>
+<li><strong>其余七种语言</strong>（Ruby、Java、Kotlin、Go、PHP、C、C++、C#）<strong>统一走同一条 C 桥接</strong></li>
+</ul>
+<p>README 说得很清楚：</p>
+<blockquote>
+<p>Ruby, Java, Go, PHP, C, C++ and C# need no headers, bindings or extra tools: the port is a plain Rust<br>library with one C entry point taking and returning JSON, and fast-anything replays the recorded calls<br>against it directly. Any language that can call C can use that bridge.</p>
+<p>（任何能调用 C 的语言都能用这条桥接。）</p>
+</blockquote>
+<p>统一 C ABI + JSON 的代价是序列化开销，收益是<strong>零依赖</strong> —— 不需要为每种语言写绑定、不需要用户装头文件、不需要额外工具链。这对” 支持十种语言” 这个目标来说是极其划算的取舍。</p>
+<p>而且 0.2.0 有一条：</p>
+<blockquote>
+<p>Ports for the C-bridge languages are now verified by fast-anything itself, in a child process, so a<br>crashing port can’t take it down.</p>
+</blockquote>
+<p>C 桥接的移植版在<strong>子进程</strong>里验证，崩了也带不垮主进程。考虑到移植版是 Agent 自动生成的 Rust 代码，崩溃概率并不低，这个隔离是必要的。</p>
+<h3 id="7-4-缓存：所有移植版共享一个-fast-target"><a href="#7-4-缓存：所有移植版共享一个-fast-target" class="headerlink" title="7.4 缓存：所有移植版共享一个 .fast/target"></a>7.4 缓存：所有移植版共享一个 <code>.fast/target</code></h3><p>README 提了一句：</p>
+<blockquote>
+<p><strong>Cache</strong>: every port shares one <code>.fast/target</code>. Delete it whenever you like.</p>
+</blockquote>
+<p>每个移植版是一个独立的单函数 crate，但共享一个 target 目录，所以增量编译很快。</p>
+<p>CHANGELOG 0.6.0 还有一条优化：</p>
+<blockquote>
+<p>Ports rebuild about 4× faster after each edit (no LTO, parallel codegen; no measurable runtime cost).</p>
+</blockquote>
+<p>改完之后重建快 4 倍 —— 做法是关掉 LTO、开启并行 codegen，运行时性能没有可测量的损失。</p>
+<p>不过这里有个值得留意的矛盾：<code>Cargo.toml</code> 里主二进制的 <code>[profile.release]</code> 明确写着 <code>lto = "fat"</code>、<code>codegen-units = 1</code>。也就是说<strong>主工具本身</strong>用满 LTO，而<strong>生成的移植版 crate</strong> 不用。两者的性能诉求完全不同，这个区分是对的。</p>
+<h3 id="7-5-Agent-在环外，工具在环内"><a href="#7-5-Agent-在环外，工具在环内" class="headerlink" title="7.5 Agent 在环外，工具在环内"></a>7.5 Agent 在环外，工具在环内</h3><p>前面提到过，这是最关键的架构取舍。</p>
+<p>fast-anything 的二进制依赖里没有任何 LLM SDK。这意味着：</p>
+<ul>
+<li>它不绑定任何模型供应商</li>
+<li>它不需要 API key</li>
+<li> 它不会把你的代码发给任何第三方（除非你主动用 <code>--agent claude</code>）</li>
+<li>Agent 只负责写 <code>src/lib.rs</code> 里的那段 Rust，<strong>所有判定逻辑都在确定性代码里</strong></li>
+</ul>
+<p>这个分工的价值在于：<strong>验证是可靠的</strong>。如果” 这个移植版对不对” 是由 LLM 判断的，那整个信任链就塌了。现在是：Agent 提方案，工具做裁判。</p>
+<p>而且用 MCP 或 Skill 的话，你可以让模型完全在本地跑 ——<code>--agent</code> 接受” 任何从 stdin 读 prompt 的命令”，你完全可以指向本地的 <code>ollama</code> 或者别的本地 CLI。</p>
+<h2 id="八、实测数据"><a href="#八、实测数据" class="headerlink" title="八、实测数据"></a>八、实测数据</h2><p>README 给了实测结果，环境是 i5-10500 / Windows 11（C 和 C++ 是 4 核 GitHub Actions Linux runner），可以从仓库的 <code>examples/</code> 复现。</p>
+<table>
+<thead>
+<tr>
+<th>应用</th>
+<th>优化前</th>
+<th>优化后</th>
+<th>加速</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> Python 模糊去重（700 个名字）</td>
+<td>4.91s</td>
+<td><strong>42ms</strong></td>
+<td><strong>116×</strong></td>
+</tr>
+<tr>
+<td>TypeScript 模糊去重（2,000 个名字）</td>
+<td>3.11s</td>
+<td><strong>155ms</strong></td>
+<td><strong>20×</strong></td>
+</tr>
+<tr>
+<td>PHP 模糊去重（600 个名字）</td>
+<td>2.94s</td>
+<td><strong>53ms</strong></td>
+<td><strong>55×</strong></td>
+</tr>
+<tr>
+<td>Go 模糊去重（3,000 个名字）</td>
+<td>3.02s</td>
+<td><strong>144ms</strong></td>
+<td><strong>21×</strong></td>
+</tr>
+<tr>
+<td>Ruby 模糊去重（400 个名字）</td>
+<td>3.13s</td>
+<td><strong>228ms</strong></td>
+<td><strong>14×</strong></td>
+</tr>
+<tr>
+<td>C# 模糊去重（4,000 个名字）</td>
+<td>4.03s</td>
+<td><strong>312ms</strong></td>
+<td><strong>13×</strong></td>
+</tr>
+<tr>
+<td>Java 模糊去重（4,000 个名字）</td>
+<td>3.50s</td>
+<td><strong>1.18s</strong></td>
+<td><strong>3×</strong></td>
+</tr>
+<tr>
+<td>C mandelbrot（8 个缩放级别）</td>
+<td>431ms</td>
+<td><strong>127ms</strong></td>
+<td><strong>3.4×</strong></td>
+</tr>
+<tr>
+<td>C++ 模糊去重（6,000 个名字）</td>
+<td>3.02s</td>
+<td><strong>1.09s</strong></td>
+<td><strong>2.7×</strong></td>
+</tr>
+</tbody></table>
+<p>Java 那一行作者特别标注了：<strong>函数本身快了 11 倍，但整个进程只快 3 倍，剩下的都是 JVM 启动时间</strong>。</p>
+<p>这个诚实我得夸。绝大多数性能工具会只报” 函数加速比”，fast-anything 报的是端到端，还额外把” 函数 11 倍但端到端 3 倍” 这种反直觉的情况标出来。因为对用户有意义的是端到端。</p>
+<p>同样值得看的是 C 和 C++ 只有 2.7-3.4 倍。对比 Python 的 116 倍，差距在哪？</p>
+<ul>
+<li><strong>Python</strong> 本来就慢，FFI 边界开销占比小，Rust 的收益被放大</li>
+<li><strong> C / C++</strong> 本来就快，同样的绝对节省量除以更小的分母，加速比自然低</li>
+<li>换句话说，<strong>这个工具在” 本来就慢的语言” 上收益最大</strong>，这符合直觉，也符合实际</li>
+</ul>
+<p>另外注意所有数据都来自 <code>examples/</code> 里的<strong>模糊去重</strong>这一个场景。这是一类典型的纯函数、CPU 密集、易移植的负载。所以这些数字应该理解为” 最好情况”，而不是” 平均值”。</p>
+<h2 id="九、和同类项目对比"><a href="#九、和同类项目对比" class="headerlink" title="九、和同类项目对比"></a>九、和同类项目对比</h2><p>这个赛道现在挺热闹的，我把几个有代表性的放一起说说。</p>
+<h3 id="9-1-vs-整应用重写工具"><a href="#9-1-vs-整应用重写工具" class="headerlink" title="9.1 vs. 整应用重写工具"></a>9.1 vs. 整应用重写工具</h3><p>最直接的对照组是 <code>erkamyaman/rust-anything</code>—— 那个项目也是帮 Agent 把代码改写成 Rust，1869 star 这个项目多少沾点它的影子（同一批爆火的”AI + Rust” 项目）。</p>
+<p>区别在哲学：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th> fast-anything</th>
+<th> 整应用重写类工具</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>目标</td>
+<td>局部热点（慢的 5%）</td>
+<td>整个模块或整个应用</td>
+</tr>
+<tr>
+<td>验证方式</td>
+<td>录制真实调用 + 差分回放</td>
+<td>用例集比对、测试通过</td>
+</tr>
+<tr>
+<td>用例来源</td>
+<td>真实生产工作负载</td>
+<td>生成的或手工写的</td>
+</tr>
+<tr>
+<td>边界策略</td>
+<td>移植最外层循环，最小化 FFI 次数</td>
+<td>逐函数迁移</td>
+</tr>
+<tr>
+<td>可逆性</td>
+<td>标记块，byte-for-byte 移除</td>
+<td>通常需要手工回滚</td>
+</tr>
+<tr>
+<td>编译成本</td>
+<td>单函数 crate，秒级</td>
+<td>模块级 crate，分钟级</td>
+</tr>
+</tbody></table>
+<p>fast-anything 的核心优势是<strong>用例来源</strong>。差分测试的关键在于” 正确答案” 必须可信 —— 原实现就是标准答案。用例来自真实工作负载，比人工造的用例可信得多。</p>
+<h3 id="9-2-vs-传统-profiler"><a href="#9-2-vs-传统-profiler" class="headerlink" title="9.2 vs. 传统 profiler"></a>9.2 vs. 传统 profiler</h3><p><code>py-spy</code>、<code>cProfile</code>、<code>pprof</code>、<code>perf</code>、Java Flight Recorder 都是成熟工具，fast-anything 用的正是它们（或等价物）。</p>
+<p>区别在于：<strong>profiler 只告诉你哪里慢，fast-anything 告诉你接下来该做什么</strong>。</p>
+<p>传统 profiler 的工作流是：跑 profile → 看火焰图 → 手动改 → 再跑 profile → 对比。中间的” 改” 这一步是最耗时的，尤其当你要写 Rust 时。</p>
+<p>fast-anything 把” 改” 这一步交给 Agent，并且提供” 证明它对了” 的机制。所以它不是替代 profiler，是<strong>接在 profiler 后面</strong>。</p>
+<h3 id="9-3-vs-Cython-Nuitka-PyO3-手写"><a href="#9-3-vs-Cython-Nuitka-PyO3-手写" class="headerlink" title="9.3 vs. Cython / Nuitka / PyO3 手写"></a>9.3 vs. Cython / Nuitka / PyO3 手写</h3><p>这是 Python 生态里最成熟的方案。做同样的事，你会：</p>
+<ol>
+<li>手写 Cython 装饰器或 PyO3 绑定</li>
+<li>自己写对照测试</li>
+<li>自己保证边界一致</li>
+</ol>
+<p>fast-anything 的差异是<strong>验证是自动的、且基于真实数据</strong>。手写方案里，” 写对照测试” 这一步占了大部分工作量，而且最容易偷懒少写。</p>
+<p>反过来，fast-anything 的产物<strong>不如手写方案干净</strong> —— 它是在原文件末尾追加标记块，生成的 crate 是机器拼装的，不会符合你的代码风格。</p>
+<h3 id="9-4-vs-通用-FFI-库（PyO3-napi-rs-JNI-等）"><a href="#9-4-vs-通用-FFI-库（PyO3-napi-rs-JNI-等）" class="headerlink" title="9.4 vs. 通用 FFI 库（PyO3 / napi-rs / JNI 等）"></a>9.4 vs. 通用 FFI 库（PyO3 /napi-rs/ JNI 等）</h3><p>这些是<strong>底层零件</strong>，fast-anything 是<strong>用零件组装的产品</strong>。</p>
+<p>它自己就用了 PyO3 和 napi-rs。所以严格说，fast-anything 是这些库之上的一层编排。</p>
+<h3 id="9-5-vs-Rust-生态的性能工具（Miri、cargo-flamegraph-等）"><a href="#9-5-vs-Rust-生态的性能工具（Miri、cargo-flamegraph-等）" class="headerlink" title="9.5 vs. Rust 生态的性能工具（Miri、cargo-flamegraph 等）"></a>9.5 vs. Rust 生态的性能工具（Miri、cargo-flamegraph 等）</h3><p>方向相反。Rust 生态的工具是优化 Rust 代码本身，fast-anything 是<strong>把别的语言变成 Rust</strong>。</p>
+<h2 id="十、真实局限"><a href="#十、真实局限" class="headerlink" title="十、真实局限"></a>十、真实局限</h2><p>这部分我不想写得太客气，因为不写清楚就是害人。</p>
+<h3 id="10-1-只能移植”纯函数”"><a href="#10-1-只能移植”纯函数”" class="headerlink" title="10.1 只能移植”纯函数”"></a>10.1 只能移植” 纯函数”</h3><p>这是最硬的限制。fast-anything 只移植<strong>顶层、确定性、接受普通数据类型</strong>的函数：</p>
+<ul>
+<li>数字、字符串、列表、字典、类型化数组</li>
+<li> dataclass、NamedTuple、数值 NumPy 数组也算” 普通数据”</li>
+<li>Python 里是模块级函数和 <code>@staticmethod</code></li>
+<li>Java / C# / PHP 是静态方法，Go 是普通函数，C/C++ 是自由函数和静态方法</li>
+</ul>
+<p>不能移植的：读写 I/O、依赖随机数、依赖全局状态、依赖环境变量、依赖数据库连接、跨函数有副作用的逻辑。</p>
+<p>如果你的热点函数读了一个全局配置，这个函数就动不了。</p>
+<p>不过作者给了一条出路 —— 在 SKILL.md 里：</p>
+<blockquote>
+<p>Suggest moving pure logic into its own module when that’s the blocker.</p>
+</blockquote>
+<p>先重构出纯函数，再移植。人工做这步有点烦，但这确实是唯一正确的路径。</p>
+<h3 id="10-2-性能收益高度依赖场景"><a href="#10-2-性能收益高度依赖场景" class="headerlink" title="10.2 性能收益高度依赖场景"></a>10.2 性能收益高度依赖场景</h3><p>前面已经说了：README 的数据全部来自” 模糊去重” 这一类 CPU 密集的纯函数负载。</p>
+<p>如果你的应用是 <strong>I/O 密集</strong>（大量数据库查询、HTTP 请求），那” 慢的 5%” 很可能根本不是 CPU 部分，Rust 帮不上什么忙。反过来说，工具会自动告诉你热点在哪 —— 但它不会说” 你的问题不该用 Rust 解决”。</p>
+<h3 id="10-3-移植版代码需要人看一眼"><a href="#10-3-移植版代码需要人看一眼" class="headerlink" title="10.3 移植版代码需要人看一眼"></a>10.3 移植版代码需要人看一眼</h3><p>这是最容易被忽略的一点：<strong>Agent 写的 Rust 会留在你的仓库里</strong>。</p>
+<p>fast-anything 验证了<strong>行为一致</strong>，但没有验证：</p>
+<ul>
+<li>代码风格是否合规</li>
+<li>有没有引入 panic 路径</li>
+<li> unsafe 块用得对不对</li>
+<li>是否有隐蔽的资源泄漏</li>
+<li>是否符合你的 lint 规则</li>
+</ul>
+<p>一个只有 <code>anyhow</code>、<code>clap</code>、<code>libloading</code>、<code>serde</code> 四个依赖的工具生成出来的 Rust，大概率是” 能跑但不好看” 的代码。你多半还是要手工整理一遍。</p>
+<p><strong>说白了：它证明了” 对”，但没有保证” 好”。</strong></p>
+<h3 id="10-4-需要-Rust-工具链"><a href="#10-4-需要-Rust-工具链" class="headerlink" title="10.4 需要 Rust 工具链"></a>10.4 需要 Rust 工具链</h3><p>虽然是” 局部重写”，你还是得装 rustup、装 Rust 工具链。对纯 Python 团队来说这是个不小的门槛 ——CI 镜像也得跟着改。</p>
+<h3 id="10-5-项目太新"><a href="#10-5-项目太新" class="headerlink" title="10.5 项目太新"></a>10.5 项目太新</h3><p>创建于 2026 年 11 月 21 日，到我写这篇的时候<strong>只有两天</strong>。</p>
+<ul>
+<li>版本号才 0.7.0，还没到 1.0</li>
+<li>56 个提交</li>
+<li> CHANGELOG 显示迭代非常快（0.1.0 到 0.7.0），0.6.2 里还有个修 npm 启动器执行位的 bug</li>
+<li> 大量功能是最近才加的</li>
+</ul>
+<p>作者迭代速度是优点，但也意味着<strong>很多东西还在动</strong>。0.7.0 才刚加的 JavaScript Bun/Deno 支持、Node worker_threads 支持，多半还没被多少人踩过。</p>
+<p>我个人建议：<strong>先用它跑一遍你的项目看效果，别急着在生产主链路上依赖它</strong>。</p>
+<h3 id="10-6-需要-Agent，有-Token-成本"><a href="#10-6-需要-Agent，有-Token-成本" class="headerlink" title="10.6 需要 Agent，有 Token 成本"></a>10.6 需要 Agent，有 Token 成本</h3><p><code>go --agent claude</code> 意味着每次移植都要调一次大模型。这个成本在高频迭代的场景下会累积。</p>
+<h2 id="十一、适合谁，不适合谁"><a href="#十一、适合谁，不适合谁" class="headerlink" title="十一、适合谁，不适合谁"></a>十一、适合谁，不适合谁</h2><h3 id="适合"><a href="#适合" class="headerlink" title="适合"></a>适合</h3><p><strong>1. 有明确的 CPU 热点，但不想整体重写的团队</strong></p>
+<p>这是我最推荐的场景。你已经知道某个函数慢，或者至少能接受跑一次 <code>scan</code> 看看。改写范围可控，出问题能一键回退。</p>
+<p><strong>2. 正在用 AI 编码 Agent，但被”Agent 写的代码不知道对不对” 折磨的人</strong></p>
+<p>这是 fast-anything 最核心的用户画像。Agent 写 Rust 很快，但验证是人的活。这个工具把验证自动化了。</p>
+<p><strong>3. Python / Ruby / PHP 这类” 动态语言但有性能需求” 的后端</strong></p>
+<p>116 倍、55 倍、14 倍 —— 这些数字不是噱头，是真实场景下能拿到的收益。</p>
+<p><strong>4. 想做 A/B 对比” 到底值不值得重写” 的人</strong></p>
+<p><code>bench</code> 会给你一个真实答案，而且 <code>disable</code> 随时能回退。这比开三天会做技术选型靠谱。</p>
+<h3 id="不适合"><a href="#不适合" class="headerlink" title="不适合"></a>不适合</h3><p><strong>1. 性能问题的根因是 I/O 而不是 CPU</strong></p>
+<p>先别折腾 Rust。先看看你的数据库索引、缓存策略、连接池。99% 的” 慢” 是 I/O 问题。</p>
+<p><strong>2. 团队没有 Rust 能力，也不打算有</strong></p>
+<p>你需要有人能看懂 Agent 生成的 Rust，能在 verify 失败时去修。哪怕只是一个会读 Rust 的同事。</p>
+<p><strong>3. 需要维护长期稳定性的核心链路</strong></p>
+<p>这个工具两天大、0.7.0 版。它目前更适合当” 探索工具” 和” 优化工具”，而不是” 运行时依赖”。</p>
+<p><strong>4. 依赖复杂对象或副作用的业务逻辑</strong></p>
+<p>热点函数如果牵扯 ORM session、请求上下文、事务，这些都过不了” 纯函数” 这一关。</p>
+<p><strong>5. 已经在用 Cython / Nuitka 并且维护得不错的老项目</strong></p>
+<p>没必要为了换工具而换工具。</p>
+<h2 id="十二、我的实际建议"><a href="#十二、我的实际建议" class="headerlink" title="十二、我的实际建议"></a>十二、我的实际建议</h2><p>如果你想试，我建议这么开始：</p>
+<p><strong>第一步，先只做 <code>scan</code>，别急着 port。</strong></p>
+<figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fast-anything doctor</span><br><span class="line">fast-anything scan -- python app.py</span><br></pre></td></tr></tbody></table></figure>
+
+<p>看看你的热点分布。如果发现” 慢的 5%” 里没有明显的纯函数热点，那这个工具对你没用，直接放弃，成本也就几分钟。</p>
+<p><strong>第二步，挑一个孤立的、调用量大的小函数试。</strong></p>
+<p>别一上来就动核心逻辑。找个边缘功能试水，跑通完整流程。</p>
+<p><strong>第三步，看 <code>verify</code> 的输出，重点看派生用例。</strong></p>
+<p>如果录制用例全过但派生用例挂了，说明这个函数有边界行为你没考虑到 —— <strong>这正是这个工具最有价值的时刻</strong>。哪怕你最后决定不用它，这个发现也有价值。</p>
+<p><strong>第四步，<code>bench</code> 看端到端，别只看函数加速比。</strong></p>
+<p>Java 那个” 函数 11 倍、端到端 3 倍” 的例子就在眼前。</p>
+<p><strong>第五步，生成 PR 报告再合并。</strong></p>
+<figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fast-anything report</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>report</code> 会出 markdown + SVG 卡片。这东西贴到 PR 里，评审的人一眼就知道哪些调用被验证过、覆盖了多少条用例。这在 code review 里太有用了。</p>
+<h2 id="十三、这个项目折射出的更大趋势"><a href="#十三、这个项目折射出的更大趋势" class="headerlink" title="十三、这个项目折射出的更大趋势"></a>十三、这个项目折射出的更大趋势</h2><p>抛开工具本身，fast-anything 让我注意到一个正在发生的变化。</p>
+<p>过去我们说”AI 写代码”，瓶颈从来不是<strong>写</strong>，是<strong>验证</strong>。你让模型写一个函数只要 10 秒，但证明这个函数跟原来那个 300 行的函数在所有输入下行为一致，可能要花一天。</p>
+<p>所以真正有价值的 AI 编程工具，不是让模型写得更快，而是<strong>让验证变得便宜</strong>。</p>
+<p>fast-anything 的整个设计 —— 录制、差分回放、派生边界用例、让原实现当标准答案 —— 本质上是在做一件事：<strong>把” 相信我” 变成” 这里有 500 条证据”</strong>。</p>
+<p>这个思路可以套用到任何领域：</p>
+<ul>
+<li>数据库迁移工具：新旧 schema 跑同一批查询，比对结果</li>
+<li> API 重构：录制真实 HTTP 请求，新旧实现回放比对响应</li>
+<li>编译器优化：同一份输入，编译前后输出必须逐字节一致</li>
+<li>性能优化框架：录制真实负载，替代拍脑袋造的 benchmark</li>
+</ul>
+<p>事实上我怀疑 <strong><code>rust-anything</code> 和 <code>fast-anything</code> 这两个项目本质上是同一类工具的不同实现</strong>，都是在解决”AI 写的东西怎么证明对”。这两个项目在 11 月中下旬前后同时爆火，1869 和 3321 star，说明这个需求是真的存在，不是一时的风口。</p>
+<p>从这个角度看，fast-anything 最值得学的地方可能不是它的 Rust 流水线，而是那个<strong>差分测试的思路</strong>：把原实现当作唯一可信的标准答案，用真实工作负载当测试用例，让工具去做机械的、容易出错的验证工作。</p>
+<p>这套东西在别的地方也用得上。</p>
+<h2 id="十四、结语"><a href="#十四、结语" class="headerlink" title="十四、结语"></a>十四、结语</h2><p>回到开头那个需求 ——“用 Rust 重写一下那个 Python 服务”。</p>
+<p>如果今天有人这么问我，我会反问三个问题。但现在我至少能给出一个可执行的路径了：</p>
+<figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm i -g @el4cteo/fast-anything</span><br><span class="line">fast-anything doctor</span><br><span class="line">fast-anything scan -- python service.py</span><br></pre></td></tr></tbody></table></figure>
+
+<p>先看热点，再决定。数据说话，不拍脑袋。</p>
+<p>这可能才是 2026 年” 让 AI 重写你的代码” 这件事的正确打开方式 —— <strong>不是全量重写，是增量替换，是每一步都带着证据</strong>。</p>
+<p>至于要不要真的用起来，我得说：<strong>先在边缘功能上试，别在核心链路上梭哈</strong>。项目两天大，还在快速迭代。</p>
+<p>但这个方向，我看好。</p>
+<hr>
+<h2 id="附：项目链接与事实来源"><a href="#附：项目链接与事实来源" class="headerlink" title="附：项目链接与事实来源"></a>附：项目链接与事实来源</h2><ul>
+<li>仓库：<a target="_blank" rel="noopener" href="https://github.com/EL4CTEO/fast-anything">https://github.com/EL4CTEO/fast-anything</a></li>
+<li>npm：<code>@el4cteo/fast-anything</code></li>
+<li>crates.io：<code>fast-anything</code></li>
+<li>许可证：MIT</li>
+<li> 本文所有数据（star 数 1869、fork 109、版本 0.7.0、创建时间 2026-11-21、提交数 56、语言支持列表、性能数据、CHANGELOG 细节）均来自该仓库的 README、CHANGELOG.md、skills/fast-anything/SKILL.md、Cargo.toml 与 GitHub 仓库页面，采集于 2026 年 11 月 23 日。</li>
+</ul>
+<p>性能数据的环境为 i5-10500 / Windows 11（C 和 C++ 为 4 核 GitHub Actions Linux runner），场景为仓库 <code>examples/</code> 中的模糊去重示例，可自行复现。这些数字反映的是 CPU 密集型纯函数负载下的最佳情况，不代表所有应用的平均收益。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/11/22/el4cteo-fast-anything-port-slow-5-percent-to-rust/" title="EL4CTEO&#x2F;fast-anything：1869 star 的工具，让 AI Agent 只把最慢的 5% 改写成 Rust 并证明行为一致">https://www.daishengli.top/2026/11/22/el4cteo-fast-anything-port-slow-5-percent-to-rust/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/fast-anything/" rel="tag"># fast-anything</a>
+              <a href="/tags/EL4CTEO/" rel="tag"># EL4CTEO</a>
+              <a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" rel="tag"># 性能优化</a>
+              <a href="/tags/%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7/" rel="tag"># 开发者工具</a>
+              <a href="/tags/FFI/" rel="tag"># FFI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/21/tracer-cloud-opensre-ci-cd-reliability-agent/" rel="prev" title="Tracer-Cloud&#x2F;opensre：13982 star 的 CI&#x2F;CD 可靠性 Agent，能自己读日志、改代码、推分支">
+                  <i class="fa fa-angle-left"></i> Tracer-Cloud/opensre：13982 star 的 CI/CD 可靠性 Agent，能自己读日志、改代码、推分支
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/23/hkuds-cli-anything-make-all-software-agent-native/" rel="next" title="HKUDS&#x2F;CLI-Anything：63603 star 的开源项目，把 40 多个专业软件变成 AI Agent 能用的命令行">
+                  HKUDS/CLI-Anything：63603 star 的开源项目，把 40 多个专业软件变成 AI Agent 能用的命令行 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

